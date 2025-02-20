@@ -16,8 +16,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
     subject: "",
   });
   const {
-    search, setSearch, selectedUniversity, setSelectedUniversity,
-    countryFilter, setCountryFilter, studyLevel, setStudyLevel,
+    search, setSearch,
   } = useCourseStore()
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
