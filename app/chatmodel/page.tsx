@@ -23,7 +23,7 @@ export default function Home() {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     try {
-      const response = await fetch("http://localhost:8080/chatZeus", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}chatZeus`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,20 +74,17 @@ export default function Home() {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${
-                    message.isUser ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${message.isUser ? "justify-end" : "justify-start"
+                    }`}
                 >
                   <div
-                    className={`flex gap-3 max-w-[55%] ${
-                      message.isUser ? "flex-row-reverse" : "flex-row"
-                    }`}
+                    className={`flex gap-3 max-w-[55%] ${message.isUser ? "flex-row-reverse" : "flex-row"
+                      }`}
                   >
                     <Avatar className="h-8 w-8">
                       <div
-                        className={`h-full w-full ${
-                          message.isUser ? "bg-blue-500" : "bg-gray-500"
-                        } flex items-center justify-center text-white`}
+                        className={`h-full w-full ${message.isUser ? "bg-blue-500" : "bg-gray-500"
+                          } flex items-center justify-center text-white`}
                       >
                         <Image
                           src={message.isUser ? "/user-dp.png" : "/zues-dp.png"}
@@ -98,9 +95,8 @@ export default function Home() {
                       </div>
                     </Avatar>
                     <Card
-                      className={`p-4 ${
-                        message.isUser ? "bg-white-500 text-black" : "bg-white"
-                      }`}
+                      className={`p-4 ${message.isUser ? "bg-white-500 text-black" : "bg-white"
+                        }`}
                     >
                       <p className="whitespace-pre-line">{message.text}</p>
                     </Card>
