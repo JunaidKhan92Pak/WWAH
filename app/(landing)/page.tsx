@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,7 @@ function Page() {
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
+  console.log(selectedValues);
   // Suspense will handle this
   const features = [
     {
