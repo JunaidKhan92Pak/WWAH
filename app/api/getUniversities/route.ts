@@ -21,7 +21,7 @@ export async function GET() {
 
         // Fetch all universities from the database
         const universities = await University.find({})
-            .select("_id  university_name  country_name acceptance_rate universityImages.banner ranking universityImages.logo") // 
+            .select("_id  university_name   country_name acceptance_rate universityImages.banner ranking universityImages.logo ") // 
             .lean();
         // Return a successful response with the fetched universities
         return NextResponse.json(
