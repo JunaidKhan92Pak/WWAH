@@ -15,7 +15,7 @@ import { useCourseStore } from "@/store/useCoursesStore";
 import FilterComponent from "./components/Filtercomponent";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
-
+import { SkeletonCard } from "@/components/skeleton"
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -87,9 +87,7 @@ const CourseArchive = () => {
       </div>
 
       {loading ? (
-        <div className="flex justify-center items-center h-[300px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-red-500"></div>
-        </div>
+        <SkeletonCard arr={12} />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
           {courses.map((item, idx) => (

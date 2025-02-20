@@ -6,6 +6,7 @@ export async function POST(req: Request) {
   try {
     // Parse incoming request data
     const data = await req.json();
+    console.log(data);
 
     // Validate input
     if (

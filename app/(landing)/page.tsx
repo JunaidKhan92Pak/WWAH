@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -13,40 +13,17 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useUniversityStore } from "@/store/useUniversitiesStore";
+import { SkeletonCard } from "@/components/skeleton"
 
 function Page() {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  const universities = [
-    {
-      name: "Massey University",
-      location: "USA",
-      image: "/university-1.png",
-      acceptance: "70%",
-      logo: "/massey-logo.png",
-    },
-    {
-      name: "Massey University",
-      location: "New Zealand",
-      image: "/university-2.png",
-      acceptance: "70%",
-      logo: "/massey-logo.png",
-    },
-    {
-      name: "Massey University",
-      location: "China",
-      image: "/university-3.png",
-      acceptance: "70%",
-      logo: "/massey-logo.png",
-    },
-    {
-      name: "Massey University",
-      location: "Canada",
-      image: "/university-3.png",
-      acceptance: "70%",
-      logo: "/massey-logo.png",
-    },
-  ]
+  const { universities, fetchUniversities, loading } = useUniversityStore();
+  useEffect(() => {
+    if (universities.length === 0) fetchUniversities();
+  }, [fetchUniversities]);
+  console.log(selectedValues);
+  // Suspense will handle this
   const features = [
     {
       icon: <Bot className="h-8 w-8" />,
@@ -81,16 +58,6 @@ function Page() {
         : [...prev, value] // Add value if it's not already stored
     );
   };
-  const visibleUniversities = universities.filter((course) => {
-    if (selectedValues.length === 0) {
-      return course; // No filters applied, return all
-    }
-    return (
-      selectedValues.includes(course.location.toLowerCase())
-    );
-  });
-
-
   return (
     // landing page container starts
     <div className="landingPage">
@@ -208,8 +175,8 @@ function Page() {
           </div>
         </section>
       </div>
-
       <section className="py-5 bg-gray-50">
+
         <div className=" mx-auto px-0 sm:px-4 w-[90%]">
           {/* Section Header */}
           <div className="flex justify-between items-center mb-8">
@@ -400,46 +367,52 @@ function Page() {
             </Badge>
           </div>
           {/* University Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {visibleUniversities.map((uni, index) => (
-              <Card
-                key={index}
-                className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
-              >
-                {/* University Image */}
-                <div className="relative h-48">
-                  <Image
-                    src={uni.image}
-                    alt={uni.name}
-                    fill
-                    className="object-cover transition-transform  duration-300 group-hover:scale-105"
-                  />
-                  {/* University Logo Overlay */}
-                  <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-md">
+          {!loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {universities.map((uni, index) => (
+                <Card
+                  key={index}
+                  className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                >
+                  {/* University Image */}
+                  <div className="relative h-48">
                     <Image
-                      src={uni.logo}
-                      alt={`${uni.name} logo`}
-                      width={40}
-                      height={40}
+                      src={uni.universityImages.banner}
+                      alt={uni.name}
+                      fill
+                      className="object-cover transition-transform  duration-300 group-hover:scale-105"
                     />
-                  </div>
-                </div>
-                {/* University Details */}
-                <div className="p-4">
-                  <h6 className="font-semibold  mb-2">{uni.name}</h6>
-                  <div className="flex  flex-col  justify-between items-start xl:items-center  text-muted-foreground">
-                    <div className="w-full flex items-center justify-between gap-2">
-                      <p>{uni.location}</p>
-                      <p>Public</p>
-
+                    {/* University Logo Overlay */}
+                    <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-md">
+                      <Image
+                        src={uni.universityImages.logo}
+                        alt={`${uni.university_name} logo`}
+                        width={40}
+                        height={40}
+                      />
                     </div>
-                    <p className="w-full">Acceptance Rate: {uni.acceptance}</p>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                  {/* University Details */}
+                  <div className="p-4">
+                    <h6 className="font-semibold  mb-2">{uni.university_name}</h6>
+                    <div className="flex  flex-col  justify-between items-start xl:items-center  text-muted-foreground">
+                      <div className="w-full flex items-center justify-between gap-2">
+                        <p>{uni.country_name}</p>
+                        <p>Public</p>
+
+                      </div>
+                      <p className="w-full">Acceptance Rate: {uni.acceptance_rate}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>) :
+            (
+              <SkeletonCard arr={4} />
+            )
+          }
         </div>
+
       </section>
       {/* Features Section */}
       <section className="md:py-5 bg-muted/50">

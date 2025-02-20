@@ -1,15 +1,4 @@
 "use client";
-// type University = {
-//   _id: string;
-//   university_name: string;
-//   country_name: string;
-//   acceptance_rate: string;
-//   ranking: { detail: string }[];
-//   universityImages?: {
-//     banner?: string;
-//     logo?: string;
-//   };
-// };
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Image from "next/image";
@@ -18,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
-
+import { SkeletonCard } from "@/components/skeleton"
 const Page = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [search, setSearch] = useState("");
@@ -92,11 +81,9 @@ const Page = () => {
         </div>
       </div>
       {loading ? (
-        <div className="flex justify-center items-center h-60">
-          <p>Loading...</p>
-        </div>
+        <SkeletonCard arr={12} />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-2">
           {filterUniversities.map((item) => (
             <Link
               target="_blank"
@@ -137,6 +124,7 @@ const Page = () => {
             </Link>
           ))}
         </div>
+
       )}
     </section>
   );
