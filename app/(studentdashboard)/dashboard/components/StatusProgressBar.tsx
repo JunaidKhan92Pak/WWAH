@@ -9,7 +9,7 @@ export function StatusProgressBar({ progress }: StatusProgressBarProps) {
   const clampedProgress = Math.max(0, Math.min(100, progress));
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-[#FFF5EE] rounded-lg">
+    <div className="w-full mx-auto p-6 bg-[#FCE7D2] rounded-xl">
       <p className=" font-semibold mb-3">Status</p>
       <div className="relative">
         {/* Progress bar background */}

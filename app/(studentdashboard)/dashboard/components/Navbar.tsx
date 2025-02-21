@@ -52,7 +52,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
               height={20}
               className="w-[24px] sm:w-[20px] h-[28px] sm:h-[20px]"
             />
-            <span className="hidden lg:inline">Complete your Profile</span>
+            <span className="hidden lg:inline">Favourites</span>
           </Button>
 
           <Button className="relative flex items-center bg-[#F1F1F1] text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">

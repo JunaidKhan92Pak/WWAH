@@ -34,9 +34,9 @@ const courses = [
 
 const Coursesuggestion = () => {
     return (
-        <>   <div className="w-full rounded-xl border p-4 mt-4">
+        <>   <div className="w-full rounded-xl border p-4">
 
-            <h5 className='font-semibold'>Suggested Courses</h5>
+<p className='font-semibold text-lg md:text-2xl'>Suggested Courses</p>
             <div className="relative w-full flex justify-center overflow-hidden">
           <div
             className="flex overflow-x-auto space-x-4 hide-scrollbar"
@@ -47,40 +47,38 @@ const Coursesuggestion = () => {
           >
                 {courses.map((course) => (
                     <div key={course.id} 
-                    className="relative w-[70%] md:w-[70%] flex flex-col md:flex-row space-x-4 space-y-4 flex-shrink-0 rounded-3xl border p-4 overflow-hidden"
+                    className="relative w-[80%] xl:w-[70%] flex flex-col md:flex-row space-x-4 space-y-4 flex-shrink-0 rounded-3xl border p-4 overflow-hidden"
 >
                             <Image
                                                        src="/course1.svg"
                                                        alt="courseImg"
                                                        width={400}
                                                        height={250}
-                                                       className="w-full h-auto md:h-44 md:w-[250px] xl:w-[230px]  object-cover rounded-2xl"
+                                                       className="w-full h-auto md:h-48 md:w-[250px] xl:w-[240px]  object-cover rounded-2xl"
                                                    />
                         <div>
-                            <h3 className="text-base md:text-sm font-semibold text-gray-800">
+                            <h3 className="font-medium text-lg">
                                 {course.title}
                             </h3>
-                            <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-3">
-                                <div className="flex items-center gap-1">
-                                    <Image src="/location.svg" width={16} height={16} alt="Location" />
-                                    <p className="text-sm truncate">{course.location}</p>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Image src="/DashboardPage/intake.svg" width={16} height={16} alt="intake" />
-                                    <p className="text-sm truncate">{course.intake}</p>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Image src="/clock.svg" width={16} height={16} alt="Duration" />
-                                    <p className="text-sm truncate">{course.duration}</p>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Image src="/money.svg" width={16} height={16} alt="Tuition Fee" />
-                                    <p className="text-sm truncate">{course.fee}</p>
-                                </div>
-
-                        
-                                
-                            </div>
+                             <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-3">
+                                                        <div className="flex items-center gap-1">
+                                                            <Image src="/location.svg" width={20} height={20} alt="Location" />
+                                                            <p className="text-sm  truncate">New Zealand</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <Image src="/DashboardPage/intake.svg" width={20} height={20} alt="intake" />
+                                                            <p className="text-sm">2024</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <Image src="/clock.svg" width={20} height={20} alt="Duration" />
+                                                            <p className="text-sm">4 Years</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <Image src="/money.svg" width={20} height={20} alt="Tuition Fee" />
+                                                            <p className="text-sm">$ 53,122</p>
+                                                        </div>
+                                                        
+                                                    </div>
                             <Button className='text-white bg-[#C7161E] w-full mt-2'>
                             Course Details</Button>
                         </div>
