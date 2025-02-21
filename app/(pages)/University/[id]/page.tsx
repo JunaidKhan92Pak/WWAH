@@ -9,6 +9,7 @@ import GalwayCampuslife from './components/GalwayCampuslife';
 import AboutGalway from './components/AboutGalway';
 import Exploresection from './components/Exploresection';
 import Herosec from './components/Herosec';
+import { HeroSkeleton } from '@/components/HeroSkeleton';
 
 type Tab = {
   label: string;
@@ -125,10 +126,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     };
     if (id) fetchData();
   }, [id]);
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <HeroSkeleton />;
   if (error) return <p>Error: {error}</p>;
   if (!data || !data.universityData) return <p>Course Not Found</p>;
-
   return (
     <div>
       <Herosec data={data.universityData} />
