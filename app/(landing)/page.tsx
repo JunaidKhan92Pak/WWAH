@@ -112,7 +112,7 @@ function Page() {
                   {
                     text: "Find Universities",
                     imageUrl: "/Map-Point-School--Streamline-Solar-Broken.svg",
-                    href: "/universityarchive",
+                    href: "/Universities",
                   },
                   {
                     text: "Find Scholarships",

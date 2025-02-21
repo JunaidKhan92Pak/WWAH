@@ -2,25 +2,32 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { University } from "@/models/universities"; // Your defined University model
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
         // Establish database connection
         await connectToDatabase();
-        // const { searchParams } = new URL(req.url);
-        // const limit = Math.max(1, parseInt(searchParams.get("limit") || "12", 10));
+        const { searchParams } = new URL(req.url);
+        const search = searchParams.get("search")?.trim() || "";
+        const countryFilter = searchParams.get("countryFilter")
+            ?.split(",")
+            .map((c) => c.trim().toLowerCase())
+            .filter((c) => c !== "") || []; // Ensure it's always an array
+        const query: Record<string, unknown> = {};
+        const textSearchSupported = await University.collection.indexExists("university_name_text");
+        if (search) {
+            if (textSearchSupported) {
+                query.$text = { $search: search };
+            } else {
+                const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
+                query.university_name = { $regex: new RegExp(escapeRegex(search), "i") };
+            }
+        }
 
-        // const countryFilter = searchParams.get("countryFilter")
-        //     ?.split(",")
-        //     .map((c) => c.trim().toLowerCase())
-        //     .filter((c) => c !== "") || []; // Ensure it's always an array
-        // const query: Record<string, unknown> = {};
-
-        // if (countryFilter.length > 0) {
-        //     query.countryname = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
-        // }
-
+        if (countryFilter.length > 0) {
+            query.country_name = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
+        }
         // Fetch all universities from the database
-        const universities = await University.find({})
+        const universities = await University.find(query)
             .select("_id  university_name   country_name acceptance_rate universityImages.banner ranking universityImages.logo ") // 
             .lean();
         // Return a successful response with the fetched universities

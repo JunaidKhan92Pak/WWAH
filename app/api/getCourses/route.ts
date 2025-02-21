@@ -8,7 +8,6 @@ export async function GET(req: Request) {
 
     // Parse search parameters
     const { searchParams } = new URL(req.url);
-    console.log(searchParams, "url");
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 12));
     const limit = Math.max(1, parseInt(searchParams.get("limit") || "12", 10));
     const search = searchParams.get("search")?.trim() || "";
