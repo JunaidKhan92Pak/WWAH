@@ -22,7 +22,7 @@ function Page() {
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
-  console.log(selectedValues);
+  // console.log(selectedValues);
   // Suspense will handle this
   const features = [
     {
