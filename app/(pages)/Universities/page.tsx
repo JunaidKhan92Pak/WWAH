@@ -86,7 +86,7 @@ const Page = () => {
                         <Link
                             target="_blank"
                             rel="noopener noreferrer"
-                            href={`/University/${item._id}`} key={item._id}>
+                            href={`/Universities/${item._id}`} key={item._id}>
                             <div className="bg-white shadow-xl rounded-2xl overflow-hidden p-3">
                                 <div className="relative h-[200px]">
                                     <div className="absolute top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
