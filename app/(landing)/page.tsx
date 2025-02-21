@@ -371,6 +371,7 @@ function Page() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {universities.map((uni, index) => (
                 <Card
+
                   key={index}
                   className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                 >
