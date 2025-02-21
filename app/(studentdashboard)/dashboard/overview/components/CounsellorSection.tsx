@@ -6,7 +6,7 @@ const CounsellorSection = () => {
   return (
     <>
       <div className='justify-center items-center flex flex-col text-center pt-8'>
-        <p className='font-semibold'>Your Designated Counsellor</p>
+        <p className='font-semibold text-lg md:text-xl'>Your Designated Counsellor</p>
         <div className='my-6'>
           <Image
             src="/DashboardPage/Objects.svg"
@@ -16,10 +16,10 @@ const CounsellorSection = () => {
             className="rounded-full mx-auto"
           />
         </div>
-        <p className='font-semibold'>FATIMA KHAN</p>
-        <p className='text-base text-[#313131]'>fatimakhan@gmail.com</p>
-        <p className='px-4 py-2 text-base bg-[#FCE7D2] text-[#C7161E] my-3'>Study Abroad Advisor</p>
-        <p className='text-base text-center mb-6'>With extensive experience in  guiding students
+        <p className='font-semibold text-lg md:text-xl'>FATIMA KHAN</p>
+        <p className='text-[#313131] text-lg'>fatimakhan@gmail.com</p>
+        <p className='px-6 py-2 bg-[#FCE7D2] text-[#C7161E] my-4'>Study Abroad Advisor</p>
+        <p className='mb-12 text-lg'>With extensive experience in  guiding students
           toward their  dream universities, Fatima speci-
           alizes in personalized support, from application
           processes to visa assistance.</p>
@@ -33,7 +33,7 @@ const CounsellorSection = () => {
           />
           Chat with Fatima</Button>
 
-        <p className='my-2'>OR</p>
+        <p className='my-4'>OR</p>
 
         <Button className='text-white bg-[#C7161E]'>
           <Image

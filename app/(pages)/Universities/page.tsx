@@ -122,7 +122,6 @@ const Page = () => {
                         </Link>
                     ))}
                 </div>
-
             )}
         </section>
     );

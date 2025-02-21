@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       "res.cloudinary.com",
       "encrypted-tbn1.gstatic.com",
       "ichef.bbci.co.uk",
+      "flagcdn.com"
     ],
     // Allow images from Cloudinary
   },

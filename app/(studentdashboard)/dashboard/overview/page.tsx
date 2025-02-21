@@ -4,28 +4,35 @@ import React from "react";
 import Herosection from "./components/Herosection";
 import CounsellorSection from "./components/CounsellorSection";
 import ApplyingSection from "./components/ApplyingSection";
-// import PaymentSection from "./components/PaymentSection";
-// import Accomodationbooking from "./components/Accomodationbooking";
+import Coursesuggestion from "./components/Coursesuggestion";
+import { StatusProgressBar } from "../components/StatusProgressBar";
+
 
 const Page = () => {
-  // const documents = Array(5).fill({
-  //   title: "Asma's Passport",
-  //   dateUploaded: "31 Dec, 2024",
-  // });
+  
 
   return (
     <>
+    <div className="w-[94%] xl:w-[98%] mx-auto overflow-hidden">
       <Herosection />
-      <div className="w-full mx-auto flex flex-col xl:flex-row gap-4  items-center md:items-stretch  mt-4 justify-center">
+      <div className="w-full mx-auto flex flex-col xl:flex-row gap-4  items-center md:items-stretch  my-6 justify-center">
 
-        <div className="w-full xl:w-[70%] rounded-xl border p-4">
-          <ApplyingSection />
+  <div className="w-full xl:w-[70%] rounded-xl border  p-4 flex flex-col space-y-4">
+    <ApplyingSection />
+    <div className="flex flex-col items-center justify-center">
+          <div className="w-full">
+            <StatusProgressBar progress={70} />
+          </div>
         </div>
-        <div className="w-full xl:w-[30%] rounded-xl border p-4">
-          <CounsellorSection />
-        </div>
+    <Coursesuggestion />
+
+  </div>
+  <div className="w-full xl:w-[30%] rounded-xl border p-4">
+    <CounsellorSection />
+  </div>
 
 
+      </div>
       </div>
     </>
   );
