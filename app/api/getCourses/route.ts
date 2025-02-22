@@ -17,8 +17,6 @@ export async function GET(req: Request) {
     const intakeYear = searchParams.get("intakeYear") || "";
     const studyMode = searchParams.get("studyMode") || "";
     const university = searchParams.get("selectedUniversity") || "";
-    const uni = searchParams.get("uni");
-    const level = searchParams.get("level");
     const subject = searchParams.get("subject");
     const searchCourse = searchParams.get("searchCourse");
     const minBudget = parseFloat(searchParams.get("minBudget") || "0");
@@ -64,12 +62,6 @@ export async function GET(req: Request) {
     // ✅ **Properly Filter Country (if countryFilter has values)**
     if (countryFilter.length > 0) {
       query.countryname = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
-    }
-    if (uni) {
-      query.universityname = { $regex: new RegExp(uni, "i") }; // Case-insensitive match
-    }
-    if (level) {
-      query.education_level = { $regex: new RegExp(level, "i") }; // Case-insensitive match
     }
     if (subject) {
       query.course_title = { $regex: new RegExp(subject, "i") }; // Case-insensitive match
