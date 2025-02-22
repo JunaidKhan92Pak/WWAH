@@ -30,15 +30,13 @@ import { useState, ChangeEvent, useEffect, useRef } from "react";
 import { useCourseStore } from "@/store/useCoursesStore";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 export default function FilterContent() {
-  const { universities, fetchUniversities } = useUniversityStore();
-  const {
-    minBudget, maxBudget, setMinBudget, setMaxBudget,
+  const { universities, search, setSearch, setCountry, fetchUniversities, loading } = useUniversityStore();
+  const { minBudget, maxBudget, setMinBudget, setMaxBudget,
     selectedUniversity, setSelectedUniversity, studyMode, setStudyMode,
     countryFilter, setCountryFilter, studyLevel, setStudyLevel,
     intakeYear, setIntakeYear
   } = useCourseStore()
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchTermUni, setSearchTermUni] = useState("");
   const studyDestinations = ["USA", "United Kingdom", "Canada", "Australia", "Germany"];
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -47,14 +45,17 @@ export default function FilterContent() {
     if (destination === "All") {
       if (countryFilter.length === studyDestinations.length) {
         setCountryFilter([]); // Uncheck all
+
       } else {
         setCountryFilter(studyDestinations); // Select all
+
       }
     } else {
       const updatedSelected = countryFilter.includes(destination)
         ? countryFilter.filter((item) => item !== destination) // Remove if exists
         : [...countryFilter, destination]; // Add if not exists
-      setCountryFilter(updatedSelected); //  Set array directly
+      setCountryFilter(updatedSelected);
+      //  Set array directly
     }
   }
 
@@ -66,17 +67,15 @@ export default function FilterContent() {
     fetchUniversities(); // Fetch universities when component mounts
   }, []);
 
-  const filteredUniversities = universities.filter((uni) =>
-    uni.university_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleSelect = (universityName: string) => {
     setSelectedUniversity(universityName);
-    setSearchTermUni(""); // Clear input after selection
+    setSearch(""); // Clear input after selection
     setIsDropdownOpen(false);
   };
   // Close dropdown when clicking outside
   useEffect(() => {
+    setCountry(countryFilter)
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && event.target instanceof Node && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
@@ -84,8 +83,7 @@ export default function FilterContent() {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
+  }, [countryFilter]);
 
   return (
     <>
@@ -170,9 +168,9 @@ export default function FilterContent() {
         <input
           type="text"
           placeholder="Search or select a university..."
-          value={searchTermUni}
+          value={search}
           onChange={(e) => {
-            setSearchTermUni(e.target.value);
+            setSearch(e.target.value);
             setIsDropdownOpen(true);
           }}
           onFocus={() => setIsDropdownOpen(true)}
@@ -182,18 +180,20 @@ export default function FilterContent() {
         {/* Dropdown List */}
         {isDropdownOpen && (
           <ul className="absolute z-10 w-full bg-white border rounded shadow-md mt-1 max-h-48 overflow-y-auto">
-            {filteredUniversities.length > 0 ? (
-              filteredUniversities.map((uni, index) => (
-                <li
-                  key={index}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleSelect(uni.university_name)}
-                >
-                  {uni.university_name} ({uni.country_name})
-                </li>
-              ))
-            ) : (
-              <li className="p-2 text-gray-500">No universities found</li>
+            {loading ? <li className="text-[16px] mt-2 text-sm text-gray-600">Loading....</li> : (
+              universities.length > 0 ? (
+                universities.map((uni, index) => (
+                  <li
+                    key={index}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSelect(uni.university_name)}
+                  >
+                    {uni.university_name} ({uni.country_name})
+                  </li>
+                ))
+              ) : (
+                <li className="p-2 text-gray-500">No universities found</li>
+              )
             )}
           </ul>
         )}

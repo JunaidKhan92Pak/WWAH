@@ -8,7 +8,7 @@ export async function GET(req: Request) {
         await connectToDatabase();
         const { searchParams } = new URL(req.url);
         const search = searchParams.get("search")?.trim() || "";
-        const countryFilter = searchParams.get("countryFilter")
+        const country = searchParams.get("country")
             ?.split(",")
             .map((c) => c.trim().toLowerCase())
             .filter((c) => c !== "") || []; // Ensure it's always an array
@@ -23,8 +23,8 @@ export async function GET(req: Request) {
             }
         }
 
-        if (countryFilter.length > 0) {
-            query.country_name = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
+        if (country.length > 0) {
+            query.country_name = { $in: country.map((c) => new RegExp(`^${c}$`, "i")) };
         }
         // Fetch all universities from the database
         const universities = await University.find(query)
