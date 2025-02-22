@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton"
 const Page = () => {
-
+    const Countries = ["USA", "China", "Canada", "Italy", "United Kingdom", "Ireland", "New Zealand", "Denmark", "France"]
     const { universities, search, setSearch, country, setCountry, fetchUniversities, loading } = useUniversityStore();
     // Fetch Universities
     useEffect(() => {
@@ -60,16 +60,18 @@ const Page = () => {
                             <ScrollArea className="p-2 ">
                                 <p className="text-[16px]">Countries:</p>
                                 <ul className="py-2 space-y-4">
-                                    {["USA", "China", "Canada", "Italy", "United Kingdom", "Ireland", "New Zealand", "Denmark", "France"].map((country) => (
+                                    {Countries.map((country) => (
                                         <li key={country} className="flex justify-between ">
                                             <div className="flex gap-2">
                                                 <Image src={`/${country.toLowerCase()}.png`} width={30} height={30} alt={country} />
                                                 <label htmlFor={country}>{country}</label>
                                             </div>
                                             <input
-                                                type="checkbox" id={country} value={country}
-                                                checked={country.includes(country)}
-                                                onChange={() => handleCheckboxChange(country)} />
+                                                type="checkbox"
+                                                onChange={() => handleCheckboxChange(country)}
+
+                                                className="mr-2"
+                                            />
                                         </li>
                                     ))}
                                 </ul>
