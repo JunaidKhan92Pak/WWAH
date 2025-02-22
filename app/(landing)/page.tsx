@@ -18,7 +18,8 @@ import { SkeletonCard } from "@/components/skeleton"
 
 function Page() {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-  const { universities, fetchUniversities, loading } = useUniversityStore();
+  const Countries = ["USA", "China", "Canada", "Italy", "United Kingdom", "Ireland", "New Zealand", "Denmark", "France"]
+  const { universities, country, setCountry, fetchUniversities, loading } = useUniversityStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
@@ -50,14 +51,22 @@ function Page() {
         "At WWAH, we are committed to your long-term success. Our career counseling support ensure that you're not only prepared for your studies but also equipped for a successful career.",
     },
   ];
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSelectedValues((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value) // Remove value if it's already stored
-        : [...prev, value] // Add value if it's not already stored
-    );
-  };
+
+  function handleCheckboxChange(destination: string): void {
+    if (destination === "All") {
+      if (country.length === country.length) {
+        setCountry([]); // Uncheck all
+      } else {
+        setCountry(country); // Select all
+      }
+    } else {
+      const updatedSelected = country.includes(destination)
+        ? country.filter((item) => item !== destination) // Remove if exists
+        : [...country, destination]; // Add if not exists
+      setCountry(updatedSelected); //  Set array directly
+    }
+  }
+
   return (
     // landing page container starts
     <div className="landingPage">
@@ -183,184 +192,28 @@ function Page() {
             <h3 className="font-bold">Top Universities!</h3>
             <Badge variant="outline" className=" bg-[#F1F1F1]">
               <DropdownMenu>
-                <DropdownMenuTrigger className=" text-sm sm:text-base font-semibold text-gray-600 flex  items-center justify-center gap-2 bg-gray-100 p-2">Filter
-                  <Image
-                    src="/favi.png"
-                    width={20} // Adjust to match screenshot
-                    height={20}
-                    alt="filter"
-                  // className="2xl:w-[32px] 2xl:h-[32px]"
-                  />
+                <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-11">
+                  <Image src="/filterr.svg" width={16} height={16} alt="filter" /> Filter
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="p-2 h-[260px]">
-                  <ScrollArea className="p-2 md:h-full">
-                    <p className="text-md">Countries:</p>
-                    <div className="pr-3">
-                      <ul className="py-2 space-y-4">
-                        <li className="flex justify-between g ">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/usa.png"
-                              width={18}
-                              height={18}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">United States</label>
+                <DropdownMenuContent className="p-2 h-[360px]">
+                  <ScrollArea className="p-2 ">
+                    <p className="text-[16px]">Countries:</p>
+                    <ul className="py-2 space-y-4">
+                      {Countries.map((country) => (
+                        <li key={country} className="flex justify-between ">
+                          <div className="flex gap-2">
+                            <Image src={`/${country.toLowerCase()}.png`} width={30} height={30} alt={country} />
+                            <label htmlFor={country}>{country}</label>
                           </div>
                           <input
                             type="checkbox"
-                            name="usa"
-                            value="usa"
-                            onChange={handleCheckboxChange}
+                            onChange={() => handleCheckboxChange(country)}
+
+                            className="mr-2"
                           />
                         </li>
-                        <li className="flex justify-between ">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/china.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">China</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="china"
-                            value="china"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                        <li className="flex justify-between ">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/canada.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">Canada</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="canada"
-                            value="canada"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                        <li className="flex justify-between ">
-                          <div className="flex  items-center gap-2">
-                            <Image
-                              src="/italy.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">Italy</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="italy"
-                            value="italy"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                        <li className="flex justify-between   gap-2">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/uk.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">United Kingdom</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="uk"
-                            value="uk"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                        <li className="flex justify-between ">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/ireland.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">Ireland</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="ireland"
-                            value="ireland"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                        <li className="flex justify-between ">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/new-zealand.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">New Zealand</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="new zealand"
-                            value="new zealand"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                        <li className="flex justify-between ">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/denmark.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">Denmark</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="denmark"
-                            value="denmark"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                        <li className="flex justify-between ">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/france.png"
-                              width={20}
-                              height={20}
-                              alt="favourite"
-                              className="w-[28px]"
-                            />
-                            <label className="text-[16px]" htmlFor="us">France</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            name="france"
-                            value="france"
-                            onChange={handleCheckboxChange}
-                          />
-                        </li>
-                      </ul>
-                    </div>
+                      ))}
+                    </ul>
                   </ScrollArea>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -369,44 +222,45 @@ function Page() {
           {/* University Cards Grid */}
           {!loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {universities.map((uni, index) => (
-                <Card
+              {universities.length === 0 ? <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">No Universities Found </p> :
+                universities.map((uni, index) => (
+                  <Card
 
-                  key={index}
-                  className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
-                >
-                  {/* University Image */}
-                  <div className="relative h-48">
-                    <Image
-                      src={uni.universityImages.banner}
-                      alt={uni.name}
-                      fill
-                      className="object-cover transition-transform  duration-300 group-hover:scale-105"
-                    />
-                    {/* University Logo Overlay */}
-                    <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-md">
+                    key={index}
+                    className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                  >
+                    {/* University Image */}
+                    <div className="relative h-48">
                       <Image
-                        src={uni.universityImages.logo}
-                        alt={`${uni.university_name} logo`}
-                        width={40}
-                        height={40}
+                        src={uni.universityImages.banner}
+                        alt={uni.name}
+                        fill
+                        className="object-cover transition-transform  duration-300 group-hover:scale-105"
                       />
-                    </div>
-                  </div>
-                  {/* University Details */}
-                  <div className="p-4">
-                    <h6 className="font-semibold  mb-2">{uni.university_name}</h6>
-                    <div className="flex  flex-col  justify-between items-start xl:items-center  text-muted-foreground">
-                      <div className="w-full flex items-center justify-between gap-2">
-                        <p>{uni.country_name}</p>
-                        <p>Public</p>
-
+                      {/* University Logo Overlay */}
+                      <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-md">
+                        <Image
+                          src={uni.universityImages.logo}
+                          alt={`${uni.university_name} logo`}
+                          width={40}
+                          height={40}
+                        />
                       </div>
-                      <p className="w-full">Acceptance Rate: {uni.acceptance_rate}</p>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                    {/* University Details */}
+                    <div className="p-4">
+                      <h6 className="font-semibold  mb-2">{uni.university_name}</h6>
+                      <div className="flex  flex-col  justify-between items-start xl:items-center  text-muted-foreground">
+                        <div className="w-full flex items-center justify-between gap-2">
+                          <p>{uni.country_name}</p>
+                          <p>Public</p>
+
+                        </div>
+                        <p className="w-full">Acceptance Rate: {uni.acceptance_rate}</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
             </div>) :
             (
               <SkeletonCard arr={4} />
