@@ -1,11 +1,63 @@
-import React from 'react'
+"use client";
+import Image from "next/image";
 
 const CompletedApplication = () => {
-  return (
-    <div>
-      <h1>gvhszvxh</h1>
-    </div>
-  )
-}
+  const applicationDetails = [
+    { src: "/location.svg", alt: "Location", text: "New Zealand" },
+    { src: "/DashboardPage/intake.svg", alt: "Intake", text: "2024" },
+    { src: "/clock.svg", alt: "Duration", text: "4 Years" },
+    { src: "/money.svg", alt: "Tuition Fee", text: "$ 53,122" },
+    { src: "/DashboardPage/deadline.svg", alt: "Deadline", text: "February 2025", isDeadline: true },
+  ];
 
-export default CompletedApplication
+  return (
+    <div className="rounded-xl mt-2">
+      <div className="mx-auto rounded-xl border flex gap-4 w-full p-4 ">
+        {["/course1.svg", "/course1.svg"].map((courseImg, index) => (
+          <div key={index} className="flex flex-row w-1/2 gap-4 bg-[#FCE7D280] p-2 rounded-xl ">
+            {/* Course Image */}
+            <Image
+              src={courseImg}
+              alt="courseImg"
+              width={600}
+              height={500}
+              className="w-full h-auto lg:h-48 md:w-[290px] xl:w-[252px] object-cover rounded-2xl"
+            />
+
+            {/* Course Details */}
+            <div className="flex flex-col gap-3 items-start">
+              <p className="font-semibold text-lg">Bachelor of Engineering (Honors) - BE(Hons)</p>
+
+              {/* Information Grid */}
+              <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-nowrap w-full">
+                {applicationDetails.map((item, i) => (
+                  <div key={i} className={`flex items-center gap-2 ${item.isDeadline ? "col-span-2" : ""}`}>
+                    <Image src={item.src} width={18} height={18} alt={item.alt} />
+                    {item.isDeadline ? (
+                      <>
+                        <p className="text-base">Deadline:</p>
+                        <p className="text-base ml-10">{item.text}</p>
+                      </>
+                    ) : (
+                      <p className="text-base">{item.text}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Static Progress Bar */}
+              <div className="relative w-full mt-2">
+                <div className="w-full bg-[#C4E538] rounded-full h-3 relative">
+                  <div className="absolute right-0 top-[-4px] bg-[#C4E538] w-3 h-3 rounded-full"></div>
+                </div>
+                <p className="text-sm text-gray-600 absolute right-0 mt-1">complete</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default CompletedApplication;
