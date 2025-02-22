@@ -83,87 +83,90 @@ const CourseArchive = () => {
         <SkeletonCard arr={12} />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
-          {courses.map((item, idx) => (
-            <div key={idx} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col">
-              <div className="relative">
-                <Image
-                  src="/course1.png"
-                  alt="coursesImg"
-                  width={400}
-                  height={250}
-                  className="w-full h-52 md:h-56 lg:h-60 object-cover"
-                />
-              </div>
-              <div className="p-4 flex-grow">
-                <h3 className="text-base md:text-lg font-bold text-gray-800 truncate">
-                  {item?.course_title}
-                </h3>
-                <div className="grid grid-cols-2 gap-x-2 gap-y-4 mt-3">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/location.png"
-                      alt="location"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4"
-                    />
-                    <p className="text-sm text-gray-600 truncate">{item.countryname}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/year.png"
-                      alt="year"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4"
-                    />
-                    <p className="text-sm text-gray-600 truncate">{item.intake}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/clock.png"
-                      alt="duration"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4"
-                    />
-                    <p className="text-sm text-gray-600 truncate">{item.duration}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/money.png"
-                      alt="fees"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4"
-                    />
-                    <p className="text-sm text-gray-600 truncate">
-                      {item.annual_tuition_fee.currency} {item.annual_tuition_fee.amount}
-                    </p>
+          {courses.length === 0 ? <p className="text-[20px] font-semibold col-span-4 text-center p-4 "> No courses Found </p> :
+            courses.map((item, idx) => (
+              <div key={idx} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col">
+                <div className="relative">
+                  <Image
+                    src="/course1.png"
+                    alt="coursesImg"
+                    width={400}
+                    height={250}
+                    className="w-full h-52 md:h-56 lg:h-60 object-cover"
+                  />
+                </div>
+                <div className="p-4 flex-grow">
+                  <h3 className="text-base md:text-lg font-bold text-gray-800 truncate">
+                    {item?.course_title}
+                  </h3>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-4 mt-3">
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/location.png"
+                        alt="location"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      <p className="text-sm text-gray-600 truncate">{item.countryname}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/year.png"
+                        alt="year"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      <p className="text-sm text-gray-600 truncate">{item.intake}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/clock.png"
+                        alt="duration"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      <p className="text-sm text-gray-600 truncate">{item.duration}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/money.png"
+                        alt="fees"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      <p className="text-sm text-gray-600 truncate">
+                        {item.annual_tuition_fee.currency} {item.annual_tuition_fee.amount}
+                      </p>
+                    </div>
                   </div>
                 </div>
+                <div className="flex justify-around mb-4 mt-auto px-2 gap-2">
+                  <Link
+                    href={`/courses/${item._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[50%] bg-red-500 rounded-lg"
+                  >
+                    <button className="w-full text-white text-sm p-2">Course Details</button>
+                  </Link>
+                  <button className="w-[50%] border border-red-500 text-red-500 text-sm p-2 rounded-lg">
+                    Create Application
+                  </button>
+                </div>
               </div>
-              <div className="flex justify-around mb-4 mt-auto px-2 gap-2">
-                <Link
-                  href={`/courses/${item._id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-[50%] bg-red-500 rounded-lg"
-                >
-                  <button className="w-full text-white text-sm p-2">Course Details</button>
-                </Link>
-                <button className="w-[50%] border border-red-500 text-red-500 text-sm p-2 rounded-lg">
-                  Create Application
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       )}
       <div className="flex justify-center items-center mt-6 gap-2">
-        <Button className="bg-red-400" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>Previous</Button>
-        <span>{`Page ${currentPage} of ${totalPages}`}</span>
-        <Button className="bg-red-400" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}>Next</Button>
+        {courses.length === 0 ? <></> : (<>
+
+          <Button className="bg-red-400" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>Previous</Button>
+          <span>{`Page ${currentPage} of ${totalPages}`}</span>
+          <Button className="bg-red-400" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}>Next</Button></>)}
       </div>
     </section>
   );

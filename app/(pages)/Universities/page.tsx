@@ -84,45 +84,46 @@ const Page = () => {
                 <SkeletonCard arr={12} />
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-2">
-                    {universities.map((item) => (
-                        <Link
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={`/Universities/${item._id}`} key={item._id}>
-                            <div className="bg-white shadow-xl rounded-2xl overflow-hidden p-3">
-                                <div className="relative h-[200px]">
-                                    <div className="absolute top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
-                                        <p className="text-sm font-medium">QS World:</p>
-                                        <p className="text-sm font-semibold">Ranking: {item.ranking[1]?.detail || "N/A"}</p>
+                    {universities.length === 0 ? <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">No Universities Found </p> :
+                        universities.map((item) => (
+                            <Link
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href={`/Universities/${item._id}`} key={item._id}>
+                                <div className="bg-white shadow-xl rounded-2xl overflow-hidden p-3">
+                                    <div className="relative h-[200px]">
+                                        <div className="absolute top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
+                                            <p className="text-sm font-medium">QS World:</p>
+                                            <p className="text-sm font-semibold">Ranking: {item.ranking[1]?.detail || "N/A"}</p>
+                                        </div>
+                                        <Image
+                                            src={item.universityImages?.banner ?? "/banner.jpg"}
+                                            width={400}
+                                            height={250}
+                                            className="h-[180px] w-[400px] object-cover rounded-xl"
+                                            alt={`${item.university_name} Banner`}
+                                        />
+                                        <div className="absolute bottom-1 left-5 w-14 h-14">
+                                            <Image src={item.universityImages?.logo ?? "/banner.jpg"} width={56} height={56} className="rounded-full bg-white border border-black" alt="University Logo" />
+                                        </div>
                                     </div>
-                                    <Image
-                                        src={item.universityImages?.banner ?? "/banner.jpg"}
-                                        width={400}
-                                        height={250}
-                                        className="h-[180px] w-[400px] object-cover rounded-xl"
-                                        alt={`${item.university_name} Banner`}
-                                    />
-                                    <div className="absolute bottom-1 left-5 w-14 h-14">
-                                        <Image src={item.universityImages?.logo ?? "/banner.jpg"} width={56} height={56} className="rounded-full bg-white border border-black" alt="University Logo" />
+                                    <div className="px-4 h-[80px] flex flex-col justify-between">
+                                        <p className="font-bold">{item.university_name}</p>
+                                        <div className="flex justify-between">
+                                            <p className="text-sm text-gray-600">{item.country_name}</p>
+                                            <p className="text-sm text-gray-600">Public</p>
+                                        </div>
+                                    </div>
+                                    <hr className="mx-4 my-3" />
+                                    <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
+                                    <div className="relative bg-[#F1F1F1] rounded-md h-7">
+                                        <div className="bg-[#16C47F] text-white flex items-center justify-center h-7 rounded-r-lg" style={{ width: item.acceptance_rate }}>
+                                            <p className="text-sm font-normal">{item.acceptance_rate}</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="px-4 h-[80px] flex flex-col justify-between">
-                                    <p className="font-bold">{item.university_name}</p>
-                                    <div className="flex justify-between">
-                                        <p className="text-sm text-gray-600">{item.country_name}</p>
-                                        <p className="text-sm text-gray-600">Public</p>
-                                    </div>
-                                </div>
-                                <hr className="mx-4 my-3" />
-                                <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
-                                <div className="relative bg-[#F1F1F1] rounded-md h-7">
-                                    <div className="bg-[#16C47F] text-white flex items-center justify-center h-7 rounded-r-lg" style={{ width: item.acceptance_rate }}>
-                                        <p className="text-sm font-normal">{item.acceptance_rate}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
+                            </Link>
+                        ))}
                 </div>
             )}
         </section>
