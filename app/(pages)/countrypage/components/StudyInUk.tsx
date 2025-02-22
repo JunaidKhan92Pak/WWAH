@@ -1,34 +1,16 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import "swiper/css";
+import { useUniversityStore } from "@/store/useUniversitiesStore";
 
 const StudyInUk = () => {
-  const UniArr = [
-    {
-      universityImage: "/bannerNY.JPG",
-      ranking: "184",
-      logo: "/LogoNY.JPG",
-      universityName: "UNIVERSITY OF YORK",
-    },
-    {
-      universityImage: "/bannerCA.JPG",
-      ranking: "101-105",
-      logo: "/LogoCA.JPG",
-      universityName: "UNIVERSITY OF CREATIVE ARTS",
-    },
-    {
-      universityImage: "/bannerHull.JPG",
-      ranking: "516",
-      logo: "/logoHull.JPEG",
-      universityName: "UNIVERSITY OF HULL",
-    },
-  ];
-  // const sliderArray = ["/edin.png", "/manch.png", "/edin.png", "/manch.png"];
+  const { universities, fetchUniversities, } = useUniversityStore();
+  useEffect(() => {
+    if (universities.length === 0) fetchUniversities();
+  }, [fetchUniversities]);
   const fullText = `
   Studying in the United Kingdom offers a wealth of advantages that make
   it an attractive destination for international students. The UK is
@@ -59,6 +41,7 @@ const StudyInUk = () => {
   those in other countries.`;
 
   const [isExpanded, setIsExpanded] = useState(false);
+  console.log(universities);
 
   return (
     <>
@@ -97,37 +80,22 @@ const StudyInUk = () => {
               msOverflowStyle: "none",
             }}
           >
-            {/* {sliderArray.map((imgSrc, index) => (
+            {universities.map((item) => (
               <div
-                key={index}
-                className="flex-shrink-0 max-w-[300px] md:max-w-[400px] xl:max-w-[500px]"
-              >
-                <Image
-                  src={imgSrc}
-                  alt={`Slide ${index + 1}`}
-                  width={500} 
-                  height={300} 
-                  sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 200vw, 40vw"
-                  className="rounded-xl shadow-lg w-full h-auto"
-                />
-              </div>
-            ))} */}
-            {UniArr.map((course, index) => (
-              <div
-                key={index}
+                key={item._id}
                 className=" bg-white  shadow-xl rounded-2xl overflow-hidden p-1 md:p-3"
               >
                 <div className="relative md:h-[120px] lg:h-[200px]">
                   <div className="absolute top-5 left-0 bg-gradient-to-r from-[#fce7d2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">
                     <p className="md:text-sm text-[10px] font-medium">QS World:</p>
                     <p className="md:text-sm text-[10px] font-semibold">
-                      Ranking: {course.ranking}
+                      Ranking:{item.ranking[0].detail}
                     </p>
                   </div>
 
                   <Image
-                    src={course.universityImage}
-                    alt={course.universityName}
+                    src={item.universityImages.banner}
+                    alt={item.university_name}
                     width={400}
                     height={250}
                     className="lg:h-[180px] lg:w-[400px] md:w-[320px] md:h-[100px] h-[70px] w-[300px] object-cover rounded-xl shadow-2xl border border-black"
@@ -135,8 +103,8 @@ const StudyInUk = () => {
 
                   <div className="absolute lg:bottom-1 -bottom-4 left-3 lg:left-5 w-14 h-14">
                     <Image
-                      src={course.logo}
-                      alt={`${course.universityName} Logo`}
+                      src={item.universityImages.logo}
+                      alt={`${item.university_name}Logo`}
                       width={56}
                       height={56}
                       className="object-fit lg:w-[56px] lg:h-[56px] md:h-[35px] md:w-[35px] w-[30px] h-[30px] rounded-full bg-white border border-gray-200"
@@ -146,15 +114,15 @@ const StudyInUk = () => {
 
                 <div className="md:px-4 lg:h-[40px] flex flex-col justify-between">
                   <div>
-                    {/* <p className="lg:font-bold text-black text-left">{course.universityName}</p> */}
-                    <p className="text-gray-900 text-left text-[10px] leading-3 md:text-[12px] font-semibold lg:text-[14px] p-1 md:p-0">{course.universityName}</p>
+                    {/* <p className="lg:font-bold text-black text-left">{item.universityName}</p> */}
+                    <p className="text-gray-900 text-left text-[10px] leading-3 md:text-[12px] font-semibold lg:text-[14px] p-1 md:p-0">{item.university_name}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <Link href="/uniarchive">
-          <Button className="bg-red-700 mt-3">Explore All Universities</Button></Link>
+          <Link href="/Universities">
+            <Button className="bg-red-700 mt-3">Explore All Universities</Button></Link>
         </div>
       </section>
     </>
