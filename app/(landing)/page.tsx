@@ -17,13 +17,11 @@ import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton"
 
 function Page() {
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const Countries = ["USA", "China", "Canada", "Italy", "United Kingdom", "Ireland", "New Zealand", "Denmark", "France"]
   const { universities, country, setCountry, fetchUniversities, loading } = useUniversityStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
-  console.log(selectedValues);
   // Suspense will handle this
   const features = [
     {
