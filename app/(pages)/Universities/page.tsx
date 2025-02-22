@@ -9,7 +9,7 @@ import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton"
 const Page = () => {
 
-    const { universities, search, setSearch, countryFilter, setCountryFilter, fetchUniversities, loading } = useUniversityStore();
+    const { universities, search, setSearch, country, setCountry, fetchUniversities, loading } = useUniversityStore();
     // Fetch Universities
     useEffect(() => {
         fetchUniversities();
@@ -22,16 +22,16 @@ const Page = () => {
     // Handle Checkbox Changes
     function handleCheckboxChange(destination: string): void {
         if (destination === "All") {
-            if (countryFilter.length === countryFilter.length) {
-                setCountryFilter([]); // Uncheck all
+            if (country.length === country.length) {
+                setCountry([]); // Uncheck all
             } else {
-                setCountryFilter(countryFilter); // Select all
+                setCountry(country); // Select all
             }
         } else {
-            const updatedSelected = countryFilter.includes(destination)
-                ? countryFilter.filter((item) => item !== destination) // Remove if exists
-                : [...countryFilter, destination]; // Add if not exists
-            setCountryFilter(updatedSelected); //  Set array directly
+            const updatedSelected = country.includes(destination)
+                ? country.filter((item) => item !== destination) // Remove if exists
+                : [...country, destination]; // Add if not exists
+            setCountry(updatedSelected); //  Set array directly
         }
     }
 
@@ -68,7 +68,7 @@ const Page = () => {
                                             </div>
                                             <input
                                                 type="checkbox" id={country} value={country}
-                                                checked={countryFilter.includes(country)}
+                                                checked={country.includes(country)}
                                                 onChange={() => handleCheckboxChange(country)} />
                                         </li>
                                     ))}

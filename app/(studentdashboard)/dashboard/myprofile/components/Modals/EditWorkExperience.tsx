@@ -47,8 +47,6 @@ const workExperienceSchema = z.object({
       })
   ),
 });
-
-
 type WorkExperienceForm = z.infer<typeof workExperienceSchema>;
 
 const EditWorkExperience = () => {

@@ -2,19 +2,19 @@ import { create } from "zustand";
 
 interface UniversitiesState {
     universities: any[];
-    countryFilter: string[];
+    country: string[];
     search: string;
     loading: boolean;
     setSearch: (search: string) => void;
     setUniversities: (universities: any[]) => void;
-    setCountryFilter: (countryFilter: string[]) => void;
+    setCountry: (country: string[]) => void;
     fetchUniversities: () => Promise<void>;
 
 }
 
 export const useUniversityStore = create<UniversitiesState>((set, get) => ({
     universities: [],
-    countryFilter: [],
+    country: [],
     loading: true,
     search: "",
     setSearch: (search) => {
@@ -23,27 +23,21 @@ export const useUniversityStore = create<UniversitiesState>((set, get) => ({
     },
     setUniversities: (universities) => {
         set({ universities })
-        // console.log(universities, "Uni");
     },
-    setCountryFilter: (countryFilter) => {
-        set({ countryFilter: Array.isArray(countryFilter) ? countryFilter : [] });
+    setCountry: (country) => {
+        set({ country: Array.isArray(country) ? country : [] });
         get().fetchUniversities(); // Fetch courses when country filter changes
     },
     fetchUniversities: async () => {
         set({ loading: true });
         try {
-            const { search, countryFilter } = get();
+            const { search, country } = get();
             const queryParams = new URLSearchParams({
                 // page: currentPage.toString(),
                 // limit: "12",
             });
-            // const { countryFilter, currentPage, } = get();
-            // const queryParams = new URLSearchParams({
-            //     page: currentPage.toString(),
-            //     limit: "8",
-            // });
-            if (countryFilter.length > 0) {
-                queryParams.append("countryFilter", countryFilter.join(","));
+            if (country.length > 0) {
+                queryParams.append("country", country.join(","));
             }
             if (search) queryParams.append("search", search);
             const res = await fetch(`/api/getUniversities?${queryParams.toString()}`);
