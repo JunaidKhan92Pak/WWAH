@@ -21,7 +21,7 @@ const Page = () => {
 
     return (
         <>
-            <div className="border rounded-xl w-[97%] mx-auto p-2 md:p-8 h-auto  lg:h-[85vh]">
+            <div className="border rounded-xl w-[97%] mx-auto p-2">
                 <h5 className="text-center lg:mb-6">Application Status Tracker</h5>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4  sm:w-[85%] xl:w-[50%]">
 
