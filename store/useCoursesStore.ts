@@ -122,10 +122,6 @@ export const useCourseStore = create<CourseState>((set, get) => ({
             if (minBudget !== null) queryParams.append("minBudget", minBudget.toString());
             if (maxBudget !== null) queryParams.append("maxBudget", maxBudget.toString());
             if (selectedUniversity) queryParams.append("selectedUniversity", selectedUniversity) //  Apply filter if selected
-            // if (uni) queryParams.append("uni", uni);
-            // if (subject) queryParams.append("subject", subject);
-            // if (level) queryParams.append("level", level);
-            // if (searchCourse) queryParams.append("searchCourse", searchCourse);
             if (countryFilter.length > 0) {
                 queryParams.append("countryFilter", countryFilter.join(","));
             }

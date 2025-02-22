@@ -1,37 +1,70 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { useCourseStore } from "@/store/useCoursesStore";
+import { useRouter } from "next/navigation";
 interface CoursesectionProps {
   name: string;
 }
 
 const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
-  const [courseInfo, setCourseInfo] = useState({
-    level: "",
-    subject: "",
-  });
-  const {
-    search, setSearch,
-  } = useCourseStore()
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setCourseInfo({
-      ...courseInfo,
-      [e.target.name]: e.target.value,
-    });
+  const router = useRouter();
+  const { search, setSearch, studyLevel, setStudyLevel, selectedUniversity, setSelectedUniversity } = useCourseStore(); // Zustand state
 
+  // ✅ Initialize local state from Zustand if values exist
+  const [courseInfo, setCourseInfo] = useState({
+    search: search || "",
+    level: studyLevel || "",
+    subject: "",
+    university: selectedUniversity || name || "",
+  });
+
+  // ✅ Sync Zustand values on mount (for back navigation)
+  useEffect(() => {
+    setCourseInfo((prev) => ({
+      ...prev,
+      search: search || "",
+      level: studyLevel || "",
+      university: selectedUniversity || name || "",
+    }));
+  }, []); // Runs only on mount
+
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setCourseInfo((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+
+  // Handle search submission
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(search);
+
+    // ✅ Update Zustand states when the form is submitted
+    if (courseInfo.search.trim()) {
+      setSearch(courseInfo.search);
+    } else {
+      setSearch(""); // ✅ Allows clearing Zustand state
+    }
+
+    setStudyLevel(courseInfo.level); // ✅ Update study level in Zustand
+    setSelectedUniversity(courseInfo.university); // ✅ Update selected university in Zustand
+
+    // Build query params dynamically
+    const queryParams = new URLSearchParams();
+    if (courseInfo.search) queryParams.append("search", courseInfo.search);
+    if (courseInfo.level) queryParams.append("studyLevel", courseInfo.level);
+    if (courseInfo.subject) queryParams.append("subject", courseInfo.subject);
+    if (courseInfo.university) queryParams.append("university", courseInfo.university);
+
+    // Navigate to search results page
+    router.push(`/coursearchive?${queryParams.toString()}`);
   };
-  // console.log(search);
   return (
     <div>
       {/* Course Section */}
@@ -42,8 +75,8 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
           <div className="">
             <h2 className="text-gray-800 mb-2 md:mb-6">Find your Course!</h2>
             {/* Dropdowns and Search Bar */}
-            <div className="md:space-y-4">
-              <form onSubmit={handleSearch}>
+            <form className="md:space-y-4" onSubmit={handleSearch}>
+              <div>
                 {/* Dropdowns for Study Level and Subject */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* study level */}
@@ -95,44 +128,27 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                 <div className="flex items-center border rounded-lg shadow-sm gap-2 px-3 py-1 bg-gray-100 m-4">
                   <CiSearch className=" text-gray-400 " />
                   <Input
-                    value={search}
-                    name="searchCourse"
-                    onChange={(e) => setSearch(e.target.value)}
+                    value={courseInfo.search}
+                    name="search"
+                    onChange={handleChange}
                     placeholder="Write course name..."
                     className="flex-1 border-none focus:ring-0 focus:outline-none outline:none bg-gray-100"
                   />
-                  <Link
+                  <Button
+                    type="submit"
                     className="hover:underline font-bold text-[#F0851D]"
-                    href={{
-                      pathname: "/coursearchive",
-                      query: {
-                        // selectedUniversity: name,
-                        // studyLevel: courseInfo.level,
-                        // subject: courseInfo.subject,
-                        search: search,
-                      }, // Pass the university ID
-                    }}
-                    target="_blank"
-                    rel="noopener noreferrer"
                   >
                     Search
-                  </Link>
+                  </Button>
                 </div>
-              </form>
+              </div>
               {/* View All Courses Button */}
-              <Link
-                href={{
-                  pathname: "/coursearchive",
-                  query: { selectedUniversity: name }, // Pass the university ID
-                }}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button className="w-full sm:w-auto mt-2 sm:mt-0 bg-[#C7161E] text-white sm:py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 ">
-                  View All Courses!
-                </Button>
-              </Link>
-            </div>
+
+              <Button type="submit" className="w-full sm:w-auto mt-2 sm:mt-0 bg-[#C7161E] text-white sm:py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 ">
+                View All Courses!
+              </Button>
+
+            </form>
           </div>
           {/* Right Side: Image */}
           <div className="relative rounded-3xl overflow-hidden shadow-lg w-[90%] h-[250px] md:h-[200px] lg:h-[300px]  2xl:h-[600px]">

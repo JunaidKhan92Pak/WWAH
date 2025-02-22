@@ -14,7 +14,6 @@ import Link from "next/link";
 import { useCourseStore } from "@/store/useCoursesStore";
 import FilterComponent from "./components/Filtercomponent";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation";
 import { SkeletonCard } from "@/components/skeleton"
 const Page = () => {
   return (
@@ -31,15 +30,9 @@ const CourseArchive = () => {
     setPage, loading, fetchCourses
   } = useCourseStore();
 
-  const searchParams = useSearchParams();
-  const universityName = searchParams.get("uni");
-  const subject = searchParams.get("subject");
-  const level = searchParams.get("level");
-  const searchCourse = searchParams.get("searchCourse");
-
   useEffect(() => {
     fetchCourses();
-  }, [universityName, subject, level, searchCourse]);
+  }, []);
 
   return (
     <section className="w-full p-4 md:p-8">
