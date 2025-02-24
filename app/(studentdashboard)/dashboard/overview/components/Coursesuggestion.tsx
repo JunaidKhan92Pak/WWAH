@@ -36,7 +36,7 @@ const Coursesuggestion = () => {
     return (
         <>   <div className="w-full rounded-xl border p-4">
 
-<p className='font-semibold text-lg md:text-2xl'>Suggested Courses</p>
+<p className='font-semibold text-lg md:text-xl'>Suggested Courses</p>
             <div className="relative w-full flex justify-center overflow-hidden">
           <div
             className="flex overflow-x-auto space-x-4 hide-scrollbar"
@@ -47,16 +47,16 @@ const Coursesuggestion = () => {
           >
                 {courses.map((course) => (
                     <div key={course.id} 
-                    className="relative w-[80%] xl:w-[70%] flex flex-col md:flex-row space-x-4 space-y-4 flex-shrink-0 rounded-3xl border p-4 overflow-hidden"
+                    className="relative w-2/3 sm:w-1/2 md:w-[70%] lg:w-[85%] flex flex-col md:flex-row gap-4 flex-shrink-0  rounded-3xl border p-4 overflow-hidden"
 >
                             <Image
                                                        src="/course1.svg"
                                                        alt="courseImg"
                                                        width={400}
                                                        height={250}
-                                                       className="w-full h-auto md:h-48 md:w-[250px] xl:w-[240px]  object-cover rounded-2xl"
+                                                       className=" h-auto md:h-48 w-[259px] md:w-[240px]  object-cover rounded-2xl"
                                                    />
-                        <div>
+                        <div className='flex flex-col justify-between' >
                             <h3 className="font-medium text-lg">
                                 {course.title}
                             </h3>
@@ -79,7 +79,7 @@ const Coursesuggestion = () => {
                                                         </div>
                                                         
                                                     </div>
-                            <Button className='text-white bg-[#C7161E] w-full mt-2'>
+                            <Button className='text-white bg-[#C7161E] hover:bg-[#C7161E] w-full mt-2'>
                             Course Details</Button>
                         </div>
                      
