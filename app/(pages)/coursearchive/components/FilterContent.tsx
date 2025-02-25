@@ -1,5 +1,5 @@
 "use client";
-import { useState, ChangeEvent, useEffect, useRef, useCallback } from "react";
+import { useState, ChangeEvent, useEffect, useRef, useCallback, useMemo } from "react";
 import { debounce } from "lodash";
 import { useCourseStore } from "@/store/useCoursesStore";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
@@ -40,19 +40,15 @@ export default function FilterContent() {
     setStudyLevel,
     intakeYear,
     setIntakeYear,
-
   } = useCourseStore();
 
-  // Local state for budget inputs to allow immediate UI feedback
   const [localMinBudget, setLocalMinBudget] = useState(minBudget || 0);
   const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget || 100000);
-
   const [searchTerm, setSearchTerm] = useState("");
-  const studyDestinations = ["USA", "United Kingdom", "Canada", "Australia", "Germany"];
+  const studyDestinations = useMemo(() => ["USA", "United Kingdom", "Canada", "Australia", "Germany"], []);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  // Debounced functions for updating the global budget state
   const debouncedUpdateMinBudget = useCallback(
     debounce((value: number) => {
       setMinBudget(value);
@@ -67,7 +63,7 @@ export default function FilterContent() {
     [setMaxBudget]
   );
 
-  function handleCheckboxChange(destination: string): void {
+  const handleCheckboxChange = useCallback((destination: string) => {
     if (destination === "All") {
       if (countryFilter.length === studyDestinations.length) {
         setCountryFilter([]); // Uncheck all
@@ -80,33 +76,34 @@ export default function FilterContent() {
         : [...countryFilter, destination]; // Add if not exists
       setCountryFilter(updatedSelected);
     }
-  }
+  }, [countryFilter, setCountryFilter, studyDestinations]);
 
-  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
+  const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
-  }
+  }, []);
 
   useEffect(() => {
     if (universities.length === 0) {
-      fetchUniversities(); // Fetch only if the list is empty
+      fetchUniversities().catch((error) => {
+        console.error("Failed to fetch universities:", error);
+        // Display an error message to the user
+      });
     }
-  }, []);
+  }, [fetchUniversities, universities.length]);
 
-  const handleSelect = (universityName: string) => {
+  const handleSelect = useCallback((universityName: string) => {
     setSelectedUniversity(universityName);
     setSearch(""); // Clear input after selection
     setIsDropdownOpen(false);
-  };
+  }, [setSelectedUniversity, setSearch]);
 
-  // Debounce the update of the country filter
   useEffect(() => {
     const handler = setTimeout(() => {
       setCountry(countryFilter);
     }, 500);
     return () => clearTimeout(handler);
-  }, [countryFilter]);
+  }, [countryFilter, setCountry]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && event.target instanceof Node && !dropdownRef.current.contains(event.target)) {
@@ -120,16 +117,14 @@ export default function FilterContent() {
   return (
     <div className="space-y-6 p-6 bg-gray-50 rounded-lg">
       {/* Study Destinations */}
-      <section className="w-full p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-        <label className="block text-lg font-semibold text-gray-800 mb-4">
-          Study Destination
-        </label>
+      <FilterSection title="Study Destination">
         <input
           type="text"
           placeholder="Search Study Destinations..."
           value={searchTerm}
           onChange={handleSearch}
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400 text-sm"
+          aria-label="Search Study Destinations"
         />
         <div className="mt-4 space-y-3">
           <label className="flex items-center space-x-3">
@@ -138,6 +133,7 @@ export default function FilterContent() {
               checked={countryFilter.length === studyDestinations.length}
               onChange={() => handleCheckboxChange("All")}
               className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+              aria-label="Select All Destinations"
             />
             <span className="text-gray-700">All</span>
           </label>
@@ -152,16 +148,16 @@ export default function FilterContent() {
                   checked={countryFilter.includes(destination)}
                   onChange={() => handleCheckboxChange(destination)}
                   className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                  aria-label={`Select ${destination}`}
                 />
                 <span className="text-gray-700">{destination}</span>
               </label>
             ))}
         </div>
-      </section>
+      </FilterSection>
 
       {/* Study Level */}
-      <section className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Study Level</h3>
+      <FilterSection title="Study Level">
         <div className="space-y-3">
           <label className="flex items-center space-x-3">
             <input
@@ -171,6 +167,7 @@ export default function FilterContent() {
               checked={studyLevel === ""}
               onChange={() => setStudyLevel("")}
               className="form-radio h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+              aria-label="None"
             />
             <span className="text-gray-700">None</span>
           </label>
@@ -183,12 +180,13 @@ export default function FilterContent() {
                 checked={studyLevel === level}
                 onChange={() => setStudyLevel(level)}
                 className="form-radio h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+                aria-label={`Select ${level}`}
               />
               <span className="text-gray-700">{level}</span>
             </label>
           ))}
         </div>
-      </section>
+      </FilterSection>
 
       {/* Filter by University */}
       <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100 relative" ref={dropdownRef}>
@@ -203,6 +201,7 @@ export default function FilterContent() {
           }}
           onFocus={() => setIsDropdownOpen(true)}
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400 text-sm"
+          aria-label="Search or select a university"
         />
         {isDropdownOpen && (
           <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-md mt-2 max-h-48 overflow-y-auto">
@@ -214,6 +213,8 @@ export default function FilterContent() {
                   key={index}
                   className="p-3 hover:bg-gray-50 cursor-pointer text-gray-700"
                   onClick={() => handleSelect(uni.university_name)}
+                  role="option"
+                  aria-selected={selectedUniversity === uni.university_name}
                 >
                   {uni.university_name} ({uni.country_name})
                 </li>
@@ -229,48 +230,46 @@ export default function FilterContent() {
       </div>
 
       {/* Filter by Intake Year */}
-      <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter by Intake Year</h3>
+      <FilterSection title="Filter by Intake Year">
         <select
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
           value={intakeYear}
           onChange={(e) => setIntakeYear(e.target.value)}
+          aria-label="Select Intake Year"
         >
           <option value="">All Years</option>
           {intakeYears.map((year, index) => (
             <option key={index} value={year}>{year}</option>
           ))}
         </select>
-      </div>
+      </FilterSection>
 
       {/* Filter by Intake Month */}
-      <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter by Intake Month</h3>
+      <FilterSection title="Filter by Intake Month">
         <select className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700">
           {intakeMonths.map((month, index) => (
             <option key={index} value={month}>{month}</option>
           ))}
         </select>
-      </div>
+      </FilterSection>
 
       {/* Filter by Mode of Study */}
-      <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter by Mode of Study</h3>
+      <FilterSection title="Filter by Mode of Study">
         <select
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
           value={studyMode}
           onChange={(e) => setStudyMode(e.target.value)}
+          aria-label="Select Mode of Study"
         >
           <option value="">All Modes</option>
           {studyModes.map((mode, index) => (
             <option key={index} value={mode}>{mode}</option>
           ))}
         </select>
-      </div>
+      </FilterSection>
 
       {/* Filter by Budget */}
-      <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter by Budget</h3>
+      <FilterSection title="Filter by Budget">
         <label className="block text-sm font-medium text-gray-700 mb-2">Select Currency</label>
         <select className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700">
           {currencies.map((currency, index) => (
@@ -290,6 +289,7 @@ export default function FilterContent() {
                 setLocalMinBudget(value);
                 debouncedUpdateMinBudget(value);
               }}
+              aria-label="Enter Minimum Budget"
             />
           </div>
           <div>
@@ -304,6 +304,7 @@ export default function FilterContent() {
                 setLocalMaxBudget(value);
                 debouncedUpdateMaxBudget(value);
               }}
+              aria-label="Enter Maximum Budget"
             />
           </div>
           {/* Min-Max Range Bar */}
@@ -315,9 +316,9 @@ export default function FilterContent() {
             </div>
             <input
               type="range"
-              min={5000}
+              min={0}
               max={50000}
-              step={500}
+              step={100}
               value={localMinBudget}
               onChange={(e) => {
                 const value = Number(e.target.value);
@@ -325,12 +326,13 @@ export default function FilterContent() {
                 debouncedUpdateMinBudget(value);
               }}
               className="w-full cursor-pointer"
+              aria-label="Select Minimum Budget Range"
             />
             <input
               type="range"
-              min={5000}
+              min={0}
               max={50000}
-              step={500}
+              step={100}
               value={localMaxBudget}
               onChange={(e) => {
                 const value = Number(e.target.value);
@@ -338,10 +340,25 @@ export default function FilterContent() {
                 debouncedUpdateMaxBudget(value);
               }}
               className="w-full cursor-pointer"
+              aria-label="Select Maximum Budget Range"
             />
           </div>
         </div>
-      </div>
+      </FilterSection>
     </div>
+  );
+}
+
+interface FilterSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+function FilterSection({ title, children }: FilterSectionProps) {
+  return (
+    <section className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">{title}</h3>
+      {children}
+    </section>
   );
 }
