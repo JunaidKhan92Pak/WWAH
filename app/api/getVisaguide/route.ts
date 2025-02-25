@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { VisaGuides } from "@/models/visaGuide";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     // Establish database connection
     await connectToDatabase();
