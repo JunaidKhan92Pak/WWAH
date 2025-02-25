@@ -3,11 +3,30 @@ import React, { useEffect, useState } from "react";
 import Hero from "./components/Hero";
 import Faqsection from "./components/Faqsection";
 import Guide from "./components/guide/Guide";
+interface Faq {
+  question: string;
+  answer: string;
+  await_decision: string;
+  Receive_your_visa: string;
+  accommodation: string;
+  prepare_for_arrival: string;
+}
+
 const Page = () => {
   interface VisaGuide {
     country_name: string;
-    faqs: any[];
-    // Add other properties as needed
+    faqs: Faq[];
+    accept_offer: string;
+    online_interview: string;
+    visa_application_process: { title: string; description: string[] }[];
+    submit_application: string;
+    await_decision: string;
+    Receive_your_visa: string;
+    accommodation: string;
+    prepare_for_arrival: string;
+    collect_your_biometric_residence_permit: string;
+    university_enrollment: string;
+
   }
 
   const [visa, setVisa] = useState<VisaGuide | null>(null);

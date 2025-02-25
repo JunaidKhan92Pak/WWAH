@@ -16,7 +16,6 @@ interface DataType {
 }
 
 export const RightSection = ({ data }: { data: DataType }) => {
-  console.log(data, "apps");
 
   const targetRef = useRef<HTMLDivElement>(null);
 
