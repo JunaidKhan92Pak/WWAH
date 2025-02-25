@@ -12,7 +12,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-
 import { IoMailOutline } from "react-icons/io5";
 import { BsPhone } from "react-icons/bs";
 import { CiPen, CiUser } from "react-icons/ci";
@@ -24,7 +23,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const Faqsection = () => {
+interface Faq {
+  question: string;
+  answer: string;
+}
+
+interface FaqsectionProps {
+  faqs: Faq[];
+}
+
+const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
+  // const [visa, setVisa] = useState([]);
   const sliderArray1 = [
     {
       src: "/visaguide/germany.png",
@@ -80,15 +89,6 @@ const Faqsection = () => {
     console.log(e.target.value);
   };
 
-  // const handleDropdownChange = (field: string, value: string) => {
-  //   setUserInfo({
-  //     ...userInfo,
-  //     [field]: value,
-  //   });
-  //   console.log(field, value);
-  //   console.log(userInfo);
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -129,66 +129,16 @@ const Faqsection = () => {
       setIsSubmitting(false);
     }
   };
-
+  // const myfaqs = visa.map((faq) => faq.faqs);
+  console.log(faqs, "faqs");
   return (
     <div>
       <section className="relative flex flex-col justify-center items-center text-center text-white w-full bg-cover bg-center ">
         {/* <div className="absolute inset-0 bg-black opacity-90 z-0"></div> */}
         <div className="w-full">
-          <FAQ
-            title="Frequently Asked Questions:"
-            items={[
-              {
-                question: "What type of visa do I need to study in the UK?",
-                answer:
-                  "The PTE test consists of four modules: Listening, Reading, Writing, and Speaking.",
-              },
-              {
-                question:
-                  "What are the eligibility requirements for a UK student visa?",
-                answer:
-                  "Focus on listening carefully to the instructions and key words. Practice active listening skills, and familiarize yourself with different accents. Time management is crucial.",
-              },
-              {
-                question: "How long does the UK student visa process take?",
-                answer:
-                  "The Reading section includes three reading passages, each with a set of questions. It is designed to test your reading skills and understanding of texts, which range from factual to descriptive.",
-              },
-              {
-                question:
-                  "Can I work while studying in the UK on a student visa?",
-                answer:
-                  "Read the questions first to understand what to look for. Skim the passages for the main ideas, and then scan for specific information. Manage your time wisely, as the section is time-limited.",
-              },
-              {
-                question: "Do I need to attend an interview for the UK visa?",
-                answer:
-                  "The IELTS Writing section consists of two tasks: Task 1 requires you to describe or summarize information from a graph, chart, or diagram. Task 2 requires you to write an essay in response to a question or argument.",
-              },
-              {
-                question: "What is the Immigration Health Surcharge (IHS)?",
-                answer:
-                  "The IELTS Writing section consists of two tasks: Task 1 requires you to describe or summarize information from a graph, chart, or diagram. Task 2 requires you to write an essay in response to a question or argument.",
-              },
-              {
-                question: "How early can I apply for my UK student visa?",
-                answer:
-                  "The IELTS Writing section consists of two tasks: Task 1 requires you to describe or summarize information from a graph, chart, or diagram. Task 2 requires you to write an essay in response to a question or argument.",
-              },
-              {
-                question:
-                  "Can I switch to a work visa after completing my studies in the UK?",
-                answer:
-                  "The IELTS Writing section consists of two tasks: Task 1 requires you to describe or summarize information from a graph, chart, or diagram. Task 2 requires you to write an essay in response to a question or argument.",
-              },
-              {
-                question:
-                  "What happens if my UK student visa application is rejected?",
-                answer:
-                  "The IELTS Writing section consists of two tasks: Task 1 requires you to describe or summarize information from a graph, chart, or diagram. Task 2 requires you to write an essay in response to a question or argument.",
-              },
-            ]}
-          />{" "}
+
+          <FAQ title="Frequently Asked Questions:" items={faqs} />
+
         </div>
       </section>
       <section className="md:py-20 py-10">
@@ -204,7 +154,6 @@ const Faqsection = () => {
             <div
               key={index}
               className="relative flex-shrink-0 max-w-[200px] md:max-w-[400px] 2xl:max-w-[600px]"
-
             >
               <Image
                 src={image.src}
@@ -217,7 +166,9 @@ const Faqsection = () => {
 
               {/* Text Overlay for Larger Screens */}
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-90 rounded-3xl hidden sm:flex flex-col justify-end p-6">
-                <p className="text-white text-lg font-semibold">{image.heading}</p>
+                <p className="text-white text-lg font-semibold">
+                  {image.heading}
+                </p>
               </div>
 
               {/* Text Below the Image for Smaller Screens */}
@@ -237,7 +188,7 @@ const Faqsection = () => {
         }}
       >
         <div className="absolute inset-0 bg-[#FCE7D2] opacity-70 z-0"></div>
-        <div className="flex flex-col md:flex-row w-full py-9 md:px-12 lg:gap-10 sm:gap-0 gap-5">
+        <div className="flex flex-col md:flex-row w-full py-9 md:px-12 lg:gap-10  sm:gap-0 gap-5">
           <div className="relative w-full md:w-1/2">
             <h4 className="text-[#313131] md:text-left text-center font-bold ">
               Get Personalized Help with Your UK Visa Application!
@@ -389,7 +340,6 @@ const Faqsection = () => {
                                     ].map((country) => (
                                       <DropdownMenuItem
                                         key={country}
-                                        // value={userInfo.country}
                                         onSelect={() => setUserInfo({ ...userInfo, country })}
                                       >
                                         {country}
@@ -446,7 +396,6 @@ const Faqsection = () => {
                           </div>
                         </div>
                         <div className="w-full flex flex-col md:flex-row gap-2 text-left">
-
                           {/* destination */}
                           <div className="md:w-1/2">
                             <label className="block text-gray-700 py-2 text-sm">
