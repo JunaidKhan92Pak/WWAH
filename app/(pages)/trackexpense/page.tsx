@@ -16,7 +16,7 @@ import { useExpenseStore } from "@/store/trackexpenes";
 import { BsBagCheck } from "react-icons/bs";
 import { TbCloudStorm } from "react-icons/tb";
 import { IoDiamondOutline } from "react-icons/io5";
-import { set } from "lodash";
+// import { set } from "lodash";
 
 // Static country images
 const images = [
@@ -143,7 +143,7 @@ const Page = () => {
             </div>
             <div className="w-full mx-auto">
               <p className="text-[#313131] text-justify lg:text-center">
-                Planning your study abroad journey? We've made budgeting easy! With our living expense calculator, you can break down your expected costs in no time. Just follow these quick steps to get an accurate snapshot of your monthly expenses for housing, food, transportation, and more.
+                Planning your study abroad journey? We&aposv;e made budgeting easy! With our living expense calculator, you can break down your expected costs in no time. Just follow these quick steps to get an accurate snapshot of your monthly expenses for housing, food, transportation, and more.
               </p>
             </div>
           </div>
