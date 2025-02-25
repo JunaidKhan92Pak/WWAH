@@ -98,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeStep, onStepClick }) => {
         {steps.map((step, index) => (
           <li key={step.id} className="cursor-pointer rounded">
             <div
-              className={`cursor-pointer flex items-center justify-evenly lg:gap-4 lg:p-3 ${
+              className={`cursor-pointer flex items-center gap-4 p-3 ${
                 step.id === activeStep ? "bg-[#C7161E] text-white" : "bg-white"
               }`}
               onClick={() => {

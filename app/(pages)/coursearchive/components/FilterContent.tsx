@@ -52,14 +52,14 @@ export default function FilterContent() {
   const debouncedUpdateMinBudget = useCallback(
     debounce((value: number) => {
       setMinBudget(value);
-    }, 300),
+    }, 500),
     [setMinBudget]
   );
 
   const debouncedUpdateMaxBudget = useCallback(
     debounce((value: number) => {
       setMaxBudget(value);
-    }, 300),
+    }, 500),
     [setMaxBudget]
   );
 
