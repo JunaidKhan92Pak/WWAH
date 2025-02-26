@@ -15,10 +15,18 @@ export default function Home() {
     });
     const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
+    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const files = e.target.files;
+    //     if (files && files.length > 0) {
+    //         setFile(files[0]);
+    //         setError(null);
+    //     }
+    // };
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files && files.length > 0) {
             setFile(files[0]);
+            e.target.value = ""; // ✅ Reset input
             setError(null);
         }
     };
@@ -48,7 +56,7 @@ export default function Home() {
                 university: normalizedData,
             }));
             setError(null);
-            console.log(parsedData);
+
 
             if (normalizedData.length === 0) {
                 setError("The file does not contain any university.");
