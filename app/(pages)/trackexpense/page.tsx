@@ -68,7 +68,7 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({ iconSrc, label, cost, bgC
 );
 
 const Page = () => {
-  const { expenses, loading, error, university, setUniversity, fetchExpenses } = useExpenseStore();
+  const { expenses, loading, error, setUniversity, fetchExpenses } = useExpenseStore();
   const { universities, fetchUniversities } = useUniversityStore();
   // Fetch universities on mount
   useEffect(() => {
