@@ -16,7 +16,7 @@ import { useExpenseStore } from "@/store/trackexpenes";
 import { BsBagCheck } from "react-icons/bs";
 import { TbCloudStorm } from "react-icons/tb";
 import { IoDiamondOutline } from "react-icons/io5";
-// import { set } from "lodash";
+
 
 // Static country images
 const images = [
@@ -68,12 +68,8 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({ iconSrc, label, cost, bgC
 );
 
 const Page = () => {
-  const { expenses, loading, error, setUniversity, fetchExpenses } = useExpenseStore();
+  const { expenses, loading, error, university, setUniversity, fetchExpenses } = useExpenseStore();
   const { universities, fetchUniversities } = useUniversityStore();
-
-  // Set filters and fetch expenses when the component mounts
-
-
   // Fetch universities on mount
   useEffect(() => {
     fetchUniversities();
@@ -83,13 +79,11 @@ const Page = () => {
   const [selectedLifestyle, setSelectedLifestyle] = useState("student_budget");
   const selectedData =
     expenses && expenses[0]?.lifestyles.find((life) => life.type === selectedLifestyle);
-
   // University search and dropdown state
   const [searchTermUni, setSearchTermUni] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-
   // Memoize filtered universities for performance
   const filteredUniversities = useMemo(() => {
     return universities.filter((uni) =>
@@ -100,18 +94,20 @@ const Page = () => {
   }, [universities, selectedCountry, searchTermUni]);
 
   const handleSelectUniversity = useCallback((universityName: string) => {
-    setUniversity(universityName);
     setSearchTermUni(universityName);
     setIsDropdownOpen(false);
+    setUniversity(universityName);
+    fetchExpenses();
+
   }, []);
 
   const handleSelectCountry = useCallback((country: string) => {
     setSelectedCountry((prev) => (prev === country ? null : country));
     setSearchTermUni(""); // Reset search when country changes
   }, []);
-  useEffect(() => {
-    fetchExpenses();
-  }, [handleSelectUniversity]);
+
+  const [showData, setShowData] = useState(false);
+
   return (
     <>
       <section className="w-full mx-auto mt-5">
@@ -261,7 +257,6 @@ const Page = () => {
                     </button>
                   </div>
                 </div>
-
                 {/* Lifestyle Selection */}
                 <div>
                   <h5 className="text-gray-800 mt-4 mb-2">Lifestyle</h5>
@@ -272,8 +267,7 @@ const Page = () => {
                         return (
                           <button
                             key={lifestyle.type}
-                            className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${lifestyle.type === "luxury_lifestyle" ? "col-span-2" : "col-span-1"
-                              } ${selectedLifestyle === lifestyle.type ? "bg-gray-100" : "bg-none"}`}
+                            className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${lifestyle.type === "luxury_lifestyle" ? "col-span-2" : "col-span-1"} ${selectedLifestyle === lifestyle.type ? "bg-gray-100" : "bg-none"}`}
                             onClick={() => setSelectedLifestyle(lifestyle.type)}
                           >
                             <LifestyleIcon className="w-8 h-8 mb-2 text-gray-700" />
@@ -285,19 +279,22 @@ const Page = () => {
                       })}
                   </div>
                 </div>
-
                 <div className="w-full flex items-center justify-center">
-                  <Button className="px-8 mt-3 sm:mt-2 bg-red-700">Calculate</Button>
+                  <Button
+                    className="px-8 mt-3 sm:mt-2 bg-red-700"
+                    onClick={() => setShowData(true)}
+                  >
+                    Calculate
+                  </Button>
                 </div>
+                {/* Right Section - Results */}
               </div>
-
-              {/* Right Section - Results */}
               <div className="flex flex-col justify-around w-full md:w-[50%] bg-white px-2 md:p-6 rounded-lg">
                 {loading ? (
                   <p>Loading expenses...</p>
                 ) : error ? (
                   <p className="text-red-500">Error: {error}</p>
-                ) : selectedData ? (
+                ) : showData && selectedData ? (
                   <>
                     <div>
                       <h4 className="w-full md:w-4/5 font-bold text-gray-800 my-4">
@@ -318,8 +315,7 @@ const Page = () => {
                       <h3 className="font-bold text-center pt-4 sm:py-6">Breakdown</h3>
                       <div
                         className="flex overflow-x-auto md:grid md:grid-cols-3 gap-3 lg:gap-y-8 gap-y-3 lg:px-4 sm:py-6 py-4 rounded-lg"
-                        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                      >
+                        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                         <BreakdownItem
                           iconSrc="/trackexpense/rent.png"
                           label="Rent"
@@ -366,6 +362,7 @@ const Page = () => {
                     </div>
                   </>
                 ) : (
+
                   <p>No expense data available.</p>
                 )}
               </div>
