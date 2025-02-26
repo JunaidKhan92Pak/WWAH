@@ -17,10 +17,8 @@ interface CourseState {
     selectedUniversity: string;
     minBudget: number | null;
     maxBudget: number | null;
-    // selectedRange: string;
     setMinBudget: (value: number | null) => void;
     setMaxBudget: (value: number | null) => void;
-    // setSelectedRange: (value: string) => void;
     setSelectedUniversity: (uni: string) => void;
     setIntakeYear: (year: string) => void;
     setStudyMode: (mode: string) => void;
@@ -51,7 +49,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
     studyMode: "",
     minBudget: null,
     maxBudget: null,
-    // selectedRange: "",
+
     setMinBudget: (value) => {
         console.log(value, "MIn");
         set({ minBudget: value })
@@ -62,18 +60,13 @@ export const useCourseStore = create<CourseState>((set, get) => ({
         set({ maxBudget: value })
         get().fetchCourses();
     },
-    // setSelectedRange: (value) => {
-    //     console.log(value, "total");
-    //     set({ selectedRange: value })
-    //     get().fetchCourses();
-    // },
+
     setSelectedUniversity(uni) {
         set({ selectedUniversity: uni })
         get().fetchCourses();
     },
     setStudyMode: (mode) => {
         set({ studyMode: mode });
-        // console.log(mode, "mode");
         get().fetchCourses(); //  Fetch courses when intake year changes
     },
     setIntakeYear: (year) => {
@@ -125,8 +118,6 @@ export const useCourseStore = create<CourseState>((set, get) => ({
             if (countryFilter.length > 0) {
                 queryParams.append("countryFilter", countryFilter.join(","));
             }
-            console.log(search, "ok");
-
             const res = await fetch(`/api/getCourses?${queryParams.toString()}`);
             if (!res.ok) throw new Error(`Failed to fetch: ${res.statusText}`);
             const data = await res.json();
