@@ -12,6 +12,7 @@ import { EnglishRequirement } from './components/EnglishRequirement'
 import { RequiredDocuments } from './components/RequiredDocuments'
 import { ApplicationProcess } from './components/ApplicationProcess'
 import { ExploreSection } from './components/ExploreSection'
+import { HeroSkeleton } from "@/components/HeroSkeleton";
 
 // export default function Page({ params }: { params: { id: string } }) {
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -177,7 +178,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     // };
     fetchData();
   }, [id]); // Add id as a dependency
-  if (loading) return (<p>Loading...</p>)
+  if (loading) return <HeroSkeleton />;
   if (error) return <p>Error: {error}</p>;
   if (!data) return < p > Course Not Found</ p>;
   return (

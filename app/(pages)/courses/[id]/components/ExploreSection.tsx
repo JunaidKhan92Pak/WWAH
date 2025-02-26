@@ -10,12 +10,9 @@ interface ExploreSectionProps {
 
 export const ExploreSection: React.FC<ExploreSectionProps> = ({ data }) => {
     const { universities, fetchUniversities } = useUniversityStore();
-
     useEffect(() => {
         fetchUniversities(); // Fetch universities when component mounts
     }, []);
-
-    console.log(universities);
 
     return (
         <section

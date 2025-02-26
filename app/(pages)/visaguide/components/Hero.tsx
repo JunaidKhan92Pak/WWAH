@@ -1,6 +1,9 @@
 import React from "react";
+interface HeroProps {
+  country: string;
+}
 
-const Hero = () => {
+const Hero: React.FC<HeroProps> = ({ country }) => {
   return (
     <div>
       <section className="w-[90%] mx-auto">
@@ -13,9 +16,12 @@ const Hero = () => {
           <div className="w-4/5 ">
             <div className="flex flex-col items-start md:w-3/5">
               <h1 className="text-left">
-                Your Comprehensive Guide to the UK Visa Application Process!
+                Your Comprehensive Guide to the {country} Visa Application
+                Process!
               </h1>
-              <p className="py-2">“Step-by-Step Visa Application Process </p>
+              <p className="py-2">
+                &quot;Step-by-Step Visa Application Process&quot;{" "}
+              </p>
             </div>
           </div>
         </div>
@@ -23,5 +29,4 @@ const Hero = () => {
     </div>
   );
 };
-
 export default Hero;

@@ -38,6 +38,8 @@
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.4.1",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.456.0",
     "mongoose": "^8.9.6",
     "next": "^15.1.2",
@@ -59,6 +61,8 @@
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.5",
+    "@types/lodash": "^4.17.15",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^18.3.18",
     "@types/react-day-picker": "^5.3.0",

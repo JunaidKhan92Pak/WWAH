@@ -5,26 +5,53 @@ import Sidebar from "./Sidebar";
 import { RightSection } from "./RightSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const Guide = () => {
+// Define the FAQ type
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+// Define the VisaGuide type
+interface VisaGuide {
+  country_name: string;
+  faqs: FAQ[];
+  accept_offer: string;
+  online_interview: string;
+  visa_application_process: { title: string; description: string[] }[];
+  submit_application: string;
+  await_decision: string;
+  Receive_your_visa: string;
+  accommodation: string;
+  prepare_for_arrival: string;
+  collect_your_biometric_residence_permit: string;
+  university_enrollment: string;
+}
+
+// Use the VisaGuide type for your data prop
+interface GuideProps {
+  data: VisaGuide;
+}
+
+const Guide: React.FC<GuideProps> = ({ data }) => {
   const [activeStep, setActiveStep] = useState(1);
 
- const handleStepClick = (id: number) => {
-   setActiveStep(id);
- };
-  // const activeContent = steps.find((step) => step.id === activeStep);
+  const handleStepClick = (id: number) => {
+    setActiveStep(id);
+  };
+
   return (
-    <div className="w-full flex md:flex-row flex-col justify-around lg:justify-evenly py-5 lg:py-12 lg:px-4   md:gap-0 ">
+    <div className="w-full flex md:flex-row flex-col justify-evenly py-12 px-4 md:gap-0">
       {/* left section */}
-      <ScrollArea className="flex flex-col  border-2 w-full md:w-[25%] rounded-3xl shadow-md items-center h-[790px] md:h-[836px]">
-        <h4 className="pt-2 lg:px-14 md:py-8 flex justify-center items-center text-center">
+      <ScrollArea className="flex flex-col border w-full md:w-[25%] rounded-3xl shadow-md items-center h-[836px]">
+        <h4 className="py-8 lg:px-14 md:py-8 flex justify-center items-center text-center">
           Step by Step Guide!
         </h4>
         <Sidebar activeStep={activeStep} onStepClick={handleStepClick} />
       </ScrollArea>
 
       {/* right section */}
-      <ScrollArea className="border-2 w-full md:w-[65%] rounded-3xl shadow-md  p-2 h-[836px]">
-        <RightSection  />
+      <ScrollArea className="border w-full md:w-[65%] rounded-3xl shadow-md p-2 h-[836px]">
+        <RightSection data={data} />
       </ScrollArea>
     </div>
   );
