@@ -69,7 +69,7 @@ export function StatusProgressBar({ progress }: StatusProgressBarProps) {
         </div>
 
         {/* Labels */}
-        <div className="flex justify-between mt-2 text-[0.5rem] sm:text-xs text-gray-600">
+        <div className="flex justify-between mt-2 text-xs sm:text-sm text-gray-600">
           <span className="text-center">Incomplete</span>
           <span className="text-center">In Process</span>
           <span className="text-center">Complete</span>

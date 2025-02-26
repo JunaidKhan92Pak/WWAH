@@ -8,7 +8,7 @@ interface CircularProgressProps {
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
   progress,
-  size = 120,
+  size = 95,
   strokeWidth = 16,
 }) => {
   const radius = (size - strokeWidth) / 2;

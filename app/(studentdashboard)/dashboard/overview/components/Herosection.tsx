@@ -3,7 +3,7 @@ import Image from "next/image"; // Import the Image component
 
 const Herosection = () => {
   return (
-    <div className="relative">
+    <div className="relative" >
       {/* Large Banner Image */}
       <Image
         src="/DashboardPage/banner.svg"
@@ -18,11 +18,11 @@ const Herosection = () => {
         alt="banner image"
         width={1000}
         height={700}
-        className="block md:hidden object-cover rounded-2xl w-full h-[170px] sm:h-[150px]"
+        className="block md:hidden object-cover rounded-2xl w-full h-[200px] md:h-[150px]"
       />
 
       {/* Text and Small Image in Top Left Corner */}
-      <div className="absolute top-4 sm:top-6 xl:top-9 left-4 sm:left-6 flex flex-col items-start w-[80%] sm:w-[70%] lg:w-[60%]">
+      <div className="absolute top-8 xl:top-9 left-4 sm:left-6 flex flex-col items-start w-[80%] sm:w-[70%] lg:w-[60%]">
         {/* Small Image */}
         <Image
           src="/DashboardPage/handframe.svg" // Path to the smaller image
