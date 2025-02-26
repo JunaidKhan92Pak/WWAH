@@ -22,15 +22,15 @@ const Page = () => {
     return (
         <>
             <div className="border rounded-xl w-[97%] mx-auto p-2">
-                <h5 className="text-center lg:mb-6">Application Status Tracker</h5>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  sm:w-[85%] xl:w-[50%]">
+                <h5 className="text-center mb-4 lg:mb-6">Application Status Tracker</h5>
+                <div className="grid grid-cols-2 gap-4  sm:w-[85%] xl:w-[50%]">
 
 
                     {tabs.map((tab) => (
                         <Button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`transition px-8 font-semibold text-xl py-6 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
+                            className={`transition px-4 font-semibold text-[0.8rem] sm:text-lg py-4 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
                                 ${activeTab === tab.id
                                     ? "bg-[#C7161E] text-white" : "text-gray-600"
                                 }`}
