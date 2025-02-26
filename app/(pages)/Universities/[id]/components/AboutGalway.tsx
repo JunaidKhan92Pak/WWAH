@@ -8,6 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+
 interface AboutGalwayProps {
   city: {
     historical_places: string;
@@ -36,55 +37,81 @@ interface AboutGalwayProps {
 }
 
 const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
-  // Memoize the slides city to prevent unnecessary re-renders
+  // Memoize the slides to prevent unnecessary re-renders
   const slides = React.useMemo(
     () => [
       {
-        images: [`${images?.city_historical_places_1}`, `${images?.city_historical_places_2}`, `${images?.city_historical_places_3}`],
+        images: [
+          images?.city_historical_places_1,
+          images?.city_historical_places_2,
+          images?.city_historical_places_3,
+        ],
         background: "/Aboutbackground.jpg",
         title: "History and Heritage",
-        description: `${city.historical_places}`
+        description: city.historical_places,
       },
       {
-        images: [`${images?.city_food_and_cafe_1}`, `${images?.city_food_and_cafe_2}`, `${images?.city_food_and_cafe_3}`],
+        images: [
+          images?.city_food_and_cafe_1,
+          images?.city_food_and_cafe_2,
+          images?.city_food_and_cafe_3,
+        ],
         background: "/Coffeewerk + Press.jpg",
         title: "Food and Cafe",
-        description: `${city.food_and_cafe}`,
+        description: city.food_and_cafe,
       },
       {
-        images: [`${images?.city_famous_places_1}`, `${images?.city_famous_places_2}`, `${images?.city_famous_places_3}`],
+        images: [
+          images?.city_famous_places_1,
+          images?.city_famous_places_2,
+          images?.city_famous_places_3,
+        ],
         background: "/Galway Cathedral.jpg",
         title: "Famous Places to Visit",
-        description: `${city.famous_places_to_visit.join(" • ")}`,
+        description: city.famous_places_to_visit.join(" • "),
         isList: true,
       },
       {
-        images: [`${images?.city_cultures_1}`, `${images?.city_cultures_2}`, `${images?.city_cultures_3}`],
+        images: [
+          images?.city_cultures_1,
+          images?.city_cultures_2,
+          images?.city_cultures_3,
+        ],
         background: "/Galway Jazz Festival.webp",
         title: "Cultures",
-        description: `${city.cultures}`,
+        description: city.cultures,
       },
       {
-        images: [`${images?.city_transportation_1}`, `${images?.city_transportation_2}`, `${images?.city_transportation_3}`],
+        images: [
+          images?.city_transportation_1,
+          images?.city_transportation_2,
+          images?.city_transportation_3,
+        ],
         background: "/Galway Jazz Festival.webp",
         title: "Transportation",
-        description: `${city.transportation}`,
+        description: city.transportation,
       },
     ],
-    [] // Dependencies array, empty since slides city is static
+    [city, images]
   );
+
+  // Track the current slide and image index within that slide
   const [currentSlide, setCurrentSlide] = React.useState(0);
-  // const [currentImages, setCurrentImages] = React.useState(0); // Track images in the current slide
+  const [currentImages, setCurrentImages] = React.useState(0);
+
   const handleSlideChange = (index: number) => {
     setCurrentSlide(index);
+    setCurrentImages(0); // Reset image index when slide changes
   };
-  // Automatically change the images within each slide every 3 seconds
+
+  // Automatically change images within each slide every 3 seconds
   React.useEffect(() => {
     const interval = setInterval(() => {
-      // setCurrentImages((prevIndex) => (prevIndex + 1) % slides[currentSlide].images.length);
+      setCurrentImages((prevIndex) => (prevIndex + 1) % slides[currentSlide].images.length);
     }, 3000);
-    return () => clearInterval(interval); // Clean up on unmount
-  }, [currentSlide]); // Add 'slides' to the dependency array
+    return () => clearInterval(interval);
+  }, [currentSlide, slides]);
+
   return (
     <div className="py-8">
       <div className="relative text-white py-4 md:py-14 lg:py-20 px-5 md:px-12">
@@ -93,20 +120,20 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
           <Image
             src={slides[currentSlide].background}
             alt="Background Image"
-            layout="fill"
-            objectFit="cover"
-            className="opacity-80"
+            fill
+            className="object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-black opacity-80"></div>
+          <div className="absolute inset-0 bg-black opacity-40"></div>
         </div>
         {/* Carousel Section */}
         <div className="px-2 sm:px-12">
           <Carousel
             className="relative w-full"
-            onChange={(event: React.FormEvent<HTMLDivElement>) => {
-              const index = (event.target as HTMLElement).getAttribute('city-index');
-              if (index) {
-                handleSlideChange(Number(index));
+            onChange={(e: React.FormEvent<HTMLDivElement>) => {
+              // Assuming the Carousel component sets a data attribute 'data-index'
+              const indexStr = (e.target as HTMLElement).getAttribute("data-index");
+              if (indexStr) {
+                handleSlideChange(Number(indexStr));
               }
             }}
           >
@@ -118,9 +145,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                     <div className="w-[95%] sm:w-[80%] lg:w-[25%] 2xl:w-[25%]">
                       <div className="rounded-3xl overflow-hidden shadow-lg">
                         <Image
-                          // src={slide?.images?.[currentImages] ?? "/placeholder.jpg"}
-                          src={'/placeholder.jpg'} // Display the current image from the images array
-                          // Display the current image from the images array
+                          src={slide.images[currentImages] ?? "/placeholder.jpg"}
                           alt={slide.title}
                           width={400}
                           height={300}
@@ -131,13 +156,12 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                     {/* Text Section */}
                     <div className="w-full sm:w-[80%] md:w-[70%] lg:w-[50%] xl:w-[40%] 2xl:w-[40%] space-y-4">
                       <h3>{slide.title}</h3>
-                      {/* Conditionally render the list if isList flag is true */}
                       {slide.isList ? (
                         <ul className="text-gray-300 leading-relaxed list-disc pl-5">
                           {slide.description
                             .split(" • ")
-                            .map((item, index) => (
-                              <li key={index}>{item}</li>
+                            .map((item, idx) => (
+                              <li key={idx}>{item}</li>
                             ))}
                         </ul>
                       ) : (
