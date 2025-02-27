@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 
-// Dynamically import the modal to reduce initial page load
+
 const CompleteApplicationModal = dynamic(
   () => import("../completeapplication/components/CompleteApplicationModal")
 );
@@ -43,9 +43,8 @@ function SidebarItem({
   return href && !onClick ? (
     <Link href={href} className="w-full">
       <div
-        className={`flex items-center p-2 rounded-lg cursor-pointer text-sm ${
-          active ? "bg-red-200 text-red-700" : "hover:bg-gray-200"
-        }`}
+        className={`flex items-center p-2 rounded-lg cursor-pointer text-sm ${active ? "bg-red-200 text-red-700" : "hover:bg-gray-200"
+          }`}
       >
         {icon}
         <span className="ml-2">{text}</span>
@@ -53,9 +52,8 @@ function SidebarItem({
     </Link>
   ) : (
     <div
-      className={`flex items-center p-2 rounded-lg cursor-pointer text-sm ${
-        active ? "bg-red-200 text-red-700" : "hover:bg-gray-200"
-      }`}
+      className={`flex items-center p-2 rounded-lg cursor-pointer text-sm ${active ? "bg-red-200 text-red-700" : "hover:bg-gray-200"
+        }`}
       onClick={(e) => {
         e.preventDefault();
         if (onClick) {
@@ -122,11 +120,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed top-16 z-40 h-[110vh] lg:h-[85vh] bg-[#FCE7D2] transition-transform duration-300 lg:translate-x-0 rounded-lg m-0 lg:m-4 lg:w-[260px]  ${
-          isOpen ? "w-[260px]" : "w-0"
-        } ${!isOpen && "!overflow-hidden"} will-change-transform`}
+        className={`fixed top-16 z-40 h-[110vh] lg:h-[85vh] bg-[#FCE7D2] transition-transform duration-300 lg:translate-x-0 rounded-lg m-0 lg:m-4 lg:w-[260px]  ${isOpen ? "w-[260px]" : "w-0"
+          } ${!isOpen && "!overflow-hidden"} will-change-transform`}
       >
-       
+
 
         {/* Sidebar Content */}
         <div
@@ -139,13 +136,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         >
           {/* Profile Section */}
           <Card className="p-2 flex flex-col items-center text-center bg-white rounded-lg">
-             {/* Close Button for Mobile */}
-        <Button
-          onClick={onClose}
-          className="absolute top-4 bg-transparent right-4 p-2 hover:bg-red-50 rounded-lg lg:hidden"
-        >
-          <X size={20} color="black" />
-        </Button>
+            {/* Close Button for Mobile */}
+            <Button
+              onClick={onClose}
+              className="absolute top-4 bg-transparent right-4 p-2 hover:bg-red-50 rounded-lg lg:hidden"
+            >
+              <X size={20} color="black" />
+            </Button>
             <Image
               src="/DashboardPage/group.svg"
               alt="Profile"
@@ -193,7 +190,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <CompleteApplicationModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onCompleteApplication={() => {}}
+          onCompleteApplication={() => { }}
         />
       )}
     </>
