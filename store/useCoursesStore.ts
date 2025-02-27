@@ -4,6 +4,7 @@ interface CourseState {
     courses: any[];
     search: string;
     countryFilter: string[];
+    subjectAreaFilter: string[];
     sortOrder: "asc" | "desc" | "";
     minPrice: string;
     maxPrice: string;
@@ -25,6 +26,7 @@ interface CourseState {
     setCourses: (courses: any[]) => void;
     setSearch: (search: string) => void;
     setCountryFilter: (countryFilter: string[]) => void;
+    setSubjectAreaFilter: (subjectAreaFilter: string[]) => void;
     setSortOrder: (order: "asc" | "desc" | "") => void;
     setPriceRange: (min: string, max: string) => void;
     setPage: (page: number) => void;
@@ -35,6 +37,7 @@ interface CourseState {
 export const useCourseStore = create<CourseState>((set, get) => ({
     courses: [],
     countryFilter: [],
+    subjectAreaFilter: [],
     universities: [],
     selectedUniversity: "",
     search: "",
@@ -51,36 +54,40 @@ export const useCourseStore = create<CourseState>((set, get) => ({
     maxBudget: null,
 
     setMinBudget: (value) => {
-        console.log(value, "MIn");
-        set({ minBudget: value })
+        console.log(value, "Min");
+        set({ minBudget: value });
         get().fetchCourses();
     },
     setMaxBudget: (value) => {
         console.log(value, "Max");
-        set({ maxBudget: value })
+        set({ maxBudget: value });
         get().fetchCourses();
     },
-
     setSelectedUniversity(uni) {
-        set({ selectedUniversity: uni })
+        set({ selectedUniversity: uni });
         get().fetchCourses();
     },
     setStudyMode: (mode) => {
         set({ studyMode: mode });
-        get().fetchCourses(); //  Fetch courses when intake year changes
+        get().fetchCourses();
     },
     setIntakeYear: (year) => {
         set({ intakeYear: year });
-        get().fetchCourses(); //  Fetch courses when intake year changes
+        get().fetchCourses();
     },
     setCourses: (courses) => set({ courses }),
     setSearch: (search) => {
         set({ search });
-        get().fetchCourses(); // Fetch courses when search changes
+        get().fetchCourses();
     },
     setCountryFilter: (countryFilter) => {
         set({ countryFilter: Array.isArray(countryFilter) ? countryFilter : [] });
-        get().fetchCourses(); // Fetch courses when country filter changes
+        get().fetchCourses();
+    },
+    // New setter for Subject Area filter
+    setSubjectAreaFilter: (subjectAreaFilter) => {
+        set({ subjectAreaFilter: Array.isArray(subjectAreaFilter) ? subjectAreaFilter : [] });
+        get().fetchCourses();
     },
     setStudyLevel: (level) => {
         set({ studyLevel: level === get().studyLevel ? "" : level });
@@ -88,36 +95,56 @@ export const useCourseStore = create<CourseState>((set, get) => ({
     },
     setSortOrder: (order) => {
         set({ sortOrder: order });
-        get().fetchCourses(); // Fetch courses when sort order changes
+        get().fetchCourses();
     },
     setPriceRange: (min, max) => {
         set({ minPrice: min, maxPrice: max });
-        get().fetchCourses(); // Fetch courses when price range changes
+        get().fetchCourses();
     },
     setPage: (page) => {
         set({ currentPage: page });
-        get().fetchCourses(); // Fetch courses when pagination changes
+        get().fetchCourses();
     },
     fetchCourses: async () => {
         set({ loading: true });
         try {
-            const { minBudget, maxBudget, search, sortOrder, currentPage, intakeYear, countryFilter, studyLevel, studyMode, selectedUniversity } = get();
+            const {
+                minBudget,
+                maxBudget,
+                search,
+                sortOrder,
+                currentPage,
+                intakeYear,
+                countryFilter,
+                subjectAreaFilter,
+                studyLevel,
+                studyMode,
+                selectedUniversity,
+            } = get();
+
             const queryParams = new URLSearchParams({
                 page: currentPage.toString(),
                 limit: "12",
             });
             if (search) queryParams.append("search", search);
-
             if (sortOrder) queryParams.append("sortOrder", sortOrder);
             if (intakeYear) queryParams.append("intakeYear", intakeYear);
-            if (studyMode) queryParams.append("studyMode", studyMode)
+            if (studyMode) queryParams.append("studyMode", studyMode);
             if (studyLevel) queryParams.append("studyLevel", studyLevel);
-            if (minBudget !== null && minBudget > 0) queryParams.append("minBudget", minBudget.toString());
-            if (maxBudget !== null && maxBudget > 0) queryParams.append("maxBudget", maxBudget.toString());
-            if (selectedUniversity) queryParams.append("selectedUniversity", selectedUniversity) //  Apply filter if selected
+            if (minBudget !== null && minBudget > 0)
+                queryParams.append("minBudget", minBudget.toString());
+            if (maxBudget !== null && maxBudget > 0)
+                queryParams.append("maxBudget", maxBudget.toString());
+            if (selectedUniversity)
+                queryParams.append("selectedUniversity", selectedUniversity);
             if (countryFilter.length > 0) {
                 queryParams.append("countryFilter", countryFilter.join(","));
             }
+            // Append subject area filter if any are selected
+            if (subjectAreaFilter.length > 0) {
+                queryParams.append("subjectAreaFilter", subjectAreaFilter.join(","));
+            }
+
             const res = await fetch(`/api/getCourses?${queryParams.toString()}`);
             if (!res.ok) throw new Error(`Failed to fetch: ${res.statusText}`);
             const data = await res.json();
@@ -132,5 +159,4 @@ export const useCourseStore = create<CourseState>((set, get) => ({
             set({ loading: false });
         }
     },
-
 }));

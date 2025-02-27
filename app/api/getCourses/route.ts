@@ -21,11 +21,12 @@ export async function GET(req: Request) {
     const searchCourse = searchParams.get("searchCourse");
     const minBudget = parseFloat(searchParams.get("minBudget") || "0");
     const maxBudget = parseFloat(searchParams.get("maxBudget") || "999999");
+
     // Extract countryFilter and convert to lowercase
     const countryFilter = searchParams.get("countryFilter")
       ?.split(",")
       .map((c) => c.trim().toLowerCase())
-      .filter((c) => c !== "") || []; // Ensure it's always an array
+      .filter((c) => c !== "") || [];
 
     // Query object initialization
     const query: Record<string, unknown> = {};
@@ -36,17 +37,20 @@ export async function GET(req: Request) {
       if (textSearchSupported) {
         query.$text = { $search: search };
       } else {
-        const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
+        const escapeRegex = (text: string) =>
+          text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
         query.course_title = { $regex: new RegExp(escapeRegex(search), "i") };
         console.log(search, "cour");
       }
     }
+
     if (!isNaN(minBudget) || !isNaN(maxBudget)) {
       query["annual_tuition_fee.amount"] = {
         $gte: minBudget,
         $lte: maxBudget,
       };
     }
+
     // ✅ **Apply Individual Filters**
     if (studyLevel) query.course_level = studyLevel;
     if (intakeYear) query.intake = { $regex: `^${intakeYear}`, $options: "i" };
@@ -54,24 +58,63 @@ export async function GET(req: Request) {
 
     // ✅ **Properly Filter University**
     if (university) {
-      const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
+      const escapeRegex = (text: string) =>
+        text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
       query.universityname = { $regex: new RegExp(`.*${escapeRegex(university)}.*`, "i") };
-      console.log(university, "Uni");
     }
 
     // ✅ **Properly Filter Country (if countryFilter has values)**
     if (countryFilter.length > 0) {
       query.countryname = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
     }
+
+    // ✅ **Course Title Filters**
+    // Apply additional filters on the course_title field.
+    // Note: If multiple course title filters are provided, we'll combine them.
+    let courseTitleFilter: Record<string, any> | undefined;
     if (subject) {
-      query.course_title = { $regex: new RegExp(subject, "i") }; // Case-insensitive match
+      courseTitleFilter = { $regex: new RegExp(subject, "i") };
     }
     if (searchCourse) {
-      query.course_title = { $regex: new RegExp(searchCourse, "i") }; // Case-insensitive match
+      // If searchCourse is provided, use that instead (or override previous filter)
+      courseTitleFilter = { $regex: new RegExp(searchCourse, "i") };
     }
+
+    // ✅ **New: Filter by Subject Area**
+    // The client can pass a `subjectAreaFilter` parameter as a comma-separated list.
+    const subjectAreaFilterStr = searchParams.get("subjectAreaFilter");
+    if (subjectAreaFilterStr) {
+      const subjectAreas = subjectAreaFilterStr
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s !== "");
+      if (subjectAreas.length > 0) {
+        // Build a regex that matches any of the provided subject areas.
+        const regexPattern = subjectAreas.join("|");
+        const subjectAreaCondition = { $regex: new RegExp(regexPattern, "i") };
+        if (courseTitleFilter) {
+          // Combine existing course title filter with the subject area condition.
+          query.$and = [
+            { course_title: courseTitleFilter },
+            { course_title: subjectAreaCondition },
+          ];
+        } else {
+          query.course_title = subjectAreaCondition;
+        }
+      }
+    } else if (courseTitleFilter) {
+      // If no subject area filter but one of the other course title filters is provided.
+      query.course_title = courseTitleFilter;
+    }
+
     // ✅ **Fetch courses with efficient pagination**
     const [courses, totalCourses] = await Promise.all([
-      Courses.find(query).sort({ course_title: sortOrder }).skip(skip).limit(limit).lean().select("_id course_title countryname intake duration annual_tuition_fee"),
+      Courses.find(query)
+        .sort({ course_title: sortOrder })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .select("_id course_title countryname intake duration annual_tuition_fee"),
       Courses.countDocuments(query),
     ]);
 

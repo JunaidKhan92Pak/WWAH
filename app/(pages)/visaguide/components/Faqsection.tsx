@@ -33,7 +33,6 @@ interface FaqsectionProps {
 }
 
 const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
-  // const [visa, setVisa] = useState([]);
   const sliderArray1 = [
     {
       src: "/visaguide/germany.png",
@@ -129,8 +128,6 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
       setIsSubmitting(false);
     }
   };
-  // const myfaqs = visa.map((faq) => faq.faqs);
-  console.log(faqs, "faqs");
   return (
     <div>
       <section className="relative flex flex-col justify-center items-center text-center text-white w-full bg-cover bg-center ">
@@ -160,18 +157,14 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
                 alt={image.alt}
                 width={600}
                 height={600}
-                // sizes="(max-width: 768px) 50vw, (max-width: 1024px) 100vw, 200vw"
                 className="rounded-3xl shadow-lg w-[250px] h-[150px] md:w-[350px] md:h-[250px] xl:w-[500px] xl:h-[300px]"
               />
 
-              {/* Text Overlay for Larger Screens */}
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-90 rounded-3xl hidden sm:flex flex-col justify-end p-6">
                 <p className="text-white text-lg font-semibold">
                   {image.heading}
                 </p>
               </div>
-
-              {/* Text Below the Image for Smaller Screens */}
               <div className="sm:hidden mt-2">
                 <p className="text-[14px] font-semibold">{image.heading}</p>
               </div>

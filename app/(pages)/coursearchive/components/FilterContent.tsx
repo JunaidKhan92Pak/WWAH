@@ -13,14 +13,34 @@ const studyLevels = [
   "Diploma",
   "Certificates",
 ];
-
 const intakeYears = ["2025", "2026", "2027", "2028"];
 const intakeMonths = ["January to April", "May to September", "October to December"];
 const studyModes = ["On Campus", "Online", "Hybrid", "Distance Learning", "Blended"];
 const currencies = [
-  "US Dollar (USD)", "Euro (EUR)", "British Pound (GBP)", "Canadian Dollar (CAD)",
-  "Australian Dollar (AUD)", "New Zealand Dollar (NZD)", "Indian Rupee (INR)",
-  "Chinese Yuan (CNY)", "Malaysian Ringgit (MYR)", "Pakistani Rupees (PKR)"
+  "US Dollar (USD)",
+  "Euro (EUR)",
+  "British Pound (GBP)",
+  "Canadian Dollar (CAD)",
+  "Australian Dollar (AUD)",
+  "New Zealand Dollar (NZD)",
+  "Indian Rupee (INR)",
+  "Chinese Yuan (CNY)",
+  "Malaysian Ringgit (MYR)",
+  "Pakistani Rupees (PKR)"
+];
+
+// New filter options for Subject Area
+const subjectAreas = [
+  "Physics",
+  "Chemistry",
+  "Biology",
+  "Earth & Environmental Sciences",
+  "Astronomy",
+  "Biotechnology",
+  "Geology",
+  "Oceanography",
+  "Computer Science",
+  "Information technology"
 ];
 
 export default function FilterContent() {
@@ -40,6 +60,8 @@ export default function FilterContent() {
     setStudyLevel,
     intakeYear,
     setIntakeYear,
+    setSubjectAreaFilter,
+    subjectAreaFilter
   } = useCourseStore();
 
   const [localMinBudget, setLocalMinBudget] = useState(minBudget || 0);
@@ -48,6 +70,7 @@ export default function FilterContent() {
   const studyDestinations = useMemo(() => ["USA", "United Kingdom", "Canada", "Australia", "Germany"], []);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
 
   const debouncedUpdateMinBudget = useCallback(
     debounce((value: number) => {
@@ -72,8 +95,8 @@ export default function FilterContent() {
       }
     } else {
       const updatedSelected = countryFilter.includes(destination)
-        ? countryFilter.filter((item) => item !== destination) // Remove if exists
-        : [...countryFilter, destination]; // Add if not exists
+        ? countryFilter.filter((item) => item !== destination)
+        : [...countryFilter, destination];
       setCountryFilter(updatedSelected);
     }
   }, [countryFilter, setCountryFilter, studyDestinations]);
@@ -86,7 +109,7 @@ export default function FilterContent() {
     if (universities.length === 0) {
       fetchUniversities().catch((error) => {
         console.error("Failed to fetch universities:", error);
-        // Display an error message to the user
+        // Display an error message to the user if needed
       });
     }
   }, [fetchUniversities, universities.length]);
@@ -113,6 +136,22 @@ export default function FilterContent() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // New handler for Subject Area checkboxes
+  const handleSubjectCheckboxChange = useCallback((subject: string) => {
+    if (subject === "All") {
+      if (subjectAreaFilter.length === subjectAreas.length) {
+        setSubjectAreaFilter([]); // Uncheck all
+      } else {
+        setSubjectAreaFilter(subjectAreas); // Select all
+      }
+    } else {
+      const updatedSelected = subjectAreaFilter.includes(subject)
+        ? subjectAreaFilter.filter((item) => item !== subject)
+        : [...subjectAreaFilter, subject];
+      setSubjectAreaFilter(updatedSelected);
+    }
+  }, [subjectAreaFilter, setSubjectAreaFilter]);
 
   return (
     <div className="space-y-6 p-6 bg-gray-50 rounded-lg">
@@ -183,6 +222,34 @@ export default function FilterContent() {
                 aria-label={`Select ${level}`}
               />
               <span className="text-gray-700">{level}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Subject Area Filter */}
+      <FilterSection title="Subject Area">
+        <div className="space-y-3">
+          <label className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={subjectAreaFilter.length === subjectAreas.length}
+              onChange={() => handleSubjectCheckboxChange("All")}
+              className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+              aria-label="Select All Subject Areas"
+            />
+            <span className="text-gray-700">All</span>
+          </label>
+          {subjectAreas.map((subject) => (
+            <label key={subject} className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                checked={subjectAreaFilter.includes(subject)}
+                onChange={() => handleSubjectCheckboxChange(subject)}
+                className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                aria-label={`Select ${subject}`}
+              />
+              <span className="text-gray-700">{subject}</span>
             </label>
           ))}
         </div>
