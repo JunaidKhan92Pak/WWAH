@@ -71,7 +71,7 @@ export async function GET(req: Request) {
     // ✅ **Course Title Filters**
     // Apply additional filters on the course_title field.
     // Note: If multiple course title filters are provided, we'll combine them.
-    let courseTitleFilter: Record<string, any> | undefined;
+    let courseTitleFilter: Record<string, unknown> | undefined;
     if (subject) {
       courseTitleFilter = { $regex: new RegExp(subject, "i") };
     }
