@@ -430,11 +430,6 @@ const BasicInfo = () => {
                 {currentPage}
               </span>
 
-              {/* Next Button */}
-              {/* Current Page Number */}
-              <span className="px-4 py-2 text-sm font-semibold  rounded-lg border">
-                {currentPage}
-              </span>
 
               {/* Next Button */}
               <PaginationItem>
