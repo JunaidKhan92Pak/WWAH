@@ -43,7 +43,7 @@ export default function CompleteApplicationModal({ isOpen, onClose, onCompleteAp
 
   return (
     <Dialog 
-      open={isOpen && !isSubmitted} // Prevent opening if already submitted in the same session
+      open={isOpen && !isSubmitted} 
       onOpenChange={() => { 
         if (isSubmitted) onClose(); 
       }} 
@@ -51,7 +51,16 @@ export default function CompleteApplicationModal({ isOpen, onClose, onCompleteAp
       <DialogContent 
         className="max-w-[300px] md:max-w-[550px] max-h-[80vh] overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        
       >
+        {/* Hide the default close button */}
+        <style>{`
+          [data-state="open"] button.absolute {
+            display: none !important;
+          }
+          }
+        `}</style>
+        
         <DialogHeader>
           <DialogTitle className="justify-center flex">
             Student Consent & Declaration Form
@@ -91,7 +100,7 @@ export default function CompleteApplicationModal({ isOpen, onClose, onCompleteAp
             </label>
           </div>
         </div>
-        <Button disabled={!isChecked} onClick={handleSubmit} className="w-full bg-[#C7161E]">
+        <Button disabled={!isChecked} onClick={handleSubmit} className="w-full bg-[#C7161E] hover:bg-[#C7161E]">
           Submit
         </Button>
       </DialogContent>

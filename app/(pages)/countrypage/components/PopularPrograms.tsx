@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import popularPrograms from "../../../../public/popularprograms.png";
+// import popularPrograms from "../../../../public/popularprograms.png";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 const PopularPrograms = () => {
@@ -79,9 +79,32 @@ const PopularPrograms = () => {
       </section>
 
       <section className="flex justify-center md:my-16 my-10 mx-5">
-        <div className="md:w-[77%]">
-          <Image src={popularPrograms} alt="popularPrograms" />
+
+        <div className="flex flex-col items-center justify-center w-full max-w-[900px] mx-auto">
+          {/* SVG Image */}
+          <div className="relative flex justify-center w-full">
+            <Image
+              src="/countrypage/livingcost.svg"
+              alt="Cost of Living"
+              width={800}
+              height={800}
+              className="w-full h-auto"
+            />
+
+            {/* Center Circle Text */}
+            <div className="absolute inset-0 flex justify-center items-center w-full h-full">
+              <div className="flex justify-center items-center  text-center w-[15%]">
+                <p className="text-sm">
+                  Cost of Living in United Kingdom! 
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+
+
+
       </section>
       <section
         className="relative mt-10 text-white bg-[#FCE7D2]"

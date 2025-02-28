@@ -23,7 +23,7 @@ const Page = () => {
 
     return (
         <>
-            <div className="w-[95%] mx-auto">
+            <div className="w-[98%] mx-auto">
                 {/* <h5 className="text-center font-bold lg:mb-10">Complete your Application</h5> */}
                     <div className="w-full grid sm:grid-cols-2  md:grid-cols-4 justify-center items-center space-x-2 space-y-2 lg:space-y-0 mt-4 my-6">
                         {tabs.map((tab) => (

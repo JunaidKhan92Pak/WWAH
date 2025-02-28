@@ -68,7 +68,7 @@ const CurrentAddress = () => {
   }
 
   return (
-    <div className="flex flex-col w-full xl:w-[75%] mx-auto my-4">
+    <div className="my-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
           <div className="grid grid-cols-1  gap-2 items-end">

@@ -36,7 +36,6 @@ const MyProfileInfo: React.FC<MyProfileInfoProps> = ({ firstName, lastName, setF
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-14  w-[80%] md:w-[70%] mx-auto xl:ml-72 mt-24 sm:mt-56 xl:mt-10 mb-6 xl:mb-32 items-baseline justify-items-start">
 
             {/* First Name */}
-            {/* First Name */}
             <EditfirstandlastName firstName={firstName} lastName={lastName} setFirstName={setFirstName} setLastName={setLastName} />
 
 
