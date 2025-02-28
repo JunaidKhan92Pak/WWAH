@@ -42,14 +42,17 @@ const Section = ({
       <p className="font-semibold">{title}</p>
       <Link href={editLink}>
         <Button className="hover:bg-[#F4D0D2]" variant="ghost" size="icon">
-        <TbEdit />
+          <TbEdit />
         </Button>
       </Link>
     </button>
     <div>
       <div className="grid grid-cols-1  gap-4">
         {Object.entries(data).map(([key, value]) => (
-          <div key={key} className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]">
+          <div
+            key={key}
+            className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
+          >
             <p className="text-sm text-muted-foreground capitalize">
               {key.replace(/([A-Z])/g, " $1").trim()}
             </p>
@@ -68,7 +71,6 @@ export default function ReviewPage() {
       <Section
         title="Personal Information"
         data={studentData.personalInfo}
-  
         editLink="/personal-info"
       />
 
@@ -76,18 +78,16 @@ export default function ReviewPage() {
       <Section
         title="Contact Details"
         data={studentData.contactDetails}
-       
         editLink="/contact-details"
       />
-      <div className="text-right mb-4">
-                <Button
-                  type="submit"
-                  className="w-1/3 sm:w-1/4 bg-red-600 hover:bg-red-700"
-                >
-                  Submit
-                </Button>
-              </div>
+      <div className="text-right my-4">
+        <Button
+          type="submit"
+          className="w-1/3 sm:w-[17%] bg-red-600 hover:bg-red-700"
+        >
+          Submit
+        </Button>
+      </div>
     </div>
-    
   );
 }

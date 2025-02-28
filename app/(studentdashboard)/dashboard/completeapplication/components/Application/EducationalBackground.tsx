@@ -55,11 +55,15 @@ export default function EducationalBackground() {
 
   return (
     <div className="mx-auto max-w-3xl my-4">
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {fields.map((field, index) => (
             <div key={field.id}>
+              <div className="mb-6">
+                <h2 className="text-base font-semibold text-center text-gray-900">
+                  Education Background {index + 1}
+                </h2>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
@@ -67,7 +71,10 @@ export default function EducationalBackground() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Highest Degree</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select Degree" />
@@ -93,7 +100,11 @@ export default function EducationalBackground() {
                     <FormItem>
                       <FormLabel>Subject Name</FormLabel>
                       <FormControl>
-                        <Input {...field} className="placeholder:text-sm" placeholder="Write..." />
+                        <Input
+                          {...field}
+                          className="placeholder:text-sm"
+                          placeholder="Write..."
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -107,7 +118,11 @@ export default function EducationalBackground() {
                     <FormItem>
                       <FormLabel>Institution Attended</FormLabel>
                       <FormControl>
-                        <Input {...field} className="placeholder:text-sm" placeholder="Write..." />
+                        <Input
+                          {...field}
+                          className="placeholder:text-sm"
+                          placeholder="Write..."
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -121,7 +136,11 @@ export default function EducationalBackground() {
                     <FormItem>
                       <FormLabel>CGPA/Marks</FormLabel>
                       <FormControl>
-                        <Input {...field} className="placeholder:text-sm" placeholder="Write..." />
+                        <Input
+                          {...field}
+                          className="placeholder:text-sm"
+                          placeholder="Write..."
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -135,7 +154,11 @@ export default function EducationalBackground() {
                     <FormItem>
                       <FormLabel>Degree Start Date</FormLabel>
                       <FormControl>
-                        <Input {...field} type="date" placeholder="YYYY/MM/DD" />
+                        <Input
+                          {...field}
+                          type="date"
+                          placeholder="YYYY/MM/DD"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -149,7 +172,11 @@ export default function EducationalBackground() {
                     <FormItem>
                       <FormLabel>Degree Completion Date</FormLabel>
                       <FormControl>
-                        <Input {...field} type="date" placeholder="YYYY/MM/DD" />
+                        <Input
+                          {...field}
+                          type="date"
+                          placeholder="YYYY/MM/DD"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
