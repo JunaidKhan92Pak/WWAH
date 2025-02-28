@@ -69,15 +69,13 @@ export default function FamilyMembers() {
   }
 
   return (
-    <div className="p-4">
-      <div className=" mx-auto max-w-3xl">
+      <div className="my-4">
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="bg-white space-y-4"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
@@ -270,6 +268,5 @@ export default function FamilyMembers() {
           </form>
         </Form>
       </div>
-    </div>
   );
 }

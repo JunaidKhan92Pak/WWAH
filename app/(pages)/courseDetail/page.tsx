@@ -8,6 +8,14 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import Herosection from "./components/Herosection";
 
+
+const healthcareItems = [
+  { text: "Public Health", image: "/countrypage/img3.svg" },
+  { text: "Healthcare Promotion", image: "/countrypage/img2.svg" },
+  { text: "Healthcare Information", image: "/countrypage/img5.png" },
+  { text: "Healthcare Management", image: "/countrypage/img4.svg" },
+  { text: "Healthcare Policy", image: "/countrypage/img1.svg" },
+]
 function Page() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState("scholarship");
@@ -148,11 +156,10 @@ function Page() {
               <Button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`font-medium transition text-sm md:text-lg hover:bg-[#FCE7D2] hover:text-black px-2 py-2 md:rounded-t-xl w-full border-b border-gray-400 md:border-none ${
-                  activeTabPro === tab.id
-                    ? "bg-[#C7161E] text-white"
-                    : "bg-transparent text-gray-800"
-                }`}
+                className={`font-medium transition text-sm md:text-lg hover:bg-[#FCE7D2] hover:text-black px-2 py-2 md:rounded-t-xl w-full border-b border-gray-400 md:border-none ${activeTabPro === tab.id
+                  ? "bg-[#C7161E] text-white"
+                  : "bg-transparent text-gray-800"
+                  }`}
               >
                 {tab.name}
               </Button>
@@ -289,11 +296,11 @@ function Page() {
       <section
         id="careerOpportunities"
         className="my-7 relative bg-black bg-cover bg-center flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8"
-      
+
       >
         <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
-        <div className="flex flex-col md:flex-row w-full gap-5 m-4 justify-center items-center">
-          <div className="relative w-full md:w-1/2 md:space-y-5 p-3 text-white">
+        <div className="flex flex-col lg:flex-row w-full gap-5 m-4 justify-center items-start md:items-center">
+          <div className="relative w-full md:w-3/4 xl:w-1/2 md:space-y-5  text-white">
             <h3>Career Opportunities</h3>
             <p className="text-[#9D9D9D] font-semibold">
               Unlock a world of career opportunities that align with your skills
@@ -301,44 +308,60 @@ function Page() {
               growth paths that set you up for long-term success.
             </p>
           </div>
-           <div  className="flex relative w-full md:w-1/2 justify-center items-center">
-           <div className="relative">
-        <Image
-          src="/CourseDetailPage/bsc.svg"
-          alt="popularPrograms"
-          width={570}
-          height={375}
-          className="w-full h-auto"
-        />
-        {/* Overlay Text */}
-        <p className="absolute top-24 left-1/2 transform -translate-x-1/2 -translate-y-1/4 text-black  text-lg md:text-xl ">
-        BSC Physiology
-        </p>
 
-        <p className="absolute top-36 left-24 transform -translate-x-12 -translate-y-1/4 text-black max-w-1">
-  Health Management
-</p>
 
-<p className="absolute top-64 left-36 transform -translate-x-6 -translate-y-2 text-black max-w-1">
-  Healthcare Information
-</p>
+          <div className="hidden md:flex relative justify-center items-center w-full xl:w-1/2 text-white h-[40vh]">
 
-<p className="absolute top-80 left-72 transform -translate-x-6 -translate-y-5 text-black max-w-1">
-  Healthcare Promotion
-</p>
+            <div className="relative w-full pr-2 flex flex-col justify-center items-end h-[20vh]">
+              <div className="flex h-[50%] items-center justify-end">
+                <p>Healthcare Promotion</p>
+              </div>
+              <div className="flex h-[50%] items-center justify-end pt-4 pr-5" >
+                <p>Healthcare Information</p>
+              </div>
+            </div>
 
-<p className="absolute top-72 left-96 transform translate-x-7 -translate-y-8 text-black max-w-1">
-  Healthcare Policy
-</p>
+            {/* Center Section */}
+            <div className="w-full flex flex-col justify-start">
+              <div className="flex justify-center text-center m-2">
+                <p>Public Health</p>
+              </div>
+              <div className="relative ">
+                <Image
+                  src="/countrypage/studyinuk.svg"
+                  alt="BSC Physiology"
+                  width={400}
+                  height={400}
 
-<p className="absolute top-44 left-96 transform translate-x-28 -translate-y-10 text-black max-w-1">
-  Public Health
-</p>
+                />
+                <div className="md:absolute md:inset-0 md:top-4 flex items-center justify-center">
+                  <p className="w-[90px] text-center  text-white md:text-black font-semibold"> BSC Physiology</p>
+                </div>
+              </div>
 
-      </div>
-          </div> 
-        
+
+            </div>
+
+            {/* Right Section with Reduced Border Height */}
+            <div className="relative w-full pl-2 flex flex-col justify-center items-start h-[20vh]">
+              <div className="flex h-[50%] items-center ">
+                <p>Healthcare Management</p>
+              </div>
+              <p className="flex h-[50%] items-center  pt-4 pl-5">Healthcare Policy</p>
+            </div>
+          </div>
+
+          <div className="relative flex flex-col md:hidden space-y-4">
+            <h2 className="text-white">BSC Physicology</h2>
+            {healthcareItems.map((item, index) => (
+              <div key={index} className="flex items-center space-x-4 text-white">
+                <Image src={item.image} alt={item.text} width={50} height={50} />
+                <p>{item.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
+
       </section>
       {/* fee and scholarship     */}
       <section id="feeScholarships" className=" w-[90%] mx-auto">
@@ -402,15 +425,14 @@ function Page() {
                 </p>
               </div>
             </div>
-            
+
             <div className="flex w-full rounded-lg bg-[#FDF2E8]">
               <button
                 onClick={() => setActiveTab("scholarship")}
-                className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
-                  activeTab === "scholarship"
-                    ? "bg-[#F57C00] text-white"
-                    : "bg-transparent text-black"
-                }`}
+                className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "scholarship"
+                  ? "bg-[#F57C00] text-white"
+                  : "bg-transparent text-black"
+                  }`}
               >
                 <Link href="https://mta.ca/costs-financial-aid/scholarships-and-awards-first-year-students">
                   Scholarship Details
@@ -418,11 +440,10 @@ function Page() {
               </button>
               <button
                 onClick={() => setActiveTab("funding")}
-                className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
-                  activeTab === "funding"
-                    ? "bg-[#F57C00] text-white"
-                    : "bg-transparent text-black"
-                }`}
+                className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "funding"
+                  ? "bg-[#F57C00] text-white"
+                  : "bg-transparent text-black"
+                  }`}
               >
                 <Link href="https://mta.ca/current-students/student-finances/financial-aid-current-students">
                   Funding Details
@@ -545,8 +566,8 @@ function Page() {
                         item.value >= 75
                           ? "#e5edde"
                           : item.value >= 50
-                          ? "#e5edde"
-                          : "#f4d0d2",
+                            ? "#e5edde"
+                            : "#f4d0d2",
                     }}
                   >
                     <p className="flex items-center gap-2 text-[14px]">
@@ -574,8 +595,8 @@ function Page() {
                         item.value >= 75
                           ? "#e5edde"
                           : item.value >= 50
-                          ? "#e5edde"
-                          : "#f4d0d2",
+                            ? "#e5edde"
+                            : "#f4d0d2",
                     }}
                   >
                     <p className="flex items-center gap-2 ">
@@ -639,7 +660,7 @@ function Page() {
               <Link href="/contactus">
                 <Button
                   className="w-full bg-[#545454] hover:bg-zinc-700 text-white py-2 rounded"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   Register Now!
                 </Button>
@@ -658,22 +679,20 @@ function Page() {
         <div className="flex flex-col md:flex-row gap-2 md:mb-8">
           <Button
             variant={"destructive"}
-            className={`px-4 py-2 rounded-lg border-2 h-12 ${
-              activeTabUni === "University Application Docs"
-                ? "border-red-500 text-gray-900 font-semibold bg-transparent"
-                : "border-gray-900 text-gray-900  bg-transparent"
-            }`}
+            className={`px-4 py-2 rounded-lg border-2 h-12 ${activeTabUni === "University Application Docs"
+              ? "border-red-500 text-gray-900 font-semibold bg-transparent"
+              : "border-gray-900 text-gray-900  bg-transparent"
+              }`}
             onClick={() => setActiveTabUni("University Application Docs")}
           >
             University Application Docs
           </Button>
           <Button
             variant={"destructive"}
-            className={`px-4 py-2 rounded-lg border-2 h-12 ${
-              activeTabUni === "Embassy Documents"
-                ? "border-red-500 text-white-700 font-semibold bg-transparent"
-                : "border-gray-900 text-gray-900  bg-transparent"
-            }`}
+            className={`px-4 py-2 rounded-lg border-2 h-12 ${activeTabUni === "Embassy Documents"
+              ? "border-red-500 text-white-700 font-semibold bg-transparent"
+              : "border-gray-900 text-gray-900  bg-transparent"
+              }`}
             onClick={() => setActiveTabUni("Embassy Documents")}
           >
             Embassy Documents
@@ -830,9 +849,9 @@ function Page() {
       {/* explore section */}
       <section
         className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full"
-        // style={{
-        //   backgroundImage: "url('/bg-usa.png')",
-        // }}
+      // style={{
+      //   backgroundImage: "url('/bg-usa.png')",
+      // }}
       >
         {/* Black Overlay */}
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>

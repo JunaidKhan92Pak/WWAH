@@ -54,7 +54,7 @@ export default function EducationalBackground() {
   }
 
   return (
-    <div className=" mx-auto  max-w-3xl">
+    <div className="mx-auto max-w-3xl my-4">
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

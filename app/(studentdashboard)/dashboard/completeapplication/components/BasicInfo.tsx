@@ -408,6 +408,7 @@ const BasicInfo = () => {
 
           {/* Pagination Controls */}
           <Pagination>
+              {/* Previous Button */}
             <PaginationContent className="flex justify-center mt-4 gap-4 items-center">
               {/* Previous Button */}
               <PaginationItem>
@@ -424,6 +425,12 @@ const BasicInfo = () => {
                 </PaginationPrevious>
               </PaginationItem>
 
+              {/* Current Page Number */}
+              <span className="px-4 py-2 text-sm font-semibold  rounded-lg border">
+                {currentPage}
+              </span>
+
+              {/* Next Button */}
               {/* Current Page Number */}
               <span className="px-4 py-2 text-sm font-semibold  rounded-lg border">
                 {currentPage}
@@ -447,6 +454,9 @@ const BasicInfo = () => {
               </PaginationItem>
             </PaginationContent>
           </Pagination>
+
+
+
         </form>
       </Form>
     </div>

@@ -73,7 +73,7 @@ const LanguageProficiency = () => {
     })
 
     return (
-        <div className="flex flex-col w-full xl:w-[75%] mx-auto my-4">
+        <div className="flex flex-col  my-4">
 
             <Form {...form}>
                 <form className="space-y-8">

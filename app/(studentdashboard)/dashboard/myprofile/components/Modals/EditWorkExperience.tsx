@@ -26,14 +26,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 // Schema Validation using Zod
 const workExperienceSchema = z.object({
   hasWorkExperience: z.boolean(),
-
   experiences: z.array(
     z
       .object({
         jobTitle: z.string().min(1, "Job title is required"),
         organizationName: z.string().min(1, "Organization name is required"),
-        dateFrom: z.string().min(1, "Start date is required"),
-        dateTo: z.string().min(1, "End date is required"),
+        dateFrom: z.date(),
+        dateTo: z.date(),
         isFullTime: z.boolean().default(false),
         isPartTime: z.boolean().default(false),
       })
@@ -41,12 +40,13 @@ const workExperienceSchema = z.object({
         message: "Please select either Full Time or Part Time",
         path: ["isFullTime"],
       })
-      .refine((data) => new Date(data.dateFrom) < new Date(data.dateTo), {
+      .refine((data) => data.dateFrom < data.dateTo, {
         message: "End date must be after start date",
         path: ["dateTo"],
       })
   ),
 });
+
 type WorkExperienceForm = z.infer<typeof workExperienceSchema>;
 
 const EditWorkExperience = () => {
@@ -59,16 +59,17 @@ const EditWorkExperience = () => {
       hasWorkExperience: false,
       experiences: [
         {
-          jobTitle: "vdfvd",
-          organizationName: "dfgd",
-          dateFrom: "dfgdgv",
-          dateTo: "vdgv",
+          jobTitle: "",
+          organizationName: "",
+          dateFrom: new Date(),
+          dateTo: new Date(),
           isFullTime: false,
           isPartTime: false,
         },
       ],
     },
   });
+
 
   const { fields, } = useFieldArray({
     control: form.control,
@@ -254,9 +255,9 @@ const EditWorkExperience = () => {
                                       <Calendar
                                         mode="single"
                                         selected={field.value ? new Date(field.value) : undefined}
-                                        onSelect={(date) => field.onChange(date ? date.toISOString() : "")}
-                                        initialFocus
+                                        onSelect={(date) => field.onChange(date || new Date())} // Ensures valid date
                                       />
+
                                     </PopoverContent>
                                   </Popover>
                                 </FormControl>
@@ -282,9 +283,9 @@ const EditWorkExperience = () => {
                                       <Calendar
                                         mode="single"
                                         selected={field.value ? new Date(field.value) : undefined}
-                                        onSelect={(date) => field.onChange(date ? date.toISOString() : "")}
-                                        initialFocus
+                                        onSelect={(date) => field.onChange(date || new Date())} // Ensures valid date
                                       />
+
                                     </PopoverContent>
                                   </Popover>
                                 </FormControl>

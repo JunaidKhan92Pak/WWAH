@@ -64,8 +64,7 @@ export default function Home() {
   }
 
   return (
-    <div className=" p-4">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-3xl my-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {fields.map((field, index) => (
@@ -221,7 +220,6 @@ export default function Home() {
             </div>
           </form>
         </Form>
-      </div>
     </div>
   );
 }

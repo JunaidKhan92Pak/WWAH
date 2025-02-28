@@ -56,7 +56,7 @@ const ActiveApplication = () => {
                 {item.isDeadline ? (
                   <>
                     <p className="text-base">Deadline:</p>
-                    <p className="text-base ml-10">{item.text}</p>
+                    <p className="text-base ml-6 md:ml-12">{item.text}</p>
                   </>
                 ) : (
                   <p className="text-base">{item.text}</p>

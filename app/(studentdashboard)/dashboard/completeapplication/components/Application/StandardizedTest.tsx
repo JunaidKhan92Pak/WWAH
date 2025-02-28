@@ -48,7 +48,7 @@ const StandardizedTest = () => {
     })
 
     return (
-        <div className="flex flex-col w-full xl:w-[75%] mx-auto my-4">
+        <div className="flex flex-col my-4">
             <Form {...form}>
                 <form className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
