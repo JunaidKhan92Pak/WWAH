@@ -38,7 +38,7 @@ const ActiveApplication = () => {
         />
 
         {/* Course Details */}
-        <div className="flex flex-col gap-3 xl:w-[25%] items-start">
+        <div className="flex flex-col gap-3  items-start">
           <p className="font-semibold text-lg">
             Bachelor of Engineering (Honors) - BE(Hons)
           </p>
