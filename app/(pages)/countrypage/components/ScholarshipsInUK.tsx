@@ -80,10 +80,10 @@ export const ScholarshipsInUK = () => {
             </div>
 
             <div className="relative flex flex-col md:hidden space-y-4">
-              <h2 className="text-white">BSC Physicology</h2>
+              <h5 className="text-white">BSC Physicology</h5>
               {healthcareItems.map((item, index) => (
                 <div key={index} className="flex items-center space-x-4 text-white ">
-                  <Image src={item.image} alt={item.text} width={50} height={50} />
+                  <Image src={item.image} alt={item.text} width={30} height={30} />
                   <p>{item.text}</p>
                 </div>
               ))}
