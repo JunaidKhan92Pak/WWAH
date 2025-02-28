@@ -50,7 +50,7 @@ const Step4 = () => {
       <section className="w-[100%]">
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-md space-y-6  lg:px-8"
+          className="bg-white rounded-md space-y-3  lg:px-8"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

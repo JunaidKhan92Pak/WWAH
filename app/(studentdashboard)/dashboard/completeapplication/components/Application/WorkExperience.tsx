@@ -69,11 +69,11 @@ export default function Home() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {fields.map((field, index) => (
               <div key={field.id} className="bg-white">
-                {/* <div className="mb-6">
-                    <h2 className="text-xl font-semibold text-center text-gray-900">
+                <div className="mb-6">
+                    <h2 className="text-base font-semibold text-center text-gray-900">
                       Work Experience {index + 1}
                     </h2>
-                  </div> */}
+                  </div>
                 <div className="grid gap-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField

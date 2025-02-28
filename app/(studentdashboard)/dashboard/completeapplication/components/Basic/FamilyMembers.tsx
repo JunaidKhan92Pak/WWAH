@@ -69,204 +69,228 @@ export default function FamilyMembers() {
   }
 
   return (
-      <div className="my-4">
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name={`familyMembers.${index}.name`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl className="bg-[#f1f1f1] text-black">
-                          <Input className="placeholder:text-sm" placeholder="Enter Name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`familyMembers.${index}.relationship`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Relationship with the student</FormLabel>
-                        <FormControl className="bg-[#f1f1f1] text-black">
-                          <Input className="placeholder:text-sm" placeholder="Enter Relationship" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`familyMembers.${index}.nationality`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nationality</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl className="bg-[#f1f1f1] text-black">
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {countries.map((country) => (
-                              <SelectItem key={country.code} value={country.code}>
-                                <span className="flex items-center gap-2">
-                                  <span className="text-lg">{country.flag}</span>
-                                  {country.name}
-                                </span>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`familyMembers.${index}.occupation`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Occupation</FormLabel>
-                        <FormControl className="bg-[#f1f1f1]">
-                          <Input className="placeholder:text-sm" placeholder="Enter Occupation" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`familyMembers.${index}.email`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl className="bg-[#f1f1f1]">
-                          <Input
-                            type="email"
-                            className="placeholder:text-sm"
-                            placeholder="Enter your email address"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`familyMembers.${index}.phoneNumber`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone No.</FormLabel>
-                        <div className="flex">
-                          <FormField
-                            control={form.control}
-                            name={`familyMembers.${index}.phoneCountry`}
-                            render={({ field: countryField }) => (
-                              <Select
-                                onValueChange={countryField.onChange}
-                                defaultValue={countryField.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-r-none border-r-0">
-                                    <SelectValue>
-                                      <div className="flex items-center gap-2">
-                                        <Image
-                                          src={
-                                            countries.find(
-                                              (c) => c.code === countryField.value
-                                            )?.flag || countries[0].flag
-                                          }
-                                          alt="Country Flag"
-                                          width={20}
-                                          height={20}
-                                          className="object-contain"
-                                          unoptimized
-                                        />
-                                        <span className="text-sm">
-                                          {countryField.value}
-                                        </span>
-                                      </div>
-                                    </SelectValue>
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {countries.map((country) => (
-                                    <SelectItem key={country.code} value={country.code}>
-                                      <div className="flex items-center gap-2">
-                                        <Image
-                                          src={country.flag}
-                                          alt={`${country.name} Flag`}
-                                          width={20}
-                                          height={20}
-                                          className="object-contain"
-                                          unoptimized
-                                        />
-                                        <span className="text-sm">{`${country.code} (${country.name})`}</span>
-                                      </div>
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            )}
-                          />
-                          <Input
-                            {...field}
-                            className="rounded-l-none bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm"
-                            placeholder="Enter your phone number"
-                          />
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+    <div className="my-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          {fields.map((field, index) => (
+            <div key={field.id}>
+              <div className="mb-6">
+                <h2 className="text-base font-semibold text-center text-gray-900">
+                  Family Member {index + 1}
+                </h2>
               </div>
-            ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name={`familyMembers.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl className="bg-[#f1f1f1] text-black">
+                        <Input
+                          className="placeholder:text-sm"
+                          placeholder="Enter Name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <div className="flex justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2 bg-[#C5C3C38A] rounded-full w-2/3 sm:w-1/3"
-                onClick={() =>
-                  append({
-                    name: "",
-                    relationship: "",
-                    nationality: "",
-                    occupation: "",
-                    email: "",
-                    phoneCountry: "US",
-                    phoneNumber: "",
-                  })
-                }
-              >
-                <Plus className="w-4 h-4" />
-                Add Family Member
-              </Button>
+                <FormField
+                  control={form.control}
+                  name={`familyMembers.${index}.relationship`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Relationship with the student</FormLabel>
+                      <FormControl className="bg-[#f1f1f1] text-black">
+                        <Input
+                          className="placeholder:text-sm"
+                          placeholder="Enter Relationship"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`familyMembers.${index}.nationality`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nationality</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl className="bg-[#f1f1f1] text-black">
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem key={country.code} value={country.code}>
+                              <span className="flex items-center gap-2">
+                                <span className="text-lg">{country.flag}</span>
+                                {country.name}
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`familyMembers.${index}.occupation`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Occupation</FormLabel>
+                      <FormControl className="bg-[#f1f1f1]">
+                        <Input
+                          className="placeholder:text-sm"
+                          placeholder="Enter Occupation"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`familyMembers.${index}.email`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl className="bg-[#f1f1f1]">
+                        <Input
+                          type="email"
+                          className="placeholder:text-sm"
+                          placeholder="Enter your email address"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`familyMembers.${index}.phoneNumber`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone No.</FormLabel>
+                      <div className="flex">
+                        <FormField
+                          control={form.control}
+                          name={`familyMembers.${index}.phoneCountry`}
+                          render={({ field: countryField }) => (
+                            <Select
+                              onValueChange={countryField.onChange}
+                              defaultValue={countryField.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-r-none border-r-0">
+                                  <SelectValue>
+                                    <div className="flex items-center gap-2">
+                                      <Image
+                                        src={
+                                          countries.find(
+                                            (c) => c.code === countryField.value
+                                          )?.flag || countries[0].flag
+                                        }
+                                        alt="Country Flag"
+                                        width={20}
+                                        height={20}
+                                        className="object-contain"
+                                        unoptimized
+                                      />
+                                      <span className="text-sm">
+                                        {countryField.value}
+                                      </span>
+                                    </div>
+                                  </SelectValue>
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {countries.map((country) => (
+                                  <SelectItem
+                                    key={country.code}
+                                    value={country.code}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <Image
+                                        src={country.flag}
+                                        alt={`${country.name} Flag`}
+                                        width={20}
+                                        height={20}
+                                        className="object-contain"
+                                        unoptimized
+                                      />
+                                      <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        <Input
+                          {...field}
+                          className="rounded-l-none bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm"
+                          placeholder="Enter your phone number"
+                        />
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-          </form>
-        </Form>
+          ))}
+
+          <div className="flex justify-between">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2 bg-[#C5C3C38A] rounded-full w-2/3 sm:w-1/3"
+              onClick={() =>
+                append({
+                  name: "",
+                  relationship: "",
+                  nationality: "",
+                  occupation: "",
+                  email: "",
+                  phoneCountry: "US",
+                  phoneNumber: "",
+                })
+              }
+            >
+              <Plus className="w-4 h-4" />
+              Add Family Member
+            </Button>
+          </div>
+        </form>
+      </Form>
+      <div className="text-right">
+        <Button
+          type="submit"
+          className="w-1/3 sm:w-1/4 bg-red-600 hover:bg-red-700"
+        >
+          Submit
+        </Button>
       </div>
+    </div>
   );
 }

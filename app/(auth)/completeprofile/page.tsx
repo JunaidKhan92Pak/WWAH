@@ -30,6 +30,8 @@ const cities = [
 const Step1 = () => {
   const router = useRouter();
   const [personalInfo, setPersonalInfo] = useState({
+    fullName: "",
+    email: "",
     contactNo: "",
     dob: "",
     country: "",
@@ -74,8 +76,35 @@ const Step1 = () => {
           onSubmit={handleSubmit}
           className="w-[100%] bg-white rounded-md space-y-2 mx-auto  lg:p-8"
         >
-          <div className="md:flex w-full gap-3 items-end">
-            <div className="md:w-1/2 w-full">
+          <div className="grid md:grid-cols-2 gap-2 w-full">
+            {/* Column 1 */}
+            <div className="flex flex-col space-y-2">
+              <label className="block text-gray-700 text-sm">Full Name</label>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Full Name"
+                value={personalInfo.fullName}
+                onChange={handleChange}
+                className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Column 2 */}
+            <div className="flex flex-col space-y-2">
+              <label className="block text-gray-700 text-sm">Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={personalInfo.email}
+                onChange={handleChange}
+                className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Column 1 - Second Row */}
+            <div className="flex flex-col space-y-2">
               <label className="block text-gray-700 text-sm">Contact</label>
               <div className="flex space-x-2">
                 <select
@@ -101,18 +130,22 @@ const Step1 = () => {
                   placeholder="Phone"
                   value={personalInfo.contactNo}
                   onChange={handleChange}
-                  className="w-3/4 px-4 py-2  bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-3/4 px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
-            <div className="md:w-1/2 w-full">
-              <label className="block text-gray-700 text-sm">Date of Birth</label>
+
+            {/* Column 2 - Second Row */}
+            <div className="flex flex-col space-y-2">
+              <label className="block text-gray-700 text-sm">
+                Date of Birth
+              </label>
               <input
                 type="date"
                 name="dob"
                 value={personalInfo.dob}
                 onChange={handleChange}
-                className="w-full px-4 py-[0.55rem] text-sm bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 text-sm bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -137,9 +170,7 @@ const Step1 = () => {
               </select>
             </div>
             <div className="w-1/2">
-              <label className="block text-gray-700 text-sm">
-                Nationality
-              </label>
+              <label className="block text-gray-700 text-sm">Nationality</label>
               <select
                 name="nationality"
                 value={personalInfo.nationality}
