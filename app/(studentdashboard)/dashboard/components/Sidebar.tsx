@@ -120,14 +120,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed top-16 z-40 h-[110vh] lg:h-[85vh] bg-[#FCE7D2] transition-transform duration-300 lg:translate-x-0 rounded-lg m-0 lg:m-4 lg:w-[260px]  ${isOpen ? "w-[260px]" : "w-0"
-          } ${!isOpen && "!overflow-hidden"} will-change-transform`}
+        className={`fixed top-16 z-40  h-screen lg:h-[85vh] bg-[#FCE7D2] transition-transform duration-300 lg:translate-x-0 rounded-lg m-0 lg:m-4 lg:w-[260px]  ${
+          isOpen ? "w-[260px]" : "w-0"
+        } ${!isOpen && "!overflow-hidden"} will-change-transform`}
       >
-
-
+        {/* Close Button for Mobile */}
+        <Button
+          onClick={onClose}
+          className="absolute top-4 bg-transparent right-4 p-2 hover:bg-red-50 rounded-lg lg:hidden"
+        >
+          <X size={20} color="black" />
+        </Button>
         {/* Sidebar Content */}
         <div
-          className="bg-[#FCE8DA] w-64 h-full p-4 flex flex-col rounded-lg overflow-y-scroll    "
+          className="bg-[#FCE8DA] w-64 h-[90vh]  p-4 flex flex-col rounded-lg overflow-y-scroll    "
           style={{
             overflow: "auto",
             scrollbarWidth: "none",
@@ -136,13 +142,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         >
           {/* Profile Section */}
           <Card className="p-2 flex flex-col items-center text-center bg-white rounded-lg">
-            {/* Close Button for Mobile */}
-            <Button
-              onClick={onClose}
-              className="absolute top-4 bg-transparent right-4 p-2 hover:bg-red-50 rounded-lg lg:hidden"
-            >
-              <X size={20} color="black" />
-            </Button>
             <Image
               src="/DashboardPage/group.svg"
               alt="Profile"
