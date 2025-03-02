@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, Suspense } from "react";
+import React, { useEffect, Suspense, useCallback, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,6 +15,7 @@ import { useCourseStore } from "@/store/useCoursesStore";
 import FilterComponent from "./components/Filtercomponent";
 import { Button } from "@/components/ui/button";
 import { SkeletonCard } from "@/components/skeleton"
+import { debounce } from "lodash";
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -25,11 +26,17 @@ const Page = () => {
 
 const CourseArchive = () => {
   const {
-    courses, search, setSearch, setSortOrder,
+    courses, setSearch, setSortOrder,
     currentPage, totalPages,
     setPage, loading, fetchCourses
   } = useCourseStore();
-
+  const [localSearch, setLocalSearch] = useState("")
+  const handleSearch = useCallback(
+    debounce((value: string) => {
+      setSearch(value);
+    }, 500),
+    [setSearch]
+  );
   useEffect(() => {
     fetchCourses();
   }, []);
@@ -54,8 +61,13 @@ const CourseArchive = () => {
             />
             <Input
               placeholder="Search Course Name..."
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
+              onChange={(e) => {
+                const value = String(e.target.value)
+                setLocalSearch(value)
+                handleSearch(value)
+              }
+              }
+              value={localSearch}
               className="w-full h-8 border-none bg-transparent outline-none focus:ring-0"
             />
           </div>
@@ -162,8 +174,7 @@ const CourseArchive = () => {
         </div>
       )}
       <div className="flex justify-center items-center mt-6 gap-2">
-        {courses.length === 0 ? <></> : (<>
-
+        {courses.length === 0 ? <span>{`Page ${currentPage} of ${totalPages}`}</span> : (<>
           <Button className="bg-red-400" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>Previous</Button>
           <span>{`Page ${currentPage} of ${totalPages}`}</span>
           <Button className="bg-red-400" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}>Next</Button></>)}

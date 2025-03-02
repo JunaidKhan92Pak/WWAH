@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -7,17 +7,22 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import Link from "next/link";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton"
+import { debounce } from "lodash";
 const Page = () => {
     const Countries = ["USA", "China", "Canada", "Italy", "United Kingdom", "Ireland", "New Zealand", "Denmark", "France"]
-    const { universities, search, setSearch, country, setCountry, fetchUniversities, loading } = useUniversityStore();
+    const { universities, setSearch, country, setCountry, fetchUniversities, loading } = useUniversityStore();
+    const [localSearch, setLocalSearch] = useState("")
     // Fetch Universities
     useEffect(() => {
         fetchUniversities();
     }, []);
     // Handle Search
-    const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-    }, []);
+    const handleSearch = useCallback(
+        debounce((value: string) => {
+            setSearch(value);
+        }, 500),
+        [setSearch]
+    );
 
     // Handle Checkbox Changes
     function handleCheckboxChange(destination: string): void {
@@ -45,8 +50,13 @@ const Page = () => {
                             <Image src="/search.svg" width={16} height={16} alt="search" className="ml-2" />
                             <Input
                                 placeholder="Search..."
-                                onChange={handleSearch}
-                                value={search}
+                                onChange={(e) => {
+                                    const value = String(e.target.value)
+                                    setLocalSearch(value)
+                                    handleSearch(value)
+                                }
+                                }
+                                value={localSearch}
                                 className="border-none bg-[#F1F1F1]"
                                 aria-label="Search Universities"
                             />

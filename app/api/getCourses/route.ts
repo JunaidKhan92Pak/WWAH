@@ -43,14 +43,14 @@ export async function GET(req: Request) {
         console.log(search, "cour");
       }
     }
-
-    if (!isNaN(minBudget) || !isNaN(maxBudget)) {
-      query["annual_tuition_fee.amount"] = {
-        $gte: minBudget,
-        $lte: maxBudget,
-      };
+    if (minBudget > 0 && maxBudget < 999999) {
+      if (!isNaN(minBudget) || !isNaN(maxBudget)) {
+        query["annual_tuition_fee.amount"] = {
+          $gte: minBudget,
+          $lte: maxBudget,
+        };
+      }
     }
-
     // ✅ **Apply Individual Filters**
     if (studyLevel) query.course_level = studyLevel;
     if (intakeYear) query.intake = { $regex: `^${intakeYear}`, $options: "i" };
@@ -79,8 +79,6 @@ export async function GET(req: Request) {
       // If searchCourse is provided, use that instead (or override previous filter)
       courseTitleFilter = { $regex: new RegExp(searchCourse, "i") };
     }
-
-    // ✅ **New: Filter by Subject Area**
     // The client can pass a `subjectAreaFilter` parameter as a comma-separated list.
     const subjectAreaFilterStr = searchParams.get("subjectAreaFilter");
     if (subjectAreaFilterStr) {
