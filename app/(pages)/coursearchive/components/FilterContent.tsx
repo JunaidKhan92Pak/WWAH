@@ -31,20 +31,12 @@ const currencies = [
 
 // New filter options for Subject Area
 const subjectAreas = [
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Earth & Environmental Sciences",
-  "Astronomy",
-  "Biotechnology",
-  "Geology",
-  "Oceanography",
-  "Computer Science",
-  "Information technology"
+  "Physics", "Chemistry", "Biology", "Earth & Environmental Sciences", "Astronomy", "Biotechnology", "Geology", "Oceanography", "Computer Science", "Information Technology", "Artificial Intelligence (AI)", "Cybersecurity", "Data Science & Analytics", "Software Engineering", "Game Development", "Engineering", "Robotics & Automation", "Mathematics", "Statistics", "Actuarial Science", "Medicine (MBBS, MD)", "Dentistry", "Nursing", "Pharmacy", "Physiotherapy", "Public Health", "Veterinary Science", "Biochemistry", "Molecular Biology", "Neuroscience", "Genetics", "Microbiology", "Immunology", "Radiology & Medical Imaging", "Nutrition & Dietetics", "Occupational Therapy", "Speech & Language Therapy", "Business Administration", "Marketing", "Human Resource Management", "Operations Management", "Supply Chain Management", "Financial Management", "Investment & Asset Management", "Banking & Risk Management", "Accounting & Auditing", "Economics", "Law", "International Law", "Political Science", "Public Administration", "International Relations", "Psychology", "Social Work", "Graphic Design", "Fashion Design", "Interior Design", "Architecture", "Theatre & Drama", "Film & Television", "Music Performance & Production", "Dance", "Journalism", "Public Relations (PR)", "Digital Media", "Advertising", "Education & Pedagogy", "Agricultural Sciences", "Food Science & Technology", "Tourism & Travel Management", "Event Management", "Culinary Arts", "Gender Studies", "Visual Arts", "Sports and Exercise Sciences", "Media & Communication"
+
 ];
 
 export default function FilterContent() {
-  const { universities, search, setSearch, setCountry, fetchUniversities, loading } = useUniversityStore();
+  const { universities, setSearch, setCountry, fetchUniversities, loading } = useUniversityStore();
   const {
     minBudget,
     maxBudget,
@@ -64,13 +56,13 @@ export default function FilterContent() {
     subjectAreaFilter
   } = useCourseStore();
 
-  const [localMinBudget, setLocalMinBudget] = useState(minBudget || 0);
-  const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget || 100000);
+  const [localMinBudget, setLocalMinBudget] = useState(minBudget || '');
+  const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget || '');
   const [searchTerm, setSearchTerm] = useState("");
   const studyDestinations = useMemo(() => ["USA", "United Kingdom", "Canada", "Australia", "Germany"], []);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-
+  const [localSearch, setLocalSearch] = useState('')
 
   const debouncedUpdateMinBudget = useCallback(
     debounce((value: number) => {
@@ -85,7 +77,12 @@ export default function FilterContent() {
     }, 500),
     [setMaxBudget]
   );
-
+  const debouncedSetSearch = useCallback(
+    debounce((value: string) => {
+      setSearch(value);
+    }, 500),
+    []
+  );
   const handleCheckboxChange = useCallback((destination: string) => {
     if (destination === "All") {
       if (countryFilter.length === studyDestinations.length) {
@@ -229,7 +226,7 @@ export default function FilterContent() {
 
       {/* Subject Area Filter */}
       <FilterSection title="Subject Area">
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-80 overflow-y-auto scroll-smooth overflow-hidden p-2 border border-gray-300 rounded-md">
           <label className="flex items-center space-x-3">
             <input
               type="checkbox"
@@ -261,9 +258,11 @@ export default function FilterContent() {
         <input
           type="text"
           placeholder="Search or select a university..."
-          value={search}
+          value={localSearch}
           onChange={(e) => {
-            setSearch(e.target.value);
+            const value = e.target.value;
+            setLocalSearch(value)
+            debouncedSetSearch(value); // Use the debounced function
             setIsDropdownOpen(true);
           }}
           onFocus={() => setIsDropdownOpen(true)}
@@ -352,9 +351,9 @@ export default function FilterContent() {
               placeholder="Min Budget"
               value={localMinBudget}
               onChange={(e) => {
-                const value = e.target.value ? Number(e.target.value) : 5000;
+                const value = Number(e.target.value);
                 setLocalMinBudget(value);
-                debouncedUpdateMinBudget(value);
+                { value ? debouncedUpdateMinBudget(value) : debouncedUpdateMinBudget.cancel(); }
               }}
               aria-label="Enter Minimum Budget"
             />
@@ -362,14 +361,16 @@ export default function FilterContent() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Enter Maximum Budget</label>
             <input
+
               type="number"
               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400"
               placeholder="Max Budget"
               value={localMaxBudget}
               onChange={(e) => {
-                const value = e.target.value ? Number(e.target.value) : 50000;
+                const value = Number(e.target.value);
                 setLocalMaxBudget(value);
-                debouncedUpdateMaxBudget(value);
+                { value ? debouncedUpdateMaxBudget(value) : debouncedUpdateMaxBudget.cancel(); }
+                ;
               }}
               aria-label="Enter Maximum Budget"
             />
@@ -383,7 +384,7 @@ export default function FilterContent() {
             </div>
             <input
               type="range"
-              min={0}
+
               max={50000}
               step={100}
               value={localMinBudget}
@@ -397,7 +398,7 @@ export default function FilterContent() {
             />
             <input
               type="range"
-              min={0}
+
               max={50000}
               step={100}
               value={localMaxBudget}
