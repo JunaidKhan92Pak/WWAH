@@ -8,8 +8,8 @@ export async function GET() {
     await connectToDatabase();
 
     // Fetch all universities from the database
-      const country = await Country.find({})
-          .select("country_name short_name _id"); // Fetch all universities from the "Universities" collection
+    const country = await Country.find({})
+      .select("country_name short_name _id"); // Fetch all universities from the "Universities" collection
     console.log(country, "country");
     // Return a successful response with the fetched universities
     return NextResponse.json(
@@ -29,7 +29,7 @@ export async function GET() {
       {
         success: false,
         message: "Failed to fetch visaguide",
-        error: error.message || "An unexpected error occurred",
+        error: (error as Error).message || "An unexpected error occurred",
       },
       { status: 500 }
     );

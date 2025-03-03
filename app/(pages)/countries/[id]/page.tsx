@@ -7,11 +7,11 @@ import PermanentResidency from "./components/PermanentResidency";
 import PopularPrograms from "./components/PopularPrograms";
 import { ScholarshipsInUK } from "./components/ScholarshipsInUK";
 import { VisaRequirements } from "./components/VisaRequirements";
-import AccomodationOptions from "./components/AccomodationOptions";
+// import AccomodationOptions from "./components/AccomodationOptions";
 import DreamStudy from "./components/DreamStudy";
 import Healthcare from "./components/Healthcare";
 import Link from "next/link";
-import FAQ from "@/components/ui/enrollment/FAQ";
+// import FAQ from "@/components/ui/enrollment/FAQ";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import AccCrousel from "./components/AccCrousel";
@@ -48,7 +48,7 @@ export default function Countrypage({
     scholarships: string[];
     visa_requirements: string[];
     work_while_studying: string;
-    accomodation_options: { name: string; description: string }[];
+    // accomodation_options: { name: string; description: string }[];
     teaching_and_learning_approach?: string;
     multicultural_environment?: string;
     faqs?: string[];
@@ -81,9 +81,9 @@ export default function Countrypage({
     health: [{ name: "", description: [""] }],
     scholarships: [],
     visa_requirements: [],
-    accomodation_options: [{ name: "", description: "" }],
+    // accomodation_options: { name: string; detail: string }[],
     teaching_and_learning_approach: "",
-    faqs: [], 
+    faqs: [],
   });
   const fetchData = async () => {
     try {
@@ -107,7 +107,7 @@ export default function Countrypage({
     fetchData();
   }, []);
   console.log(country.health, "Country from parent");
-  
+
   return country ? (
     <div>
       <div className="w-[90%] mx-auto">
@@ -136,7 +136,7 @@ export default function Countrypage({
         visaRequirements={country.visa_requirements || []}
         countryName={country.country_name}
       />
-      <AccomodationOptions accomodation={country?.accomodation_options} />
+      {/* <AccomodationOptions accomodation={country?.accomodation_options} /> */}
       <AccCrousel
         countryName={country.country_name}
         teaching_and_learning_approach={
@@ -153,15 +153,7 @@ export default function Countrypage({
 
       <Healthcare health={country.health} countryName={country.country_name} />
 
-      <FAQ title="Frequently Asked Questions:" items={country.faqs } />
-      {/* <FAQ
-        title="Frequently Asked Questions:"
-        items={(country?.faqs || []).map((faq) => ({
-          question: faq,
-          answer: "",
-        }))}
-      /> */}
-
+      {/* <FAQ title="Frequently Asked Questions:" items={country?.faqs ? country?.faqs : []} /> */}
       <section className="relative w-full  h-auto lg:mt-10 flex items-center px-4 sm:px-8 md:px-12">
         {/* Background Image */}
         <div className="absolute top-0 left-0 w-full h-full z-0">

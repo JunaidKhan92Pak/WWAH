@@ -1,9 +1,7 @@
 import React from "react";
 import Image from "next/image";
-// import acdm from "/countrypage/acdm.png";
-// import language from "/countrypage/language.png";
 interface HeroProps {
-    country :{
+  country: {
     id: string;
     country_name: string;
     capital: string;
@@ -30,12 +28,12 @@ interface HeroProps {
     scholarships: string[];
     visa_requirements: string[];
     work_while_studying: string;
-    accomodation_options: { name: string; description: string }[];
+    // accomodation_options: { name: string; description: string }[];
     teaching_and_learning_approach?: string;
     multicultural_environment?: string;
     faqs?: string[];
   }
-  // country: {
+
   //   id: string;
   //   country_name: string;
   //   capital: string;

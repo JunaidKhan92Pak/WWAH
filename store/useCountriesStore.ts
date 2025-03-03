@@ -2,7 +2,7 @@ import { create } from "zustand";
 interface CountryState {
   search: string;
   loading: boolean;
-  countries: [];
+  countries: any[];
   setSearch: (search: string) => void;
   setCountries: (countries: any[]) => void;
   fetchCountries: () => Promise<void>;
@@ -16,7 +16,6 @@ export const useCountry = create<CountryState>((set, get) => ({
     get().fetchCountries(); // Fetch courses when search changes
   },
   setCountries: (countries) => {
-    console.log(countries , "the")
     set({ countries });
   },
   fetchCountries: async () => {
