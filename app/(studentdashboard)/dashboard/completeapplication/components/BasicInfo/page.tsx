@@ -41,12 +41,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import ContactDetailform from "./Basic/ContactDetailform";
-import CurrentAddress from "./Basic/CurrentAddress";
-import PassportAndVisaForm from "./Basic/PassportandVisaform";
-import LearningExperienceAbroad from "./Basic/LearningExperienceAbroad";
-import FinancialSponsorInformation from "./Basic/FinancialSponsorInformation";
-import FamilyMembers from "./Basic/FamilyMembers";
+import ContactDetailform from "./components/ContactDetailform";
+import CurrentAddress from "./components/CurrentAddress";
+import PassportAndVisaForm from "./components/PassportandVisaform";
+import LearningExperienceAbroad from "./components/LearningExperienceAbroad";
+import FinancialSponsorInformation from "./components/FinancialSponsorInformation";
+import FamilyMembers from "./components/FamilyMembers";
+
 
 // Form Validation Schema
 const formSchema = z.object({
@@ -243,9 +244,8 @@ const BasicInfo = () => {
                           <FormControl>
                             <Button
                               variant="outline"
-                              className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] ${
-                                !field.value ? "text-[#313131]" : ""
-                              }`}
+                              className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] ${!field.value ? "text-[#313131]" : ""
+                                }`}
                             >
                               {field.value ? (
                                 format(field.value, "yyyy/MM/dd")
@@ -408,7 +408,7 @@ const BasicInfo = () => {
 
           {/* Pagination Controls */}
           <Pagination>
-              {/* Previous Button */}
+            {/* Previous Button */}
             <PaginationContent className="flex justify-center mt-4 gap-4 items-center">
               {/* Previous Button */}
               <PaginationItem>
@@ -417,15 +417,17 @@ const BasicInfo = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
-                  className={`p-2 text-sm  ${
-                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                  }`}
+                  className={`p-2 text-sm  ${currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }`}
                 >
                   Previous
                 </PaginationPrevious>
               </PaginationItem>
 
-
+              {/* Current Page Number */}
+              <span className="px-4 py-2 text-sm font-semibold  rounded-lg border">
+                {currentPage}
+              </span>
 
               {/* Next Button */}
               <PaginationItem>
@@ -434,11 +436,10 @@ const BasicInfo = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
-                  className={`p-2 text-sm  ${
-                    currentPage === totalPages
+                  className={`p-2 text-sm  ${currentPage === totalPages
                       ? "pointer-events-none opacity-50"
                       : ""
-                  }`}
+                    }`}
                 >
                   Next
                 </PaginationNext>

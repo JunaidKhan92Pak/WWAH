@@ -67,7 +67,7 @@ const GKSscholarships = () => {
             </div> */}
 
             <div
-              className=" relative w-full md:w-1/2 justify-center items-center"
+              className=" relative w-full xl:w-1/2 justify-center items-center"
               style={{
                 backgroundImage: "url('/scholarshipdetail/benefit.svg')",
                 backgroundSize: "270px 270px", // Maintain original size
@@ -77,7 +77,7 @@ const GKSscholarships = () => {
               }}
             >
               <div className="border border-yellow-300 w-[100%] flex justify-end  ">
-                <div className="flex flex-row w-[85%] justify-between py-8 items-end">
+                <div className="flex flex-row xl:w-[85%] justify-between py-8 items-end">
                   <p className="text-white text-[16px] border border-red-700">
                     {" "}
                     Full Tuition Coverage
@@ -91,8 +91,8 @@ const GKSscholarships = () => {
                 </div>
                 
               </div>
-              <div className="w-full justify-end">
-                <div className="flex flex-row w-full justify-between ">
+              <div className="border border-yellow-300 w-[100%] flex justify-end  ">
+                <div className="flex flex-row xl:w-[93%] justify-between  items-start">
                   <div className="w-[30%] items-end">
 
                   <p className="text-white text-[16px] border border-red-700">
@@ -108,20 +108,23 @@ const GKSscholarships = () => {
                   </div>{" "}
                 </div>
               </div>{" "}
-              {/* <div className="w-full">
-                <div className="flex flex-row w-full justify-between">
+              <div className="border border-yellow-300 w-[100%] flex justify-end  pt-4">
+                <div className="flex flex-row xl:w-[88%] justify-between  items-start">
+                  <div className="w-[25%] items-end">
+
                   <p className="text-white text-[16px] border border-red-700">
                     {" "}
                     Full Tuition Coverage
                   </p>
-                  <div className="w-[45%]">
+                  </div>
+                  <div className="w-[40%]">
                     {" "}
                     <p className="text-white text-[16px] border border-blue-600">
                       €1,400 Monthly Stipend to cover living expenses
                     </p>
                   </div>{" "}
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>

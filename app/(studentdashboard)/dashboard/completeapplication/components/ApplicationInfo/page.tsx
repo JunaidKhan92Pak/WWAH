@@ -7,10 +7,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import LanguageProficiency from "./Application/LanguageProficiency";
-import StandardizedTest from "./Application/StandardizedTest";
-import EducationalBackground from "./Application/EducationalBackground";
-import WorkExperience from "./Application/WorkExperience";
+import EducationalBackground from "./components/EducationalBackground";
+import LanguageProficiency from "./components/LanguageProficiency";
+import StandardizedTest from "./components/StandardizedTest";
+import WorkExperience from "./components/WorkExperience";
+
 
 const ApplicationInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
