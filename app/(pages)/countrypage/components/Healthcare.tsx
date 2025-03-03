@@ -1,69 +1,128 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import Image from "next/image";
-const Healthcare = () => {
+const Healthcare = ({ health, countryName }) => {
+  const [showMore, setShowMore] = useState(false);
   return (
     <>
       <section className="bg-gray-50 py-4 lg:pt-6 w-full">
         <div className="w-[90%] mx-auto">
-          <div className="lg:w-4/5 mx-auto">          
-          <h2 className="lg:w-4/5 mx-auto text-gray-800 text-center mb-4 md:mb-8">
-            Healthcare & Safety Facilities in United Kingdom!{" "}
-          </h2></div>
+          <div className="lg:w-4/5 mx-auto">
+            <h2 className="lg:w-4/5 mx-auto text-gray-800 text-center mb-4 md:mb-8">
+              Healthcare & Safety Facilities in {countryName}!{" "}
+            </h2>
+          </div>
 
           {/* row 1 */}
           <div className="flex flex-col gap-5 md:gap-10">
-          <div className="flex flex-col md:flex-row items-center gap-5 md:gap-20">
-            {/* Image Section */}
+            <div className="flex flex-col md:flex-row items-center gap-5 md:gap-20">
+              {/* Image Section */}
 
-            {/* Text Section */}
-            <div className="text-center md:text-left w-full md:w-[50%] pl-0 md:pl-8">
-              <h3 className=" text-gray-900 mb-2">
-                National Health Service (NHS)
-              </h3>
-              <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
-                The National Health Service (NHS) is the UK&#39;s publicly funded
-                healthcare system, and international students who are studying
-                in the UK for more than six months have access to its services.
-              </p>
+              {/* Text Section */}
+              <div className="text-center md:text-left w-full md:w-[50%] pl-0 md:pl-8">
+                <h3 className=" text-gray-900 mb-2">
+                  {/* National Health Service (NHS) */}
+                  {health ? health[0].name : <></>}
+                </h3>
+                <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
+                  {health ? health[0].description : <></>}
+                </p>
+              </div>
+              <div className="w-full md:w-[50%] rounded-2xl">
+                <Image
+                  src="/carehealth.png"
+                  alt="Missionicon"
+                  width={400}
+                  height={297}
+                  className="w-full rounded-3xl"
+                />
+              </div>
             </div>
-            <div className="w-full md:w-[50%] rounded-2xl">
-              <Image
-                src="/carehealth.png"
-                alt="Missionicon"
-                width={400}
-                height={297}
-                className="w-full rounded-3xl"
-              />
-            </div>
-          </div>
-          {/* row 2 */}
-          <div className="flex flex-col-reverse md:flex-row items-center gap-5 md:gap-20">
-            {/* Text Section */}
+            {/* row 2 */}
+            <div className="flex flex-col-reverse md:flex-row items-center gap-5 md:gap-20">
+              {/* Text Section */}
 
-            {/* Image Section */}
-            <div className="w-full md:w-[50%]">
-              <Image
-                src="/healthcare.png"
-                alt="visionicon"
-                className="w-full rounded-3xl"
-                width={400}
-                height={297}
-              />
+              {/* Image Section */}
+              <div className="w-full md:w-[50%]">
+                <Image
+                  src="/healthcare.png"
+                  alt="visionicon"
+                  className="w-full rounded-3xl"
+                  width={400}
+                  height={297}
+                />
+              </div>
+              {/* <div className="text-center md:text-left w-full md:w-[50%] ">
+                {health?.slice(1).map((item, index) => (
+                  <div key={index}>
+                    <h3 className="text-gray-900 mb-2">{item.name}</h3>
+                    <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
+                      {item.description ? (
+                        <ul className="list-disc pl-5">
+                          {item.description.map((point, i) => (
+                            <li key={i}>{point}</li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </p>
+                  </div>
+                ))}
+              </div> */}
+              <div className="text-center md:text-left w-full md:w-[50%]">
+                {/* First Item (Visible by Default) */}
+                <div>
+                  <h3 className="text-gray-900 mb-2">{health?.[1].name}</h3>
+                  <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
+                    {health?.[1].description ? (
+                      <ul className="list-disc pl-5">
+                        {health?.[1].description.map((point, index) => (
+                          <li key={index}>{point}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </p>
+                </div>
+
+                {/* Read More Section */}
+                {health?.length > 2 && (
+                  <>
+                    {!showMore && (
+                      <button
+                        onClick={() => setShowMore(true)}
+                        className="text-blue-600 hover:underline mt-2 block"
+                      >
+                        Read more...
+                      </button>
+                    )}
+
+                    {showMore &&
+                      health?.slice(2).map((item, index) => (
+                        <div key={index} className="mt-4">
+                          <h3 className="text-gray-900 mb-2">{item.name}</h3>
+                          <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
+                            {item.description ? (
+                              <ul className="list-disc pl-5">
+                                {item.description.map((point, i) => (
+                                  <li key={i}>{point}</li>
+                                ))}
+                              </ul>
+                            ) : null}
+                          </p>
+                        </div>
+                      ))}
+
+                    {showMore && (
+                      <button
+                        onClick={() => setShowMore(false)}
+                        className="text-blue-600 hover:underline mt-2 block"
+                      >
+                        Show less
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-            <div className="text-center md:text-left w-full md:w-[50%] ">
-              <h3 className=" text-gray-900 mb-2">How it works:</h3>
-              <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
-                Healthcare Surcharge: When applying for a student visa,
-                international students are required to pay an Immigration Health
-                Surcharge (IHS), which grants them access to NHS services
-                throughout their stay. General Practitioner (GP): Students
-                should register with a local GP (family doctor) upon arrival in
-                the UK. The GP is the first point of contact for non-emergency
-                medical issues, routine check-ups, and referrals to specialists.
-                Read more...
-              </p>
-            </div>
-          </div>
           </div>
         </div>
       </section>

@@ -8,13 +8,16 @@ import { Button } from "@/components/ui/button";
 // import language from "../../../../public/language.png";
 // import health from "../../../../public/health.png";
 import Link from "next/link";
-export const VisaRequirements = () => {
+import Image from "next/image";
+export const VisaRequirements = ({ visaRequirements ,countryName}) => {
   interface requiremtProps {
     id: number;
     // src: StaticImageData;
     src: string;
     content: string;
   }
+  const visarequirement = visaRequirements?.map((r) => (r))
+  console.log(visarequirement);
   const requirements: requiremtProps[] = [
     {
       id: 1,
@@ -64,17 +67,17 @@ export const VisaRequirements = () => {
               </h4>
             </div>
             <ol className=" h-[90%] grid grid-cols-1  md:grid-cols-2 gap-2">
-              {requirements.map((requirement) => (
-                <li key={requirement.id} className=" flex items-center  ">
+              {requirements?.map((requirement, indx) => (
+                <li key={indx} className=" flex items-center  ">
                   <div className="flex items-center space-x-3 ">
-                    {/* <Image
+                    <Image
                       src={requirement.src}
                       alt={requirement.content}
                       className="rounded-lg  w-10 h-10"
                       width={10}
                       height={10}
-                    /> */}
-                    <p>{requirement.content}</p>
+                    />
+                    <p>{visarequirement ? visarequirement[indx] : <></>}</p>
                   </div>
                 </li>
               ))}
@@ -100,14 +103,13 @@ export const VisaRequirements = () => {
                   <p className="font-semibold">
                     LEARN MORE ABOUT STEP-BY-STEP GUIDE TO
                     <br />
-                    UK VISA APPLICATION PROCESS
+                    {countryName} VISA APPLICATION PROCESS
                   </p>
 
                   {/* Button */}
                   <div className="w-full flex items-center justify-center">
                     <Link href="/visaguide">
                       <Button className="bg-red-700 2xl:w-60 2xl:h-35 2xl:py-10 2xl:text-[30px]">
-
                         Find out More
                       </Button>
                     </Link>

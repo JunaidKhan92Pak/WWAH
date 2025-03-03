@@ -38,7 +38,7 @@ const Page = () => {
       }
       const posts = await response.json();
       setVisa(posts.visaguide);
-      console.log(posts, "posts");
+      // console.log(posts, "posts");
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error fetching visa guide:", error.message);

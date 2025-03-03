@@ -1,27 +1,21 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import { useCountry } from "@/store/useCountriesStore";
+import Link from "next/link";
 const Page = () => {
-  const CountryArray = [
-    { src: "/country1.png", alt: "United States(US) " },
-    { src: "/country2.png", alt: "China " },
-    { src: "/country3.png", alt: "Canada" },
-    { src: "/country4.png", alt: "Italy " },
-    { src: "/country5.png", alt: "United Kingdom(UK) " },
-    { src: "/country6.png", alt: "Ireland " },
-    { src: "/country7.png", alt: "New Zealand " },
-    { src: "/country8.png", alt: "Denmark " },
-    { src: "/country9.png", alt: "France" },
-  ];
-  const [search, setSearch] = useState("");
 
-  const handelFilter = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const [search, setSearch] = useState("");
+  const { countries, fetchCountries } = useCountry() as { countries: { _id: string, short_name: string, alt: string }[], fetchCountries: () => void };
+  const handelFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-  }
-  const searchedCountry = CountryArray.filter((country) =>
-    country.alt.toLowerCase().includes(search.toLowerCase())
-  );
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+  console.log(countries, "dsdasdwqa");
 
   return (
     <>
@@ -35,12 +29,13 @@ const Page = () => {
         /> */}
         <div className="flex justify-between md:py-5">
           <div className="space-y-2">
-            <h3 className="leading-6 md:leading-10 md:mb-2 font-bold py-2">Explore the Most Viewed Study Destinations!
+            <h3 className="leading-6 md:leading-10 md:mb-2 font-bold py-2">
+              Explore the Most Viewed Study Destinations!
             </h3>
             {/* <p>Most viewed & all - time countires</p> */}
           </div>
           {/* <div className="bg-gray-100 rounded-lg px-4"> */}
-          <div className="w-[90%] md:w-[60%]  flex justify-end  items-center gap-4 md:p-2">
+          <div className="w-[90%] md:w-[60%]  flex justify-end  items-center gap-4 md:p-2 ">
             <div className="flex  bg-[#F1F1F1]   rounded-lg ">
               <Image
                 src="/search.svg"
@@ -59,18 +54,21 @@ const Page = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-5">
-          {searchedCountry .map((country, index) => (
-            <div key={index} className="flex-shrink-0">
-              <Image
-                src={country.src}
-                alt={country.alt}
-                width={0}
-                height={0}
-                sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
-                className="rounded-xl  w-full h-auto max-w-[600px] md:max-w-[400px] xl:max-w-[400px] 2xl:max-w-[800px]"
-              />
-            </div>
+        <div className="grid grid-cols-4 gap-5 ">
+          {countries?.map((country, index) => (
+            <Link target="_blank"  href={`/countries/${country._id}`} key={index}>
+              <div className="flex-shrink-0 ">
+                <Image
+                  src={`/countryarchive/${country.short_name}.svg`}
+                  alt={country.alt}
+                  width={0}
+                  height={0}
+                  sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
+                  className="rounded-xl w-full h-auto max-w-[600px] md:max-w-[400px] xl:max-w-[400px] 2xl:max-w-[800px]"
+                />
+                {/* <p>{country.country_name}</p> */}
+              </div>
+            </Link>
           ))}
         </div>
       </section>

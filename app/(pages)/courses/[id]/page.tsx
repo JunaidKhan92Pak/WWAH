@@ -60,7 +60,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       universityDocuments: []
     };
   }
-  //   universityname: string;
+
   //   courseData: {
   //     _id: string;
   //     countryname: string;
