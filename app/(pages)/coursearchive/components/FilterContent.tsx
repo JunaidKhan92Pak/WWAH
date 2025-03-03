@@ -353,7 +353,12 @@ export default function FilterContent() {
               onChange={(e) => {
                 const value = Number(e.target.value);
                 setLocalMinBudget(value);
-                { value ? debouncedUpdateMinBudget(value) : debouncedUpdateMinBudget.cancel(); }
+
+                if (!isNaN(value)) {
+                  debouncedUpdateMinBudget(value);
+                } else {
+                  debouncedUpdateMinBudget.cancel();
+                }
               }}
               aria-label="Enter Minimum Budget"
             />
@@ -365,12 +370,14 @@ export default function FilterContent() {
               type="number"
               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400"
               placeholder="Max Budget"
-              value={localMaxBudget}
               onChange={(e) => {
                 const value = Number(e.target.value);
                 setLocalMaxBudget(value);
-                { value ? debouncedUpdateMaxBudget(value) : debouncedUpdateMaxBudget.cancel(); }
-                ;
+                if (!isNaN(value)) {
+                  debouncedUpdateMaxBudget(value);
+                } else {
+                  debouncedUpdateMaxBudget.cancel();
+                }
               }}
               aria-label="Enter Maximum Budget"
             />

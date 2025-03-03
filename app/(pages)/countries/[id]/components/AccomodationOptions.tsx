@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from "next/link";
 
 interface Accomodation {
-  accomodation : { name: string; detail: string }[];
+  accomodation: { name: string; detail: string }[];
 }
 
 // interface AccomodescriptionationOptionsProps {
@@ -49,8 +49,8 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
   ];
   const name = accomodation?.map((acc) => acc.name);
   const description = accomodation?.map((acc) => acc.detail);
-  console.log(name,"name")
-  console.log(description,"description")
+  console.log(name, "name")
+  console.log(description, "description")
   return (
     <>
       <div>
