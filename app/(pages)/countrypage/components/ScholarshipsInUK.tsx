@@ -2,19 +2,7 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-const healthcareItems = [
-  { text: "Public Health", image: "/countrypage/img3.svg" },
-  { text: "Healthcare Promotion", image: "/countrypage/img2.svg" },
-  { text: "Healthcare Information", image: "/countrypage/img5.png" },
-  { text: "Healthcare Management", image: "/countrypage/img4.svg" },
-  { text: "Healthcare Policy", image: "/countrypage/img1.svg" },
-]
-
-export const ScholarshipsInUK = () => {
-
-
-
+export const ScholarshipsInUK = ({ countryName}) => {
   return (
     <>
       <section>
@@ -25,10 +13,10 @@ export const ScholarshipsInUK = () => {
           }}
         >
           <div className=" absolute inset-0 bg-black opacity-60 z-0"></div>
-          <div className="flex flex-col lg:flex-row w-full gap-5 m-4 justify-center items-start md:items-center">
-            <div className="relative w-full md:w-3/4 xl:w-1/2 md:space-y-5  text-white">
-              <h3 className="md:mt-2 pt-4">Scholarships in United Kingdom!</h3>
-              <p>
+          <div className="flex flex-col md:flex-row w-[90%] justify-between items-center">
+            <div className=" relative w-full md:w-1/2  md:space-y-5 md:p-3 text-white">
+              <h3 className="md:mt-2 pt-4">Scholarships in {countryName}!</h3>
+              <p className="text-[#9D9D9D]">
                 Discover a range of scholarship opportunities on our dedicated
                 scholarship page. Whether you&#39;re a prospective student or
                 already enrolled, there are options available to help support

@@ -3,32 +3,48 @@ import Image from "next/image";
 // import acdm from "/countrypage/acdm.png";
 // import language from "/countrypage/language.png";
 
-const Hero = () => {
+const Hero = ({ country }) => {
   const arr1 = [
-    { img: "/countrypage/capital.svg", Heading: "Capital", Name: "London" },
-    { img: "/countrypage/language.svg", Heading: "Language", Name: "English" },
+    {
+      img: "/countrypage/capital.svg",
+      Heading: "Capital",
+      Name: `${country.capital}`,
+    },
+    {
+      img: "/countrypage/language.svg",
+      Heading: "Language",
+      Name: `${country.language}`,
+    },
     {
       img: "/countrypage/population.svg",
       Heading: "Population",
-      Name: "67,961,439",
+      Name: `${country.population}`,
     },
     {
       img: "/countrypage/currency.svg",
       Heading: "Currency",
-      Name: "Pound Sterling",
+      Name: `${country.currency}`,
     },
     {
       img: "/countrypage/international.svg",
       Heading: "International Students",
-      Name: "679970",
+      Name: `${country.international_students}`,
     },
     {
       img: "/countrypage/acdm.svg",
       Heading: "Academic Intakes",
-      Name: "Pound Sterling",
+      Name: `${country.academic_intakes}`,
     },
-    { img: "/countrypage/code.svg", Heading: "Dialing Codes", Name: "+44" },
-    { img: "/countrypage/gdp.svg", Heading: "GDP", Name: "$4.5 BILLION" },
+    {
+      img: "/countrypage/code.svg",
+      Heading: "Dialing Codes",
+      Name: `${country.dialing_code}`,
+    },
+    {
+      img: "/countrypage/gdp.svg",
+      Heading: "GDP",
+      Name: `${country.gdp}`,
+    },
   ];
 
   return (
@@ -49,12 +65,12 @@ const Hero = () => {
               height={80}
               className="object-cover w-[55px] md:w-[40px] lg:w-1/10 xl:w-1/12"
             />
-            <h1>Study In United Kingdom</h1>
+            <h1>Study In {country.country_name}</h1>
           </div>
           <p className="py-2">
             Step Into Success with a{" "}
             <span className="text-[#F6B677] font-bold">World-Class</span>{" "}
-            Education in the UK.
+            Education in the {country.country_name}.
           </p>
         </div>
       </div>
@@ -92,7 +108,9 @@ const Hero = () => {
               </div>
               {/* Text Content */}
               <div className="flex flex-col pt-2">
-                <p className="font-bold md:text-sm text-[12px] text-wrap">{item.Heading}</p>
+                <p className="font-bold md:text-sm text-[12px] text-wrap">
+                  {item.Heading}
+                </p>
                 <p className="md:text-sm text-[12px] text-wrap">{item.Name}</p>
               </div>
             </div>

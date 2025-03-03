@@ -2,32 +2,57 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import "flowbite";
-const AccCrousel = () => {
+const AccCrousel = ({
+  countryName,
+  teaching_and_learning_approach,
+  multicultural_environment,
+}) => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [nestedIndex, setNestedIndex] = useState(0);
   const slides = [
     {
       image: "/mainbanner.jpeg",
-      text: "Academic Life and Cultural Diversity in United Kingdom",
+      text: ` Academic Life and Cultural Diversity in jj ${countryName || ""}`,
       icon: "/vector.png",
     },
     {
       image: "/teaching&learning-approach.jpeg",
       heading: "Teaching and Learning Approach",
       list: [
-        { text: "Lectures, Seminars, and Tutorials", image: "/LECTURES.jpg" },
-        { text: "Research Opportunities", image: "/Research Opportunities.jpg" },
-        { text: "Independent Study", image: "/Independent study.jpg" },
-        { text: "Assessments", image: "/Assessment.jpg" },
+        {
+          text: `${teaching_and_learning_approach?.[0] || ""}`,
+          image: "/LECTURES.jpg",
+        },
+        {
+          text: `${teaching_and_learning_approach?.[1] || ""}`,
+          image: "/Research Opportunities.jpg",
+        },
+        {
+          text: `${teaching_and_learning_approach?.[2] || ""}`,
+          image: "/Independent study.jpg",
+        },
+        {
+          text: `${teaching_and_learning_approach?.[3] || ""}`,
+          image: "/Assessment.jpg",
+        },
       ],
     },
     {
       image: "/multiculturalenvironment.jpg",
       heading: "Multicultural Environment",
       list: [
-        { text: "Student Mix", image: "/Student Mix.png" },
-        { text: "Cultural Societies", image: "/Cultural Societies.jpg" },
-        { text: "Festivals and Cultural Events", image: "/Cultural Festivals.jpeg" },
+        {
+          text: `${multicultural_environment?.[0] || ""}`,
+          image: "/Student Mix.png",
+        },
+        {
+          text: `${multicultural_environment?.[1] || ""}`,
+          image: "/Cultural Societies.jpg",
+        },
+        {
+          text: `${multicultural_environment?.[2] || ""}`,
+          image: "/Cultural Festivals.jpeg",
+        },
       ],
     },
   ];
@@ -43,8 +68,8 @@ const AccCrousel = () => {
     // Automatically change the nested index for slides with a list
     if (slides[activeSlideIndex]?.list?.length) {
       const interval = setInterval(() => {
-        setNestedIndex((prev) =>
-          (prev + 1) % (slides[activeSlideIndex]?.list?.length ?? 1)
+        setNestedIndex(
+          (prev) => (prev + 1) % (slides[activeSlideIndex]?.list?.length ?? 1)
         );
       }, 5000); // Change every 5 seconds
       return () => clearInterval(interval);
@@ -58,8 +83,9 @@ const AccCrousel = () => {
             {slides.map((slide, slideIndex) => (
               <div
                 key={slideIndex}
-                className={`${activeSlideIndex === slideIndex ? "block" : "hidden"
-                  } duration-700 ease-in-out`}
+                className={`${
+                  activeSlideIndex === slideIndex ? "block" : "hidden"
+                } duration-700 ease-in-out`}
                 data-carousel-item
               >
                 <div
@@ -108,7 +134,6 @@ const AccCrousel = () => {
                           />
                         )}
                         <h4 className="text-center py-5">{slide.text}</h4>
-
                       </>
                     )}
                   </div>
@@ -122,10 +147,11 @@ const AccCrousel = () => {
               <button
                 key={slideIndex}
                 type="button"
-                className={`md:w-2 md:h-2 h-1 w-1 rounded-full ${activeSlideIndex === slideIndex
-                  ? "bg-blue-500"
-                  : "bg-gray-500"
-                  }`}
+                className={`md:w-2 md:h-2 h-1 w-1 rounded-full ${
+                  activeSlideIndex === slideIndex
+                    ? "bg-blue-500"
+                    : "bg-gray-500"
+                }`}
                 onClick={() => {
                   setActiveSlideIndex(slideIndex);
                   setNestedIndex(0); // Reset nested index when changing slides
@@ -188,4 +214,4 @@ const AccCrousel = () => {
     </div>
   );
 };
-export default AccCrousel; 
+export default AccCrousel;

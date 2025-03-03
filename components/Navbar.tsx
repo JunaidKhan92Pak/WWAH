@@ -40,7 +40,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="h-0 md:h-[50px]" >
+    <header className="h-0 md:h-[50px]">
       <div className="fixed z-20 w-full mb-2 p-2 bg-white top-0 hidden md:block ">
         <div className=" w-[90%]  mx-auto py-3 px-5 shadow-md rounded-xl bg-white text-black">
           <div className="flex justify-between gap-3 items-center">
@@ -51,7 +51,7 @@ const Navbar = () => {
                 alt="logo"
                 width={113}
                 height={45}
-              // className="2xl:w-[150px] 2xl:h-[60px]"
+                // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}
@@ -67,9 +67,10 @@ const Navbar = () => {
                     </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
-                    <Link href="/Universities" passHref>
+                    <Link href="/uniarchive" passHref>
                       <NavigationMenuLink className="hover:underline font-normal">
-                        Universities   </NavigationMenuLink>
+                        Universities{" "}
+                      </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
 

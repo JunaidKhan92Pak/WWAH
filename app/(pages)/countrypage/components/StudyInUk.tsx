@@ -6,39 +6,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 
-const StudyInUk = () => {
-  const { universities, fetchUniversities, } = useUniversityStore();
+const StudyInUk = ({ country, countryName }) => {
+  const { universities, fetchUniversities } = useUniversityStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
-  const fullText = `
-  Studying in the United Kingdom offers a wealth of advantages that make
-  it an attractive destination for international students. The UK is
-  home to world-class universities renowned for their high academic
-  standards and cutting-edge research. Students can experience a rich
-  blend of cultures, as campuses are filled with individuals from around
-  the globe, fostering an inclusive environment. Many UK degree programs,
-  especially at the postgraduate level, are shorter in duration than
-  those in other countries, allowing for time and cost savings. UK
-  qualifications are globally recognized and highly regarded by employers,
-  enhancing career prospects. Additionally, universities provide extensive
-  support services, including orientation programs and academic assistance,
-  helping students transition smoothly. The opportunity to immerse oneself
-  in the UKs rich history, culture, and language further enriches the experience.
-  With options for part-time work and numerous networking opportunities
-  through university events, studying in the UK not only provides an exceptional
-  education but also valuable life experiences.
-`;
+  const fullText = ``;
 
-  const truncatedText = `
-  Studying in the United Kingdom offers a wealth of advantages that make
-  it an attractive destination for international students. The UK is
-  home to world-class universities renowned for their high academic
-  standards and cutting-edge research. Students can experience a rich
-  blend of cultures, as campuses are filled with individuals from around
-  the globe, fostering an inclusive environment. Many UK degree programs,
-  especially at the postgraduate level, are shorter in duration than
-  those in other countries.`;
+  const truncatedText = `${country}`;
 
   const [isExpanded, setIsExpanded] = useState(false);
   console.log(universities);
@@ -71,7 +46,9 @@ const StudyInUk = () => {
         <div className="absolute inset-0 bg-black opacity-90 z-0"></div>
 
         <div className="relative z-10 w-full md:px-6 space-y-2">
-          <h2 className="md:pt-10 pb-4">Popular Universities in United Kingdom</h2>
+          <h2 className="md:pt-10 pb-4">
+            Popular Universities in {countryName}
+          </h2>
 
           <div
             className="flex overflow-x-auto md:space-x-4 md:p-4 hide-scrollbar gap-1 max-w-[90%] mx-auto"
@@ -87,7 +64,9 @@ const StudyInUk = () => {
               >
                 <div className="relative md:h-[120px] lg:h-[200px]">
                   <div className="absolute top-5 left-0 bg-gradient-to-r from-[#fce7d2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">
-                    <p className="md:text-sm text-[10px] font-medium">QS World:</p>
+                    <p className="md:text-sm text-[10px] font-medium">
+                      QS World:
+                    </p>
                     <p className="md:text-sm text-[10px] font-semibold">
                       Ranking:{item.ranking[0].detail}
                     </p>
@@ -115,14 +94,19 @@ const StudyInUk = () => {
                 <div className="md:px-4 lg:h-[40px] flex flex-col justify-between">
                   <div>
                     {/* <p className="lg:font-bold text-black text-left">{item.universityName}</p> */}
-                    <p className="text-gray-900 text-left text-[10px] leading-3 md:text-[12px] font-semibold lg:text-[14px] p-1 md:p-0">{item.university_name}</p>
+                    <p className="text-gray-900 text-left text-[10px] leading-3 md:text-[12px] font-semibold lg:text-[14px] p-1 md:p-0">
+                      {item.university_name}
+                    </p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
           <Link href="/Universities">
-            <Button className="bg-red-700 mt-3">Explore All Universities</Button></Link>
+            <Button className="bg-red-700 mt-3">
+              Explore All Universities
+            </Button>
+          </Link>
         </div>
       </section>
     </>

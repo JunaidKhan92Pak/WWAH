@@ -3,7 +3,11 @@ import React, { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton"
@@ -24,21 +28,21 @@ const Page = () => {
         [setSearch]
     );
 
-    // Handle Checkbox Changes
-    function handleCheckboxChange(destination: string): void {
-        if (destination === "All") {
-            if (country.length === country.length) {
-                setCountry([]); // Uncheck all
-            } else {
-                setCountry(country); // Select all
-            }
-        } else {
-            const updatedSelected = country.includes(destination)
-                ? country.filter((item) => item !== destination) // Remove if exists
-                : [...country, destination]; // Add if not exists
-            setCountry(updatedSelected); //  Set array directly
-        }
+  // Handle Checkbox Changes
+  function handleCheckboxChange(destination: string): void {
+    if (destination === "All") {
+      if (country.length === country.length) {
+        setCountry([]); // Uncheck all
+      } else {
+        setCountry(country); // Select all
+      }
+    } else {
+      const updatedSelected = country.includes(destination)
+        ? country.filter((item) => item !== destination) // Remove if exists
+        : [...country, destination]; // Add if not exists
+      setCountry(updatedSelected); //  Set array directly
     }
+  }
 
     return (
         <section className="w-[90%] mx-auto">

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-const PermanentResidency = () => {
+const PermanentResidency = ({ residency, countryName }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // const toggleText = () => {
@@ -21,11 +21,12 @@ const PermanentResidency = () => {
       {/* Content Section (50%) */}
       <div className="relative z-10 w-full lg:w-1/2 flex flex-col justify-center space-y-2 sm:px-4 text-left">
         <h5>
-          How to Get Permanent Residency in the United Kingdom as an
+          How to Get Permanent Residency in the {countryName} as an
           International Student?
         </h5>
         <div className="text-[rgb(209,207,207)] space-y-3">
-          <ul className="leading-relaxed">
+          <p>{residency}</p>
+          {/* <ul className="leading-relaxed">
             <li>
               • To get Permanent Residency in United Kingdom, first step is to
               obtain a Student Visa (Tier 4) to study in the UK.
@@ -52,11 +53,11 @@ const PermanentResidency = () => {
               visas and Not more than 180 days/year absence, you will meet
               Residency requirements.
             </li>
-          </ul>
+          </ul> */}
 
           {isExpanded && (
             <>
-              <ul className="leading-relaxed">
+              {/* <ul className="leading-relaxed">
                 <li>
                   {" "}
                   • Apply for Indefinite Leave to Remain (ILR). Documents needed
@@ -81,7 +82,7 @@ const PermanentResidency = () => {
                   certificate and ID to apply for a British Passport. Processing
                   time for this will be 3–6 weeks.
                 </li>
-              </ul>
+              </ul> */}
             </>
           )}
           <p>

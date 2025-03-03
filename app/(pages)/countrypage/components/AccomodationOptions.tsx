@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import AccCrousel from "./AccCrousel";
 
-const AccomodationOptions = () => {
+const AccomodationOptions = ({ accomodation }) => {
   const arr2 = [
     {
       src: "/countrypage/uniAccomodation.jpg",
@@ -39,7 +38,10 @@ const AccomodationOptions = () => {
       p: "For students who need temporary accommodation (e.g., for a short course, study abroad, or before securing permanent housing), there are options like Hostels and Hotels.",
     },
   ];
-
+const name = accomodation?.map((acc) =>(acc.name))
+  const detail = accomodation?.map((acc) => (acc.detail))
+  console.log(name,"name")
+  console.log(detail,"detail")
   return (
     <div>
       <div className="md:my-10 my-5 2xl:my-20">
@@ -66,14 +68,14 @@ const AccomodationOptions = () => {
 
               {/* Text Overlay for Larger Screens */}
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-100 rounded-xl hidden sm:flex flex-col justify-end p-4">
-                <p className="text-white text-lg font-bold">{image.heading}</p>
-                <p className="text-white text-sm leading-4">{image.p}</p>
+                <p className="text-white text-lg font-bold">{name ? name[index] : <></>}</p>
+                <p className="text-white text-sm leading-4">{detail ? detail[index] : <></>}</p>
               </div>
 
               {/* Text Below the Image for Smaller Screens */}
               <div className="sm:hidden mt-2">
-                <p className="text-[14px] font-bold">{image.heading}</p>
-                <p className="text-[13px] leading-4">{image.p}</p>
+                <p className="text-[14px] font-bold">{name ? name[index] : <></>}</p>
+                <p className="text-[13px] leading-4">{detail ? detail[index] : <></>}</p>
               </div>
             </div>
           ))}
@@ -105,7 +107,6 @@ const AccomodationOptions = () => {
           </div>
         </div>
       </section>
-      <AccCrousel />
     </div>
   );
 };

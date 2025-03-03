@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import Hero from "./components/Hero";
 import StudyInUs from "./components/StudyInUk";
 import WorkOpportunity from "./components/WorkOpportunity";
@@ -13,66 +14,66 @@ import Link from "next/link";
 import FAQ from "@/components/ui/enrollment/FAQ";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import AccCrousel from "./components/AccCrousel";
 const Countrypage = () => {
+      // const [visa, setVisa] = useState({});
+      const [country, setCountry] = useState({});
+      const fetchData = async () => {
+        try {
+          const response = await fetch("/api/getCountry");
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const posts = await response.json();
+          setCountry(posts.country);
+          console.log(posts, "posts");
+        } catch (error) {
+          console.error("Error fetching country:", error.message);
+        }
+      };
+      console.log(country, "Country from Parent");
+      useEffect(() => {
+        fetchData();
+      }, []);
   return (
     <div>
       <div className="w-[90%] mx-auto">
-        <Hero />
+        <Hero country={country} />
       </div>
-      <StudyInUs />
-      <WorkOpportunity />
-      <PermanentResidency />
-      <PopularPrograms />
-      
-      <ScholarshipsInUK />
-
-      <VisaRequirements />
-      <AccomodationOptions />
-
-      <Healthcare />
-
-      <FAQ
-        title="Frequently Asked Questions:"
-        items={[
-          {
-            question: "Why should I study in the United Kingdom?",
-            answer:
-              "The UK is home to some of the world's best universities, known for their high academicstandards, innovative teaching methods, and research opportunities.",
-          },
-          {
-            question: "What is the cost of studying in the UK for international students?",
-            answer:
-              "Tuition fees can range from £10,000 to £38,000 per year, depending on the course and university.",
-          },
-          {
-            question:
-              "What type of visa do I need to study in the UK?",
-            answer:
-              "You will need a Tier 4 (General) student visa for courses longer than 6 months. For shortercourses, a Short-term study visa may be required",
-          },
-          {
-            question:
-              "How long does it take to complete a degree in the UK",
-            answer:
-             ` 
-      • Undergraduate degrees: Typically take 3–4 years.
-      • Postgraduate degrees: Usually 1–2 years.
-      • PhDs: Normally take 3–4 years.`,
-          },
-          {
-            question:
-              "What is the post-study work visa in the UK",
-            answer:
-              "The Graduate Route Visa allows international students to stay in the UK for up to 2 years (3years for PhD graduates) after completing their degree to work or look for employment.",
-          },
-          {
-            question:
-              "Is it safe to study and live in the UK?",
-            answer:
-              "Yes, the UK is generally safe for international students. Universities provide robust safety and security services, including campus security, emergency support, and safety apps to ensurestudent well-being.",
-          },
-        ]}
+      <StudyInUs
+        country={country.why_study}
+        countryName={country.country_name}
       />
+      <WorkOpportunity
+        whileStudying={country.work_while_studying}
+        afterStudying={country.work_after_study}
+      />
+      <PermanentResidency
+        residency={country.residency}
+        countryName={country.country_name}
+      />
+      <PopularPrograms country={country} />
+
+      <ScholarshipsInUK
+        scholarships={country.scholarships}
+        countryName={country.country_name}
+      />
+
+      <VisaRequirements
+        visaRequirements={country.visa_requirements}
+        countryName={country.country_name}
+      />
+      <AccomodationOptions accomodation={country.accomodation_options} />
+      <AccCrousel
+        countryName={country.country_name}
+        teaching_and_learning_approach={country.teaching_and_learning_approach}
+        multicultural_environment={country.multicultural_environment}
+      />
+
+      <Healthcare health={country.health} countryName={country.country_name} />
+
+      {/* <FAQ title="Frequently Asked Questions:" items={country.faqs } /> */}
+      <FAQ title="Frequently Asked Questions:" items={country?.faqs || []} />
 
       <section className="relative w-full  h-auto lg:mt-10 flex items-center px-4 sm:px-8 md:px-12">
         {/* Background Image */}
@@ -91,7 +92,7 @@ const Countrypage = () => {
         <div className="relative z-10 gap-4 flex flex-col lg:flex-row items-center  justify-between w-full h-full space-y-4 sm:space-y-0 my-10">
           {/* Left Side - Text */}
           <div className="w-full sm:w-[65%] lg:w-[50%] text-center lg:text-left">
-            <h5  className="md:w-full text-gray-900 leading-10">
+            <h5 className="md:w-full text-gray-900 leading-10">
               Make your dream of studying in the UK a reality with our expert
               guidance!
             </h5>
