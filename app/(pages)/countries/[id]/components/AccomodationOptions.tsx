@@ -1,6 +1,4 @@
 "use client";
-// import { useEffect, useState } from "react";
-// import Image from "next/image";
 import Image from "next/legacy/image";
 import { Button } from '@/components/ui/button';
 import Link from "next/link";
@@ -9,11 +7,7 @@ interface Accomodation {
   accomodation: { name: string; detail: string }[];
 }
 
-// interface AccomodescriptionationOptionsProps {
-//   accomodation: Accomodation[];
-// }
 const AccomodationOptions = ({ accomodation }: Accomodation) => {
-  // const name = accomodation.map((acc) => acc.name);
   const arr2 = [
     {
       src: "/countrypage/uniAccomodation.jpg",
@@ -49,8 +43,7 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
   ];
   const name = accomodation?.map((acc) => acc.name);
   const description = accomodation?.map((acc) => acc.detail);
-  console.log(name, "name")
-  console.log(description, "description")
+
   return (
     <>
       <div>

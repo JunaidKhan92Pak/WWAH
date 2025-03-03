@@ -15,18 +15,9 @@ const Page = () => {
   useEffect(() => {
     fetchCountries();
   }, []);
-  console.log(countries, "dsdasdwqa");
-
   return (
     <>
       <section className="w-[90%] mx-auto">
-        {/* <Image
-          width={1400}
-          height={600}
-          alt="herocourse"
-          src="/courseHero.png"
-          className="w-full object-cover 2xl:h-[60vh] rounded-2xl"
-        /> */}
         <div className="flex justify-between md:py-5">
           <div className="space-y-2">
             <h3 className="leading-6 md:leading-10 md:mb-2 font-bold py-2">
@@ -56,7 +47,7 @@ const Page = () => {
         </div>
         <div className="grid grid-cols-4 gap-5 ">
           {countries?.map((country, index) => (
-            <Link target="_blank"  href={`/countries/${country._id}`} key={index}>
+            <Link target="_blank" href={`/countries/${country._id}`} key={index}>
               <div className="flex-shrink-0 ">
                 <Image
                   src={`/countryarchive/${country.short_name}.svg`}

@@ -10,7 +10,6 @@ export async function GET() {
     // Fetch all universities from the database
     const country = await Country.find({})
       .select("country_name short_name _id"); // Fetch all universities from the "Universities" collection
-    console.log(country, "country");
     // Return a successful response with the fetched universities
     return NextResponse.json(
       {

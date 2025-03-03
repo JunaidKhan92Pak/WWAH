@@ -14,7 +14,6 @@ export async function GET(req: Request) {
     }
     // Fetch all universities from the database
     const country = await Country.findById(id).lean(); // Fetch all universities from the "Universities" collection
-    console.log(country, "country");
     // Return a successful response with the fetched universities
     return NextResponse.json(
       {
