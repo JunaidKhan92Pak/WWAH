@@ -1,11 +1,19 @@
 import React from "react";
 import Image from "next/image";
-import popularPrograms from "../../../../../public/popularprograms.png";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 interface PopularProgramsProps {
   country: string[];
 }
+
+const data = [
+  { icon: '/countrypage/health.svg', title: 'Health & Wellbeing', cost: '£26', color: 'bg-teal-500' },
+  { icon: '/countrypage/groceries.svg', title: 'Groceries', cost: '£100-£200', color: 'bg-green-500' },
+  { icon: '/countrypage/rent.svg', title: 'Rent', cost: '£439-£700', color: 'bg-yellow-500' },
+  { icon: '/countrypage/eatingOut.svg', title: 'Eating Out', cost: '£66-£80', color: 'bg-blue-500' },
+  { icon: '/countrypage/transport.svg', title: 'Transport', cost: '£30-£69', color: 'bg-purple-500' },
+  { icon: '/countrypage/householdbills.svg', title: 'Household Bills', cost: '£40-£79', color: 'bg-red-500' },
+];
 
 const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
   const arr1 = [
@@ -85,9 +93,37 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
         </div>
       </section>
 
-      <section className="flex justify-center md:my-16 my-10 mx-5">
-        <div className="md:w-[77%]">
-          <Image src={popularPrograms} alt="popularPrograms" />
+      <section className="flex justify-center my-6 md:my-12 text-center">
+        <div className="text-center">
+          <h4>Cost of Living in United Kingdom!</h4>
+          <div
+            className="flex md:grid md:grid-cols-6 justify-center md:gap-4 overflow-x-auto md:overflow-x-hidden scrollbar-hide py-2 md:py-6"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {data.map((item, index) => (
+              <div key={index} className="flex-shrink-0 w-[calc(100%/4)] sm:w-full flex flex-col gap-2  items-center text-black"
+>
+                <div
+                >
+                  <Image
+                    src={item.icon}
+                    alt={item.title}
+                    width={110}
+                    height={110}
+                    className="w-14 h-14 md:w-20 md:h-20 lg:w-28 lg:h-28"
+                  />
+
+                </div>
+                <div className="md:w-2/3">
+                <p className="font-semibold md:mt-2">{item.title}</p>
+                </div>
+                <p className="text-gray-600">{item.cost}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
       <section
