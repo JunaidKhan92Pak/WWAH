@@ -2,27 +2,35 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-const Hero = () => {
+interface HeroProps {
+  name: string;
+  country: string;
+  type: string;
+  deadline: string;
+  university: string;
+}
+
+const Hero: React.FC<HeroProps> = ({ name, country, type, deadline, university }) => {
   const scholarshipArr = [
     {
       Image: "/scholarshipdetail/country.svg",
       Heading: "Host Country",
-      Name: " South Korea",
+      Name: `${country}`,
     },
     {
       Image: "/scholarshipdetail/university.svg",
       Heading: "Host University",
-      Name: "Inje University",
+      Name: `${university}`,
     },
     {
       Image: "/scholarshipdetail/scholarship.svg",
       Heading: "Scholarship Type",
-      Name: "Fully Funded",
+      Name: `${type}`,
     },
     {
       Image: "/scholarshipdetail/deadline.svg",
       Heading: "Deadline",
-      Name: "April 12th, 2024",
+      Name: `${deadline}`,
     },
   ];
   return (
@@ -39,7 +47,7 @@ const Hero = () => {
             {/* Left Section */}
             <div className="w-[90%] flex flex-col justify-center items-center text-center md:text-left">
               <h2 className="text-white md:leading-10 lg:leading-12">
-                INJE University GKS Scholarship 2024 South Korea (Fully Funded)
+                {name}
               </h2>
             </div>
 

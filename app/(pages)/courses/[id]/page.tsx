@@ -60,50 +60,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       universityDocuments: []
     };
   }
-
-  //   courseData: {
-  //     _id: string;
-  //     countryname: string;
-  //     universityname: string;
-  //     course_link: string;
-  //     course_title: string;
-  //     required_ielts_score: string;
-  //     required_pte_score: string;
-  //     required_toefl_score: string;
-  //     entry_requirement: string;
-  //     education_level: string;
-  //     course_level: string;
-  //     intake: string;
-  //     duration: string;
-  //     start_date: string;
-  //     degree_format: string;
-  //     location_campus: string;
-  //     annual_tuition_fee: {
-  //       currency: string;
-  //       amount: string;
-  //     };
-  //     initial_deposit: string;
-  //     overview: string;
-  //     course_structure: string;
-  //     year_1?: string;
-  //     year_2?: string;
-  //     year_3?: string;
-  //     year_4?: string;
-  //     year_5?: string;
-  //     year_6?: string;
-  //     career_opportunity_1?: string;
-  //     career_opportunity_2?: string;
-  //     career_opportunity_3?: string;
-  //     career_opportunity_4?: string;
-  //     career_opportunity_5?: string;
-  //   },
-  //   countryData: {
-  //     countryname: string,
-  //     embassyDocuments: [],
-  //     universityDocuments: []
-  //   };
-  // };
-
   const [data, setData] = useState<CourseData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -138,7 +94,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   // Unwrap the params Promise using React.use()
   // const { id } = params;
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         const res = await fetch(`/api/course?id=${id}`);
