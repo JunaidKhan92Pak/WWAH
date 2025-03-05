@@ -40,7 +40,6 @@ export async function GET(req: Request) {
         const escapeRegex = (text: string) =>
           text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
         query.course_title = { $regex: new RegExp(escapeRegex(search), "i") };
-        console.log(search, "cour");
       }
     }
     if (minBudget > 0 && maxBudget < 999999) {

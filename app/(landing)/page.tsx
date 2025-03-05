@@ -114,7 +114,7 @@ function Page() {
                   {
                     text: "Find Countries",
                     imageUrl: "/Earth--Streamline-Solar-Broken.svg",
-                    href: "/countrypage",
+                    href: "/countries",
                   },
                   {
                     text: "Find Universities",
@@ -223,7 +223,6 @@ function Page() {
               {universities.length === 0 ? <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">No Universities Found </p> :
                 universities.map((uni, index) => (
                   <Card
-
                     key={index}
                     className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                   >

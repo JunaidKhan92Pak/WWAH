@@ -190,6 +190,6 @@ export default function Countrypage({
       <DreamStudy />
     </div>
   ) : (
-    <p> hkhk</p>
+    <p>Loading....</p>
   );
 }

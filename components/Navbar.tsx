@@ -51,7 +51,7 @@ const Navbar = () => {
                 alt="logo"
                 width={113}
                 height={45}
-                // className="2xl:w-[150px] 2xl:h-[60px]"
+              // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}
@@ -60,7 +60,7 @@ const Navbar = () => {
                 <NavigationMenuList className="flex gap-3 lg:gap-12 items-center">
                   {/* Link to Study Destination Page */}
                   <NavigationMenuItem>
-                    <Link href="/countrypage" passHref>
+                    <Link href="/countries" passHref>
                       <NavigationMenuLink className="hover:underline font-normal">
                         Study Destinations
                       </NavigationMenuLink>
