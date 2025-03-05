@@ -67,7 +67,7 @@ const GKSscholarships = () => {
             </div> */}
 
             <div
-              className=" relative w-full xl:w-1/2 justify-center items-center"
+              className=" relative w-[80%] xl:w-1/2 justify-center items-center"
               style={{
                 backgroundImage: "url('/scholarshipdetail/benefit.svg')",
                 backgroundSize: "270px 270px", // Maintain original size
@@ -76,13 +76,16 @@ const GKSscholarships = () => {
                 height: "270px", // Ensure the container has enough height
               }}
             >
-              <div className="border border-yellow-300 w-[100%] flex justify-end  ">
-                <div className="flex flex-row xl:w-[85%] justify-between py-8 items-end">
+              <div className="w-[100%] flex justify-end  ">
+                <div className="flex flex-row w-[85%] justify-between py-8 items-end">
+                  <div className="w-[%] xl:w-[40%] items-end">
+
                   <p className="text-white text-[16px] border border-red-700">
                     {" "}
                     Full Tuition Coverage
                   </p>
-                  <div className="w-[40%]">
+                  </div>
+                  <div className="w-[42%] xl:w-[40%]">
                     {" "}
                     <p className="text-white text-[16px] border border-blue-600">
                       €1,400 Monthly Stipend to cover living expenses
@@ -91,40 +94,42 @@ const GKSscholarships = () => {
                 </div>
                 
               </div>
-              <div className="border border-yellow-300 w-[100%] flex justify-end  ">
-                <div className="flex flex-row xl:w-[93%] justify-between  items-start">
-                  <div className="w-[30%] items-end">
+              <div className="w-[100%] flex justify-end  ">
+                <div className="flex flex-row w-[92%] xl:w-[96%] justify-between  items-start">
+                  <div className="w-[30%] xl:w-[30%] items-end">
 
                   <p className="text-white text-[16px] border border-red-700">
                     {" "}
-                    Full Tuition Coverage
+                      Free Travel and Installation Costs 
                   </p>
                   </div>
-                  <div className="w-[30%]">
+                  <div className="w-[34%] xl:w-[30%]">
                     {" "}
                     <p className="text-white text-[16px] border border-blue-600">
-                      €1,400 Monthly Stipend to cover living expenses
+                      Free Medical Insurance
                     </p>
                   </div>{" "}
                 </div>
               </div>{" "}
-              <div className="border border-yellow-300 w-[100%] flex justify-end  pt-4">
-                <div className="flex flex-row xl:w-[88%] justify-between  items-start">
-                  <div className="w-[25%] items-end">
+              <div className="w-[100%] flex justify-end  ">
+                <div className="flex flex-row w-[76%] xl:w-[85%] justify-between items-end">
+                  <div className="w-[20%] items-end">
 
-                  <p className="text-white text-[16px] border border-red-700">
-                    {" "}
-                    Full Tuition Coverage
-                  </p>
+                    <p className="text-white text-[16px] border border-red-700">
+                      {" "}
+                      Free Visa Cost
+                    </p>
                   </div>
-                  <div className="w-[40%]">
+                  <div className="w-[43%]">
+
                     {" "}
                     <p className="text-white text-[16px] border border-blue-600">
-                      €1,400 Monthly Stipend to cover living expenses
+                      Free Exposure to
+                      International Learning
                     </p>
                   </div>{" "}
                 </div>
-              </div>
+              </div>{" "}
             </div>
           </div>
         </div>

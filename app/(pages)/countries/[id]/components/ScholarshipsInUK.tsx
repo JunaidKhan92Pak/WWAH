@@ -23,14 +23,14 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
     <>
       <section>
         <div
-          className="relative bg-cover mt-5 lg:mt-10 bg-center min-h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8"
+          className="relative bg-cover mt-5 lg:mt-10 bg-center min-h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-6"
           style={{
             backgroundImage: "url('/ScolarshipsInUK.png')",
           }}
         >
           <div className=" absolute inset-0 bg-black opacity-60 z-0"></div>
-          <div className="flex flex-col lg:flex-row w-[90%] justify-between items-center">
-            <div className=" relative w-full lg:w-1/2 space-y-5 lg:p-3 text-white">
+          <div className="flex flex-col lg:flex-row w-full justify-between items-start md:items-center">
+            <div className=" relative w-full md:w-[75%] lg:w-[50%] space-y-5 lg:p-3 text-white">
               <h3 className="lg:mt-2 pt-4">Scholarships in {countryName}!</h3>
               <p className="text-[#9D9D9D]">
                 Discover a range of scholarship opportunities on our dedicated
@@ -40,15 +40,8 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
                 need, or specific fields of study.
               </p>
             </div>
-            {/* <div className="flex relative w-full md:w-1/2 justify-center items-center">
-              <Image
-                src={StudyInUk}
-                alt="popularPrograms"
-                className="w-[90%]"
-              />
-
-            </div> */}
-            <div className="hidden md:flex relative justify-center items-center w-full xl:w-1/2 text-white">
+        
+            <div className="hidden md:flex relative justify-center items-center w-full xl:w-[70%] text-white">
               <div className="relative w-full pr-2 flex flex-col justify-center items-end h-[20vh]">
                 <div className="flex h-[50%] items-center justify-end">
                   <p>Healthcare Promotion</p>
@@ -69,11 +62,13 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
                     width={400}
                     height={400}
                   />
-                  <div className="md:absolute md:inset-0 md:top-4 flex items-center justify-center">
-                    <p className="w-[90px] text-center  text-white md:text-black font-semibold">
+                  <div className="absolute inset-0 top-3 xl:top-4 flex justify-center items-center w-full h-full">
+                    <div className="flex justify-center items-center  text-center w-[15%]">
+                    <p className="text-center  text-white md:text-black font-semibold ">
                       {" "}
-                      Scholarships in {countryName}
+                      Scholarships
                     </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -87,7 +82,7 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
                 </p>
               </div>
             </div>
-            <div className="relative flex flex-col md:hidden space-y-4">
+            <div className="relative flex flex-col md:hidden space-y-4 my-4">
               <h5 className="text-white"> Scholarships in {countryName}</h5>
               {healthcareItems.map((item, index) => (
                 <div
