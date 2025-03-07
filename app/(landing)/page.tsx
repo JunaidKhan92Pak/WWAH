@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import Image from "next/image";
@@ -12,13 +12,24 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
-import { SkeletonCard } from "@/components/skeleton"
+import { SkeletonCard } from "@/components/skeleton";
 
 function Page() {
-  const Countries = ["USA", "China", "Canada", "Italy", "United Kingdom", "Ireland", "New Zealand", "Denmark", "France"]
-  const { universities, country, setCountry, fetchUniversities, loading } = useUniversityStore();
+  const Countries = [
+    "USA",
+    "China",
+    "Canada",
+    "Italy",
+    "United Kingdom",
+    "Ireland",
+    "New Zealand",
+    "Denmark",
+    "France",
+  ];
+  const { universities, country, setCountry, fetchUniversities, loading } =
+    useUniversityStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
@@ -76,7 +87,11 @@ function Page() {
               <Image src="/logo.png" alt="WWAH Logo" width={112} height={45} />
             </Link>
             <Link href="/signin">
-              <Button className="bg-red-700" variant="default" size="lg">
+              <Button
+                className="bg-red-700 hover:bg-red-700"
+                variant="default"
+                size="lg"
+              >
                 Login
               </Button>
             </Link>
@@ -183,7 +198,6 @@ function Page() {
         </section>
       </div>
       <section className="py-5 bg-gray-50">
-
         <div className=" mx-auto px-0 sm:px-4 w-[90%]">
           {/* Section Header */}
           <div className="flex justify-between items-center mb-8">
@@ -191,7 +205,13 @@ function Page() {
             <Badge variant="outline" className=" bg-[#F1F1F1]">
               <DropdownMenu>
                 <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-11">
-                  <Image src="/filterr.svg" width={16} height={16} alt="filter" /> Filter
+                  <Image
+                    src="/filterr.svg"
+                    width={16}
+                    height={16}
+                    alt="filter"
+                  />{" "}
+                  Filter
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="p-2 h-[360px]">
                   <ScrollArea className="p-2 ">
@@ -200,13 +220,17 @@ function Page() {
                       {Countries.map((country) => (
                         <li key={country} className="flex justify-between ">
                           <div className="flex gap-2">
-                            <Image src={`/${country.toLowerCase()}.png`} width={30} height={30} alt={country} />
+                            <Image
+                              src={`/${country.toLowerCase()}.png`}
+                              width={30}
+                              height={30}
+                              alt={country}
+                            />
                             <label htmlFor={country}>{country}</label>
                           </div>
                           <input
                             type="checkbox"
                             onChange={() => handleCheckboxChange(country)}
-
                             className="mr-2"
                           />
                         </li>
@@ -220,7 +244,11 @@ function Page() {
           {/* University Cards Grid */}
           {!loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {universities.length === 0 ? <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">No Universities Found </p> :
+              {universities.length === 0 ? (
+                <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
+                  No Universities Found{" "}
+                </p>
+              ) : (
                 universities.map((uni, index) => (
                   <Card
                     key={index}
@@ -246,25 +274,27 @@ function Page() {
                     </div>
                     {/* University Details */}
                     <div className="p-4">
-                      <h6 className="font-semibold  mb-2">{uni.university_name}</h6>
+                      <h6 className="font-semibold  mb-2">
+                        {uni.university_name}
+                      </h6>
                       <div className="flex  flex-col  justify-between items-start xl:items-center  text-muted-foreground">
                         <div className="w-full flex items-center justify-between gap-2">
                           <p>{uni.country_name}</p>
                           <p>Public</p>
-
                         </div>
-                        <p className="w-full">Acceptance Rate: {uni.acceptance_rate}</p>
+                        <p className="w-full">
+                          Acceptance Rate: {uni.acceptance_rate}
+                        </p>
                       </div>
                     </div>
                   </Card>
-                ))}
-            </div>) :
-            (
-              <SkeletonCard arr={4} />
-            )
-          }
+                ))
+              )}
+            </div>
+          ) : (
+            <SkeletonCard arr={4} />
+          )}
         </div>
-
       </section>
       {/* Features Section */}
       <section className="md:py-5 bg-muted/50">
@@ -297,21 +327,20 @@ function Page() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="bg-transparent  border-white text-white hover:bg-white hover:text-black  text-left"
+                  className="bg-transparent  border-white text-white  hover:bg-gray-900 hover:text-white  text-left"
                 >
                   <Image
                     src="/google-play.png"
                     alt="Get it on Google Play"
                     width={18}
                     height={14}
-
                   />
                   Get it on Google Play
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="bg-transparent  border-white text-white hover:bg-white hover:text-black  text-left"
+                  className="bg-transparent  border-white text-white  hover:bg-gray-900 hover:text-white  text-left"
                 >
                   <Image
                     src="/app-store.png"
