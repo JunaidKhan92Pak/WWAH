@@ -7,6 +7,7 @@ import Applicationdepartment from "./components/Applicationdepartment";
 import Requireddocs from "./components/Requireddocs";
 import Applicationprocess from "./components/Applicationprocess";
 import Eligibilitycriteria from "./components/Eligibilitycriteria";
+import { HeroSkeleton } from "@/components/HeroSkeleton";
 // import { HeroSkeleton } from "@/components/HeroSkeleton";
 type Tab = {
   label: string;
@@ -33,33 +34,33 @@ type ScholarshipData = {
 const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = React.use(params);
   const [data, setData] = useState<ScholarshipData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch(`/api/scholarship?id=${id}`);
-        if (!res.ok) throw new Error("Failed to fetch course data");
-
+        if (!res.ok) throw new Error("Failed to fetch scholarship data");
         const jsonData = await res.json();
-        if (!jsonData.ScholarshipData) throw new Error("Course data not found");
+        if (!jsonData.ScholarshipData) throw new Error("Scholarship data not found");
         setData(jsonData.ScholarshipData);
       }
       catch (err) {
-        console.error("Error fetching course data:", err);
+        console.error("Error fetching scholaoship data:", err);
+        let errorMessage = "An error occurred while fetching data.";
         if (err instanceof Error) {
-          // errorMessage = err.message;
+          errorMessage = err.message;
         }
-        // setError(errorMessage);
+        setError(errorMessage);
       }
-      // finally {
-      //   setLoading(false);
-      // }
+      finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
   }, [id]); // Add id as a dependency
-  // if (loading) return <HeroSkeleton />;
-  // if (error) return <p>Error: {error}</p>;
-  // if (!data) return < p > Course Not Found</ p>;
+
   const tabs: Tab[] = [
     { label: "Scholarship Overview", id: "Scholarship Overview" },
     { label: "Benefits", id: "Benefits" },
@@ -81,8 +82,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       window.scrollTo({ top: yPosition, behavior: "smooth" });
     }
   };
-  console.log(data);
 
+  if (loading) return <HeroSkeleton />;
+  if (error) return <p>Error: {error}</p>;
+  if (!data) return < p > Not Aviable</ p>;
   return (
     <>
       <Hero name={data?.name || 'Not Available'} country={data?.hostCountry || 'Unknown'} type={data?.scholarshipType || 'Unknown'} deadline={data?.deadline || 'Unknown'} university={data?.university || 'Not Mention'} />
@@ -106,7 +109,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
       <Overview overview={data?.overview || ""} duration={data?.duration || { undergraduate: "", master: "", phd: "" }} />
       <div id="Benefits">
-        <GKSscholarships benefits={data?.benefits || []} />
+        <GKSscholarships benefit={data?.benefits || []} />
       </div>
       <div id="Application-departments">
         <Applicationdepartment applicableDepartments={data?.applicableDepartments || []} />

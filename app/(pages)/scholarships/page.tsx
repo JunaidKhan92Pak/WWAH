@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useScholarships } from "@/store/useScholarships";
 import { debounce } from "lodash";
 import Link from "next/link";
+import { SkeletonCard } from "@/components/skeleton";
 
 const Page = () => {
   // List of countries for filters
@@ -24,7 +25,7 @@ const Page = () => {
   ];
 
   // Extract actions and state from Zustand store
-  const { scholarships, fetchscholarships, setSearch, setCountry } = useScholarships();
+  const { scholarships, loading, fetchscholarships, setSearch, setCountry } = useScholarships();
 
   useEffect(() => {
     fetchscholarships();
@@ -34,7 +35,6 @@ const Page = () => {
   const [selectedInfo, setSelectedInfo] = useState<string[]>([]);
   const [localSearch, setLocalSearch] = useState("");
   console.log(selectedInfo);
-
   // Debounced search to optimize rapid input changes
   const debouncedSetSearch = useCallback(
     debounce((value: string) => {
@@ -275,72 +275,74 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 p-2">
-            {scholarships.map((item) => (
-              <div key={item._id} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3">
-                {/* Image Section */}
-                <div>
-                  <Image
-                    src={"/course1.svg"}
-                    alt="University Image"
-                    width={400}
-                    height={250}
-                    className="w-full object-cover"
-                  />
-                </div>
-                {/* Content Section */}
-                <div className="p-2 flex-grow">
-                  <p className="font-bold">{item.name}</p>
-                  <div className="flex justify-between flex-wrap">
-                    <div className="flex items-center gap-2 mt-2">
-                      <Image src={"/location.svg"} alt="location" width={16} height={16} />
-                      <p className="text-sm md:text-base text-gray-600 font-bold">
-                        {item.hostCountry}
-                      </p>
+          {loading ? (
+            <SkeletonCard arr={8} />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 p-2">
+              {scholarships.map((item) => (
+                <div key={item._id} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3">
+                  {/* Image Section */}
+                  <div>
+                    <Image
+                      src={"/course1.svg"}
+                      alt="University Image"
+                      width={400}
+                      height={250}
+                      className="w-full object-cover"
+                    />
+                  </div>
+                  {/* Content Section */}
+                  <div className="p-2 flex-grow">
+                    <p className="font-bold">{item.name}</p>
+                    <div className="flex flex-col md:flex-row justify-between flex-wrap">
+                      <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                        <Image src={"/location.svg"} alt="location" width={16} height={16} />
+                        <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                          {item.hostCountry}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                        <Image src={"/money.svg"} alt="scholarship type" width={16} height={16} />
+                        <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                          {item.scholarshipType}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Image src={"/money.svg"} alt="year" width={16} height={16} />
-                      <p className="text-sm md:text-base text-gray-600 font-bold">
-                        {item.scholarshipType}
-                      </p>
+                    <div className="flex flex-col md:flex-row justify-between flex-wrap">
+                      <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                        <Image src={"/Notebook.svg"} alt="degree level" width={16} height={16} />
+                        <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                          {item.degreeLevel ? item.degreeLevel : "Not Specified"}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                        <Image src={"/clock.svg"} alt="deadline" width={16} height={16} />
+                        <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                          {item.deadline}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex justify-between flex-wrap">
-                    <div className="flex items-center gap-2 mt-2">
-                      <Image src={"/Notebook.svg"} alt="duration" width={16} height={16} />
-                      <p className="text-sm md:text-base text-gray-600 font-bold">
-                        {/* Duration */}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Image src={"/clock.svg"} alt="fees" width={16} height={16} />
-                      <p className="text-sm md:text-base text-gray-600 font-bold">
-                        {/* Application Deadline */}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {/* Divider */}
-                <hr className="mx-4 mb-4" />
-                {/* Buttons Section */}
-                <div className="flex gap-2 flex-row justify-evenly mb-1 px-2">
-                  <Link
-                    href={`/scholarships/${item._id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex  items-center  justify-center md:w-[50%] w-[40%] bg-red-500  hover:bg-red-500 rounded-lg   hover:text-white text-[12px] md:text-md md:px-3 md:py-1 border text-center  border-[#F0851D] text-[#F0851D]  sm:w-auto"
-                  >
-                    <button className="">
-                      View Details
+                  {/* Divider */}
+                  <hr className="mx-4 mb-4" />
+                  {/* Buttons Section */}
+                  <div className="flex gap-2 flex-row justify-evenly mb-1 px-2">
+                    <Link
+                      href={`/scholarships/${item._id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center md:w-[50%] w-[40%] bg-red-500 hover:bg-red-500 rounded-lg hover:text-white text-[12px] md:text-md md:px-3 md:py-1 border text-center border-[#F0851D] text-[#F0851D] sm:w-auto"
+                    >
+                      <button>View Details</button>
+                    </Link>
+                    <button className="w-[50%] border border-[#F0851D] text-[#F0851D] text-[12px] hover:bg-red-500 hover:text-white md:text-md md:px-3 py-1 rounded-lg sm:w-auto">
+                      Start Your Application
                     </button>
-                  </Link>
-                  <button className="w-[50%] border border-[#F0851D] text-[#F0851D] text-[12px] hover:bg-red-500 hover:text-white md:text-md md:px-3 py-1 rounded-lg sm:w-auto">
-                    Start Your Application
-                  </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
           <div className="w-28 mx-auto py-10">
             <div className="flex justify-between items-center">
               <p>Show More</p>
