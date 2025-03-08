@@ -10,6 +10,7 @@ export async function POST(req: Request) {
         // Ensure body is an array (for bulk upload)
         const scholarshipsArray = Array.isArray(body) ? body : [body];
 
+        // Transform and map data dynamically, capturing all provided fields
         const scholarships = scholarshipsArray.map(scholarship => {
             const numScholarships = Number(scholarship["Number of Scholarships"]);
             return {
@@ -17,25 +18,18 @@ export async function POST(req: Request) {
                 hostCountry: scholarship["Host Country"]?.trim() || "Unknown",
                 numberOfScholarships: (numScholarships >= 1 ? numScholarships : 1),
                 scholarshipType: scholarship["Scholarship Type"]?.trim() || "Not Specified",
-                deadline: scholarship["Deadline"]
-                    ? new Date(String(scholarship["Deadline"]).trim())
-                    : null,
+                // Store Deadline as a string
+                deadline: scholarship["Deadline"] ? String(scholarship["Deadline"]).trim() : "",
                 overview: scholarship["Scholarship Overview"]?.trim() || "No overview available",
-
-                // Map durations into an object
                 duration: {
                     undergraduate: scholarship["Duration of the Scholarship 1"]?.trim() || "",
                     master: scholarship["Duration of the Scholarship 2"]?.trim() || "",
                     phd: scholarship["Duration of the Scholarship 3"]?.trim() || ""
                 },
-
-                // Map benefits dynamically as an array
                 benefits: Object.keys(scholarship)
                     .filter(key => key.toLowerCase().startsWith("benefits of scholarship"))
                     .map(key => scholarship[key]?.trim())
                     .filter(Boolean),
-
-                // Map applicable departments along with their details
                 applicableDepartments: Object.keys(scholarship)
                     .filter(key => key.toLowerCase().startsWith("applicable departments"))
                     .map(key => ({
@@ -43,8 +37,6 @@ export async function POST(req: Request) {
                         details: scholarship[`Detail ${key.split(' ')[2]}`]?.trim() || "No details available"
                     }))
                     .filter(dep => dep.name !== "Unknown Department"),
-
-                // Map eligibility criteria as an array of objects with name and detail
                 eligibilityCriteria: Object.keys(scholarship)
                     .filter(key => key.toLowerCase().startsWith("eligibility criteria") && !key.toLowerCase().includes("detail"))
                     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
@@ -59,15 +51,11 @@ export async function POST(req: Request) {
                         return { name: criterion, detail: detail };
                     })
                     .filter(item => item.name),
-
-                // Dynamically capture all age requirements regardless of count
                 ageRequirements: Object.keys(scholarship)
                     .filter(key => key.toLowerCase().startsWith("age requirement"))
                     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
                     .map(key => scholarship[key]?.trim())
                     .filter(Boolean),
-
-                // Map required documents along with their details
                 requiredDocuments: Object.keys(scholarship)
                     .filter(key => key.toLowerCase().startsWith("required document") && !key.toLowerCase().includes("detail"))
                     .map(key => {
@@ -80,16 +68,23 @@ export async function POST(req: Request) {
                         };
                     })
                     .filter(doc => doc.name),
-
-                // Capture additional fields such as Degree Level if present
                 degreeLevel: scholarship["Degree Level"]?.trim() || ""
             };
         });
 
-        // Insert the transformed data into MongoDB
-        const insertedScholarships = await Scholarship.insertMany(scholarships);
+        // Upsert each scholarship. Using a combination of "name" and "hostCountry" as unique keys.
+        const upsertPromises = scholarships.map(async (scholarshipData) => {
+            const filter = {
+                name: scholarshipData.name,
+                hostCountry: scholarshipData.hostCountry
+            };
+            const options = { new: true, upsert: true };
+            return await Scholarship.findOneAndUpdate(filter, scholarshipData, options);
+        });
+
+        const upsertedScholarships = await Promise.all(upsertPromises);
         return NextResponse.json(
-            { message: "Scholarships added successfully", data: insertedScholarships },
+            { message: "Scholarships upserted successfully", data: upsertedScholarships },
             { status: 201 }
         );
     } catch (error) {

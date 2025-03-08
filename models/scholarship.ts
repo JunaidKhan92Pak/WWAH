@@ -6,7 +6,7 @@ const ScholarshipSchema = new Schema(
         hostCountry: { type: String, required: true, trim: true },
         numberOfScholarships: { type: Number, required: true, min: 1 },
         scholarshipType: { type: String, required: true, trim: true },
-        deadline: { type: Date, required: true },
+        deadline: { type: String, trim: true },
         overview: { type: String, required: true, trim: true },
         duration: {
             undergraduate: { type: String, trim: true },

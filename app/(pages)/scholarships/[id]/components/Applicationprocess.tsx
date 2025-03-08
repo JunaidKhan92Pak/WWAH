@@ -1,9 +1,8 @@
 import React from "react";
 import Link from "next/link";
-// import Button from '@/components/ui/button'
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-// import { title } from "process";
+
 const Applicationprocess = () => {
   const sliderData = [
     {
@@ -56,8 +55,7 @@ const Applicationprocess = () => {
             <div>
               <h6 className="mt-1 font-bold">Submit Your Application</h6>
               <p className="text-gray-700 mt-1">
-                Complete your Personal and Educational details. Upload your
-                documents and double-check all information before submission.
+                Complete your Personal and Educational details. Upload your documents and doublecheck all information before submission.
               </p>
             </div>
 
@@ -65,10 +63,9 @@ const Applicationprocess = () => {
             <div>
               <h6 className="mt-1 font-bold">Pay the Application Fee (If required)</h6>
               <p className="text-gray-700 mt-1">
-                Make sure to pay the application fee (if applicable) to finalize
-                your submission. Payment can be made easily directly to the
-                university through bank, money exchangers, online apps, and WWAH
-                secure online payment system.
+                Make sure to pay the application fee (if applicable) to finalize your submission. Payment
+                can be made easily directly to the university through bank, money exchangers, online
+                apps and WWAH secure online payment system.
               </p>
             </div>
 
@@ -76,9 +73,35 @@ const Applicationprocess = () => {
             <div>
               <h6 className="mt-1 font-bold">Track Your Application</h6>
               <p className="text-gray-700 mt-1">
-                Once your application is submitted, you can monitor its progress
-                through your personalized WWAH dashboard. Stay informed with
-                real-time updates and notifications.<span className="underline">Read more</span></p>  
+                Once your application is submitted, you can monitor its progress through your
+                personalized WWAH dashboard. Stay informed with real-time updates and notifications.</p>
+            </div>
+            <div>
+              <h6 className="mt-1 font-bold">Receive Your Offer Letter</h6>
+              <p className="text-gray-700 mt-1">
+                If your application is successful, you&#39;ll receive an offer letter from the university. Review
+                the offer carefully and accept it through our portal
+              </p>
+            </div>
+            <div>
+              <h6 className="mt-1 font-bold">Apply for a Visa</h6>
+              <p className="text-gray-700 mt-1">
+                Once you&#39;ve accepted an offer and received your visa letter, start the visa application
+                process. We&#39;ll provide guidance and resources to help you secure your student visa. </p>
+            </div>
+            <div>
+              <h6 className="mt-1 font-bold">Plan Your Arrival
+              </h6>
+              <p className="text-gray-700 mt-1">
+                After your visa is approved, begin planning your journey. WWAH offers tips on
+                accommodation, travel, and settling into your new environment.
+              </p>
+            </div>
+            <div>
+              <h6 className="mt-1 font-bold">Begin Your Academic Journey</h6>
+              <p className="text-gray-700 mt-1">
+                Congratulations! You&#39;re all set to start your studies abroad. Stay connected with WWAH
+                team throughout your academic journey for any assistance </p>
             </div>
           </div>
         </div>
@@ -109,9 +132,6 @@ const Applicationprocess = () => {
       </section>
       <section
         className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12s overflow-hidden justify-between w-full"
-        // style={{
-        //   backgroundImage: "url('/bg-usa.png')",
-        // }}
       >
         {/* Black Overlay */}
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
