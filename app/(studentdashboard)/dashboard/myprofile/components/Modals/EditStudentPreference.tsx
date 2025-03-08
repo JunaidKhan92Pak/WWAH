@@ -66,8 +66,14 @@ const EditStudentPreference = () => {
         <p className="text-gray-600 text-base">Student Preference:</p>
         <div className="flex flex-row items-center gap-x-2">
           <p className="text-sm">Last updated on 21st Sep, 2024</p>
-          <Image src="/DashboardPage/pen.svg" alt="Edit" width={18} height={18} className="cursor-pointer" onClick={() => setOpen(true)} />
-
+          <Image
+            src="/DashboardPage/pen.svg"
+            alt="Edit"
+            width={18}
+            height={18}
+            className="cursor-pointer"
+            onClick={() => setOpen(true)}
+          />
         </div>
       </div>
 
@@ -75,7 +81,9 @@ const EditStudentPreference = () => {
         <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh] overflow-y-auto ">
           <DialogHeader>
             <DialogTitle>Edit Student Preference</DialogTitle>
-            <p className="text-sm text-gray-500">You can change this information once in 20 days.</p>
+            <p className="text-sm text-gray-500">
+              You can change this information once in 20 days.
+            </p>
           </DialogHeader>
 
           <Form {...form}>
@@ -87,29 +95,35 @@ const EditStudentPreference = () => {
                   name="country"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>What is your preferred country for studying abroad?
+                      <FormLabel>
+                        What is your preferred country for studying abroad?
                       </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          >
+                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
                             <SelectValue placeholder="Select a country" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-                          <SelectItem value="United States">United States</SelectItem>
-                          <SelectItem value="Canada">Canada</SelectItem>
+                          <SelectItem value="USA">United States</SelectItem>
+                          <SelectItem value="China">China</SelectItem>
                           <SelectItem value="Australia">Australia</SelectItem>
+                          <SelectItem value="Italy">Italy</SelectItem>
+                          <SelectItem value="Malaysia">Malaysia</SelectItem>
                           <SelectItem value="Germany">Germany</SelectItem>
-                          <SelectItem value="France">France</SelectItem>
-                          <SelectItem value="Netherlands">Netherlands</SelectItem>
-                          <SelectItem value="Sweden">Sweden</SelectItem>
-                          <SelectItem value="New Zealand">New Zealand</SelectItem>
+                          <SelectItem value="Canada">Canada</SelectItem>
+                          <SelectItem value="United Kingdom">
+                            United Kingdom
+                          </SelectItem>
                           <SelectItem value="Ireland">Ireland</SelectItem>
-                          <SelectItem value="Singapore">Singapore</SelectItem>
-                          <SelectItem value="Switzerland">Switzerland</SelectItem>
-
+                          <SelectItem value="New Zealand">
+                            New Zealand
+                          </SelectItem>
+                          <SelectItem value="Denmark">Denmark</SelectItem>
+                          <SelectItem value="France">France</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -123,12 +137,13 @@ const EditStudentPreference = () => {
                   name="city"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>What is your preferred city?
-                      </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormLabel>What is your preferred city?</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          >
+                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
                             <SelectValue placeholder="Select a city" />
                           </SelectTrigger>
                         </FormControl>
@@ -142,7 +157,9 @@ const EditStudentPreference = () => {
                           <SelectItem value="Paris">Paris</SelectItem>
                           <SelectItem value="Dubai">Dubai</SelectItem>
                           <SelectItem value="Singapore">Singapore</SelectItem>
-                          <SelectItem value="Los Angeles">Los Angeles</SelectItem>
+                          <SelectItem value="Los Angeles">
+                            Los Angeles
+                          </SelectItem>
                           <SelectItem value="Chicago">Chicago</SelectItem>
                         </SelectContent>
                       </Select>
@@ -157,24 +174,28 @@ const EditStudentPreference = () => {
                   name="degreeLevel"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Which degree level are you interested in?
+                      <FormLabel>
+                        Which degree level are you interested in?
                       </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          >
+                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
                             <SelectValue placeholder="Select degree level" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Bachelors">Bachelors</SelectItem>
-                          <SelectItem value="Diploma">Diploma</SelectItem>
-                          <SelectItem value="Associate Degree">Associate Degree</SelectItem>
-                          <SelectItem value="Masters">Masters</SelectItem>
-                          <SelectItem value="PhD">PhD</SelectItem>
-                          <SelectItem value="Postdoctoral">Postdoctoral</SelectItem>
-                          <SelectItem value="Certificate">Certificate</SelectItem>
-                          <SelectItem value="Short Course">Short Course</SelectItem>
+                          <SelectItem value="foundation">Foundation</SelectItem>
+                          <SelectItem value="bachelor">Bachelor</SelectItem>
+                          <SelectItem value="preMaster">Pre Master</SelectItem>
+                          <SelectItem value="master">Master</SelectItem>
+                          <SelectItem value="phd">PhD</SelectItem>
+                          <SelectItem value="diploma">Diploma</SelectItem>
+                          <SelectItem value="certificate">
+                            Certificate
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -188,33 +209,45 @@ const EditStudentPreference = () => {
                   name="fieldOfStudy"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Which field of study would you like to pursue?
+                      <FormLabel>
+                        Which field of study would you like to pursue?
                       </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          >
+                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
                             <SelectValue placeholder="Select a field" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="Science">Science</SelectItem>
-                          <SelectItem value="Engineering">Engineering</SelectItem>
+                          <SelectItem value="Engineering">
+                            Engineering
+                          </SelectItem>
                           <SelectItem value="Business">Business</SelectItem>
-                          <SelectItem value="Arts & Humanities">Arts & Humanities</SelectItem>
+                          <SelectItem value="Arts & Humanities">
+                            Arts & Humanities
+                          </SelectItem>
                           <SelectItem value="Medicine">Medicine</SelectItem>
                           <SelectItem value="Law">Law</SelectItem>
-                          <SelectItem value="Information Technology">Information Technology</SelectItem>
-                          <SelectItem value="Social Sciences">Social Sciences</SelectItem>
+                          <SelectItem value="Information Technology">
+                            Information Technology
+                          </SelectItem>
+                          <SelectItem value="Social Sciences">
+                            Social Sciences
+                          </SelectItem>
                           <SelectItem value="Education">Education</SelectItem>
-                          <SelectItem value="Environmental Studies">Environmental Studies</SelectItem>
+                          <SelectItem value="Environmental Studies">
+                            Environmental Studies
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
 
                 {/* Tuition Fee Budget */}
                 <FormField
@@ -287,7 +320,10 @@ const EditStudentPreference = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Which study mode would you prefer?</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
                             <SelectValue placeholder="Select mode" />
@@ -296,17 +332,20 @@ const EditStudentPreference = () => {
                         <SelectContent>
                           <SelectItem value="On Campus">On Campus</SelectItem>
                           <SelectItem value="Online">Online</SelectItem>
-                          <SelectItem value="Hybrid">Hybrid (Online & On Campus)</SelectItem>
-                          <SelectItem value="Distance Learning">Distance Learning</SelectItem>
+                          <SelectItem value="Hybrid">
+                            Blended
+                          </SelectItem>
+                         
                         </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
               </div>
-              <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">Update My Preferences</Button>
+              <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
+                Update My Preferences
+              </Button>
             </form>
           </Form>
         </DialogContent>
@@ -314,7 +353,12 @@ const EditStudentPreference = () => {
       {/* Success Modal */}
       <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
         <DialogContent className="flex flex-col justify-center items-center  max-w-72 md:max-w-96 !rounded-3xl">
-          <Image src="/DashboardPage/success.svg" alt="Success" width={150} height={150} />
+          <Image
+            src="/DashboardPage/success.svg"
+            alt="Success"
+            width={150}
+            height={150}
+          />
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold text-gray-900">
               Preferences Updated Successfully!

@@ -82,7 +82,9 @@ const Step4 = () => {
                 name="proficiencyTest"
                 value={englishProficiency.proficiencyTest}
                 onChange={handleChange}
-                disabled={englishProficiency.proficiencyLevel === "willingToTest"}
+                disabled={
+                  englishProficiency.proficiencyLevel === "willingToTest"
+                }
                 className="w-full text-sm px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
               >
                 <option value="" disabled>
@@ -91,7 +93,8 @@ const Step4 = () => {
                 <option value="ielts">IELTS</option>
                 <option value="pte">PTE</option>
                 <option value="toefl">TOEFL</option>
-                <option value="languageCert">Language Cert</option>
+                <option value="duolingo">DUOLINGO</option>
+                <option value="language-cert">Language Cert</option>
                 <option value="others">Others</option>
               </select>
             </div>
@@ -108,7 +111,9 @@ const Step4 = () => {
                 value={englishProficiency.proficiencyTestScore}
                 onChange={handleChange}
                 placeholder="Write..."
-                disabled={englishProficiency.proficiencyLevel === "willingToTest"}
+                disabled={
+                  englishProficiency.proficiencyLevel === "willingToTest"
+                }
                 className="w-full placeholder:text-sm  bg-[#F1F1F1] px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-800 placeholder-black disabled:placeholder-gray-700 disabled:bg-gray-200"
               />
             </div>
