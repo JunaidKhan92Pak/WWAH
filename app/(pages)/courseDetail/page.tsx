@@ -8,14 +8,13 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import Herosection from "./components/Herosection";
 
-
 const healthcareItems = [
   { text: "Public Health", image: "/countrypage/img3.svg" },
   { text: "Healthcare Promotion", image: "/countrypage/img2.svg" },
   { text: "Healthcare Information", image: "/countrypage/img5.png" },
   { text: "Healthcare Management", image: "/countrypage/img4.svg" },
   { text: "Healthcare Policy", image: "/countrypage/img1.svg" },
-]
+];
 function Page() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState("scholarship");
@@ -148,7 +147,7 @@ function Page() {
     <div>
       <Herosection />
       {/* Course Overview & Navigation Tabs */}
-      <section className="bg-white md:mt-6 lg:mt-12 mb-6">
+      <section className="bg-white mt-6 lg:mt-12 mb-6">
         <div className=" mx-auto w-[92%]">
           {/* Navigation Tabs */}
           <div className="w-full lg:w-[90%] flex flex-col lg:flex-row justify-center lg:justify-start items-center border-b border-gray-200">
@@ -156,10 +155,11 @@ function Page() {
               <Button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`font-medium transition text-sm md:text-lg hover:bg-[#FCE7D2] hover:text-black px-2 py-2 md:rounded-t-xl w-full border-b border-gray-400 md:border-none ${activeTabPro === tab.id
-                  ? "bg-[#C7161E] text-white"
-                  : "bg-transparent text-gray-800"
-                  }`}
+                className={`font-medium transition text-sm md:text-lg hover:bg-[#FCE7D2] hover:text-black px-2 py-2 md:rounded-t-xl w-full border-b border-gray-400 md:border-none ${
+                  activeTabPro === tab.id
+                    ? "bg-[#C7161E] text-white"
+                    : "bg-transparent text-gray-800"
+                }`}
               >
                 {tab.name}
               </Button>
@@ -280,7 +280,7 @@ function Page() {
                     <span className="text-[#F0851D]">AI - Powered </span>
                     platform Zeus to find your dream university in 3 minutes.
                   </p>
-                  <Link href="/universityarchievepage">
+                  <Link href="/chatmodel">
                     <Button className="mt-4 bg-white  text-red-700 hover:bg-gray-300 w-4/5">
                       Start your Abroad Journey
                     </Button>
@@ -296,7 +296,6 @@ function Page() {
       <section
         id="careerOpportunities"
         className="my-7 relative bg-black bg-cover bg-center flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8"
-
       >
         <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
         <div className="flex flex-col lg:flex-row w-full gap-5 m-4 justify-center items-start md:items-center">
@@ -309,14 +308,12 @@ function Page() {
             </p>
           </div>
 
-
           <div className="hidden md:flex relative justify-center items-center w-full xl:w-1/2 text-white h-[40vh]">
-
             <div className="relative w-full pr-2 flex flex-col justify-center items-end h-[20vh]">
               <div className="flex h-[50%] items-center justify-end">
                 <p>Healthcare Promotion</p>
               </div>
-              <div className="flex h-[50%] items-center justify-end pt-4 pr-5" >
+              <div className="flex h-[50%] items-center justify-end pt-4 pr-5">
                 <p>Healthcare Information</p>
               </div>
             </div>
@@ -332,14 +329,14 @@ function Page() {
                   alt="BSC Physiology"
                   width={400}
                   height={400}
-
                 />
                 <div className="md:absolute md:inset-0 md:top-4 flex items-center justify-center">
-                  <p className="w-[90px] text-center  text-white md:text-black font-semibold"> BSC Physiology</p>
+                  <p className="w-[90px] text-center  text-white md:text-black font-semibold">
+                    {" "}
+                    BSC Physiology
+                  </p>
                 </div>
               </div>
-
-
             </div>
 
             {/* Right Section with Reduced Border Height */}
@@ -347,29 +344,36 @@ function Page() {
               <div className="flex h-[50%] items-center ">
                 <p>Healthcare Management</p>
               </div>
-              <p className="flex h-[50%] items-center  pt-4 pl-5">Healthcare Policy</p>
+              <p className="flex h-[50%] items-center  pt-4 pl-5">
+                Healthcare Policy
+              </p>
             </div>
           </div>
 
           <div className="relative flex flex-col md:hidden space-y-4">
             <h2 className="text-white">BSC Physicology</h2>
             {healthcareItems.map((item, index) => (
-              <div key={index} className="flex items-center space-x-4 text-white">
-                <Image src={item.image} alt={item.text} width={50} height={50} />
+              <div
+                key={index}
+                className="flex items-center space-x-4 text-white"
+              >
+                <Image
+                  src={item.image}
+                  alt={item.text}
+                  width={50}
+                  height={50}
+                />
                 <p>{item.text}</p>
               </div>
             ))}
           </div>
         </div>
-
       </section>
       {/* fee and scholarship     */}
       <section id="feeScholarships" className=" w-[90%] mx-auto">
         <h2 className="pb-2">Fee and Scholarships!</h2>
 
-
         <div className="grid grid-cols-1 lg:grid-cols-[24%_26%_50%] gap-6">
-
           {/* Fee Information Card */}
           <Card className="md:p-6 p-2 bg-[#FCE7D2] flex flex-col justify-between">
             <div>
@@ -397,7 +401,7 @@ function Page() {
               <p>
                 Have Questions about University Fee?{" "}
                 <Link
-                  href="#"
+                  href="/contactus"
                   className="text-red-600 hover:underline font-semibold"
                 >
                   WWAH
@@ -410,9 +414,7 @@ function Page() {
           {/* Scholarships Card */}
           <Card className="py-6 md:p-6 p-2 bg-[#FCE7D2] flex flex-col justify-between">
             <div>
-
               <h5 className="mb-4 leading-tight">
-
                 Scholarships at Dublin City University
               </h5>
 
@@ -429,10 +431,11 @@ function Page() {
             <div className="flex w-full rounded-lg bg-[#FDF2E8]">
               <button
                 onClick={() => setActiveTab("scholarship")}
-                className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "scholarship"
-                  ? "bg-[#F57C00] text-white"
-                  : "bg-transparent text-black"
-                  }`}
+                className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
+                  activeTab === "scholarship"
+                    ? "bg-[#F57C00] text-white"
+                    : "bg-transparent text-black"
+                }`}
               >
                 <Link href="https://mta.ca/costs-financial-aid/scholarships-and-awards-first-year-students">
                   Scholarship Details
@@ -440,10 +443,11 @@ function Page() {
               </button>
               <button
                 onClick={() => setActiveTab("funding")}
-                className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "funding"
-                  ? "bg-[#F57C00] text-white"
-                  : "bg-transparent text-black"
-                  }`}
+                className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
+                  activeTab === "funding"
+                    ? "bg-[#F57C00] text-white"
+                    : "bg-transparent text-black"
+                }`}
               >
                 <Link href="https://mta.ca/current-students/student-finances/financial-aid-current-students">
                   Funding Details
@@ -566,8 +570,8 @@ function Page() {
                         item.value >= 75
                           ? "#e5edde"
                           : item.value >= 50
-                            ? "#e5edde"
-                            : "#f4d0d2",
+                          ? "#e5edde"
+                          : "#f4d0d2",
                     }}
                   >
                     <p className="flex items-center gap-2 text-[14px]">
@@ -595,8 +599,8 @@ function Page() {
                         item.value >= 75
                           ? "#e5edde"
                           : item.value >= 50
-                            ? "#e5edde"
-                            : "#f4d0d2",
+                          ? "#e5edde"
+                          : "#f4d0d2",
                     }}
                   >
                     <p className="flex items-center gap-2 ">
@@ -660,7 +664,7 @@ function Page() {
               <Link href="/contactus">
                 <Button
                   className="w-full bg-[#545454] hover:bg-zinc-700 text-white py-2 rounded"
-                  onClick={() => { }}
+                  onClick={() => {}}
                 >
                   Register Now!
                 </Button>
@@ -673,26 +677,28 @@ function Page() {
       {/* Required Documents! */}
       <section
         id="entryRequirements"
-        className="flex flex-col items-center justify-center md:my-14 "
+        className="flex flex-col items-center justify-center my-5 md:my-10"
       >
         <h1 className="md:mb-6 mb-2">Required Documents!</h1>
         <div className="flex flex-col md:flex-row gap-2 md:mb-8">
           <Button
             variant={"destructive"}
-            className={`px-4 py-2 rounded-lg border-2 h-12 ${activeTabUni === "University Application Docs"
-              ? "border-red-500 text-gray-900 font-semibold bg-transparent"
-              : "border-gray-900 text-gray-900  bg-transparent"
-              }`}
+            className={`px-4 py-2 rounded-lg border-2 h-12 ${
+              activeTabUni === "University Application Docs"
+                ? "border-red-500 text-gray-900 font-semibold bg-transparent"
+                : "border-gray-900 text-gray-900  bg-transparent"
+            }`}
             onClick={() => setActiveTabUni("University Application Docs")}
           >
             University Application Docs
           </Button>
           <Button
             variant={"destructive"}
-            className={`px-4 py-2 rounded-lg border-2 h-12 ${activeTabUni === "Embassy Documents"
-              ? "border-red-500 text-white-700 font-semibold bg-transparent"
-              : "border-gray-900 text-gray-900  bg-transparent"
-              }`}
+            className={`px-4 py-2 rounded-lg border-2 h-12 ${
+              activeTabUni === "Embassy Documents"
+                ? "border-red-500 text-white-700 font-semibold bg-transparent"
+                : "border-gray-900 text-gray-900  bg-transparent"
+            }`}
             onClick={() => setActiveTabUni("Embassy Documents")}
           >
             Embassy Documents
@@ -704,7 +710,7 @@ function Page() {
             <div className="bg-white p-6 rounded-xl shadow-md h-full">
               <h5 className=" md:mb-4">University Application Docs:</h5>
               <h6 className=" md:mb-4">Required Documents:</h6>
-              <ul className="grid grid-cols-2 gap-2 md:gap-4 text-gray-700 ">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-0 md:gap-4 text-gray-700 ">
                 <li className="flex items-center space-x-2">
                   <span className="text-red-500 text-4xl">•</span>
                   <p>Passport Images</p>
@@ -760,98 +766,103 @@ function Page() {
         )}
       </section>
       {/* application process */}
-      <section id="applicationProcess" className="w-[90%]  mx-5 md:my-10">
-        <h2 className="mb-2">Application Process!</h2>
-        <div className="flex flex-col lg:flex-row gap-0 lg:gap-4">
-          <div className="space-y-2">
-            {/* Step 1 */}
-            <div>
-              <h6>Create an Account</h6>
-              <p className="text-gray-700 mt-2">
-                Click on{" "}
+      <div className="w-full flex flex-col items-center">
+        <section id="applicationProcess" className="w-[90%]  my-5 md:my-10">
+          <h2 className="mb-2">Application Process!</h2>
+          <div className="flex flex-col lg:flex-row gap-0 lg:gap-4">
+            <div className="space-y-2">
+              {/* Step 1 */}
+              <div>
+                <h6>Create an Account</h6>
+                <p className="text-gray-700 mt-2">
+                  Click on{" "}
+                  <Link
+                    href="/apply-now"
+                    className="text-[#F0851D] hover:underline font-semibold"
+                  >
+                    Apply Now
+                  </Link>{" "}
+                  after creating your personalized profile through a registered
+                  account. You can monitor your applications and receive regular
+                  updates.{" "}
+                  <Link
+                    href="/register"
+                    className="text-[#F0851D] hover:underline font-semibold"
+                  >
+                    Register here.
+                  </Link>
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div>
+                <h6>Submit Your Application</h6>
+                <p className="text-gray-700 mt-2">
+                  Complete your Personal and Educational details. Upload your
+                  documents and double-check all information before submission.
+                </p>
+              </div>
+            </div>
+            {/* Image with CTA */}
+            <div className="relative bg-gray-100 p-4 w-full lg:w-[90%] 2xl:w-[70%] rounded-lg shadow-md h-40 md:h-60 flex items-center justify-center my-1">
+              {/* Background Image */}
+              <div
+                className="absolute inset-0 bg-cover bg-center rounded-lg"
+                style={{
+                  backgroundImage: "url('/application-process-img.png')",
+                }}
+              ></div>
+
+              {/* Overlay Content */}
+              <div className="relative text-center text-white">
+                <h6 className="mb-2">Begin Your Academic Journey in Ireland</h6>
                 <Link
-                  href="/apply-now"
-                  className="text-[#F0851D] hover:underline font-semibold"
+                  href="/learn-more"
+                  className="bg-red-500 text-white px-2 py-2 rounded-md hover:bg-red-600 text-sm"
                 >
-                  Apply Now
-                </Link>{" "}
-                after creating your personalized profile through a registered
-                account. You can monitor your applications and receive regular
-                updates.{" "}
-                <Link
-                  href="/register"
-                  className="text-[#F0851D] hover:underline font-semibold"
-                >
-                  Register here.
+                  Learn About the Application Process
                 </Link>
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div>
-              <h6>Submit Your Application</h6>
-              <p className="text-gray-700 mt-2">
-                Complete your Personal and Educational details. Upload your
-                documents and double-check all information before submission.
-              </p>
+              </div>
             </div>
           </div>
-          {/* Image with CTA */}
-          <div className="relative bg-gray-100 p-4 w-full lg:w-[90%] 2xl:w-[70%] rounded-lg shadow-md h-40 md:h-60 flex items-center justify-center my-1">
-            {/* Background Image */}
-            <div
-              className="absolute inset-0 bg-cover bg-center rounded-lg"
-              style={{ backgroundImage: "url('/application-process-img.png')" }}
-            ></div>
-
-            {/* Overlay Content */}
-            <div className="relative text-center text-white">
-              <h6 className="mb-2">Begin Your Academic Journey in Ireland</h6>
-              <Link
-                href="/learn-more"
-                className="bg-red-500 text-white px-2 py-2 rounded-md hover:bg-red-600 text-sm"
-              >
-                Learn About the Application Process
-              </Link>
-            </div>
+          {/* Step 3 */}
+          <div>
+            <h6>Pay the Application Fee (If required)</h6>
+            <p className="text-gray-700 mt-2">
+              Make sure to pay the application fee (if applicable) to finalize
+              your submission. Payment can be made easily directly to the
+              university through bank, money exchangers, online apps, and WWAH
+              secure online payment system.
+            </p>
           </div>
-        </div>
-        {/* Step 3 */}
-        <div>
-          <h6>Pay the Application Fee (If required)</h6>
-          <p className="text-gray-700 mt-2">
-            Make sure to pay the application fee (if applicable) to finalize
-            your submission. Payment can be made easily directly to the
-            university through bank, money exchangers, online apps, and WWAH
-            secure online payment system.
-          </p>
-        </div>
-        {/* Step 4 */}
-        <div>
-          <h6>Track Your Application</h6>
-          <p className="text-gray-700 mt-2">
-            Once your application is submitted, you can monitor its progress
-            through your personalized WWAH dashboard. Stay informed with
-            real-time updates and notifications.
-          </p>
-        </div>
+          {/* Step 4 */}
+          <div>
+            <h6>Track Your Application</h6>
+            <p className="text-gray-700 mt-2">
+              Once your application is submitted, you can monitor its progress
+              through your personalized WWAH dashboard. Stay informed with
+              real-time updates and notifications.
+            </p>
+          </div>
 
-        {/* Read More */}
-        <div className="">
-          <Link
-            href="/read-more"
-            className="text-red-500 hover:underline font-semibold"
-          >
-            Read more....
-          </Link>
-        </div>
-      </section>
+          {/* Read More */}
+          <div className="">
+            <Link
+              href="/read-more"
+              className="text-red-500 hover:underline font-semibold"
+            >
+              Read more....
+            </Link>
+          </div>
+        </section>
+      </div>
+
       {/* explore section */}
       <section
         className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full"
-      // style={{
-      //   backgroundImage: "url('/bg-usa.png')",
-      // }}
+        // style={{
+        //   backgroundImage: "url('/bg-usa.png')",
+        // }}
       >
         {/* Black Overlay */}
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
