@@ -40,6 +40,7 @@ const CourseArchive = () => {
   useEffect(() => {
     fetchCourses();
   }, []);
+  console.log(courses[0]);
 
   return (
     <section className="w-full p-4 md:p-8">
@@ -100,7 +101,7 @@ const CourseArchive = () => {
               <div key={idx} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col">
                 <div className="relative">
                   <Image
-                    src="/course1.png"
+                    src={item.universityData?.universityImages.banner || `/course-${idx}.png`}
                     alt="coursesImg"
                     width={400}
                     height={250}

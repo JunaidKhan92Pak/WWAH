@@ -7,18 +7,25 @@ export async function GET(req: Request) {
         // Establish database connection
         await connectToDatabase();
         const { searchParams } = new URL(req.url);
+
         const search = searchParams.get("search")?.trim() || "";
         const country = searchParams.get("country")
             ?.split(",")
             .map((c) => c.trim().toLowerCase())
-            .filter((c) => c !== "") || []; // Ensure it's always an array
+            .filter((c) => c !== "") || [];
+
+        // Get pagination parameters
+        const page = Number(searchParams.get("page")) || 1;
+        const limit = Number(searchParams.get("limit")) || 12; // Default limit is 12
+
         const query: Record<string, unknown> = {};
         const textSearchSupported = await University.collection.indexExists("university_name_text");
         if (search) {
             if (textSearchSupported) {
                 query.$text = { $search: search };
             } else {
-                const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
+                const escapeRegex = (text: string) =>
+                    text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
                 query.university_name = { $regex: new RegExp(escapeRegex(search), "i") };
             }
         }
@@ -26,23 +33,30 @@ export async function GET(req: Request) {
         if (country.length > 0) {
             query.country_name = { $in: country.map((c) => new RegExp(`^${c}$`, "i")) };
         }
-        // Fetch all universities from the database
+
+        // Get total count for pagination
+        const totalCount = await University.countDocuments(query);
+        const totalPages = Math.ceil(totalCount / limit);
+        const skip = (page - 1) * limit;
+
+        // Fetch universities with pagination
         const universities = await University.find(query)
-            .select("_id  university_name   country_name acceptance_rate universityImages.banner ranking universityImages.logo ") // 
+            .select("_id university_name country_name acceptance_rate universityImages.banner ranking universityImages.logo")
+            .skip(skip)
+            .limit(limit)
             .lean();
-        // Return a successful response with the fetched universities
+
         return NextResponse.json(
             {
                 success: true,
                 message: "Universities fetched successfully",
-                universities, // Changed this to `universities`
+                universities,
+                totalPages,
             },
             { status: 200 }
         );
     } catch (error) {
-        // Log error for debugging
         console.error("Error fetching universities:", error);
-        // Return an error response
         return NextResponse.json(
             {
                 success: false,
