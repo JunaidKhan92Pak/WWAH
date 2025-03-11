@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { Courses } from "@/models/courses";
 
+import type { PipelineStage } from "mongoose";
+
 export async function GET(req: Request) {
   try {
     await connectToDatabase();
 
-    // Parse search parameters
+    // Parse search parameters from the request URL
     const { searchParams } = new URL(req.url);
-    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 12));
-    const limit = Math.max(1, parseInt(searchParams.get("limit") || "12", 10));
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+    const limit = Math.max(1, parseInt(searchParams.get("limit") || "12"));
     const search = searchParams.get("search")?.trim() || "";
     const sortOrder = searchParams.get("sortOrder")?.toLowerCase() === "desc" ? -1 : 1;
     const skip = (page - 1) * limit;
@@ -22,16 +24,16 @@ export async function GET(req: Request) {
     const minBudget = parseFloat(searchParams.get("minBudget") || "0");
     const maxBudget = parseFloat(searchParams.get("maxBudget") || "999999");
 
-    // Extract countryFilter and convert to lowercase
+    // Extract and process country filter
     const countryFilter = searchParams.get("countryFilter")
       ?.split(",")
       .map((c) => c.trim().toLowerCase())
       .filter((c) => c !== "") || [];
 
-    // Query object initialization
+    // Initialize the query object
     const query: Record<string, unknown> = {};
 
-    // ✅ **Case-Insensitive Search**
+    // Support text search if an index exists; otherwise, use regex search
     const textSearchSupported = await Courses.collection.indexExists("course_title_text");
     if (search) {
       if (textSearchSupported) {
@@ -42,43 +44,37 @@ export async function GET(req: Request) {
         query.course_title = { $regex: new RegExp(escapeRegex(search), "i") };
       }
     }
+
+    // Budget filtering
     if (minBudget > 0 && maxBudget < 999999) {
       if (!isNaN(minBudget) || !isNaN(maxBudget)) {
-        query["annual_tuition_fee.amount"] = {
-          $gte: minBudget,
-          $lte: maxBudget,
-        };
+        query["annual_tuition_fee.amount"] = { $gte: minBudget, $lte: maxBudget };
       }
     }
-    // ✅ **Apply Individual Filters**
     if (studyLevel) query.course_level = studyLevel;
     if (intakeYear) query.intake = { $regex: `^${intakeYear}`, $options: "i" };
     if (studyMode) query.degree_format = { $regex: `^${studyMode}`, $options: "i" };
 
-    // ✅ **Properly Filter University**
+    // Filter by university name using regex
     if (university) {
       const escapeRegex = (text: string) =>
         text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
       query.universityname = { $regex: new RegExp(`.*${escapeRegex(university)}.*`, "i") };
     }
 
-    // ✅ **Properly Filter Country (if countryFilter has values)**
+    // Filter by country if provided
     if (countryFilter.length > 0) {
       query.countryname = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
     }
 
-    // ✅ **Course Title Filters**
-    // Apply additional filters on the course_title field.
-    // Note: If multiple course title filters are provided, we'll combine them.
+    // Apply course title filters
     let courseTitleFilter: Record<string, unknown> | undefined;
     if (subject) {
       courseTitleFilter = { $regex: new RegExp(subject, "i") };
     }
     if (searchCourse) {
-      // If searchCourse is provided, use that instead (or override previous filter)
       courseTitleFilter = { $regex: new RegExp(searchCourse, "i") };
     }
-    // The client can pass a `subjectAreaFilter` parameter as a comma-separated list.
     const subjectAreaFilterStr = searchParams.get("subjectAreaFilter");
     if (subjectAreaFilterStr) {
       const subjectAreas = subjectAreaFilterStr
@@ -86,11 +82,9 @@ export async function GET(req: Request) {
         .map((s) => s.trim())
         .filter((s) => s !== "");
       if (subjectAreas.length > 0) {
-        // Build a regex that matches any of the provided subject areas.
         const regexPattern = subjectAreas.join("|");
         const subjectAreaCondition = { $regex: new RegExp(regexPattern, "i") };
         if (courseTitleFilter) {
-          // Combine existing course title filter with the subject area condition.
           query.$and = [
             { course_title: courseTitleFilter },
             { course_title: subjectAreaCondition },
@@ -100,20 +94,53 @@ export async function GET(req: Request) {
         }
       }
     } else if (courseTitleFilter) {
-      // If no subject area filter but one of the other course title filters is provided.
       query.course_title = courseTitleFilter;
     }
 
-    // ✅ **Fetch courses with efficient pagination**
-    const [courses, totalCourses] = await Promise.all([
-      Courses.find(query)
-        .sort({ course_title: sortOrder })
-        .skip(skip)
-        .limit(limit)
-        .lean()
-        .select("_id course_title countryname intake duration annual_tuition_fee"),
-      Courses.countDocuments(query),
-    ]);
+    // Build aggregation pipeline with $lookup to join university data
+    const pipeline: PipelineStage[] = [
+      { $match: query },
+      {
+        $lookup: {
+          from: "universities", // name of the universities collection
+          localField: "universityname", // field in courses
+          foreignField: "university_name", // matching field in universities
+          as: "universityData",
+        },
+      },
+      {
+        $unwind: {
+          path: "$universityData",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      { $sort: { course_title: sortOrder } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $project: {
+          _id: 1,
+          course_title: 1,
+          countryname: 1,
+          intake: 1,
+          duration: 1,
+          annual_tuition_fee: 1,
+          "universityData.universityImages.banner": 1,
+          "universityData.university_name": 1,
+        },
+      },
+    ];
+
+    // Run the aggregation pipeline to fetch courses with joined university info
+    const courses = await Courses.aggregate(pipeline);
+
+    // Count total matching courses for pagination
+    const countPipeline: PipelineStage[] = [
+      { $match: query },
+      { $count: "total" },
+    ];
+    const countResult = await Courses.aggregate(countPipeline);
+    const totalCourses = countResult[0]?.total || 0;
 
     return NextResponse.json(
       {

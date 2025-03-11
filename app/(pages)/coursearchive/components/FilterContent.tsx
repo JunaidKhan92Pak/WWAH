@@ -151,7 +151,7 @@ export default function FilterContent() {
   }, [subjectAreaFilter, setSubjectAreaFilter]);
 
   return (
-    <div className="space-y-6 p-6 bg-gray-50 rounded-lg">
+    <div className="space-y-6 p-6 bg-gray-50 rounded-lg h-full overflow-y-auto">
       {/* Study Destinations */}
       <FilterSection title="Study Destination">
         <input
@@ -191,7 +191,6 @@ export default function FilterContent() {
             ))}
         </div>
       </FilterSection>
-
       {/* Study Level */}
       <FilterSection title="Study Level">
         <div className="space-y-3">
@@ -223,7 +222,6 @@ export default function FilterContent() {
           ))}
         </div>
       </FilterSection>
-
       {/* Subject Area Filter */}
       <FilterSection title="Subject Area">
         <div className="space-y-3 max-h-80 overflow-y-auto scroll-smooth overflow-hidden p-2 border border-gray-300 rounded-md">
@@ -251,7 +249,6 @@ export default function FilterContent() {
           ))}
         </div>
       </FilterSection>
-
       {/* Filter by University */}
       <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100 relative" ref={dropdownRef}>
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter by University</h3>
@@ -294,7 +291,6 @@ export default function FilterContent() {
           <p className="mt-3 text-sm text-gray-600">Selected: {selectedUniversity}</p>
         )}
       </div>
-
       {/* Filter by Intake Year */}
       <FilterSection title="Filter by Intake Year">
         <select
@@ -309,7 +305,6 @@ export default function FilterContent() {
           ))}
         </select>
       </FilterSection>
-
       {/* Filter by Intake Month */}
       <FilterSection title="Filter by Intake Month">
         <select className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700">
@@ -318,7 +313,6 @@ export default function FilterContent() {
           ))}
         </select>
       </FilterSection>
-
       {/* Filter by Mode of Study */}
       <FilterSection title="Filter by Mode of Study">
         <select
@@ -333,7 +327,6 @@ export default function FilterContent() {
           ))}
         </select>
       </FilterSection>
-
       {/* Filter by Budget */}
       <FilterSection title="Filter by Budget">
         <label className="block text-sm font-medium text-gray-700 mb-2">Select Currency</label>
@@ -391,7 +384,7 @@ export default function FilterContent() {
             </div>
             <input
               type="range"
-
+              min={0}
               max={50000}
               step={100}
               value={localMinBudget}
@@ -405,7 +398,7 @@ export default function FilterContent() {
             />
             <input
               type="range"
-
+              min={0}
               max={50000}
               step={100}
               value={localMaxBudget}

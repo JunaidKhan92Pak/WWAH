@@ -24,17 +24,29 @@ const Page = () => {
     { name: "France", value: "france", img: "/france.png" },
   ];
 
-  // Extract actions and state from Zustand store
-  const { scholarships, loading, fetchscholarships, setSearch, setCountry } = useScholarships();
+  // Extract actions and state from Zustand store (including new filter states)
+  const {
+    scholarships,
+    loading,
+    fetchscholarships,
+    setSearch,
+    setCountry,
+    programs,
+    setPrograms,
+    scholarshipType, // New: current scholarship type filters
+    setScholarshipType, // New setter
+    deadlineFilters,   // New: current application deadline filters
+    setDeadlineFilters // New setter
+  } = useScholarships();
 
   useEffect(() => {
     fetchscholarships();
   }, [fetchscholarships]);
 
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-  const [selectedInfo, setSelectedInfo] = useState<string[]>([]);
+  // We'll still use local state for search input; others are synced with Zustand.
   const [localSearch, setLocalSearch] = useState("");
-  console.log(selectedInfo);
+
   // Debounced search to optimize rapid input changes
   const debouncedSetSearch = useCallback(
     debounce((value: string) => {
@@ -55,14 +67,36 @@ const Page = () => {
     );
   };
 
-  const handleInfoChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSelectedInfo((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+  // For Programs, update directly using store values
+  const handleProgramChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPrograms(
+      programs.includes(value)
+        ? programs.filter((item) => item !== value)
+        : [...programs, value]
     );
   };
 
-  // Handle search input change (used in both mobile and desktop)
+  // New: Scholarship Type filter handler
+  const handleScholarshipTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setScholarshipType(
+      scholarshipType.includes(value)
+        ? scholarshipType.filter((item) => item !== value)
+        : [...scholarshipType, value]
+    );
+  };
+
+  // New: Application Deadline filter handler
+  const handleDeadlineChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDeadlineFilters(
+      deadlineFilters.includes(value)
+        ? deadlineFilters.filter((item) => item !== value)
+        : [...deadlineFilters, value]
+    );
+  };
+
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalSearch(value);
@@ -109,71 +143,91 @@ const Page = () => {
               </div>
               <hr className="mx-4" />
               <ScrollArea className="p-4 md:h-full h-[400px]">
+                {/* Country Filter */}
                 <h6 className="text-lg">Country:</h6>
-                <div>
-                  <ul className="py-2 space-y-4 mb-2">
-                    {countries.map((country) => (
-                      <li key={country.value} className="flex justify-between">
-                        <div className="flex items-center gap-2">
-                          <Image
-                            src={country.img}
-                            width={18}
-                            height={18}
-                            alt={country.name}
-                            className="w-[26px]"
-                          />
-                          <label className="text-[16px]">{country.name}</label>
-                        </div>
-                        <input
-                          type="checkbox"
-                          value={country.value}
-                          checked={selectedValues.includes(country.value)}
-                          onChange={handleCheckboxChange}
+                <ul className="py-2 space-y-3 mb-2">
+                  {countries.map((country) => (
+                    <li key={country.value} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={country.img}
+                          width={18}
+                          height={18}
+                          alt={country.name}
+                          className="w-[26px]"
                         />
-                      </li>
-                    ))}
-                  </ul>
-                  <hr />
-                  <p className="text-lg mt-4">Programs:</p>
-                  <ul className="py-2 space-y-4 mb-2">
-                    {["Bachelors", "Master", "PhD"].map((program) => (
-                      <li key={program} className="flex justify-between">
-                        <label className="text-[16px]">{program}</label>
-                        <input
-                          type="checkbox"
-                          name={program.toLowerCase()}
-                          value={program.toLowerCase()}
-                          onChange={handleInfoChange}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                  <hr />
-                  <p className="text-lg mt-4">Scholarship Type:</p>
-                  <ul className="py-4 space-y-4 mb-2">
-                    {["Fully Funded", "Partial Funded"].map((type) => (
-                      <li key={type} className="flex justify-between">
-                        <label className="text-[16px]">{type}</label>
-                        <input type="checkbox" name={type} value={type} onChange={handleInfoChange} />
-                      </li>
-                    ))}
-                  </ul>
-                  <hr />
-                  <p className="text-lg mt-4">Application Deadline:</p>
-                  <ul className="py-2 space-y-4">
-                    {["Jan 2025", "Feb 2025", "March 2025"].map((deadline) => (
-                      <li key={deadline} className="flex justify-between">
-                        <label className="text-[16px]">{deadline}</label>
-                        <input type="checkbox" name={deadline} value={deadline} onChange={handleInfoChange} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        <span className="text-[16px] truncate">{country.name}</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        value={country.value}
+                        checked={selectedValues.includes(country.value)}
+                        onChange={handleCheckboxChange}
+                        className="ml-2"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <hr />
+                {/* Programs Filter */}
+                <p className="text-lg mt-4">Programs:</p>
+                <ul className="py-2 space-y-3 mb-2">
+                  {["Bachelors", "Master", "PhD"].map((program) => (
+                    <li key={program} className="flex items-center justify-between">
+                      <span className="text-[16px] truncate">{program}</span>
+                      <input
+                        type="checkbox"
+                        name={program.toLowerCase()}
+                        value={program.toLowerCase()}
+                        onChange={handleProgramChange}
+                        checked={programs.includes(program.toLowerCase())}
+                        className="ml-2"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <hr />
+                {/* Scholarship Type Filter */}
+                <p className="text-lg mt-4">Scholarship Type:</p>
+                <ul className="py-3 space-y-3 mb-2">
+                  {["Fully Funded", "Partial Funded"].map((type) => (
+                    <li key={type} className="flex items-center justify-between">
+                      <span className="text-[16px] truncate">{type}</span>
+                      <input
+                        type="checkbox"
+                        name={type}
+                        value={type}
+                        onChange={handleScholarshipTypeChange}
+                        checked={scholarshipType.includes(type)}
+                        className="ml-2"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <hr />
+                {/* Application Deadline Filter */}
+                <p className="text-lg mt-4">Application Deadline:</p>
+                <ul className="py-2 space-y-3">
+                  {["Jan 2025", "Feb 2025", "March 2025"].map((deadline) => (
+                    <li key={deadline} className="flex items-center justify-between">
+                      <span className="text-[16px] truncate">{deadline}</span>
+                      <input
+                        type="checkbox"
+                        name={deadline}
+                        value={deadline}
+                        onChange={handleDeadlineChange}
+                        checked={deadlineFilters.includes(deadline)}
+                        className="ml-2"
+                      />
+                    </li>
+                  ))}
+                </ul>
               </ScrollArea>
             </section>
           </div>
         </SheetContent>
       </Sheet>
+      {/* Desktop Filter Sidebar */}
       <div className="flex justify-around gap-2">
         <section className="hidden md:block w-[20%] lg:w-[20%]">
           <div className="border-2 rounded-3xl p-4 md:p-0">
@@ -195,10 +249,11 @@ const Page = () => {
             </div>
             <hr className="mx-4 md:m-6" />
             <ScrollArea className="p-4 h-[500px] md:h-full overflow-auto">
-              <p className="font-bold">Country:</p>
-              <ul className="py-4 space-y-4 md:space-y-6">
+              {/* Desktop Country Filter */}
+              <p className="font-bold text-base md:text-xl">Country:</p>
+              <ul className="py-4 space-y-3 md:space-y-4">
                 {countries.map((country) => (
-                  <li key={country.value} className="flex justify-between">
+                  <li key={country.value} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Image
                         src={country.img}
@@ -207,66 +262,79 @@ const Page = () => {
                         alt={country.name}
                         className="w-[26px]"
                       />
-                      <label className="text-[16px]">{country.name}</label>
+                      <span className="text-[16px] truncate">{country.name}</span>
                     </div>
                     <input
                       type="checkbox"
                       value={country.value}
                       checked={selectedValues.includes(country.value)}
                       onChange={handleCheckboxChange}
+                      className="ml-2"
                     />
                   </li>
                 ))}
               </ul>
+              {/* Desktop Programs Filter */}
               <p className="text-base md:text-xl">Programs:</p>
-              <ul className="py-4 space-y-4 md:space-y-6">
+              <ul className="py-4 space-y-3 md:space-y-4">
                 {["Bachelors", "Master", "PhD"].map((program) => (
-                  <li key={program} className="flex justify-between items-center">
-                    <label htmlFor={program.toLowerCase()} className="text-sm md:text-base">
-                      {program}
-                    </label>
+                  <li key={program} className="flex items-center justify-between">
+                    <span className="text-[16px] truncate">{program}</span>
                     <input
                       type="checkbox"
                       name={program.toLowerCase()}
                       value={program.toLowerCase()}
-                      onChange={handleInfoChange}
+                      onChange={handleProgramChange}
+                      checked={programs.includes(program.toLowerCase())}
+                      className="ml-2"
                     />
                   </li>
                 ))}
               </ul>
+              {/* Desktop Scholarship Type Filter */}
               <p className="text-base md:text-xl">Scholarship Type:</p>
-              <ul className="py-4 space-y-4 md:space-y-6">
+              <ul className="py-4 space-y-3 md:space-y-4">
                 {["Fully Funded", "Partial Funded"].map((type) => (
-                  <li key={type} className="flex justify-between items-center">
-                    <label htmlFor={type} className="text-sm md:text-base">
-                      {type}
-                    </label>
-                    <input type="checkbox" name={type} value={type} onChange={handleInfoChange} />
+                  <li key={type} className="flex items-center justify-between">
+                    <span className="text-[16px] truncate">{type}</span>
+                    <input
+                      type="checkbox"
+                      name={type}
+                      value={type}
+                      onChange={handleScholarshipTypeChange}
+                      checked={scholarshipType.includes(type)}
+                      className="ml-2"
+                    />
                   </li>
                 ))}
               </ul>
+              {/* Desktop Application Deadline Filter */}
               <p className="text-base md:text-xl">Application Deadline:</p>
-              <ul className="py-4 space-y-4 md:space-y-6">
+              <ul className="py-4 space-y-3 md:space-y-4">
                 {["Jan 2025", "Feb 2025", "March 2025"].map((deadline) => (
-                  <li key={deadline} className="flex justify-between items-center">
-                    <label htmlFor={deadline} className="text-sm md:text-base">
-                      {deadline}
-                    </label>
-                    <input type="checkbox" name={deadline} value={deadline} onChange={handleInfoChange} />
+                  <li key={deadline} className="flex items-center justify-between">
+                    <span className="text-[16px] truncate">{deadline}</span>
+                    <input
+                      type="checkbox"
+                      name={deadline}
+                      value={deadline}
+                      onChange={handleDeadlineChange}
+                      checked={deadlineFilters.includes(deadline)}
+                      className="ml-2"
+                    />
                   </li>
                 ))}
               </ul>
             </ScrollArea>
           </div>
         </section>
+        {/* Scholarship Display Section */}
         <section className="md:w-[75%] w-[90%]">
-          {/* All University Section */}
           <div className="flex flex-col md:flex-row justify-between">
             <div className="md:py-2 flex flex-col">
               <h3 className="font-bold w-4/5 text-start">
                 Find the Right Scholarship for Your Academic Journey!
               </h3>
-              {/* <p className="text-sm">Showing Scholarships in United States:</p> */}
             </div>
             <div className="flex items-center justify-start md:justify-center gap-4 mt-4 md:mt-0">
               <div className="flex items-center gap-2 bg-gray-100 rounded-lg py-2 px-4 md:p-3">
@@ -294,6 +362,7 @@ const Page = () => {
                   {/* Content Section */}
                   <div className="p-2 flex-grow">
                     <p className="font-bold">{item.name}</p>
+                    <p className="text-sm text-gray-600"> <span className="font-semibold">Min Requirment  :</span> {item.minRequirement} </p>
                     <div className="flex flex-col md:flex-row justify-between flex-wrap">
                       <div className="flex items-center gap-2 mt-2 md:w-1/2">
                         <Image src={"/location.svg"} alt="location" width={16} height={16} />
