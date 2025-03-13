@@ -2,8 +2,8 @@ import Image from "next/image";
 import React from "react";
 // import StudyInUk from "/StudyInUK.png";
 // import StudyInUk from "./StudyInUk";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
+import Banner from "@/components/ui/enrollment/Banner";
 interface ScholarshipsInUKProps {
   countryName: string;
   scholarships: string[];
@@ -40,7 +40,7 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
                 need, or specific fields of study.
               </p>
             </div>
-        
+
             <div className="hidden md:flex relative justify-center items-center w-full xl:w-[70%] text-white">
               <div className="relative w-full pr-2 flex flex-col justify-center items-end h-[20vh]">
                 <div className="flex h-[50%] items-center justify-end">
@@ -64,10 +64,10 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
                   />
                   <div className="absolute inset-0 top-3 xl:top-4 flex justify-center items-center w-full h-full">
                     <div className="flex justify-center items-center  text-center w-[15%]">
-                    <p className="text-center  text-white md:text-black font-semibold ">
-                      {" "}
-                      Scholarships
-                    </p>
+                      <p className="text-center  text-white md:text-black font-semibold ">
+                        {" "}
+                        Scholarships
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -102,31 +102,12 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
           </div>
         </div>
       </section>
-      <section
-        className="relative mt-10 text-white bg-[#FCE7D2]"
-        style={{
-          backgroundImage: "url('/bg-usa.png')",
-
-          backgroundSize: "cover",
-        }}
-      >
-        <div className="absolute inset-0 bg-[#FCE7D2] opacity-70 z-0"></div>
-        <div className="flex flex-col md:flex-row w-full py-9 md:px-12 lg:gap-10 sm:gap-0 gap-5">
-          <div className="relative w-full lg:w-1/2">
-            <h4 className="md:w-full text-gray-900 leading-6 text-center lg:text-left">
-              Discover Scholarship Opportunities on our Scholarships Page!
-            </h4>
-          </div>
-
-          <div className="relative w-full md:w-1/2 flex justify-center items-center md:justify-end ">
-            <Link href="/scholarships">
-              <Button className="bg-red-700 2xl:w-100 2xl:h-35 2xl:py-10 2xl:text-[30px]">
-                Explore Scholarship Options
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <Banner
+        title="Discover Scholarship Opportunities on our Scholarships Page!"
+        buttonText="Explore Scholarship Options"
+        buttonLink="/scholarships"
+        backgroundImage="/bg-usa.png"
+      />
     </>
   );
 };

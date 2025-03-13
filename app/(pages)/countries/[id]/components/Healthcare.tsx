@@ -19,15 +19,15 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
           </div>
 
           {/* row 1 */}
-          <div className="flex flex-col gap-5 md:gap-10">
-            <div className="flex flex-col md:flex-row items-center gap-5 md:gap-20">
+          <div className="flex flex-col gap-5 ">
+            <div className="flex flex-col md:flex-row items-center gap-5 ">
               {/* Image Section */}
 
               {/* Text Section */}
               <div className="text-center md:text-left w-full md:w-[50%] pl-0 md:pl-8">
                 <h3 className=" text-gray-900 mb-2">
                   {/* National Health Service (NHS) */}
-                   {health ? health[0].name : "nill"} 
+                  {health ? health[0].name : "nill"}
                 </h3>
                 <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
                   {health ? health[0].description : "nill"}
@@ -44,7 +44,7 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
               </div>
             </div>
             {/* row 2 */}
-            <div className="flex flex-col-reverse md:flex-row items-center gap-5 md:gap-20">
+            <div className="flex items-start flex-col-reverse md:flex-row  gap-5 ">
               {/* Text Section */}
 
               {/* Image Section */}
@@ -91,38 +91,59 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                 {/* Read More Section */}
                 {health?.length > 2 && (
                   <>
-                    {!showMore && (
-                      <button
-                        onClick={() => setShowMore(true)}
-                        className="text-blue-600 hover:underline mt-2 block"
-                      >
-                        Read more...
-                      </button>
-                    )}
+                    {/* Always show health[1] */}
+                    <div className="mt-4">
+                      <h3 className="text-gray-900 mb-2">{health[1].name}</h3>
+                      <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
+                        {health[1].description && (
+                          <ul className="list-disc pl-5">
+                            {health[1].description.map((point, i) => (
+                              <li key={i}>{point}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </p>
+                    </div>
 
-                    {showMore &&
-                      health?.slice(2).map((item, index) => (
-                        <div key={index} className="mt-4">
-                          <h3 className="text-gray-900 mb-2">{item.name}</h3>
-                          <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
-                            {item.description ? (
-                              <ul className="list-disc pl-5">
-                                {item.description.map((point, i) => (
-                                  <li key={i}>{point}</li>
-                                ))}
-                              </ul>
-                            ) : null}
-                          </p>
-                        </div>
-                      ))}
+                    {/* Show items from health[2] onwards only when showMore is true */}
+                    {health.length > 2 && (
+                      <>
+                        {!showMore && (
+                          <button
+                            onClick={() => setShowMore(true)}
+                            className="text-blue-600 hover:underline mt-2 block"
+                          >
+                            Read more...
+                          </button>
+                        )}
 
-                    {showMore && (
-                      <button
-                        onClick={() => setShowMore(false)}
-                        className="text-blue-600 hover:underline mt-2 block"
-                      >
-                        Show less
-                      </button>
+                        {showMore &&
+                          health.slice(2).map((item, index) => (
+                            <div key={index + 2} className="mt-4">
+                              <h3 className="text-gray-900 mb-2">
+                                {item.name}
+                              </h3>
+                              <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
+                                {item.description && (
+                                  <ul className="list-disc pl-5">
+                                    {item.description.map((point, i) => (
+                                      <li key={i}>{point}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </p>
+                            </div>
+                          ))}
+
+                        {showMore && (
+                          <button
+                            onClick={() => setShowMore(false)}
+                            className="text-blue-600 hover:underline mt-2 block"
+                          >
+                            Show less
+                          </button>
+                        )}
+                      </>
                     )}
                   </>
                 )}

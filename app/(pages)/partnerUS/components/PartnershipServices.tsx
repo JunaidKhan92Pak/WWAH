@@ -33,8 +33,9 @@ export default function PartnershipServices() {
                     <p>Referral Commission for Successful Student Placements</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Earn a commission for every student you successfully refer
-                    and place in our programs.
+                    Partners can earn a commission for each student successfully
+                    placed at a university or institution through the WWAH
+                    platform.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
@@ -48,8 +49,9 @@ export default function PartnershipServices() {
                     <p>Performance-Based Incentives</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Unlock additional rewards based on your performance and
-                    enrollment milestones.
+                    The more students an agent refers who successfully enroll in
+                    a university, the greater the potential commission, which
+                    encourages active participation and recruitment.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
@@ -63,8 +65,10 @@ export default function PartnershipServices() {
                     <p>Bonus Payouts for Top-Performing Agents</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Receive exclusive bonuses when you reach the top performer
-                    status.
+                    Partners who bring in a high number of qualified students
+                    not only get higher commissions but also additional benefits
+                    like bonus payouts or exclusive partnership deals with
+                    premium institutions.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4" className="border-0">
@@ -78,8 +82,9 @@ export default function PartnershipServices() {
                     <p>Cross-Promotion & Co-Marketing</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Partner with us for co-marketing opportunities and
-                    cross-promotion of your services.
+                    Partners can earn commissions by participating in co-branded
+                    marketing campaigns with WWAH, helping them promote their
+                    services while sharing the benefits of the portal.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -114,8 +119,9 @@ export default function PartnershipServices() {
                     <p>Enhanced User Experience</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Earn a commission for every student you successfully refer
-                    and place in our programs.
+                    A simplified application process reduces the complexity and
+                    time required for students to apply, making it easier for
+                    partners to guide prospective students through the process.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
@@ -129,8 +135,9 @@ export default function PartnershipServices() {
                     <p>Real Time Updates</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Unlock additional rewards based on your performance and
-                    enrollment milestones.
+                    Real-time updates ensure that partners have immediate access
+                    to the status of student applications, making it easier for
+                    them to communicate progress to prospective students.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
@@ -144,8 +151,9 @@ export default function PartnershipServices() {
                     <p>Stay Organized with Our Document Manager</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Receive exclusive bonuses when you reach the top performer
-                    status.
+                    Our Document Manager simplifies the application process.
+                    With a clear checklist of required documents for each
+                    application, you can upload everything in just seconds.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -180,8 +188,9 @@ export default function PartnershipServices() {
                     <p>24/7 Support</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Earn a commission for every student you successfully refer
-                    and place in our programs.
+                    With our 24/7 service, you may get help whenever you need
+                    it. To keep your business operations operating smoothly, our
+                    team is committed to offering quick and effective solutions.
                   </AccordionContent>
                 </AccordionItem>
 
@@ -196,8 +205,8 @@ export default function PartnershipServices() {
                     <p>Proactive Communication</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Receive exclusive bonuses when you reach the top performer
-                    status.
+                    Our Team keeps partners informed about any changes in
+                    policies, new features, or available resources.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
@@ -211,8 +220,9 @@ export default function PartnershipServices() {
                     <p>Personalized Counseling Sessions</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Unlock additional rewards based on your performance and
-                    enrollment milestones.
+                    WWAH offers personalized virtual counseling sessions where
+                    partners can discuss specific student needs, career advice,
+                    and educational pathways.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -259,8 +269,9 @@ export default function PartnershipServices() {
                     <p>Broader Student Opportunities</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Earn a commission for every student you successfully refer
-                    and place in our programs.
+                    Partners can offer their students a vast array of academic
+                    programs across multiple countries, making it easier to find
+                    the right fit for diverse student profiles and interests.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
@@ -274,8 +285,10 @@ export default function PartnershipServices() {
                     <p>Competitive Edge</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Unlock additional rewards based on your performance and
-                    enrollment milestones.
+                    Having access to more global institutions gives partners a
+                    competitive advantage. They can differentiate themselves
+                    from other agencies or educational advisors by offering more
+                    options to students.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
@@ -289,8 +302,9 @@ export default function PartnershipServices() {
                     <p>Enhanced Branding and Credibility</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Receive exclusive bonuses when you reach the top performer
-                    status.
+                    Being associated with a broad network of international
+                    institutions boosts the credibility of partners in the eyes
+                    of students and parents.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -324,8 +338,10 @@ export default function PartnershipServices() {
                     <p>Webinars and Online Workshops</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Earn a commission for every student you successfully refer
-                    and place in our programs.
+                    Regular webinars and online workshops focused on best
+                    practices in international student recruitment can help
+                    partners stay updated on industry trends, effective
+                    strategies, and university partnerships.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
@@ -339,8 +355,8 @@ export default function PartnershipServices() {
                     <p>Conversion Sessions</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Unlock additional rewards based on your performance and
-                    enrollment milestones.
+                    Conversion-focused sessions can train partners on improving
+                    their student conversion rates.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
@@ -354,8 +370,9 @@ export default function PartnershipServices() {
                     <p>Learning Materials and Resources</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Receive exclusive bonuses when you reach the top performer
-                    status.
+                    Partners will have access to a rich library of learning
+                    materials, such as eBooks, guides, and articles with
+                    in-depth knowledge on the education sector.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4" className="border-0">
@@ -369,8 +386,8 @@ export default function PartnershipServices() {
                     <p>Networking Opportunities</p>
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Receive exclusive bonuses when you reach the top performer
-                    status.
+                    Partner networking events, allowing agents to collaborate,
+                    share insights, and learn from one another.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

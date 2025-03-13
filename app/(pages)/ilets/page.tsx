@@ -8,11 +8,7 @@ import OnlineOffline from "@/components/ui/enrollment/OnlineOffline";
 import FAQ from "@/components/ui/enrollment/FAQ";
 import Registration from "@/components/ui/enrollment/Registration";
 import Banner from "@/components/ui/enrollment/Banner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-// import girl from "@/public/girl.png"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Step {
   icon: string;
@@ -80,11 +76,11 @@ export default function Home() {
       />
       <InfoSection
         title1="What is IELTS?"
-        description1="IELTS stands for the International English Language Testing System an English Language proficiency test. The International English Language Testing System (IELTS) is a globally recognized test that assesses the English language proficiency of individuals who wish to study or work in environments where English is the primary language."
+        description1="IELTS stands for the International English Language Testing System – an English Language proficiency test. The International English Language Testing System (IELTS) is a globally recognized test that assesses the English language proficiency of individuals who wish to study or work in environments where English is the primary language."
         imageSrc1="/ilets/iletsInfoImg1.svg"
         imageAlt1="iletsInfo"
         title2="Why IELTS?"
-        description2="The International English Language Testing System (IELTS) is one of the most trusted English proficiency tests in the world."
+        description2="The International English Language Testing System (IELTS) offers two main types of tests:"
         imageSrc2="/ilets/iletsInfoImg2.svg"
         imageAlt2="Why IELTS"
         dividerImageSrc="/dividerInfoSection.png"
@@ -108,8 +104,8 @@ export default function Home() {
       <ExamStructure
         textSectionTitle="Test Format"
         textSectionDescription={[
-          "Both versions of the IELTS include four sections: Listening, Reading, Writing, and Speaking. The Listening and Speaking sections are identical for both versions, while the Reading and Writing sections differ. The main differences in the Reading and Writing sections, reflecting the specific requirements of academic versus general usage of English. The Academic version focuses on readiness for university-level study and professional registration",
-          "Click here to Register for IELTS classes with us!",
+          "Both versions of the IELTS include four sections: Listening, Reading, Writing, and Speaking. The Listening and Speaking sections are identical for both versions, while the Reading and Writing sections differ. The main differences in the Reading and Writing sections, reflecting the specific requirements of academic versus general usage of English. The Academic version focuses on readiness for university-level study and professional registration, while the General Training version assesses English proficiency in a broader social and workplace context. The scoring system for both versions is the same, with scores reported on a nine-band scale.",
+          "Click here to Register for IELTS Academic or General class with us!",
         ]}
         examSectionTitle="IELTS Exam Structure!"
         examSectionDescription1="Total duration of IELTS exam is 2 Hours 45 Minutes. The IELTS exam comprises four main
@@ -144,13 +140,12 @@ export default function Home() {
           <h3 className=" text-[#313131]"> IELTS Offline </h3>
         </div>
       </div> */}
-   
 
       {/* IlETS ONLINE OFFLINE SECTION */}
       {/* <section className="parentdiv w-full mx-auto flex justify-center my-6">
         <div className="ChildDiv w-[90%] flex flex-col lg:flex-row items-center justify-center gap-8">
           {/* Text Div */}
-          {/* <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] p-6 shadow-2xl rounded-3xl flex flex-col">
+      {/* <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] p-6 shadow-2xl rounded-3xl flex flex-col">
             <div className="w-full flex flex-col">
               <h3 className="text-[#313131] w-full">
                 IELTS Online (Computer-Delivered):
@@ -165,8 +160,8 @@ export default function Home() {
             </div>
           </div> */}
 
-          {/* Image Div */}
-          {/* <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] relative shadow-2xl rounded-3xl overflow-hidden">
+      {/* Image Div */}
+      {/* <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] relative shadow-2xl rounded-3xl overflow-hidden">
             <Image
               src="/girl.png"
               alt="Image representing IELTS"
@@ -179,63 +174,71 @@ export default function Home() {
       {/* </section>  */}
 
       <div className="flex justify-center mt-10">
-      <Tabs defaultValue="online" className="flex flex-col items-center ">
-        <TabsList className="flex space-x-4 bg-transparent">
-          {/* IELTS Online Tab */}
-          <TabsTrigger
+        <Tabs defaultValue="online" className="flex flex-col items-center ">
+          <TabsList className="flex space-x-4 bg-transparent">
+            {/* IELTS Online Tab */}
+            <TabsTrigger
+              value="online"
+              className="text-base sm:text-xl relative border bg-transparent rounded-lg px-3 sm:px-12 py-4  focus:outline-none focus:ring-2  focus:ring-red-300 data-[state=active]:bg-red-100"
+            >
+              IELTS Online
+            </TabsTrigger>
+
+            {/* IELTS Offline Tab */}
+            <TabsTrigger
+              value="offline"
+              className="text-base sm:text-xl border border-gray-300 rounded-lg px-3 sm:px-12 py-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-300 data-[state=active]:bg-red-100"
+            >
+              IELTS Offline
+            </TabsTrigger>
+          </TabsList>
+
+          {/* IELTS Online Content */}
+          <TabsContent
             value="online"
-            className="text-base sm:text-xl relative border bg-transparent rounded-lg px-3 sm:px-12 py-4  focus:outline-none focus:ring-2  focus:ring-red-300 data-[state=active]:bg-red-100"
+            className="w-full flex justify-center mt-6"
           >
-            IELTS Online
-        
-          </TabsTrigger>
-
-          {/* IELTS Offline Tab */}
-          <TabsTrigger
-            value="offline"
-            className="text-base sm:text-xl border border-gray-300 rounded-lg px-3 sm:px-12 py-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-300 data-[state=active]:bg-red-100"
-          >
-            IELTS Offline
-          </TabsTrigger>
-        </TabsList>
-
-        {/* IELTS Online Content */}
-        <TabsContent value="online" className="w-full flex justify-center mt-6">
-          <section className="parentdiv w-[90%] mx-auto flex flex-col lg:flex-row items-center justify-center gap-8">
-            {/* Text Div */}
-            <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] p-6 shadow-2xl rounded-3xl flex flex-col">
-              <div className="w-full flex flex-col">
-                <h6 className="text-[#313131] w-full">
-                  IELTS Online (Computer-Delivered):
-                </h6>
-                <p className="mt-2 lg:mt-6">
-                  Online IELTS is conducted on a computer at an official IELTS
-                  test center. It typically offers more frequent test dates and
-                  greater flexibility in choosing test times. Results are
-                  usually available faster, within 3-5 days. It is ideal for
-                  candidates who prefer typing over handwriting.
-                </p>
+            <section className="parentdiv w-[90%] mx-auto flex flex-col lg:flex-row items-center justify-center gap-8">
+              {/* Text Div */}
+              <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] p-6 shadow-2xl rounded-3xl flex flex-col">
+                <div className="w-full flex flex-col">
+                  <h6 className="text-[#313131] w-full">
+                    IELTS Online (Computer-Delivered):
+                  </h6>
+                  <p className="mt-2 lg:mt-6">
+                    Online IELTS Conducted on a computer at an official IELTS
+                    test center. It Typically offers more frequent test dates
+                    and greater flexibility in choosing test times. Results are
+                    usually available faster, within 3-5 days. It is Ideal for
+                    candidates who prefer typing over handwriting.
+                  </p>
+                </div>
               </div>
-            </div>
 
-            {/* Image Div */}
-            <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] relative shadow-2xl rounded-3xl overflow-hidden">
-              <Image
-                src="/girl.png"
-                alt="Image representing IELTS"
-                width={500}
-                height={20}
-                className="rounded-3xl w-full h-full object-cover"
-              />
-            </div>
-          </section>
-        </TabsContent>
+              {/* Image Div */}
+              <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] relative shadow-2xl rounded-3xl overflow-hidden">
+                <Image
+                  src="/girl.png"
+                  alt="Image representing IELTS"
+                  width={500}
+                  height={20}
+                  className="rounded-3xl w-full h-full object-cover"
+                />
+              </div>
+            </section>
+          </TabsContent>
 
-        {/* IELTS Offline Content */}
-        <TabsContent value="offline" className="mt-4">
-          <p>Content for IELTS Offline</p>
-        </TabsContent>
-      </Tabs>
+          {/* IELTS Offline Content */}
+          <TabsContent value="offline" className="mt-4">
+            <p>
+              Paper based IELTS Conducted on paper at an official IELTS test
+              center. It Typically offers fewer test dates compared to the
+              computer-delivered format. It is Suitable for candidates who
+              prefer writing by hand. Results are generally available within 13
+              days after the test.
+            </p>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Choosing Section */}
@@ -251,8 +254,9 @@ export default function Home() {
             availability when choosing between the computer-delivered and
             paper-based IELTS formats. Both formats are widely accepted by
             educational institutions and immigration authorities, so the choice
-            primarily depends on the candidates convenience and test taking
-            style.
+            primarily depends on the candidates convenience and test- taking
+            style. If you are aiming for a Top IELTS Score, then Book IELTS
+            Preparation classes with us.
           </p>
         </div>
       </section>
@@ -268,8 +272,7 @@ export default function Home() {
         title="How to Register for IELTS Exam:"
         steps={steps}
         feeTitle="IELTS Exam Fee!"
-        feeDescription="The IELTS exam fee varies slightly depending on the specific type of test and location. For the standard IELTS Academic and General Training exams, the fee is 
-        $280 - $340. It is advisable to check the official IELTS website or contact your local test center for the exact fee in your region."
+        feeDescription="The IELTS exam fee varies slightly depending on the specific type of test and location. For the standard IELTS Academic and General Training exams, the fee is $280 - $340. It is advisable to check the official IELTS website or contact your local test center for the exact fee in your region."
       />
 
       <Banner
@@ -283,74 +286,106 @@ export default function Home() {
         title="Frequently Asked Questions:"
         items={[
           {
-            question: "What is the IELTS test format?",
+            question: "What is the Structure of IELTS Listening Section?",
             answer:
-              "The IELTS test consists of four modules: Listening, Reading, Writing, and Speaking.",
+              "The Listening section lasts for 30 minutes and includes four recordings of native English speakers. You'll answer a series of questions based on these recordings.",
           },
           {
             question:
               "What are the Tips for Success in Listening Section of IELTS?",
-            answer:
-              "Focus on listening carefully to the instructions and key words. Practice active listening skills, and familiarize yourself with different accents. Time management is crucial.",
+            answer: [
+              "- Practice Active Listening: Regularly listen to English audio resources such as podcasts, news broadcasts, and lectures.",
+              "- Note-Taking: Develop shorthand skills to quickly jot down important points.",
+              "- Predict Answers: Use the context of the conversation to predict possible answers before listening.",
+            ],
           },
           {
             question: "What is the Structure of IELTS Reading Section?",
             answer:
-              "The IELTS Reading section includes three reading passages, each with a set of questions. It is designed to test your reading skills and understanding of texts, which range from factual to descriptive.",
+              "The Reading section lasts for 60 minutes and includes 40 questions, designed to test a wide range of reading skills. The test is divided into three sections with increasing difficulty.",
           },
           {
             question:
               "What are the Tips for Success in Reading Section of IELTS?",
-            answer:
-              "Read the questions first to understand what to look for. Skim the passages for the main ideas, and then scan for specific information. Manage your time wisely, as the section is time-limited.",
+            answer: [
+              "- Skimming and Scanning: Quickly identify main ideas and specific information.",
+              "- Time Management: Allocate time wisely, spending approximately 20 minutes per section.",
+              "- Vocabulary Building: Enhance your vocabulary by reading diverse English texts.",
+            ],
           },
           {
             question: "What is the Structure of IELTS Writing Section?",
-            answer:
-              "The IELTS Writing section consists of two tasks: Task 1 requires you to describe or summarize information from a graph, chart, or diagram. Task 2 requires you to write an essay in response to a question or argument.",
+            answer: [
+              "The Writing section is 60 minutes long and comprises two tasks:",
+              "- Task 1: Describe visual information (graphs, charts, tables) in at least 150 words.",
+              "- Task 2: Respond to a point of view or argument in at least 250 words.",
+            ],
           },
           {
             question:
               "What are the Tips for Success in Writing Section of IELTS?",
-            answer:
-              "For Task 1, focus on summarizing the main points, and for Task 2, ensure you present clear arguments with supporting evidence. Practice writing essays and managing your time during the test.",
+            answer: [
+              "- Understand Task Requirements: Ensure you meet the word count and address all parts of the question.",
+              "- Structure Your Writing: Use clear paragraphs with a logical flow of ideas.",
+              "- Practice Regularly: Write essays and reports on various topics to improve clarity and coherence.",
+            ],
           },
           {
             question: "What is the Structure of IELTS Speaking Section?",
-            answer:
-              "The IELTS Speaking section is a face-to-face interview with an examiner. It is divided into three parts: an introduction, a long-turn task where the candidate speaks on a topic, and a discussion on abstract topics.",
+            answer: [
+              "The Speaking section is a face-to-face interview with an examiner, lasting 11-14 minutes. If you take IELTS on paper, your Speaking test will take place on a different day to the other sections of the test, in a 7-day window before or after the main test day. It is divided into three parts:",
+              "- Part 1: General questions about yourself and familiar topics.",
+              "- Part 2: A talk based on a given topic, with one minute to prepare.",
+              "- Part 3: A discussion on abstract ideas and issues related to the Part 2 topic.",
+            ],
           },
           {
             question:
               "What are the Tips for Success in IELTS Speaking Section?",
-            answer:
-              "Speak clearly and confidently. Practice speaking with fluency and coherence. Answer questions in detail and expand on your ideas. Practice mock interviews with a partner or tutor.",
-          },
-          {
-            question:
-              "What are the Tips for Success in IELTS Speaking Section?",
-            answer:
-              "Speak clearly and confidently. Practice speaking with fluency and coherence. Answer questions in detail and expand on your ideas. Practice mock interviews with a partner or tutor.",
+            answer: [
+              "- Practice Speaking: Engage in regular conversations with fluent English speakers.",
+              "- Fluency and Coherence: Focus on speaking smoothly and logically.",
+              "- Pronunciation and Vocabulary: Work on clear pronunciation and appropriate use of vocabulary.",
+            ],
           },
           {
             question: "What are the Eligibility Requirements of IELTS?",
-            answer:
-              "There are no specific eligibility requirements for IELTS. However, it is typically required for those planning to study or work in an English-speaking country. It is available to individuals 16 years and older.",
+            answer: [
+              "Age: While there is no age limit, the IELTS test is generally recommended for individuals aged 16 and above.",
+              "Identification Requirements:",
+              "- Valid ID",
+              "- Passport",
+              "- National Identity Card",
+            ],
           },
           {
             question: "Explain IELTS Band Scores?",
-            answer:
-              "The IELTS Band Scores range from 0 to 9, with 9 being the highest level of proficiency. Each section of the test (Listening, Reading, Writing, and Speaking) is scored, and the overall band score is the average of these scores.",
+            answer: [
+              "The IELTS exam scores candidates on a scale from 1 to 9 for each of the four sections: Listening, Reading, Writing, and Speaking.",
+              "Each section of the IELTS test is scored individually on a band scale of 1 to 9, with each band corresponding to a specific level of English proficiency:",
+              "- Band 9: Expert User",
+              "- Band 8: Very Good User",
+              "- Band 7: Good User",
+              "- Band 6: Competent User",
+              "- Band 5: Modest User",
+              "- Band 4: Limited User",
+              "- Band 3: Extremely Limited User",
+              "- Band 2: Intermittent User",
+              "- Band 1: Non-User",
+              "- Band 0: Did Not Attempt the Test",
+            ],
           },
           {
             question: "What is the Overall IELTS Band Score?",
-            answer:
-              "The overall IELTS band score is calculated by averaging the four individual section scores. If the average score ends in .25, it is rounded up, while scores ending in .75 are rounded down.",
+            answer: [
+              "The overall band score is the average of the four individual section band scores, rounded to the nearest whole or half band.",
+              "For example: If a candidate scores 6.5 in Listening, 6.0 in Reading, 7.0 in Writing, and 6.5 in Speaking, the overall band score would be:",
+              "(6.5 + 6.0 + 7.0 + 6.5) / 4 = 6.5.",
+            ],
           },
           {
             question: "How long is an IELTS score valid?",
-            answer:
-              "IELTS scores are valid for two years. After that, the scores may no longer reflect your current level of English proficiency, so you might need to retake the exam if your score expires.",
+            answer: "IELTS scores are valid for two years from the test date.",
           },
         ]}
       />

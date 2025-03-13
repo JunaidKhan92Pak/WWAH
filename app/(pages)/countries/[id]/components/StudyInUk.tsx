@@ -11,17 +11,21 @@ interface StudyInUkProps {
   countryName: string;
 }
 
-const StudyInUk = ({ country, countryName }: StudyInUkProps) => {
+const StudyInUk = ({ countryName }: StudyInUkProps) => {
   const { universities, fetchUniversities } = useUniversityStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
-  const fullText = ``;
 
-  const truncatedText = `${country? country :""}`;
+  const fullText =
+    "Studying in the United Kingdom offers a wealth of advantages that make it an attractive destination for international students. The UK is home to world-class universities renowned for their high academic standards and cutting-edge research. Students can experience a rich blend of cultures, as campuses are filled with individuals from around the globe, fostering an inclusive environment. Many UK degree programs, especially at the postgraduate level, are shorter in duration than those in other countries.";
+  const maxLength = 300;
 
   const [isExpanded, setIsExpanded] = useState(false);
-  // console.log(universities);
+  const truncatedText =
+    fullText.length > maxLength
+      ? fullText.slice(0, maxLength) + "..."
+      : fullText;
 
   return (
     <>
@@ -31,19 +35,21 @@ const StudyInUk = ({ country, countryName }: StudyInUkProps) => {
         <div className="text-center">
           <p>
             {isExpanded ? fullText : truncatedText}
-            <span
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="text-black-200  underline underline-offset-4 font-normal cursor-pointer ml-2"
-            >
-              {isExpanded ? "...Read less" : "Read more..."}
-            </span>
+            {fullText.length > maxLength && (
+              <span
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="text-black-200 underline underline-offset-4 font-normal cursor-pointer ml-2"
+              >
+                {isExpanded ? "Read less" : "Read more..."}
+              </span>
+            )}
           </p>
         </div>
       </div>
 
       {/* Carousel Section */}
       <section
-        className="relative flex justify-center items-center text-center text-white bg-5 bg-black bg-cover bg-center min-h-[60px] md:min-h-[100vh] mt-10 py-5"
+        className="relative flex justify-center items-center text-center text-white bg-5 bg-black bg-cover bg-center  mt-10 py-5"
         style={{
           backgroundImage: "url('/bg-usa.png')",
         }}
@@ -51,12 +57,10 @@ const StudyInUk = ({ country, countryName }: StudyInUkProps) => {
         <div className="absolute inset-0 bg-black opacity-90 z-0"></div>
 
         <div className="relative z-10 w-full md:px-6 space-y-2">
-          <h2 className="md:pt-10 pb-4">
-            Popular Universities in {countryName}
-          </h2>
+          <h2 className="py-2">Popular Universities in {countryName}</h2>
 
           <div
-            className="flex overflow-x-auto md:space-x-4 md:p-4 hide-scrollbar gap-1 max-w-[90%] mx-auto"
+            className="flex overflow-x-auto md:space-x-4 md:p-4 hide-scrollbar gap-1 mx-auto"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
