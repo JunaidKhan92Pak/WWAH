@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/legacy/image";
-import { Button } from '@/components/ui/button';
-import Link from "next/link";
+import Banner from "@/components/ui/enrollment/Banner";
 
 interface Accomodation {
   accomodation: { name: string; detail: string }[];
@@ -94,30 +93,15 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
         </div>
 
         {/* Advisor Section */}
-        <section
-          className="relative text-white bg-[#FCE7D2]"
-          style={{
-            backgroundImage: "url('/bg-usa.png')",
-            backgroundSize: "cover",
-          }}
-        >
-          <div className="absolute inset-0 bg-[#FCE7D2] opacity-70 z-0"></div>
-          <div className="flex flex-col md:flex-row w-full py-6 md:px-12 lg:gap-10 gap-5 sm:gap-0 mb-10">
-            <div className="relative w-full md:w-1/2">
-              <h4 className="md:w-full text-gray-900 leading-6 text-center lg:text-left">
-                Need help finding the perfect place to live abroad? Ask the WWAH
-                Advisor now!
-              </h4>
-            </div>
-            <div className="relative w-full md:w-1/2 flex justify-center items-center md:justify-end">
-              <Link href="/contactus">
-                <Button className="bg-red-700 2xl:w-100 2xl:h-35 2xl:py-10 2xl:text-[30px]">
-                  Consult with WWAH Advisor
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <div className="my-2 md:my-6">
+           <Banner
+          title="Need help finding the perfect place to live abroad? Ask the WWAH Advisor now!"
+          buttonText="Consult with WWAH Advisor"
+          buttonLink="/contactus"
+          backgroundImage="/bg-usa.png"
+        />
+        </div>
+       
       </div>
     </>
   );
