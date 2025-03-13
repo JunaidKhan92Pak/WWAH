@@ -18,19 +18,8 @@ const formSchema = z.object({
   city: z.string().min(1, "City is required"),
   degreeLevel: z.string().min(1, "Degree level is required"),
   fieldOfStudy: z.string().min(1, "Field of study is required"),
-  tuitionBudget: z
-    .string()
-    .min(1, "Tuition budget is required")
-    .regex(/^\d+$/, "Must be a valid number")
-    .transform((val) => parseFloat(val))
-    .refine((val) => val > 0, "Must be greater than 0"),
-
-  livingBudget: z
-    .string()
-    .min(1, "Living budget is required")
-    .regex(/^\d+$/, "Must be a valid number")
-    .transform((val) => parseFloat(val))
-    .refine((val) => val > 0, "Must be greater than 0"),
+  tuitionBudget: z.string().min(1, "Tuition budget is required"),
+  livingBudget: z.string().min(1, "Living budget is required"),
   studyMode: z.string().min(1, "Study mode is required"),
 });
 
@@ -41,13 +30,13 @@ const EditStudentPreference = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: "dfd",
-      city: "vd",
-      degreeLevel: "dfd",
-      fieldOfStudy: "dfd",
-      tuitionBudget: 0,
-      livingBudget: 0,
-      studyMode: "kl",
+      country: "United Kingdom",
+      city: "London",
+      degreeLevel: "Bachelors",
+      fieldOfStudy: "Engineering",
+      tuitionBudget: "10000",
+      livingBudget: "5000",
+      studyMode: "On Campus",
     },
   });
 
