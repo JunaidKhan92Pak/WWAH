@@ -28,7 +28,8 @@ const ScholarshipSchema = new Schema(
         requiredDocuments: [
             { name: { type: String, trim: true }, details: { type: String, trim: true } }
         ],
-        degreeLevel: { type: String, trim: true }
+        degreeLevel: { type: String, trim: true },
+        minRequirement: { type: String, trim: true },
     },
     { timestamps: true, versionKey: false }
 );

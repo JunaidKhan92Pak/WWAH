@@ -28,7 +28,7 @@ export default function Home() {
   const data = {
     title: 'PTE "Online or Offline"',
     description:
-      "PTE Academic Online is a remote proctored version of the test that can be taken at home, in an office, or any private location with a stable internet connection. It is ideal for test-takers who cannot visit a physical test center or prefer the convenience of taking the exam from their own device. The Offline PTE Academic exam is taken at an official Pearson test center on a computer. It is conducted in a secure environment with a proctor present to monitor the test-taker. Both the online and offline versions of PTE Academic are identical in terms of content, format, and scoring. The main differences lie in the test environment and the proctoring method used. Test-takers should carefully consider their options and choose the format that best suits their needs, location, and preferences. ",
+      "PTE Academic Online is a remote proctored version of the test that can be taken at home, in an office, or any private location with a stable internet connection. It is ideal for test-takers who cannot visit a physical test center or prefer the convenience of taking the exam from their own device. The Offline PTE Academic exam is taken at an official Pearson test center on a computer. It is conducted in a secure environment with a proctor present to monitor the test-taker. Both the online and offline versions of PTE Academic are identical in terms of content, format, and scoring. The main differences lie in the test environment and the proctoring method used. Test-takers should carefully consider their options and choose the format that best suits their needs, location, and preferences.",
   };
   const steps: Step[] = [
     {
@@ -42,12 +42,12 @@ export default function Home() {
       text: "2. Log into Your Account",
     },
     {
-      icon: "/Clipboard-Text--Streamline-Solar-Broken.png",
+      icon: "/Clipboard.svg",
       alt: "Shield Icon",
       text: "3. Choose the Test Type",
     },
     {
-      icon: "/Clipboard-Text--Streamline-Solar-Broken.png",
+      icon: "/Clipboard.svg",
       alt: "Clipboard Icon",
       text: "4. Select Your Test Center and Date",
     },
@@ -78,28 +78,33 @@ export default function Home() {
       />
       <InfoSection
         title1="What is PTE?"
-        description1="The PTE Exam (Pearson Test of English) is a computer-based English language proficiency test designed to assess non-native English speakers' skills in speaking, writing, reading, and listening. PTE scores are widely accepted for academic admissions, immigration applications, and sometimes for professional registration in English-speaking countries, such as the UK, Australia, New Zealand, and Canada."
+        description1="The PTE Exam (Pearson Test of English) is a computer-based English language proficiency test designed to assess non-native English speakers' skills in speaking, writing, reading, and
+listening. PTE scores are widely accepted for academic admissions, immigration applications, and sometimes for professional registration in English-speaking countries, such as the UK,
+Australia, New Zealand, and Canada.
+"
         imageSrc1="/pte/whatIsPTE.svg"
         imageAlt1="iletsInfo"
         title2="Types of PTE Exams!"
         description2="The Pearson Test of English (PTE) offers two main types of tests:"
         imageSrc2="/pte/iletsInfoImg2.svg"
-        imageAlt2="Why IELTS"
+        imageAlt2="Why PTE"
         dividerImageSrc="/dividerInfoSection.png"
         testTypes={testTypes}
-        testDescription="Each test serves different purposes and is tailored to meet the specific needs of candidates. Understanding the differences between these test types is crucial for selecting the one that aligns with your goals."
+        testDescription="Each test serves different purposes and is tailored to meet the specific needs of candidates.
+Understanding the differences between these test types is crucial for selecting the one that aligns with your goals.
+"
       />
 
       <ComparisonSection
         leftItem={{
           title: "PTE Academic",
           description:
-            "This test is primarily designed for students aiming to study abroad and is widely accepted by universities, colleges, and governments for student visa applications. It evaluates four essential skills: Speaking, Writing, Reading, and Listening. Entirely computer-based, including a recorded speaking section, the test integrates questions to assess multiple skills simultaneously. With a duration of about three hours, it is scored on a 10-90 scale and provides detailed feedback for each section.",
+            "It is Primarily designed for students who want to study abroad. It’s widely accepted by universities, colleges, and governments for student visa applications. The test focuses on four key skills — Speaking, Writing, Reading, and Listening. The test is entirely computer-based, including the speaking section, where responses are recorded via a microphone. The questions are integrated, meaning a single question might test multiple skills. Its Duration is approximately 3 hours. It is scored on a scale of 10-90, with detailed feedback provided on each section",
         }}
         rightItem={{
           title: "PTE General",
           description:
-            "It is similar to PTE Academic, it tests Listening, Reading, Writing, and Speaking, but with agreater emphasis on practical communication skills rather than academic contexts. The PTE General consists of two main parts: a written paper (which includes listening) and a spoken test. It is available in six levels (A1, A2, B1, B2, C1, C2) aligned with the Common European Framework of Reference (CEFR). Its duration varies depending on the level, generally shorter than the PTE Academic.",
+            "It is similar to PTE Academic, it tests Listening, Reading, Writing, and Speaking, but with a greater emphasis on practical communication skills rather than academic contexts. The PTE General consists of two main parts: a written paper (which includes listening) and a spoken test. It is available in six levels (A1, A2, B1, B2, C1, C2) aligned with the Common European Framework of Reference (CEFR). Its duration varies depending on the level, generally shorter than the PTE Academic.",
         }}
       />
 
@@ -131,7 +136,7 @@ export default function Home() {
             title: "Writing",
           },
         ]}
-         examSectionDescription2="The PTE Exam tests English skills across four sections: Speaking, Writing, Reading, and Listening. PTE Test results are typically available within 48 hours."
+        examSectionDescription2="The PTE Exam tests English skills across four sections: Speaking, Writing, Reading, and Listening. PTE Test results are typically available within 48 hours."
       />
 
       <Banner
@@ -162,29 +167,40 @@ export default function Home() {
         items={[
           {
             question: "What is the passing score for PTE Academic?",
-            answer:
-              "The PTE test consists of four modules: Listening, Reading, Writing, and Speaking.",
+            answer: [
+              "There is no specific passing score for PTE Academic, as required scores vary based on the institution or immigration body’s requirements.",
+              "Most universities require scores between 50 and 65, while visa requirements often range from 65 to 79.",
+            ],
           },
           {
             question: "When are PTE results available?",
-            answer:
-              "Focus on listening carefully to the instructions and key words. Practice active listening skills, and familiarize yourself with different accents. Time management is crucial.",
+            answer: [
+              "PTE Academic results are typically available within 48 hours of completing the exam.",
+              "Test-takers receive an email once the scores are ready, and they can view them on the Pearson PTE portal.",
+            ],
           },
           {
             question: "What ID is required on test day?",
-            answer:
-              "The Reading section includes three reading passages, each with a set of questions. It is designed to test your reading skills and understanding of texts, which range from factual to descriptive.",
+            answer: [
+              "In most countries, a valid passport is the primary identification required.",
+              "Make sure it’s current and matches the details used during registration.",
+            ],
           },
           {
             question:
               "Is there a limit to how many times I can take the PTE Academic?",
-            answer:
-              "Read the questions first to understand what to look for. Skim the passages for the main ideas, and then scan for specific information. Manage your time wisely, as the section is time-limited.",
+            answer: [
+              "No, there’s no limit on the number of times you can take the test.",
+              "However, there must be a minimum gap of 5 days between test attempts.",
+            ],
           },
           {
             question: "Can I reschedule or cancel my PTE test?",
-            answer:
-              "The IELTS Writing section consists of two tasks: Task 1 requires you to describe or summarize information from a graph, chart, or diagram. Task 2 requires you to write an essay in response to a question or argument.",
+            answer: [
+              "Yes, you can reschedule or cancel your test.",
+              "If you reschedule more than 14 days before the test, there’s no additional fee.",
+              "However, rescheduling or canceling within 14 days of the test date may incur charges.",
+            ],
           },
         ]}
       />

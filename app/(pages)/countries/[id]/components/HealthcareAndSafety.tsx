@@ -33,7 +33,7 @@ export default function HealthAndSafety({
 }: InfoSectionProps) {
   return (
     <div className="py-16 bg-white">
-      <div className="w-[90%] max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+      <div className="w-[90%]  mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="flex flex-col justify-between gap-2 h-full w-full">
           <div>
             <h2 className="font-bold mb-4">{title1}</h2>

@@ -68,7 +68,9 @@ export async function POST(req: Request) {
                         };
                     })
                     .filter(doc => doc.name),
-                degreeLevel: scholarship["Degree Level"]?.trim() || ""
+                degreeLevel: scholarship["Degree Level"]?.trim() || "",
+                // New field Min Requirement
+                minRequirement: scholarship["Min Requirement"]?.trim() || ""
             };
         });
 
