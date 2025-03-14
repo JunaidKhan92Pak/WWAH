@@ -312,7 +312,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       {/* progress bar  */}
-      <ProgressSection />
+      <ProgressSection data={data.courseData} />
 
       {/* English Requirnment Section      */}
       <EnglishRequirement data={data.courseData} />
