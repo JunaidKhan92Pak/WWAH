@@ -127,7 +127,7 @@ export default function Countrypage({
       <PopularPrograms country={country.popular_programs} />
 
       <ScholarshipsInUK
-        scholarships={country.scholarships}
+        // scholarships={country.scholarships}
         countryName={country.country_name || ""}
       />
 
@@ -153,12 +153,12 @@ export default function Countrypage({
       <Healthcare health={country.health} countryName={country.country_name} />
 
       <FAQ title="Frequently Asked Questions:" items={country?.faqs} />
-       <Banner
-              title="Create your Application today for your desired program!"
-              buttonText="Apply Now!"
-              buttonLink="/scholarships"
-              backgroundImage="/bg-usa.png"
-            />
+      <Banner
+        title="Create your Application today for your desired program!"
+        buttonText="Apply Now!"
+        buttonLink="/scholarships"
+        backgroundImage="/bg-usa.png"
+      />
       <DreamStudy />
     </div>
   ) : (
