@@ -36,7 +36,7 @@ const Coursesuggestion = () => {
   return (
     <>
       {" "}
-      <div className="w-full rounded-xl border p-2 md:p-4">
+      <div className="bg-gray-100 w-full rounded-xl  p-2 md:p-4">
         <p className="font-semibold text-lg md:text-xl">Suggested Courses</p>
         <div className="relative w-full sm:w-full flex justify-center overflow-hidden">
           <div
@@ -49,7 +49,7 @@ const Coursesuggestion = () => {
             {courses.map((course) => (
               <div
                 key={course.id}
-                className="relative w-[250px] md:w-[100%] lg:w-[85%] flex flex-col md:flex-row gap-4 flex-shrink-0  rounded-3xl border p-2 md:p-4 overflow-hidden"
+                className="relative w-[250px] md:w-[100%] lg:w-[85%] flex flex-col md:flex-row gap-4 flex-shrink-0 bg-white rounded-3xl  p-2 md:p-4 overflow-hidden"
               >
                 <Image
                   src="/course1.svg"
@@ -59,9 +59,9 @@ const Coursesuggestion = () => {
                   className=" h-auto md:h-48 w-[259px] md:w-[240px]  object-cover rounded-2xl"
                 />
                 <div className="flex flex-col justify-between">
-                  <h3 className="font-medium  text-sm md:text-lg">
+                  <h5 className="  text-sm md:text-lg leading-tight">
                     {course.title}
-                  </h3>
+                  </h5>
                   <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-3">
                     <div className="flex items-center gap-1">
                       <Image

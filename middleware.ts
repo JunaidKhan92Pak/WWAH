@@ -11,5 +11,5 @@ return NextResponse.next();
 }
 
 export const config = { 
-matcher: ["/home" ],
+matcher: ["/home", "/dashboard" ],
 };  

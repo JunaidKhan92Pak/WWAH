@@ -32,6 +32,7 @@ const Step1 = () => {
   const [personalInfo, setPersonalInfo] = useState({
     fullName: "",
     email: "",
+    countryCode: "",
     contactNo: "",
     dob: "",
     country: "",
@@ -44,11 +45,12 @@ const Step1 = () => {
   ) => {
     const { name, value } = e.target;
     setPersonalInfo({ ...personalInfo, [name]: value });
+console.log(value);
+
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/personal-Information`,
@@ -68,7 +70,7 @@ const Step1 = () => {
       console.log(`There Is SOme Error ${error}`);
     }
   };
-
+  console.log(personalInfo.countryCode,"country code");
   return (
     <div className="w-full">
       <section className="w-full">
@@ -109,6 +111,8 @@ const Step1 = () => {
               <div className="flex space-x-2">
                 <select
                   name="countryCode"
+                  value={personalInfo.countryCode}
+                  onChange={handleChange}
                   className="py-2 w-1/4 bg-[#F1F1F1] text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="+44">+44 (UK)</option>

@@ -6,11 +6,29 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 // Define validation schema
 const formSchema = z.object({
@@ -19,42 +37,98 @@ const formSchema = z.object({
   degreeLevel: z.string().min(1, "Degree level is required"),
   fieldOfStudy: z.string().min(1, "Field of study is required"),
   tuitionBudget: z.string().min(1, "Tuition budget is required"),
+  // .regex(/^\d+$/, "Must be a valid number")
+  // .transform((val) => parseFloat(val))
+  // .refine((val) => val > 0, "Must be greater than 0"),
+
   livingBudget: z.string().min(1, "Living budget is required"),
+  // .regex(/^\d+$/, "Must be a valid number")
+  // .transform((val) => parseFloat(val))
+  // .refine((val) => val > 0, "Must be greater than 0")
   studyMode: z.string().min(1, "Study mode is required"),
+  currency: z.string().min(1, "Currency is required"),
 });
 
-const EditStudentPreference = () => {
+interface StudentPreferenceData {
+  perferredCountry: string;
+  perferredCity: string;
+  degreeLevel: string;
+  fieldOfStudy: string;
+  tutionfees: string;
+  livingcost: string;
+  studyMode: string;
+  currency: string;
+  updatedAt: Date;
+}
+
+const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [currency, setCurrency] = useState(data.currency || "");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: "United Kingdom",
-      city: "London",
-      degreeLevel: "Bachelors",
-      fieldOfStudy: "Engineering",
-      tuitionBudget: "10000",
-      livingBudget: "5000",
-      studyMode: "On Campus",
+      country: `${data.perferredCountry}`,
+      city: `${data.perferredCity}`,
+      degreeLevel: `${data.degreeLevel}`,
+      fieldOfStudy: `${data.fieldOfStudy}`,
+      tuitionBudget: `${data.tutionfees}`,
+      livingBudget:`${data.livingcost}`,
+      studyMode: `${data.studyMode}`,
+      currency: "USD",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setOpen(false);
-    // Show success modal
-    setTimeout(() => {
-      setSuccessOpen(true);
-    }, 300);
-  }
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   console.log(values);
+  //   setOpen(false);
+  //   // Show success modal
+  //   setTimeout(() => {
+  //     setSuccessOpen(true);
+  //   }, 300);
+  // }
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("Submitting:", values); // Debugging
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updateUserPreferences`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(values),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Updated successfully:", data);
+        setOpen(false);
+        setTimeout(() => {
+          setSuccessOpen(true);
+        }, 300);
+      } else {
+        console.error("Error updating:", data.message);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
   return (
     <>
       <div className="flex flex-col items-start space-y-4">
         <p className="text-gray-600 text-base">Student Preference:</p>
         <div className="flex flex-row items-center gap-x-2">
-          <p className="text-sm">Last updated on 21st Sep, 2024</p>
+          <p className="text-sm">
+            last updated on{" "}
+            {new Date(data.updatedAt).toLocaleDateString("en-GB")}
+          </p>
           <Image
             src="/DashboardPage/pen.svg"
             alt="Edit"
@@ -149,7 +223,9 @@ const EditStudentPreference = () => {
                           <SelectItem value="Los Angeles">
                             Los Angeles
                           </SelectItem>
+                          
                           <SelectItem value="Chicago">Chicago</SelectItem>
+                          <SelectItem value="california">California</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -215,7 +291,9 @@ const EditStudentPreference = () => {
                           <SelectItem value="Engineering">
                             Engineering
                           </SelectItem>
+
                           <SelectItem value="Business">Business</SelectItem>
+
                           <SelectItem value="Arts & Humanities">
                             Arts & Humanities
                           </SelectItem>
@@ -227,6 +305,7 @@ const EditStudentPreference = () => {
                           <SelectItem value="Social Sciences">
                             Social Sciences
                           </SelectItem>
+
                           <SelectItem value="Education">Education</SelectItem>
                           <SelectItem value="Environmental Studies">
                             Environmental Studies
@@ -246,14 +325,22 @@ const EditStudentPreference = () => {
                     <FormItem>
                       <FormLabel>Preferred Tuition Fee Budget</FormLabel>
                       <div className="flex items-center space-x-2">
-                        <Select defaultValue="PKR">
+                        <Select
+                          // defaultValue="PKR"
+                          // name="currency"
+                          value={currency}
+                          onValueChange={setCurrency}
+                        >
                           <FormControl>
                             <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
                               <SelectValue placeholder="PKR" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="PKR">PKR</SelectItem>
+                            <SelectItem value="pkr">PKR</SelectItem>
+                            <SelectItem value="usd">USD</SelectItem>
+                            <SelectItem value="euro">Euro</SelectItem>
+                            <SelectItem value="sar">SAR</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormControl>
@@ -278,14 +365,22 @@ const EditStudentPreference = () => {
                     <FormItem>
                       <FormLabel>Preferred Living Cost Budget</FormLabel>
                       <div className="flex items-center space-x-2">
-                        <Select defaultValue="PKR">
+                        <Select
+                          // defaultValue="PKR"
+                          // name="currency"
+                          value={currency}
+                          onValueChange={setCurrency}
+                        >
                           <FormControl>
                             <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
                               <SelectValue placeholder="PKR" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="PKR">PKR</SelectItem>
+                            <SelectItem value="pkr">PKR</SelectItem>
+                            <SelectItem value="usd">USD</SelectItem>
+                            <SelectItem value="euro">Euro</SelectItem>
+                            <SelectItem value="sar">SAR</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormControl>
@@ -319,12 +414,9 @@ const EditStudentPreference = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="On Campus">On Campus</SelectItem>
+                          <SelectItem value="onCampus">On Campus</SelectItem>
                           <SelectItem value="Online">Online</SelectItem>
-                          <SelectItem value="Hybrid">
-                            Blended
-                          </SelectItem>
-                         
+                          <SelectItem value="Hybrid">Blended</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

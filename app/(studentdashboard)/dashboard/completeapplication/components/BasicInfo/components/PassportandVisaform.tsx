@@ -6,10 +6,10 @@ import * as z from "zod";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Calendar } from "@/components/ui/calendar";
+// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+// import { CalendarIcon } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -19,39 +19,45 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
-  hasPassport: z.boolean(),
-  noPassport: z.boolean(),
-  passportno: z.string().optional(),
-  oldpassportno: z
-    .string()
-    .optional()
-    .refine((val) => !val || /^[A-Z0-9]+$/.test(val), {
-      message: "Old Passport No. must contain only letters and numbers.",
-    }),
-  passportexpiry: z
-    .date()
-    .nullable()
-    .optional()
-    .refine((date) => !date || date > new Date(), {
-      message: "Passport expiry date must be a future date.",
-    }),
-  oldpassportexpiry: z
-    .date()
-    .nullable()
-    .optional()
-    .refine((date) => !date || date < new Date(), {
-      message: "Old passport expiry date must be in the past.",
-    }),
-}).superRefine((data, ctx) => {
-  if (data.hasPassport && (!data.passportno || data.passportno.trim() === "")) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["passportno"],
-      message: "Passport number is required when 'I have a passport' is checked.",
-    });
-  }
-});
+const formSchema = z
+  .object({
+    hasPassport: z.boolean(),
+    noPassport: z.boolean(),
+    passportno: z.string().optional(),
+    oldpassportno: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^[A-Z0-9]+$/.test(val), {
+        message: "Old Passport No. must contain only letters and numbers.",
+      }),
+    passportexpiry: z
+      .date()
+      .nullable()
+      .optional()
+      .refine((date) => !date || date > new Date(), {
+        message: "Passport expiry date must be a future date.",
+      }),
+    oldpassportexpiry: z
+      .date()
+      .nullable()
+      .optional()
+      .refine((date) => !date || date < new Date(), {
+        message: "Old passport expiry date must be in the past.",
+      }),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.hasPassport &&
+      (!data.passportno || data.passportno.trim() === "")
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["passportno"],
+        message:
+          "Passport number is required when 'I have a passport' is checked.",
+      });
+    }
+  });
 
 const PassportAndVisaForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,7 +76,6 @@ const PassportAndVisaForm = () => {
       <Form {...form}>
         <form className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
             {/* Has Passport Field */}
             <FormField
               control={form.control}
@@ -159,7 +164,7 @@ const PassportAndVisaForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Passport Expiry Date</FormLabel>
-                  <Popover>
+                  {/* <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
@@ -180,7 +185,15 @@ const PassportAndVisaForm = () => {
                         initialFocus
                       />
                     </PopoverContent>
-                  </Popover>
+                  </Popover> */}
+                  <Input
+                    type="date"
+                    value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -211,17 +224,22 @@ const PassportAndVisaForm = () => {
               name="oldpassportexpiry"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Old Passport Expiry Date:
-                  </FormLabel>
-                  <Popover>
+                  <FormLabel>Old Passport Expiry Date:</FormLabel>
+                  {/* <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant="outline"
-                          className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] ${!field.value ? "text-[#313131]" : ""}`}
+                          className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] ${
+                            !field.value ? "text-[#313131]" : ""
+                          }`}
                           disabled={!form.watch("hasPassport")}
                         >
-                          {field.value ? format(field.value, "yyyy/MM/dd") : <span>YYYY/MM/DD</span>}
+                          {field.value ? (
+                            format(field.value, "yyyy/MM/dd")
+                          ) : (
+                            <span>YYYY/MM/DD</span>
+                          )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -229,12 +247,20 @@ const PassportAndVisaForm = () => {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value ?? undefined}  // Ensure it is Date | undefined, not null
+                        selected={field.value ?? undefined} // Ensure it is Date | undefined, not null
                         onSelect={(date) => field.onChange(date ?? undefined)} // Convert null to undefined
                         initialFocus
                       />
                     </PopoverContent>
-                  </Popover>
+                  </Popover> */}
+                  <Input
+                    type="date"
+                    value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

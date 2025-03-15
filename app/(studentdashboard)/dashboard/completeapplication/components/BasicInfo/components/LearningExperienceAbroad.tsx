@@ -6,10 +6,10 @@ import * as z from "zod";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Calendar } from "@/components/ui/calendar";
+// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+// import { CalendarIcon } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -56,7 +56,8 @@ const LearningExperienceAbroad = () => {
               render={({ field }) => (
                 <FormItem className="col-span-2">
                   <FormLabel>
-                    Have you studied or whether studying in any abroad country currently?
+                    Have you studied or whether studying in any abroad country
+                    currently?
                   </FormLabel>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex items-center justify-start bg-[#f1f1f1] rounded-lg py-3 px-4 border">
@@ -69,7 +70,9 @@ const LearningExperienceAbroad = () => {
                         }}
                       />
 
-                      <span className="ml-2 text-[#313131] font-medium">Yes</span>
+                      <span className="ml-2 text-[#313131] font-medium">
+                        Yes
+                      </span>
                     </div>
                     <div className="flex items-center justify-start bg-[#f1f1f1] rounded-lg py-3 px-4 border">
                       <Checkbox
@@ -81,7 +84,9 @@ const LearningExperienceAbroad = () => {
                         }}
                       />
 
-                      <span className="ml-2 text-[#313131] font-medium">No</span>
+                      <span className="ml-2 text-[#313131] font-medium">
+                        No
+                      </span>
                     </div>
                   </div>
                   <FormMessage />
@@ -161,7 +166,7 @@ const LearningExperienceAbroad = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Expiry Date</FormLabel>
-                  <Popover>
+                  {/* <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
@@ -182,7 +187,15 @@ const LearningExperienceAbroad = () => {
                         initialFocus
                       />
                     </PopoverContent>
-                  </Popover>
+                  </Popover> */}
+                  <Input
+                    type="date"
+                    value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

@@ -1,16 +1,14 @@
 "use client";
-
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { CalendarIcon } from "lucide-react";
+// import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
-
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+// import { Button } from "@/components/ui/button";
+// import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -27,13 +25,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
 import { toast } from "sonner";
-
 import {
   Pagination,
   PaginationContent,
@@ -47,7 +44,6 @@ import PassportAndVisaForm from "./components/PassportandVisaform";
 import LearningExperienceAbroad from "./components/LearningExperienceAbroad";
 import FinancialSponsorInformation from "./components/FinancialSponsorInformation";
 import FamilyMembers from "./components/FamilyMembers";
-
 
 // Form Validation Schema
 const formSchema = z.object({
@@ -239,13 +235,14 @@ const BasicInfo = () => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Date of Birth</FormLabel>
-                      <Popover>
+                      {/* <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant="outline"
-                              className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] ${!field.value ? "text-[#313131]" : ""
-                                }`}
+                              className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] ${
+                                !field.value ? "text-[#313131]" : ""
+                              }`}
                             >
                               {field.value ? (
                                 format(field.value, "yyyy/MM/dd")
@@ -267,7 +264,17 @@ const BasicInfo = () => {
                             initialFocus
                           />
                         </PopoverContent>
-                      </Popover>
+                      </Popover> */}
+                      <Input
+                        type="date"
+                        value={
+                          field.value ? format(field.value, "yyyy-MM-dd") : ""
+                        }
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -417,8 +424,9 @@ const BasicInfo = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
-                  className={`p-2 text-sm  ${currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                    }`}
+                  className={`p-2 text-sm  ${
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
                 >
                   Previous
                 </PaginationPrevious>
@@ -436,19 +444,17 @@ const BasicInfo = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
-                  className={`p-2 text-sm  ${currentPage === totalPages
+                  className={`p-2 text-sm  ${
+                    currentPage === totalPages
                       ? "pointer-events-none opacity-50"
                       : ""
-                    }`}
+                  }`}
                 >
                   Next
                 </PaginationNext>
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-
-
-
         </form>
       </Form>
     </div>

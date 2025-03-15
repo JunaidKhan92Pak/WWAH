@@ -10,11 +10,11 @@ const AcademicInformation = () => {
     majorSubject: "",
     previousGradingScale: "",
     previousGradingScore: "",
-    standarizedTest: "",
-    standarizedTestScore: "",
+    standardizedTest: "",
+    standardizedTestScore: "",
     institutionName: "",
-    startdate: "",
-    endDate:"",
+    startDate: "",
+    endDate: "",
   });
 
   const handleChange = (
@@ -27,7 +27,7 @@ const AcademicInformation = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}academic-Information`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/academic-Information`,
         {
           method: "POST",
           headers: {
@@ -149,9 +149,9 @@ const AcademicInformation = () => {
                 What standardized test have you taken?
               </label>
               <select
-                id="standarizedTest"
-                name="standarizedTest"
-                value={academicInfo.standarizedTest}
+                id="standardizedTest"
+                name="standardizedTest"
+                value={academicInfo.standardizedTest}
                 onChange={handleChange}
                 className="w-full px-4 py-2 text-sm  bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -175,9 +175,9 @@ const AcademicInformation = () => {
               </label>
               <input
                 type="text"
-                name="standarizedTestScore"
-                id="standarizedTestScore"
-                value={academicInfo.standarizedTestScore}
+                name="standardizedTestScore"
+                id="standardizedTestScore"
+                value={academicInfo.standardizedTestScore}
                 onChange={handleChange}
                 placeholder="Write..."
                 className="w-full bg-[#F1F1F1] px-4 py-2 placeholder:text-sm  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-700"
@@ -192,9 +192,9 @@ const AcademicInformation = () => {
               </label>
               <input
                 type="date"
-                name="startdate"
-                id="startdate"
-                value={academicInfo.startdate}
+                name="startDate"
+                id="startDate"
+                value={academicInfo.startDate}
                 onChange={handleChange}
                 placeholder="start date"
                 className="w-full bg-[#F1F1F1] px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-700"

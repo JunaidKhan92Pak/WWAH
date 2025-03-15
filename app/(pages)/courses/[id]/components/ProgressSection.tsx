@@ -5,10 +5,11 @@ import { extractMajorFromTitle } from "@/utils/extractMajor";
 import { calculateMajorSuccess } from "@/utils/calculateMajorSuccess";
 import { extractOverallScore } from "@/utils/extractEnglishScores";
 import { calculateEnglishSuccess } from "@/utils/calculateEnglishSuccess";
+import { ReactNode } from 'react';
 interface Factor {
     label: string;
     value: number;
-    icon?: JSX.Element;
+    icon?: ReactNode;
 }
 interface progressProps {
     data: {

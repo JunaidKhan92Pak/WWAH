@@ -1,13 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
-import { CalendarIcon } from "lucide-react";
+// import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+// import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -24,15 +24,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { countries } from "@/lib/countries";
-
+import { useEffect, useState } from "react";
+import { useUserStore } from "@/store/useUserData";
+import { getAuthToken } from "@/authHelper";
+// import { getAuthToken } from "@/authHelper";
 
 const formSchema = z.object({
   country: z.string({
@@ -47,7 +50,7 @@ const formSchema = z.object({
   accommodationType: z.string({
     required_error: "Please select accommodation type.",
   }),
-  startDate: z.date({
+  startDate: z.string({
     required_error: "Please select a date.",
   }),
   distance: z.string({
@@ -73,6 +76,17 @@ const formSchema = z.object({
 });
 
 export default function Home() {
+  const { user, fetchUserProfile } = useUserStore();
+
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token) {
+      fetchUserProfile(token);
+    }
+  }, []);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,13 +94,56 @@ export default function Home() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success("Form submitted successfully!", {
-      description: "We'll get back to you soon.",
-    });
-    console.log(values);
-  }
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   toast.success("Form submitted successfully!", {
+  //     description: "We'll get back to you soon.",
+  //   });
+  //   console.log(values);
+  // }
+  const userName = user?.user.firstName + " " + user?.user.lastName;
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (
+    values,
+    event
+  ) => {
+    event?.preventDefault();
+    console.log("done", values, userName);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/accommodationBooking`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${getAuthToken()}`, // Add auth token if needed
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            ...values,
+            userName,
+            startDate: new Date(values.startDate).toISOString(),
+          }),
+        }
+      );
 
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to submit form");
+      }
+
+      toast.success("Form submitted successfully!", {
+        description: "We'll get back to you soon.",
+      });
+      form.reset();
+    } catch (error) {
+      toast.error("Submission failed", {
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="p-4">
       <div className="max-w-3xl mx-auto">
@@ -226,13 +283,14 @@ export default function Home() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Accommodation Start Date</FormLabel>
-                    <Popover>
+                    {/* <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant={"outline"}
-                            className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] placeholder-[#313131] text-sm ${!field.value && "text-[#313131]"
-                              }`}
+                            className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] placeholder-[#313131] text-sm ${
+                              !field.value && "text-[#313131]"
+                            }`}
                           >
                             {field.value ? (
                               format(field.value, "YYYY/MM/DD")
@@ -254,7 +312,18 @@ export default function Home() {
                           initialFocus
                         />
                       </PopoverContent>
-                    </Popover>
+                    </Popover> */}
+                    <Input
+                      type="date"
+                      value={
+                        field.value ? format(field.value, "yyyy-MM-dd") : ""
+                      }
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
+                    />
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -437,6 +506,7 @@ export default function Home() {
                         {...field}
                         className="rounded-l-none bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm"
                         placeholder="Enter your phone number"
+                        name="phoneNumber"
                       />
                     </div>
                     <FormMessage />
@@ -469,7 +539,7 @@ export default function Home() {
                 type="submit"
                 className="w-1/3 sm:w-1/4 bg-red-600 hover:bg-red-700"
               >
-                Submit
+                {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             </div>
           </form>

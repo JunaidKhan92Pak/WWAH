@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 // import Image from "next/image"; // Import the Image component
 // import { Button } from "@/components/ui/button";
 import Herosection from "./components/Herosection";
@@ -6,12 +7,23 @@ import CounsellorSection from "./components/CounsellorSection";
 import ApplyingSection from "./components/ApplyingSection";
 import Coursesuggestion from "./components/Coursesuggestion";
 import { StatusProgressBar } from "../components/StatusProgressBar";
+import { useUserStore } from "@/store/useUserData";
+import { getAuthToken } from "@/authHelper";
 
 const Page = () => {
+     const { user, fetchUserProfile } = useUserStore();
+
+     useEffect(() => {
+       const token = getAuthToken();
+       if (token) {
+         fetchUserProfile(token);
+       }
+     }, []);
+  // console.log(user)
   return (
     <>
       <div className="w-[94%] xl:w-[98%] mx-auto overflow-hidden">
-        <Herosection />
+        {user?.user && <Herosection user={user.user} />}
         <div className="w-full mx-auto flex flex-col xl:flex-row gap-4  items-center md:items-stretch  my-6 justify-center">
           <div className="w-full xl:w-[70%] rounded-xl border  p-4 flex flex-col space-y-4">
             <ApplyingSection />
@@ -28,7 +40,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-   </> 
+    </>
   );
 };
 
