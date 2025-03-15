@@ -6,7 +6,7 @@ import { SidebarProfile } from "./SidebarProfile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
-const MobileSidebar: React.FC = () => {
+const MobileSidebar= () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
   useEffect(() => {

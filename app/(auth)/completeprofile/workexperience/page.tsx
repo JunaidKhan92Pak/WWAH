@@ -7,6 +7,7 @@ const Step3 = () => {
 
   const [hasWorkExperience, setHasWorkExperience] = useState(false);
   const [workExperience, setWorkExperience] = useState({
+    hasWorkExperience: false, // Updated key to "hasWorkExperience"
     jobTitle: "",
     organizationName: "",
     startDate: "",
@@ -25,32 +26,39 @@ const Step3 = () => {
     setWorkExperience({ ...workExperience, employmentType: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // If no work experience, send only that info
-    const submissionData = hasWorkExperience
-      ? { hasWorkExperience, ...workExperience }
-      : { hasWorkExperience };
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/work-experience`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(submissionData),
-        }
-      );
-
-      const res = await response.json();
-      console.log(res);
-      router.push("/completeprofile/workexperience");
-    } catch (error) {
-      console.error("There was an error:", error);
-    }
+  // A helper to update both states for work experience flag
+  const handleWorkExperienceChange = (value: boolean) => {
+    setHasWorkExperience(value);
+    setWorkExperience({ ...workExperience, hasWorkExperience: value });
   };
+
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  // Use the workExperience state directly.
+  const submissionData = workExperience.hasWorkExperience
+    ? { ...workExperience }
+    : { hasWorkExperience: workExperience.hasWorkExperience };
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/workExperience`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(submissionData),
+      }
+    );
+
+    const res = await response.json();
+    console.log(res);
+    router.push("/completeprofile/languageproficiency");
+  } catch (error) {
+    console.error("There was an error:", error);
+  }
+};
+
 
   return (
     <div className="w-full p-4">
@@ -69,7 +77,7 @@ const Step3 = () => {
                 name="workExperience"
                 value="yes"
                 checked={hasWorkExperience}
-                onChange={() => setHasWorkExperience(true)}
+                onChange={() => handleWorkExperienceChange(true)}
                 className="mr-2"
               />
               Yes
@@ -80,7 +88,7 @@ const Step3 = () => {
                 name="workExperience"
                 value="no"
                 checked={!hasWorkExperience}
-                onChange={() => setHasWorkExperience(false)}
+                onChange={() => handleWorkExperienceChange(false)}
                 className="mr-2"
               />
               No
@@ -101,8 +109,8 @@ const Step3 = () => {
                   <label className="flex items-center text-sm sm:text-base ">
                     <input
                       type="checkbox"
-                      value="Full Time"
-                      checked={workExperience.employmentType === "Full Time"}
+                      value="fullTime"
+                      checked={workExperience.employmentType === "fullTime"}
                       onChange={handleEmploymentTypeChange}
                       className="mr-2"
                     />
@@ -111,8 +119,8 @@ const Step3 = () => {
                   <label className="flex items-center text-sm sm:text-base ">
                     <input
                       type="checkbox"
-                      value="Part Time"
-                      checked={workExperience.employmentType === "Part Time"}
+                      value="partTime"
+                      checked={workExperience.employmentType === "partTime"}
                       onChange={handleEmploymentTypeChange}
                       className="mr-2"
                     />

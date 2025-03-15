@@ -1,9 +1,24 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import Image from "next/image"; // Import the Image component
 
-const Herosection = () => {
+interface User {
+  firstName: string | null;
+  lastName: string | null;
+}
+
+const Herosection = ({ user }: { user: User }) => {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
-    <div className="relative" >
+    <div className="relative">
       {/* Large Banner Image */}
       <Image
         src="/DashboardPage/banner.svg"
@@ -33,17 +48,24 @@ const Herosection = () => {
         />
         {/* Text Below the Image */}
         <div className="mt-2 sm:mt-3 text-white">
-          <h4>Hello, Asma Kazmi!</h4>
+          <h4>
+            Hello, {user?.firstName || "user"} {user?.lastName || "name"} || !
+          </h4>
           <p className="md:mb-3 text-base">
-            Monday, 30 Dec, 2024 (07:09 PM)
+            {/* Monday, 30 Dec, 2024 (07:09 PM)
+             */}
+            {/* day */}
+            {time.toLocaleDateString("en-US", { weekday: "long" })} {/* date */}
+            {time.toLocaleTimeString()}
           </p>
           <p className="text-base leading-tight  md:w-4/5">
-            Get a real-time view of key business metrics to track performance at a glance.
+            Get a real-time view of key business metrics to track performance at
+            a glance.
           </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Herosection

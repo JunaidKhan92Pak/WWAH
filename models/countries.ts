@@ -7,7 +7,7 @@ interface ICountry extends Document {
   language: string;
   population: number;
   currency: string;
-  international_students: number;
+  international_students: string;
   academic_intakes: string;
   dialing_code: number;
   gdp: string;
@@ -34,50 +34,49 @@ interface ICountry extends Document {
 }
 
 const CountrySchema = new Schema<ICountry>({
-  country_name: { type: String, required: true },
-  short_name: { type: String, required: true },
-  capital: { type: String, required: true },
-  language: { type: String, required: true },
-  population: { type: Number, required: true },
-  currency: { type: String, required: true },
-  international_students: { type: Number, required: true },
+  country_name: { type: String, },
+  short_name: { type: String, },
+  capital: { type: String, },
+  language: { type: String, },
+  population: { type: Number, },
+  currency: { type: String, },
+  international_students: { type: String },
   academic_intakes: { type: String },
-  dialing_code: { type: Number, required: true },
-  gdp: { type: String, required: true },
-  why_study: { type: String, required: true },
-  work_while_studying: { type: String, required: true },
-  work_after_study: { type: String, required: true },
-  residency: { type: String, required: true },
-  popular_programs: [{ type: String, required: true }],
-  rent: { type: String, required: true },
-  groceries: { type: String, required: true },
-  transportation: { type: String, required: true },
-  healthcare: { type: String, required: true },
-  eating_out: { type: String, required: true },
-  household_bills: { type: String, required: true },
-  miscellaneous: { type: String, required: true },
+  dialing_code: { type: Number, },
+  gdp: { type: String, },
+  why_study: { type: String, },
+  work_while_studying: { type: String, },
+  work_after_study: { type: String, },
+  residency: { type: String, },
+  popular_programs: [{ type: String, }],
+  rent: { type: String, },
+  groceries: { type: String, },
+  transportation: { type: String, },
+  healthcare: { type: String, },
+  eating_out: { type: String, },
+  household_bills: { type: String, },
+  miscellaneous: { type: String },
 
-  // top_universities: [{ type: String }],
   health: [
     {
-      name: { type: String, required: true },
-      description: [{ type: String, required: true }],
+      name: { type: String, },
+      description: [{ type: String, }],
     },
   ],
-  scholarships: [{ type: String, required: true }],
-  visa_requirements: [{ type: String, required: true }],
+  scholarships: [{ type: String,}],
+  visa_requirements: [{ type: String, }],
   accomodation_options: [
     {
-      name: { type: String, required: true },
-      detail: { type: String, required: true },
+      name: { type: String, },
+      detail: { type: String, },
     },
   ],
-  teaching_and_learning_approach: [{ type: String, required: true }],
-  multicultural_environment: [{ type: String, required: true }],
+  teaching_and_learning_approach: [{ type: String, }],
+  multicultural_environment: [{ type: String, }],
   faqs: [
     {
-      question: { type: String, required: true },
-      answer: { type: String, required: true },
+      question: { type: String, },
+      answer: { type: String, },
     },
   ],
 });

@@ -14,8 +14,10 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CompleteApplicationModal from "../completeapplication/components/CompleteApplicationModal";
+import { useUserStore } from "@/store/useUserData";
+import { getAuthToken } from "@/authHelper";
 
 const sidebarItems = [
   {
@@ -52,9 +54,15 @@ const sidebarItems = [
 
 
 export function Sidebar() {
+   const { user, fetchUserProfile } = useUserStore();
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token) {
+      fetchUserProfile(token);
+    }
+  }, []);
   return (
     <div className="flex flex-col ">
       {/* Profile Section */}
@@ -66,8 +74,10 @@ export function Sidebar() {
           height={64}
           className="w-16 h-16 rounded-full mb-2"
         />
-        <h2 className="text-sm font-semibold">Asma Kazmi</h2>
-        <p className="text-xs text-gray-500">asmaikazmi@gmail.com</p>
+        <h2 className="text-sm font-semibold">
+          {user?.user.firstName} {user?.user.lastName}
+        </h2>
+        <p className="text-xs text-gray-500">{user?.user.email}</p>
         <div className="w-full">
           <Link href="/dashboard/myprofile">
             <Button className="mt-1 bg-red-700 hover:bg-red-600 text-white w-full">

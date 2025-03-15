@@ -27,7 +27,7 @@ const Step4 = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}english-proficiency`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/english-proficiency`,
         {
           method: "POST",
           headers: {
