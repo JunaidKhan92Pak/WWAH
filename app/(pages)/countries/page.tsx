@@ -53,13 +53,13 @@ const Page = () => {
           <p className="col-span-full text-center">No data found</p>
         ) : (
           filteredCountries.map((country) => (
-            <Link key={country._id} href={`/countries/${country._id}`} target="_blank">
-              <div className="overflow-hidden rounded-xl">
+            <Link key={country._id} href={`/countries/${country._id}`} target="_blank" className="cursor-pointer">
+              <div className="overflow-hidden rounded-xl relative h-52">
                 <ImageWithLoader
                   src={`/countryarchive/${country.short_name}.svg`}
                   alt={country.alt}
                   sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
-                  className="w-full h-auto"
+                  className="object-cover"
                 />
               </div>
             </Link>

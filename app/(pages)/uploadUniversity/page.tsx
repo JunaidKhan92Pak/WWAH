@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import * as XLSX from "xlsx";
-
+import FileButton from "@/components/FileButton";
 export default function Home() {
     const allImages = ["banner", "logo", "campus_sports_recreation", "campus_accommodation", "campus_transportation", "campus_student_services", "campus_cultural_diversity", "campus_alumni_network", "city_historical_places_1", "city_historical_places_2", "city_historical_places_3", "city_food_and_cafe_1", "city_food_and_cafe_2", "city_food_and_cafe_3", "city_famous_places_1", "city_famous_places_2", "city_famous_places_3", "city_cultures_1", "city_cultures_2", "city_cultures_3", "city_transportation_1", "city_transportation_2", "city_transportation_3"
     ]
@@ -40,6 +40,8 @@ export default function Home() {
 
     const handleFileRead = () => {
         if (!file) {
+            console.log("jo");
+
             setError("Please select an Excel file to read.");
             return;
         }
@@ -183,8 +185,11 @@ export default function Home() {
     return (
         <div className="bg-gradient-to-br from-indigo-100 to-purple-50 min-h-screen flex justify-center  py-10">
             <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
+
                 <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
+                {error && <p className="text-red-600 text-sm mt-4 text-center">{error}</p>}
                 <form onSubmit={uploadDataToServer} className="space-y-4">
+
                     <div className="mb-4">
                         <label
                             htmlFor="country"
@@ -217,13 +222,8 @@ export default function Home() {
                             onChange={handleFileChange}
                             className="hidden"
                         />
-                        <button
-                            type="button"
-                            onClick={handleFileRead}
-                            className="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition"
-                        >
-                            Read File
-                        </button>
+
+                        <FileButton handleFile={handleFileRead} />
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">

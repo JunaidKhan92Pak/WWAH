@@ -16,6 +16,7 @@ import FilterComponent from "./components/Filtercomponent";
 import { Button } from "@/components/ui/button";
 import { SkeletonCard } from "@/components/skeleton"
 import { debounce } from "lodash";
+import ImageWithLoader from "@/components/ImageWithLoader";
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -40,7 +41,6 @@ const CourseArchive = () => {
   useEffect(() => {
     fetchCourses();
   }, []);
-  console.log(courses[0]);
 
   return (
     <section className="w-full p-4 md:p-8">
@@ -99,13 +99,14 @@ const CourseArchive = () => {
           {courses.length === 0 ? <p className="text-[20px] font-semibold col-span-4 text-center p-4 "> No courses Found </p> :
             courses.map((item, idx) => (
               <div key={idx} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative">
-                  <Image
+                <div className="relative h-52">
+                  <ImageWithLoader
                     src={item.universityData?.universityImages.banner || `/course-${idx}.png`}
                     alt="coursesImg"
-                    width={400}
-                    height={250}
-                    className="w-full h-52 md:h-56 lg:h-60 object-cover"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
+                    // width={400}
+                    // height={250}
+                    className="object-cover"
                   />
                 </div>
                 <div className="p-4 flex-grow">

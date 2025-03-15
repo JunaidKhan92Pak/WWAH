@@ -2,6 +2,7 @@
 interface Course {
   [key: string]: string | number | { currency: string; amount: number };
 }
+import FileButton from "@/components/FileButton";
 import { useState } from "react";
 import * as XLSX from "xlsx";
 export default function Home() {
@@ -199,13 +200,16 @@ export default function Home() {
           onChange={handleFileChange}
           className="block w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button
+        <div className="flex items-center justify-center">
+          <FileButton handleFile={handleFileRead} />
+        </div>
+        {/* <button
           type="button"
           onClick={handleFileRead}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           Read File
-        </button>
+        </button> */}
         {error && <p className="text-red-500 text-center">{error}</p>}
 
         {parsedData.courses.length > 0 && (
