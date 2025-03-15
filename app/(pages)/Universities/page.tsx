@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
+import ImageWithLoader from "@/components/ImageWithLoader";
 
 const Page = () => {
     const Countries = [
@@ -157,17 +158,19 @@ const Page = () => {
                                 >
                                     <div className="bg-white shadow-xl rounded-2xl overflow-hidden p-3">
                                         <div className="relative h-[200px]">
-                                            <div className="absolute top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
+                                            <div className="absolute z-10 top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
                                                 <p className="text-sm font-medium">QS World:</p>
                                                 <p className="text-sm font-semibold">
                                                     Ranking: {item.ranking[1]?.detail || "N/A"}
                                                 </p>
                                             </div>
-                                            <Image
+                                            <ImageWithLoader
                                                 src={item.universityImages?.banner ?? "/banner.jpg"}
-                                                width={400}
-                                                height={250}
+                                                // width={400}
+                                                // height={250}
+                                                sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
                                                 className="h-[180px] w-[400px] object-cover rounded-xl"
+                                                // className="w-full h-52 md:h-56 lg:h-60 object-cover"
                                                 alt={`${item.university_name} Banner`}
                                             />
                                             <div className="absolute bottom-1 left-5 w-14 h-14">

@@ -24,13 +24,13 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({ src, alt, sizes, clas
     const [loaded, setLoaded] = useState(false);
 
     return (
-        <div className="relative w-full h-60">
+        <div >
             <Image
                 src={src}
                 alt={alt}
                 fill
                 sizes={sizes}
-                className={`${className} object-contain transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+                className={`${className} transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
                 onLoadingComplete={() => setLoaded(true)}
             />
             {!loaded && (
