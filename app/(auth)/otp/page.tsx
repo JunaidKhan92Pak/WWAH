@@ -9,9 +9,7 @@ const Page = () => {
         {/* Sign-in Form Section */}
         <div className="flex-1 max-w-2xl sm:pl-44 px-20 sm:pr-28">
           <Image src={Logo} alt="Logo" className="mb-4 w-28 mx-auto" />
-          <div className="mb-2 text-center">
-            Reset Password
-          </div>
+          <div className="mb-2 text-center">Reset Password</div>
           <p className="text-gray-600 text-center sm:px-10 mb-6">
             Please enter your new password to secure your account.
           </p>
@@ -47,16 +45,16 @@ const Page = () => {
 
         {/* Image Section */}
         <div className="hidden md:block">
-    <div className="flex items-center justify-center my-2">
-      <Image
-        src="/Group.png"
-        width={400}
-        height={400}
-        alt="Decorative"
-        className="object-contain h-auto"
-      />
-    </div>
-  </div>
+          <div className="flex items-center justify-center my-2">
+            <Image
+              src="/Group.png"
+              width={400}
+              height={400}
+              alt="Decorative"
+              className="object-contain h-auto"
+            />
+          </div>
+        </div>
       </div>
       <div className="bg-white absolute inset-0 max-w-sm h-40 m-auto rounded-2xl">
         <div className="flex flex-col justify-center items-center">
@@ -64,13 +62,14 @@ const Page = () => {
             <div className="pt-5">Password Reset</div>
             <div className="text-center">Successful!</div>
           </div>
-<Link href="/signin">
-          <button
-            type="submit"
-            className="bg-red-700 w-72 text-white p-2 rounded-lg"
-          >
-            Go back
-          </button></Link>
+          <Link href="/signin">
+            <button
+              type="submit"
+              className="bg-red-700 w-72 text-white p-2 rounded-lg"
+            >
+              Go back
+            </button>
+          </Link>
         </div>
       </div>
     </>

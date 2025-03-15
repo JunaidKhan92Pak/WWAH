@@ -1,7 +1,7 @@
 "use client";
 
 
-import { DateRangeDialog } from "./components/dataRangeDialogue";
+// import { DateRangeDialog } from "./components/dataRangeDialogue";
 import {
   Table,
   TableBody,
@@ -74,7 +74,7 @@ export default function Home() {
           Date range
         </Button> */}
         <div className=" bg-gray-100 flex items-center justify-center">
-          <DateRangeDialog />
+          {/* <DateRangeDialog /> */}
         </div>
       </div>
 

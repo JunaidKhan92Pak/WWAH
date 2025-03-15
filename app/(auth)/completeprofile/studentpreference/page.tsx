@@ -34,7 +34,7 @@ const Step5 = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}userPreference`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/userPreference`,
         {
           method: "POST",
           headers: {
@@ -260,7 +260,12 @@ const Step5 = () => {
                   <div className="flex flex-col items-center">
                     <div className=" flex items-center justify-center   ">
                       {/* <CheckCircle className="w-12 h-12 text-orange-500" /> */}
-                      <Image src="/completeprofile/Accmodal.svg" alt="complete profile" width={100} height={100}  />
+                      <Image
+                        src="/completeprofile/Accmodal.svg"
+                        alt="complete profile"
+                        width={100}
+                        height={100}
+                      />
                     </div>
                     <p className="mt-4 text-lg font-semibold text-gray-900">
                       Account Created Successfully!
