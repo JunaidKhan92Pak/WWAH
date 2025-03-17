@@ -5,13 +5,14 @@ interface ReadMoreProps {
   children: React.ReactNode;
   image: string;
 }
-const ReadMore: React.FC<ReadMoreProps> = ({ children, }) => {
+const ReadMore: React.FC<ReadMoreProps> = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div>
       <div
-        className={`text-[#9D9D9D] leading-relaxed ${isExpanded ? "line-clamp-none" : "line-clamp-3"
-          }`}
+        className={`text-[#9D9D9D] leading-relaxed ${
+          isExpanded ? "line-clamp-none" : "line-clamp-3"
+        }`}
       >
         {children}
       </div>
@@ -31,7 +32,7 @@ interface OverviewSectionProps {
   year: string | number;
   modrenday: string;
   univideo: string;
-  image: string;  // ✅ Add this line
+  image: string; // ✅ Add this line
 }
 const Overviewsection: React.FC<OverviewSectionProps> = ({
   overview,
@@ -50,8 +51,8 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
           {/* Background Image */}
           <div className="absolute inset-0 -z-10 bg-black"></div>
           <div className="w-[90%] mx-auto">
-            <div className="flex flex-col md:flex-row justify-between">
-              <div className="w-full md:w-3/4">
+            <div className="flex flex-col md:flex-row md:gap-4 justify-between">
+              <div className="w-full md:w-3/4 ">
                 <h2 className="mb-2 md:mb-4">Overview!</h2>
                 {/* Wrap all content after overview inside ReadMore */}
                 <ReadMore image={image}>
