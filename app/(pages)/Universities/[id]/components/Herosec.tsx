@@ -69,7 +69,8 @@ const Herosec = ({ data }: { data: UniversityData }) => {
       <section className="mx-auto w-[90%]">
         <div>
           <div
-            className="relative md:h-[80vh] h-[95%] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
+            // className="relative md:h-[80vh] h-[95%] flex justify-center items-center text-center rounded-2xl text-white sm:bg-cover sm:bg-center"
+            className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             style={{
               backgroundImage: `url(${
                 data?.universityImages?.banner
@@ -89,7 +90,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                     height={80}
                     className="object-contain rounded-full w-10 md:w-16"
                   />
-                  <h3 className="text-white text-start">
+                  <h3 className="text-white text-start font-bold">
                     {data.university_name}
                   </h3>
 
@@ -122,10 +123,10 @@ const Herosec = ({ data }: { data: UniversityData }) => {
 
                 {/* Right Section */}
                 <div
-                  className="w-4/5 md:w-full lg:w-[60%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
-py-2 md:py-3 2xl:py-6 flex flex-col justify-center items-center text-center"
+                  className="w-full md:w-full lg:w-[60%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
+py-2 md:py-3 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
                 >
-                  <p className="text-white w-[90%] md:w-4/5">
+                  <p className="text-white w-[90%] md:w-[90%]">
                     Book Your Online Video Counselling Session with WWAH
                     Advisor!
                   </p>
@@ -160,7 +161,7 @@ py-2 md:py-3 2xl:py-6 flex flex-col justify-center items-center text-center"
                 className="flex-shrink-0 w-[calc(100%/3)] sm:w-auto flex flex-col items-center text-center space-y-2"
               >
                 <div className="rounded-3xl flex items-center justify-center">
-                  <div className="relative h-16 w-16">
+                  <div className="relative h-12 w-12 sm:h-16 sm:w-16">
                     <Image
                       src={item.Image}
                       alt={item.Heading}

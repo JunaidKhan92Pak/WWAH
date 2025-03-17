@@ -1,6 +1,12 @@
 import * as React from "react";
 import Image from "next/image";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"; // Ensure the correct path
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"; // Ensure the correct path
 
 // Simple Card and CardContent components
 const Card = ({ children }: { children: React.ReactNode }) => (
@@ -35,34 +41,58 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
   // Array for carousel data: image, title, and description for each slide
   const carouselData = [
     {
-      image: `${images?.campus_sports_recreation ? images.campus_sports_recreation : '/banner.png'}`, // Image for the first slide
+      image: `${
+        images?.campus_sports_recreation
+          ? images.campus_sports_recreation
+          : "/banner.png"
+      }`, // Image for the first slide
       title: "Sports & Recreation",
-      description: `${data.sports_recreation}`
+      description: `${data.sports_recreation}`,
     },
     {
-      image: `${images?.campus_accommodation ? images.campus_accommodation : '/banner.png'}`, // Image for the second slide
+      image: `${
+        images?.campus_accommodation
+          ? images.campus_accommodation
+          : "/banner.png"
+      }`, // Image for the second slide
       title: "Accommodation",
       description: `${data.accommodation}`,
     },
     {
-      image: `${images?.campus_transportation ? images.campus_transportation : '/banner.png'}`, // Image for the third slide
+      image: `${
+        images?.campus_transportation
+          ? images.campus_transportation
+          : "/banner.png"
+      }`, // Image for the third slide
       title: "Transportation",
       description: `${data.transportation}`,
     },
     {
-      image: `${images?.campus_student_services ? images.campus_student_services : '/banner.png'}`, // Image for the third slide
+      image: `${
+        images?.campus_student_services
+          ? images.campus_student_services
+          : "/banner.png"
+      }`, // Image for the third slide
       title: "Student Services",
-      description: `${data.student_services}`
+      description: `${data.student_services}`,
     },
     {
-      image: `${images?.campus_cultural_diversity ? images.campus_cultural_diversity : '/banner.png'}`, // Image for the third slide
+      image: `${
+        images?.campus_cultural_diversity
+          ? images.campus_cultural_diversity
+          : "/banner.png"
+      }`, // Image for the third slide
       title: "Cultural Diversity",
-      description: `${data.cultural_diversity}`
+      description: `${data.cultural_diversity}`,
     },
     {
-      image: `${images?.campus_alumni_network ? images.campus_alumni_network : '/banner.png'}`, // Image for the third slide
+      image: `${
+        images?.campus_alumni_network
+          ? images.campus_alumni_network
+          : "/banner.png"
+      }`, // Image for the third slide
       title: "Alumni Network & Support",
-      description: `${data.alumni_network_support}`
+      description: `${data.alumni_network_support}`,
     },
   ];
 
@@ -86,11 +116,10 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
           <CarouselContent>
             {carouselData.map((data, index) => (
               <CarouselItem key={index}>
-                <div className="flex flex-col  lg:flex-row  justify-center items-center">
-
+                <div className="flex flex-col gap-4 sm:gap-0 lg:flex-row  justify-center items-center">
                   {/* Left Side: Text */}
-                  <div className="text-left w-full lg:w-[50%] px-0 sm:px-0.5 ">
-                    <h3 >Campus Life at {uniname}</h3>
+                  <div className="text-left w-full lg:w-[45%] px-0 sm:px-0.5 ">
+                    <h3>Campus Life at {uniname}</h3>
                     <h5 className="text-[#F6B677]">{data.title}</h5>
                     <p className="text-[#9D9D9D]">{data.description}</p>
                   </div>
@@ -99,7 +128,7 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
                   <div className="w-full lg:w-[50%] px-0 sm:px-8">
                     <Card>
                       <CardContent>
-                        <div className="relative w-full lg:w-[100%] h-[200px] sm:h-[40vh] md:h-[60vh] xl:h-[55vh] 2xl:h-[60vh]">
+                        <div className="relative w-full lg:w-[97%] h-[200px] sm:h-[40vh] md:h-[60vh] lg:h-[65vh] xl:h-[55vh] 2xl:h-[60vh]">
                           <Image
                             src={data?.image ? data.image : "/placeholder.jpg"} // Replace with your actual image path
                             alt={`Campus View ${index + 1}`}
@@ -112,7 +141,6 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
                     </Card>
                   </div>
                 </div>
-
               </CarouselItem>
             ))}
           </CarouselContent>
