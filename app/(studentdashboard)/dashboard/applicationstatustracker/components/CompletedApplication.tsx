@@ -43,8 +43,11 @@ const CompletedApplication = () => {
                     <Image src={item.src} width={18} height={18} alt={item.alt} />
                     {item.isDeadline ? (
                       <>
-                        <p className="text-sm">Deadline:</p>
-                        <p className="text-sm ml-10">{item.text}</p>
+                        <div className="flex justify-between">
+                           <p className="text-sm">Deadline:</p>
+                        <p className="text-sm ">{item.text}</p>
+                        </div>
+                       
                       </>
                     ) : (
                       <p className="text-sm">{item.text}</p>

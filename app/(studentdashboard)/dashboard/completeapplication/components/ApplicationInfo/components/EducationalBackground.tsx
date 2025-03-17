@@ -75,7 +75,7 @@ export default function EducationalBackground() {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <FormControl>
+                        <FormControl className="bg-[#f1f1f1]">
                           <SelectTrigger>
                             <SelectValue placeholder="Select Degree" />
                           </SelectTrigger>
@@ -102,7 +102,7 @@ export default function EducationalBackground() {
                       <FormControl>
                         <Input
                           {...field}
-                          className="placeholder:text-sm"
+                          className="placeholder:text-sm bg-[#f1f1f1]"
                           placeholder="Write..."
                         />
                       </FormControl>
@@ -120,7 +120,7 @@ export default function EducationalBackground() {
                       <FormControl>
                         <Input
                           {...field}
-                          className="placeholder:text-sm"
+                          className="placeholder:text-sm bg-[#f1f1f1]"
                           placeholder="Write..."
                         />
                       </FormControl>
@@ -138,7 +138,7 @@ export default function EducationalBackground() {
                       <FormControl>
                         <Input
                           {...field}
-                          className="placeholder:text-sm"
+                          className="placeholder:text-sm bg-[#f1f1f1]"
                           placeholder="Write..."
                         />
                       </FormControl>
@@ -158,6 +158,7 @@ export default function EducationalBackground() {
                           {...field}
                           type="date"
                           placeholder="YYYY/MM/DD"
+                          className="bg-[#f1f1f1]"
                         />
                       </FormControl>
                       <FormMessage />
@@ -176,6 +177,7 @@ export default function EducationalBackground() {
                           {...field}
                           type="date"
                           placeholder="YYYY/MM/DD"
+                          className="bg-[#f1f1f1]"
                         />
                       </FormControl>
                       <FormMessage />
