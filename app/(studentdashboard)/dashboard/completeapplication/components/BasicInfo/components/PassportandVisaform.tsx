@@ -193,6 +193,7 @@ const PassportAndVisaForm = () => {
                     onBlur={field.onBlur}
                     name={field.name}
                     ref={field.ref}
+                    className="bg-[#f1f1f1]"
                   />
                   <FormMessage />
                 </FormItem>
@@ -260,6 +261,7 @@ const PassportAndVisaForm = () => {
                     onBlur={field.onBlur}
                     name={field.name}
                     ref={field.ref}
+                    className="bg-[#f1f1f1]"
                   />
                   <FormMessage />
                 </FormItem>

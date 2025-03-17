@@ -1,7 +1,8 @@
 import Image from "next/image";
 import React from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+// import { Button } from "@/components/ui/button";
+// import Link from "next/link";
+import Banner from "@/components/ui/enrollment/Banner";
 
 
 interface ScholarshipsInUKProps {
@@ -71,7 +72,7 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
         </div>
       </div>
       {/* Explore Scholarships Section */}
-      <section
+      {/* <section
         className="relative mt-10 text-white bg-[#FCE7D2]"
         style={{
           backgroundImage: "url('/bg-usa.png')",
@@ -95,7 +96,13 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
+      <Banner
+              title="Get Personalized Help with Your UK Visa Application!"
+              buttonText="Schedule a Session with WWAH Advisors Now!"
+              buttonLink="/"
+              backgroundImage="/bg-usa.png"
+            />
     </>
   );
 };
