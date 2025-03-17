@@ -13,7 +13,14 @@ interface CoursesectionProps {
 
 const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
   const router = useRouter();
-  const { search, setSearch, studyLevel, setStudyLevel, selectedUniversity, setSelectedUniversity } = useCourseStore(); // Zustand state
+  const {
+    search,
+    setSearch,
+    studyLevel,
+    setStudyLevel,
+    selectedUniversity,
+    setSelectedUniversity,
+  } = useCourseStore(); // Zustand state
 
   // ✅ Initialize local state from Zustand if values exist
   const [courseInfo, setCourseInfo] = useState({
@@ -34,7 +41,9 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
   }, []); // Runs only on mount
 
   // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setCourseInfo((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -60,7 +69,8 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
     if (courseInfo.search) queryParams.append("search", courseInfo.search);
     if (courseInfo.level) queryParams.append("studyLevel", courseInfo.level);
     if (courseInfo.subject) queryParams.append("subject", courseInfo.subject);
-    if (courseInfo.university) queryParams.append("university", courseInfo.university);
+    if (courseInfo.university)
+      queryParams.append("university", courseInfo.university);
 
     // Navigate to search results page
     router.push(`/coursearchive?${queryParams.toString()}`);
@@ -78,7 +88,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
             <form className="md:space-y-4" onSubmit={handleSearch}>
               <div>
                 {/* Dropdowns for Study Level and Subject */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   {/* study level */}
                   <div>
                     <label
@@ -92,7 +102,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       value={courseInfo.level}
                       onChange={handleChange}
                       id="study-level"
-                      className="w-full p-1 md:p-2 border rounded-lg bg-gray-100"
+                      className="w-full p-1 md:p-1 border rounded-lg bg-gray-100"
                     >
                       <option value="" disabled>
                         Select
@@ -114,7 +124,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       value={courseInfo.subject}
                       onChange={handleChange}
                       id="subject"
-                      className="w-full p-1 md:p-2 border rounded-lg bg-gray-100"
+                      className="w-full p-1 md:p-1 border rounded-lg bg-gray-100"
                     >
                       <option value="" disabled selected>
                         Select
@@ -125,18 +135,18 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                   </div>
                 </div>
                 {/* Search Bar with Icon */}
-                <div className="flex items-center border rounded-lg shadow-sm gap-2 px-3 py-1 bg-gray-100 m-4">
+                <div className="flex items-center border rounded-lg shadow-sm gap-2 px-3 py-0 bg-gray-100 mt-3">
                   <CiSearch className=" text-gray-400 " />
                   <Input
                     value={courseInfo.search}
                     name="search"
                     onChange={handleChange}
                     placeholder="Write course name..."
-                    className="flex-1 border-none focus:ring-0 focus:outline-none outline:none bg-gray-100"
+                    className="flex-1 border-none focus:ring-0 focus:outline-none outline:none bg-gray-100 placeholder:text-[14px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
                   />
                   <Button
                     type="submit"
-                    className="hover:underline font-bold text-[#F0851D]"
+                    className="hover:underline font-bold bg-gray-100 text-[#F0851D] underline underline-offset-4"
                   >
                     Search
                   </Button>
@@ -144,10 +154,12 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
               </div>
               {/* View All Courses Button */}
 
-              <Button type="submit" className="w-full sm:w-auto mt-2 sm:mt-0 bg-[#C7161E] text-white sm:py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 ">
+              <Button
+                type="submit"
+                className="w-full sm:w-auto mt-2 sm:mt-0 bg-[#C7161E] text-white sm:py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 "
+              >
                 View All Courses!
               </Button>
-
             </form>
           </div>
           {/* Right Side: Image */}
