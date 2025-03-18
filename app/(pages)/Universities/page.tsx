@@ -150,7 +150,7 @@ const Page = () => {
                             </p>
                         ) : (
                             universities.map((item) => (
-                                <Link
+                                 <Link
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     href={`/Universities/${item._id}`}

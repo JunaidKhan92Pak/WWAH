@@ -17,11 +17,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-
 const MobileNavbar = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  // const [user, setUser] = useState(true); 
+  // const [user, setUser] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const auth = useAuth();
 
@@ -50,40 +49,31 @@ const MobileNavbar = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side={"left"} className="p-1">
-          <div className="w-5/6 mx-auto py-3 px-2 sm:px-5 shadow-md rounded-xl m-4 bg-white text-black">
-            {/* Navbar Content */}
-            {/* Navbar Main */}
+          <div className="w-[90%] mt-8 border border-gray-00 mx-auto py-3 px-2 sm:px-5 shadow-md rounded-xl m-4 bg-white text-black">
             <div className="flex justify-around">
               {/* Logo */}
-              <Image src="/logo.png" alt="logo" width={50} height={45} />
+              <Image
+                src="/logo.png"
+                alt="logo"
+                width={600}
+                height={605}
+                className="w-16"
+              />
 
-              {/* Navigation Menu */}
-             
-
-              {/* Conditional Rendering */}
               <div className="flex gap-2 md:gap-5">
-                {isAuthenticated ? (  
-                  // Profile Dropdown for Logged-in Users
+                {isAuthenticated ? (
                   <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
                     <button
                       type="button"
-                      className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                      className="flex text-sm bg-gray-800 rounded-full  "
                       id="user-menu-button"
                       aria-expanded={isDropdownOpen}
                       onClick={toggleDropdown}
                     >
                       <span className="sr-only">Open user menu</span>
                       <FaCircleUser className="bg-white text-xl" />
-                      {/* <Image
-                  className="w-8 h-8 rounded-full"
-                  src="/docs/images/people/profile-picture-3.jpg"
-                  alt="user photo"
-                  width={32}
-                  height={32}
-                /> */}
                     </button>
 
-                    {/* Dropdown Menu */}
                     {isDropdownOpen && (
                       <div
                         id="user-dropdown"
@@ -132,15 +122,16 @@ const MobileNavbar = () => {
                     )}
                   </div>
                 ) : (
-                  // Login/Signup Buttons for Guests
                   <>
-                  <div>
-                    <Link href="/signin">
-                      <Button className="text-[10px] w-10 h-6 px-4 bg-red-700 text-white" variant="outline">
-                        Login
-                      </Button>
-                    </Link>
-                  
+                    <div>
+                      <Link href="/signin">
+                        <Button
+                          className="text-[10px] w-16 h-8 px-4 bg-red-700 text-white"
+                          variant="outline"
+                        >
+                          Login
+                        </Button>
+                      </Link>
                     </div>
                   </>
                 )}
@@ -148,20 +139,35 @@ const MobileNavbar = () => {
             </div>
           </div>
           <div>
-                <NavigationMenu>
-                  <NavigationMenuList className="flex flex-col items-start gap-5 text-[14px] m-8 ">
-                    <NavigationMenuItem>Study Destination</NavigationMenuItem>
-                    <NavigationMenuItem>
-                      Universities
-                      <NavigationMenuContent>
-                        <NavigationMenuLink href="#">Link</NavigationMenuLink>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>Programs</NavigationMenuItem>
-                    <NavigationMenuItem>Scholarships</NavigationMenuItem>
-                  </NavigationMenuList>
-                </NavigationMenu>
-              </div>
+            <NavigationMenu className="w-full">
+              <NavigationMenuList className="flex flex-col items-start  text-[14px] mx-8 my-6 gap-5 w-[136%]">
+                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+                  <Link href="/countries" passHref>
+                    <span className="block w-full">Study Destination</span>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+                  <Link href="/uniarchive" passHref>
+                    <span className="block w-full">Universities</span>
+                  </Link>
+                  <NavigationMenuContent>
+                    <NavigationMenuLink href="#">Link</NavigationMenuLink>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+                  <Link href="/coursearchive" passHref>
+                    <span className="block w-full">Courses</span>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+                  <Link href="">
+                    {" "}
+                    <span className="block w-full">Scholarships</span>
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
         </SheetContent>
       </Sheet>
     </div>

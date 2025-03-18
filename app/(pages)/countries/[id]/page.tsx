@@ -12,8 +12,9 @@ import DreamStudy from "./components/DreamStudy";
 import Healthcare from "./components/Healthcare";
 import Banner from "@/components/ui/enrollment/Banner";
 import FAQ from "@/components/ui/enrollment/FAQ";
-
 import AccCrousel from "./components/AccCrousel";
+// import AccCrousel from "./components/AccCrousel";
+
 export default function Countrypage({
   params,
 }: {

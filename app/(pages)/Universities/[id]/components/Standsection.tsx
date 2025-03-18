@@ -11,7 +11,7 @@ const Standsection: React.FC<StandsectionProps> = ({ our_mission, values }) => {
     <>
       {/* section: What We Stand For */}
       <div className="md:py-12 py-6 w-full bg-white">
-        <div className="max-w-5xl 2xl:max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="md:w-[90%] mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-gray-800 pb-3">What we stand for?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Mission */}

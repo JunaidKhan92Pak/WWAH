@@ -6,7 +6,7 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ country }) => {
   return (
     <div>
-      <section className="w-[90%] mx-auto">
+      <section className="w-[95%] mx-auto">
         <div
           className="relative mt-4 h-[200px] md:h-[80vh] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
           style={{
@@ -15,7 +15,7 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
         >
           <div className="w-4/5 ">
             <div className="flex flex-col items-start md:w-3/5">
-              <h1 className="text-left">
+              <h1 className="text-left lg:leading-tight">
                 Your Comprehensive Guide to the {country} Visa Application
                 Process!
               </h1>
