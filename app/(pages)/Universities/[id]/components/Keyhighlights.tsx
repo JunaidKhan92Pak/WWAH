@@ -41,7 +41,7 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
 
   return (
     <>
-      <section className="md:py-4 py-2 w-[90%] sm:w-[85%] md:w-[90%] xl:w-[80%] mx-auto">
+      <section className="md:py-4 py-2 w-[90%] sm:w-[85%] md:w-[90%] xl:w-[85%] mx-auto">
         <h2 className="mb-4 text-center sm:text-left">
           Rankings & Achievements!
         </h2>

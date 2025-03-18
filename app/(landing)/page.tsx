@@ -221,7 +221,7 @@ const [successOpen, setSuccessOpen] = useState(false);
             <h3 className="font-bold">Top Universities!</h3>
             <Badge variant="outline" className=" bg-[#F1F1F1]">
               <DropdownMenu>
-                <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-11">
+                <DropdownMenuTrigger className="text-sm text-gray-900 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-8">
                   <Image
                     src="/filterr.svg"
                     width={16}

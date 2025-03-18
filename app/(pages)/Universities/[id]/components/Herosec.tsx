@@ -66,7 +66,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
 
   return (
     <>
-      <section className="mx-auto w-[90%]">
+      <section className="mx-auto w-[90%] md:w-[95%]">
         <div>
           <div
             // className="relative md:h-[80vh] h-[95%] flex justify-center items-center text-center rounded-2xl text-white sm:bg-cover sm:bg-center"
@@ -81,7 +81,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-100"></div>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 justify-items-center ml-3 sm:ml-0 py-4 sm:py-12  relative z-10 px-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center ml-3 sm:ml-0 py-4 sm:py-12  relative z-10 px-4">
                 <div className="space-y-2 text-left">
                   <Image
                     src={data?.universityImages?.logo || "/default-logo.png"}
@@ -95,9 +95,9 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                   </h3>
 
                   <div className="bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 py-1">
                       {" "}
-                      <CiLocationOn className="h-8  sm:h-12 lg:h-5 w-5 sm:w-12 lg:w-8" />
+                      <CiLocationOn className="h-4  w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
                       <p className="">{data.location}</p>
                     </div>
                   </div>
@@ -123,8 +123,8 @@ const Herosec = ({ data }: { data: UniversityData }) => {
 
                 {/* Right Section */}
                 <div
-                  className="w-full md:w-full lg:w-[60%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
-py-2 md:py-3 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
+                  className="w-full md:w-4/5 md:h-4/5 lg:w-[60%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
+py-4 md:py-1 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
                 >
                   <p className="text-white w-[90%] md:w-[90%]">
                     Book Your Online Video Counselling Session with WWAH
