@@ -80,7 +80,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
       {/* Course Section */}
       <section className="pb-10 lg:pb-16 w-full">
         <div className="bg-white lg:mt-12 lg:mb-12"></div>
-        <div className="w-[90%] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="w-[90%] mx-auto sm:px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           {/* Left Side: Course Search Form */}
           <div className="">
             <h2 className="text-gray-800 mb-2 md:mb-6">Find your Course!</h2>
@@ -146,7 +146,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                   />
                   <Button
                     type="submit"
-                    className="hover:underline font-bold bg-gray-100 text-[#F0851D] underline underline-offset-4"
+                    className="hover:underline font-bold bg-gray-100 text-[#F0851D] underline underline-offset-3"
                   >
                     Search
                   </Button>
@@ -163,7 +163,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
             </form>
           </div>
           {/* Right Side: Image */}
-          <div className="relative rounded-3xl overflow-hidden shadow-lg w-[90%] h-[250px] md:h-[200px] lg:h-[300px]  2xl:h-[600px]">
+          <div className="relative rounded-3xl overflow-hidden shadow-lg w-[100%] h-[250px] md:h-[200px] lg:h-[300px]  2xl:h-[600px]">
             <Image
               src="/Hero_Robot.png" // Replace with actual image path
               alt="Zeus Guide"
