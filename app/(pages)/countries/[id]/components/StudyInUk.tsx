@@ -23,22 +23,20 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const truncatedText =
-    fullText.length > maxLength
-      ? fullText.slice(0, maxLength) + "..."
-      : fullText;
+    fullText.length > maxLength ? fullText.slice(0, maxLength) + "." : fullText;
 
   return (
     <>
       {/* Introduction Section */}
       <div className="text-center w-5/6 lg:w-[70%] mx-auto md:pt-28">
-        <h2 className="pt-4 pb-2">Why Study In United Kingdom!</h2>
+        <h2 className="pt-4 pb-2 font-bold">Why Study In United Kingdom!</h2>
         <div className="text-center">
           <p>
             {isExpanded ? fullText : truncatedText}
             {fullText.length > maxLength && (
               <span
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-black-200 underline underline-offset-4 font-normal cursor-pointer ml-2"
+                className="text-red-600 font-semibold underline hover:font-bold underline-offset-4 cursor-pointer ml-2"
               >
                 {isExpanded ? "Read less" : "Read more..."}
               </span>
@@ -57,10 +55,10 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
         <div className="absolute inset-0 bg-black opacity-90 z-0"></div>
 
         <div className="relative z-10 w-full md:px-6 space-y-2">
-          <h2 className="py-2">Popular Universities in {countryName}</h2>
+          <h2 className="py-2 ">Popular Universities in {countryName}</h2>
 
           <div
-            className="flex overflow-x-auto md:space-x-4 md:p-4 hide-scrollbar gap-1 mx-auto"
+            className="flex overflow-x-auto justify-center px-4 md:space-x-4 md:p-4 hide-scrollbar gap-1 mx-auto"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -69,10 +67,10 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
             {universities.map((item) => (
               <div
                 key={item._id}
-                className=" bg-white  shadow-xl rounded-2xl overflow-hidden p-1 md:p-3"
+                className=" bg-white shadow-xl rounded-2xl overflow-hidden p-1 md:p-3"
               >
                 <div className="relative md:h-[120px] lg:h-[200px]">
-                  <div className="absolute top-5 left-0 bg-gradient-to-r from-[#fce7d2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">
+                  <div className="absolute top-3 left-0 bg-gradient-to-r from-[#fce7d2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">
                     <p className="md:text-sm text-[10px] font-medium">
                       QS World:
                     </p>
@@ -86,16 +84,16 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
                     alt={item.university_name}
                     width={400}
                     height={250}
-                    className="lg:h-[180px] lg:w-[400px] md:w-[320px] md:h-[100px] h-[70px] w-[300px] object-cover rounded-xl shadow-2xl border border-black"
+                    className="lg:h-[180px] lg:w-[350px] md:w-[320px] md:h-[100px] h-[100px] w-[300px] object-cover rounded-xl shadow-2xl border border-black "
                   />
 
-                  <div className="absolute lg:bottom-1 -bottom-4 left-3 lg:left-5 w-14 h-14">
+                  <div className="absolute lg:bottom-1 -bottom-7 left-3 lg:left-5 w-14 h-14">
                     <Image
                       src={item.universityImages.logo}
                       alt={`${item.university_name}Logo`}
                       width={56}
                       height={56}
-                      className="object-fit lg:w-[56px] lg:h-[56px] md:h-[35px] md:w-[35px] w-[30px] h-[30px] rounded-full bg-white border border-gray-200"
+                      className="object-fit lg:w-[56px] lg:h-[56px] md:h-[35px] md:w-[35px] w-[25px] h-[30px] rounded-full bg-white border border-gray-200"
                     />
                   </div>
                 </div>

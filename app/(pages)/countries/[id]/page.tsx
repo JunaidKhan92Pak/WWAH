@@ -51,7 +51,7 @@ export default function Countrypage({
     teaching_and_learning_approach?: string;
     multicultural_environment?: string;
     faqs: [];
-    accomodation_options: []
+    accomodation_options: [];
   }
 
   const [country, setCountry] = useState<Country>({
@@ -83,7 +83,7 @@ export default function Countrypage({
     visa_requirements: [],
     teaching_and_learning_approach: "",
     faqs: [],
-    accomodation_options: []
+    accomodation_options: [],
   });
   const fetchData = async () => {
     try {
@@ -110,7 +110,7 @@ export default function Countrypage({
 
   return country ? (
     <div>
-      <div className="w-[90%] mx-auto">
+      <div className="w-[95%] mx-auto">
         <Hero country={country} />
       </div>
       <StudyInUs

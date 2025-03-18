@@ -46,7 +46,7 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
   return (
     <>
       <div>
-        <div className="md:my-10 my-5 2xl:my-20">
+        <div className="md:my-10 my-5 2xl:my-20 mx-2">
           <h3 className="text-center">Accommodation Options!</h3>
           <div
             className="flex overflow-x-auto space-x-4 p-4 "

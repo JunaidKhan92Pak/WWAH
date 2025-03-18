@@ -7,15 +7,18 @@ interface PermanentResidencyProps {
   countryName: string;
 }
 
-const PermanentResidency: React.FC<PermanentResidencyProps> = ({ residency, countryName }) => {
-   const [isExpanded, setIsExpanded] = useState(false);
-   const maxLength = 1200;
+const PermanentResidency: React.FC<PermanentResidencyProps> = ({
+  residency,
+  countryName,
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 1200;
   // const toggleText = () => {
   //   setIsExpanded((prevState) => !prevState);
   // };
   return (
     <section
-      className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center h-auto p-6 my-1 overflow-hidden"
+      className="relative flex flex-col lg:flex-row lg:gap-5 items-center text-white bg-black bg-cover bg-center h-auto p-6 my-1 overflow-hidden"
       style={{
         backgroundImage: "url(&#39;/bg-usa.png')",
       }}
@@ -24,7 +27,7 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({ residency, coun
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
       {/* Content Section (50%) */}
-      <div className="relative z-10 leading-tight w-full lg:w-1/2 flex flex-col justify-center space-y-2 sm:px-4 text-left">
+      <div className="relative z-10 leading-tight w-full lg:w-1/2 flex flex-col justify-center space-y-2 sm:px-4 text-left lg:px-4">
         <h5>
           How to Get Permanent Residency in the {countryName} as an
           International Student?
@@ -40,7 +43,7 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({ residency, coun
             <p>
               <span
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-black-500 mt-0 underline underline-offset-4 font-normal cursor-pointer ml-2"
+                className="text-red-600 font-semibold underline hover:font-bold underline-offset-4 cursor-pointer ml-2"
               >
                 {isExpanded ? "Read less" : "Read more..."}
               </span>
@@ -56,7 +59,7 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({ residency, coun
           alt="Side Image"
           width={600}
           height={600}
-          className="rounded-lg shadow-lg object-cover sm:w-[80%] md:w-[70%] lg:w-full max-w-[700px] overflow-hidden"
+          className="rounded-3xl shadow-lg object-cover sm:w-[80%] md:w-[70%] lg:w-full max-w-[700px] overflow-hidden"
         />
       </div>
     </section>

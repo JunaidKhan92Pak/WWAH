@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 interface HealthcareProps {
-  health: { name: string; description:string[] }[];
+  health: { name: string; description: string[] }[];
   countryName: string;
 }
 
@@ -111,7 +111,8 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                         {!showMore && (
                           <button
                             onClick={() => setShowMore(true)}
-                            className="text-blue-600 hover:underline mt-2 block"
+                            // className="text-blue-600 hover:underline mt-2 block"
+                            className="text-red-600 font-semibold underline hover:font-bold underline-offset-4 cursor-pointer ml-2"
                           >
                             Read more...
                           </button>
@@ -138,7 +139,7 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                         {showMore && (
                           <button
                             onClick={() => setShowMore(false)}
-                            className="text-blue-600 hover:underline mt-2 block"
+                            className="text-red-600 font-semibold underline hover:font-bold underline-offset-4 cursor-pointer ml-2"
                           >
                             Show less
                           </button>
