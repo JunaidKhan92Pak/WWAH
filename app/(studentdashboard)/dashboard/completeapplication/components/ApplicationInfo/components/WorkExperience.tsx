@@ -64,162 +64,166 @@ export default function Home() {
   }
 
   return (
-      <div className="mx-auto max-w-3xl my-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {fields.map((field, index) => (
-              <div key={field.id} className="bg-white">
-                <div className="mb-6">
-                    <h2 className="text-base font-semibold text-center text-gray-900">
-                      Work Experience {index + 1}
-                    </h2>
-                  </div>
-                <div className="grid gap-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name={`experiences.${index}.jobTitle`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Title</FormLabel>
-                          <FormControl>
-                            <Input className="placeholder:text-sm" placeholder="Write..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`experiences.${index}.organizationName`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Organization Name</FormLabel>
-                          <FormControl>
-                            <Input className="placeholder:text-sm" placeholder="Write..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                          <div className="flex space-x-6 justify-evenly">
-                            <FormField
-                              control={form.control}
-                              name={`experiences.${index}.isFullTime`}
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={(checked) => {
-                                        field.onChange(checked);
-                                        if (checked) {
-                                          form.setValue(
-                                            `experiences.${index}.isPartTime`,
-                                            false
-                                          );
-                                        }
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <div className="space-y-1 leading-none">
-                                    <FormLabel>Full Time</FormLabel>
-                                  </div>
+    <div className="mx-auto max-w-3xl my-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {fields.map((field, index) => (
+            <div key={field.id} className="bg-white">
+              <div className="mb-6">
+                <h2 className="text-base font-semibold text-center text-gray-900">
+                  Work Experience {index + 1}
+                </h2>
+              </div>
+              <div className="grid gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name={`experiences.${index}.jobTitle`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Job Title</FormLabel>
+                        <FormControl className="bg-[#f1f1f1]">
+                          <Input
+                            className="placeholder:text-sm"
+                            placeholder="Write..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`experiences.${index}.organizationName`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Organization Name</FormLabel>
+                        <FormControl className="bg-[#f1f1f1]">
+                          <Input
+                            className="placeholder:text-sm"
+                            placeholder="Write..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                        <div className="flex space-x-6 justify-evenly">
+                          <FormField
+                            control={form.control}
+                            name={`experiences.${index}.isFullTime`}
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={(checked) => {
+                                      field.onChange(checked);
+                                      if (checked) {
+                                        form.setValue(
+                                          `experiences.${index}.isPartTime`,
+                                          false
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel>Full Time</FormLabel>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`experiences.${index}.isPartTime`}
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={(checked) => {
+                                      field.onChange(checked);
+                                      if (checked) {
+                                        form.setValue(
+                                          `experiences.${index}.isFullTime`,
+                                          false
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel>Part Time</FormLabel>
+                                </div>
+                                <FormMessage>
+                                  {
+                                    form.formState.errors.experiences?.[index]
+                                      ?.isPartTime?.message
+                                  }
+                                </FormMessage>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-                                </FormItem>
-
-                              )}
-                            />
-                            <FormField
-                              control={form.control}
-                              name={`experiences.${index}.isPartTime`}
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={(checked) => {
-                                        field.onChange(checked);
-                                        if (checked) {
-                                          form.setValue(
-                                            `experiences.${index}.isFullTime`,
-                                            false
-                                          );
-                                        }
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <div className="space-y-1 leading-none">
-                                    <FormLabel>Part Time</FormLabel>
-                                  </div>
-                                  <FormMessage>
-                                    {
-                                      form.formState.errors.experiences?.[index]
-                                        ?.isPartTime?.message
-                                    }
-                                  </FormMessage>
-                                </FormItem>
-                              )}
-                            />
-
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name={`experiences.${index}.dateFrom`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date From</FormLabel>
-                          <FormControl>
-                            <Input type="date" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`experiences.${index}.dateTo`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date To</FormLabel>
-                          <FormControl>
-                            <Input type="date" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name={`experiences.${index}.dateFrom`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Date From</FormLabel>
+                        <FormControl className="bg-[#f1f1f1]">
+                          <Input type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`experiences.${index}.dateTo`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Date To</FormLabel>
+                        <FormControl className="bg-[#f1f1f1]">
+                          <Input type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
-            ))}
-            <div className="flex justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mt-2  bg-[#C5C3C38A] rounded-full w-2/3 sm:w-1/3"
-                onClick={() =>
-                  append({
-                    jobTitle: "",
-                    organizationName: "",
-                    dateFrom: "",
-                    dateTo: "",
-                    isFullTime: false,
-                    isPartTime: false,
-                  })
-                }
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Work Experiencee
-              </Button>
-
             </div>
-          </form>
-        </Form>
+          ))}
+          <div className="flex justify-between">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-2  bg-[#C5C3C38A] rounded-full w-2/3 sm:w-1/3"
+              onClick={() =>
+                append({
+                  jobTitle: "",
+                  organizationName: "",
+                  dateFrom: "",
+                  dateTo: "",
+                  isFullTime: false,
+                  isPartTime: false,
+                })
+              }
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Work Experiencee
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }

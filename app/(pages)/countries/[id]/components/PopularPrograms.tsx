@@ -6,12 +6,42 @@ interface PopularProgramsProps {
 }
 
 const data = [
-  { icon: '/countrypage/health.svg', title: 'Health & Wellbeing', cost: '£26', color: 'bg-teal-500' },
-  { icon: '/countrypage/groceries.svg', title: 'Groceries', cost: '£100-£200', color: 'bg-green-500' },
-  { icon: '/countrypage/rent.svg', title: 'Rent', cost: '£439-£700', color: 'bg-yellow-500' },
-  { icon: '/countrypage/eatingOut.svg', title: 'Eating Out', cost: '£66-£80', color: 'bg-blue-500' },
-  { icon: '/countrypage/transport.svg', title: 'Transport', cost: '£30-£69', color: 'bg-purple-500' },
-  { icon: '/countrypage/householdbills.svg', title: 'Household Bills', cost: '£40-£79', color: 'bg-red-500' },
+  {
+    icon: "/countrypage/health.svg",
+    title: "Health & Wellbeing",
+    cost: "£26",
+    color: "bg-teal-500",
+  },
+  {
+    icon: "/countrypage/groceries.svg",
+    title: "Groceries",
+    cost: "£100-£200",
+    color: "bg-green-500",
+  },
+  {
+    icon: "/countrypage/rent.svg",
+    title: "Rent",
+    cost: "£439-£700",
+    color: "bg-yellow-500",
+  },
+  {
+    icon: "/countrypage/eatingOut.svg",
+    title: "Eating Out",
+    cost: "£66-£80",
+    color: "bg-blue-500",
+  },
+  {
+    icon: "/countrypage/transport.svg",
+    title: "Transport",
+    cost: "£30-£69",
+    color: "bg-purple-500",
+  },
+  {
+    icon: "/countrypage/householdbills.svg",
+    title: "Household Bills",
+    cost: "£40-£79",
+    color: "bg-red-500",
+  },
 ];
 
 const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
@@ -57,14 +87,14 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
         <div className="lg:flex z-10 w-full py-2 sm:py-0">
           {/* Title Section */}
           <div className="lg:w-2/5 flex items-center justify-center text-center lg:text-left text-gray-600 2xl:justify-center md:mb-6 mb-2 lg:mb-0">
-            <h5 className="md:w-full text-gray-900 leading-10 text-lg sm:text-xl md:text-2xl">
+            <h5 className="md:w-4/5 text-gray-900 font-bold leading-10 text-lg sm:text-xl md:text-2xl">
               Popular Programs to Study in United Kingdom!
             </h5>
           </div>
 
           {/* Icon Section with Horizontal Scrollbar */}
           <div
-            className="flex lg:w-3/5 overflow-x-auto scrollbar-hide space-x-4 px-2"
+            className="flex lg:w-3/5 overflow-x-auto scrollbar-hide space-x-4 px-2 py-2 mx-2 md:mx-0"
             style={{
               scrollbarWidth: "thin",
               msOverflowStyle: "none",
@@ -81,9 +111,10 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
                     alt={item.caption}
                     width={40}
                     height={40}
+                    className="w-8 h-8 md:w-10 md:h-10 "
                   />
                 </div>
-                <p className="text-center w-24 sm:w-28 text-[12px] sm:text-[14px] md:text-[16px] font-medium mt-2">
+                <p className="text-center w-24 sm:w-28 text-[12px] sm:text-[14px] md:text-[15px] font-medium mt-2">
                   {item.caption}
                 </p>
               </div>
@@ -92,7 +123,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
         </div>
       </section>
 
-      <section className="flex justify-center my-6 md:my-12 text-center">
+      <section className="flex justify-center my-6 md:my-8 text-center">
         <div className="text-center">
           <h4>Cost of Living in United Kingdom!</h4>
           <div

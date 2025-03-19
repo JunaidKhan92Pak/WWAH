@@ -90,43 +90,39 @@ const AccCrousel = ({
             {slides.map((slide, slideIndex) => (
               <div
                 key={slideIndex}
-                className={`${
-                  activeSlideIndex === slideIndex ? "block" : "hidden"
-                } duration-700 ease-in-out`}
+                className={`${activeSlideIndex === slideIndex ? "block" : "hidden"
+                  } duration-700 ease-in-out`}
                 data-carousel-item
               >
                 <div
-                  className="relative bg-cover bg-center flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 h-[220px] sm:h-[60vh] lg:h-[70vh]"
+                  className="relative bg-cover bg-center flex flex-col items-center justify-center  h-[360px] md:h-[450px]"
                   style={{
                     backgroundImage: `url(${slide.image})`,
                   }}
                 >
                   <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
-                  <div className="lg:w-3/5 mb-5 flex flex-col justify-center items-center text-white z-10">
+                  <div className="w-[80%] mx-auto  flex flex-col justify-center items-center text-white z-10">
                     {/* Common Heading */}
-                    <h2 className="text-center mb-2 lg:mb-10 text-white text-nowrap">
+                    <h2 className="text-center mb-2 md:mb-4 text-white text-nowrap">
                       {slide.heading}
                     </h2>
                     {slide.list ? (
-                      <div className="flex flex-col md:flex-row w-full h-full items-center justify-between">
+                      <div className="flex flex-col md:gap-4 md:flex-row items-center justify-center">
                         {/* Left Side - Image */}
-                        <div className="w-1/2 flex items-center justify-center">
-                          <Image
-                            src={
-                              slide.list[nestedIndex]?.image ||
-                              "/placeholder.jpg"
-                            }
-                            alt={slide.list[nestedIndex]?.text || "Slide Image"}
-                            width={400}
-                            height={300}
-                            className="rounded-xl shadow-lg w-[60vw] md:w-[35vw] lg:w-[25vw] h-[100px] sm:h-[35vh] object-cover"
-                          />
-                        </div>
+                          <div className="w-[230px] md:w-[300px]  flex-none"> {/* Fixed size container */}
+                            <Image
+                              src={slide.list[nestedIndex]?.image || "/placeholder.jpg"}
+                              alt={slide.list[nestedIndex]?.text || "Slide Image"}
+                              width={400}
+                              height={300}
+                              className="rounded-xl shadow-lg object-cover w-full h-full"
+                            />
+                          </div>
                         {/* Right Side - Text */}
-                        <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-center px-4 md:text-nowrap">
-                          <h5 className="md:text-left text-center text-white py-2 items-center justify-center">
+                        <div className="flex flex-col md:w-[40%] ">
+                          <h6 className="md:text-start text-center text-white ">
                             {slide.list[nestedIndex]?.text || "Default Text"}
-                          </h5>
+                          </h6>
                         </div>
                       </div>
                     ) : (
@@ -144,6 +140,7 @@ const AccCrousel = ({
                       </>
                     )}
                   </div>
+
                 </div>
               </div>
             ))}
@@ -154,11 +151,10 @@ const AccCrousel = ({
               <button
                 key={slideIndex}
                 type="button"
-                className={`md:w-2 md:h-2 h-1 w-1 rounded-full ${
-                  activeSlideIndex === slideIndex
-                    ? "bg-blue-500"
-                    : "bg-gray-500"
-                }`}
+                className={`md:w-2 md:h-2 h-1 w-1 rounded-full ${activeSlideIndex === slideIndex
+                  ? "bg-blue-500"
+                  : "bg-gray-500"
+                  }`}
                 onClick={() => {
                   setActiveSlideIndex(slideIndex);
                   setNestedIndex(0); // Reset nested index when changing slides

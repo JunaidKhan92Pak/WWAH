@@ -1,4 +1,11 @@
 "use client";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import Image from "next/image";
@@ -75,7 +82,7 @@ function Page() {
       setCountry(updatedSelected); //  Set array directly
     }
   }
-
+const [successOpen, setSuccessOpen] = useState(false);
   return (
     // landing page container starts
     <div className="landingPage">
@@ -110,6 +117,16 @@ function Page() {
                   <br />
                   How can I Help You?
                 </h1>
+                <div className="HeroRightSide relative block lg:hidden">
+                  <Image
+                    src="/Hero_Robot.png"
+                    alt="Robot"
+                    width={499}
+                    height={633}
+                    className="2xl:w-[550px] 2xl:h-[700px]"
+                  />
+                </div>
+
                 {/* Chat Input */}
                 <div className="chat-input rounded-lg p-2 flex items-center gap-3 2xl:gap-5 2xl:justify-evenly bg-white bg-opacity-30">
                   <Bot className="h-6 w-6 text-white/80" />
@@ -204,7 +221,7 @@ function Page() {
             <h3 className="font-bold">Top Universities!</h3>
             <Badge variant="outline" className=" bg-[#F1F1F1]">
               <DropdownMenu>
-                <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-11">
+                <DropdownMenuTrigger className="text-sm text-gray-900 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-8">
                   <Image
                     src="/filterr.svg"
                     width={16}
@@ -243,16 +260,16 @@ function Page() {
           </div>
           {/* University Cards Grid */}
           {!loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex gap-6 overflow-x-auto scrollbar-hide p-4">
               {universities.length === 0 ? (
-                <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
-                  No Universities Found{" "}
+                <p className="text-[20px] font-semibold text-center p-4 w-full">
+                  No Universities Found
                 </p>
               ) : (
                 universities.map((uni, index) => (
                   <Card
                     key={index}
-                    className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                    className="min-w-[300px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                   >
                     {/* University Image */}
                     <Link
@@ -266,7 +283,7 @@ function Page() {
                         src={uni.universityImages.banner}
                         alt={uni.name}
                         fill
-                        className="object-cover transition-transform  duration-300 group-hover:scale-105"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                       {/* University Logo Overlay */}
                       <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-md">
@@ -280,10 +297,10 @@ function Page() {
                     </Link>
                     {/* University Details */}
                     <div className="p-4">
-                      <h6 className="font-semibold  mb-2">
+                      <h6 className="font-semibold mb-2">
                         {uni.university_name}
                       </h6>
-                      <div className="flex  flex-col  justify-between items-start xl:items-center  text-muted-foreground">
+                      <div className="flex flex-col justify-between items-start xl:items-center text-muted-foreground">
                         <div className="w-full flex items-center justify-between gap-2">
                           <p>{uni.country_name}</p>
                           <p>Public</p>
@@ -329,33 +346,54 @@ function Page() {
                 Study Abroad dreams made simple: Just Download WWAH app, Upload
                 & Travel.
               </p>
-              <div className="text-sm flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-transparent  border-white text-white  hover:bg-gray-900 hover:text-white  text-left"
-                >
-                  <Image
-                    src="/google-play.png"
-                    alt="Get it on Google Play"
-                    width={18}
-                    height={14}
-                  />
-                  Get it on Google Play
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-transparent  border-white text-white  hover:bg-gray-900 hover:text-white  text-left"
-                >
-                  <Image
-                    src="/app-store.png"
-                    alt="Download on App Store"
-                    width={18}
-                    height={14}
-                  />
-                  Download on the App Store
-                </Button>
+              <div>
+                <div className="text-sm flex flex-col sm:flex-row gap-4">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-transparent border-white text-white hover:bg-gray-900 hover:text-white text-left"
+                    onClick={() => setSuccessOpen(true)}
+                  >
+                    <Image
+                      src="/google-play.png"
+                      alt="Get it on Google Play"
+                      width={18}
+                      height={14}
+                    />
+                    Get it on Google Play
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-transparent border-white text-white hover:bg-gray-900 hover:text-white text-left"
+                    onClick={() => setSuccessOpen(true)}
+                  >
+                    <Image
+                      src="/app-store.png"
+                      alt="Download on App Store"
+                      width={18}
+                      height={14}
+                    />
+                    Download on the App Store
+                  </Button>
+                </div>
+
+                {/* Modal */}
+                <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
+                  <DialogContent className="flex flex-col justify-center items-center max-w-72 md:max-w-96 !rounded-3xl">
+                    <Image
+                      src="/DashboardPage/success.svg"
+                      alt="Success"
+                      width={150}
+                      height={150}
+                    />
+                    <DialogHeader>
+                      <DialogTitle className="text-lg font-semibold text-gray-900">
+                        The mobile app is coming soon!
+                      </DialogTitle>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
             <div className="relative">

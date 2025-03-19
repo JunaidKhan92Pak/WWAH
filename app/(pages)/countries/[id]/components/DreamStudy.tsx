@@ -3,17 +3,17 @@ import React from "react";
 
 const DreamStudy = () => {
   // const arr3 = ["/turk.png", "/studycanada.png", "/edin.png", "/manch.png"];
- const arr3 = [
-   { src: "/country2.png", alt: "United States(US) " },
-   { src: "/country2.png", alt: "China " },
-   { src: "/country3.png", alt: "Canada" },
-   { src: "/country4.png", alt: "Italy " },
-   { src: "/country5.png", alt: "United Kingdom(UK) " },
-   { src: "/country6.png", alt: "Ireland " },
-   { src: "/country7.png", alt: "New Zealand " },
-   { src: "/country8.png", alt: "Denmark " },
-   { src: "/country9.png", alt: "France" },
- ];
+  const arr3 = [
+    { src: "/country1.png", alt: "United States(US) " },
+    { src: "/country2.png", alt: "China " },
+    { src: "/country3.png", alt: "Canada" },
+    { src: "/country4.png", alt: "Italy " },
+    { src: "/country5.png", alt: "United Kingdom(UK) " },
+    { src: "/country6.png", alt: "Ireland " },
+    { src: "/country7.png", alt: "New Zealand " },
+    { src: "/country8.png", alt: "Denmark " },
+    { src: "/country9.png", alt: "France" },
+  ];
 
   return (
     <div>

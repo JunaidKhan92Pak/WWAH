@@ -40,11 +40,11 @@ const Exploresection = () => {
           >
             {loading ? (
               <SkeletonCard arr={1} />
-            )
-              : (universities.map((item, index) => (
+            ) : (
+              universities.map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-[85%] sm:w-[85%] md:w-[70%] lg:w-[80%] h-[30vh] sm:h-[50vh]     md:h-[55vh] lg:h-[50vh] 2xl:h-[60vh] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+                  className="relative w-[85%] sm:w-[85%] md:w-[70%] lg:w-[80%] h-[25vh] sm:h-[50vh] max-[320px]:h-[50vh] md:h-[55vh] lg:h-[50vh] 2xl:h-[60vh] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
                 >
                   <Image
                     src={item.universityImages.banner}
@@ -56,7 +56,7 @@ const Exploresection = () => {
                   />
                   {/* Text Overlay */}
 
-                  <div className="absolute bottom-0 bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl w-full text-white p-4 sm:p-6 md:p-8">
+                  <div className="absolute bottom-0 bg-white bg-opacity-20 backdrop-blur-sm rounded-3xl w-full text-white p-4 sm:p-6 md:p-8">
                     {/* Logo Image */}
                     <div className="absolute -top-8 left-2 sm:-top-10 sm:left-4 md:-top-12 lg:-top-10 2xl:-top-16 md:left-6">
                       <Image
@@ -68,7 +68,7 @@ const Exploresection = () => {
                       />
                     </div>
                     {/* Title */}
-                    <h4>{item.university_name}</h4>
+                    <h6>{item.university_name}</h6>
                     {/* Additional Info */}
                     <div className="flex sm:flex-row gap-2 sm:gap-16 lg:gap-12 flex-wrap sm:flex-nowrap">
                       <p>{item.country_name}</p>
@@ -76,9 +76,9 @@ const Exploresection = () => {
                       <p>{item.acceptance_rate}</p>
                     </div>
                   </div>
-                </div>)
-              ))}
-
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

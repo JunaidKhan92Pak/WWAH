@@ -1,8 +1,8 @@
 import Image from "next/image";
 import React from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-
+// import { Button } from "@/components/ui/button";
+// import Link from "next/link";
+import Banner from "@/components/ui/enrollment/Banner";
 
 interface ScholarshipsInUKProps {
   countryName: string;
@@ -31,10 +31,8 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
   return (
     <>
       {/* Scholarship Timeline Section */}
-      <section className="hidden md:flex flex-col items-center bg-black text-white py-8">
-        <h4>
-          Scholarships in {countryName}!
-        </h4>
+      <section className="hidden md:flex flex-col items-center bg-black text-white py-8 mt-5">
+        <h4>Scholarships in {countryName}!</h4>
 
         {/* Timeline Image */}
         <div className="relative w-full flex justify-center mt-4">
@@ -50,20 +48,21 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
         {/* Scholarship List Below Image */}
         <div className="flex w-full md:w-[95%] lg:w-[85%] mt-4">
           {scholarships.map((scholarship, index) => (
-            <p key={index} className="text-xs sm:text-sm lg:text-base text-center w-2/5">
+            <p
+              key={index}
+              className="text-xs sm:text-sm lg:text-base text-center w-2/5"
+            >
               {scholarship}
             </p>
           ))}
         </div>
       </section>
       <div className="md:hidden flex flex-col items-start bg-black text-white py-8 px-6">
-        <h4>
-          Scholarships in {countryName}!
-        </h4>
+        <h4>Scholarships in {countryName}!</h4>
 
         <div className="flex flex-col space-y-3 mt-4">
           {scholarshipItems.map((item, index) => (
-            <div key={index} className="flex items-center space-x-">
+            <div key={index} className="flex items-center space-x-2">
               <Image src={item.image} alt={item.text} width={15} height={15} />
               <p>{item.text}</p>
             </div>
@@ -71,7 +70,7 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
         </div>
       </div>
       {/* Explore Scholarships Section */}
-      <section
+      {/* <section
         className="relative mt-10 text-white bg-[#FCE7D2]"
         style={{
           backgroundImage: "url('/bg-usa.png')",
@@ -95,7 +94,13 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
+      <Banner
+        title="Get Personalized Help with Your UK Visa Application!"
+        buttonText="Schedule a Session with WWAH Advisors Now!"
+        buttonLink="/"
+        backgroundImage="/bg-usa.png"
+      />
     </>
   );
 };

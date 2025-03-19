@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { CiLocationOn } from "react-icons/ci";
 
 interface UniversityData {
   establishment_year?: string;
@@ -65,33 +66,40 @@ const Herosec = ({ data }: { data: UniversityData }) => {
 
   return (
     <>
-      <section className="mx-auto w-[90%]">
+      <section className="mx-auto w-[90%] md:w-[95%]">
         <div>
           <div
-            className="relative md:h-[80vh] h-[90%] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
+            // className="relative md:h-[80vh] h-[95%] flex justify-center items-center text-center rounded-2xl text-white sm:bg-cover sm:bg-center"
+            className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             style={{
-              backgroundImage: `url(${data?.universityImages?.banner ? data.universityImages.banner : "/banner.jpg"
-                })`,
+              backgroundImage: `url(${
+                data?.universityImages?.banner
+                  ? data.universityImages.banner
+                  : "/banner.jpg"
+              })`,
             }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-100"></div>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 justify-items-center ml-3 sm:ml-0 py-4 sm:py-12  relative z-10 px-4">
-                <div className="md:space-y-2">
-
-                  <h3 className="text-white text-start">
+              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center ml-3 sm:ml-0 py-4 sm:py-12  relative z-10 px-4">
+                <div className="space-y-2 text-left">
+                  <Image
+                    src={data?.universityImages?.logo || "/default-logo.png"}
+                    alt="University Logo"
+                    width={80}
+                    height={80}
+                    className="object-contain rounded-full w-10 md:w-16"
+                  />
+                  <h3 className="text-white text-start font-bold">
                     {data.university_name}
                   </h3>
 
-                  <div className="w-1/2 p-2 bg-white bg-opacity-10 rounded-lg flex items-center justify-start text-white">
-                    <Image
-                      src={data?.universityImages?.logo || "/default-logo.png"}
-                      alt="University Logo"
-                      width={80}
-                      height={80}
-                      className="object-contain rounded-full"
-                    />
-                    <p className="ml-2">{data.location}</p>
+                  <div className="bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
+                    <div className="flex items-center gap-1 py-1">
+                      {" "}
+                      <CiLocationOn className="h-4  w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
+                      <p className="">{data.location}</p>
+                    </div>
                   </div>
 
                   <Link
@@ -106,7 +114,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                         width={20}
                         height={20}
                       />
-                      <p className="text-[#313131] text-left leading-6">
+                      <p className="text-[#313131] text-left leading-5 md:leading-6">
                         Get a virtual tour of {data.university_name}
                       </p>
                     </div>
@@ -114,8 +122,11 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                 </div>
 
                 {/* Right Section */}
-                <div className="w-4/5 md:w-full lg:w-[60%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-4 md:p-4 2xl:p-12 flex flex-col justify-evenly items-center text-center">
-                  <p className="text-white w-[90%] md:w-4/5">
+                <div
+                  className="w-full md:w-4/5 md:h-4/5 lg:w-[60%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
+py-4 md:py-1 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
+                >
+                  <p className="text-white w-[90%] md:w-[90%]">
                     Book Your Online Video Counselling Session with WWAH
                     Advisor!
                   </p>
@@ -125,7 +136,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                     <div className="flex-1 border-t border-gray-100"></div>
                   </div>
                   <Link href="/contactus">
-                    <Button className="w-full px-[14vw] md:px-[7vw] py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
+                    <Button className="w-full px-[12vw] md:px-[5vw] md:py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
                       Apply Now
                     </Button>
                   </Link>
@@ -150,7 +161,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                 className="flex-shrink-0 w-[calc(100%/3)] sm:w-auto flex flex-col items-center text-center space-y-2"
               >
                 <div className="rounded-3xl flex items-center justify-center">
-                  <div className="relative h-16 w-16">
+                  <div className="relative h-12 w-12 sm:h-16 sm:w-16">
                     <Image
                       src={item.Image}
                       alt={item.Heading}

@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useCourseStore } from "@/store/useCoursesStore";
 import FilterComponent from "./components/Filtercomponent";
 import { Button } from "@/components/ui/button";
-import { SkeletonCard } from "@/components/skeleton"
+import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
 const Page = () => {
@@ -27,11 +27,16 @@ const Page = () => {
 
 const CourseArchive = () => {
   const {
-    courses, setSearch, setSortOrder,
-    currentPage, totalPages,
-    setPage, loading, fetchCourses
+    courses,
+    setSearch,
+    setSortOrder,
+    currentPage,
+    totalPages,
+    setPage,
+    loading,
+    fetchCourses,
   } = useCourseStore();
-  const [localSearch, setLocalSearch] = useState("")
+  const [localSearch, setLocalSearch] = useState("");
   const handleSearch = useCallback(
     debounce((value: string) => {
       setSearch(value);
@@ -63,17 +68,17 @@ const CourseArchive = () => {
             <Input
               placeholder="Search Course Name..."
               onChange={(e) => {
-                const value = String(e.target.value)
-                setLocalSearch(value)
-                handleSearch(value)
-              }
-              }
+                const value = String(e.target.value);
+                setLocalSearch(value);
+                handleSearch(value);
+              }}
               value={localSearch}
-              className="w-full h-8 border-none bg-transparent outline-none focus:ring-0"
+              // className="w-full h-8 border-none bg-transparent outline-none focus:ring-0"
+              className="w-full pl-2 pt-2 rounded-lg  bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
             />
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger className="bg-[#F1F1F1] rounded-md p-2 flex items-center gap-2 text-base text-gray-600">
+            <DropdownMenuTrigger className="bg-[#F1F1F1] rounded-md py-2 px-6 flex items-center gap-2 text-base text-gray-600">
               <MdOutlineSortByAlpha className="w-4 h-4" />
               <span>Sorting</span>
             </DropdownMenuTrigger>
@@ -95,18 +100,27 @@ const CourseArchive = () => {
       {loading ? (
         <SkeletonCard arr={12} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
-          {courses.length === 0 ? <p className="text-[20px] font-semibold col-span-4 text-center p-4 "> No courses Found </p> :
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4  md:p-4">
+          {courses.length === 0 ? (
+            <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
+              {" "}
+              No courses Found{" "}
+            </p>
+          ) : (
             courses.map((item, idx) => (
-              <div key={idx} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative h-52">
+              <div
+                key={idx}
+                className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3 "
+              >
+                <div className="relative h-52 p-2">
                   <ImageWithLoader
-                    src={item.universityData?.universityImages.banner || `/course-${idx}.png`}
+                    src={
+                      item.universityData?.universityImages.banner ||
+                      `/course-${idx}.png`
+                    }
                     alt="coursesImg"
                     sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
-                    // width={400}
-                    // height={250}
-                    className="object-cover"
+                    className="object-cover  rounded-2xl"
                   />
                 </div>
                 <div className="p-4 flex-grow">
@@ -116,13 +130,15 @@ const CourseArchive = () => {
                   <div className="grid grid-cols-2 gap-x-2 gap-y-4 mt-3">
                     <div className="flex items-center gap-2">
                       <Image
-                        src="/location.png"
+                        src="/location.svg"
                         alt="location"
                         width={16}
                         height={16}
                         className="w-4 h-4"
                       />
-                      <p className="text-sm text-gray-600 truncate">{item.countryname}</p>
+                      <p className="text-sm text-gray-600 truncate">
+                        {item.countryname}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
@@ -132,7 +148,9 @@ const CourseArchive = () => {
                         height={16}
                         className="w-4 h-4"
                       />
-                      <p className="text-sm text-gray-600 truncate">{item.intake}</p>
+                      <p className="text-sm text-gray-600 truncate">
+                        {item.intake}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
@@ -142,7 +160,9 @@ const CourseArchive = () => {
                         height={16}
                         className="w-4 h-4"
                       />
-                      <p className="text-sm text-gray-600 truncate">{item.duration}</p>
+                      <p className="text-sm text-gray-600 truncate">
+                        {item.duration}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
@@ -153,33 +173,54 @@ const CourseArchive = () => {
                         className="w-4 h-4"
                       />
                       <p className="text-sm text-gray-600 truncate">
-                        {item.annual_tuition_fee.currency} {item.annual_tuition_fee.amount}
+                        {item.annual_tuition_fee.currency}{" "}
+                        {item.annual_tuition_fee.amount}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-around mb-4 mt-auto px-2 gap-2">
+                <div className="flex justify-around mb-4 mt-auto gap-2">
                   <Link
                     href={`/courses/${item._id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-[50%] bg-red-500 rounded-lg"
                   >
-                    <button className="w-full text-white text-sm p-2">Course Details</button>
+                    <button className="w-full text-white text-sm p-2">
+                      Course Details
+                    </button>
                   </Link>
                   <button className="w-[50%] border border-red-500 text-red-500 text-sm p-2 rounded-lg">
                     Create Application
                   </button>
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
       )}
       <div className="flex justify-center items-center mt-6 gap-2">
-        {courses.length === 0 ? <span>{`Page ${currentPage} of ${totalPages}`}</span> : (<>
-          <Button className="bg-red-400" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>Previous</Button>
+        {courses.length === 0 ? (
           <span>{`Page ${currentPage} of ${totalPages}`}</span>
-          <Button className="bg-red-400" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}>Next</Button></>)}
+        ) : (
+          <>
+            <Button
+              className="bg-red-600"
+              disabled={currentPage === 1}
+              onClick={() => setPage(currentPage - 1)}
+            >
+              Previous
+            </Button>
+            <span>{`Page ${currentPage} of ${totalPages}`}</span>
+            <Button
+              className="bg-red-600"
+              disabled={currentPage === totalPages}
+              onClick={() => setPage(currentPage + 1)}
+            >
+              Next
+            </Button>
+          </>
+        )}
       </div>
     </section>
   );

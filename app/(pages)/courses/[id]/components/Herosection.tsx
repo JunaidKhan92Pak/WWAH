@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { CiLocationOn } from "react-icons/ci";
 interface CourseData {
   _id: string;
   countryname: string;
@@ -86,7 +87,7 @@ const Herosection = ({ data }: { data: CourseData }) => {
         <div className="w-full mx-auto ">
           {/* Hero Section */}
           <div
-            className="relative w-[90%] mx-auto rounded-3xl bg-no-repeat bg-cover bg-center overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center"
+            className="relative w-[95%] mx-auto rounded-3xl bg-no-repeat bg-cover bg-center overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center"
             style={{ backgroundImage: "url('/dcu-hero-img.png')" }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center justify-items-center sm:px-6 md:py-12 py-2 relative z-10">
@@ -99,18 +100,22 @@ const Herosection = ({ data }: { data: CourseData }) => {
                   height={130}
                   className="object-contain w-[100px] h-[100px] md:w-[130px] md:h-[130px]"
                 /> */}
-                <h1 className="text-white">{data.course_title}</h1>
+                <h2 className="text-white text-start font-bold">
+                  {data.course_title}
+                </h2>
                 <p className="text-white">{data.universityname}</p>
-                <div className="w-full sm:w-[60%] lg:w-[42%] p-3 bg-white bg-opacity-10 rounded-lg flex items-center 
-                justify-center text-white">
-                  <Image
-                    src="/CourseDetailPage/map-point.svg"
-                    alt="Location Icon"
-                    width={24}
-                    height={24}
-                  />
-                  <p className="ml-2 text-base">{data.location_campus ? data.location_campus : "Not Avialable"}</p>
+                <div className="bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
+                  <div className="flex items-center gap-1 py-1">
+                    <CiLocationOn className="h-4  w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
+
+                    <p className="ml-2 text-base">
+                      {data.location_campus
+                        ? data.location_campus
+                        : "Not Avialable"}
+                    </p>
+                  </div>
                 </div>
+               
               </div>
 
               <div className="w-[90%] md:w-full lg:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">

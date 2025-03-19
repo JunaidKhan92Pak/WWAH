@@ -41,34 +41,30 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
 
   return (
     <>
-      <section className="md:py-4 py-2 w-[90%] sm:w-[85%] md:w-[80%] mx-auto">
+      <section className="md:py-4 py-2 w-[90%] sm:w-[85%] md:w-[90%] xl:w-[85%] mx-auto">
         <h2 className="mb-4 text-center sm:text-left">
           Rankings & Achievements!
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-16 md:gap-10 bg-[#FCE7D2] p-2 sm:p-8 rounded-3xl justify-items-center items-start relative">
-          {/* Rankings */}
           <div className="relative">
             <h5 className="mb-4 text-center sm:text-left">Rankings:</h5>
             {ranking?.length > 0 &&
               ranking.map((item, index) => (
-                <div key={index} className="md:mb-4 mb-1">
+                <div key={index} className="md:mb-4 mb-1 md:space-y-5">
                   <p className="md:mb-0 mb-1 ">{item.name}</p>
                   <div className="relative bg-white rounded-md h-8 overflow-hidden w-full">
                     <div
                       className="bg-[#C7161E] text-white flex items-center justify-center h-8 rounded-r-lg"
-                      style={{ width: width[index] }} // Ensure it is in percentage or px
+                      style={{ width: width[index] }}
                     >
                       <p className="text-[14px]">Ranked {item.detail}</p>
                     </div>
                   </div>
                 </div>
-              ))
-            }
-            {/* Divider Line */}
-            <div className="absolute top-0 bottom-0 -right-20 md:-right-30 mt-6 w-px bg-gray-300 hidden xl:block"></div>
+              ))}
+            <div className="absolute top-0 bottom-0 -right-20 md:-right-10 mt-6 w-px bg-gray-300 hidden xl:block"></div>
           </div>
 
-          {/* Notable Alumni */}
           <div className="relative">
             <h5 className="mb-4 md:text-left text-center">Notable Alumni:</h5>
             <div className="grid md:grid-cols-1 grid-cols-2 gap-4 sm:gap-4">
@@ -79,7 +75,7 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
                 >
                   <div className="sm:w-12 sm:h-12 w-10 h-10 relative">
                     <Image
-                      src={alumni.image}
+                      src={alumni.image || "/user-dp.png"}
                       alt="alumini"
                       layout="fill"
                       objectFit="cover"
@@ -97,24 +93,19 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
                 </div>
               ))}
             </div>
-            {/* Divider Line */}
-            <div className="absolute top-0 bottom-0 -right-20 md:-right-30 mt-6 w-px bg-gray-300 hidden xl:block"></div>
+            <div className="absolute top-0 bottom-0 -right-20 md:-right-10 mt-6 w-px bg-gray-300 hidden xl:block"></div>
           </div>
 
-          {/* Key Achievements */}
           <div>
             <h5 className="mb-4 text-center sm:text-left">Key Achievements</h5>
-            {/* Container for achievements */}
             <div className="grid grid-cols-2 md:grid-cols-1 items-center sm:items-start gap-2 md:gap-4">
               {achievement.map((item, index) => (
                 <div
                   key={index}
                   className="flex flex-col items-center sm:items-start"
                 >
-                  {/* Image */}
                   <div className="relative w-10 h-10">
                     <Image
-                      // src={achievement.image}
                       src={icons[index]}
                       alt={"achievement"}
                       layout="fill"
@@ -122,7 +113,6 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
                       className="rounded-full"
                     />
                   </div>
-                  {/* Achievement Text */}
                   <p className="text-gray-700 text-center sm:text-left">
                     {item.title}
                   </p>

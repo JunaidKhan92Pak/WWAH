@@ -9,8 +9,8 @@ const Requireddocs = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-6 items-stretch">
           {/* Text Section */}
           <div className="bg-white p-2 md:p-6 rounded-2xl shadow-lg h-full">
-            <h4 className="lg:mb-2 mb-1">University Application Docs:</h4>
-            <h5 className="lg:mb-2 mb-1">Required Documents:</h5>
+            {/* <h4 className="lg:mb-2 mb-1">University Application Docs:</h4> */}
+            <h5 className="lg:mb-2 mb-1">Required Document list:</h5>
             <ul className="grid grid-cols-2 lg:gap-4 md:gap-2 gap-1 text-gray-700 leading-snug ">
               <li className="flex items-center space-x-2">
                 <span className="text-red-500 text-4xl">•</span>

@@ -5,21 +5,22 @@ interface ReadMoreProps {
   children: React.ReactNode;
   image: string;
 }
-const ReadMore: React.FC<ReadMoreProps> = ({ children, }) => {
+const ReadMore: React.FC<ReadMoreProps> = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div>
       <div
-        className={`text-[#9D9D9D] leading-relaxed ${isExpanded ? "line-clamp-none" : "line-clamp-3"
-          }`}
+        className={`text-[#9D9D9D] leading-relaxed ${
+          isExpanded ? "line-clamp-none" : "line-clamp-3"
+        }`}
       >
         {children}
       </div>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="text-[#9D9D9D] hover:underline my-2"
+        className="text-red-500 underline underline-offset-4 font-normal hover:font-semibold my-2"
       >
-        {isExpanded ? "Show Less" : "Read More"}
+        {isExpanded ? "Show Less" : "Read More..."}
       </button>
     </div>
   );
@@ -31,7 +32,7 @@ interface OverviewSectionProps {
   year: string | number;
   modrenday: string;
   univideo: string;
-  image: string;  // ✅ Add this line
+  image: string; // ✅ Add this line
 }
 const Overviewsection: React.FC<OverviewSectionProps> = ({
   overview,
@@ -50,8 +51,8 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
           {/* Background Image */}
           <div className="absolute inset-0 -z-10 bg-black"></div>
           <div className="w-[90%] mx-auto">
-            <div className="flex flex-col md:flex-row justify-between">
-              <div className="w-full md:w-3/4">
+            <div className="flex flex-col md:flex-row md:gap-4 justify-between items-center">
+              <div className="w-full md:w-1/2 ">
                 <h2 className="mb-2 md:mb-4">Overview!</h2>
                 {/* Wrap all content after overview inside ReadMore */}
                 <ReadMore image={image}>
@@ -70,30 +71,36 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
                   <p className="text-[#9D9D9D]">{modrenday}</p>
                 </ReadMore>
               </div>
-              <div className="w-full md:w-2/5">
+
+              <div className="w-full md:w-1/2">
                 {/* Image Section */}
-                <div className="relative rounded-3xl overflow-hidden shadow-lg w-full h-[200px] md:h-[300px] lg:h-[250px] 2xl:h-[600px]">
-                  <Image
-                    src={image}
-                    alt="University Image"
-                    layout="fill"
-                    objectFit="cover"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 flex justify-center items-end text-center bg-black/60 p-4 md:p-6">
-                    <div className="w-[90%] sm:w-[80%] md:w-[75%] lg:w-[85%]">
-                      <p className="text-white px-4 mb-3">
-                        Get a glimpse of your future at {name}!
-                      </p>
-                      <Link
-                        href={univideo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <button className="bg-white text-[#C7161E] px-2 md:px-4 py-1 rounded-md hover:bg-gray-300 transition">
-                          Watch ? Discover More
-                        </button>
-                      </Link>
+                <div className="flex flex-col items-center">
+                  {" "}
+                  {/* <div className="relative rounded-3xl overflow-hidden shadow-lg w-full h-[200px] md:h-[300px] lg:h-[250px] 2xl:h-[600px]"> */}
+                  <div className="relative rounded-3xl overflow-hidden shadow-lg w-[100%] sm:w-[80%] h-[200px] sm:h-[250px] md:h-[200px] lg:h-[280px]  2xl:h-[600px]">
+                    {" "}
+                    <Image
+                      src={image}
+                      alt="University Image"
+                      layout="fill"
+                      objectFit="cover"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 flex justify-center items-end text-center bg-black/50 p-4 md:p-6">
+                      <div className="w-[90%] sm:w-[80%] md:w-[75%] lg:w-[85%]">
+                        <p className="text-white px-4 mb-3">
+                          Get a glimpse of your future at {name}!
+                        </p>
+                        <Link
+                          href={univideo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <button className="bg-white text-[#C7161E] px-2 md:px-4 py-1 rounded-md hover:bg-gray-300 transition">
+                            Watch ? Discover More
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

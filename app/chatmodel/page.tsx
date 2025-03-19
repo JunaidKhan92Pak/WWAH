@@ -23,14 +23,17 @@ export default function Home() {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}chatZeus`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ userPrompt: trimmedInput }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}chatZeus`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ userPrompt: trimmedInput }),
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch AI response");
       }
@@ -55,9 +58,20 @@ export default function Home() {
   return (
     <>
       <div className="flex min-h-screen flex-col">
+        {/* Background Image */}
+        <div className="absolute top-0 left-0 w-full h-full z-0">
+          <Image
+            src="/bg-usa.png"
+            alt="Background Image"
+            layout="fill"
+            objectFit="cover"
+            className="absolute top-0 left-0 z-0 bg-[#FCE7D2]"
+          />
+        </div>
+        <div className="absolute inset-0 bg-[#FCE7D2] opacity-60 z-0"></div>
         {/* Header */}
         <header className="fixed top-0 w-full bg-white border-b z-10">
-          <div className="w-[90%] mx-auto px-4 py-3 flex items-center">
+          <div className="w-[90%] mx-auto sm:px-4 py-3 flex items-center">
             <div>
               <Image src="/logo.png" alt="Logo" width={113} height={45} />
             </div>
@@ -68,23 +82,26 @@ export default function Home() {
           </div>
         </header>
         {/* Chat Area */}
-        <main className="flex-1 w-[90%] mx-auto px-4 pt-20 pb-24">
+        <main className="relative flex-1 w-[90%] mx-auto sm:px-4 pt-20 pb-24 ">
           <ScrollArea className="h-[calc(100vh-8rem)] overflow-hidden">
             <div className="space-y-4 py-4 pb-16">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.isUser ? "justify-end" : "justify-start"
-                    }`}
+                  className={`flex ${
+                    message.isUser ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
-                    className={`flex gap-3 max-w-[55%] ${message.isUser ? "flex-row-reverse" : "flex-row"
-                      }`}
+                    className={`flex gap-3 max-w-[55%] ${
+                      message.isUser ? "flex-row-reverse" : "flex-row"
+                    }`}
                   >
                     <Avatar className="h-8 w-8">
                       <div
-                        className={`h-full w-full ${message.isUser ? "bg-blue-500" : "bg-gray-500"
-                          } flex items-center justify-center text-white`}
+                        className={`h-full w-full ${
+                          message.isUser ? "bg-blue-500" : "bg-gray-500"
+                        } flex items-center justify-center text-white`}
                       >
                         <Image
                           src={message.isUser ? "/user-dp.png" : "/zues-dp.png"}
@@ -95,8 +112,11 @@ export default function Home() {
                       </div>
                     </Avatar>
                     <Card
-                      className={`p-4 ${message.isUser ? "bg-white-500 text-black" : "bg-white"
-                        }`}
+                      className={`p-4 ${
+                        message.isUser
+                          ? "bg-[#F9CEA5] text-black"
+                          : "bg-[#F9CEA5]"
+                      }`}
                     >
                       <p className="whitespace-pre-line">{message.text}</p>
                     </Card>
@@ -108,9 +128,20 @@ export default function Home() {
           </ScrollArea>
         </main>
         {/* Chat Input */}
-        <div className="fixed bottom-0 w-full bg-white">
-          <div className="w-[90%] sm:[70%] lg:w-[58%] mx-auto py-2">
-            <div className="flex items-center border rounded-3xl shadow-sm gap-2 px-3 py-1">
+        <div className="fixed  bottom-0 w-full bg-white">
+          {/* Background Image */}
+          <div className="absolute top-0 left-0 w-full h-full z-0">
+            <Image
+              src="/bg-usa.png"
+              alt="Background Image"
+              layout="fill"
+              objectFit="cover"
+              className="absolute top-0 left-0 z-0 bg-[#FCE7D2]"
+            />
+          </div>
+          <div className="absolute inset-0 bg-[#FCE7D2] opacity-60 z-0"></div>
+          <div className="relative w-[90%] sm:[70%] lg:w-[58%] mx-auto py-2">
+            <div className="flex items-center border rounded-xl shadow-sm bg-white gap-2 px-3 py-1">
               <Image
                 src="/chatRobot.png"
                 alt="chatrobot"
@@ -176,9 +207,3 @@ export default function Home() {
     </>
   );
 }
-
-
-
-
-
-

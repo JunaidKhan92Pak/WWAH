@@ -134,7 +134,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <Herosec data={data.universityData} />
       <div>
         <div className="bg-white my-6 md:mt-12 md:mb-12">
-          <div className="w-[90%] mx-auto px-6">
+          <div className="w-[95%] mx-auto px-6">
             <div className="w-full flex flex-col lg:flex-row justify-center lg:justify-evenly items-center border-b border-gray-200">
               {tabs.map((tab) => (
                 <button

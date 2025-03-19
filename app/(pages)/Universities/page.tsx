@@ -84,13 +84,13 @@ const Page = () => {
             <div className="md:flex md:justify-between py-5">
                 <h3 className="font-bold">Discover Universities Worldwide</h3>
                 <div className="sm:flex items-center">
-                    <div className="w-full md:w-[70%] flex md:justify-end items-center p-2">
+                    <div className="w-full md:w-[70%] flex md:justify-end items-center py-2 md:p-2">
                         <div className="w-[95%] flex bg-[#F1F1F1] rounded-lg h-10">
                             <Image
                                 src="/search.svg"
                                 width={16}
                                 height={16}
-                                alt="search"
+                                alt="search"    
                                 className="ml-2"
                             />
                             <Input
@@ -108,7 +108,7 @@ const Page = () => {
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-11">
-                            <Image src="/filterr.svg" width={16} height={16} alt="filter" />{" "}
+                            <Image src="/filterr.svg" width={16} height={14} alt="filter" />{" "}
                             Filter
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="p-2 h-[260px]">
@@ -143,14 +143,14 @@ const Page = () => {
                 <SkeletonCard arr={12} />
             ) : (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 px-2">
                         {universities.length === 0 ? (
                             <p className="text-[20px] font-semibold col-span-4 text-center p-4">
                                 No Universities Found
                             </p>
                         ) : (
                             universities.map((item) => (
-                                <Link
+                                 <Link
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     href={`/Universities/${item._id}`}

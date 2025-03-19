@@ -16,7 +16,6 @@ interface DataType {
 }
 
 export const RightSection = ({ data }: { data: DataType }) => {
-
   const targetRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -25,7 +24,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="1" ref={targetRef}>
         <div className="flex items-center gap-4 p-3 ">
           <Image
-            src={"/visaguide/choose.png"}
+            src={"/visaguide/choose.svg"}
             alt={"choose progarm"}
             width={40}
             height={40}
@@ -58,7 +57,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="2" className="pb-4" ref={targetRef}>
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/register.png"}
+            src={"/visaguide/register.svg"}
             alt={"register"}
             width={40}
             height={40}
@@ -83,7 +82,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="3" className="pb-4" ref={targetRef}>
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/fee.png"}
+            src="/visaguide/fee.svg"
             alt={"fee"}
             width={40}
             height={40}
@@ -103,7 +102,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="4" className="pb-4" ref={targetRef}>
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/track.png"}
+            src="/visaguide/track.svg"
             alt={"track"}
             width={40}
             height={40}
@@ -122,7 +121,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="5" className="pb-4" ref={targetRef}>
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/offer.png"}
+            src={"/visaguide/offer.svg"}
             alt={"offer"}
             width={40}
             height={40}
@@ -152,7 +151,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="6" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/interview.png"}
+            src={"/visaguide/interview.svg"}
             alt={"fee"}
             width={40}
             height={40}
@@ -168,7 +167,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="7" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/process.png"}
+            src={"/visaguide/process.svg"}
             alt={"process"}
             width={40}
             height={40}
@@ -231,7 +230,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="8" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/submit.png"}
+            src={"/visaguide/submit.svg"}
             alt={"submit"}
             width={40}
             height={40}
@@ -246,7 +245,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="9" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/decision.png"}
+            src={"/visaguide/decision.svg"}
             alt={"fee"}
             width={40}
             height={40}
@@ -262,7 +261,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="10" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/recieve.png"}
+            src={"/visaguide/recieve.svg"}
             alt={"fee"}
             width={40}
             height={40}
@@ -277,7 +276,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="11" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/accommodation.png"}
+            src={"/visaguide/accommodation.svg"}
             alt={"fee"}
             width={40}
             height={40}
@@ -304,7 +303,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="12" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/prepare.svg"}
+            src={"/visaguide/accommodation.svg"}
             alt={"fee"}
             width={40}
             height={40}
@@ -329,7 +328,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
       <div id="13" className="pb-4">
         <div className="flex items-center gap-4 p-3  ">
           <Image
-            src={"/visaguide/post.svg"}
+            src={"/visaguide/accommodation.svg"}
             alt={"fee"}
             width={40}
             height={40}

@@ -12,8 +12,9 @@ import DreamStudy from "./components/DreamStudy";
 import Healthcare from "./components/Healthcare";
 import Banner from "@/components/ui/enrollment/Banner";
 import FAQ from "@/components/ui/enrollment/FAQ";
-
 import AccCrousel from "./components/AccCrousel";
+// import AccCrousel from "./components/AccCrousel";
+
 export default function Countrypage({
   params,
 }: {
@@ -50,7 +51,7 @@ export default function Countrypage({
     teaching_and_learning_approach?: string;
     multicultural_environment?: string;
     faqs: [];
-    accomodation_options: []
+    accomodation_options: [];
   }
 
   const [country, setCountry] = useState<Country>({
@@ -82,7 +83,7 @@ export default function Countrypage({
     visa_requirements: [],
     teaching_and_learning_approach: "",
     faqs: [],
-    accomodation_options: []
+    accomodation_options: [],
   });
   const fetchData = async () => {
     try {
@@ -109,7 +110,7 @@ export default function Countrypage({
 
   return country ? (
     <div>
-      <div className="w-[90%] mx-auto">
+      <div className="w-[95%] mx-auto">
         <Hero country={country} />
       </div>
       <StudyInUs
@@ -165,3 +166,4 @@ export default function Countrypage({
     <p>Loading....</p>
   );
 }
+ 

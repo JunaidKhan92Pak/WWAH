@@ -123,7 +123,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
             fill
             className="object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-black opacity-40"></div>
+          <div className="absolute inset-0 bg-black opacity-70"></div>
         </div>
         {/* Carousel Section */}
         <div className="px-2 sm:px-12">
@@ -142,14 +142,14 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                 <CarouselItem key={index}>
                   <div className="flex flex-col lg:flex-row justify-center gap-8 items-center">
                     {/* Image Section */}
-                    <div className="w-[95%] sm:w-[80%] lg:w-[25%] 2xl:w-[25%]">
+                    <div className="w-[95%] sm:w-[80%] lg:w-[35%] 2xl:w-[25%]">
                       <div className="rounded-3xl overflow-hidden shadow-lg">
                         <Image
                           src={slide.images[currentImages] ?? "/placeholder.jpg"}
                           alt={slide.title}
                           width={400}
                           height={300}
-                          className="object-cover w-full h-[180px] sm:h-[50vh] md:h-[60vh] lg:h-[40vh] xl:h-[40vh] 2xl:h-[55vh]"
+                          className="object-cover w-full h-[180px] sm:h-[50vh] md:h-[60vh] lg:h-[40vh] xl:h-[50vh] 2xl:h-[55vh]"
                         />
                       </div>
                     </div>

@@ -28,43 +28,10 @@ interface HeroProps {
     scholarships: string[];
     visa_requirements: string[];
     work_while_studying: string;
-    // accomodation_options: { name: string; description: string }[];
     teaching_and_learning_approach?: string;
     multicultural_environment?: string;
     faqs?: string[];
-  }
-
-  //   id: string;
-  //   country_name: string;
-  //   capital: string;
-  //   language: string;
-  //   population: number;
-  //   currency: string;
-  //   international_students: number;
-  //   academic_intakes: string;
-  //   dialing_code: number;
-  //   gdp: string;
-  //   why_study: string;
-  //   work_while_study: string;
-  //   work_after_study: string;
-  //   residency: string;
-  //   popular_programs: string[];
-  //   rent: string;
-  //   groceries: string;
-  //   transportation: string;
-  //   eating_out: string;
-  //   household_bills: string;
-  //   miscellaneous: string;
-  //   health: { name: string; description: string[] }[];
-  //   scholarships: string[];
-  //   visa_requirements: string[];
-  //   work_while_studying: string;
-  //   accomodation_options?: string;
-  //   teaching_and_learning_approach?: string;
-  //   multicultural_environment?: string;
-  //   faqs?: string[];
-  //   healthcare: string;
-  // };
+  };
 }
 
 const Hero: React.FC<HeroProps> = ({ country }) => {
@@ -127,11 +94,11 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
               alt="flag"
               width={80}
               height={80}
-              className="object-cover w-[55px] md:w-[40px] lg:w-1/10 xl:w-1/12"
+              className="object-cover w-[40px] md:w-[40px] lg:w-1/10 xl:w-1/12"
             />
-            <h1>Study In {country.country_name}</h1>
+            <h1 className="lg:w-[40%]">Study In {country.country_name}</h1>
           </div>
-          <p className="py-2">
+          <p className="py-2 lg:w-[40%]">
             Step Into Success with a{" "}
             <span className="text-[#F6B677] font-bold">World-Class</span>{" "}
             Education in the {country.country_name}.

@@ -1,15 +1,15 @@
 import React from "react";
-import choose from "../../../../../public/visaguide/choose.png";
-import accommodation from "../../../../../public/visaguide/accommodation.png";
-import desicion from "../../../../../public/visaguide/decision.png";
-import fee from "../../../../../public/visaguide/fee.png";
-import interview from "../../../../../public/visaguide/interview.png";
-import offer from "../../../../../public/visaguide/offer.png";
-import process from "../../../../../public/visaguide/process.png";
-import recieve from "../../../../../public/visaguide/recieve.png";
-import register from "../../../../../public/visaguide/register.png";
-import submit from "../../../../../public/visaguide/submit.png";
-import track from "../../../../../public/visaguide/track.png";
+import choose from "../../../../../public/visaguide/choose.svg";
+import accommodation from "../../../../../public/visaguide/accommodation.svg";
+import desicion from "../../../../../public/visaguide/decision.svg";
+import fee from "../../../../../public/visaguide/fee.svg";
+import interview from "../../../../../public/visaguide/interview.svg";
+import offer from "../../../../../public/visaguide/offer.svg";
+import process from "../../../../../public/visaguide/process.svg";
+import recieve from "../../../../../public/visaguide/recieve.svg";
+import register from "../../../../../public/visaguide/register.svg";
+import submit from "../../../../../public/visaguide/submit.svg";
+import track from "../../../../../public/visaguide/track.svg";
 
 import Image from "next/image";
 
