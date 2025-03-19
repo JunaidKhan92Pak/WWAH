@@ -6,6 +6,12 @@ import { calculateMajorSuccess } from "@/utils/calculateMajorSuccess";
 import { extractOverallScore } from "@/utils/extractEnglishScores";
 import { calculateEnglishSuccess } from "@/utils/calculateEnglishSuccess";
 import { ReactNode } from 'react';
+import { useUserStore } from '@/store/userStore';
+import { calculateGradeSuccess } from '@/utils/calculateGradeSuccess';
+import { calculateTuitionFeeSuccess } from '@/utils/calculateTuitionFeeSuccess';
+
+
+
 interface Factor {
     label: string;
     value: number;
@@ -63,15 +69,6 @@ const calculateDegreeSuccess = (studentDegree: string, requiredDegree: string): 
     return isEligible ? 100 : 10;
 };
 
-// Helper for Grades: calculates success percentage based on the gap between student's grade and required grade.
-const calculateGradeSuccess = (studentGrade: number, requiredGrade: number): number => {
-    const gap = requiredGrade - studentGrade;
-    if (gap <= 0) return 99;
-    if (gap > 0 && gap <= 10) return 90;
-    if (gap > 10 && gap <= 20) return 75;
-    if (gap > 20 && gap <= 30) return 50;
-    return 10;
-};
 const calculateWorkExperienceSuccess = (experienceYears: number): number => {
     if (experienceYears >= 1) return 100; // ✅ Full match
     if (experienceYears >= 0.5) return 75; // 🔹 6+ months
@@ -86,13 +83,6 @@ const extractGrades = (input: string) => {
         percentage: parseInt(percentMatch ? percentMatch[1] : "60"),
     };
 };
-// const extractMajorFromTitle = (courseTitle: string): string => {
-//     // Remove degree prefixes like "BA", "BSc", "MA", "MSc", "Honours"
-//     return courseTitle
-//         .replace(/^(BA Honours|BSc Honours|MA|MSc|PhD|Honours|BA|BSc)\s+/i, "")
-//         .replace(/\(Hons\)/i, "") // Remove "(Hons)"
-//         .trim(); // Remove extra spaces
-// };
 export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
     const { synonyms, loading, error } = useSynonyms();
     const [academicFactors, setAcademicFactors] = useState<Factor[]>([]);
@@ -101,7 +91,8 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
     const [overallFinancial, setOverallFinancial] = useState<number>(0);
     const [overallSuccess, setOverallSuccess] = useState<number | null>(null);
     console.log(overallSuccess);
-
+    const { user } = useUserStore();
+    console.log(user, "User From store in p")
     // Function to determine progress bar background color (kept per your design)
     const getProgressBarColor = (value: number) => {
         return value >= 75 ? "#87CE8B" : value >= 50 ? "#fff75e" : "#FE4343";
@@ -111,10 +102,12 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
     // 🔹 Calculate work experience success percentage
     const workExperienceSuccess = calculateWorkExperienceSuccess(userExperienceYears);
     const requiredMajor = extractMajorFromTitle(String(data.course_title || "").trim());
-    const userMajor = "Game"; // Replace with real user major from profile
+    const userMajor = user?.majorSubject.majorSubject || "Not Mention" // Replace with real user major from profile
     const majorSuccess = calculateMajorSuccess(userMajor, requiredMajor, synonyms);
-    const userTest = "IELTS"; // "IELTS" | "PTE" | "TOEFL"
-    const userScore = 5.0; // Example user's overall score
+    const userTest = user?.langPro.proficiencyTest || "Not Mention"
+        ; // "IELTS" | "PTE" | "TOEFL"
+    const userScore = user?.langPro.proficiencyTestScore || 0
+        ; // Example user's overall score
 
     // 🔹 Extract required overall score from text data
     const requiredScore =
@@ -128,15 +121,27 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
     const englishSuccess = calculateEnglishSuccess(userScore, requiredScore);
 
     useEffect(() => {
+
         // Dummy values for demonstration:
-        const studentDegree = "Bachelor"; // Example: student's degree
+        const studentDegree = user?.majorSubject.highestQualification || ""
+            ; // Example: student's degree
         const requiredDegree = data.course_level; // e.g., from course data (could also be data.degree_format)
         const degreeSuccess = calculateDegreeSuccess(studentDegree, requiredDegree);
-
-        const studentGrade = 90; // Example: student's grade score
-        const requiredGrade = extractGrades(data.entry_requirement); // Extract required grade percentage from entry requirement paragraph
-        const gradeSuccess = calculateGradeSuccess(studentGrade, requiredGrade.percentage);
-
+        // Grade Success calculation:
+        // Assume user's grade and grading scale come from user.profile
+        // For example, user's previous grading scale is "percentage" and their score is 45.
+        const requiredGradeValue = extractGrades(data.entry_requirement).percentage; // e.g., 60%
+        const studentGrade = user?.majorSubject.previousGradingScore || 45; // Replace with actual value if available
+        const studentScale: "percentage" | "letter" | "cgpa" | "passfail" = user?.majorSubject?.previousGradingScale || "percentage";
+        const gradeSuccess = calculateGradeSuccess(
+            studentGrade,
+            requiredGradeValue,
+            studentScale
+        );
+        // Convert course tuition fee from string to number and compare it with the user's tuition budget.
+        const courseTuitionFee = Number(data.annual_tuition_fee.amount);
+        const userTuitionBudget = Number(user?.userPreference?.tutionfees) || 0; // Assume this is available in user.financial
+        const tuitionFeeSuccess = calculateTuitionFeeSuccess(userTuitionBudget, courseTuitionFee);
         // Dummy academic and financial factors data
         const dummyData = {
             academicFactors: [
@@ -204,7 +209,7 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
             financialFactors: [
                 {
                     label: "Tuition Fee",
-                    value: 10,
+                    value: tuitionFeeSuccess,
                     icon: (
                         <Image
                             src="/fee-icon.png"
@@ -228,7 +233,6 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
                 },
             ],
         };
-
         // Simulate an API delay for demonstration
         setTimeout(() => {
             setAcademicFactors(dummyData.academicFactors);
@@ -249,6 +253,7 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
             setOverallSuccess(Number(overall.toFixed(2)));
         }, 1000);
     }, [data, calculateMajorSuccess]);
+    console.log(data);
 
     if (loading) return <p>Loading synonyms...</p>;
     if (error) return <p>Error loading synonyms: {error}</p>;

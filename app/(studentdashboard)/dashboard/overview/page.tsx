@@ -8,17 +8,17 @@ import ApplyingSection from "./components/ApplyingSection";
 import Coursesuggestion from "./components/Coursesuggestion";
 import { StatusProgressBar } from "../components/StatusProgressBar";
 import { useUserStore } from "@/store/useUserData";
-import { getAuthToken } from "@/authHelper";
+import { getAuthToken } from "@/utils/authHelper";
 
 const Page = () => {
-     const { user, fetchUserProfile } = useUserStore();
+  const { user, fetchUserProfile } = useUserStore();
 
-     useEffect(() => {
-       const token = getAuthToken();
-       if (token) {
-         fetchUserProfile(token);
-       }
-     }, []);
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token) {
+      fetchUserProfile(token);
+    }
+  }, []);
   // console.log(user)
   return (
     <>

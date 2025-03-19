@@ -272,7 +272,13 @@ const [successOpen, setSuccessOpen] = useState(false);
                     className="min-w-[300px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                   >
                     {/* University Image */}
-                    <div className="relative h-48">
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`/Universities/${uni._id}`}
+                      key={uni._id}
+                      className="relative h-48"
+                    >
                       <Image
                         src={uni.universityImages.banner}
                         alt={uni.name}
@@ -288,7 +294,7 @@ const [successOpen, setSuccessOpen] = useState(false);
                           height={40}
                         />
                       </div>
-                    </div>
+                    </Link>
                     {/* University Details */}
                     <div className="p-4">
                       <h6 className="font-semibold mb-2">

@@ -34,7 +34,7 @@ import { toast } from "sonner";
 import { countries } from "@/lib/countries";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserData";
-import { getAuthToken } from "@/authHelper";
+import { getAuthToken } from "@/utils/authHelper";
 // import { getAuthToken } from "@/authHelper";
 
 const formSchema = z.object({

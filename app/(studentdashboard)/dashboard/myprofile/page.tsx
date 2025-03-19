@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import HeroSection from "./components/HeroSection";
 import MyProfileInfo from "./components/MyProfileInfo";
 import { useRouter } from "next/navigation";
-import { getAuthToken } from "@/authHelper";
+import { getAuthToken } from "@/utils/authHelper";
 import { useUserStore } from "@/store/useUserData";
 
 const Page = () => {

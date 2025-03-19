@@ -10,8 +10,6 @@ export default function useSynonyms() {
             try {
                 const res = await fetch("/synonyms.json"); // Load from /public
                 const data = await res.json();
-                console.log(data, "data from synonyms.json");
-
                 setSynonyms(data);
             } catch (err) {
                 setError("Failed to load synonyms.");
