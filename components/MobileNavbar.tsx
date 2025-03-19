@@ -140,13 +140,13 @@ const MobileNavbar = () => {
           </div>
           <div>
             <NavigationMenu className="w-full">
-              <NavigationMenuList className="flex flex-col items-start  text-[14px] mx-8 my-6 gap-5 w-[136%]">
-                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+              <NavigationMenuList className="flex flex-col items-start  text-[14px] mx-6 my-6 gap-5 w-[100%]">
+                <NavigationMenuItem className="w-full border-b border-gray-600 pb-2">
                   <Link href="/countries" passHref>
                     <span className="block w-full">Study Destination</span>
                   </Link>
                 </NavigationMenuItem>
-                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+                <NavigationMenuItem className="w-full border-b border-gray-600 pb-2">
                   <Link href="/uniarchive" passHref>
                     <span className="block w-full">Universities</span>
                   </Link>
@@ -154,12 +154,12 @@ const MobileNavbar = () => {
                     <NavigationMenuLink href="#">Link</NavigationMenuLink>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
-                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+                <NavigationMenuItem className="w-full border-b border-gray-600 pb-2">
                   <Link href="/coursearchive" passHref>
                     <span className="block w-full">Courses</span>
                   </Link>
                 </NavigationMenuItem>
-                <NavigationMenuItem className="w-full border-b border-gray-300 pb-2">
+                <NavigationMenuItem className="w-full border-b border-gray-600 pb-2">
                   <Link href="">
                     {" "}
                     <span className="block w-full">Scholarships</span>

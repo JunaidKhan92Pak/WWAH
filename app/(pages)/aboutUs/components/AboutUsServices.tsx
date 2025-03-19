@@ -36,9 +36,9 @@ export default function AboutUsServices() {
           <div className="flex items-start space-x-2">
             <span className="block md:hidden">-</span>
             <p className="text-gray-900 leading-tight">
-              <p className="font-bold">Comprehensive Course Listings: </p>Browse thousands of
-              courses from institutions worldwide, categorized for easy
-              navigation.
+              <p className="font-bold">Comprehensive Course Listings: </p>Browse
+              thousands of courses from institutions worldwide, categorized for
+              easy navigation.
             </p>
           </div>
           <div className="flex items-start space-x-2">
@@ -57,7 +57,7 @@ export default function AboutUsServices() {
                 </>
               )}
               <span
-                className="text-black font-semibold cursor-pointer"
+                className="text-red-600 font-semibold hover:font-bold cursor-pointer"
                 onClick={() => toggleReadMore("application")}
               >
                 {isExpanded.application ? " Show less" : " Read more..."}
@@ -78,7 +78,7 @@ export default function AboutUsServices() {
                 </>
               )}
               <span
-                className="text-black font-semibold cursor-pointer"
+                className="text-red-600 font-semibold hover:font-bold cursor-pointer"
                 onClick={() => toggleReadMore("transportation")}
               >
                 {isExpanded.transportation ? " Show less" : " Read more..."}
@@ -115,7 +115,7 @@ export default function AboutUsServices() {
                 </>
               )}
               <span
-                className="text-black font-semibold cursor-pointer"
+                className="text-red-600 font-semibold hover:font-bold cursor-pointer"
                 onClick={() => toggleReadMore("accommodation")}
               >
                 {isExpanded.accommodation ? " Show less" : " Read more..."}
@@ -125,9 +125,9 @@ export default function AboutUsServices() {
           <div className="flex items-start space-x-2">
             <span className="block md:hidden">-</span>
             <p className="text-gray-900 leading-tight">
-              <p className="font-bold">Resources and Support:</p>Access a wealth of resources,
-              including application tips, scholarship information, and career
-              advice.
+              <p className="font-bold">Resources and Support:</p>Access a wealth
+              of resources, including application tips, scholarship information,
+              and career advice.
             </p>
           </div>
         </div>
