@@ -28,7 +28,7 @@ export default function Banner({
             className="absolute top-0 left-0 z-0 bg-[#FCE7D2]"
           />
         </div>
-        <div className="absolute inset-0 bg-[#FCE7D2] opacity-60 z-0"></div>
+        <div className="absolute inset-0 bg-[#FCE7D2] opacity-80 z-0"></div>
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center w-full gap-4 sm:flex-row sm:justify-between  my-4 sm:my-10 ">

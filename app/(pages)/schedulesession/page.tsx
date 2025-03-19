@@ -87,11 +87,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FCE7D2] py-6 px-4 ">
+    <div className="min-h-screen bg-[#FCE7D2] py-12 px-4 ">
       <div className="max-w-3xl mx-auto">
-        <h4 className="text-center">Schedule a session with WWAH Advisors</h4>
+        <h5 className="text-center font-bold py-2">
+          Schedule a session with WWAH Advisors
+        </h5>
         <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h5 className=" text-center mb-8">Enter Details</h5>
+          <h6 className=" text-center mb-8">Enter Details:</h6>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -374,13 +376,16 @@ export default function Home() {
               </div>
 
               <div className="flex justify-end mt-8">
-                <Button type="submit" className="w-full md:w-auto bg-red-700 hover:bg-red-700">
+                <Button
+                  type="submit"
+                  className="w-full md:w-auto bg-red-700 hover:bg-red-700"
+                >
                   Submit
                 </Button>
               </div>
             </form>
           </Form>
-        </div> 
+        </div>
       </div>
     </div>
   );

@@ -97,7 +97,7 @@ export default function AboutUsServices() {
             alt="divider"
             width={40}
             height={100}
-            className="h-max"
+            className="h-max "
           />
         </div>
         <div className="space-y-6">

@@ -143,7 +143,7 @@ const Page = () => {
                 <SkeletonCard arr={12} />
             ) : (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 px-2">
                         {universities.length === 0 ? (
                             <p className="text-[20px] font-semibold col-span-4 text-center p-4">
                                 No Universities Found
