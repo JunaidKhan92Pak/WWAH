@@ -112,18 +112,21 @@ function Page() {
       name: "IELTS",
       overallScore: "6.5",
       subScore: "6.0",
+      link: "ilets",
       description: "Minimum Sub Score: 6.0",
     },
     {
       name: "TOEFL iBET",
       overallScore: "90",
       subScore: "20",
+      link: "pte",
       description: "Minimum Sub Score: 20 in each band",
     },
     {
       name: "CAEL",
       overallScore: "70",
       subScore: "60",
+      link: "toefl",
       description: "Minimum Sub Score: 60",
     },
   ];
@@ -150,12 +153,12 @@ function Page() {
       <section className="bg-white mt-6 lg:mt-12 mb-6">
         <div className=" mx-auto w-[92%]">
           {/* Navigation Tabs */}
-          <div className="w-full lg:w-[90%] flex flex-col lg:flex-row justify-center lg:justify-start items-center border-b border-gray-200">
+          <div className="w-full lg:w-[95%] flex overflow-x-auto scrollbar-hide border-b border-gray-200">
             {tabs.map((tab) => (
               <Button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`font-medium transition text-sm md:text-lg hover:bg-[#FCE7D2] hover:text-black px-2 py-2 md:rounded-t-xl w-full border-b border-gray-400 md:border-none ${
+                className={`font-medium transition text-sm md:text-lg hover:bg-[#FCE7D2] hover:text-black px-4 py-2 md:rounded-t-xl flex-shrink-0 border-b border-gray-400 md:border-none ${
                   activeTabPro === tab.id
                     ? "bg-[#C7161E] text-white"
                     : "bg-transparent text-gray-800"
@@ -165,6 +168,7 @@ function Page() {
               </Button>
             ))}
           </div>
+
           {/* Course Overview */}
           <div
             id="courseOverview"
@@ -369,7 +373,7 @@ function Page() {
           </div>
         </div>
       </section>
-      {/* fee and scholarship     */}
+      {/* fee and scholarship*/}
       <section id="feeScholarships" className=" w-[90%] mx-auto">
         <h2 className="pb-2">Fee and Scholarships!</h2>
 
@@ -642,7 +646,7 @@ function Page() {
                   </h6>
                   <p className="text-gray-400 md:mb-4">{req.description}</p>
                   <a
-                    href={`/details/${req.name.toLowerCase()}`}
+                    href={`/${req.link}`}
                     className="text-red-500 hover:text-red-400 underline"
                   >
                     View Detail
@@ -661,7 +665,7 @@ function Page() {
               <p className="text-gray-400 mb-4">
                 Book your IELTS/PTE Classes with us and Start preparing Today!
               </p>
-              <Link href="/contactus">
+              <Link href="/form">
                 <Button
                   className="w-full bg-[#545454] hover:bg-zinc-700 text-white py-2 rounded"
                   onClick={() => {}}

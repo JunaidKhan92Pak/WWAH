@@ -6,6 +6,13 @@ import React, {
   useRef,
   useState,
 } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { GoShareAndroid } from "react-icons/go";
 import { PiPersonSimpleCircleLight } from "react-icons/pi";
 import Image from "next/image";
@@ -67,7 +74,24 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({
   bgColor,
   currency,
 }) => (
+const BreakdownItem: React.FC<BreakdownItemProps> = ({
+  iconSrc,
+  label,
+  cost,
+  bgColor,
+  currency,
+}) => (
   <div className="flex-shrink-0 w-[calc(100%/3)] sm:w-auto flex flex-col items-center text-left md:text-center rounded-lg">
+    <div
+      className={`p-4 sm:px-12 sm:py-6 md:px-6 lg:px-8 xl:px-10 lg:py-8 rounded-xl ${bgColor}`}
+    >
+      <Image
+        src={iconSrc}
+        alt={label}
+        width={300}
+        height={300}
+        className="h-6 w-6 md:w-6 md:h-6"
+      />
     <div
       className={`p-4 sm:px-12 sm:py-6 md:px-6 lg:px-8 xl:px-10 lg:py-8 rounded-xl ${bgColor}`}
     >
@@ -89,6 +113,8 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({
 const Page = () => {
   const { expenses, loading, error, setUniversity, fetchExpenses } =
     useExpenseStore();
+  const { expenses, loading, error, setUniversity, fetchExpenses } =
+    useExpenseStore();
   const { universities, fetchUniversities } = useUniversityStore();
   // Fetch universities on mount
   useEffect(() => {
@@ -100,6 +126,8 @@ const Page = () => {
   const selectedData =
     expenses &&
     expenses[0]?.lifestyles.find((life) => life.type === selectedLifestyle);
+    expenses &&
+    expenses[0]?.lifestyles.find((life) => life.type === selectedLifestyle);
   // University search and dropdown state
   const [searchTermUni, setSearchTermUni] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -107,6 +135,11 @@ const Page = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   // Memoize filtered universities for performance
   const filteredUniversities = useMemo(() => {
+    return universities.filter(
+      (uni) =>
+        (!selectedCountry ||
+          uni.country_name.toLowerCase() === selectedCountry.toLowerCase()) &&
+        uni.university_name.toLowerCase().includes(searchTermUni.toLowerCase())
     return universities.filter(
       (uni) =>
         (!selectedCountry ||
@@ -187,6 +220,11 @@ const Page = () => {
                 your expected costs in no time. Just follow these quick steps to
                 get an accurate snapshot of your monthly expenses for housing,
                 food, transportation, and more.
+                Planning your study abroad journey? We&aposv;e made budgeting
+                easy! With our living expense calculator, you can break down
+                your expected costs in no time. Just follow these quick steps to
+                get an accurate snapshot of your monthly expenses for housing,
+                food, transportation, and more.
               </p>
             </div>
           </div>
@@ -235,6 +273,10 @@ const Page = () => {
                             key={index}
                             className="basis-1/4 md:basis-1/4 lg:basis-1/6 2xl:basis-1/12"
                           >
+                          <CarouselItem
+                            key={index}
+                            className="basis-1/4 md:basis-1/4 lg:basis-1/6 2xl:basis-1/12"
+                          >
                             <div className="flex aspect-square items-center justify-center">
                               <div className="flex flex-col items-center">
                                 <div className="w-[60px] flex justify-center items-center">
@@ -243,6 +285,14 @@ const Page = () => {
                                     alt={image.alt}
                                     width={200}
                                     height={200}
+                                    onClick={() =>
+                                      handleSelectCountry(image.name)
+                                    }
+                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${
+                                      selectedCountry === image.name
+                                        ? "border-[#F0851D] border-2"
+                                        : "border-0"
+                                    }`}
                                     onClick={() =>
                                       handleSelectCountry(image.name)
                                     }
@@ -296,11 +346,17 @@ const Page = () => {
                             onClick={() =>
                               handleSelectUniversity(uni.university_name)
                             }
+                            onClick={() =>
+                              handleSelectUniversity(uni.university_name)
+                            }
                           >
                             {uni.university_name} ({uni.country_name})
                           </li>
                         ))
                       ) : (
+                        <li className="p-2 text-gray-500">
+                          No universities found
+                        </li>
                         <li className="p-2 text-gray-500">
                           No universities found
                         </li>
@@ -314,11 +370,17 @@ const Page = () => {
                   <h5 className="text-gray-800 mb-2 mt-4">
                     Accommodation Type
                   </h5>
+                  <h5 className="text-gray-800 mb-2 mt-4">
+                    Accommodation Type
+                  </h5>
                   <div className="grid grid-cols-2 gap-6">
                     <button className="flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg hover:bg-gray-100">
                       <GoShareAndroid className="w-8 h-8 mb-2" />
                       <div className="flex flex-col items-center">
                         <p className="text-gray-700 font-normal">Shared</p>
+                        <p className="text-gray-700 font-normal">
+                          Accommodation
+                        </p>
                         <p className="text-gray-700 font-normal">
                           Accommodation
                         </p>
@@ -331,6 +393,9 @@ const Page = () => {
                         <p className="text-gray-700 font-normal">
                           Accommodation
                         </p>
+                        <p className="text-gray-700 font-normal">
+                          Accommodation
+                        </p>
                       </div>
                     </button>
                   </div>
@@ -340,6 +405,34 @@ const Page = () => {
                   <h5 className="text-gray-800 mt-4 mb-2">Lifestyle</h5>
                   <div className="grid grid-cols-2 gap-6">
                     {expenses &&
+                      expenses[0]?.lifestyles.map(
+                        (lifestyle: { type: keyof typeof lifestyleIcons }) => {
+                          const LifestyleIcon =
+                            lifestyleIcons[lifestyle.type] || BsBagCheck;
+                          return (
+                            <button
+                              key={lifestyle.type}
+                              className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${
+                                lifestyle.type === "luxury_lifestyle"
+                                  ? "col-span-2"
+                                  : "col-span-1"
+                              } ${
+                                selectedLifestyle === lifestyle.type
+                                  ? "bg-gray-100"
+                                  : "bg-none"
+                              }`}
+                              onClick={() =>
+                                setSelectedLifestyle(lifestyle.type)
+                              }
+                            >
+                              <LifestyleIcon className="w-8 h-8 mb-2 text-gray-700" />
+                              <p className="font-normal text-gray-700">
+                                {lifestyle.type.replace("_", " ").toUpperCase()}
+                              </p>
+                            </button>
+                          );
+                        }
+                      )}
                       expenses[0]?.lifestyles.map(
                         (lifestyle: { type: keyof typeof lifestyleIcons }) => {
                           const LifestyleIcon =
@@ -406,8 +499,16 @@ const Page = () => {
                       <h3 className="font-bold text-center pt-4 sm:py-6">
                         Breakdown
                       </h3>
+                      <h3 className="font-bold text-center pt-4 sm:py-6">
+                        Breakdown
+                      </h3>
                       <div
                         className="flex overflow-x-auto md:grid md:grid-cols-3 gap-3 lg:gap-y-8 gap-y-3 lg:px-4 sm:py-6 py-4 rounded-lg"
+                        style={{
+                          scrollbarWidth: "none",
+                          msOverflowStyle: "none",
+                        }}
+                      >
                         style={{
                           scrollbarWidth: "none",
                           msOverflowStyle: "none",
@@ -459,6 +560,34 @@ const Page = () => {
                     </div>
                   </>
                 ) : (
+                  <div className="flex flex-col justify-around w-full bg-white px-2 p-4 lg:p-6 rounded-lg space-y-4">
+                    <h4 className="w-full lg:w-2/3 font-bold text-gray-800 leading-tight">
+                      Your Estimated Living Expense will be:
+                    </h4>
+                    <input
+                      type="text"
+                      disabled
+                      placeholder="EX: £ 0 - 100"
+                      className="w-full border border-gray-300 rounded-lg text-start font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-600 px-4 py-2"
+                    />
+                    <p className="text-gray-500 ">
+                      = (PKR 517,334 - PKR 661,038)
+                    </p>
+                    <div className=" bg-gray-100 rounded-lg p-2 md:p-6">
+                      <div className="flex justify-center">
+                        <Image
+                          src="/trackexpense/calculator.svg"
+                          alt="Calculator Illustration"
+                          width={200}
+                          height={200}
+                          className="object-contain"
+                        />
+                      </div>
+                      <p className="text-gray-700  text-center font-semibold">
+                        Your Expense Breakdowns will be shown here...
+                      </p>
+                    </div>
+                  </div>
                   <div className="flex flex-col justify-around w-full bg-white px-2 p-4 lg:p-6 rounded-lg space-y-4">
                     <h4 className="w-full lg:w-2/3 font-bold text-gray-800 leading-tight">
                       Your Estimated Living Expense will be:

@@ -91,9 +91,15 @@ const Herosection = () => {
               </Link>
               </div> */}
               <div className="w-[90%] md:w-full lg:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
-                <p className="text-white w-4/5">
-                  Book Your Online Video Counselling Session with WWAH Advisor!
-                </p>
+                <Link
+                  href="/schedulesession"
+                  className="[text-align:-webkit-center]"
+                >
+                  <p className="text-white w-4/5 hover:underline">
+                    Book Your Online Video Counselling Session with WWAH
+                    Advisor!
+                  </p>
+                </Link>
                 <div className="flex items-center w-[50%] my-2">
                   <div className="flex-1 border-t border-gray-100"></div>
                   <p className="mx-4 text-white">Or</p>
