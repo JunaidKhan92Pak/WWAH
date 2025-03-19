@@ -8,7 +8,6 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  // const router = useRouter();
 
   // Login function
   const loginAction = async (userData) => {
@@ -59,28 +58,25 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email }),
         credentials: "include",
       });
-  
+
       if (!response.ok) {
         const errorRes = await response.json();
         console.error(`Error ${response.status}: ${errorRes.message || "Unknown error"}`);
         return { success: false, message: errorRes.message || "Failed to process request." };
       }
-  
+
       // Ensure the structure of the response is consistent
       const forgotRes = await response.json();
       return {
         success: forgotRes.success || false,
         message: forgotRes.message || "Unexpected response structure.",
       };
-  
+
     } catch (error) {
       console.error("Network or server error in forgetAction:", error);
       return { success: false, message: "An unexpected error occurred. Please try again later." };
     }
   };
-  
-  
-
   const verifyOtpAction = async (enteredOtp) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}verifyOtp`, {
@@ -98,29 +94,29 @@ export const AuthProvider = ({ children }) => {
 
     }
   };
-  
+
   const resetPasswordAction = async (newPassword) => {
     try {
       console.log("Sending reset request with payload:", { newPassword });
-  
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}resetpassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          
+
         },
         credentials: "include",
 
         body: JSON.stringify({ newPassword }),
 
       });
-  
+
       if (!response.ok) {
         const errorRes = await response.json();
         console.error("Backend error:", errorRes);
         throw new Error(errorRes.message || "Failed to reset password");
       }
-  
+
       const data = await response.json();
       console.log("Successful response:", data);
       return data;
@@ -129,8 +125,8 @@ export const AuthProvider = ({ children }) => {
       throw new Error("Something went wrong. Please try again later.");
     }
   };
-  
-  
+
+
 
 
   // Logout function
@@ -145,22 +141,22 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
       });
-  
+
       // Ensure response is OK (status 200)
       if (!response.ok) {
         throw new Error("Failed to log out");
       }
-  
+
       // Optionally, handle any response data if needed (e.g., success message)
       const res = await response.json();
-      
+
       console.log("Logout successful:", res);
       // Remove the authToken cookie from client-side (clear the cookie)
       document.cookie = "authToken=; max-age=0; path=/";
       // window.scrollTo(0, 0);  // Clears the cookie
       return res
       // Redirect user to a public page (e.g., /signin)
-      
+
     } catch (error) {
       console.log(`There was an error during logout: ${error}`);
     }

@@ -10,7 +10,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { useAuth } from "../app/(auth)/auth/authProvider";
-import { getAuthToken } from "@/authHelper";
+import { getAuthToken } from "@/utils/authHelper";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -58,11 +58,11 @@ const MobileNavbar = () => {
               <Image src="/logo.png" alt="logo" width={50} height={45} />
 
               {/* Navigation Menu */}
-             
+
 
               {/* Conditional Rendering */}
               <div className="flex gap-2 md:gap-5">
-                {isAuthenticated ? (  
+                {isAuthenticated ? (
                   // Profile Dropdown for Logged-in Users
                   <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
                     <button
@@ -134,13 +134,13 @@ const MobileNavbar = () => {
                 ) : (
                   // Login/Signup Buttons for Guests
                   <>
-                  <div>
-                    <Link href="/signin">
-                      <Button className="text-[10px] w-10 h-6 px-4 bg-red-700 text-white" variant="outline">
-                        Login
-                      </Button>
-                    </Link>
-                  
+                    <div>
+                      <Link href="/signin">
+                        <Button className="text-[10px] w-10 h-6 px-4 bg-red-700 text-white" variant="outline">
+                          Login
+                        </Button>
+                      </Link>
+
                     </div>
                   </>
                 )}
@@ -148,20 +148,20 @@ const MobileNavbar = () => {
             </div>
           </div>
           <div>
-                <NavigationMenu>
-                  <NavigationMenuList className="flex flex-col items-start gap-5 text-[14px] m-8 ">
-                    <NavigationMenuItem>Study Destination</NavigationMenuItem>
-                    <NavigationMenuItem>
-                      Universities
-                      <NavigationMenuContent>
-                        <NavigationMenuLink href="#">Link</NavigationMenuLink>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>Programs</NavigationMenuItem>
-                    <NavigationMenuItem>Scholarships</NavigationMenuItem>
-                  </NavigationMenuList>
-                </NavigationMenu>
-              </div>
+            <NavigationMenu>
+              <NavigationMenuList className="flex flex-col items-start gap-5 text-[14px] m-8 ">
+                <NavigationMenuItem>Study Destination</NavigationMenuItem>
+                <NavigationMenuItem>
+                  Universities
+                  <NavigationMenuContent>
+                    <NavigationMenuLink href="#">Link</NavigationMenuLink>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                <NavigationMenuItem>Programs</NavigationMenuItem>
+                <NavigationMenuItem>Scholarships</NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
         </SheetContent>
       </Sheet>
     </div>

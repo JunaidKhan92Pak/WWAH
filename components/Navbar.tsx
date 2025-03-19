@@ -12,7 +12,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { useAuth } from "../app/(auth)/auth/authProvider";
-import { getAuthToken } from "@/authHelper";
+import { getAuthToken } from "@/utils/authHelper";
 import { useRouter } from "next/navigation";
 const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);

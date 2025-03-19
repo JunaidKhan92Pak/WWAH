@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import CompleteApplicationModal from "../completeapplication/components/CompleteApplicationModal";
 import { useUserStore } from "@/store/useUserData";
-import { getAuthToken } from "@/authHelper";
+import { getAuthToken } from "@/utils/authHelper";
 
 const sidebarItems = [
   {
@@ -54,7 +54,7 @@ const sidebarItems = [
 
 
 export function Sidebar() {
-   const { user, fetchUserProfile } = useUserStore();
+  const { user, fetchUserProfile } = useUserStore();
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   useEffect(() => {
@@ -115,7 +115,7 @@ export function Sidebar() {
         <CompleteApplicationModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onCompleteApplication={() => {}}
+          onCompleteApplication={() => { }}
         />
       )}
     </div>

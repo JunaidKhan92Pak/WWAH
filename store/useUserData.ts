@@ -1,108 +1,3 @@
-// import { create } from "zustand";
-
-// interface User {
-//   id: string;
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   contactNo: string;
-//   dob: string;
-//   country: string;
-//   nationality: string;
-//   gender: string;
-//   city: string;
-//   createdAt: string;
-//   updatedAt: string;
-//   user: {
-//     firstName: string;
-//     lastName: string;
-//     email: string;
-//     contactNo: string;
-//     dob: string;
-//     country: string;
-//     nationality: string;
-//     gender: string;
-//     city: string;
-//     createdAt: string;
-//     updatedAt: string;
-//   };
-//   AcademmicInfo: {
-//     highestQualification: string;
-//     majorSubject: string;
-//     previousGradingScale: string;
-//     previousGradingScore: string;
-//     standarizedTest: string;
-//     standarizedTestScore: string;
-//     institutionName: string;
-//     startdate: Date;
-//     endDate: Date;
-//     createdAt: Date;
-//     updatedAt: Date;
-//   };
-//   LanguageProf: {
-//     proficiencyLevel: string;
-//     proficiencyTest: string;
-//     proficiencyTestScore: string;
-//     createdAt: Date;
-//     updatedAt: Date;
-//   };
-//   UserPref: {
-//     perferredCountry: string;
-//     perferredCity: string;
-//     degreeLevel: string;
-//     fieldOfStudy: string;
-//     livingcost: string;
-//     tutionfees: string;
-//     studyMode: string;
-//     currency: string;
-//     createdAt: Date;
-//     updatedAt: Date;
-//   };
-// }
-
-// interface UserStore {
-//   user: User | null;
-//   loading: boolean;
-//   error: string | null;
-//   fetchUserProfile: (token: string) => Promise<void>;
-//   setUser: (user: User | null) => void;
-// }
-
-// export const useUserStore = create<UserStore>((set) => ({
-//   user: null,
-//   loading: false,
-//   error: null,
-
-//   fetchUserProfile: async (token) => {
-//     try {
-//       set({ loading: true, error: null });
-
-//       const response = await fetch(
-//         `${process.env.NEXT_PUBLIC_BACKEND_API}profile`,
-//         {
-//           method: "GET",
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//           credentials: "include",
-//         }
-//       );
-
-//       if (!response.ok) {
-//         throw new Error("Failed to fetch user data");
-//       }
-
-//       const user = await response.json();
-//       set({ user, loading: false });
-//     } catch (error) {
-//       console.error("Error fetching profile:", error);
-//       set({ error: (error as Error).message, loading: false });
-//     }
-//   },
-
-//   setUser: (user) => set({ user }),
-// }));
 
 import { create } from "zustand";
 
@@ -119,7 +14,6 @@ interface AcademmicInfo {
   createdAt: Date;
   updatedAt: Date;
 }
-
 interface LanguageProf {
   proficiencyLevel: string;
   proficiencyTest: string;
@@ -188,7 +82,6 @@ export const useUserStore = create<UserStore>((set) => ({
   fetchUserProfile: async (token) => {
     try {
       set({ loading: true, error: null });
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}profile`,
         {
@@ -209,9 +102,6 @@ export const useUserStore = create<UserStore>((set) => ({
       // Map API response to match the updated User interface
       const user: User = {
         ...userData,
-        // academicInfo: userData.AcademmicInfo, // Ensure correct mapping
-        // languageProficiency: userData.LanguageProf,
-        // userPreferences: userData.UserPref,
       };
 
       set({ user, loading: false });
