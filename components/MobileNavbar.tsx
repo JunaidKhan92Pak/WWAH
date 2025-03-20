@@ -83,11 +83,6 @@ const MobileNavbar = () => {
             <div className="flex justify-around">
               {/* Logo */}
               <Image src="/logo.png" alt="logo" width={50} height={45} />
-
-              {/* Navigation Menu */}
-
-
-              {/* Conditional Rendering */}
               <Image
                 src="/logo.png"
                 alt="logo"
@@ -97,86 +92,73 @@ const MobileNavbar = () => {
               />
               <div className="flex gap-2 md:gap-5">
                 {isAuthenticated ? (
-                  // Profile Dropdown for Logged-in Users
                   <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
-                    {isAuthenticated ? (
-                      <div className="relative flex items-center space-x-3">
-                        <button
-                          type="button"
-                          className="flex text-sm bg-gray-800 rounded-full"
-                          onClick={toggleDropdown}
-                        >
-                          <span className="sr-only">Open user menu</span>
-                          <FaCircleUser className="bg-white text-xl" />
-                        </button>
-                        {isDropdownOpen && (
-                          <div className="absolute right-1 top-10 z-20 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow">
-                            <div className="px-4 py-3">
-                              <span className="block text-sm text-gray-900">
-                                {"Bonnie Green"}
+                    <button
+                      type="button"
+                      className="flex text-sm bg-gray-800 rounded-full"
+                      onClick={toggleDropdown}
+                    >
+                      <span className="sr-only">Open user menu</span>
+                      <FaCircleUser className="bg-white text-xl" />
+                    </button>
+                    {isDropdownOpen && (
+                      <div className="absolute right-1 top-10 z-20 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow">
+                        <div className="px-4 py-3">
+                          <span className="block text-sm text-gray-900">Bonnie Green</span>
+                          <span className="block text-sm text-gray-500 truncate">
+                            name@flowbite.com
+                          </span>
+                        </div>
+                        <ul className="py-2">
+                          <li>
+                            <Link href="/completeprofile" onClick={() => setIsOpen(false)}>
+                              <span className="block px-4 py-2 text-sm hover:bg-gray-100">
+                                Dashboard
                               </span>
-                              <span className="block text-sm text-gray-500 truncate">
-                                {"name@flowbite.com"}
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/chatmodel" onClick={() => setIsOpen(false)}>
+                              <span className="block px-4 py-2 text-sm hover:bg-gray-100">
+                                Chat with ZEUS
                               </span>
-                            </div>
-                            <ul className="py-2">
-                              <li>
-                                <Link
-                                  href="/completeprofile"
-                                  onClick={() => setIsOpen(false)}
-                                >
-                                  <span className="block px-4 py-2 text-sm hover:bg-gray-100">
-                                    Dashboard
-                                  </span>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link
-                                  href="/chatmodel"
-                                  onClick={() => setIsOpen(false)}
-                                >
-                                  <span className="block px-4 py-2 text-sm hover:bg-gray-100">
-                                    Chat with ZEUS
-                                  </span>
-                                </Link>
-                              </li>
-                              <li>
-                                <a className="block px-4 py-2 text-sm hover:bg-gray-100">
-                                  Settings
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  className="block px-4 py-2 text-sm hover:bg-gray-100"
-                                  onClick={() => auth.logout()}
-                                >
-                                  Logout
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        )}
+                            </Link>
+                          </li>
+                          <li>
+                            <a className="block px-4 py-2 text-sm hover:bg-gray-100">
+                              Settings
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="block px-4 py-2 text-sm hover:bg-gray-100"
+                              onClick={() => auth.logout()}
+                            >
+                              Logout
+                            </a>
+                          </li>
+                        </ul>
                       </div>
-                    ) : (
-                  // Login/Signup Buttons for Guests
-                  <>
-                    <div>
-                      <Link href="/signin">
-                        <Button className="text-[10px] w-10 h-6 px-4 bg-red-700 text-white" variant="outline">
-                          Login
-                        </Button>
-                      </Link>
-
-                    </div>
-                  </>
-                  <Link href="/signin" onClick={() => setIsOpen(false)}>
-                    <Button className="text-[10px] w-16 h-8 px-4 bg-red-700 text-white">
-                      Login
-                    </Button>
-                  </Link>
                     )}
                   </div>
-            </div>
+                ) : (
+                  // Login/Signup Buttons for Guests
+                  <div>
+                    <Link href="/signin">
+                      <Button className="text-[10px] w-10 h-6 px-4 bg-red-700 text-white" variant="outline">
+                        Login
+                      </Button>
+                    </Link>
+
+                    <Link href="/signin" onClick={() => setIsOpen(false)}>
+                      <Button className="text-[10px] w-16 h-8 px-4 bg-red-700 text-white">
+                        Login
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+
+              </div>
             </div>
             <div>
               <NavigationMenu>
