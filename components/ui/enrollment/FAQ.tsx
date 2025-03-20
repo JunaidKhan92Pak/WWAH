@@ -25,7 +25,7 @@ export default function FAQ({ title, items }: FAQProps) {
         <Accordion
           type="single"
           collapsible
-          className="md:space-y-8 space-y-2 my-8"
+          className="md:space-y-8 space-y-2 my-4"
         >
           {items.map((item, index) => (
             <AccordionItem

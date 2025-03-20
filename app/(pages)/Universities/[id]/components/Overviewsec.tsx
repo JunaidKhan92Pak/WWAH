@@ -51,8 +51,8 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
           {/* Background Image */}
           <div className="absolute inset-0 -z-10 bg-black"></div>
           <div className="w-[90%] mx-auto">
-            <div className="flex flex-col md:flex-row md:gap-4 justify-between items-center">
-              <div className="w-full md:w-1/2 ">
+            <div className="flex flex-col lg:flex-row md:gap-4 justify-between items-center">
+              <div className="w-full lg:w-1/2 ">
                 <h2 className="mb-2 md:mb-4">Overview!</h2>
                 {/* Wrap all content after overview inside ReadMore */}
                 <ReadMore image={image}>
@@ -72,7 +72,7 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
                 </ReadMore>
               </div>
 
-              <div className="w-full md:w-1/2">
+              <div className="w-full lg:w-1/2">
                 {/* Image Section */}
                 <div className="flex flex-col items-center">
                   {" "}
