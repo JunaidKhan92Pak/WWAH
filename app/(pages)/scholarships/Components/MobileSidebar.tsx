@@ -17,12 +17,12 @@ const MobileSidebar = () => {
   }
   return (
     <div className="">
-      <Sheet >
+      <Sheet>
         <SheetTrigger>
           <Button
             variant={"ghost"}
             size={"sm"}
-            className="md:hidden mt-8 mb-4 mx-4  bg-gray-100 border-2 border-gray-200"
+            className="lg:hidden mt-8 mb-4 mx-4  bg-gray-100 border-2 border-gray-200"
           >
             {/* <Menu /> */}
             <div className="flex items-center w-[100px] justify-between ">

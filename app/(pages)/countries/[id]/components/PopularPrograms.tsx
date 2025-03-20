@@ -144,7 +144,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
                     alt={item.title}
                     width={110}
                     height={110}
-                    className="w-14 h-14 md:w-20 md:h-20 lg:w-28 lg:h-28"
+                    className="w-14 h-14 md:w-18 md:h-18 lg:w-28 lg:h-28"
                   />
                 </div>
                 <div className="md:w-2/3">
