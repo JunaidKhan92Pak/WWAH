@@ -133,15 +133,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     <div>
       <Herosec data={data.universityData} />
       <div>
+        
         <div className="bg-white my-6 md:mt-12 md:mb-12">
           <div className="w-[95%] mx-auto px-6">
-            <div className="w-full flex flex-col lg:flex-row justify-center lg:justify-evenly items-center border-b border-gray-200">
+            <div className="w-full flex whitespace-nowrap overflow-x-auto scrollbar-hide justify-center lg:justify-evenly items-center border-b border-gray-200">
               {tabs.map((tab) => (
                 <button
                   key={tab.label}
                   onClick={() => handleTabClick(tab)}
-                  className={`transition px-10 py-2 rounded-t-xl ${activeTab === tab.label ? "bg-[#C7161E] text-white" : "text-gray-600"
-                    }`}
+                  className={`transition px-10 py-2 rounded-t-xl ${
+                    activeTab === tab.label
+                      ? "bg-[#C7161E] text-white"
+                      : "text-gray-600"
+                  }`}
                   aria-label={`Navigate to ${tab.label}`}
                   aria-selected={activeTab === tab.label}
                 >
@@ -157,13 +161,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         <Overviewsection
           name={data.universityData.university_name}
           overview={data.universityData.overview}
-          origin_and_establishment={data.universityData.origin_and_establishment}
+          origin_and_establishment={
+            data.universityData.origin_and_establishment
+          }
           year={data.universityData.establishment_year}
           modrenday={data.universityData.modern_day_development}
           univideo={data.universityData.university_video}
           image={data.universityData.universityImages?.banner || ""} // Ensure a fallback empty string
         />
-
       </div>
       <Standsection
         our_mission={data.universityData.our_mission || "Mission not available"}

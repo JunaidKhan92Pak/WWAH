@@ -137,7 +137,7 @@ const Herosection = () => {
         </div> */}
         <div className="relative mt-2 lg:-mt-10 flex justify-center">
           <div
-            className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4  rounded-2xl shadow-lg mx-auto w-[80%] lg:w-[70%] lg:grid lg:grid-cols-7"
+            className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4  rounded-2xl shadow-lg mx-auto w-[90%] lg:w-[70%] lg:grid lg:grid-cols-7"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
