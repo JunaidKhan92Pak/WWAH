@@ -134,7 +134,7 @@ const MobileNavbar = () => {
                               className="block px-4 py-2 text-sm hover:bg-gray-100"
                               onClick={() => auth.logout()}
                             >
-                              Logout
+                              LOGOUT
                             </a>
                           </li>
                         </ul>
@@ -149,10 +149,16 @@ const MobileNavbar = () => {
                         Login
                       </Button>
                     </Link>
+                    {/* <Link href="/signin">
+                        <Button className="text-[10px] w-10 h-6 px-4 bg-red-700 text-white" variant="outline">
+                          Login
+                        </Button>
+                      </Link> */}
 
-                    <Link href="/signin" onClick={() => setIsOpen(false)}>
+                    <Link href="/signin"
+                      onClick={() => setIsOpen(false)}>
                       <Button className="text-[10px] w-16 h-8 px-4 bg-red-700 text-white">
-                        Login
+                        LOGIN
                       </Button>
                     </Link>
                   </div>
@@ -174,6 +180,19 @@ const MobileNavbar = () => {
                   <NavigationMenuItem>Scholarships</NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
+              {/* <NavigationMenu>
+                <NavigationMenuList className="flex flex-col items-start gap-5 text-[14px] m-8 ">
+                  <NavigationMenuItem>Study Destination</NavigationMenuItem>
+                  <NavigationMenuItem>
+                    Universities
+                    <NavigationMenuContent>
+                      <NavigationMenuLink href="#">Link</NavigationMenuLink>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>Programs</NavigationMenuItem>
+                  <NavigationMenuItem>Scholarships</NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu> */}
             </div>
             <nav className="w-full">
               <ul className="flex flex-col items-start text-[14px] mx-6 my-6 gap-5 w-[80%]">
