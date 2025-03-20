@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import  { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Calculator } from "lucide-react";
@@ -16,13 +16,13 @@ const healthcareItems = [
   { text: "Healthcare Policy", image: "/countrypage/img1.svg" },
 ];
 function Page() {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState("scholarship");
+ const [isExpanded, setIsExpanded] = useState(false);
+ const [activeTab, setActiveTab] = useState("scholarship");
 
-  const toggleReadMore = () => {
-    setIsExpanded((prev) => !prev);
-  };
-  const [activeTabPro, setActiveTabPro] = useState("");
+ const toggleReadMore = () => {
+   setIsExpanded((prev) => !prev);
+ };
+
 
   const tabs = [
     { name: "Course Overview", id: "courseOverview" },
@@ -32,17 +32,28 @@ function Page() {
     { name: "Application Process", id: "applicationProcess" },
   ];
 
-  const handleTabClick = (id: string) => {
-    setActiveTabPro(id);
+ const [activeTabPro, setActiveTabPro] = useState(
+   tabs.length > 0 ? tabs[0].id : ""
+ );
 
-    const element = document.getElementById(id);
-    if (element) {
-      const yOffset = -100; // Adjust this value based on your header height or margin
-      const yPosition =
-        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: yPosition, behavior: "smooth" });
-    }
-  };
+ useEffect(() => {
+   if (!activeTabPro && tabs.length > 0) {
+     setActiveTabPro(tabs[0].id);
+   }
+ }, [tabs, activeTabPro]);
+
+const handleTabClick = (id: string) => {
+  setActiveTabPro(id);
+
+  const element = document.getElementById(id);
+  if (element) {
+    const yOffset = -100; // Adjust this value based on your header height or margin
+    const yPosition =
+      element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: yPosition, behavior: "smooth" });
+  }
+};
+
 
   const [activeTabUni, setActiveTabUni] = useState(
     "University Application Docs"
@@ -145,6 +156,7 @@ function Page() {
       title: "University of Victoria",
     },
   ];
+
 
   return (
     <div>
@@ -377,7 +389,7 @@ function Page() {
       <section id="feeScholarships" className=" w-[90%] mx-auto">
         <h2 className="pb-2">Fee and Scholarships!</h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[24%_26%_50%] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[24%_26%_46%] gap-6">
           {/* Fee Information Card */}
           <Card className="md:p-6 p-2 bg-[#FCE7D2] flex flex-col justify-between">
             <div>
@@ -808,7 +820,7 @@ function Page() {
               </div>
             </div>
             {/* Image with CTA */}
-            <div className="relative bg-gray-100 p-4 w-full lg:w-[90%] 2xl:w-[70%] rounded-lg shadow-md h-40 md:h-60 flex items-center justify-center my-1">
+            <div className="relative bg-gray-100 p-4 w-full lg:w-[90%] 2xl:w-[60%] rounded-lg shadow-md h-40 md:h-60 flex items-center justify-center my-1">
               {/* Background Image */}
               <div
                 className="absolute inset-0 bg-cover bg-center rounded-lg"
@@ -871,7 +883,7 @@ function Page() {
         {/* Black Overlay */}
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
         {/* Content Section */}
-        <div className="relative z-10 w-full lg:w-[40%] flex flex-col justify-center md:space-y-4 sm:px-4 text-left">
+        <div className="relative z-10 w-full lg:w-[56%] flex flex-col justify-center md:space-y-4 sm:px-4 text-left">
           <h6 className="mb-2">Explore More Universities!</h6>
           <p className="text-[#9D9D9D] leading-relaxed">
             Discover the exciting world of universities in the United Kingdom,
@@ -881,7 +893,7 @@ function Page() {
           </p>
         </div>
         {/* Slider Section */}
-        <div className="relative z-10 w-full lg:w-[60%] mt-6 lg:mt-0">
+        <div className="relative z-10 w-full lg:w-[40%] mt-6 lg:mt-0">
           <div className="relative w-full flex justify-center overflow-hidden">
             <div
               className="flex overflow-x-auto space-x-4 hide-scrollbar"
@@ -893,7 +905,7 @@ function Page() {
               {sliderData.map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-[85%] md:w-[50%]  flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+                  className="relative w-[85%] md:w-[65%]  flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
                 >
                   <Image
                     src={item.src}

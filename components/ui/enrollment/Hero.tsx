@@ -14,7 +14,7 @@ export default function Hero({
 }: HeroProps) {
   return (
     <div
-      className="relative flex items-center justify-center h-[44vh] sm:h-[80vh]  w-[95%] mx-auto my-4 rounded-2xl"
+      className="relative flex items-center justify-center h-[270px] sm:h-[80vh]  w-[95%] mx-auto my-4 rounded-2xl"
       style={{
         backgroundImage: ` url(${backgroundImage})`,
         backgroundSize: "cover",

@@ -34,7 +34,7 @@ export default function Banner({
         <div className="relative z-10 flex flex-col items-center w-full gap-4 sm:flex-row sm:justify-between  my-4 sm:my-10 ">
           {/* Left Side - Text */}
           <div className="w-full text-center sm:text-left sm:w-[65%] lg:w-[50%]">
-            <h5 className="font-bold">
+            <h5 className="font-semibold">
               {title}
             </h5>
           </div>
