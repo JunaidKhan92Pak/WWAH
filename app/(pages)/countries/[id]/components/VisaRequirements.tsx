@@ -8,7 +8,10 @@ interface VisaRequirementsProps {
   countryName: string;
 }
 
-export const VisaRequirements: React.FC<VisaRequirementsProps> = ({ visaRequirements, countryName }) => {
+export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
+  visaRequirements,
+  countryName,
+}) => {
   interface requiremtProps {
     id: number;
     // src: StaticImageData;
@@ -56,15 +59,14 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({ visaRequirem
   ];
   return (
     <>
-      <section className="w-[90%] mx-auto 2xl:my-20">
+      <section className="w-[90%] mx-auto my-5 2xl:my-20">
         <div className=" flex md:flex-row flex-col  w-full  p-4 gap-4 md:gap-2">
           {/* Left Section */}
           <div className="w-[100%] md:w-[50%]   flex flex-col ">
-     
-              <h4 className="text-[#313131] pb-2  md:text-left text-center 2xl:text-center font-bold w-full">
-                Visa Requirements!
-              </h4>
-            
+            <h4 className="text-[#313131] pb-2  md:text-left text-center 2xl:text-center font-bold w-full">
+              Visa Requirements!
+            </h4>
+
             <ol className="  grid grid-cols-1  md:grid-cols-2 gap-2 md:gap-6">
               {requirements?.map((requirement, indx) => (
                 <li key={indx} className=" flex items-center  ">

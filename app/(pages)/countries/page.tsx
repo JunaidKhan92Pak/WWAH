@@ -28,7 +28,7 @@ const Page = () => {
 
   return (
     <section className="container mx-auto px-4 py-6">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row justify-between items-center my-6">
         <h3 className="text-xl md:text-2xl font-bold">
           Explore the Most Viewed Study Destinations!
         </h3>
@@ -44,7 +44,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-6">
         {loading ? (
           <div className="col-span-full flex justify-center items-center rounded-lg h-80">
             <BookLoader />
@@ -54,7 +54,8 @@ const Page = () => {
         ) : (
           filteredCountries.map((country) => (
             <Link key={country._id} href={`/countries/${country._id}`} target="_blank" className="cursor-pointer">
-              <div className="overflow-hidden rounded-xl relative h-52">
+              <div className="overflow-hidden rounded-xl relative min-h-[268px] md:min-h-[250px]">
+
                 <ImageWithLoader
                   src={`/countryarchive/${country.short_name}.svg`}
                   alt={country.alt}

@@ -10,7 +10,13 @@ interface HeroProps {
   university: string;
 }
 
-const Hero: React.FC<HeroProps> = ({ name, country, type, deadline, university }) => {
+const Hero: React.FC<HeroProps> = ({
+  name,
+  country,
+  type,
+  deadline,
+  university,
+}) => {
   const scholarshipArr = [
     {
       Image: "/scholarshipdetail/country.svg",
@@ -46,13 +52,11 @@ const Hero: React.FC<HeroProps> = ({ name, country, type, deadline, university }
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 justify-items-center px-4 sm:px-6 py-4 md:py-8 sm:py-12  relative z-10">
             {/* Left Section */}
             <div className="w-[90%] flex flex-col justify-center items-center text-center md:text-left">
-              <h2 className="text-white md:leading-10 lg:leading-12">
-                {name}
-              </h2>
+              <h2 className="text-white md:leading-10 lg:leading-12">{name}</h2>
             </div>
 
             {/* Right Section */}
-            <div className="w-full sm:w-[90%] md:w-full lg:w-[60%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
+            <div className="w-full sm:w-[90%] md:w-full lg:w-[45%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
               <p className="text-white w-4/5">
                 Book Your Online Video Counselling Session with WWAH Advisor!
               </p>

@@ -3,7 +3,7 @@ import Image from "next/image";
 const Requireddocs = () => {
   return (
     <div>
-      <section className="flex flex-col items-center justify-center py-2 lg:py-5 px-4  w-[90%] mx-auto">
+      <section className="flex flex-col items-center justify-center py-2 lg:py-5 px-4  lg:w-[90%] mx-auto">
         <h3 className="lg:mb-4">Required Documents!</h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-6 items-stretch">
