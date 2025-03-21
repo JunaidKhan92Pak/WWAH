@@ -1,9 +1,9 @@
-import React from 'react'
-import Herosection from './components/Herosection'
-import PreparationWithWWAH from './components/PreparationWithWWAH'
-import RatingSection from './components/Ratingsection'
-import ScheduleTable from './components/Schedulesection'
-import Formsection from './components/Formsection'
+import React from "react";
+import Herosection from "./components/Herosection";
+import PreparationWithWWAH from "./components/PreparationWithWWAH";
+import RatingSection from "./components/Ratingsection";
+import ScheduleTable from "./components/Schedulesection";
+import Formsection from "./components/Formsection";
 // import Herosection from './components /Herosection'
 // import Herosection from '/components /Herosection'
 // import PreparationWithWWAH from './components /PreparationWithWWAH'
@@ -20,7 +20,7 @@ const page = () => {
       <ScheduleTable />
       <Formsection/>
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;

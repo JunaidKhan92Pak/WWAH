@@ -10,26 +10,29 @@ interface OverviewProps {
 }
 
 const Overview: React.FC<OverviewProps> = ({ overview, duration }) => {
-
   return (
     <div>
       <section className="mt-2">
         <div className=" mx-auto w-[90%]">
-
           {/* Course Overview */}
-          <div className="flex flex-col md:flex-row gap-5 lg:gap-10 md:py-10">
+          <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 md:py-10">
             {/* content side */}
-            <div className="w-full md:w-1/2">
+            <div className="w-full lg:w-1/2">
               <div className=" mx-auto leading-snug">
                 <h2 className="font-bold">Course Overview!</h2>
                 <p className="text-gray-700 mb-2">{overview}</p>
-              
+
                 <p className="font-bold  mb-2">Duration of the Scholarship:</p>
-                <p><strong>Degree:</strong>  {duration?.undergraduate},{duration?.master} , {duration?.phd} </p>
-                <p><strong>Research:</strong> 6 months or 1 year</p>
+                <p>
+                  <strong>Degree:</strong> {duration?.undergraduate},
+                  {duration?.master} , {duration?.phd}{" "}
+                </p>
+                <p>
+                  <strong>Research:</strong> 6 months or 1 year
+                </p>
               </div>
             </div>
-            <div className="w-full md:w-1/2 lg:h-screen md:block hidden">
+            <div className="w-full lg:w-1/2 lg:h-screen md:block hidden">
               <Image
                 src="/imeg.png"
                 alt="postgraduate"

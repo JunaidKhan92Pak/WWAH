@@ -174,7 +174,7 @@ const Applicationprocess = () => {
               {sliderData.map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-[77%] sm:w-[80%] md:w-[40%] lg:w-[60%] h-full flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+                  className="relative w-[65%] sm:w-[80%] md:w-[40%] lg:w-[60%] xl:w-[50%] h-full flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
                 >
                   <Image
                     src={item.src}
@@ -182,7 +182,7 @@ const Applicationprocess = () => {
                     width={400}
                     height={350}
                     objectFit="cover"
-                    className="rounded-3xl md:w-[360px] md:h-[300px] w-[200px] h-[160px]"
+                    className="rounded-3xl md:w-[250px] md:h-[250px] w-[200px] h-[160px]"
                   />
                 </div>
               ))}

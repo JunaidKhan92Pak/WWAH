@@ -103,11 +103,11 @@ const Formsection = () => {
     >
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
-      <div className="relative z-10 bg-gray-700 bg-opacity-70 border text-white rounded-3xl shadow-lg p-6 md:p-10 2xl:p-20 w-[90%] mx-auto">
-        <div className="flex gap-1 sm:space-y-0 sm:space-x-8 justify-center items-center text-center md:mb-12 mb-4">
+      <div className="relative z-10 bg-gray-700 bg-opacity-70 border text-white rounded-3xl shadow-lg p-3 md:p-10 2xl:p-20 w-[90%] mx-auto">
+        <div className="flex gap-1 sm:space-y-0 sm:space-x-2 justify-center items-center text-center md:mb-12 mb-4">
           <Button
             onClick={() => setFormType("Register Now")}
-            className={`text-white p-6 2xl:p-14 w-full sm:w-[48%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Register Now" ? "bg-white" : "bg-transparent"
+            className={`text-white p-6 2xl:p-14 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Register Now" ? "bg-white" : "bg-transparent"
               }`}
           >
             <h6 className={formType === "Register Now" ? "text-[#C7161E]" : "text-white"}>
@@ -116,7 +116,7 @@ const Formsection = () => {
           </Button>
           <Button
             onClick={() => setFormType("Book a Demo")}
-            className={`text-white p-6 2xl:p-14 w-full sm:w-[48%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Book a Demo" ? "bg-white" : "bg-transparent"
+            className={`text-white p-6 2xl:p-14 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Book a Demo" ? "bg-white" : "bg-transparent"
               }`}
           >
             <h6 className={formType === "Book a Demo" ? "text-[#C7161E]" : "text-white"}>
@@ -185,7 +185,7 @@ const Formsection = () => {
                   <label className="block mb-2 font-semibold">Contact Number</label>
                   <div className="flex flex-row gap-2">
                     {/* Dropdown for Country Code */}
-                    <div className="flex items-center justify-center w-2/5 sm:w-1/2 lg:w-1/3  bg-white bg-opacity-20 rounded-md">
+                    <div className="flex items-center justify-center w-[60%] lg:w-[30%] xl:w-[20%]  bg-white bg-opacity-20 rounded-md">
                       <Select onValueChange={handleCountryCodeChange}>
                         <SelectTrigger className="flex items-center bg-transparent 2xl:py-8">
                           {/* Conditionally render Pakistan's country code, name, and flag as the placeholder */}
@@ -201,7 +201,7 @@ const Formsection = () => {
                                     height={20}
                                     className="object-cover"
                                   />
-                                  <p className="text-xs">{`${countries[0].code} (${countries[0].country})`}</p>
+                                  <p className="text-xs">{`${countries[0].code} `}</p>
 
                                 </div>
                               )
@@ -455,7 +455,7 @@ const Formsection = () => {
 
           </div>
           <div className="pt-6 text-center">
-            <Button type="submit" className="px-12">
+            <Button type="submit" className="px-12 bg-red-700 hover:bg-red-500 transition text-white py-2 rounded-lg">
               {formType === "Register Now" ? "Register" : "Book Demo"}
             </Button>
           </div>

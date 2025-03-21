@@ -110,7 +110,7 @@ export default function Countrypage({
 
   return country ? (
     <div>
-      <div className="w-[95%] mx-auto">
+      <div className="w-[90%] md:w-[95%] mx-auto">
         <Hero country={country} />
       </div>
       <StudyInUs
@@ -166,4 +166,3 @@ export default function Countrypage({
     <p>Loading....</p>
   );
 }
- 

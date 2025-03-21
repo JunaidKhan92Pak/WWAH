@@ -94,9 +94,9 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
 
           {/* Icon Section with Horizontal Scrollbar */}
           <div
-            className="flex lg:w-3/5 overflow-x-auto scrollbar-hide space-x-4 px-2 py-2 mx-2 md:mx-0"
+            className="flex lg:w-3/5 overflow-x-auto scrollbar-hide space-x-3 px-2 py-2 mx-2 md:mx-0"
             style={{
-              scrollbarWidth: "thin",
+              scrollbarWidth: "none",
               msOverflowStyle: "none",
             }}
           >

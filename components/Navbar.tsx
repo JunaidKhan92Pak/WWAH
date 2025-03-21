@@ -12,6 +12,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { useAuth } from "../app/(auth)/auth/authProvider";
+// import { getAuthToken } from "@/authHelper";
 import { getAuthToken } from "@/utils/authHelper";
 import { useRouter } from "next/navigation";
 const Navbar = () => {
@@ -40,8 +41,8 @@ const Navbar = () => {
   };
 
   return (
-    <header className="h-0 md:h-[50px]">
-      <div className="fixed z-20 w-full mb-2 p-2 bg-white top-0 hidden lg:block ">
+    <header className="h-0 md:h-[50px] lg:mb-10">
+      <div className="fixed z-20 w-full mb-2 p-2 bg-white top-0 hidden md:block ">
         <div className=" w-[95%]  mx-auto py-3 px-5 shadow-md rounded-xl bg-white text-black">
           <div className="flex justify-between gap-3 items-center">
             {/* Logo */}

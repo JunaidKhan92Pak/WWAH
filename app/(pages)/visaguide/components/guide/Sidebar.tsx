@@ -90,6 +90,40 @@ export const steps = [
     title: "Post Arrival process",
   },
 ];
+// const handleScroll = (id: number) => {
+//   const target = document.getElementById(id.toString());
+//   if (target) {
+//     const offset = 65; // Adjust this value based on your layout
+//     const targetPosition = target.getBoundingClientRect().top + window.scrollY;
+//     window.scrollTo({ top: targetPosition - offset, behavior: "smooth" });
+//   }
+// };
+
+// const handleScroll = (id: number) => {
+//   const rightSection = document.getElementById("right-section");
+//   const target = document.getElementById(id.toString());
+
+//   if (rightSection && target) {
+//     rightSection.scrollTo({
+//       top: target.offsetTop - rightSection.offsetTop,
+//       behavior: "smooth",
+//     });
+//   }
+// };
+
+const handleScroll = (id: number) => {
+  const rightSection = document.getElementById("right-section");
+  const target = document.getElementById(id.toString());
+
+  if (rightSection && target) {
+    const offset = 20; // Adjust this value based on your design
+
+    rightSection.scrollTo({
+      top: target.offsetTop - rightSection.offsetTop - offset,
+      behavior: "smooth",
+    });
+  }
+};
 
 const Sidebar: React.FC<SidebarProps> = ({ activeStep, onStepClick }) => {
   return (
@@ -103,8 +137,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeStep, onStepClick }) => {
               }`}
               onClick={() => {
                 onStepClick(step.id);
-                const target = document.getElementById(step.id.toString());
-                target?.scrollIntoView({ behavior: "smooth", block: "start" });
+                handleScroll(step.id);
+
+                // const target = document.getElementById(step.id.toString());
+                // target?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
             >
               <Image

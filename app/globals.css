@@ -134,11 +134,10 @@ input::placeholder {
     font-size: 1.1rem;
   }
   h4 {
-    font-size: 1.050rem;
+    font-size: 1.05rem;
   }
   h5 {
     font-size: 1rem;
-
   }
   h6 {
     font-size: 0.87rem;
@@ -169,14 +168,14 @@ input::placeholder {
   }
   h5 {
     font-size: 1.4rem;
-
   }
   h6 {
     font-size: 1.2rem;
   }
   p,
   label,
-  li,  select,
+  li,
+  select,
   option,
   button,
   ::placeholder {
@@ -198,9 +197,7 @@ input::placeholder {
     font-size: 1.8rem;
   }
   h5 {
-    
     font-size: 1.5rem;
-
   }
   h6 {
     font-size: 1.2rem;
@@ -233,7 +230,6 @@ input::placeholder {
   }
   h5 {
     font-size: 1.7rem;
-
   }
   h6 {
     font-size: 1.5rem;
@@ -243,8 +239,7 @@ input::placeholder {
   li,
   select,
   option,
-  button
-   {
+  button {
     font-size: 1.2rem;
   }
   input::placeholder {
@@ -292,3 +287,8 @@ input::placeholder {
   }
 }
 
+#right-section {
+  max-height: 836px; /* Adjust based on layout */
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}

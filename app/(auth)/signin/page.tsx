@@ -1,10 +1,15 @@
 "use client";
 import Image from "next/image";
-import logo from "@/public/logo.png";
+import logo from "@/public/logo.svg";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { IoMailOutline, IoKeyOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import {
+  IoMailOutline,
+  IoKeyOutline,
+  IoEyeOutline,
+  IoEyeOffOutline,
+} from "react-icons/io5";
 import { useAuth } from "../auth/authProvider";
 
 const Page = () => {
@@ -55,16 +60,26 @@ const Page = () => {
       <div className="md:w-1/2 flex items-center justify-center">
         <div className="w-6/7 pt-5 md:pt-0 px-8 flex flex-col items-end justify-center">
           <div className="w-full sm:w-full lg:w-4/5">
+            {/* <Image
+              src={logo}
+              alt="Logo"
+              width={100}
+              height={100}
+              unoptimized={true}
+              className="lg:mb-0 w-16 sm:w-24 mx-auto md:w-[100px] 2xl:w-40 2xl:h-34"
+            /> */}
             <Image
               src={logo}
               alt="Logo"
-              width={80}
-              height={80}
-              className="lg:mb-0 w-16 sm:w-24 mx-auto md:w-[66px] 2xl:w-40 2xl:h-34"
+              width={100}
+              height={100}
+              className="lg:mb-0 w-16 sm:w-24 mx-auto md:w-[120px] 2xl:w-40 2xl:h-36"
+              unoptimized={true}
             />
             <h3 className="text-center lg:mb-2">Welcome back</h3>
             <p className="text-gray-600 mb-2 text-center sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
-              Achieve your study dreams in your ideal country with global support from Admission Hub.
+              Achieve your study dreams in your ideal country with global
+              support from Admission Hub.
             </p>
           </div>
           {generalError && (
@@ -80,7 +95,7 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type="text"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border ${
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
                     errors.email || generalError
                       ? "border-red-600"
                       : "border-gray-300"
@@ -92,14 +107,43 @@ const Page = () => {
                 />
               </div>
             </div>
-
             <div>
               <label className="block text-gray-700 mb-1">Password</label>
               <div className="relative">
                 <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border ${
+                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
+                    errors.password || generalError
+                      ? "border-red-600"
+                      : "border-gray-300"
+                  } rounded`}
+                  placeholder="Enter your password"
+                  name="password"
+                  value={userData.password}
+                  onChange={handleChange}
+                />
+                {showPassword ? (
+                  <IoEyeOffOutline
+                    className="absolute right-3 2xl:right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl cursor-pointer"
+                    onClick={() => setShowPassword(false)}
+                  />
+                ) : (
+                  <IoEyeOutline
+                    className="absolute right-3 2xl:right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl cursor-pointer"
+                    onClick={() => setShowPassword(true)}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* <div>
+              <label className="block text-gray-700 mb-1">Password</label>
+              <div className="relative">
+                <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl " />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
                     errors.password || generalError
                       ? "border-red-600"
                       : "border-gray-300"
@@ -121,7 +165,7 @@ const Page = () => {
                   />
                 )}
               </div>
-            </div>
+            </div> */}
 
             <div className="flex justify-between items-center text-gray-600">
               <div className="flex">
@@ -161,7 +205,7 @@ const Page = () => {
           </form>
         </div>
       </div>
-      <div className="hidden md:flex justify-center md:w-[50%] lg:w-[50%] p-4">
+      <div className="hidden md:flex justify-center md:w-[50%] lg:w-[50%] lg:p-4">
         <div className="relative w-[80%] h-[100%]">
           <Image
             src="/Group.png" // Replace with your decorative image

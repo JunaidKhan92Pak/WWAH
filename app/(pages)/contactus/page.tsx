@@ -138,7 +138,7 @@ export default function ContactUs() {
                 Message
                 <textarea
                   placeholder="Leave us a message..."
-                  rows={4}
+                  rows={6}
                   className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
 
 ></textarea>

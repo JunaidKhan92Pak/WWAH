@@ -88,7 +88,7 @@ const Page = () => {
             className="w-16 sm:w-24 mx-auto"
           />
 
-          <h3 className="text-center">Create an Account!</h3>
+          <h4 className="text-center">Create an Account!</h4>
           <p className="text-gray-600 mb-2 text-center sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
             Please provide your information below to begin your learning journey
           </p>
@@ -96,13 +96,15 @@ const Page = () => {
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="flex w-full gap-4 2xl:gap-6">
               <div className="w-1/2">
-                <label className="block text-gray-700 py-2">First Name</label>
+                <label className="block text-gray-800 font-normal pt-2">
+                  First Name
+                </label>
                 <div className="relative">
                   <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
                   <input
                     type="text"
                     name="firstName"
-                    className="w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border border-gray-300 rounded-lg 2xl:p-6"
+                    className="w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border border-gray-300 rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
                     placeholder="Enter First Name"
                     onChange={handleChange}
                     value={formData.firstName}
@@ -113,13 +115,15 @@ const Page = () => {
                 )}
               </div>
               <div className="w-1/2">
-                <label className="block text-gray-700 py-2">Last Name</label>
+                <label className="block text-gray-800 font-normal pt-2">
+                  Last Name
+                </label>
                 <div className="relative">
                   <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
                   <input
                     type="text"
                     name="lastName"
-                    className="w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border border-gray-300 rounded-lg 2xl:p-6"
+                    className="w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border border-gray-300 rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
                     placeholder="Enter Last Name"
                     onChange={handleChange}
                     value={formData.lastName}
@@ -133,30 +137,36 @@ const Page = () => {
 
             {/* Email */}
             <div>
-              <label className="block text-gray-700 py-2">Email</label>
+              <label className="block text-gray-800 font-normal pt-2">
+                Email
+              </label>
               <div className="relative">
                 <IoMailOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
                 <input
                   type="email"
                   name="email"
-                  className="w-full p-1 lg:p-2 2xl:pl-16 pl-8 lg:pl-10 border border-gray-300 rounded-lg 2xl:p-6"
+                  className="w-full p-1 lg:p-2 2xl:pl-16 pl-8 lg:pl-10 border border-gray-300 rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
                   placeholder="Enter your Email"
                   onChange={handleChange}
                   value={formData.email}
                 />
               </div>
-              {errors.email && <p className="text-red-600 mt-1">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-600 mt-1">{errors.email}</p>
+              )}
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-gray-700 py-2">Password</label>
+              <label className="block text-gray-800 font-normal pt-2">
+                Password
+              </label>
               <div className="relative">
                 <IoKeyOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  className="w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border border-gray-300 rounded-lg 2xl:p-6"
+                  className="w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border border-gray-300 rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
                   placeholder="Enter your Password"
                   onChange={handleChange}
                   value={formData.password}
@@ -176,13 +186,15 @@ const Page = () => {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-gray-700 py-2">Confirm Password</label>
+              <label className="block text-gray-800 font-normal pt-2  ">
+                Confirm Password
+              </label>
               <div className="relative">
                 <IoKeyOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
-                  className="w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border border-gray-300 rounded-lg 2xl:p-6"
+                  className="w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border border-gray-300 rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
                   placeholder="Confirm your Password"
                   onChange={handleChange}
                   value={formData.confirmPassword}
@@ -192,7 +204,11 @@ const Page = () => {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                  {showConfirmPassword ? (
+                    <AiOutlineEyeInvisible />
+                  ) : (
+                    <AiOutlineEye />
+                  )}
                 </button>
               </div>
               {errors.confirmPassword && (
@@ -218,8 +234,8 @@ const Page = () => {
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:flex justify-center md:w-[50%] lg:w-[40%] p-4">
-        <div className="relative w-[80%] h-[100%]">
+      <div className="hidden md:flex justify-center md:w-[50%] lg:w-[50%] p-4">
+        <div className="relative xl:w-[100%] xl:h-[100%] h-[95%] w-[100%]">
           <Image
             src="/Group.png" // Replace with your decorative image
             alt="Decorative"

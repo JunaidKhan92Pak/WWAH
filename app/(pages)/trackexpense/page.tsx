@@ -134,7 +134,7 @@ const Page = () => {
       <section className="w-full mx-auto md:  mt-5">
         {/* Hero Section */}
         <div
-          className="relative w-[95%] mx-auto md:h-[80vh] h-[80%] flex justify-center md:py-2 items-center text-center rounded-2xl text-white bg-cover bg-center"
+          className="relative w-[90%] md:w-[95%] mx-auto md:h-[80vh] h-[270px] flex justify-center md:py-2 items-center text-center rounded-2xl text-white bg-cover bg-center"
           style={{ backgroundImage: "url('/heroimg.png')" }}
         >
           <div className="w-4/5 text-left my-5">
@@ -246,10 +246,11 @@ const Page = () => {
                                     onClick={() =>
                                       handleSelectCountry(image.name)
                                     }
-                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${selectedCountry === image.name
+                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${
+                                      selectedCountry === image.name
                                         ? "border-[#F0851D] border-2"
                                         : "border-0"
-                                      }`}
+                                    }`}
                                   />
                                 </div>
                                 <p className="pt-2 tracking-wide text-center text-[8px] font-bold md:text-[13px]">
@@ -346,13 +347,15 @@ const Page = () => {
                           return (
                             <button
                               key={lifestyle.type}
-                              className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${lifestyle.type === "luxury_lifestyle"
+                              className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${
+                                lifestyle.type === "luxury_lifestyle"
                                   ? "col-span-2"
                                   : "col-span-1"
-                                } ${selectedLifestyle === lifestyle.type
+                              } ${
+                                selectedLifestyle === lifestyle.type
                                   ? "bg-gray-100"
                                   : "bg-none"
-                                }`}
+                              }`}
                               onClick={() =>
                                 setSelectedLifestyle(lifestyle.type)
                               }
