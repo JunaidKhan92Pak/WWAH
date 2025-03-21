@@ -41,10 +41,10 @@ const Hero: React.FC<HeroProps> = ({
   ];
   return (
     <>
-      <section className="mx-auto w-[95%] md:mt-4">
+      <section className="mx-auto w-[90%] md:w-[95%] md:mt-4">
         {/* Hero Section */}
         <div
-          className="relative md:h-[80vh] h-[90%] flex justify-center items-center text-center rounded-3xl text-white bg-cover bg-center"
+          className="relative md:h-[80vh] h-[270px] flex justify-center items-center text-center rounded-3xl text-white bg-cover bg-center"
           style={{
             backgroundImage: "url('/scholarshipdetail/scholarshipdetail.png')",
           }}

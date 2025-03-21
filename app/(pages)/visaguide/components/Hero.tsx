@@ -6,9 +6,9 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ country }) => {
   return (
     <div>
-      <section className="w-[95%] mx-auto">
+      <section className="w-[90%] md:w-[95%] mx-auto">
         <div
-          className="relative mt-4 h-[200px] md:h-[80vh] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
+          className="relative md:mt-4 h-[200px] md:h-[80vh] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
           style={{
             backgroundImage: "url('/visaBg.png')",
           }}

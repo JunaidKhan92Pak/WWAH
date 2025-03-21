@@ -254,7 +254,7 @@ const Page = () => {
           </SheetContent>
         </Sheet>
         {/* Desktop Filter Sidebar */}
-        <div className="flex gap-2 pt-4">
+        <div className="flex gap-2 pt-1">
           <section className="hidden lg:block lg:w-[20%] w-[25%]">
             <div className="border-2 rounded-3xl p-4 md:p-0">
               <div className="hidden md:flex items-center gap-2 p-4">
@@ -380,7 +380,7 @@ const Page = () => {
           {/* Scholarship Display Section */}
           <section className="lg:w-[77%] w-[90%]">
             <div className="flex flex-col md:flex-row justify-between">
-              <div className="lg:py-6 flex flex-col">
+              <div className="lg:px-3 flex flex-col">
                 <h3 className="font-bold w-4/5 text-start">
                   Find the Right Scholarship for Your Academic Journey!
                 </h3>

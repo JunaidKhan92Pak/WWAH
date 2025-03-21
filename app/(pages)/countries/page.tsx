@@ -22,29 +22,35 @@ const Page = () => {
 
   const filteredCountries = search
     ? countries.filter((country) =>
-      country.short_name.toLowerCase().includes(search.toLowerCase())
-    )
+        country.short_name.toLowerCase().includes(search.toLowerCase())
+      )
     : countries;
 
   return (
-    <section className="container mx-auto px-4 py-6">
-      <div className="flex flex-col md:flex-row justify-between items-center my-6">
+    <section className="container mx-auto px-4 pb-4 md:py-1">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center m-2 md:m-6">
         <h3 className="text-xl md:text-2xl font-bold">
           Explore the Most Viewed Study Destinations!
         </h3>
         <div className="mt-4 md:mt-0 flex items-center bg-gray-100 rounded-lg px-3">
-          <Image src="/search.svg" width={16} height={16} alt="search" className="mr-2" />
+          <Image
+            src="/search.svg"
+            width={16}
+            height={16}
+            alt="search"
+            className="mr-2"
+          />
           <Input
             placeholder="Search..."
             onChange={handleFilter}
             value={search}
             name="search"
-            className="border-none text-sm bg-gray-100 outline-none focus:ring-0"
+            className="border-none text-sm bg-gray-100 outline-none focus:ring-0 placeholder:text-[13px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-6 md:mx-6 mx-2">
         {loading ? (
           <div className="col-span-full flex justify-center items-center rounded-lg h-80">
             <BookLoader />
@@ -53,9 +59,13 @@ const Page = () => {
           <p className="col-span-full text-center">No data found</p>
         ) : (
           filteredCountries.map((country) => (
-            <Link key={country._id} href={`/countries/${country._id}`} target="_blank" className="cursor-pointer">
+            <Link
+              key={country._id}
+              href={`/countries/${country._id}`}
+              target="_blank"
+              className="cursor-pointer"
+            >
               <div className="overflow-hidden rounded-xl relative min-h-[268px] md:min-h-[250px]">
-
                 <ImageWithLoader
                   src={`/countryarchive/${country.short_name}.svg`}
                   alt={country.alt}

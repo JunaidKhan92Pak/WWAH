@@ -25,10 +25,9 @@ type ScholarshipData = {
     master: string;
     phd: string;
   };
-  benefits: string[]
-  applicableDepartments: []
-  eligibilityCriteria: []
-
+  benefits: string[];
+  applicableDepartments: [];
+  eligibilityCriteria: [];
 };
 
 const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -42,18 +41,17 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         const res = await fetch(`/api/scholarship?id=${id}`);
         if (!res.ok) throw new Error("Failed to fetch scholarship data");
         const jsonData = await res.json();
-        if (!jsonData.ScholarshipData) throw new Error("Scholarship data not found");
+        if (!jsonData.ScholarshipData)
+          throw new Error("Scholarship data not found");
         setData(jsonData.ScholarshipData);
-      }
-      catch (err) {
+      } catch (err) {
         console.error("Error fetching scholaoship data:", err);
         let errorMessage = "An error occurred while fetching data.";
         if (err instanceof Error) {
           errorMessage = err.message;
         }
         setError(errorMessage);
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -85,10 +83,16 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
   if (loading) return <HeroSkeleton />;
   if (error) return <p>Error: {error}</p>;
-  if (!data) return < p > Not Aviable</ p>;
+  if (!data) return <p> Not Aviable</p>;
   return (
     <>
-      <Hero name={data?.name || 'Not Available'} country={data?.hostCountry || 'Unknown'} type={data?.scholarshipType || 'Unknown'} deadline={data?.deadline || 'Unknown'} university={data?.university || 'Not Mention'} />
+      <Hero
+        name={data?.name || "Not Available"}
+        country={data?.hostCountry || "Unknown"}
+        type={data?.scholarshipType || "Unknown"}
+        deadline={data?.deadline || "Unknown"}
+        university={data?.university || "Not Mention"}
+      />
       <div className="bg-white mt-4 lg:mt-40 2xl:mt-[12%] lg:my-6">
         <div className=" mx-auto sm:w-[88%] w-[70%]">
           <div className="w-full flex flex-col sm:flex-row gap-1 justify-center lg:justify-evenly items-center  border-b border-gray-200">
@@ -96,10 +100,11 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-2 md:text-[14px] text-[12px] md:py-2 py-1 rounded-lg w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
-                  ? "bg-[#C7161E] text-white"
-                  : "text-gray-800"
-                  }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-2 md:text-[14px] text-[12px] md:py-2 py-1 rounded-lg w-full hover:bg-[#FCE7D2] hover:text-black ${
+                  activeTabPro === tab.label
+                    ? "bg-[#C7161E] text-white"
+                    : "text-gray-800"
+                }`}
               >
                 {tab.label}
               </button>
@@ -107,15 +112,22 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       </div>
-      <Overview overview={data?.overview || ""} duration={data?.duration || { undergraduate: "", master: "", phd: "" }} />
+      <Overview
+        overview={data?.overview || ""}
+        duration={data?.duration || { undergraduate: "", master: "", phd: "" }}
+      />
       <div id="Benefits">
         <GKSscholarships benefit={data?.benefits || []} />
       </div>
       <div id="Application-departments">
-        <Applicationdepartment applicableDepartments={data?.applicableDepartments || []} />
+        <Applicationdepartment
+          applicableDepartments={data?.applicableDepartments || []}
+        />
       </div>
-      <div id="Eligibility Criteria" >
-        <Eligibilitycriteria eligibilityCriteria={data?.eligibilityCriteria || []} />
+      <div id="Eligibility Criteria">
+        <Eligibilitycriteria
+          eligibilityCriteria={data?.eligibilityCriteria || []}
+        />
       </div>
 
       <div id="Required Documents">

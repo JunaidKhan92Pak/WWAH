@@ -81,7 +81,7 @@ const Page = () => {
 
   return (
     <section className="w-[90%] mx-auto">
-      <div className="md:flex md:justify-between py-5 md:pt-16">
+      <div className="md:flex md:justify-between py-5 md:pt-10">
         <h3 className="font-bold">Discover Universities Worldwide</h3>
         <div className="sm:flex items-center">
           <div className="w-full md:w-[70%] flex md:justify-end items-center py-2 md:p-2">
@@ -101,7 +101,7 @@ const Page = () => {
                   handleSearch(value);
                 }}
                 value={localSearch}
-                className="border-none bg-[#F1F1F1]"
+                className="border-none bg-[#F1F1F1] placeholder:text-[13px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
                 aria-label="Search Universities"
               />
             </div>
@@ -143,7 +143,7 @@ const Page = () => {
         <SkeletonCard arr={12} />
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 px-2">
             {universities.length === 0 ? (
               <p className="text-[20px] font-semibold col-span-4 text-center p-4">
                 No Universities Found

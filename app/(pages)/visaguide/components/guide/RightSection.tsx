@@ -19,7 +19,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
   const targetRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className=" py-4 px-4 ">
+    <div id="right-section" className=" py-4 px-4 ">
       {/* Choose your Program */}
       <div id="1" ref={targetRef}>
         <div className="flex items-center gap-4 p-3 ">

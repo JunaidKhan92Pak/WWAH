@@ -47,7 +47,7 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
       heading: "Japan Visa Guidence",
     },
   ];
-  
+
   return (
     <div>
       <section className="relative flex flex-col justify-center items-center text-center text-white w-full bg-cover bg-center ">
@@ -56,7 +56,7 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
           <FAQ title="Frequently Asked Questions:" items={faqs} />
         </div>
       </section>
-      <section className="md:py-20 py-10">
+      <section className="md:py-10 py-10">
         <h2 className="text-center mb-5">Our Blogs!</h2>
         <div
           className="flex overflow-x-auto space-x-4 p-4 hide-scrollbar"
@@ -68,14 +68,14 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
           {sliderArray1.map((image, index) => (
             <div
               key={index}
-              className="relative flex-shrink-0 max-w-[200px] md:max-w-[400px] 2xl:max-w-[600px]"
+              className="relative flex-shrink-0 max-w-[200px] md:max-w-[350px] 2xl:max-w-[600px]"
             >
               <Image
                 src={image.src}
                 alt={image.alt}
                 width={600}
                 height={600}
-                className="rounded-3xl shadow-lg w-[250px] h-[150px] md:w-[350px] md:h-[250px] xl:w-[500px] xl:h-[300px]"
+                className="rounded-3xl shadow-lg w-[250px] h-[150px] md:w-[350px] md:h-[250px] xl:w-[500px] xl:h-[280px]"
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-90 rounded-3xl hidden sm:flex flex-col justify-end p-6">
@@ -96,7 +96,6 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
-      
     </div>
   );
 };

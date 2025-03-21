@@ -82,7 +82,7 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
     <section className="mx-auto">
       {/* Hero Section */}
       <div
-        className="relative h-[150px] sm:h-[75vh] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center md:mt-4"
+        className="relative h-[170px] sm:h-[75vh] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center md:mt-4"
         style={{
           backgroundImage: "url('/countrypage/bg-image.png')",
         }}
@@ -111,7 +111,7 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
         <div
           className="
       flex lg:grid lg:grid-cols-4 md:gap-6  overflow-x-auto bg-white shadow-lg rounded-2xl mx-auto 
-      w-[90%] md:w-[80%] md:py-6 md:px-4 p-2 whitespace-nowrap lg:whitespace-normal lg:overflow-visible sm:relative md:absolute md:-top-20 md:left-1/2 md:transform md:-translate-x-1/2 "
+      w-[95%] md:w-[80%] md:py-6 md:px-4 p-2 whitespace-nowrap lg:whitespace-normal lg:overflow-visible sm:relative md:absolute md:-top-20 md:left-1/2 md:transform md:-translate-x-1/2 "
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
