@@ -32,7 +32,7 @@ const Exploresection = () => {
       <div className="relative z-10 w-full lg:w-[50%] mt-6 lg:mt-0">
         <div className="relative w-full flex justify-center overflow-hidden">
           <div
-            className="flex overflow-x-auto space-x-4 hide-scrollbar"
+            className="flex overflow-x-auto space-x-2 md:space-x-5 hide-scrollbar"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -44,7 +44,7 @@ const Exploresection = () => {
               universities.map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-[85%] sm:w-[85%] md:w-[70%] lg:w-[80%] h-[25vh] sm:h-[50vh] max-[320px]:h-[50vh] md:h-[55vh] lg:h-[50vh] 2xl:h-[60vh] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+                  className="relative flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
                 >
                   <Image
                     src={item.universityImages.banner}
@@ -52,11 +52,11 @@ const Exploresection = () => {
                     width={400}
                     height={350}
                     objectFit="cover"
-                    className="rounded-3xl w-full h-full"
+                    className="rounded-3xl w-[235px] md:w-[400px] xl:w-[450px] xl:h-[350px] h-[220px] md:h-[300px]"
                   />
                   {/* Text Overlay */}
 
-                  <div className="absolute bottom-0 bg-white bg-opacity-20 backdrop-blur-sm rounded-3xl w-full text-white p-4 sm:p-6 md:p-8">
+                  <div className="absolute bottom-0 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl md:rounded-3xl w-full text-white p-4 sm:p-6 md:p-8 ">
                     {/* Logo Image */}
                     <div className="absolute -top-8 left-2 sm:-top-10 sm:left-4 md:-top-12 lg:-top-10 2xl:-top-16 md:left-6">
                       <Image
@@ -70,11 +70,12 @@ const Exploresection = () => {
                     {/* Title */}
                     <h6>{item.university_name}</h6>
                     {/* Additional Info */}
-                    <div className="flex sm:flex-row gap-2 sm:gap-16 lg:gap-12 flex-wrap sm:flex-nowrap">
+                    <div className="flex w-full justify-between text-white text-sm sm:text-base">
                       <p>{item.country_name}</p>
                       <p>Public</p>
                       <p>{item.acceptance_rate}</p>
                     </div>
+
                   </div>
                 </div>
               ))

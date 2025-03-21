@@ -52,7 +52,7 @@ const Step4 = () => {
           onSubmit={handleSubmit}
           className="bg-white rounded-md space-y-3  lg:px-8"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
             <div>
               <label className="block text-gray-700 text-sm mb-2">
                 What is your English Proficiency level?

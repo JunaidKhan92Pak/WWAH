@@ -113,8 +113,8 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
   }, [currentSlide, slides]);
 
   return (
-    <div className="py-8">
-      <div className="relative text-white py-4 md:py-14 lg:py-20 px-5 md:px-12">
+    <div className="pt-8">
+      <div className="relative text-white px-5 md:px-12 ">
         {/* Background Image */}
         <div className="absolute inset-0 -z-10">
           <Image
@@ -126,7 +126,6 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
           <div className="absolute inset-0 bg-black opacity-70"></div>
         </div>
         {/* Carousel Section */}
-        <div className="px-2 sm:px-12">
           <Carousel
             className="relative w-full"
             onChange={(e: React.FormEvent<HTMLDivElement>) => {
@@ -140,24 +139,24 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
             <CarouselContent>
               {slides.map((slide, index) => (
                 <CarouselItem key={index}>
-                  <div className="flex flex-col lg:flex-row justify-center gap-8 items-center">
+                  <div className="flex flex-col lg:flex-row justify-center gap-6 items-center w-[85%] xl:w-[70%] mx-auto pt-7 xl:py-12">
                     {/* Image Section */}
-                    <div className="w-[95%] sm:w-[80%] lg:w-[35%] 2xl:w-[25%]">
+                    <div className="w-full md:w-[70%] lg:w-[50%]  xl:w-[40%]">
                       <div className="rounded-3xl overflow-hidden shadow-lg">
                         <Image
                           src={slide.images[currentImages] ?? "/placeholder.jpg"}
                           alt={slide.title}
                           width={400}
                           height={300}
-                          className="object-cover w-full h-[180px] sm:h-[50vh] md:h-[60vh] lg:h-[40vh] xl:h-[50vh] 2xl:h-[55vh]"
+                          className="object-cover w-full h-[180px] sm:h-[50vh] md:h-[25vh] lg:h-[37vh]"
                         />
                       </div>
                     </div>
                     {/* Text Section */}
-                    <div className="w-full sm:w-[80%] md:w-[70%] lg:w-[50%] xl:w-[40%] 2xl:w-[40%] space-y-4">
+                    <div className="w-full md:w-[70%] lg:w-[50%] xl:w-[50%] space-y-2 ">
                       <h3>{slide.title}</h3>
                       {slide.isList ? (
-                        <ul className="text-gray-300 leading-relaxed list-disc pl-5">
+                        <ul className="text-gray-300 leading-relaxed list-disc lg:pl-5">
                           {slide.description
                             .split(" • ")
                             .map((item, idx) => (
@@ -177,7 +176,6 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
             <CarouselPrevious className="text-black" />
             <CarouselNext className="text-black" />
           </Carousel>
-        </div>
       </div>
     </div>
   );

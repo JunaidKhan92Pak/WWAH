@@ -4,15 +4,15 @@ import Image from "next/image";
 function GlobalNetwork() {
   return (
     <div
-    className="relative flex flex-col lg:flex-row items-center justify-center h-auto lg:h-[400px] w-full my-4 mt-12 bg-black text-white"
+    className="relative flex flex-col md:flex-row items-center justify-center w-full my-4 py-4  mt-12 bg-black text-white "
   >
-    <div className="w-[90%]  px-4 sm:px-6 lg:px-8 lg:w-1/2">
-      <div className="text-left pl-0 lg:pl-16">
-        <h5 className="my-4 w-full lg:w-[90%]">
+    <div className="w-[90%]  px-6 md:px-8 lg:w-1/2">
+      <div className="text-left pl-0 lg:pl-12">
+        <h5 className="my-2 md:my-4">
           Join Our Global Network!
         </h5>
-        <p className="mb-4 w-full xl:w-[90%] 2xl:w-3/4">
-          With over <span className="text-[#F0851D]">1,000 universities</span> worldwide in our network, we’ve been driving growth and success for partners globally. Join us and expand your opportunities in the international education market.
+        <p className="mb-4">
+          With over <span className="text-[#F0851D] font-semibold">1,000 Universities</span> worldwide in our network, we&#39;ve been driving growth and success for partners globally. Join us and expand your opportunities in the international education market.
         </p>
       </div>
     </div>
@@ -20,7 +20,7 @@ function GlobalNetwork() {
       <Image
         src="/global.png"
         alt="Global Network"
-        className="w-full max-w-sm lg:max-w-md object-contain h-[300px] lg:h-[400px]"
+        className="w-full max-w-sm md:max-w-md  xl:max-w-lg object-contain h-[200px] lg:h-[400px]"
         width={950}
         height={1100}
       />

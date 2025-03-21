@@ -68,7 +68,7 @@ const Step5 = () => {
           onSubmit={handleSubmit}
           className="mx-auto lg:px-8 bg-white rounded-md space-y-6 "
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
             <div>
               <label
                 htmlFor="preferredCountry"
@@ -120,7 +120,7 @@ const Step5 = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
             <div>
               <label
                 htmlFor="degreeLevel"

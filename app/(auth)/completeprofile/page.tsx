@@ -76,7 +76,7 @@ console.log(value);
       <section className="w-full">
         <form
           onSubmit={handleSubmit}
-          className="w-[100%] bg-white rounded-md space-y-2 mx-auto  lg:p-8"
+          className="w-[100%] bg-white rounded-md space-y-2 mx-auto  l:p-8"
         >
           <div className="grid md:grid-cols-2 gap-2 w-full">
             {/* Column 1 */}
@@ -113,20 +113,20 @@ console.log(value);
                   name="countryCode"
                   value={personalInfo.countryCode}
                   onChange={handleChange}
-                  className="py-2 w-1/4 bg-[#F1F1F1] text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="py-2 w-2/5 md:w-1/2 xl:w-1/4 bg-[#F1F1F1] text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="+44">+44 (UK)</option>
-                  <option value="+86">+86 (China)</option>
-                  <option value="+61">+61 (Australia)</option>
-                  <option value="+1">+1 (Canada)</option>
-                  <option value="+1">+1 (USA)</option>
-                  <option value="+353">+353 (Ireland)</option>
-                  <option value="+64">+64 (New Zealand)</option>
-                  <option value="+49">+49 (Germany)</option>
-                  <option value="+39">+39 (Italy)</option>
-                  <option value="+60">+60 (Malaysia)</option>
-                  <option value="+33">+33 (France)</option>
-                  <option value="+45">+45 (Denmark)</option>
+                  <option value="+44">🇬🇧 +44 (UK)</option>
+  <option value="+86">🇨🇳 +86 (China)</option>
+  <option value="+61">🇦🇺 +61 (Australia)</option>
+  <option value="+1">🇨🇦 +1 (Canada)</option>
+  <option value="+1">🇺🇸 +1 (USA)</option>
+  <option value="+353">🇮🇪 +353 (Ireland)</option>
+  <option value="+64">🇳🇿 +64 (New Zealand)</option>
+  <option value="+49">🇩🇪 +49 (Germany)</option>
+  <option value="+39">🇮🇹 +39 (Italy)</option>
+  <option value="+60">🇲🇾 +60 (Malaysia)</option>
+  <option value="+33">🇫🇷 +33 (France)</option>
+  <option value="+45">🇩🇰 +45 (Denmark)</option>
                 </select>
                 <input
                   type="text"
@@ -154,8 +154,8 @@ console.log(value);
             </div>
           </div>
 
-          <div className="flex gap-3 items-end">
-            <div className="w-1/2">
+          <div className="flex flex-col md:flex-row gap-2 md:items-end">
+            <div className="md:w-1/2">
               <label className="block text-gray-700 text-sm">Country</label>
               <select
                 name="country"
@@ -173,7 +173,7 @@ console.log(value);
                 ))}
               </select>
             </div>
-            <div className="w-1/2">
+            <div className="md:w-1/2">
               <label className="block text-gray-700 text-sm">Nationality</label>
               <select
                 name="nationality"

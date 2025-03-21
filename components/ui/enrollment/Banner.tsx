@@ -41,7 +41,7 @@ export default function Banner({
 
           <div className="w-full flex justify-center sm:w-auto sm:justify-center">
             <Link href={buttonLink}>
-              <Button className="px-6 sm:px-8 lg:px-8 py-3 sm:py-4 text-white bg-[#C7161E] rounded-lg shadow-lg hover:bg-[#A10E17] transition">
+              <Button className="px-3 sm:px-8 lg:px-8 py-3 sm:py-4 text-white bg-[#C7161E] rounded-lg shadow-lg hover:bg-[#A10E17] transition">
                 {buttonText}
               </Button>
             </Link>
