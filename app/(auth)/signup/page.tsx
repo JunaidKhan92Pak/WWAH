@@ -8,11 +8,11 @@ import { useAuth } from "../auth/authProvider";
 import { CiUser } from "react-icons/ci";
 import { IoMailOutline, IoKeyOutline } from "react-icons/io5";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
+import { useUserStore } from "@/store/userStore";
 const Page = () => {
   const router = useRouter();
   const { signupAction } = useAuth();
-
+  const { fetchUser } = useUserStore()
   // Form state and validation errors
   const [formData, setFormData] = useState({
     firstName: "",
@@ -50,8 +50,8 @@ const Page = () => {
       email: !formData.email
         ? "Email is required."
         : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-        ? ""
-        : "Enter a valid email address.",
+          ? ""
+          : "Enter a valid email address.",
       password: !formData.password ? "Password is required." : "",
       confirmPassword:
         formData.password !== formData.confirmPassword
@@ -66,7 +66,8 @@ const Page = () => {
 
     const res = await signupAction(formData);
     if (res.success) {
-      router.push("/home");
+      fetchUser()
+      router.push("/");
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
