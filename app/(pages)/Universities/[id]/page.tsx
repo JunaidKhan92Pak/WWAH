@@ -10,6 +10,8 @@ import AboutGalway from './components/AboutGalway';
 import Exploresection from './components/Exploresection';
 import Herosec from './components/Herosec';
 import { HeroSkeleton } from '@/components/HeroSkeleton';
+import Banner from "@/components/ui/enrollment/Banner";
+// import FAQ from "@/components/ui/enrollment/FAQ";
 
 type Tab = {
   label: string;
@@ -194,6 +196,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           images={data?.universityData.universityImages || null}
         />
       </div>
+         <Banner
+              title="Turn your Study Abroad dreams into Reality!"
+              buttonText="Book a Personalized Session with WWAH today."
+              buttonLink="/schedulesession"
+              backgroundImage="/bg-usa.png"
+          />
+          {/* <FAQ title="Frequently Asked Questions:" items={country?.faqs} /> */}
+          
       <Exploresection />
     </div>
   );

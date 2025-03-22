@@ -4,8 +4,10 @@ import Link from "next/link";
 
 function PartnerUsHero() {
   return (
+    <section className="mx-auto w-[90%] md:w-[95%] overflow-hidden mt-4">
+
     <div
-      className="relative flex items-center justify-center h-[270px] lg:h-[450px] w-[90%] mx-auto my-4 rounded-2xl"
+      className="relative h-[35vh] md:h-[80vh] flex flex-col justify-center items-center md:items-start text-white bg-cover bg-center rounded-3xl py-4 sm:p-0"
       style={{
         backgroundImage: ` url(${"./partnerWithUs.png"})`,
         backgroundSize: "cover",
@@ -31,6 +33,7 @@ function PartnerUsHero() {
         </div>
       </div>
     </div>
+    </section>
   );
 }
 
