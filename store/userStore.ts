@@ -2,12 +2,7 @@
 
 // import { create } from "zustand";
 
-// export interface UserData {
-//     majorSubject: { majorSubject: string, highestQualification: string, previousGradingScore: number, previousGradingScale: any }
-//     langPro: { proficiencyTest: string, proficiencyTestScore: number }
-//     userPreference: { tutionfees: string }
-//     personalInfo: { firstName: string, email: string }
-// }
+
 
 // interface UserState {
 //     user: UserData | null;
@@ -30,8 +25,14 @@ import { create } from "zustand";
 import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
 import { getUserData } from "@/utils/getUser";
 
+export interface UserData {
+    majorSubject: { majorSubject: string, highestQualification: string, previousGradingScore: number, previousGradingScale: any }
+    langPro: { proficiencyTest: string, proficiencyTestScore: number }
+    userPreference: { tutionfees: string }
+    personalInfo: { firstName: string, email: string }
+}
 interface UserState {
-    user: any;
+    user: UserData | null;
     isAuthenticate: boolean;
     loading: boolean;
     setUser: (user: any) => void;

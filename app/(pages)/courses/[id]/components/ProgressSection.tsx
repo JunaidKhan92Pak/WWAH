@@ -102,11 +102,11 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
     // 🔹 Calculate work experience success percentage
     const workExperienceSuccess = calculateWorkExperienceSuccess(userExperienceYears);
     const requiredMajor = extractMajorFromTitle(String(data.course_title || "").trim());
-    const userMajor = user?.majorSubject.majorSubject || "Not Mention" // Replace with real user major from profile
+    const userMajor = user?.majorSubject?.majorSubject || "Not Mention" // Replace with real user major from profile
     const majorSuccess = calculateMajorSuccess(userMajor, requiredMajor, synonyms);
-    const userTest = user?.langPro.proficiencyTest || "Not Mention"
+    const userTest = user?.langPro?.proficiencyTest || "Not Mention"
         ; // "IELTS" | "PTE" | "TOEFL"
-    const userScore = user?.langPro.proficiencyTestScore || 0
+    const userScore = user?.langPro?.proficiencyTestScore || 0
         ; // Example user's overall score
 
     // 🔹 Extract required overall score from text data
@@ -122,7 +122,7 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
 
     useEffect(() => {
         // Dummy values for demonstration:
-        const studentDegree = user?.majorSubject.highestQualification || ""
+        const studentDegree = user?.majorSubject?.highestQualification || ""
             ; // Example: student's degree
         const requiredDegree = data.course_level; // e.g., from course data (could also be data.degree_format)
         const degreeSuccess = calculateDegreeSuccess(studentDegree, requiredDegree);
@@ -130,7 +130,7 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
         // Assume user's grade and grading scale come from user.profile
         // For example, user's previous grading scale is "percentage" and their score is 45.
         const requiredGradeValue = extractGrades(data?.entry_requirement || "60%").percentage;  // e.g., 60%
-        const studentGrade = user?.majorSubject.previousGradingScore || 0; // Replace with actual value if available
+        const studentGrade = user?.majorSubject?.previousGradingScore || 0; // Replace with actual value if available
         const studentScale: "percentage" | "letter" | "cgpa" | "passfail" = user?.majorSubject?.previousGradingScale || "percentage";
         const gradeSuccess = calculateGradeSuccess(
             studentGrade,
