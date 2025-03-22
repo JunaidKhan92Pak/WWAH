@@ -131,7 +131,7 @@ export async function POST(req: Request) {
 
     // If 'university' is an array, extract the first element; otherwise, use the object
     const uni = Array.isArray(data.university) ? data.university[0] : data.university;
-
+    const universityImages = data.universityImages || {};
     // Prepare university data for insertion/updating
     const universityData = {
       country_name: uni.country_name || "Not specified",
@@ -203,6 +203,7 @@ export async function POST(req: Request) {
         { question: uni.faq_5, answer: uni.faq_5_answer },
         { question: uni.faq_6, answer: uni.faq_6_answer },
       ].filter((faq) => faq.question && faq.answer),
+      universityImages,
     };
 
     // Check if the university already exists (using unique fields: country_name and university_name)
