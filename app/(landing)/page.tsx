@@ -126,10 +126,10 @@ function Page() {
                   >
                     <div className="px-4 py-3">
                       <span className="block text-sm text-gray-900 dark:text-white">
-                        {user?.personalInfo.firstName}
+                        {user?.personalInfo.firstName || "User12"}
                       </span>
                       <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                        {user?.personalInfo.email}
+                        {user?.personalInfo.email || "user@gmail.com"}
                       </span>
                     </div>
                     <ul className="py-2">
