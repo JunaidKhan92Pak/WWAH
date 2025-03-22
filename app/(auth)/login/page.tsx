@@ -29,19 +29,30 @@ const Page = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setGeneralError(""); // Clear previous errors
+
     if (!userData.email || !userData.password) {
       setGeneralError("Please fill in all fields.");
       return;
     }
+
     try {
       const loginres = await loginAction(userData);
+      console.log("Login Response:", loginres); // 🔍 Debugging
+
+      if (!loginres) {
+        setGeneralError("No response from server.");
+        return;
+      }
+
       if (loginres.success) {
         router.push("/");
       } else {
-        setGeneralError("Invalid email or password");
+        setGeneralError(loginres.message || "Invalid email or password.");
       }
-    } catch (error) {
-      setGeneralError("Login failed, please try again." + error);
+    } catch (err) {
+      setGeneralError("Login failed, please try again.");
+      console.error("Login failed:", err);
     }
   };
 
@@ -76,9 +87,10 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  className={`w-full pl-10 pr-2 py-2 border rounded ${
-                    errors.email ? "border-red-600" : "border-gray-300"
-                  }`}
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border ${errors.email || generalError
+                    ? "border-red-600"
+                    : "border-gray-300"
+                    } rounded text-base 2xl:text-lg`}
                   placeholder="Enter your email address"
                   name="email"
                   value={userData.email}
@@ -91,10 +103,11 @@ const Page = () => {
               <div className="relative">
                 <IoKeyOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
-                  type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 pr-10 py-2 border rounded ${
-                    errors.password ? "border-red-600" : "border-gray-300"
-                  }`}
+                  type="password"
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border ${errors.password || generalError
+                    ? "border-red-600"
+                    : "border-gray-300"
+                    } rounded`}
                   placeholder="Enter your password"
                   name="password"
                   value={userData.password}
@@ -133,7 +146,7 @@ const Page = () => {
           </form>
         </div>
       </div>
-      {/* Image Section */}
+      {/* image section */}
       <div className="hidden md:flex justify-center md:w-[50%] lg:w-[50%] p-4">
         <div className="relative w-[80%] h-[100%]">
           <Image

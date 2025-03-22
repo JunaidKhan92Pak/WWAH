@@ -93,7 +93,6 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
     const [overallSuccess, setOverallSuccess] = useState<number | null>(null);
     console.log(overallSuccess);
     const { user } = useUserStore();
-    console.log(user, "User From store in p")
     // Function to determine progress bar background color (kept per your design)
     const getProgressBarColor = (value: number) => {
         return value >= 75 ? "#87CE8B" : value >= 50 ? "#fff75e" : "#FE4343";
@@ -130,7 +129,7 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
         // Grade Success calculation:
         // Assume user's grade and grading scale come from user.profile
         // For example, user's previous grading scale is "percentage" and their score is 45.
-        const requiredGradeValue = extractGrades(data.entry_requirement).percentage; // e.g., 60%
+        const requiredGradeValue = extractGrades(data?.entry_requirement || "60%").percentage;  // e.g., 60%
         const studentGrade = user?.majorSubject.previousGradingScore || 0; // Replace with actual value if available
         const studentScale: "percentage" | "letter" | "cgpa" | "passfail" = user?.majorSubject?.previousGradingScale || "percentage";
         const gradeSuccess = calculateGradeSuccess(

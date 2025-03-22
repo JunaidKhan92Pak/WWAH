@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -115,7 +113,7 @@ const Herosection = ({ data }: { data: CourseData }) => {
                     </p>
                   </div>
                 </div>
-               
+
               </div>
 
               <div className="w-[90%] md:w-full lg:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
@@ -139,7 +137,7 @@ const Herosection = ({ data }: { data: CourseData }) => {
 
         <div className="relative mt-2 lg:-mt-10 flex justify-center">
           <div
-            className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4  rounded-2xl shadow-lg mx-auto w-[80%] lg:w-[70%] lg:grid lg:grid-cols-7"
+            className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4 rounded-2xl shadow-lg mx-auto w-[80%] lg:w-[70%] lg:grid lg:grid-cols-7"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -148,7 +146,7 @@ const Herosection = ({ data }: { data: CourseData }) => {
             {arr1.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center text-center md:space-y-2 min-w-[100px] lg:min-w-0"
+                className="relative flex flex-col items-center text-center md:space-y-2 min-w-[100px] lg:min-w-0"
               >
                 <Image
                   src={item.Image}
@@ -157,12 +155,29 @@ const Herosection = ({ data }: { data: CourseData }) => {
                   height={40}
                   className="w-16 h-16"
                 />
-                <p className="font-semibold text-sm">{item.Heading}</p>
-                <p className="text-xs text-wrap">{item.Name}</p>
+
+                {/* Heading with Tooltip */}
+                <div className="relative group w-[100px]">
+                  <p className="font-semibold text-sm truncate max-w-[100px]">
+                    {item.Heading}
+                  </p>
+                </div>
+
+                {/* Name with Tooltip */}
+                <div className="relative group w-[100px]">
+                  <p className="text-xs truncate max-w-[100px] overflow-hidden">
+                    {item.Name}
+                  </p>
+                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-xs p-2 rounded-md w-[200px] text-center shadow-lg">
+                    {item.Name}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
         </div>
+
+
       </section>
     </div>
   );
