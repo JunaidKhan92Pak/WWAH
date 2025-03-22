@@ -15,6 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Bot, Headphones, Trophy, Users, Send } from "lucide-react";
 import Footer from "@/components/Footer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FaCircleUser } from "react-icons/fa6";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
+import { useUserStore } from "@/store/userStore";
 
 function Page() {
   const Countries = [
@@ -35,11 +37,12 @@ function Page() {
     "Denmark",
     "France",
   ];
-  const { universities, country, setCountry, fetchUniversities, loading } =
+  const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
     useUniversityStore();
+  const { user, isAuthenticate, loading: userLoading, logout } = useUserStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
-  }, [fetchUniversities]);
+  }, [fetchUniversities, user]);
   // Suspense will handle this
   const features = [
     {
@@ -82,7 +85,15 @@ function Page() {
       setCountry(updatedSelected); //  Set array directly
     }
   }
-const [successOpen, setSuccessOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+  const [successOpen, setSuccessOpen] = useState(false);
+  if (uniLoading || userLoading) {
+    return <span className="text-gray-500">Checking...</span>;
+  }
+
   return (
     // landing page container starts
     <div className="landingPage">
@@ -93,15 +104,82 @@ const [successOpen, setSuccessOpen] = useState(false);
             <Link href="/" className="flex items-center space-x-2">
               <Image src="/logo.png" alt="WWAH Logo" width={112} height={45} />
             </Link>
-            <Link href="/signin">
-              <Button
-                className="bg-red-700 hover:bg-red-700"
-                variant="default"
-                size="lg"
-              >
-                Login
-              </Button>
-            </Link>
+            {isAuthenticate ? (
+              // Profile Dropdown for Logged-in Users
+              <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
+                <button
+                  type="button"
+                  className="flex text-sm bg-white  rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                  id="user-menu-button"
+                  aria-expanded={isDropdownOpen}
+                  onClick={toggleDropdown}
+                >
+                  <span className="sr-only">Open user menu</span>
+                  <FaCircleUser className="text-gray-800  w-11 h-11 text-xl 2xl:text-4xl" />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div
+                    id="user-dropdown"
+                    className="absolute right-1 top-10 z-20 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                  >
+                    <div className="px-4 py-3">
+                      <span className="block text-sm text-gray-900 dark:text-white">
+                        {user?.personalInfo.firstName}
+                      </span>
+                      <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
+                        {user?.personalInfo.email}
+                      </span>
+                    </div>
+                    <ul className="py-2">
+                      <li>
+                        <Link
+                          href="/completeprofile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        >
+                          Dashboard
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href="/chatmodel"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        >
+                          Chat with ZEUS
+                        </Link>
+                      </li>
+                      <li>
+                        <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                          Settings
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                          onClick={logout}
+                        >
+                          Logout
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Login/Signup Buttons for Guests
+              <>
+                <Link href="/signin">
+                  <Button
+                    className="bg-[#C7161E] text-white text-base"
+                    variant="outline"
+                    size="lg"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </header>
         {/* header section ends */}
@@ -259,7 +337,7 @@ const [successOpen, setSuccessOpen] = useState(false);
             </Badge>
           </div>
           {/* University Cards Grid */}
-          {!loading ? (
+          {!uniLoading ? (
             <div className="flex gap-6 overflow-x-auto scrollbar-hide p-4">
               {universities.length === 0 ? (
                 <p className="text-[20px] font-semibold text-center p-4 w-full">
@@ -277,14 +355,15 @@ const [successOpen, setSuccessOpen] = useState(false);
                       rel="noopener noreferrer"
                       href={`/Universities/${uni._id}`}
                       key={uni._id}
-                      className="relative h-48"
+                      className="relative h-48 block"
                     >
                       <Image
                         src={uni.universityImages.banner}
                         alt={uni.name}
-                        fill
+                        layout="fill"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
+
                       {/* University Logo Overlay */}
                       <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-md">
                         <Image
@@ -293,6 +372,7 @@ const [successOpen, setSuccessOpen] = useState(false);
                           width={40}
                           height={40}
                         />
+
                       </div>
                     </Link>
                     {/* University Details */}

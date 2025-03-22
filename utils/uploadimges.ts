@@ -1,8 +1,11 @@
 import cloudinary from "cloudinary";
 cloudinary.v2.config({
-    cloud_name: "do7lmtq9f",
-    api_key: "971684736325193",
-    api_secret: "l7RmA6TWCvGrKAJe5N1Jdnug-Ig",
+    // cloud_name: "do7lmtq9f",
+    cloud_name: "diktirwh8",
+    // api_key: "971684736325193", //junaid
+    api_key: "758583315993972", // hafiz zain
+    // api_secret: "l7RmA6TWCvGrKAJe5N1Jdnug-Ig",
+    api_secret: "xFMq91tuoL6F9P71w7KObWFyZhA",
 });
 export const uploadImage = async (base64Image: string, universitiesImages: string, filename: string) => {
 

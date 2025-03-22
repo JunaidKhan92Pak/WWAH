@@ -10,8 +10,8 @@ import AboutGalway from './components/AboutGalway';
 import Exploresection from './components/Exploresection';
 import Herosec from './components/Herosec';
 import { HeroSkeleton } from '@/components/HeroSkeleton';
-import Banner from "@/components/ui/enrollment/Banner";
-// import FAQ from "@/components/ui/enrollment/FAQ";
+import FAQ from '@/components/ui/enrollment/FAQ';
+import Banner from '@/components/ui/enrollment/Banner';
 
 type Tab = {
   label: string;
@@ -70,6 +70,7 @@ type UniversityData = {
     cultures: string;
     transportation: string;
   };
+  faq: []
 };
 
 type ApiResponse = {
@@ -128,6 +129,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     };
     if (id) fetchData();
   }, [id]);
+  console.log(data, "data.universityData?.faqs")
   if (loading) return <HeroSkeleton />;
   if (error) return <p>Error: {error}</p>;
   if (!data || !data.universityData) return <p>Course Not Found</p>;
@@ -135,7 +137,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     <div>
       <Herosec data={data.universityData} />
       <div>
-        
         <div className="bg-white my-6 md:mt-12 md:mb-12">
           <div className="w-[95%] mx-auto px-6">
             <div className="w-full flex whitespace-nowrap overflow-x-auto scrollbar-hide justify-center lg:justify-evenly items-center border-b border-gray-200">
@@ -143,11 +144,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 <button
                   key={tab.label}
                   onClick={() => handleTabClick(tab)}
-                  className={`transition px-10 py-2 rounded-t-xl ${
-                    activeTab === tab.label
-                      ? "bg-[#C7161E] text-white"
-                      : "text-gray-600"
-                  }`}
+                  className={`transition px-10 py-2 rounded-t-xl ${activeTab === tab.label ? "bg-[#C7161E] text-white" : "text-gray-600"
+                    }`}
                   aria-label={`Navigate to ${tab.label}`}
                   aria-selected={activeTab === tab.label}
                 >
@@ -196,14 +194,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           images={data?.universityData.universityImages || null}
         />
       </div>
-         <Banner
-              title="Turn your Study Abroad dreams into Reality!"
-              buttonText="Book a Personalized Session with WWAH today."
-              buttonLink="/schedulesession"
-              backgroundImage="/bg-usa.png"
-          />
-          {/* <FAQ title="Frequently Asked Questions:" items={country?.faqs} /> */}
-          
+      <FAQ title="Frequently Asked Questions:" items={data?.universityData?.faq || []} />
+      <Banner
+        title="Turn your Study Abroad dreams into Reality!"
+        buttonText="Book a Personalized Session with WWAH today."
+        buttonLink="/schedulesession"
+        backgroundImage="/bg-usa.png"
+      />
       <Exploresection />
     </div>
   );

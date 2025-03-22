@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -22,11 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number (add with country code)"),
   date: z.string().min(1, "Please select a date"),
   fromTime: z.string().min(1, "Please select time"),
   toTime: z.string().min(1, "Please select time"),
@@ -39,7 +39,6 @@ const formSchema = z.object({
   major: z.string().min(2, "Major must be at least 2 characters"),
   budget: z.string().min(1, "Please enter your budget"),
 });
-
 const countries = [
   "United States",
   "United Kingdom",
@@ -50,7 +49,6 @@ const countries = [
   "Japan",
   "Singapore",
 ];
-
 const destinations = [
   "United States",
   "United Kingdom",
@@ -59,10 +57,14 @@ const destinations = [
   "Germany",
   "France",
 ];
-
 const degrees = ["Bachelor's", "Master's", "PhD", "Diploma", "Certificate"];
-
 export default function Home() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log(isSubmitting);
+
+  const [responseMessage, setResponseMessage] = useState("");
+  console.log(responseMessage);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,12 +82,38 @@ export default function Home() {
       budget: "",
     },
   });
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   console.log(values);
+  //   toast.success("Form submitted successfully!");
+  // }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
+    setResponseMessage("");
+    console.log(values, "these will be send ")
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/scheduleSession`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values), // Corrected form submission
+      });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast.success("Form submitted successfully!");
-  }
+      const data = await response.json();
+      console.log(data);
 
+      if (response.ok) {
+        toast.success("Form submitted successfully!");
+        form.reset(); // Reset form after successful submission
+      } else {
+        setResponseMessage(data.error || "Failed to send message.");
+      }
+    } catch (error) {
+      setResponseMessage("An error occurred. Please try again." + error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-[#FCE7D2] py-12 px-4 ">
       <div className="max-w-3xl mx-auto">
@@ -115,7 +143,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="email"
@@ -134,7 +161,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="phone"
@@ -152,7 +178,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="date"
@@ -171,7 +196,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="fromTime"
@@ -190,7 +214,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="toTime"

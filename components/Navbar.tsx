@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaCircleUser } from "react-icons/fa6";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -11,35 +10,14 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { useAuth } from "../app/(auth)/auth/authProvider";
-// import { getAuthToken } from "@/authHelper";
-import { getAuthToken } from "@/utils/authHelper";
-import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/userStore";
 const Navbar = () => {
+  const { user, isAuthenticate, loading, logout } = useUserStore();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const auth = useAuth();
-  const router = useRouter();
-  const handleLogout = async () => {
-    const resp = await auth.logout();
-    if (resp) {
-      setIsAuthenticated(false); // Explicitly update state after logout
-
-      router.push("/");
-    }
-  };
-  useEffect(() => {
-    // Check for authToken in cookies on page load
-    const token = getAuthToken();
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
-
+  if (loading) return <span className="text-gray-500">Checking...</span>;
   return (
     <header className="h-0 md:h-[50px] lg:mb-10">
       <div className="fixed z-20 w-full mb-2 p-2 bg-white top-0 hidden md:block ">
@@ -52,7 +30,7 @@ const Navbar = () => {
                 alt="logo"
                 width={113}
                 height={45}
-                // className="2xl:w-[150px] 2xl:h-[60px]"
+              // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}
@@ -70,7 +48,7 @@ const Navbar = () => {
                   <NavigationMenuItem>
                     <Link href="/Universities" passHref>
                       <NavigationMenuLink className="hover:underline font-normal">
-                        Universities{" "}
+                        Universities
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
@@ -98,18 +76,18 @@ const Navbar = () => {
 
             {/* Conditional Rendering */}
             <div className="flex gap-3 lg:gap-5">
-              {isAuthenticated ? (
+              {isAuthenticate ? (
                 // Profile Dropdown for Logged-in Users
                 <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
                   <button
                     type="button"
-                    className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                    className="flex text-sm bg-white  rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                     id="user-menu-button"
                     aria-expanded={isDropdownOpen}
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <FaCircleUser className="bg-white text-xl 2xl:text-4xl" />
+                    <FaCircleUser className="text-gray-800  w-11 h-11 text-xl 2xl:text-4xl" />
                   </button>
 
                   {/* Dropdown Menu */}
@@ -120,10 +98,10 @@ const Navbar = () => {
                     >
                       <div className="px-4 py-3">
                         <span className="block text-sm text-gray-900 dark:text-white">
-                          {"Bonnie Green"}
+                          {user?.personalInfo.firstName}
                         </span>
                         <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                          {"name@flowbite.com"}
+                          {user?.personalInfo.email}
                         </span>
                       </div>
                       <ul className="py-2">
@@ -151,7 +129,7 @@ const Navbar = () => {
                         <li>
                           <a
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                            onClick={handleLogout}
+                            onClick={logout}
                           >
                             Logout
                           </a>

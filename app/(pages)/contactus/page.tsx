@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import React from 'react'
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 export default function ContactUs() {
   const countries = [
     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
@@ -29,11 +29,16 @@ export default function ContactUs() {
     { code: "+45", flag: "/denmark.png", country: "Denmark" },
   ];
   const [form, setForm] = useState({
-    country: "",
+    firstName: "",
+    lastName: "",
     countryCode: "",
     phoneNumber: "",
-  })
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    message: "",
+    country: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [responseMessage, setResponseMessage] = useState("");
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
@@ -45,48 +50,97 @@ export default function ContactUs() {
       countryCode: value,
     });
   };
-  return (
-    <>
-      <section className="sm:w-[90%] mx-auto">
-        <div className="flex flex-col lg:flex-row gap-6 py-5 md:py-10 justify-center items-stretch p-2">
-          {/* Left Section */}
-          <div className="w-full lg:w-1/2 bg-white rounded-2xl p-2 md:p-6 border flex flex-col  xl:space-y-4">
-            <h6 className="text-red-500 ">Contact Us</h6>
-            <h4>Let&#39;s Chat, Reach Out to Us!</h4>
-            <p className="text-gray-600 mb-3 xl:mb-0">
-              Have questions or feedback? We&#39;re here to help. Send us a message, and
-              we&#39;ll respond within 24 hours.
-            </p>
-            <form className="space-y-4 md:space-y-5 flex-1 flex flex-col">
-              <div className="grid  md:grid-cols-2 gap-2">
-              <label htmlFor="firstname" className="block text-gray-700">
-              First Name
-                  <input
-                    type="text"
-                    placeholder="Enter your first name"
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Validate form data before submitting
+    if (!form.firstName || !form.lastName || !form.phoneNumber || !form.message) {
+      setResponseMessage("Please fill out all fields before submitting.");
+      setIsSubmitting(false); // Stop submitting
+      return; // Prevent form submission
+    }
+    // Clear any previous error messages
+    setResponseMessage("");
+    console.log(form, "Hi hello");
+    // Make API request to send data
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}contactus`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
 
-                  />
-                </label>
-                <label htmlFor="lastname" className="block text-gray-700">
+      const data = await response.json();
+      console.log(data);
+
+      if (response.ok) {
+        setResponseMessage("Message sent successfully!");
+        setForm({
+          firstName: "",
+          lastName: "",
+          countryCode: "",
+          phoneNumber: "",
+          message: "",
+          country: "",
+        });
+      } else {
+        setResponseMessage(data.error || "Failed to send message.");
+      }
+    } catch (error) {
+      setResponseMessage("An error occurred. Please try again." + error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  return (
+    <section className="sm:w-[90%] mx-auto">
+      <div className="flex flex-col lg:flex-row gap-6 py-5 md:py-10 justify-center items-stretch p-2">
+        {/* Left Section */}
+        <div className="w-full lg:w-1/2 bg-white rounded-2xl p-2 md:p-6 border flex flex-col xl:space-y-4">
+          <h6 className="text-red-500 ">Contact Us</h6>
+          <h4>Let&#39;s Chat, Reach Out to Us!</h4>
+          <p className="text-gray-600 mb-3 xl:mb-0">
+            Have questions or feedback? We&#39;re here to help. Send us a message, and
+            we&#39;ll respond within 24 hours.
+          </p>
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5 flex-1 flex flex-col">
+            <div className="grid md:grid-cols-2 gap-2">
+              <label htmlFor="firstname" className="block text-gray-700">
+                First Name
+                <input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  placeholder="Enter your first name"
+                  className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
+                />
+              </label>
+              <label htmlFor="lastname" className="block text-gray-700">
                 Last Name
-                  <input
-                    type="text"
-                    placeholder="Enter your last name"
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
-/>
-                </label>
-              </div>
-              <div>
-              <label htmlFor="phonenumber" className="block  text-gray-700">
+                <input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  placeholder="Enter your last name"
+                  className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
+                />
+              </label>
+            </div>
+            <div>
+              <label htmlFor="phonenumber" className="block text-gray-700">
                 Phone Number
               </label>
-                <div className="flex flex-row gap-2">
-                  {/* Dropdown for Country Code */}
-                  <div className="flex items-center justify-center w-full sm:w-1/3 lg:w-2/3 xl:w-1/3">
-                    <Select onValueChange={handleCountryCodeChange}>
-                      <SelectTrigger className="flex items-center border rounded-md focus:outline-none focus:ring-0 focus:ring-gray-300 bg-[#F1F1F1]">
-                        <SelectValue placeholder={
+              <div className="flex flex-row gap-2">
+                {/* Dropdown for Country Code */}
+                <div className="flex items-center justify-center w-full sm:w-1/3 lg:w-2/3 xl:w-1/3">
+                  <Select onValueChange={handleCountryCodeChange}>
+                    <SelectTrigger className="flex items-center border rounded-md focus:outline-none focus:ring-0 focus:ring-gray-300 bg-[#F1F1F1]">
+                      <SelectValue
+                        placeholder={
                           form.countryCode
                             ? `${form.countryCode} (${countries.find(c => c.code === form.countryCode)?.country || ''})`
                             : (
@@ -101,122 +155,134 @@ export default function ContactUs() {
                                 <p className="text-xs">{`${countries[0].code} (${countries[0].country})`}</p>
                               </div>
                             )
-                        } />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {countries.map((country) => (
-                          <SelectItem key={`${country.code}-${country.country}`} value={`${country.code}-${country.country}`}>
-                            <div className="flex items-center space-x-2">
-                              <Image
-                                src={country.flag}
-                                alt={`${country.country} Flag`}
-                                width={20}
-                                height={20}
-                                className="object-cover"
-                              />
-                              <p className="text-xs truncate">{`${country.code} (${country.country})`}</p>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  {/* Input Field for Phone Number */}
-                  <div className="w-full">
-                    <Input
-                      name="phoneNumber"
-                      value={form.phoneNumber}
-                      type="text"
-                      placeholder="Enter phone number"
-                      className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
-                      onChange={handleChange}
-                    />
-                  </div>
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem key={`${country.code}-${country.country}`} value={country.code}>
+                          <div className="flex items-center space-x-2">
+                            <Image
+                              src={country.flag}
+                              alt={`${country.country} Flag`}
+                              width={20}
+                              height={20}
+                              className="object-cover"
+                            />
+                            <p className="text-xs truncate">{`${country.code} (${country.country})`}</p>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* Input Field for Phone Number */}
+                <div className="w-full">
+                  <Input
+                    name="phoneNumber"
+                    value={form.phoneNumber}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Enter phone number"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
+                  />
                 </div>
               </div>
-              <label htmlFor="phonenumber" className="block  text-gray-700">
-                Message
-                <textarea
-                  placeholder="Leave us a message..."
-                  rows={6}
-                  className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
-
-></textarea>
-              </label>
-              <div className="flex gap-2">
-                <input type="checkbox" id="privacyPolicy" />
-                <label htmlFor="privacyPolicy" className="text-gray-600">
-                  I agree to our friendly <span className="text-red-500">privacy policy</span>
-                </label>
-              </div>
-              <Button className="bg-[#C7161E] text-white text-base"
-                variant="outline"
-                size="lg">
-                Send Message!
-              </Button>
-            </form>
-          </div>
-          {/* Right Section */}
-          <div className="w-full lg:w-1/2 flex flex-col gap-4 items-center justify-center bg-white rounded-2xl flex-1">
-            <div className="w-full hidden lg:block">
-              <Image
-                src="/ContactUsPage/contactus.svg"
-                alt="Contact Person"
-                width={560}
-                height={400}
-                className="w-[700px] h-[290px] xl:h-[410px] object-cover rounded-2xl"
-              />
             </div>
-            <div className="w-full border rounded-2xl p-4 flex flex-col gap-3">
-              <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-4">
-                <div className="p-4 bg-white rounded-lg">
-                  <Image
-                    src="/ContactUsPage/letter.svg"
-                    alt="Email Icon"
-                    width={26}
-                    height={26}
-                    className="text-red-500"
-                  />
-                </div>
-                <div>
-                  <p>Email Address</p>
-                  <p className="text-gray-600">info@worldwidehub.com</p>
-                </div>
+            <label htmlFor="message" className="block text-gray-700">
+              Message
+              <textarea
+                name="message"
+                value={form.message}
+                onChange={handleChange}
+                placeholder="Leave us a message..."
+                rows={4}
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
+              />
+            </label>
+            <div className="flex gap-2">
+              <input type="checkbox" id="privacyPolicy" />
+              <label htmlFor="privacyPolicy" className="text-gray-600">
+                I agree to our friendly{" "}
+                <span className="text-red-500">privacy policy</span>
+              </label>
+            </div>
+            <Button
+              className="bg-[#C7161E] text-white text-base"
+              variant="outline"
+              size="lg"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sending..." : "Send Message!"}
+            </Button>
+            {responseMessage && (
+              <div className="text-center text-gray-700 mt-4">
+                {responseMessage}
               </div>
-              <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
-                <div className="p-4 bg-white rounded-lg">
-                  <Image
-                    src="/ContactUsPage/phone.svg"
-                    alt="Phone Icon"
-                    width={26}
-                    height={26}
-                    className="text-red-500"
-                  />
-                </div>
-                <div>
-                  <p>Phone Number</p>
-                  <p className="text-gray-600">+92 328 99 11 998</p>
-                </div>
+            )}
+          </form>
+        </div>
+        {/* Right Section */}
+        <div className="w-full lg:w-1/2 flex flex-col gap-4 items-center justify-center bg-white rounded-2xl flex-1">
+          <div className="w-full hidden lg:block">
+            <Image
+              src="/ContactUsPage/contactus.svg"
+              alt="Contact Person"
+              width={560}
+              height={400}
+              className="w-[700px] h-[290px] xl:h-[410px] object-cover rounded-2xl"
+            />
+          </div>
+          <div className="w-full border rounded-2xl p-4 flex flex-col gap-3">
+            <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-4">
+              <div className="p-4 bg-white rounded-lg">
+                <Image
+                  src="/ContactUsPage/letter.svg"
+                  alt="Email Icon"
+                  width={26}
+                  height={26}
+                  className="text-red-500"
+                />
               </div>
-              <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
-                <div className="p-4 bg-white rounded-lg">
-                  <Image
-                    src="/ContactUsPage/global.svg"
-                    alt="Website Icon"
-                    width={26}
-                    height={26}
-                    className="text-red-500"
-                  />
-                </div>
-                <div>
-                  <p>Website</p>
-                  <p className="text-gray-600">www.worldwidehub.com</p>
-                </div>
+              <div>
+                <p>Email Address</p>
+                <p className="text-gray-600">info@worldwidehub.com</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
+              <div className="p-4 bg-white rounded-lg">
+                <Image
+                  src="/ContactUsPage/phone.svg"
+                  alt="Phone Icon"
+                  width={26}
+                  height={26}
+                  className="text-red-500"
+                />
+              </div>
+              <div>
+                <p>Phone Number</p>
+                <p className="text-gray-600">+92 328 99 11 998</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
+              <div className="p-4 bg-white rounded-lg">
+                <Image
+                  src="/ContactUsPage/global.svg"
+                  alt="Website Icon"
+                  width={26}
+                  height={26}
+                  className="text-red-500"
+                />
+              </div>
+              <div>
+                <p>Website</p>
+                <p className="text-gray-600">www.worldwidehub.com</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </>
-  )
+      </div>
+    </section>
+  );
 }

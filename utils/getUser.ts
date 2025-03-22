@@ -1,7 +1,7 @@
 export async function getUserData(token: string) {
     console.log(`🔹 Fetching user data with token: ${token}`);
 
-    const response = await fetch(`http://localhost:8080/profile/data`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}profile/data`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
@@ -15,7 +15,6 @@ export async function getUserData(token: string) {
         console.error(`❌ API Error (${response.status}):`, text);
         throw new Error("Failed to fetch user data");
     }
-
     // 🔹 Try to parse JSON, handle errors gracefully
     try {
         const data = await response.json();

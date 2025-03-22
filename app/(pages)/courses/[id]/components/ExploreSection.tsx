@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+// import Image from "next/image";
 import React, { useEffect } from "react";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 
@@ -13,6 +13,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data }) => {
     useEffect(() => {
         fetchUniversities(); // Fetch universities when component mounts
     }, []);
+    console.log(universities);
 
     return (
         <section
@@ -42,7 +43,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data }) => {
                             msOverflowStyle: "none",
                         }}
                     >
-                        {universities.map((item, index) => (
+                        {/* {universities.map((item, index) => (
                             <div
                                 key={index}
                                 className="relative w-[85%] md:w-[50%] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
@@ -56,7 +57,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data }) => {
                                     className="rounded-3xl w-full h-full"
                                 />
                             </div>
-                        ))}
+                        ))} */}
                     </div>
                 </div>
             </div>

@@ -12,9 +12,12 @@ import {
 } from "react-icons/io5";
 import { useAuth } from "../auth/authProvider";
 
+import { useUserStore } from "@/store/userStore";
+
 const Page = () => {
   const router = useRouter();
   const { loginAction } = useAuth(); // Get login function from context
+  const { fetchUser } = useUserStore()
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -25,7 +28,6 @@ const Page = () => {
   });
   const [generalError, setGeneralError] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -35,24 +37,30 @@ const Page = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!userData.email || !userData.password) {
       setGeneralError("Please fill in all fields.");
       return;
-    } else {
-      try {
-        const loginres = await loginAction(userData);
-        console.log(loginres);
-        if (loginres.success) {
-          router.push("/");
-        } else {
-          setGeneralError("Invalid email or password");
-        }
-      } catch (err) {
-        setGeneralError("Login failed, please try again.");
-        console.error("Login failed", err);
+    }
+
+    try {
+      const loginRes = await loginAction(userData);
+
+      if (loginRes.success) {
+        // const { user } = await useUser();
+        // setUser(user);
+        fetchUser()
+        router.push("/");
+      } else {
+        setGeneralError("Invalid email or password");
       }
+    } catch (err) {
+      setGeneralError("Login failed, please try again.");
+      console.error("Login failed", err);
     }
   };
+
+
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
@@ -95,11 +103,10 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type="text"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
-                    errors.email || generalError
-                      ? "border-red-600"
-                      : "border-gray-300"
-                  } rounded text-base 2xl:text-lg`}
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border ${errors.email || generalError
+                    ? "border-red-600"
+                    : "border-gray-300"
+                    } rounded text-base 2xl:text-lg`}
                   placeholder="Enter your email address"
                   name="email"
                   value={userData.email}
@@ -113,41 +120,10 @@ const Page = () => {
                 <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
-                    errors.password || generalError
-                      ? "border-red-600"
-                      : "border-gray-300"
-                  } rounded`}
-                  placeholder="Enter your password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleChange}
-                />
-                {showPassword ? (
-                  <IoEyeOffOutline
-                    className="absolute right-3 2xl:right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl cursor-pointer"
-                    onClick={() => setShowPassword(false)}
-                  />
-                ) : (
-                  <IoEyeOutline
-                    className="absolute right-3 2xl:right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl cursor-pointer"
-                    onClick={() => setShowPassword(true)}
-                  />
-                )}
-              </div>
-            </div>
-
-            {/* <div>
-              <label className="block text-gray-700 mb-1">Password</label>
-              <div className="relative">
-                <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl " />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
-                    errors.password || generalError
-                      ? "border-red-600"
-                      : "border-gray-300"
-                  } rounded`}
+                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border ${errors.password || generalError
+                    ? "border-red-600"
+                    : "border-gray-300"
+                    } rounded`}
                   placeholder="Enter your password"
                   name="password"
                   value={userData.password}
@@ -165,7 +141,7 @@ const Page = () => {
                   />
                 )}
               </div>
-            </div> */}
+            </div>
 
             <div className="flex justify-between items-center text-gray-600">
               <div className="flex">

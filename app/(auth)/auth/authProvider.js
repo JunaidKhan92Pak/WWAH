@@ -1,15 +1,41 @@
-"use client";
-import React, { createContext, useContext, useState } from "react";
-// import { useRouter } from "next/navigation";
-// Create Auth Context
+"use client"
+// import useUser from "@/hooks/useUser";
+import { deleteAuthToken } from "@/utils/authHelper";
+import React, { createContext, useContext, useState, } from "react";
+import { useUserStore } from "@/store/userStore";
 const AuthContext = createContext();
 
 // AuthProvider Component
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const { setUser } = useUserStore(); // ✅ Zustand state management
+  const [user, setUserState] = useState(null);
   const [token, setToken] = useState(null);
+  // const loginAction = async (userData) => {
+  //   try {
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}signin`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(userData),
+  //     });
 
-  // Login function
+  //     const loggedInUser = await res.json();
+  //     console.log(loggedInUser, "login");
+
+  //     if (loggedInUser.success) {
+  //       document.cookie = `authToken=${loggedInUser.token}; path=/`;
+  //       setToken(loggedInUser.token);
+  //       // ✅ Fetch user data immediately after login
+  //       const { user } = await useUser();
+  //       setUser(user); // Update Zustand
+  //       setUserState(user); // Update local state
+  //     }
+
+  //     return loggedInUser; // ✅ Always return the response
+  //   } catch (err) {
+  //     console.error("Login error", err);
+  //     return { success: false, message: "Login failed" }; // ✅ Ensure a fallback response
+  //   }
+  // };
   const loginAction = async (userData) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}signin`, {
@@ -17,14 +43,17 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
+
       const loggedInUser = await res.json();
       if (loggedInUser.success) {
-        document.cookie = `authToken=${loggedInUser.token}; path=/`
-        setToken(loggedInUser.token)
+        document.cookie = `authToken=${loggedInUser.token}; path=/`;
+        // useUser()
+        setToken(loggedInUser.token);
       }
       return loggedInUser;
     } catch (err) {
       console.error("Login error", err);
+      return { success: false, message: "Login failed" };
     }
   };
 
@@ -36,11 +65,20 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
+
       const res = await response.json();
       if (!response.ok || !res.signup) {
         return { success: false, message: res.message || "Sign-up failed." };
       }
-      setUser(res.user);
+
+      document.cookie = `authToken=${res.token}; path=/`;
+      setToken(res.token);
+
+      // ✅ Fetch user data immediately after signup
+      // const { user } = await useUser();
+      // setUser(user); // Update Zustand
+      // setUserState(user); // Update local state
+
       return { success: true };
     } catch (err) {
       console.error("Signup error", err);
@@ -125,38 +163,26 @@ export const AuthProvider = ({ children }) => {
       throw new Error("Something went wrong. Please try again later.");
     }
   };
-
-
-
-
   // Logout function
   const logout = async () => {
     console.log("Logging out...");
     try {
-      // Send logout request to your API to handle server-side logout
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}logout`, {
-        method: "GET", // Or POST if preferred
-        headers: {
-          // Add any headers if required (e.g., for JWT token or content-type)
-          "Content-Type": "application/json",
-        },
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       });
 
-      // Ensure response is OK (status 200)
       if (!response.ok) {
         throw new Error("Failed to log out");
       }
 
-      // Optionally, handle any response data if needed (e.g., success message)
+      deleteAuthToken();
+      setUser(null); // ✅ Clear Zustand
+      setUserState(null); // ✅ Clear local state
+      setToken(null);
+
       const res = await response.json();
-
-      console.log("Logout successful:", res);
-      // Remove the authToken cookie from client-side (clear the cookie)
-      document.cookie = "authToken=; max-age=0; path=/";
-      // window.scrollTo(0, 0);  // Clears the cookie
-      return res
-      // Redirect user to a public page (e.g., /signin)
-
+      return res;
     } catch (error) {
       console.log(`There was an error during logout: ${error}`);
     }

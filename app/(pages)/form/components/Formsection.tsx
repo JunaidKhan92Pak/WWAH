@@ -13,34 +13,62 @@ import { Button } from "@/components/ui/button";
 
 const Formsection = () => {
   const countries = [
-    { code: "+92", flag: "/pakflag.png",
-       country: "Pakistan" },
-    { code: "+1", flag: "/usa.png",
-       country: "USA" },
-    { code: "+91", flag: "/india.png", 
-      country: "India" },
-    { code: "+61", flag: "/australia.png",  
-      country: "Australia" },
-    { code: "+39", flag: "/italy.png", 
-      country: "Italy" },
-    { code: "+44", flag: "/uk.png", 
-      country: "United Kingdom" },
-    { code: "+1", flag: "/canada.png",
-       country: "Canada" },
-    { code: "+86", flag: "/china.png",
-       country: "China" },
-    { code: "+353", flag: "/ireland.png",
-       country: "Ireland" },
-    { code: "+64", flag: "/new-zealand.png",
-       country: "New Zealand" },
-    { code: "+49", flag: "/germany.png",
-       country: "Germany" },
-    { code: "+60", flag: "/malaysia.png",
-       country: "Malaysia" },
-    { code: "+33", flag: "/france.png", 
-      country: "France" },
-    { code: "+45", flag: "/denmark.png",
-       country: "Denmark" },
+    {
+      code: "+92", flag: "/pakflag.png",
+      country: "Pakistan"
+    },
+    {
+      code: "+1", flag: "/usa.png",
+      country: "USA"
+    },
+    {
+      code: "+91", flag: "/india.png",
+      country: "India"
+    },
+    {
+      code: "+61", flag: "/australia.png",
+      country: "Australia"
+    },
+    {
+      code: "+39", flag: "/italy.png",
+      country: "Italy"
+    },
+    {
+      code: "+44", flag: "/uk.png",
+      country: "United Kingdom"
+    },
+    {
+      code: "+1", flag: "/canada.png",
+      country: "Canada"
+    },
+    {
+      code: "+86", flag: "/china.png",
+      country: "China"
+    },
+    {
+      code: "+353", flag: "/ireland.png",
+      country: "Ireland"
+    },
+    {
+      code: "+64", flag: "/new-zealand.png",
+      country: "New Zealand"
+    },
+    {
+      code: "+49", flag: "/germany.png",
+      country: "Germany"
+    },
+    {
+      code: "+60", flag: "/malaysia.png",
+      country: "Malaysia"
+    },
+    {
+      code: "+33", flag: "/france.png",
+      country: "France"
+    },
+    {
+      code: "+45", flag: "/denmark.png",
+      country: "Denmark"
+    },
   ];
 
   const [form, setForm] = useState({
@@ -80,16 +108,21 @@ const Formsection = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = await fetch("http://localhost:8080/sendMail", {
-      method: "POST",
-      body: JSON.stringify(form),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
-    if (data.ok) {
-      const response = await data.json();
-      console.log(response);
+    if (!form.country || !form.countryCode || !form.email || !form.firstName || !form.format || !form.lastName || !form.phoneNumber || !form.test || !form.timing) {
+      console.log("Hello");
+    }
+    else {
+      const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}sendMail`, {
+        method: "POST",
+        body: JSON.stringify(form),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      if (data.ok) {
+        const response = await data.json();
+        console.log(response);
+      }
     }
   };
 
@@ -405,7 +438,6 @@ const Formsection = () => {
                     </div>
                   </div>
                 </div>
-
                 <div>
                   <label className="block mb-2 font-semibold">Preferred Test (IELTS/PTE/TOEFL)</label>
                   <Select
@@ -452,7 +484,6 @@ const Formsection = () => {
                 </div>
               </>
             )}
-
           </div>
           <div className="pt-6 text-center">
             <Button type="submit" className="px-12 bg-red-700 hover:bg-red-500 transition text-white py-2 rounded-lg">
