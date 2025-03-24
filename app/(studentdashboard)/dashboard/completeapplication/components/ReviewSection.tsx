@@ -1,150 +1,8 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
+import { fetchApplicationInfo, fetchBasicInfo } from "@/utils/stdDashboard";
+import { useEffect, useState } from "react";
 import { MdModeEditOutline } from "react-icons/md";
-// Mock data - replace this with your actual data fetching logic
-const studentData = {
-  personalInfo: {
-    familyName: "Muhammad Ahmad",
-    givenName: "Muhammad Ahmad Haseen",
-    nationality: "Pakistan",
-    nativeLanguage: "Urdu",
-    dateOfBirth: "25-06-2005",
-    countryOfResidence: "Pakistan",
-    gender: "Female",
-    maritalStatus: "Single",
-    religion: "Islam",
-  },
-  contactDetails: {
-    homeAddress: "Johar Town Lahore",
-    detailedAddress: "street-no13 ,block no.230 johar town lahore",
-    country: "Pakistan",
-    cityProvince: "Lahore/Punjab",
-    zipCode: "Pakistan",
-    phoneNumber: "03334487969",
-    email: "muhammadahmad903@gmail.com",
-  },
-  currentDetails: {
-    homeAddress: "Johar Town Lahore",
-    detailedAddress: "street-no13 ,block no.230 johar town lahore",
-    country: "Pakistan",
-    cityProvince: "Lahore/Punjab",
-    zipCode: "Pakistan",
-    phoneNumber: "03334487969",
-    email: "muhammadahmad903@gmail.com",
-  },
-  passportInfo: {
-    passportNumber: "12345",
-    passportExpiryDate: "23/25",
-    oldPassportNumber: "34567",
-    oldPassportExpiryDate: "11/11",
-  },
-  learningExperienceAbroad: {
-    countryName: "United Kingdom",
-    institutionAttended: "Oxford University",
-    visaType: "Student Visa",
-    visaExpiryDate: "12/31/2026",
-    durationOfStudy: "2 years",
-  },
-  financialSponsorInfo: {
-    name: "Ahmed Khan",
-    relationshipWithStudent: "Father",
-    nationality: "Pakistan",
-    occupation: "Businessman",
-    email: "ahmed.khan@example.com",
-    phoneNumber: "+92 300 1234567",
-  },
-  familyMembers: [
-    {
-      name: "Fatima Khan",
-      relationshipWithStudent: "Mother",
-      nationality: "Pakistan",
-      occupation: "Doctor",
-      email: "fatima.khan@example.com",
-      phoneNumber: "+92 321 9876543",
-    },
-    {
-      name: "Ali Khan",
-      relationshipWithStudent: "Mother",
-      nationality: "Pakistan",
-      occupation: "Doctor",
-      email: "fatima.khan@example.com",
-      phoneNumber: "+92 321 9876543",
-    },
-  ],
-  languageProficiency: {
-    countryOfStudy: "United States",
-    proficiencyLevel: "Advanced",
-    testTaken: "IELTS",
-    overallScore: "8.0",
-    listeningScore: "8.5",
-    readingScore: "7.5",
-    writingScore: "7.0",
-    speakingScore: "8.0",
-  },
-
-  educationalBackground: [
-    {
-      highestDegree: "Bachelor's in Computer Science",
-      subjectName: "Software Engineering",
-      institutionAttended: "COMSATS University",
-      cgpaOrMarks: "3.8/4.0",
-      degreeStartDate: "09/01/2019",
-      degreeCompletionDate: "06/30/2023",
-    },
-    {
-      highestDegree: "High School",
-      subjectName: "Pre-Engineering",
-      institutionAttended: "Punjab College",
-      cgpaOrMarks: "85%",
-      degreeStartDate: "09/01/2017",
-      degreeCompletionDate: "06/30/2019",
-    },
-  ],
-  workExperience: [
-    {
-      jobTitle: "Frontend Developer",
-      organizationName: "SYN DEV AI",
-      employmentType: "Full Time",
-      dateFrom: "12/01/2023",
-      dateTo: "Present",
-    },
-    {
-      jobTitle: "Frontend Developer Intern",
-      organizationName: "Software House XYZ",
-      employmentType: "Part Time",
-      dateFrom: "06/01/2023",
-      dateTo: "11/30/2023",
-    },
-  ],
-  standardizedTests: [
-    {
-      testName: "IELTS",
-      overallScore: "7.5",
-      subScores: {
-        listening: "8.0",
-        reading: "7.0",
-        writing: "6.5",
-        speaking: "7.5",
-      },
-    },
-    {
-      testName: "TOEFL",
-      overallScore: "100",
-      subScores: {
-        listening: "25",
-        reading: "24",
-        writing: "26",
-        speaking: "25",
-      },
-    },
-  ],
-};
-
-const fdataMap = studentData.familyMembers;
-const wdataMap = studentData.workExperience;
-const edataMap = studentData.educationalBackground;
-const sdataMap = studentData.standardizedTests;
 const Section = ({
   title,
   data,
@@ -158,7 +16,6 @@ const Section = ({
     <button className="flex flex-row items-center whitespace-nowrap rounded-lg mb-4 p-2 bg-[#F4D0D2]">
       <p className="font-semibold">{title}</p>
     </button>
-
     <div>
       <div className="grid grid-cols-1  gap-4">
         {data &&
@@ -179,6 +36,166 @@ const Section = ({
   </div>
 );
 export default function ReviewPage() {
+  interface Data1Type {
+    familyName?: string;
+    givenName?: string;
+    nationality?: string;
+    DOB?: string;
+    countryOfResidence?: string;
+    gender?: string;
+    maritalStatus?: string;
+    religion?: string;
+    homeAddress?: string;
+    detailedAddress?: string;
+    country?: string;
+    currentZipCode?: string;
+    countryCode?: string;
+    phoneNo?: string;
+    currentDetailedAddress?: string;
+    currentCountry?: string;
+    currentCity?: string;
+    currentEmail?: string;
+    currentPhoneNo?: string;
+    passportNumber?: string;
+    passportExpiryDate?: string;
+    oldPassportNumber?: string;
+    oldPassportExpiryDate?: string;
+    visitedCountry?: string;
+    institution?: string;
+    visaType?: string;
+    visaExpiryDate?: string;
+    durationOfStudyAbroad?: string;
+    sponsorName?: string;
+    sponsorRelationship?: string;
+    sponsorsNationality?: string;
+    sponsorsOccupation?: string;
+    sponsorsEmail?: string;
+    sponsorsPhoneNo?: string;
+    familyMembers?: Array<{
+      name: string;
+      relationship: string;
+      nationality: string;
+      occupation: string;
+      email: string;
+      phoneNo: string;
+    }>;
+  }
+
+  const [data1, setData1] = useState<Data1Type | null>(null);
+  interface Data2Type {
+    countryOfStudy?: string;
+    proficiencyLevel?: string;
+    proficiencyTest?: string;
+    overAllScore?: string;
+    listeningScore?: string;
+    readingScore?: string;
+    writingScore?: string;
+    speakingScore?: string;
+    educationalBackground?: Array<{
+      highestDegree: string;
+      subjectName: string;
+      institutionAttended: string;
+      marks: string;
+      degreeStartDate: string;
+      degreeEndDate: string;
+    }>;
+    workExperience?: Array<{
+      jobTitle: string;
+      organizationName: string;
+      employmentType: string;
+      from: string;
+      to: string;
+    }>;
+    standardizedTest?: string;
+    standardizedOverallScore?: string;
+    standardizedSubScore?: string[];
+  }
+
+  const [data2, setData2] = useState<Data2Type | null>(null);
+  // console.log(data1, "data 1");
+  // console.log(data2, "data 2");
+  useEffect(() => {
+    const getData = async () => {
+      const result1 = await fetchBasicInfo();
+      const result2 = await fetchApplicationInfo();
+      setData1(result1);
+      setData2(result2);
+    };
+
+    getData();
+  }, []);
+  const studentData = {
+    personalInfo: {
+      familyName: `${data1?.familyName}`,
+      givenName: `${data1?.givenName}`,
+      nationality: `${data1?.nationality}`,
+      dateOfBirth: `${data1?.DOB}`,
+      countryOfResidence: `${data1?.countryOfResidence}`,
+      gender: `${data1?.gender}`,
+      maritalStatus: `${data1?.maritalStatus}`,
+      religion: `${data1?.religion}`,
+    },
+    contactDetails: {
+      homeAddress: `${data1?.homeAddress}`,
+      detailedAddress: `${data1?.detailedAddress}`,
+      country: `${data1?.country}`,
+      // cityProvince: `${data1?.religion}`,
+      zipCode: `${data1?.currentZipCode}`,
+      phoneNumber: `${data1?.countryCode}-${data1?.phoneNo}`,
+      // email: `${data1?.religion}`,
+    },
+    currentDetails: {
+      homeAddress: `${data1?.homeAddress}`,
+      detailedAddress: `${data1?.currentDetailedAddress}`,
+      country: `${data1?.currentCountry}`,
+      cityProvince: `${data1?.currentCity}`,
+      zipCode: `${data1?.currentZipCode}`,
+      phoneNumber: `${data1?.countryCode}-${data1?.currentPhoneNo}`,
+      email: `${data1?.currentEmail}`,
+    },
+    passportInfo: {
+      passportNumber: `${data1?.passportNumber}`,
+      passportExpiryDate: `${data1?.passportExpiryDate}`,
+      oldPassportNumber: `${data1?.oldPassportNumber}`,
+      oldPassportExpiryDate: `${data1?.oldPassportExpiryDate}`,
+    },
+    learningExperienceAbroad: {
+      countryName: `${data1?.visitedCountry}`,
+      institutionAttended: `${data1?.institution}`,
+      visaType: `${data1?.visaType}`,
+      visaExpiryDate: `${data1?.visaExpiryDate}`,
+      durationOfStudy: `${data1?.durationOfStudyAbroad}`,
+    },
+    financialSponsorInfo: {
+      name: `${data1?.sponsorName}`,
+      relationshipWithStudent: `${data1?.sponsorRelationship}`,
+      nationality: `${data1?.sponsorsNationality}`,
+      occupation: `${data1?.sponsorsOccupation}`,
+      email: `${data1?.sponsorsEmail}`,
+      phoneNumber: `${data1?.countryCode}-${data1?.sponsorsPhoneNo}`,
+    },
+    familyMembers: data1?.familyMembers,
+    languageProficiency: {
+      countryOfStudy: `${data2?.countryOfStudy}`,
+      proficiencyLevel: `${data2?.proficiencyLevel}`,
+      testTaken: `${data2?.proficiencyTest}`,
+      overallScore: `${data2?.overAllScore}`,
+      listeningScore: `${data2?.listeningScore}`,
+      readingScore: `${data2?.readingScore}`,
+      writingScore: `${data2?.writingScore}`,
+      speakingScore: `${data2?.speakingScore}`,
+    },
+    educationalBackground: data2?.educationalBackground,
+    workExperience: data2?.workExperience,
+    standardizedTests: {
+      testName: `${data2?.standardizedTest}`,
+      overallScore: `${data2?.standardizedOverallScore}`,
+      subScores: data2?.standardizedSubScore?.join(", ") || "",
+    },
+  };
+  const fdataMap = studentData?.familyMembers;
+  const wdataMap = studentData?.workExperience;
+  const edataMap = studentData?.educationalBackground;
   return (
     <div className="mx-auto p-4">
       {/* Personal Information Section */}
@@ -216,7 +233,7 @@ export default function ReviewPage() {
       {/* Family Members Section */}
       <Section title="Family Members">
         <div className="grid grid-cols-1 gap-4">
-          {fdataMap.map((member, index) => (
+          {fdataMap?.map((member, index) => (
             <div
               key={index}
               className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
@@ -231,7 +248,7 @@ export default function ReviewPage() {
 
               {/* Relationship */}
               <p className="text-sm text-muted-foreground">Relationship</p>
-              <p className="font-medium">{member.relationshipWithStudent}</p>
+              <p className="font-medium">{member.relationship}</p>
 
               {/* Nationality */}
               <p className="text-sm text-muted-foreground">Nationality</p>
@@ -247,7 +264,7 @@ export default function ReviewPage() {
 
               {/* Phone */}
               <p className="text-sm text-muted-foreground">Phone</p>
-              <p className="font-medium">{member.phoneNumber}</p>
+              <p className="font-medium">{member.phoneNo}</p>
 
               {/* Divider */}
               <hr className="col-span-2" />
@@ -258,7 +275,7 @@ export default function ReviewPage() {
       {/* Educational Background Section */}
       <Section title="Educational Background">
         <div className="grid grid-cols-1 gap-4">
-          {edataMap.map((education, index) => (
+          {edataMap?.map((education, index) => (
             <div
               key={index}
               className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
@@ -283,7 +300,7 @@ export default function ReviewPage() {
 
               {/* CGPA/Marks */}
               <p className="text-sm text-muted-foreground">CGPA/Marks</p>
-              <p className="font-medium">{education.cgpaOrMarks}</p>
+              <p className="font-medium">{education.marks}</p>
 
               {/* Degree Start Date */}
               <p className="text-sm text-muted-foreground">Degree Start Date</p>
@@ -293,7 +310,7 @@ export default function ReviewPage() {
               <p className="text-sm text-muted-foreground">
                 Degree Completion Date
               </p>
-              <p className="font-medium">{education.degreeCompletionDate}</p>
+              <p className="font-medium">{education.degreeEndDate}</p>
 
               {/* Divider */}
               <hr className="col-span-2" />
@@ -304,7 +321,7 @@ export default function ReviewPage() {
       {/* Work Experience Section */}
       <Section title="Work Experience">
         <div className="grid grid-cols-1 gap-4">
-          {wdataMap.map((experience, index) => (
+          {wdataMap?.map((experience, index) => (
             <div
               key={index}
               className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
@@ -327,11 +344,11 @@ export default function ReviewPage() {
 
               {/* Date From */}
               <p className="text-sm text-muted-foreground">Start Date</p>
-              <p className="font-medium">{experience.dateFrom}</p>
+              <p className="font-medium">{experience.from}</p>
 
               {/* Date To */}
               <p className="text-sm text-muted-foreground">End Date</p>
-              <p className="font-medium">{experience.dateTo}</p>
+              <p className="font-medium">{experience.to}</p>
 
               {/* Divider */}
               <hr className="col-span-2" />
@@ -340,40 +357,12 @@ export default function ReviewPage() {
         </div>
       </Section>
       {/* Standardized Test Section */}
-      <Section title="Standardized Test">
+      <Section title="Standardized Test" data={studentData.standardizedTests}>
         <div className="grid grid-cols-1 gap-4">
-          {sdataMap.map((test, index) => (
-            <div
-              key={index}
-              className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
-            >
-              {/* Index Number */}
-              <p className="font-medium">{index + 1}</p>
-              <p className="text-sm text-muted-foreground">-</p>
-
-              {/* Test Name */}
-              <p className="text-sm text-muted-foreground">Test Name</p>
-              <p className="font-medium">{test.testName}</p>
-
-              {/* Overall Score */}
-              <p className="text-sm text-muted-foreground">Overall Score</p>
-              <p className="font-medium">{test.overallScore}</p>
-
-              {/* Sub Scores */}
-              <p className="text-sm text-muted-foreground">Sub Scores</p>
-              <div className="font-medium space-y-1">
-                {Object.entries(test.subScores).map(([subject, score], i) => (
-                  <p key={i}>
-                    {subject.charAt(0).toUpperCase() + subject.slice(1)}:{" "}
-                    {score}
-                  </p>
-                ))}
-              </div>
-
-              {/* Divider */}
-              <hr className="col-span-2" />
-            </div>
-          ))}
+          <div className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]">
+            {/* Divider */}
+            <hr className="col-span-2" />
+          </div>
         </div>
       </Section>
       {/* <div className="text-right my-4">

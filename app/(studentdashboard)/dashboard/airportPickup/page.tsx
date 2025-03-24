@@ -28,7 +28,6 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-// import { PlaneLanding } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -36,7 +35,6 @@ import * as z from "zod";
 import { useEffect } from "react";
 import Image from "next/image";
 import { FaPlaneDeparture } from "react-icons/fa6";
-// import { CalendarIcon } from "lucide-react";
 
 // Comprehensive country data with flag image URLs
 const countries = [
@@ -83,10 +81,13 @@ const formSchema = z.object({
 
   // Additional Information
   additionalPreference: z.string().optional(),
-  ticket: z.string().optional(),
+  ticket: z.any().optional(), // Change to any to handle file upload
 });
 
 export default function Home() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState({ type: "", message: "" });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -106,7 +107,6 @@ export default function Home() {
 
       // Additional Information
       additionalPreference: "",
-      ticket: "",
     },
   });
 
@@ -123,9 +123,101 @@ export default function Home() {
     return () => subscription.unsubscribe();
   }, [form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Handle form submission here
+  // Flight details modal state
+  const [open, setOpen] = useState(false);
+  const [flightData, setFlightData] = useState({
+    arrivalDate: "",
+    time: "",
+    airportName: "",
+    flightNumber: "",
+    airlineName: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFlightData({ ...flightData, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = () => {
+    console.log("Saved Flight Details:", flightData);
+    setOpen(false); // Close modal after saving
+  };
+
+  const handleCancel = () => {
+    setFlightData({
+      arrivalDate: "",
+      time: "",
+      airportName: "",
+      flightNumber: "",
+      airlineName: "",
+    });
+    setOpen(false); // Close modal on cancel
+  };
+
+  // Form submission function
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    setSubmitMessage({ type: "", message: "" });
+
+    try {
+      // Create FormData object to handle file upload
+      const formData = new FormData();
+
+      // Add all form fields
+      Object.keys(values).forEach((key) => {
+        if (key !== "ticket") {
+          formData.append(key, values[key as keyof typeof values] as string);
+        }
+      });
+
+      // Add file if it exists
+      const ticketField = form.getValues("ticket");
+      if (ticketField && ticketField[0]) {
+        formData.append("ticket", ticketField[0]);
+      }
+
+      // Add flight details as JSON string
+      formData.append("flightDetails", JSON.stringify(flightData));
+
+      // Submit the form to backend
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/airportPickup`,
+        {
+          method: "POST",
+          body: formData,
+          // Note: Don't set Content-Type header when using FormData
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitMessage({
+          type: "success",
+          message:
+            "Your airport pickup request has been submitted successfully.",
+        });
+
+        // Reset form
+        form.reset();
+        setFlightData({
+          arrivalDate: "",
+          time: "",
+          airportName: "",
+          flightNumber: "",
+          airlineName: "",
+        });
+      } else {
+        throw new Error(data.message || "Failed to submit form");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitMessage({
+        type: "error",
+        message: "Failed to submit your request. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const CountryFlag = ({ url }: { url: string }) => (
@@ -139,34 +231,6 @@ export default function Home() {
       />
     </div>
   );
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    arrivalDate: "",
-    time: "",
-    airportName: "",
-    flightNumber: "",
-    airlineName: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSave = () => {
-    console.log("Saved Flight Details:", formData);
-    setOpen(false); // Close modal after saving
-  };
-
-  const handleCancel = () => {
-    setFormData({
-      arrivalDate: "",
-      time: "",
-      airportName: "",
-      flightNumber: "",
-      airlineName: "",
-    });
-    setOpen(false); // Close modal on cancel
-  };
 
   return (
     <div className="p-4">
@@ -175,6 +239,18 @@ export default function Home() {
           Fill out the airport pickup form below with your travel details so we
           can arrange a hassle-free pickup for you.
         </p>
+
+        {submitMessage.message && (
+          <div
+            className={`p-4 my-4 rounded ${
+              submitMessage.type === "success"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {submitMessage.message}
+          </div>
+        )}
 
         <div>
           <Form {...form}>
@@ -228,7 +304,7 @@ export default function Home() {
                         </SelectContent>
                       </Select>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {form.formState.errors.country?.message}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -263,7 +339,7 @@ export default function Home() {
                         </SelectContent>
                       </Select>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {form.formState.errors.university?.message}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -292,7 +368,7 @@ export default function Home() {
                         </SelectContent>
                       </Select>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {form.formState.errors.city?.message}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -302,14 +378,20 @@ export default function Home() {
                 <FormField
                   control={form.control}
                   name="ticket"
-                  render={({ field }) => (
+                  render={({ field: {  onChange, ...fieldProps } }) => (
                     <FormItem>
                       <FormLabel>Upload Ticket</FormLabel>
                       <FormControl className="bg-[#f1f1f1]">
-                        <Input type="file" {...field} />
+                        <Input
+                          type="file"
+                          {...fieldProps}
+                          onChange={(e) => {
+                            onChange(e.target.files);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {String(form.formState.errors.ticket?.message || "")}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -341,7 +423,7 @@ export default function Home() {
                         </SelectContent>
                       </Select>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {form.formState.errors.pickupOption?.message}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -360,7 +442,7 @@ export default function Home() {
                         />
                       </FormControl>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {form.formState.errors.dropOffLocation?.message}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -382,7 +464,7 @@ export default function Home() {
                       />
                     </FormControl>
                     <FormMessage>
-                      {form.formState.errors.ticket?.message}
+                      {form.formState.errors.additionalPreference?.message}
                     </FormMessage>
                   </FormItem>
                 )}
@@ -447,7 +529,7 @@ export default function Home() {
                         </FormControl>
                       </div>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {form.formState.errors.phoneNo?.message}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -466,7 +548,7 @@ export default function Home() {
                         />
                       </FormControl>
                       <FormMessage>
-                        {form.formState.errors.ticket?.message}
+                        {form.formState.errors.email?.message}
                       </FormMessage>
                     </FormItem>
                   )}
@@ -476,7 +558,7 @@ export default function Home() {
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-[#FCE7D2] hover:bg-[#FCE7D2] text-black">
-                    <FaPlaneDeparture /> Add Flight Details
+                    <FaPlaneDeparture className="mr-2" /> Add Flight Details
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-md p-6">
@@ -490,7 +572,7 @@ export default function Home() {
                         type="date"
                         id="arrivalDate"
                         name="arrivalDate"
-                        value={formData.arrivalDate}
+                        value={flightData.arrivalDate}
                         onChange={handleChange}
                       />
                     </div>
@@ -500,7 +582,7 @@ export default function Home() {
                         type="time"
                         id="time"
                         name="time"
-                        value={formData.time}
+                        value={flightData.time}
                         onChange={handleChange}
                       />
                     </div>
@@ -510,7 +592,7 @@ export default function Home() {
                         type="text"
                         id="airportName"
                         name="airportName"
-                        value={formData.airportName}
+                        value={flightData.airportName}
                         onChange={handleChange}
                         placeholder="Write..."
                         className="placeholder:text-sm"
@@ -522,7 +604,7 @@ export default function Home() {
                         type="text"
                         id="flightNumber"
                         name="flightNumber"
-                        value={formData.flightNumber}
+                        value={flightData.flightNumber}
                         onChange={handleChange}
                         placeholder="Write..."
                         className="placeholder:text-sm"
@@ -534,7 +616,7 @@ export default function Home() {
                         type="text"
                         id="airlineName"
                         name="airlineName"
-                        value={formData.airlineName}
+                        value={flightData.airlineName}
                         onChange={handleChange}
                         placeholder="Write..."
                         className="placeholder:text-sm"
@@ -554,8 +636,9 @@ export default function Home() {
                 <Button
                   type="submit"
                   className="w-1/3 sm:w-1/4 bg-red-600 hover:bg-red-700"
+                  disabled={isSubmitting}
                 >
-                  Submit
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>
             </form>

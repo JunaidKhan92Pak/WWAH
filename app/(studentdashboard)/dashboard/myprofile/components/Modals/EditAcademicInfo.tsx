@@ -357,15 +357,15 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                           </PopoverContent>
                         </Popover> */}
                         <Input
-                                              type="date"
-                                              value={
-                                                field.value ? format(field.value, "yyyy-MM-dd") : ""
-                                              }
-                                              onChange={field.onChange}
-                                              onBlur={field.onBlur}
-                                              name={field.name}
-                                              ref={field.ref}
-                                            />
+                          type="date"
+                          value={
+                            field.value ? format(field.value, "yyyy-MM-dd") : ""
+                          }
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
