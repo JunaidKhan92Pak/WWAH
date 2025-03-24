@@ -113,7 +113,7 @@ const Page = () => {
             <Button
               variant={"ghost"}
               size={"sm"}
-              className="lg:hidden block mb-4 mx-4 bg-gray-100 border-2 border-gray-200"
+              className="lg:hidden block mb-2 mx-2 bg-gray-100 border-2 border-gray-200"
             >
               <div className="flex items-center w-[100px] justify-between">
                 <div className="flex gap-2">
@@ -134,7 +134,7 @@ const Page = () => {
               </div>
             </Button>
           </SheetTrigger>
-          <SheetContent side={"left"} className="p-0">
+          <SheetContent side={"left"} className="p-0 ">
             <div className="p-2">
               <section>
                 <div className="flex bg-[#F1F1F1] mx-2 mb-2 w-[80%] px-2 rounded-lg">
@@ -378,8 +378,8 @@ const Page = () => {
             </div>
           </section>
           {/* Scholarship Display Section */}
-          <section className="lg:w-[77%] w-[90%]">
-            <div className="flex flex-col md:flex-row justify-between">
+          <section className="lg:w-[77%] w-[100%]">
+            <div className="flex flex-col md:flex-row justify-between px-2">
               <div className="lg:px-3 flex flex-col">
                 <h3 className="font-bold w-4/5 text-start">
                   Find the Right Scholarship for Your Academic Journey!

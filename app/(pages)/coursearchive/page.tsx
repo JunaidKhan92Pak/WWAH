@@ -48,7 +48,7 @@ const CourseArchive = () => {
   }, []);
 
   return (
-    <section className="w-full p-4 md:p-8">
+    <section className="w-[95%] mx-auto p-2 ">
       <div className="md:flex items-center">
         <div className="w-full">
           <h3 className="font-bold mb-1 flex items-center md:mb-0">
@@ -56,14 +56,14 @@ const CourseArchive = () => {
           </h3>
           <p className="text-gray-600">Over 1000 courses available.</p>
         </div>
-        <div className="w-full md:w-[60%] mt-3 md:mt-10 flex flex-wrap md:flex-nowrap items-center gap-4 md:justify-end">
-          <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 py-1 w-full md:w-[60%] md:max-w-[280px]">
+        <div className="w-[70%] md:w-[90%] lg:w-[75%] xl:w-[60%] mt-3 md:mt-10 flex flex-wrap md:flex-nowrap items-center gap-4 md:justify-end">
+          <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 w-full md:w-[60%] md:max-w-[280px]">
             <Image
               src="/search.svg"
               width={20}
               height={20}
               alt="search"
-              className="w-4 h-4 mr-2"
+              className="w-4 h-4"
             />
             <Input
               placeholder="Search Course Name..."
@@ -74,7 +74,7 @@ const CourseArchive = () => {
               }}
               value={localSearch}
               // className="w-full h-8 border-none bg-transparent outline-none focus:ring-0"
-              className="w-full pl-2 pt-2 rounded-lg  bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+              className="w-full pl-2 pt-2 rounded-lg  bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] border-none focus:ring-0 truncate"
             />
           </div>
           <DropdownMenu>
@@ -100,7 +100,7 @@ const CourseArchive = () => {
       {loading ? (
         <SkeletonCard arr={12} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4  md:p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4  md:p-0">
           {courses.length === 0 ? (
             <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
               {" "}

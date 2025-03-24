@@ -59,6 +59,7 @@ const MobileNavbar = () => {
     return null;
   }
   return (
+
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button
@@ -70,12 +71,21 @@ const MobileNavbar = () => {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="p-4 w-[90%] sm:w-[80%] md:w-[60%] lg:w-[40%]">
+      <SheetContent
+        side="left"
+        className="p-4 w-[80%] sm:w-[80%] md:w-[60%] lg:w-[40%] bg-gray-100"
+      >
         <div className="mt-8 border border-gray-200 mx-auto py-3 px-4 shadow-lg rounded-xl bg-white text-black">
           {/* Header */}
           <div className="flex items-center justify-between border-b pb-3 ">
             <div className="w-[35%] md:w-[40%] h-1 border-3  flex justify-center items-center">
-              <Image src="/logo.png" alt="logo" width={150} height={50} className="object-contain" />
+              <Image
+                src="/logo.png"
+                alt="logo"
+                width={150}
+                height={50}
+                className="object-contain"
+              />
             </div>
             {isAuthenticated ? (
               <div className="relative flex items-center space-x-3">
@@ -89,8 +99,12 @@ const MobileNavbar = () => {
                 {isDropdownOpen && (
                   <div className="absolute right-0 top-12 z-20 w-48 bg-white shadow-lg rounded-lg divide-y divide-gray-100">
                     <div className="px-4 py-3">
-                      <span className="block text-sm text-gray-900">Bonnie Green</span>
-                      <span className="block text-sm text-gray-500 truncate">name@flowbite.com</span>
+                      <span className="block text-sm text-gray-900">
+                        Bonnie Green
+                      </span>
+                      <span className="block text-sm text-gray-500 truncate">
+                        name@flowbite.com
+                      </span>
                     </div>
                     <ul className="py-2">
                       {[
@@ -98,16 +112,26 @@ const MobileNavbar = () => {
                         { href: "/chatmodel", label: "Chat with ZEUS" },
                       ].map((item) => (
                         <li key={item.href}>
-                          <Link href={item.href} onClick={() => setIsOpen(false)}>
-                            <span className="block px-4 py-2 text-sm hover:bg-gray-100">{item.label}</span>
+                          <Link
+                            href={item.href}
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <span className="block px-4 py-2 text-sm hover:bg-gray-100">
+                              {item.label}
+                            </span>
                           </Link>
                         </li>
                       ))}
                       <li>
-                        <a className="block px-4 py-2 text-sm hover:bg-gray-100">Settings</a>
+                        <a className="block px-4 py-2 text-sm hover:bg-gray-100">
+                          Settings
+                        </a>
                       </li>
                       <li>
-                        <a className="block px-4 py-2 text-sm hover:bg-gray-100" onClick={() => auth.logout()}>
+                        <a
+                          className="block px-4 py-2 text-sm hover:bg-gray-100"
+                          onClick={() => auth.logout()}
+                        >
                           Logout
                         </a>
                       </li>
@@ -117,7 +141,9 @@ const MobileNavbar = () => {
               </div>
             ) : (
               <Link href="/signin" onClick={() => setIsOpen(false)}>
-                <Button className="text-sm w-20 sm:w-24  h-8 sm:h-10 bg-red-700 text-white">Login</Button>
+                <Button className="text-sm w-20 sm:w-24  h-8 sm:h-10 bg-red-700 text-white">
+                  Login
+                </Button>
               </Link>
             )}
           </div>
@@ -133,7 +159,9 @@ const MobileNavbar = () => {
               ].map((item) => (
                 <li key={item.href} className="border-b pb-2">
                   <Link href={item.href} onClick={() => setIsOpen(false)}>
-                    <span className="block w-full hover:text-red-600">{item.label}</span>
+                    <span className="block w-full hover:text-red-600">
+                      {item.label}
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -143,7 +171,6 @@ const MobileNavbar = () => {
       </SheetContent>
     </Sheet>
   );
-
 };
 
 export default MobileNavbar;
