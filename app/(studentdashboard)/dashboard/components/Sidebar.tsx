@@ -63,6 +63,14 @@ export function Sidebar() {
       fetchUserProfile(token);
     }
   }, []);
+  useEffect(() => {
+    // Auto open modal when navigating to "Complete your application"
+    if (pathname === "/dashboard/completeapplication") {
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
+    }
+  }, [pathname]);
   return (
     <div className="flex flex-col ">
       {/* Profile Section */}

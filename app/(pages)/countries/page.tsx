@@ -38,7 +38,6 @@ const Page = () => {
             width={16}
             height={16}
             alt="search"
-            className="mr-2"
           />
           <Input
             placeholder="Search..."
@@ -50,7 +49,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-6 md:mx-6 mx-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-4 md:mx-6 mx-2 py-2">
         {loading ? (
           <div className="col-span-full flex justify-center items-center rounded-lg h-80">
             <BookLoader />
@@ -65,7 +64,7 @@ const Page = () => {
               target="_blank"
               className="cursor-pointer"
             >
-              <div className="overflow-hidden rounded-xl relative min-h-[268px] md:min-h-[250px]">
+              <div className="overflow-hidden rounded-xl relative min-h-[255px] md:min-h-[250px]">
                 <ImageWithLoader
                   src={`/countryarchive/${country.short_name}.svg`}
                   alt={country.alt}

@@ -107,7 +107,7 @@ const Page = () => {
             </div>
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-11">
+            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-10">
               <Image src="/filterr.svg" width={16} height={14} alt="filter" />{" "}
               Filter
             </DropdownMenuTrigger>
