@@ -16,7 +16,7 @@ const Footer = () => {
         {/* Top Section */}
         <div className="text-center lg:text-left mb-4">
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt="WWAH Logo"
             width={100}
             height={100}

@@ -1,4 +1,5 @@
 
+import Image from 'next/image';
 import React from 'react'
 
 interface CareerOpportunitiesProps {
@@ -42,49 +43,104 @@ interface CareerOpportunitiesProps {
 
 export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({ data }) => {
   return (
-    <section
-      id="careerOpportunities"
-      className="my-7 relative bg-black bg-cover bg-center flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8"
-    // style={{
-    //   backgroundImage: "url('/bg-usa.png')",
-    //   backgroundColor: "#000000",
-    // }}
-    >
-      <div className="absolute inset-0 bg-black opacity-80 z-0"></div>
-      <div className="flex flex-col md:flex-row w-full gap-5 m-4 justify-center items-center">
-        <div className="relative w-full md:w-1/2 md:space-y-5 p-3 text-white">
-          <h3>Career Opportunities</h3>
-          <p className="text-[#e6e3e3] ">
-            Unlock a world of career opportunities that align with your skills
-            and passions. Discover industries, job roles, and professional
-            growth paths that set you up for long-term success.
+    <>
+
+      <section className="hidden md:flex flex-col items-center bg-black text-white py-8 mt-5">
+        <h4>Scholarships in This Course!</h4>
+
+        {/* Timeline Image */}
+        <div className="relative w-full flex justify-center mt-4">
+          <Image
+            src="/countrypage/scholarship.svg"
+            alt="Scholarships Timeline"
+            width={900}
+            height={300}
+            className="w-full md:w-[80%] lg:w-[70%]"
+          />
+        </div>
+
+        {/* Scholarship List Below Image */}
+        <div className="flex w-full md:w-[95%] lg:w-[85%] mt-4">
+          <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
+            {data.career_opportunity_1}
+          </p>
+          <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
+            {data.career_opportunity_2}
+          </p>
+          <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
+            {data.career_opportunity_3}
+
+          </p>
+          <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
+            {data.career_opportunity_4}
+
+          </p>
+          <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
+            {data.career_opportunity_5}
+
           </p>
         </div>
-        {/* <div  className="flex relative w-full md:w-1/2 justify-center items-center">
+      </section>
+      {/* Mobile View */}
+      <div className="md:hidden flex flex-col items-start bg-black text-white py-8 px-6">
+        <h4>Scholarships in This Course!</h4>
+
+        <div className="flex flex-col space-y-3 mt-4">
+          <div className="flex items-center space-x-2">
             <Image
-              src="/BSC.png"
-              alt="popularPrograms"
-              width={570}
-              height={375}
+              src="/countrypage/yellow.svg"
+              alt="Chevening Scholarships"
+              width={15}
+              height={15}
             />
-          </div> */}
-        <div className="relative flex flex-col w-full md:w-1/2 justify-center  text-white ">
-          <h3 className="py-2 text-left">BSC Physiology</h3>
+            <p>{data.career_opportunity_1}</p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 place-content-between">
+          <div className="flex items-center space-x-2">
+            <Image
+              src="/countrypage/orange.svg"
+              alt="Rhodes Scholarships"
+              width={15}
+              height={15}
+            />
+            <p>{data.career_opportunity_2}</p>
+          </div>
 
-            <li>{data.career_opportunity_1}</li>
-            <li>{data.career_opportunity_2}</li>
+          <div className="flex items-center space-x-2">
+            <Image
+              src="/countrypage/red.svg"
+              alt="Great Scholarships"
+              width={15}
+              height={15}
+            />
+            <p>{data.career_opportunity_3}</p>
+          </div>
 
+          <div className="flex items-center space-x-2">
+            <Image
+              src="/countrypage/sky.svg"
+              alt="Gates Cambridge Scholarships"
+              width={15}
+              height={15}
+            />
+            <p>{data.career_opportunity_4}</p>
+          </div>
 
-            <li>{data.career_opportunity_3}</li>
-            <li>{data.career_opportunity_4}</li>
-
-
-            <li>{data.career_opportunity_5}</li>
+          <div className="flex items-center space-x-2">
+            <Image
+              src="/countrypage/blue.svg"
+              alt="Rhodes Scholarships"
+              width={15}
+              height={15}
+            />
+            <p>{data.career_opportunity_5}</p>
           </div>
         </div>
       </div>
-    </section>
+    </>
+
+
+
+
   )
 }
