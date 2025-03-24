@@ -82,9 +82,9 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
                     </div>
 
                     {/* Image Section */}
-                    <div className="items-center justify-center rounded-3xl shadow-lg h-full block p-6 bg-red-50">
+                    <div className="items-center justify-center rounded-3xl shadow-lg h-full block  bg-red-50">
                         {selectedDocUni ? (
-                            <div className="p-4">
+                            <div>
                                 <h3 className="text-lg font-semibold">{selectedDocUni.name} Details</h3>
                                 <p
                                     className="text-gray-700 mt-2"
