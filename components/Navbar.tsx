@@ -30,7 +30,7 @@ const Navbar = () => {
                 alt="logo"
                 width={113}
                 height={45}
-              // className="2xl:w-[150px] 2xl:h-[60px]"
+                // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}
@@ -107,7 +107,7 @@ const Navbar = () => {
                       <ul className="py-2">
                         <li>
                           <Link
-                            href="/completeprofile"
+                            href="/dashboard"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           >
                             Dashboard

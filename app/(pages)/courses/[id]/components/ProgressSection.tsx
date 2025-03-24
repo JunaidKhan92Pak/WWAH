@@ -97,16 +97,16 @@ export const ProgressSection = ({ data }: { data: progressProps['data'] }) => {
     const getProgressBarColor = (value: number) => {
         return value >= 75 ? "#87CE8B" : value >= 50 ? "#fff75e" : "#FE4343";
     };
-    const userExperienceYears = 0.1; // Example: 8 months (0.67 years)
+    const userExperienceYears = 1; // Example: 8 months (0.67 years)
 
     // 🔹 Calculate work experience success percentage
     const workExperienceSuccess = calculateWorkExperienceSuccess(userExperienceYears);
     const requiredMajor = extractMajorFromTitle(String(data.course_title || "").trim());
-    const userMajor = user?.majorSubject?.majorSubject || "Not Mention" // Replace with real user major from profile
+    const userMajor = user?.majorSubject?.majorSubject || "Music"; // Replace with real user major from profile
     const majorSuccess = calculateMajorSuccess(userMajor, requiredMajor, synonyms);
     const userTest = user?.langPro?.proficiencyTest || "Not Mention"
         ; // "IELTS" | "PTE" | "TOEFL"
-    const userScore = user?.langPro?.proficiencyTestScore || 0
+    const userScore = user?.langPro?.proficiencyTestScore || 100
         ; // Example user's overall score
 
     // 🔹 Extract required overall score from text data

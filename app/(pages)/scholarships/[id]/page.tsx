@@ -93,9 +93,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         deadline={data?.deadline || "Unknown"}
         university={data?.university || "Not Mention"}
       />
-      <div className="bg-white mt-4 lg:mt-40 2xl:mt-[12%] lg:my-6">
-        <div className=" mx-auto sm:w-[88%] w-[70%]">
-          <div className="w-full flex flex-col sm:flex-row gap-1 justify-center lg:justify-evenly items-center  border-b border-gray-200">
+      <div className="bg-white my-4 lg:mt-40 2xl:mt-[12%] lg:my-6">
+        <div className=" mx-auto sm:w-[88%] w-[90%]">
+          <div className="w-full flex whitespace-nowrap overflow-x-auto scrollbar-hide justify-center lg:justify-evenly items-center border-b gap-2 border-gray-200">
             {tabs.map((tab) => (
               <button
                 key={tab.id}

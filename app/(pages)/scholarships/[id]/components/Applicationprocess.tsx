@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 // import { Button } from "@/components/ui/button";
 import Banner from "@/components/ui/enrollment/Banner";
+import Exploresection from "@/app/(pages)/Universities/[id]/components/Exploresection";
 
 const Applicationprocess = () => {
   const sliderData = [
@@ -148,10 +149,8 @@ const Applicationprocess = () => {
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
-      <section className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12s overflow-hidden justify-between w-full mt-5">
-        {/* Black Overlay */}
+      {/* <section className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12s overflow-hidden justify-between w-full mt-5">
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
-        {/* Content Section */}
         <div className="relative z-10 w-full lg:w-[45%] flex flex-col justify-center md:space-y-4 sm:px-4 text-left">
           <h3 className="mb-2">Explore More Universities!</h3>
           <p className="text-[#9D9D9D] leading-relaxed">
@@ -161,7 +160,6 @@ const Applicationprocess = () => {
             aspirations!
           </p>
         </div>
-        {/* Slider Section */}
         <div className="relative z-10 w-full lg:w-[55%] mt-6 lg:mt-0">
           <div className="relative w-full flex justify-center overflow-hidden">
             <div
@@ -182,14 +180,15 @@ const Applicationprocess = () => {
                     width={400}
                     height={350}
                     objectFit="cover"
-                    className="rounded-3xl md:w-[250px] md:h-[250px] w-[200px] h-[160px]"
+                    className="rounded-3xl md:w-[260px] md:h-[220px] xl:w-[300px] w-[200px] h-[160px]"
                   />
                 </div>
               ))}
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
+      <Exploresection/>
     </div>
   );
 };

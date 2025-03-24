@@ -56,8 +56,8 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
           <FAQ title="Frequently Asked Questions:" items={faqs} />
         </div>
       </section>
-      <section className="md:py-10 py-10">
-        <h2 className="text-center mb-5">Our Blogs!</h2>
+      <section className="md:py-10 py-2">
+        <h2 className="text-center md:mb-5">Our Blogs!</h2>
         <div
           className="flex overflow-x-auto space-x-4 p-4 hide-scrollbar"
           style={{
@@ -83,19 +83,21 @@ const Faqsection: React.FC<FaqsectionProps> = ({ faqs }) => {
                   {image.heading}
                 </p>
               </div>
-              <div className="sm:hidden mt-2">
+              <div className="sm:hidden mt-2 text-center md:text-left">
                 <p className="text-[14px] font-semibold">{image.heading}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
-      <Banner
-        title="Get Personalized Help with Your UK Visa Application!"
-        buttonText="Schedule a Session with WWAH Advisors Now!"
-        buttonLink="/schedulesession"
-        backgroundImage="/bg-usa.png"
-      />
+      <div className="mb-5">
+        <Banner
+          title="Get Personalized Help with Your UK Visa Application!"
+          buttonText="Schedule a Session with WWAH Advisors Now!"
+          buttonLink="/schedulesession"
+          backgroundImage="/bg-usa.png"
+        />
+      </div>
     </div>
   );
 };
