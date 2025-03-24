@@ -1,27 +1,27 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
 // import { Button } from "@/components/ui/button";
 import Banner from "@/components/ui/enrollment/Banner";
 import Exploresection from "@/app/(pages)/Universities/[id]/components/Exploresection";
 
 const Applicationprocess = () => {
-  const sliderData = [
-    {
-      src: "/scholarshipdetail/slideee.png",
-      title: "University of Oxford",
-    },
-    {
-      src: "/scholarshipdetail/slideee.png",
+  // const sliderData = [
+  //   {
+  //     src: "/scholarshipdetail/slideee.png",
+  //     title: "University of Oxford",
+  //   },
+  //   {
+  //     src: "/scholarshipdetail/slideee.png",
 
-      title: "University of Oxford",
-    },
-    {
-      src: "/scholarshipdetail/slideee.png",
+  //     title: "University of Oxford",
+  //   },
+  //   {
+  //     src: "/scholarshipdetail/slideee.png",
 
-      title: "University of Oxford",
-    },
-  ];
+  //     title: "University of Oxford",
+  //   },
+  // ];
   return (
     <div>
       <section className="container mx-auto p-2 md:p-6 w-[90%]">
