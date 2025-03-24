@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import CompleteApplicationModal from "../completeapplication/components/CompleteApplicationModal";
 import { useUserStore } from "@/store/useUserData";
 import { getAuthToken } from "@/utils/authHelper";
-
 const sidebarItems = [
   {
     href: "/dashboard/overview",
@@ -51,8 +50,6 @@ const sidebarItems = [
     title: "Airport Pickup",
   },
 ];
-
-
 export function Sidebar() {
   const { user, fetchUserProfile } = useUserStore();
   const pathname = usePathname();
@@ -123,7 +120,7 @@ export function Sidebar() {
         <CompleteApplicationModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onCompleteApplication={() => { }}
+          onCompleteApplication={() => {}}
         />
       )}
     </div>

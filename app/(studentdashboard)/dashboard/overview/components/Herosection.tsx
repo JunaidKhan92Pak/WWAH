@@ -49,7 +49,7 @@ const Herosection = ({ user }: { user: User }) => {
         {/* Text Below the Image */}
         <div className="mt-2 sm:mt-3 text-white">
           <h4>
-            Hello, {user?.firstName || "user"} {user?.lastName || "name"} || !
+            Hello, {user?.firstName || "user"} {user?.lastName || "name"} !
           </h4>
           <p className="md:mb-3 text-base">
             {/* Monday, 30 Dec, 2024 (07:09 PM)

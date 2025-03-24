@@ -1,13 +1,10 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
-// import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-// import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -15,7 +12,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"; // Ensure the path is correct and the module exists
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -24,11 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { countries } from "@/lib/countries";
@@ -50,9 +42,12 @@ const formSchema = z.object({
   accommodationType: z.string({
     required_error: "Please select accommodation type.",
   }),
-  startDate: z.string({
-    required_error: "Please select a date.",
-  }),
+  startDate:z.string().refine((date) => !isNaN(Date.parse(date)), {
+        message: "Invalid start date",
+      }),
+  // startDate: z.string({
+  //   required_error: "Please select a date.",
+  // }),
   distance: z.string({
     required_error: "Please select preferred distance.",
   }),
@@ -74,7 +69,6 @@ const formSchema = z.object({
     message: "Please enter a valid email address.",
   }),
 });
-
 export default function Home() {
   const { user, fetchUserProfile } = useUserStore();
 
@@ -93,13 +87,6 @@ export default function Home() {
       countryCode: "+92",
     },
   });
-
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   toast.success("Form submitted successfully!", {
-  //     description: "We'll get back to you soon.",
-  //   });
-  //   console.log(values);
-  // }
   const userName = user?.user.firstName + " " + user?.user.lastName;
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (
     values,
@@ -135,7 +122,23 @@ export default function Home() {
       toast.success("Form submitted successfully!", {
         description: "We'll get back to you soon.",
       });
-      form.reset();
+      // Reset form with default values
+      form.reset({
+        country: "",
+        university: "",
+        city: "",
+        accommodationType: "",
+        startDate: "",
+        distance: "",
+        preferences: "",
+        currency: "",
+        budgetMin: "",
+        budgetMax: "",
+        phone: "",
+        countryCode: "+92",
+        email: "",
+      });
+      // form.reset();
     } catch (error) {
       toast.error("Submission failed", {
         description: error instanceof Error ? error.message : "Unknown error",
@@ -283,36 +286,6 @@ export default function Home() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Accommodation Start Date</FormLabel>
-                    {/* <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={`w-full pl-3 text-left font-normal bg-[#f1f1f1] placeholder-[#313131] text-sm ${
-                              !field.value && "text-[#313131]"
-                            }`}
-                          >
-                            {field.value ? (
-                              format(field.value, "YYYY/MM/DD")
-                            ) : (
-                              <span>YYYY/MM/DD</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover> */}
                     <Input
                       type="date"
                       value={
@@ -324,12 +297,10 @@ export default function Home() {
                       ref={field.ref}
                       className="bg-[#f1f1f1]"
                     />
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="distance"
@@ -421,7 +392,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="budgetMax"
@@ -464,7 +434,7 @@ export default function Home() {
                                     <Image
                                       src={
                                         countries.find(
-                                          (c) => c.code === countryField.value
+                                          (c) => c.code + c.name === countryField.value
                                         )?.flag || countries[0].flag
                                       }
                                       alt="Country Flag"

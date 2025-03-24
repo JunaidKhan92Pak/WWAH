@@ -10,7 +10,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <aside
-          className="hidden lg:block w-64 overflow-y-scroll bg-[#FFF8F5] border-r flex-shrink-0"
+          className="hidden lg:block w-64 overflow-y-scroll bg-[#FCE7D2] border-r flex-shrink-0"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <Sidebar />

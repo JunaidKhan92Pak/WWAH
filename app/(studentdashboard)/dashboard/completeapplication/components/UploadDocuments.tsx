@@ -1,20 +1,17 @@
 "use client";
-
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { FileIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-
+import { getAuthToken } from "@/utils/authHelper";
 interface Document {
   id: string;
   name: string;
-  files: File[];
+  files: { name: string; url: string }[];
   date: string;
   isChecked: boolean;
 }
-
 export default function Home() {
   const [documents, setDocuments] = useState<Document[]>([
     { id: "1", name: "Valid Passport", files: [], date: "", isChecked: false },
@@ -145,63 +142,639 @@ export default function Home() {
       isChecked: false,
     },
   ]);
-
-  const handleFileUpload = async (
-    id: string,
-    selectedFiles: FileList | null
-  ) => {
-    if (!selectedFiles) return;
-
-    const validTypes = [
-      "image/jpeg",
-      "image/png",
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-    const newFiles = Array.from(selectedFiles);
-
-    // Validate each file
-    const validFiles = newFiles.filter(
-      (file) => validTypes.includes(file.type) && file.size <= 30 * 1024 * 1024
-    );
-
-    if (validFiles.length !== newFiles.length) {
-      alert(
-        "Some files were invalid. Please upload valid files (JPG, PNG, PDF, DOCX) with a size less than 30MB."
+  const fetchDocuments = async () => {
+    const token = getAuthToken();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/getDocuments`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
       );
+
+      if (!response.ok) throw new Error("Failed to fetch data1");
+      else {
+        const pdata = await response.json();
+        return pdata.documents;
+      }
+    } catch (error) {
+      console.error("❌ Error parsing JSON response:", error);
+      throw new Error("Invalid JSON response from server");
+    }
+  };
+  useEffect(() => {
+    const getData = async () => {
+      const fetchedDocs = await fetchDocuments();
+      console.log(fetchedDocs, "fetchedDocs");
+
+      setDocuments((prevDocs) =>
+        prevDocs.map((doc) => {
+          const matchedDoc = fetchedDocs.find(
+            (fetchedDoc: { name: string; files: { name: string; url: string }[]; date: string }) => fetchedDoc.name === doc.name
+          );
+          prevDocs.forEach((doc) => {
+            const matchedDoc = fetchedDocs.find(
+              (fetchedDoc: { name: string; files: { name: string; url: string }[]; date: string }) =>
+                fetchedDoc.name.trim().toLowerCase() ===
+                doc.name.trim().toLowerCase()
+            );
+
+            if (!matchedDoc) {
+              console.log(`No match found for: "${doc.name}"`);
+            } else {
+              console.log(`Matched: "${doc.name}" with "${matchedDoc.name}"`);
+            }
+          });
+
+          console.log("Prev Docs:", prevDocs);
+          console.log("Fetched Docs:", fetchedDocs);
+          console.log(matchedDoc, "matched");
+          return matchedDoc
+            ? {
+                ...doc,
+                files: matchedDoc.files || [],
+                date: matchedDoc.date || "",
+                isChecked: matchedDoc.files.length > 0,
+              }
+            : doc;
+        })
+      );
+    };
+
+    getData();
+  }, []);
+  // const handleFileUpload = useCallback(
+  //   async (id: string, selectedFiles: FileList | null) => {
+  //     if (!selectedFiles) return;
+
+  //     const validTypes = [
+  //       "image/jpeg",
+  //       "image/png",
+  //       "application/pdf",
+  //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  //     ];
+
+  //     const validFiles = Array.from(selectedFiles).filter(
+  //       (file) =>
+  //         validTypes.includes(file.type) && file.size <= 30 * 1024 * 1024
+  //     );
+
+  //     if (validFiles.length !== selectedFiles.length) {
+  //       alert(
+  //         "Invalid files detected! Only JPG, PNG, PDF, DOCX under 30MB are allowed."
+  //       );
+  //     }
+
+  //     if (validFiles.length === 0) {
+  //       alert("No valid files selected for upload.");
+  //       return;
+  //     }
+
+  //     const uploadedFiles: { name: string; url: string; public_id: string }[] =[];
+
+  //     // 🔥 Upload files to Cloudinary
+  //     for (const file of validFiles) {
+  //       const formData = new FormData();
+  //       formData.append("file", file);
+  //       formData.append("upload_preset", "world-wide-admissions"); // Change this as needed
+
+  //       try {
+  //         const response = await fetch(
+  //           `https://api.cloudinary.com/v1_1/djimwwkgl/upload`,
+  //           { method: "POST", body: formData }
+  //         );
+
+  //         const data = await response.json();
+  //         if (!response.ok || !data.secure_url || !data.public_id) {
+  //           throw new Error(
+  //             `Cloudinary upload failed: ${
+  //               data.error?.message || "Unknown error"
+  //             }`
+  //           );
+  //         }
+
+  //         uploadedFiles.push({
+  //           name: file.name, // Keep original file name
+  //           url: data.secure_url, // Store Cloudinary URL
+  //           public_id: data.public_id, // Store Cloudinary public_id
+  //         });
+  //       } catch (error) {
+  //         console.error("Upload error:", error);
+  //       }
+  //     }
+
+  //     // 🚀 Send uploaded files to backend
+  //     try {
+  //       // const response = await fetch(
+  //       //   `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/uploadDocument`,
+  //       //   {
+  //       //     method: "POST",
+  //       //     headers: {
+  //       //       "Content-Type": "application/json",
+  //       //       Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust auth if needed
+  //       //     },
+  //       //     credentials: "include",
+  //       //     body: JSON.stringify({
+  //       //       documents: [
+  //       //         {
+  //       //           id,
+  //       //           name: `Document_${id}`, // Assign a name
+  //       //           files: uploadedFiles,
+  //       //           date: new Date().toISOString(),
+  //       //           isChecked: true,
+  //       //         },
+  //       //       ],
+  //       //     }),
+  //       //   }
+  //       // );
+
+  //       // const result = await response.json();
+  //       // if (!response.ok) throw new Error(result.message || "Upload failed");
+
+  //       // ✅ Update state with uploaded files
+  //       setDocuments((docs) =>
+  //         docs.map((doc) =>
+  //           doc.id === id
+  //             ? {
+  //                 ...doc,
+  //                 files: [...doc.files, ...uploadedFiles],
+  //                 date: new Date().toLocaleDateString(),
+  //                 isChecked: true,
+  //               }
+  //             : doc
+  //         )
+  //       );
+  //     } catch (error) {
+  //       console.error("Error uploading to backend:", error);
+  //       alert("Failed to save document on server.");
+  //     }
+  //   },
+  //   []
+  // );
+
+  // const handleFileUpload = useCallback(
+  //   async (id: string, selectedFiles: FileList | null) => {
+  //     console.log("hhiu");
+  //     if (!selectedFiles) return;
+
+  //     const validTypes = [
+  //       "image/jpeg",
+  //       "image/png",
+  //       "application/pdf",
+  //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  //     ];
+  //     const validFiles = Array.from(selectedFiles).filter(
+  //       (file) =>
+  //         validTypes.includes(file.type) && file.size <= 30 * 1024 * 1024
+  //     );
+
+  //     if (validFiles.length !== selectedFiles.length) {
+  //       alert(
+  //         "Invalid files detected! Only JPG, PNG, PDF, DOCX under 30MB are allowed."
+  //       );
+  //     }
+  //     if (validFiles.length === 0) {
+  //       alert("No valid files selected for upload.");
+  //       return;
+  //     }
+  //     const uploadedFiles: { name: string; url: string; public_id: string }[] =
+  //       [];
+  //     for (const file of validFiles) {
+  //       const formData = new FormData();
+  //       formData.append("file", file);
+  //       formData.append("upload_preset", "world-wide-admissions");
+
+  //       try {
+  //         const response = await fetch(
+  //           `https://api.cloudinary.com/v1_1/djimwwkgl/upload`,
+  //           { method: "POST", body: formData }
+  //         );
+
+  //         const data = await response.json();
+  //         console.log(data, "data");
+  //         if (!response.ok || !data.secure_url || !data.public_id) {
+  //           throw new Error(
+  //             `Cloudinary upload failed: ${
+  //               data.error?.message || "Unknown error"
+  //             }`
+  //           );
+  //         }
+  //         uploadedFiles.push({
+  //           name: file.name,
+  //           url: data.secure_url,
+  //           public_id: data.public_id,
+  //         });
+  //       } catch (error) {
+  //         console.error("Upload error:", error);
+  //       }
+  //     }
+  //     setDocuments((docs) =>
+  //       docs.map((doc) =>
+  //         doc.id === id
+  //           ? {
+  //               ...doc,
+  //               files: [...doc.files, ...uploadedFiles],
+  //               date: new Date().toLocaleDateString(),
+  //               isChecked: true,
+  //             }
+  //           : doc
+  //       )
+  //     );
+  //   },
+  //   []
+  // );
+  const handleFileUpload = useCallback(
+    async (id: string, selectedFiles: FileList | null) => {
+      if (!selectedFiles) return;
+
+      const validTypes = [
+        "image/jpeg",
+        "image/png",
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+
+      const validFiles = Array.from(selectedFiles).filter(
+        (file) =>
+          validTypes.includes(file.type) && file.size <= 30 * 1024 * 1024
+      );
+
+      if (validFiles.length === 0) {
+        alert("No valid files selected for upload.");
+        return;
+      }
+
+      const uploadedFiles: { name: string; url: string; public_id: string }[] =
+        [];
+      console.log("Files to send:", uploadedFiles);
+
+      for (const file of validFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "world-wide-admissions");
+
+        try {
+          const response = await fetch(
+            `https://api.cloudinary.com/v1_1/djimwwkgl/image/upload`, // ✅ Fix: Correct endpoint
+            { method: "POST", body: formData }
+          );
+
+          const data = await response.json();
+          console.log(data, "data");
+          if (!response.ok || !data.secure_url || !data.public_id) {
+            throw new Error(
+              `Cloudinary upload failed: ${
+                data.error?.message || "Unknown error"
+              }`
+            );
+          }
+
+          uploadedFiles.push({
+            name: file.name,
+            url: data.secure_url,
+            public_id: data.public_id,
+          });
+        } catch (error) {
+          console.error("Cloudinary Upload Error:", error);
+        }
+      }
+
+      if (uploadedFiles.length === 0) {
+        alert("No files were successfully uploaded to Cloudinary.");
+        return;
+      }
+const documentName =
+  documents.find((doc) => doc.id === id)?.name || `Document_${id}`;
+
+      // 🚀 Send uploaded file metadata to backend
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/uploadDocument`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust auth if needed
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              documents: [
+                {
+                  id,
+                  name: documentName,
+                  files: uploadedFiles, // ✅ Send Cloudinary metadata, not raw files
+                  date: new Date().toISOString(),
+                  isChecked: true,
+                },
+              ],
+            }),
+          }
+        );
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "Upload failed");
+
+        setDocuments((docs) =>
+          docs.map((doc) =>
+            doc.id === id
+              ? {
+                  ...doc,
+                  files: [...doc.files, ...uploadedFiles],
+                  date: new Date().toLocaleDateString(),
+                  isChecked: true,
+                }
+              : doc
+          )
+        );
+      } catch (error) {
+        console.error("Error uploading to backend:", error);
+        alert("Failed to save document on server.");
+      }
+    },
+    []
+  );
+
+  // const handleDelete = useCallback(async (id: string) => {
+  //   setDocuments((docs) =>
+  //     docs.map((doc) =>
+  //       doc.id === id ? { ...doc, files: [], date: "", isChecked: false } : doc
+  //     )
+  //   );
+
+  //   console.log("deleted successfully");
+  // }, []);
+
+  // const handleDelete = useCallback(
+  //   async (id: string, files: { name: string; url: string }[]) => {
+  //     if (!files.length) {
+  //       alert("No files to delete.");
+  //       return;
+  //     }
+
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/deleteDocument`,
+  //         {
+  //           method: "DELETE",
+  //           headers: { "Content-Type": "application/json" },
+  //           credentials: "include",
+  //           body: JSON.stringify({ documentId: id, files }),
+  //         }
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Failed to delete document.");
+  //       }
+  //       // Remove the document from state
+  //       setDocuments((docs) =>
+  //         docs.map((doc) =>
+  //           doc.id === id
+  //             ? { ...doc, files: [], date: "", isChecked: false }
+  //             : doc
+  //         )
+  //       );
+
+  //       alert("Document deleted successfully!");
+  //     } catch (error) {
+  //       console.error("Error deleting document:", error);
+  //     }
+  //   },
+  //   []
+  // );
+
+  // const handleDelete = useCallback(
+  //   async (docId: string, fileToDelete: { name: string; url: string }) => {
+  //     if (!fileToDelete) return;
+
+  //     const token = getAuthToken(); // Assuming you have this function for authentication
+
+  //     try {
+  //       // Extract public_id from Cloudinary URL
+  //       const publicId = fileToDelete.url.split("/").pop()?.split(".")[0]; // Extract last part before extension
+
+  //       if (!publicId) {
+  //         console.error(
+  //           "Failed to extract public_id from URL:",
+  //           fileToDelete.url
+  //         );
+  //         return;
+  //       }
+
+  //       // 1️⃣ Step 1: Delete from Cloudinary
+  //       const cloudinaryResponse = await fetch(
+  //         `https://api.cloudinary.com/v1_1/djimwwkgl/image/destroy`,
+  //         {
+  //           method: "POST",
+  //           headers: { "Content-Type": "application/json" },
+  //           body: JSON.stringify({
+  //             public_id: publicId,
+  //             api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  //           }),
+  //         }
+  //       );
+
+  //       const cloudinaryData = await cloudinaryResponse.json();
+  //       if (!cloudinaryData.result || cloudinaryData.result !== "ok") {
+  //         throw new Error("Failed to delete file from Cloudinary.");
+  //       }
+
+  //       // 2️⃣ Step 2: Delete from Database
+  //       const dbResponse = await fetch(
+  //         `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/deleteDocument`,
+  //         {
+  //           method: "DELETE",
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //           credentials: "include",
+  //           body: JSON.stringify({
+  //             documentId: docId,
+  //             fileName: fileToDelete.name,
+  //           }),
+  //         }
+  //       );
+
+  //       if (!dbResponse.ok) {
+  //         throw new Error("Failed to delete file from database.");
+  //       }
+
+  //       // 3️⃣ Step 3: Update UI
+  //       setDocuments((docs) =>
+  //         docs.map((doc) =>
+  //           doc.id === docId
+  //             ? {
+  //                 ...doc,
+  //                 files: doc.files.filter(
+  //                   (file) => file.name !== fileToDelete.name
+  //                 ),
+  //                 isChecked: doc.files.length > 1, // If no files remain, uncheck
+  //               }
+  //             : doc
+  //         )
+  //       );
+
+  //       alert("File deleted successfully!");
+  //     } catch (error) {
+  //       console.error("Error deleting file:", error);
+  //       alert("Failed to delete the file. Please try again.");
+  //     }
+  //   },
+  //   []
+  // );
+
+  // const handleDelete = async (documentId: string, files: { url: string }[]) => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/deleteDocument`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ documentId, files }),
+  //         credentials: "include", // Ensure cookies/session are sent if needed
+  //       }
+  //     );
+
+  //     const data = await response.json();
+
+  //     if (!response.ok) {
+  //       throw new Error(data.message || "Failed to delete document");
+  //     }
+
+  //     alert("Document deleted successfully!");
+  //     // Update UI after deletion (e.g., refetch data or update state)
+  //   } catch (error) {
+  //     console.error("Error deleting document:", error);
+  //     alert("Error deleting document. Please try again.");
+  //   }
+  // };
+  // const handleDelete = async (documentId: string, files: { url: string }[]) => {
+  //   if (!documentId || !files || files.length === 0) {
+  //         console.log("Deleting document: try", documentId, files);
+  //     console.error("Missing document ID or files.");
+  //     alert("Error: Missing document ID or files.");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/deleteDocument`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ documentId, files }),
+  //         credentials: "include", // Ensure authentication cookies are sent if needed
+  //       }
+  //     );
+
+  //     const data = await response.json();
+
+  //     if (!response.ok) {
+  //       throw new Error(data.message || "Failed to delete document");
+  //     }
+  //     console.log("Deleting document:try", documentId, files);
+
+  //     alert("Document deleted successfully!");
+  //     // Update UI after deletion (e.g., remove item from state or refetch data)
+  //   } catch (error) {
+  //     console.error("Error deleting document:", error);
+  //     alert(error.message);
+  //   }
+  // };
+  interface File {
+    name: string;
+    url: string;
+    _id?: string; // Assuming _id is optional and may exist in the file object
+  }
+
+  const handleDelete = async (files: File[]) => {
+    console.log(files, "document id and files");
+
+    if (!files || files.length === 0) {
+      console.error("Missing document or files.");
+      alert("Error: Missing file.");
+      return;
     }
 
-    setDocuments((docs) =>
-      docs.map((doc) => {
-        if (doc.id === id) {
-          return {
-            ...doc,
-            files: [...doc.files, ...validFiles],
-            date: new Date().toLocaleDateString(),
-            isChecked: true,
-          };
+    const token = getAuthToken();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/deleteDocument`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ files }),
+          credentials: "include",
         }
-        return doc;
-      })
-    );
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete document");
+      }
+
+      // Fix: Use files[0]._id instead of undefined documentId
+      setDocuments(
+        documents.map((doc) =>
+          doc.id === files[0]._id
+            ? { ...doc, files: [], date: "", isChecked: false }
+            : doc
+        )
+      );
+
+      alert("Document deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      alert((error as Error).message);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setDocuments((docs) =>
-      docs.map((doc) => {
-        if (doc.id === id) {
-          return {
-            ...doc,
-            files: [],
-            date: "",
-            isChecked: false,
-          };
-        }
-        return doc;
-      })
+  const handleSubmit = async () => {
+    // Ensure all documents have name and date
+    const validDocuments = documents.map((doc) => ({
+      name: doc.name || "Untitled", // Provide a default value if missing
+      date: doc.date || new Date().toISOString(), // Set current date if missing
+      isChecked: doc.isChecked,
+      files: doc.files.map((file) => ({
+        name: file.name,
+        url: "url" in file ? file.url : "",
+      })), // Ensure file objects have name and url
+    }));
+    console.log(
+      "🚀 Documents before sending:",
+      JSON.stringify({ documents }, null, 2)
     );
+    console.log("Documents being sent:", validDocuments); // Debugging log
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/uploadDocument`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ documents: validDocuments }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to save file details to database.");
+      }
+      alert("Files uploaded and saved successfully!");
+    } catch (error) {
+      console.error("Error saving document:", error);
+    }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 ">
       <div className="mx-auto bg-white rounded-lg shadow-sm">
@@ -239,7 +812,6 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-
                 <div className="flex items-center space-x-2 justify-end sm:justify-normal">
                   <Input
                     type="file"
@@ -257,11 +829,46 @@ export default function Home() {
                   >
                     Upload
                   </Button>
-
-                  <Button
+                  {/* <Button
                     variant="outline"
                     className="text-red-500 hover:text-red-600"
                     onClick={() => handleDelete(doc.id)}
+                  >
+                    Delete
+                  </Button> */}
+                  {/* {doc.files.map((file) => (
+                    <div
+                      key={file.name}
+                      className="flex items-center space-x-2"
+                    >
+                      <span className="text-xs">{file.name}</span>
+                      <Button
+                        variant="outline"
+                        className="text-red-500 hover:text-red-600"
+                        onClick={() => handleDelete(doc.id, file)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  ))} */}
+
+                  {/* <Button
+                    variant="outline"
+                    className="text-red-500 hover:text-red-600"
+                    onClick={() => handleDelete(doc.id, doc.files)}
+                  >
+                    Delete
+                  </Button> */}
+                  {/* <button
+                    onClick={() => handleDelete(document?.id, document?.files)}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    Delete
+                  </button> */}
+                  <Button
+                    variant="outline"
+                    className="text-red-500 hover:text-red-600"
+                    onClick={() => handleDelete(doc.files)}
                   >
                     Delete
                   </Button>
@@ -269,10 +876,9 @@ export default function Home() {
               </div>
             ))}
           </div>
-
           <div className="text-right my-4">
             <Button
-              type="submit"
+              onClick={handleSubmit}
               className="w-1/3 sm:w-[17%] bg-red-600 hover:bg-red-700"
             >
               Submit
