@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }) => {
       const loggedInUser = await res.json();
       if (loggedInUser.success) {
         document.cookie = `authToken=${loggedInUser.token}; path=/`;
-        // useUser()
         setToken(loggedInUser.token);
       }
       return loggedInUser;

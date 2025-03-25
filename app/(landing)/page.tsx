@@ -37,18 +37,13 @@ function Page() {
     "Denmark",
     "France",
   ];
-  const {
-    universities,
-    country,
-    setCountry,
-    fetchUniversities,
-    loading: uniLoading,
-  } = useUniversityStore();
-  const { user, isAuthenticate, loading: userLoading, logout } = useUserStore();
+  const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
+    useUniversityStore();
+  const { isAuthenticate, loading, logout, user } = useUserStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
-  }, [fetchUniversities, user]);
-  // Suspense will handle this
+  }, [fetchUniversities]);
+
   const features = [
     {
       icon: <Bot className="h-8 w-8" />,
@@ -75,7 +70,6 @@ function Page() {
         "At WWAH, we are committed to your long-term success. Our career counseling support ensure that you're not only prepared for your studies but also equipped for a successful career.",
     },
   ];
-
   function handleCheckboxChange(destination: string): void {
     if (destination === "All") {
       if (country.length === country.length) {
@@ -95,7 +89,7 @@ function Page() {
     setDropdownOpen(!isDropdownOpen);
   };
   const [successOpen, setSuccessOpen] = useState(false);
-  if (uniLoading || userLoading) {
+  if (uniLoading || loading) {
     return <span className="text-gray-500">Checking...</span>;
   }
 
@@ -343,13 +337,13 @@ function Page() {
           </div>
           {/* University Cards Grid */}
           {!uniLoading ? (
-            <div className="flex gap-6 overflow-x-auto scrollbar-hide p-4">
+            <div className="flex gap-6 overflow-x-auto  scrollbar-hide p-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
               {universities.length === 0 ? (
                 <p className="text-[20px] font-semibold text-center p-4 w-full">
                   No Universities Found
                 </p>
               ) : (
-                universities.map((uni, index) => (
+                universities.slice(0, 4).map((uni, index) => (
                   <Card
                     key={index}
                     className="min-w-[300px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"

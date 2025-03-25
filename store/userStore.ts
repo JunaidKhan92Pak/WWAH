@@ -1,41 +1,19 @@
-// // /store/userStore.ts
-
-// import { create } from "zustand";
-
-
-
-// interface UserState {
-//     user: UserData | null;
-//     isAuthenticate: boolean;
-//     loading: boolean;
-//     setUser: (user: UserData) => void;
-//     logout: () => void;
-//     setLoading: (loading: boolean) => void;
-// }
-
-// export const useUserStore = create<UserState>((set) => ({
-//     user: null,
-//     isAuthenticate: false,
-//     loading: true,  // Initially true
-//     setUser: (user) => set({ user, isAuthenticate: true, loading: false }),
-//     logout: () => set({ user: null, isAuthenticate: false, loading: false }),
-//     setLoading: (loading) => set({ loading }),
-// }));
 import { create } from "zustand";
 import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
 import { getUserData } from "@/utils/getUser";
 
 export interface UserData {
-    majorSubject: { majorSubject: string, highestQualification: string, previousGradingScore: number, previousGradingScale: any }
-    langPro: { proficiencyTest: string, proficiencyTestScore: number }
-    userPreference: { tutionfees: string }
-    personalInfo: { firstName: string, email: string }
+    majorSubject: { majorSubject: string, highestQualification: string, previousGradingScore: number, previousGradingScale: any };
+    langPro: { proficiencyTest: string, proficiencyTestScore: number };
+    userPreference: { tutionfees: string };
+    personalInfo: { firstName: string, email: string };
 }
+
 interface UserState {
     user: UserData | null;
     isAuthenticate: boolean;
     loading: boolean;
-    setUser: (user: any) => void;
+    setUser: (user: UserData | null) => void;
     logout: () => void;
     fetchUser: () => Promise<void>;
 }
@@ -45,28 +23,102 @@ export const useUserStore = create<UserState>((set) => ({
     isAuthenticate: false,
     loading: true,
 
-    setUser: (user) => set({ user, isAuthenticate: true, loading: false }),
+    setUser: (user) => {
+        set({
+            user,
+            isAuthenticate: !!user, // ✅ Dynamically set authentication state
+            loading: false,
+        });
+    },
 
     logout: () => {
-        deleteAuthToken(); // Remove token
-        set({ user: null, isAuthenticate: false, loading: false });
+        deleteAuthToken(); // ✅ Remove token first
+        set(() => ({ user: null, isAuthenticate: false, loading: false })); // ✅ Reset store state
     },
+
     fetchUser: async () => {
         const token = getAuthToken();
         if (!token) {
             set({ loading: false });
             return;
         }
+
         try {
             const userData = await getUserData(token);
-            if (userData) {
-                set({ user: userData, isAuthenticate: true, loading: false });
-            } else {
-                set({ loading: false });
-            }
+            set({
+                user: userData || null,
+                isAuthenticate: !!userData,
+                loading: false,
+            });
         } catch (error) {
             console.error("❌ Error fetching user:", error);
             set({ loading: false });
         }
     },
 }));
+// import { create } from "zustand";
+// import { persist } from "zustand/middleware";
+// import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
+// import { getUserData } from "@/utils/getUser";
+
+// export interface UserData {
+//     majorSubject: { majorSubject: string, highestQualification: string, previousGradingScore: number, previousGradingScale: any };
+//     langPro: { proficiencyTest: string, proficiencyTestScore: number };
+//     userPreference: { tutionfees: string };
+//     personalInfo: { firstName: string; email: string };
+// }
+
+// interface UserState {
+//     user: UserData | null;
+//     isAuthenticate: boolean;
+//     loading: boolean;
+//     setUser: (user: UserData | null) => void;
+//     logout: () => void;
+//     fetchUser: () => Promise<void>;
+// }
+
+// export const useUserStore = create<UserState>()(
+//     persist(
+//         (set) => ({
+//             user: null,
+//             isAuthenticate: false,
+//             loading: true,
+
+//             setUser: (user) => {
+//                 set({
+//                     user,
+//                     isAuthenticate: !!user,
+//                     loading: false,
+//                 });
+//             },
+
+//             logout: () => {
+//                 deleteAuthToken();
+//                 set({ user: null, isAuthenticate: false, loading: false });
+//             },
+
+//             fetchUser: async () => {
+//                 const token = getAuthToken();
+//                 if (!token) {
+//                     set({ loading: false });
+//                     return;
+//                 }
+//                 try {
+//                     const userData = await getUserData(token);
+//                     set({
+//                         user: userData || null,
+//                         isAuthenticate: !!userData,
+//                         loading: false,
+//                     });
+//                 } catch (error) {
+//                     console.error("❌ Error fetching user:", error);
+//                     set({ loading: false });
+//                 }
+//             },
+//         }),
+//         {
+//             name: "user-data", // unique key in localStorage
+//             // Optionally add serialization options here.
+//         }
+//     )
+// );
