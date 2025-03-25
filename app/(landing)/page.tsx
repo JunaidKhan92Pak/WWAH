@@ -28,6 +28,7 @@ import { useUserStore } from "@/store/userStore";
 // import Loading from "@/app/loading";
 
 function Page() {
+  const router = useRouter();
   const Countries = [
     "USA",
     "China",
@@ -39,6 +40,7 @@ function Page() {
     "Denmark",
     "France",
   ];
+  const [input, setInput] = useState("");
   const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
     useUniversityStore();
   const { isAuthenticate, loading, logout, user } = useUserStore();
@@ -73,6 +75,8 @@ function Page() {
     },
   ];
   function handleCheckboxChange(destination: string): void {
+
+
     if (destination === "All") {
       if (country.length === country.length) {
         setCountry([]); // Uncheck all
@@ -86,6 +90,7 @@ function Page() {
       setCountry(updatedSelected); //  Set array directly
     }
   }
+
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -94,8 +99,6 @@ function Page() {
   if (uniLoading || loading) {
     return <span className="text-gray-500">Checking...</span>;
   }
-  const [input, setInput] = useState("");
-  const router = useRouter();
 
   // if (uniLoading || userLoading) {
   //   return <span className="text-gray-500">loading</span>;
