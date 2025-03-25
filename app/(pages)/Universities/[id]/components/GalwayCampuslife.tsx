@@ -41,56 +41,50 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
   // Array for carousel data: image, title, and description for each slide
   const carouselData = [
     {
-      image: `${
-        images?.campus_sports_recreation
+      image: `${images?.campus_sports_recreation
           ? images.campus_sports_recreation
           : "/banner.png"
-      }`, // Image for the first slide
+        }`, // Image for the first slide
       title: "Sports & Recreation",
       description: `${data.sports_recreation}`,
     },
     {
-      image: `${
-        images?.campus_accommodation
+      image: `${images?.campus_accommodation
           ? images.campus_accommodation
           : "/banner.png"
-      }`, // Image for the second slide
+        }`, // Image for the second slide
       title: "Accommodation",
       description: `${data.accommodation}`,
     },
     {
-      image: `${
-        images?.campus_transportation
+      image: `${images?.campus_transportation
           ? images.campus_transportation
           : "/banner.png"
-      }`, // Image for the third slide
+        }`, // Image for the third slide
       title: "Transportation",
       description: `${data.transportation}`,
     },
     {
-      image: `${
-        images?.campus_student_services
+      image: `${images?.campus_student_services
           ? images.campus_student_services
           : "/banner.png"
-      }`, // Image for the third slide
+        }`, // Image for the third slide
       title: "Student Services",
       description: `${data.student_services}`,
     },
     {
-      image: `${
-        images?.campus_cultural_diversity
+      image: `${images?.campus_cultural_diversity
           ? images.campus_cultural_diversity
           : "/banner.png"
-      }`, // Image for the third slide
+        }`, // Image for the third slide
       title: "Cultural Diversity",
       description: `${data.cultural_diversity}`,
     },
     {
-      image: `${
-        images?.campus_alumni_network
+      image: `${images?.campus_alumni_network
           ? images.campus_alumni_network
           : "/banner.png"
-      }`, // Image for the third slide
+        }`, // Image for the third slide
       title: "Alumni Network & Support",
       description: `${data.alumni_network_support}`,
     },
@@ -98,7 +92,7 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
 
   return (
     <div>
-      <div className="relative text-white py-4 sm:py-12 md:px-10 px-5">
+      <div className="relative text-white py-4 sm:py-12 md:px-10 px-4 w-full">
         {/* Background Image */}
         <div className="absolute inset-0 -z-10 bg-black">
           <Image
@@ -116,19 +110,19 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
           <CarouselContent>
             {carouselData.map((data, index) => (
               <CarouselItem key={index}>
-                <div className="flex flex-col gap-4 sm:gap-0 lg:flex-row  justify-center items-center">
+                <div className="flex flex-col gap-4 lg:flex-row  justify-between items-center w-[89%] md:w-[75%] lg:w-[90%] xl:w-[80%] mx-auto">
                   {/* Left Side: Text */}
-                  <div className="text-left w-full lg:w-[45%] px-0 sm:px-0.5 ">
-                    <h3>Campus Life at {uniname}</h3>
+                  <div className="w-full">
+                    <h4 className="leading-tight">Campus Life at {uniname}</h4>
                     <h5 className="text-[#F6B677]">{data.title}</h5>
-                    <p className="text-[#9D9D9D]">{data.description}</p>
+                    <p className="text-justify md:text-start lg:leading-tight xl:leading-6 text-[#9D9D9D]">{data.description}</p>
                   </div>
 
                   {/* Right Side: Image */}
-                  <div className="w-full lg:w-[50%] px-0 sm:px-8">
+                  <div className="w-full">
                     <Card>
                       <CardContent>
-                        <div className="relative w-full lg:w-[97%] h-[200px] sm:h-[40vh] md:h-[60vh] lg:h-[65vh] xl:h-[55vh] 2xl:h-[60vh]">
+                        <div className="relative w-full lg:w-[97%] h-[220px]  md:h-[360px] lg:h-[310px] xl:h-[350px] 2xl:h-[450px]">
                           <Image
                             src={data?.image ? data.image : "/placeholder.jpg"} // Replace with your actual image path
                             alt={`Campus View ${index + 1}`}

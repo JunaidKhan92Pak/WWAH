@@ -160,3 +160,4 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
 };
 
 export default Healthcare;
+{/* <Healthcare health={country.health} countryName={country?.country_name} /> */ }

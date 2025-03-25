@@ -79,13 +79,21 @@ const Page = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
 
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => ({
+      ...prev,
+      [id]: !prev[id], // Toggle favorite status for specific university
+    }));
+  };
+
   return (
     <section className="w-[90%] mx-auto">
-      <div className="md:flex md:justify-between py-5 md:pt-10">
+      <div className="md:flex md:justify-between py-5 md:pt-10 gap-4">
         <h3 className="font-bold">Discover Universities Worldwide</h3>
-        <div className="sm:flex items-center">
-          <div className="w-full md:w-[70%] flex md:justify-end items-center py-2 md:p-2">
-            <div className="w-[95%] flex bg-[#F1F1F1] rounded-lg h-10">
+        <div className="flex flex-col md:flex-row md:tems-center gap-3">
+            <div className="w-[70%] flex bg-[#F1F1F1] rounded-lg h-10 ">
               <Image
                 src="/search.svg"
                 width={16}
@@ -104,10 +112,9 @@ const Page = () => {
                 className="border-none bg-[#F1F1F1] placeholder:text-[13px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
                 aria-label="Search Universities"
               />
-            </div>
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-10">
+            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10">
               <Image src="/filterr.svg" width={16} height={14} alt="filter" />{" "}
               Filter
             </DropdownMenuTrigger>
@@ -137,26 +144,27 @@ const Page = () => {
               </ScrollArea>
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* Favorites Button (Static) */}
+          <button className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10">
+            <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
+            Favorites
+          </button>
         </div>
       </div>
       {loading ? (
         <SkeletonCard arr={12} />
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-2">
             {universities.length === 0 ? (
               <p className="text-[20px] font-semibold col-span-4 text-center p-4">
                 No Universities Found
               </p>
             ) : (
               universities.map((item) => (
-                <Link
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`/Universities/${item._id}`}
-                  key={item._id}
-                >
-                  <div className="bg-white shadow-xl rounded-2xl overflow-hidden p-3">
+                <div key={item._id} className="bg-white shadow-xl rounded-2xl overflow-hidden p-3">
+
+            
                     <div className="relative h-[200px]">
                       <div className="absolute z-10 top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
                         <p className="text-sm font-medium">QS World:</p>
@@ -164,6 +172,22 @@ const Page = () => {
                           Ranking: {item.ranking[1]?.detail || "N/A"}
                         </p>
                       </div>
+                      {/* Share & Favorite Buttons */}
+                      <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3  bg-white bg-opacity-20 backdrop-blur-sm  rounded-md">
+                        <button>
+                          <Image src="/share.svg" width={20} height={20} alt="Share" />
+                        </button>
+
+                      <button onClick={() => toggleFavorite(item._id)}>
+                        {favorites[item._id] ? (
+                          <Image src="/redheart.svg" width={20} height={20} alt="Favorite" />
+                        ) : (
+                          <Image src="/whiteheart.svg" width={20} height={20} alt="Favorite" />
+                        )}
+                      </button>
+
+                      </div>
+
                       <ImageWithLoader
                         src={item.universityImages?.banner ?? "/banner.jpg"}
                         // width={400}
@@ -184,7 +208,15 @@ const Page = () => {
                       </div>
                     </div>
                     <div className="px-4 h-[80px] flex flex-col justify-between">
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`/Universities/${item._id}`}
+                      key={item._id}
+                    >
                       <p className="font-bold">{item.university_name}</p>
+                    </Link>
+
                       <div className="flex justify-between">
                         <p className="text-sm text-gray-600">
                           {item.country_name}
@@ -205,7 +237,6 @@ const Page = () => {
                       </div>
                     </div>
                   </div>
-                </Link>
               ))
             )}
           </div>

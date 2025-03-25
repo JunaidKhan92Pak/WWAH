@@ -194,13 +194,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           images={data?.universityData.universityImages || null}
         />
       </div>
-      <FAQ title="Frequently Asked Questions:" items={data?.universityData?.faq || []} />
       <Banner
         title="Turn your Study Abroad dreams into Reality!"
         buttonText="Book a Personalized Session with WWAH today."
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
+      <FAQ title="Frequently Asked Questions:" items={data?.universityData?.faq || []} />
+     
       <Exploresection />
     </div>
   );

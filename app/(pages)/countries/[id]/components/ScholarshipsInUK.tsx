@@ -31,7 +31,7 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
   return (
     <>
       {/* Scholarship Timeline Section */}
-      <section className="hidden md:flex flex-col items-center bg-black text-white py-8 mt-5">
+      <section className="hidden md:flex flex-col items-center bg-black text-white py-8 mt-10">
         <h4>Scholarships in {countryName}!</h4>
 
         {/* Timeline Image */}
@@ -58,7 +58,7 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
         </div>
       </section> 
 
-       <div className="md:hidden flex flex-col items-start bg-black text-white py-8 px-6">
+       <div className="md:hidden flex flex-col items-start bg-black text-white py-8 px-6 mt-10">
          <h4>Scholarships in {countryName}!</h4>
 
          <div className="flex flex-col space-y-3 mt-4">
@@ -74,9 +74,9 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
 
      
       <Banner
-        title="Get Personalized Help with Your UK Visa Application!"
+        title={`Get Personalized Help with Your ${countryName} Visa Application!`}
         buttonText="Schedule a Session with WWAH Advisors Now!"
-        buttonLink="/"
+        buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
     </>
