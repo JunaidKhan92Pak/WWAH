@@ -80,9 +80,9 @@ export function Sidebar() {
           className="w-16 h-16 rounded-full mb-2"
         />
         <h2 className="text-sm font-semibold">
-          {user?.user.firstName} {user?.user.lastName}
+          {user?.user?.firstName} {user?.user?.lastName}
         </h2>
-        <p className="text-xs text-gray-500">{user?.user.email}</p>
+        <p className="text-xs text-gray-500">{user?.user?.email}</p>
         <div className="w-full">
           <Link href="/dashboard/myprofile">
             <Button className="mt-1 bg-red-700 hover:bg-red-600 text-white w-full">

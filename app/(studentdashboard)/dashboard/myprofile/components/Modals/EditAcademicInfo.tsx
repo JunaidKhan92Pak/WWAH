@@ -81,15 +81,15 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      qualification: `${data.highestQualification}`,
-      subject: `${data.majorSubject}`,
-      gradingScale: `${data.previousGradingScale}`,
-      obtainedScore: `${data.previousGradingScore}`,
+      qualification: `${data?.highestQualification}`,
+      subject: `${data?.majorSubject}`,
+      gradingScale: `${data?.previousGradingScale}`,
+      obtainedScore: `${data?.previousGradingScore}`,
       startDate: `${data?.startDate}`,
       endDate: `${data?.endDate}`,
-      institution: `${data.institutionName}`,
-      test: `${data.standardizedTest}`,
-      testScore: `${data.standardizedTestScore}`,
+      institution: `${data?.institutionName}`,
+      test: `${data?.standardizedTest}`,
+      testScore: `${data?.standardizedTestScore}`,
     },
   });
 
@@ -138,7 +138,7 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
           />
           <p className="text-sm">
             Last updated on{" "}
-            {new Date(data.updatedAt).toLocaleDateString("en-GB")}
+            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"

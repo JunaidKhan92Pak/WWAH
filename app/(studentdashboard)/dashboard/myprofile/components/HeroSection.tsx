@@ -127,12 +127,12 @@ const HeroSection = ({ user }: HeroSectionProps) => {
         </div>
         <div>
           <p className="font-semibold text-lg">
-            {user.firstName} {user.lastName}
+            {user?.firstName} {user?.lastName}
           </p>
 
           <div className="flex flex-col  gap-2 ">
             <div className="md:block hidden">
-              <p className="text-base text-gray-600">{user.email}</p>
+              <p className="text-base text-gray-600">{user?.email}</p>
 
               {/* Red Line Divider */}
               <div className="w-44 h-[1px] bg-[#F4D0D2]"></div>
@@ -140,7 +140,7 @@ const HeroSection = ({ user }: HeroSectionProps) => {
               <p className="text-base text-gray-600">
                 {/* Member since: {profile.membershipDate} */}
                 Member since:
-                {new Date(user.createdAt).toLocaleDateString("en-GB")}
+                {new Date(user?.createdAt).toLocaleDateString("en-GB")}
               </p>
             </div>
           </div>

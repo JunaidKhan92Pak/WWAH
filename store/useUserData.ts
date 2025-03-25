@@ -1,6 +1,4 @@
-
 import { create } from "zustand";
-
 interface AcademmicInfo {
   highestQualification: string;
   majorSubject: string;
@@ -21,7 +19,6 @@ interface LanguageProf {
   createdAt: Date;
   updatedAt: Date;
 }
-
 interface UserPref {
   perferredCountry: string;
   perferredCity: string;
@@ -82,34 +79,30 @@ export const useUserStore = create<UserStore>((set) => ({
   fetchUserProfile: async (token) => {
     try {
       set({ loading: true, error: null });
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}profile`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
-
-      if (!response.ok) {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}profile`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // ✅ Ensure cookies are sent
+      }
+    );
+      if (!response) {
         throw new Error("Failed to fetch user data");
       }
-
       const userData = await response.json();
       // Map API response to match the updated User interface
       const user: User = {
         ...userData,
       };
-
       set({ user, loading: false });
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("Error fetching profile in wwah:", error);
       set({ error: (error as Error).message, loading: false });
     }
   },
-
   setUser: (user) => set({ user }),
 }));

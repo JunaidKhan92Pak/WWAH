@@ -64,18 +64,18 @@ interface StudentPreferenceData {
 const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  const [currency, setCurrency] = useState(data.currency || "");
+  const [currency, setCurrency] = useState(data?.currency || "");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: `${data.perferredCountry}`,
-      city: `${data.perferredCity}`,
-      degreeLevel: `${data.degreeLevel}`,
-      fieldOfStudy: `${data.fieldOfStudy}`,
-      tuitionBudget: `${data.tutionfees}`,
-      livingBudget:`${data.livingcost}`,
-      studyMode: `${data.studyMode}`,
+      country: `${data?.perferredCountry}`,
+      city: `${data?.perferredCity}`,
+      degreeLevel: `${data?.degreeLevel}`,
+      fieldOfStudy: `${data?.fieldOfStudy}`,
+      tuitionBudget: `${data?.tutionfees}`,
+      livingBudget:`${data?.livingcost}`,
+      studyMode: `${data?.studyMode}`,
       currency: "USD",
     },
   });
@@ -127,7 +127,7 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
         <div className="flex flex-row items-center gap-x-2">
           <p className="text-sm">
             last updated on{" "}
-            {new Date(data.updatedAt).toLocaleDateString("en-GB")}
+            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
