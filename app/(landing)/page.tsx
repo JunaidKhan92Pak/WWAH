@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,7 @@ import {
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
 import { useUserStore } from "@/store/userStore";
+// import Loading from "@/app/loading";
 
 function Page() {
   const Countries = [
@@ -37,9 +39,20 @@ function Page() {
     "Denmark",
     "France",
   ];
+<<<<<<< Updated upstream
   const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
     useUniversityStore();
   const { isAuthenticate, loading, logout, user } = useUserStore();
+=======
+  const {
+    universities,
+    country,
+    setCountry,
+    fetchUniversities,
+    loading: uniLoading,
+  } = useUniversityStore();
+  const { user, isAuthenticate, logout } = useUserStore();
+>>>>>>> Stashed changes
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
@@ -88,11 +101,28 @@ function Page() {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
+<<<<<<< Updated upstream
   const [successOpen, setSuccessOpen] = useState(false);
   if (uniLoading || loading) {
     return <span className="text-gray-500">Checking...</span>;
   }
+=======
+  const [input, setInput] = useState("");
+>>>>>>> Stashed changes
 
+  const [successOpen, setSuccessOpen] = useState(false);
+  const router = useRouter();
+
+  // if (uniLoading || userLoading) {
+  //   return <span className="text-gray-500">loading</span>;
+  // }
+  const handleNavigate = () => {
+    if (input.trim()) {
+      router.push(`/chatmodel?message=${encodeURIComponent(input)}`);
+    } else {
+      router.push("/chatmodel"); // Navigate without message if input is empty
+    }
+  };
   return (
     // landing page container starts
     <div className="landingPage">
@@ -210,11 +240,18 @@ function Page() {
                   <input
                     type="text"
                     placeholder="Chat with Zeus..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
                     className="flex-1 bg-transparent border-none  focus:outline-none text-white placeholder:text-white/60 placeholder:text-sm "
                   />
-                  <Link href="/chatmodel">
-                    <Send className="h-5 w-5 text-white/80 cursor-pointer hover:text-white transition-colors" />
-                  </Link>
+                  {/* <Link
+                    href={`/chatmodel?message=${encodeURIComponent(input)}`}
+                  > */}
+                    <Send
+                      onClick={handleNavigate}
+                      className="h-5 w-5 text-white/80 cursor-pointer hover:text-white transition-colors"
+                    />
+                  {/* </Link> */}
                 </div>
               </div>
               {/* Action Buttons */}
