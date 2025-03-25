@@ -9,10 +9,11 @@ import { CiUser } from "react-icons/ci";
 import { IoMailOutline, IoKeyOutline } from "react-icons/io5";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useUserStore } from "@/store/userStore";
+
 const Page = () => {
   const router = useRouter();
   const { signupAction } = useAuth();
-  const { fetchUser } = useUserStore()
+  const { setUser, loading } = useUserStore();
   // Form state and validation errors
   const [formData, setFormData] = useState({
     firstName: "",
@@ -64,15 +65,20 @@ const Page = () => {
       return;
     }
 
-    const res = await signupAction(formData);
-    if (res.success) {
-      fetchUser()
-      router.push("/");
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: res.message, // Correct reference of res.message
-      }));
+    try {
+      const res = await signupAction(formData);
+      if (res.success) {
+        setUser(res.user);
+        router.push("/");
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: res.message, // Correct reference of res.message
+        }));
+      }
+    }
+    catch (err) {
+      console.error("Login failed", err);
     }
   };
 
@@ -222,7 +228,7 @@ const Page = () => {
               type="submit"
               className="w-full bg-red-700 text-white p-2 mt-4 rounded 2xl:p-6"
             >
-              Go to my dashboard
+              {loading ? "Processing..." : "Go to my dashboard"}
             </button>
             <p className="text-center mt-2 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
               Already have an account?{" "}

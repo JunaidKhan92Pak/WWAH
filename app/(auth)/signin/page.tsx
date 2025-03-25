@@ -11,13 +11,13 @@ import {
   IoEyeOffOutline,
 } from "react-icons/io5";
 import { useAuth } from "../auth/authProvider";
-
 import { useUserStore } from "@/store/userStore";
+
 
 const Page = () => {
   const router = useRouter();
   const { loginAction } = useAuth(); // Get login function from context
-  const { fetchUser } = useUserStore()
+  const { setUser, loading } = useUserStore();
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -35,9 +35,9 @@ const Page = () => {
     setGeneralError("");
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!userData.email || !userData.password) {
       setGeneralError("Please fill in all fields.");
       return;
@@ -45,11 +45,8 @@ const Page = () => {
 
     try {
       const loginRes = await loginAction(userData);
-
-      if (loginRes.success) {
-        // const { user } = await useUser();
-        // setUser(user);
-        fetchUser()
+      if (loginRes.success && loginRes.user) {
+        setUser(loginRes.user);
         router.push("/");
       } else {
         setGeneralError("Invalid email or password");
@@ -58,8 +55,8 @@ const Page = () => {
       setGeneralError("Login failed, please try again.");
       console.error("Login failed", err);
     }
-  };
 
+  };
 
 
   return (
@@ -167,7 +164,7 @@ const Page = () => {
               type="submit"
               className="w-full bg-red-700 text-white p-2 rounded 2xl:p-4"
             >
-              Sign In
+              {loading ? "Processing..." : "Sign In"}
             </button>
             <span className="block text-[12px] lg:text-[14px] 2xl:text-[24px] text-center 2xl:w-full">
               Don&#39;t have an account?{" "}

@@ -11,12 +11,14 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { useUserStore } from "@/store/userStore";
+
 const Navbar = () => {
-  const { user, isAuthenticate, loading, logout } = useUserStore();
+  const { isAuthenticate, loading, logout, user } = useUserStore();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
+
   if (loading) return <span className="text-gray-500">Checking...</span>;
   return (
     <header className="h-0 md:h-[50px] lg:mb-10">
@@ -98,7 +100,7 @@ const Navbar = () => {
                     >
                       <div className="px-4 py-3">
                         <span className="block text-sm text-gray-900 dark:text-white">
-                          {user?.personalInfo?.firstName || "User 12"}
+                          {user?.personalInfo.firstName || "User"}
                         </span>
                         <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
                           {user?.personalInfo?.email || "user12gmail.com"}
