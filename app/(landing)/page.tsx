@@ -39,20 +39,9 @@ function Page() {
     "Denmark",
     "France",
   ];
-<<<<<<< Updated upstream
   const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
     useUniversityStore();
   const { isAuthenticate, loading, logout, user } = useUserStore();
-=======
-  const {
-    universities,
-    country,
-    setCountry,
-    fetchUniversities,
-    loading: uniLoading,
-  } = useUniversityStore();
-  const { user, isAuthenticate, logout } = useUserStore();
->>>>>>> Stashed changes
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
@@ -101,16 +90,11 @@ function Page() {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
-<<<<<<< Updated upstream
   const [successOpen, setSuccessOpen] = useState(false);
   if (uniLoading || loading) {
     return <span className="text-gray-500">Checking...</span>;
   }
-=======
   const [input, setInput] = useState("");
->>>>>>> Stashed changes
-
-  const [successOpen, setSuccessOpen] = useState(false);
   const router = useRouter();
 
   // if (uniLoading || userLoading) {
@@ -247,10 +231,10 @@ function Page() {
                   {/* <Link
                     href={`/chatmodel?message=${encodeURIComponent(input)}`}
                   > */}
-                    <Send
-                      onClick={handleNavigate}
-                      className="h-5 w-5 text-white/80 cursor-pointer hover:text-white transition-colors"
-                    />
+                  <Send
+                    onClick={handleNavigate}
+                    className="h-5 w-5 text-white/80 cursor-pointer hover:text-white transition-colors"
+                  />
                   {/* </Link> */}
                 </div>
               </div>
