@@ -3,6 +3,7 @@ import Image from "next/image";
 import Banner from "@/components/ui/enrollment/Banner";
 interface PopularProgramsProps {
   country: string[];
+  countryName: string;
 }
 
 const data = [
@@ -44,7 +45,7 @@ const data = [
   },
 ];
 
-const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
+const PopularPrograms: React.FC<PopularProgramsProps> = ({ country  , countryName} )  => {
   const arr1 = [
     {
       icon: "/Suitcasesvg.svg",
@@ -88,7 +89,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
           {/* Title Section */}
           <div className="lg:w-2/5 flex items-center justify-center text-center lg:text-left text-gray-600 2xl:justify-center md:mb-6 mb-2 lg:mb-0">
             <h5 className="md:w-4/5 text-gray-900 font-bold leading-10 text-lg sm:text-xl md:text-2xl">
-              Popular Programs to Study in United Kingdom!
+              Popular Programs to Study in {countryName}
             </h5>
           </div>
 
@@ -125,7 +126,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
 
       <section className="flex justify-center my-6 md:my-8 text-center">
         <div className="text-center">
-          <h4>Cost of Living in United Kingdom!</h4>
+          <h4>Cost of Living in {countryName}!</h4>
           <div
             className="flex md:grid md:grid-cols-6 justify-center md:gap-4 overflow-x-auto md:overflow-x-hidden scrollbar-hide py-2 md:py-6"
             style={{
@@ -159,7 +160,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country }) => {
       <Banner
         title="Create your Application today for your desired program!"
         buttonText="Apply Now!"
-        buttonLink="/scholarships"
+        buttonLink="/coursearchive"
         backgroundImage="/bg-usa.png"
       />
     </>

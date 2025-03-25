@@ -29,7 +29,7 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
     <>
       {/* Introduction Section */}
       <div className="text-center w-5/6 lg:w-[70%] mx-auto md:pt-28">
-        <h2 className="pt-4 pb-2 font-bold">Why Study In United Kingdom!</h2>
+        <h2 className="pt-4 pb-2 font-bold">Why Study In {countryName}!</h2>
         <div className="text-center">
           <p>
             {isExpanded ? fullText : truncatedText}

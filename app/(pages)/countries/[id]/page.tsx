@@ -120,12 +120,14 @@ export default function Countrypage({
       <WorkOpportunity
         whileStudying={country.work_while_studying}
         afterStudying={country.work_after_study}
+        countryName={country.country_name || ""}
+
       />
       <PermanentResidency
         residency={country.residency}
         countryName={country.country_name || ""}
       />
-      <PopularPrograms country={country.popular_programs} />
+      <PopularPrograms country={country.popular_programs} countryName={country.country_name} />
 
       <ScholarshipsInUK
         // scholarships={country.scholarships}
@@ -151,13 +153,13 @@ export default function Countrypage({
         }
       />
 
-      <Healthcare health={country.health} countryName={country.country_name} />
+      <Healthcare health={country.health} countryName={country?.country_name} />
 
       <FAQ title="Frequently Asked Questions:" items={country?.faqs} />
       <Banner
-        title="Create your Application today for your desired program!"
-        buttonText="Apply Now!"
-        buttonLink="/scholarships"
+        title={`Make your dream of studying in the ${country?.country_name} a reality with our expert guidance!`}
+        buttonText="Book a Counselling Session wth WWAH Advisor!"
+        buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
       <DreamStudy />
