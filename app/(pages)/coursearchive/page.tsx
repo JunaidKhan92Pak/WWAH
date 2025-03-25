@@ -179,7 +179,7 @@ const CourseArchive = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-around mb-4 mt-auto gap-2">
+                {/* <div className="flex justify-around mb-4 mt-auto gap-2">
                   <Link
                     href={`/courses/${item._id}`}
                     target="_blank"
@@ -190,9 +190,29 @@ const CourseArchive = () => {
                       Course Details
                     </button>
                   </Link>
-                  <button className="w-[50%] border border-red-500 text-red-500 text-sm p-2 rounded-lg">
-                    Create Application
-                  </button>
+                  <Link href="dashboard">
+                    <button className="w-[50%] border border-red-500 text-red-500 text-sm p-2 rounded-lg">
+                      Create Application
+                    </button>
+                  </Link>
+                </div> */}
+                <div className="flex justify-between items-center mb-4 mt-auto gap-2">
+                  <Link
+                    href={`/courses/${item._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-1/2"
+                  >
+                    <button className="w-full bg-red-500 text-white text-sm p-2 rounded-lg">
+                      Course Details
+                    </button>
+                  </Link>
+
+                  <Link href="dashboard" className="w-1/2">
+                    <button className="w-full border border-red-500 text-red-500 text-sm p-2 rounded-lg">
+                      Create Application
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))

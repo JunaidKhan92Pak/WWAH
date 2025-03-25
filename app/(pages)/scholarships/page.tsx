@@ -492,7 +492,7 @@ const Page = () => {
                       </Link>
 
                       <Link
-                        href="#"
+                        href="/dashboard"
                         className="flex-1 flex items-center justify-center border border-[#F0851D] text-[#F0851D] text-xs md:text-[13px] px-1 py-2 rounded-lg hover:bg-red-500 hover:text-white text-center"
                       >
                         Start Your Application
