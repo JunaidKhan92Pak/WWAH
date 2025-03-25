@@ -69,16 +69,13 @@ const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   phoneCountry: z.string().min(1, "Country code is required"),
   phoneNo: z.string().min(1, "Phone number is required"),
-
   // Location Details
   country: z.string().min(1, "Country is required"),
   university: z.string().min(1, "University is required"),
   city: z.string().min(1, "City is required"),
-
   // Pickup Details
   pickupOption: z.string().min(1, "Pickup option is required"),
   dropOffLocation: z.string().min(1, "Drop off location is required"),
-
   // Additional Information
   additionalPreference: z.string().optional(),
   ticket: z.any().optional(), // Change to any to handle file upload
@@ -87,7 +84,6 @@ const formSchema = z.object({
 export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState({ type: "", message: "" });
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -95,16 +91,13 @@ export default function Home() {
       email: "",
       phoneCountry: "+1",
       phoneNo: "",
-
       // Location Details
       country: "",
       university: "",
       city: "",
-
       // Pickup Details
       pickupOption: "",
       dropOffLocation: "",
-
       // Additional Information
       additionalPreference: "",
     },
@@ -174,10 +167,8 @@ export default function Home() {
       if (ticketField && ticketField[0]) {
         formData.append("ticket", ticketField[0]);
       }
-
       // Add flight details as JSON string
       formData.append("flightDetails", JSON.stringify(flightData));
-
       // Submit the form to backend
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/airportPickup`,
@@ -187,16 +178,13 @@ export default function Home() {
           // Note: Don't set Content-Type header when using FormData
         }
       );
-
       const data = await response.json();
-
       if (data.success) {
         setSubmitMessage({
           type: "success",
           message:
             "Your airport pickup request has been submitted successfully.",
         });
-
         // Reset form
         form.reset();
         setFlightData({
@@ -219,7 +207,6 @@ export default function Home() {
       setIsSubmitting(false);
     }
   }
-
   const CountryFlag = ({ url }: { url: string }) => (
     <div className="relative w-4 h-4 rounded-full overflow-hidden">
       <Image
@@ -231,7 +218,6 @@ export default function Home() {
       />
     </div>
   );
-
   return (
     <div className="p-4">
       <div className="mx-auto max-w-3xl">
@@ -374,8 +360,7 @@ export default function Home() {
                   )}
                 />
                 {/* Document Upload Section */}
-
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="ticket"
                   render={({ field: {  onChange, ...fieldProps } }) => (
@@ -388,6 +373,30 @@ export default function Home() {
                           onChange={(e) => {
                             onChange(e.target.files);
                           }}
+                        />
+                      </FormControl>
+                      <FormMessage>
+                        {String(form.formState.errors.ticket?.message || "")}
+                      </FormMessage>
+                    </FormItem>
+                  )}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="ticket"
+                  render={({ field: { onChange, ...fieldProps } }) => (
+                    <FormItem>
+                      <FormLabel>Upload Ticket</FormLabel>
+                      <FormControl className="bg-[#f1f1f1]">
+                        <Input
+                          type="file"
+                          {...fieldProps}
+                          onChange={(e) => {
+                            // Only update if files exist
+                            onChange(e.target.files ? e.target.files : null);
+                          }}
+                          // Important: Explicitly set value to undefined
+                          value={undefined}
                         />
                       </FormControl>
                       <FormMessage>

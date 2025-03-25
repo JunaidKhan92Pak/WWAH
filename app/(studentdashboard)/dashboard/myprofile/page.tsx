@@ -5,7 +5,6 @@ import MyProfileInfo from "./components/MyProfileInfo";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/authHelper";
 import { useUserStore } from "@/store/useUserData";
-
 const Page = () => {
   const { user, setUser, fetchUserProfile } = useUserStore();
   const router = useRouter();
@@ -19,7 +18,7 @@ const Page = () => {
       }
       fetchUserProfile(token);
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("Error fetching profile:", error );
     }
   };
   console.log(user, "user data");
@@ -35,7 +34,7 @@ const Page = () => {
         <>
           <HeroSection user={user.user} />
           <MyProfileInfo
-            user={user.user}
+            user={user?.user}
             academicInfo={user?.AcademmicInfo}
             languageProficiency={user?.LanguageProf}
             userPreferences={user?.UserPref}

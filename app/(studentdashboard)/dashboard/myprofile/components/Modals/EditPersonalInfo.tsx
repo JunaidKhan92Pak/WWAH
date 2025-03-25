@@ -69,12 +69,12 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      contactNo: `${data.contactNo}`,
-      dob: `${data.dob}`,
-      country: `${data.country}`,
-      nationality: `${data.nationality}`,
-      city: `${data.city}`,
-      countryCode: `${data.countryCode}`, // Default country code set
+      contactNo: `${data?.contactNo}`,
+      dob: `${data?.dob}`,
+      country: `${data?.country}`,
+      nationality: `${data?.nationality}`,
+      city: `${data?.city}`,
+      countryCode: `${data?.countryCode}`, // Default country code set
     },
   });
 
@@ -190,7 +190,7 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
           />
           <p className="text-sm">
             last updated on{" "}
-            {new Date(data.updatedAt).toLocaleDateString("en-GB")}
+            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"

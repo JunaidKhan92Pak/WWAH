@@ -29,11 +29,23 @@ import {
 } from "@/components/ui/form";
 
 const formSchema = z.object({
-  proficiencyLevel: z.enum(["native speaker", "test", "willingToTest"], {
-    message: "Select a valid proficiency level",
-  }),
+  proficiencyLevel: z.enum(
+    ["native speaker", "test", "willingToTest", "undefined", ""],
+    {
+      message: "Select a valid proficiency level",
+    }
+  ),
   testType: z.enum(
-    ["IELTS", "PTE", "TOEFL", "DUOLINGO", "Language Cert", "others"],
+    [
+      "IELTS",
+      "PTE",
+      "TOEFL",
+      "DUOLINGO",
+      "Language Cert",
+      "others",
+      "",
+      "undefined",
+    ],
     {
       message: "Select a valid test type",
     }
@@ -55,12 +67,12 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: formSchema.parse({
-      proficiencyLevel: `${data.proficiencyLevel}`,
-      testType: `${data.proficiencyTest}`,
-      score: `${data.proficiencyTestScore}`,
+      proficiencyLevel: `${data?.proficiencyLevel}` || "",
+      testType: `${data?.proficiencyTest}` || "",
+      score: `${data?.proficiencyTestScore}` || "",
     }),
   });
-  console.log(data.proficiencyTestScore, "data.proficiencyTestScore");
+  console.log(data?.proficiencyTestScore, "data.proficiencyTestScore");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log("Submitting:", values); // Debugging
@@ -107,7 +119,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
           />
           <p className="text-sm">
             last updated on{" "}
-            {new Date(data.updatedAt).toLocaleDateString("en-GB")}
+            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"

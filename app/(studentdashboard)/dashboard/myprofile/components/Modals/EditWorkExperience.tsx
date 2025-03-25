@@ -81,15 +81,15 @@ const EditWorkExperience = ({ data }: { data: WorkExperienceData }) => {
   const form = useForm<WorkExperienceForm>({
     resolver: zodResolver(workExperienceSchema),
     defaultValues: {
-      hasWorkExperience: data.hasWorkExperience,
+      hasWorkExperience: data?.hasWorkExperience,
       experiences: [
         {
-          jobTitle: `${data.jobTitle}`,
-          organizationName: `${data.organizationName}`,
+          jobTitle: `${data?.jobTitle}`,
+          organizationName: `${data?.organizationName}`,
           dateFrom: `${data?.startDate}`,
           dateTo: `${data?.endDate}`,
-          isFullTime: data.employmentType === "fullTime",
-          isPartTime: data.employmentType === "partTime",
+          isFullTime: data?.employmentType === "fullTime",
+          isPartTime: data?.employmentType === "partTime",
         },
       ],
     },
@@ -100,7 +100,7 @@ const EditWorkExperience = ({ data }: { data: WorkExperienceData }) => {
     name: "experiences",
   });
 
-  console.log(data.organizationName, "organizationName data");
+  console.log(data?.organizationName, "organizationName data");
   const hasWorkExperience = form.watch("hasWorkExperience");
 
   async function onSubmit(values: z.infer<typeof workExperienceSchema>) {
@@ -146,7 +146,7 @@ const EditWorkExperience = ({ data }: { data: WorkExperienceData }) => {
         />
         <p className="text-sm">
           {" "}
-          last updated on {new Date(data.updatedAt).toLocaleDateString("en-GB")}
+          last updated on {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
         </p>
         <Image
           src="/DashboardPage/pen.svg"
