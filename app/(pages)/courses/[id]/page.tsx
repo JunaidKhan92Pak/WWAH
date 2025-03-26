@@ -53,6 +53,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       career_opportunity_4?: string;
       career_opportunity_5?: string;
     };
+    universityData?: {
+      universityImages?: string;
+    };
     countryData: {
       countryname: string;
       embassyDocuments: [];
@@ -137,7 +140,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   if (!data) return <p> Course Not Found</p>;
   return (
     <div>
-      <Herosection data={data.courseData} />
+      <Herosection data={data?.courseData} uniData={{ banner: data?.universityData?.universityImages || "" }} />
       {/* Course Overview & Navigation Tabs */}
       <section className="bg-white md:mt-6 lg:mt-12 mb-6">
         <div className=" mx-auto w-[92%]">
@@ -148,11 +151,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
                 className={`font-medium transition text-sm md:text-lg px-10 py-2 md:rounded-t-xl flex-shrink-0 border-b border-gray-400 md:border-none
-        ${
-          activeTabPro === tab.id
-            ? "bg-[#C7161E] text-white"
-            : "bg-transparent text-gray-800"
-        }
+        ${activeTabPro === tab.id
+                    ? "bg-[#C7161E] text-white"
+                    : "bg-transparent text-gray-800"
+                  }
         hover:bg-[#FCE7D2] hover:text-black`}
               >
                 {tab.name}

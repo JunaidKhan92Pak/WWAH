@@ -40,7 +40,7 @@ interface CourseData {
   career_opportunity_5?: string;
 }
 
-const Herosection = ({ data }: { data: CourseData }) => {
+const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: string } }) => {
   const arr1 = [
     {
       Image: "/CourseDetailPage/Notebook.svg",
@@ -85,9 +85,12 @@ const Herosection = ({ data }: { data: CourseData }) => {
         <div className="w-full mx-auto ">
           {/* Hero Section */}
           <div
-            className="relative w-[95%] mx-auto rounded-3xl bg-no-repeat bg-cover bg-center overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center"
-            style={{ backgroundImage: "url('/dcu-hero-img.png')" }}
+            className="relative w-[95%] mx-auto rounded-3xl overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center"
+            // style={{ backgroundImage: `url("/dcu-hero-img.png")` }}
+            style={{ backgroundImage: `url(${uniData?.banner}  ) `, backgroundSize: "cover" }}
           >
+            {/* Black overlay */}
+            <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center justify-items-center sm:px-6 md:py-12 py-2 relative z-10">
               {/* Left Section */}
               <div className="w-[90%] flex flex-col items-center md:items-start text-center md:text-left space-y-2 pl-0 lg:pl-12">
