@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     const searchCourse = searchParams.get("searchCourse");
     const minBudget = parseFloat(searchParams.get("minBudget") || "0");
     const maxBudget = parseFloat(searchParams.get("maxBudget") || "999999");
-
+    const intakeMonth = searchParams.get("intakeMonth") || "";
     // Extract and process country filter
     const countryFilter = searchParams.get("countryFilter")
       ?.split(",")
@@ -52,9 +52,33 @@ export async function GET(req: Request) {
       }
     }
     if (studyLevel) query.course_level = studyLevel;
-    if (intakeYear) query.intake = { $regex: `^${intakeYear}`, $options: "i" };
+    // Filtering by intake month and year if provided
+    if (intakeMonth && intakeYear) {
+      // Filter for both month and year
+      query.intake = {
+        $elemMatch: {
+          $regex: `\\b${intakeMonth}\\s+${intakeYear}\\b`, // Matches "February 2026", "July 2027"
+          $options: "i"  // Case-insensitive search
+        }
+      };
+    } else if (intakeMonth) {
+      // Filter by month only
+      query.intake = {
+        $elemMatch: {
+          $regex: `\\b${intakeMonth}\\b`, // Matches only the month, e.g., "February"
+          $options: "i"
+        }
+      };
+    } else if (intakeYear) {
+      // Filter by year only
+      query.intake = {
+        $elemMatch: {
+          $regex: `\\b${intakeYear}\\b`, // Matches only the year, e.g., "2026"
+          $options: "i"
+        }
+      };
+    }
     if (studyMode) query.degree_format = { $regex: `^${studyMode}`, $options: "i" };
-
     // Filter by university name using regex
     if (university) {
       const escapeRegex = (text: string) =>

@@ -65,13 +65,23 @@ export default function Home() {
             }
           }
 
-          // ✅ Handle annual tuition fee extraction
-          if (normalizedKey === "annual_tuition_fee" && typeof value === "string") {
-            const match = value.match(/([$€£])?([\d,]+)/);
-            if (match) {
+          // ✅ Handle annual tuition fee extraction and normalization
+          if (normalizedKey === "annual_tuition_fee") {
+            // If the value is a string with a currency symbol (e.g., "$9000" or "€9000")
+            if (typeof value === "string") {
+              const match = value.match(/([$€£])?([\d,]+)/); // Match optional currency and amount
+              if (match) {
+                normalizedValue = {
+                  currency: match[1] || "$", // Default currency to "$" if not provided
+                  amount: parseFloat(match[2].replace(/,/g, "")), // Convert number string to float
+                };
+              }
+            }
+            // If the value is a number, treat it as an amount and add the default currency
+            else if (typeof value === "number") {
               normalizedValue = {
-                currency: match[1] || "$", // Default currency to "$" if not provided
-                amount: parseFloat(match[2].replace(/,/g, "")), // Convert number string to float
+                currency: "$", // Default to "$" for numbers
+                amount: value,
               };
             }
           }

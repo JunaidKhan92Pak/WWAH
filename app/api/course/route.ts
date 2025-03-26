@@ -4,6 +4,7 @@ import { Courses } from "@/models/courses";
 import Country from "@/models/countryData";
 import mongoose from "mongoose";
 import { ICourse } from "@/models/courses"; // Import your ICourse interface
+import { University } from "@/models/universities";
 
 export async function GET(req: Request) {
     try {
@@ -30,8 +31,8 @@ export async function GET(req: Request) {
                 universityDocuments: { $elemMatch: { course_level: courseData.education_level } },
             }
         ).lean();
-
-        return NextResponse.json({ courseData, countryData });
+        const universityData = await University.findById(courseData.university_id).select("universityImages").lean();
+        return NextResponse.json({ courseData, countryData, universityData });
 
     } catch (error) {
         console.error("Error fetching course data:", error);
