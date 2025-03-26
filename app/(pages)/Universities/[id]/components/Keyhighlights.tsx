@@ -74,12 +74,12 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
                   className="flex flex-col md:flex-row md:justify-start items-center justify-center md:flex md:items-start gap-4 md:mb-3"
                 >
                   <div className="sm:w-12 sm:h-12 w-10 h-10 relative">
-                    <Image
+                    <img
                       src={alumni.image || "/user-dp.png"}
                       alt="alumini"
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-full border"
+                      // layout="fill"
+                      // objectFit="cover"
+                      className="rounded-full border object-fit sm:w-12 sm:h-12 w-10 h-10 "
                     />
                   </div>
                   <div>

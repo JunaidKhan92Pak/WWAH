@@ -71,26 +71,26 @@ export default function Home() {
     }
   };
 
-    const handleFileRead = () => {
-        if (!file) {
-            console.log("jo");
+  const handleFileRead = () => {
+    if (!file) {
+      console.log("jo");
 
-            setError("Please select an Excel file to read.");
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const data = new Uint8Array(e.target?.result as ArrayBuffer);
-            const workbook = XLSX.read(data, { type: "array" });
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
-            const json: Record<string, string | number>[] = XLSX.utils.sheet_to_json(worksheet);
-            const normalizedData = normalizeData(json);
-            setParsedData((prev) => ({
-                ...prev,
-                university: normalizedData,
-            }));
-            setError(null);
+      setError("Please select an Excel file to read.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const json: Record<string, string | number>[] = XLSX.utils.sheet_to_json(worksheet);
+      const normalizedData = normalizeData(json);
+      setParsedData((prev) => ({
+        ...prev,
+        university: normalizedData,
+      }));
+      setError(null);
 
 
       if (normalizedData.length === 0) {
@@ -110,16 +110,25 @@ export default function Home() {
             .toLowerCase();
           let normalizedValue = value;
 
+          // Suppose 'field' represents the data type, e.g., "student_count" for student numbers.
           if (typeof value === "number" && value < 1 && value > 0) {
             normalizedValue = `${value * 100}%`;
           }
 
-          if (typeof value === "number" && value > 40000 && value < 60000) {
+          // Only convert to a date if the field is not a student count.
+          if (
+            typeof value === "number" &&
+            value > 40000 &&
+            value < 60000 &&
+            normalizedKey !== "national_students" && // add additional keys if necessary
+            normalizedKey !== "international_students"
+          ) {
             const date = XLSX.SSF.parse_date_code(value);
             normalizedValue = new Date(Date.UTC(date.y, date.m - 1, date.d))
               .toISOString()
               .split("T")[0];
           }
+
 
           return [normalizedKey, normalizedValue];
         })
@@ -221,48 +230,48 @@ export default function Home() {
     }
   };
 
-    return (
-        <div className="bg-gradient-to-br from-indigo-100 to-purple-50 min-h-screen flex justify-center  py-10">
-            <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
+  return (
+    <div className="bg-gradient-to-br from-indigo-100 to-purple-50 min-h-screen flex justify-center  py-10">
+      <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
 
-                <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
-                {error && <p className="text-red-600 text-sm mt-4 text-center">{error}</p>}
-                <form onSubmit={uploadDataToServer} className="space-y-4">
-                    <div className="mb-4">
-                        <label
-                            htmlFor="country"
-                            className="cursor-pointer text-black p-2  rounded-lg transition"
-                        >
-                            Country Name
-                        </label>
-                        <input
-                            type="text"
-                            id="country"
-                            name="country"
-                            placeholder="Enter Country"
-                            value={parsedData.country}
-                            onChange={(e) => setParsedData({ ...parsedData, country: e.target.value })}
-                            className="w-full py-3 px-4 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        />
-                    </div>
+        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
+        {error && <p className="text-red-600 text-sm mt-4 text-center">{error}</p>}
+        <form onSubmit={uploadDataToServer} className="space-y-4">
+          <div className="mb-4">
+            <label
+              htmlFor="country"
+              className="cursor-pointer text-black p-2  rounded-lg transition"
+            >
+              Country Name
+            </label>
+            <input
+              type="text"
+              id="country"
+              name="country"
+              placeholder="Enter Country"
+              value={parsedData.country}
+              onChange={(e) => setParsedData({ ...parsedData, country: e.target.value })}
+              className="w-full py-3 px-4 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
 
-                    <div className="flex justify-between items-center">
-                        <label
-                            htmlFor="excel-upload"
-                            className="cursor-pointer bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition"
-                        >
-                            Select University Excel File
-                        </label>
-                        <input
-                            id="excel-upload"
-                            type="file"
-                            accept=".xlsx, .xls"
-                            onChange={handleFileChange}
-                            className="hidden"
-                        />
+          <div className="flex justify-between items-center">
+            <label
+              htmlFor="excel-upload"
+              className="cursor-pointer bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition"
+            >
+              Select University Excel File
+            </label>
+            <input
+              id="excel-upload"
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={handleFileChange}
+              className="hidden"
+            />
 
-                        <FileButton handleFile={handleFileRead} />
-                    </div>
+            <FileButton handleFile={handleFileRead} />
+          </div>
 
           <div className="grid grid-cols-2 gap-6">
             {allImages.map((imageType) => (

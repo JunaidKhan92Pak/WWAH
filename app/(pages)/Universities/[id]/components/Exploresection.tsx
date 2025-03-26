@@ -41,7 +41,7 @@ const Exploresection = () => {
             {loading ? (
               <SkeletonCard arr={1} />
             ) : (
-              universities.map((item, index) => (
+              universities.slice(0, 4).map((item, index) => (
                 <div
                   key={index}
                   className="relative flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
