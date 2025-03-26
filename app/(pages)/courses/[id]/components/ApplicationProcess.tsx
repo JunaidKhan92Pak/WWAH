@@ -22,7 +22,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({ countryn
                             <p className="text-gray-700 mt-2">
                                 Click on{" "}
                                 <Link
-                                    href="/apply-now"
+                                    href="/dashboard/overview"
                                     className="text-[#F0851D] hover:underline font-semibold"
                                 >
                                     Apply Now
@@ -31,7 +31,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({ countryn
                                 account. You can monitor your applications and receive regular
                                 updates.{" "}
                                 <Link
-                                    href="/register"
+                                    href="/signup"
                                     className="text-[#F0851D] hover:underline font-semibold"
                                 >
                                     Register here.

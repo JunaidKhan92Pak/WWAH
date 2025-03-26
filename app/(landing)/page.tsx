@@ -187,8 +187,8 @@ function Page() {
               <>
                 <Link href="/signin">
                   <Button
-                    className="bg-[#C7161E] text-white text-base"
-                    variant="outline"
+                    className="bg-[#C7161E] hover:bg-[#C7161E] text-white text-base"
+                    // variant="outline"
                     size="lg"
                   >
                     Login

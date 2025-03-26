@@ -57,9 +57,9 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row  sm:min-h-screen">
       {/* Left Section */}
-      <div className="md:w-1/2 flex items-center justify-center">
+      <div className="w-full md:w-1/2 flex items-center justify-center min-h-[90vh]">
         <div className="w-6/7 pt-5 md:pt-0 px-8 flex flex-col items-end justify-center">
           <div className="w-full sm:w-full lg:w-4/5">
             <Image
@@ -67,7 +67,7 @@ const Page = () => {
               alt="Logo"
               width={200}
               height={200}
-              className="w-16 sm:w-24 mx-auto"
+              className="w-24 mx-auto mb-4 sm:mb-2"
             />
             <h3 className="text-center">Welcome back</h3>
             <p className="text-gray-600 text-center sm:px-8">
@@ -158,6 +158,7 @@ const Page = () => {
         </div>
       </div>
     </div>
+   
   );
 };
 

@@ -1,10 +1,10 @@
-"use client"
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Calculator } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import React, { useState } from 'react'
+"use client";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Calculator } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useState } from "react";
 
 interface FeeAndScholarshipsProps {
   data: {
@@ -48,7 +48,7 @@ interface FeeAndScholarshipsProps {
 export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
   const [activeTab, setActiveTab] = useState("scholarship");
   return (
-    <section className=" w-[90%] mx-auto">
+    <section className=" w-[90%] mx-auto my-4">
       <h2 className="pb-2">Fee and Scholarships!</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-[24%_26%_46%] gap-2 md:gap-6">
@@ -72,16 +72,8 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               </li>
               <li className="flex items-center space-x-2 ">
                 <span className="vertical-line w-[1px] h-3 bg-black"></span>
-                <div className="relative group w-[100px]">
-                  <p className="text-sm font-semibold truncate max-w-[100px] overflow-hidden">
-                    {data.initial_deposit}
-                  </p>
-                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-100 text-black text-sm font-normal p-2 rounded-md w-[200px] text-center shadow-lg ">
-                    {data.initial_deposit}
-                  </span>
-                </div>
+                <p className="font-semibold">{data.initial_deposit}</p>
                 <p className="text-gray-600">Initial Deposit</p>
-
               </li>
             </ul>
           </div>
@@ -110,10 +102,10 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             <div className="flex items-start space-x-2 pb-4">
               {/* <span className="vertical-line hidden lg:block w-[1px] h-36  bg-black"></span> */}
               <p className="text-gray-600 mb-4 leading-tight">
-                For overseas students, {data.universityname} provides a
-                variety of scholarships that may cover living expenses, travel
-                expenses, tuition fees, or provide a partial award like a
-                tuition fee remission or discount.
+                For overseas students, {data.universityname} provides a variety
+                of scholarships that may cover living expenses, travel expenses,
+                tuition fees, or provide a partial award like a tuition fee
+                remission or discount.
               </p>
             </div>
           </div>
@@ -121,10 +113,11 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
           <div className="flex w-full rounded-lg bg-[#FDF2E8]">
             <button
               onClick={() => setActiveTab("scholarship")}
-              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "scholarship"
-                ? "bg-[#F57C00] text-white"
-                : "bg-transparent text-black"
-                }`}
+              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
+                activeTab === "scholarship"
+                  ? "bg-[#F57C00] text-white"
+                  : "bg-transparent text-black"
+              }`}
             >
               <Link href="https://mta.ca/costs-financial-aid/scholarships-and-awards-first-year-students">
                 Scholarship Details
@@ -132,10 +125,11 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             </button>
             <button
               onClick={() => setActiveTab("funding")}
-              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "funding"
-                ? "bg-[#F57C00] text-white"
-                : "bg-transparent text-black"
-                }`}
+              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
+                activeTab === "funding"
+                  ? "bg-[#F57C00] text-white"
+                  : "bg-transparent text-black"
+              }`}
             >
               <Link href="https://mta.ca/current-students/student-finances/financial-aid-current-students">
                 Funding Details
@@ -147,7 +141,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             <Button
               variant="outline"
               className="w-full mt-4 border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
-       rounded-lg text-xs sm:text-sm hover:bg-[#F0851D] hover:text-white transition-colors duration-300"
+       rounded-lg text-xs sm:text-sm hover:bg-[#F0851D] hover:text-white transition-colors duration-300 py-4"
             >
               Contact with WWAH Advisor
             </Button>
@@ -159,13 +153,11 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             <h5 className="font-semibold mb-4 leading-tight">
               Payment method for International Students
             </h5>
-            <div className="flex items-start space-x-2">
-              <span className="vertical-line hidden lg:block w-[1px] h-6 bg-black"></span>
-              <p className=" text-gray-600 mb-2 leading-tight">
-                There are three ways in which you can pay your tuition and
-                related fee:
-              </p>
-            </div>
+
+            <p className=" text-gray-600 mb-2 leading-tight">
+              There are three ways in which you can pay your tuition and related
+              fee:
+            </p>
 
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-start gap-2">
               <div className="flex items-center space-x-2">
@@ -182,18 +174,16 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               </div>
             </div>
 
-            <div className="flex items-start space-x-2 mt-2">
-              <span className="vertical-line hidden lg:block w-[1px] h-10 bg-black"></span>
-              <p className=" text-gray-600 mb-4 leading-tight">
-                To find out how to pay Your tuition fee, deposits &
-                Accommodation fee at {data.universityname}.
-              </p>
-            </div>
+            <p className=" text-gray-600 mb-4 leading-tight mt-2">
+              To find out how to pay Your tuition fee, deposits & Accommodation
+              fee at {data.universityname}.
+            </p>
+
             <Link href="#">
               <Button
                 variant="outline"
                 className="w-full border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
-            rounded-lg font-medium hover:bg-[#F0851D] hover:text-white transition-colors duration-300"
+            rounded-lg font-medium hover:bg-[#F0851D] hover:text-white transition-colors duration-300 py-4"
               >
                 Click here
               </Button>
@@ -219,7 +209,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               <Link href="/trackexpense">
                 <Button
                   variant="secondary"
-                  className="w-full bg-white text-black py-2 px-6 rounded-lg hover:bg-gray-200 transition duration-300"
+                  className="w-full bg-white text-black  px-6 rounded-lg hover:bg-gray-200 transition duration-300 py-4"
                 >
                   Calculate Now
                 </Button>
@@ -230,4 +220,4 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
       </div>
     </section>
   );
-}
+};

@@ -64,7 +64,7 @@ export const EnglishRequirement: React.FC<EnglishRequirementProps> = ({
             <p className="text-gray-400 mb-4">
               Book your IELTS/PTE Classes with us and Start preparing Today!
             </p>
-            <Link href="/contactus">
+            <Link href="/form">
               <Button
                 className="w-full bg-[#545454] hover:bg-zinc-700 text-white py-2 rounded"
                 onClick={() => {}}

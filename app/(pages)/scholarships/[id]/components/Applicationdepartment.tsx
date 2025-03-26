@@ -30,11 +30,11 @@ const Applicationdepartment: React.FC<ApplicationdepartmentProps> = ({
             Applicable Department!
           </h4>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 2xl:gap-5 2xl:w-[95%]">
+        <div className="flex gap-3 2xl:gap-5 2xl:w-[95%]">
           {applicableDepartments.map((dept, index) => (
             <div
               key={dept._id || dept.name}
-              className="lg:p-5 p-3 border border-gray-300 rounded-3xl"
+              className="lg:p-5 p-3 border border-gray-300 rounded-3xl "
             >
               <Image
                 src={icons[index]}
