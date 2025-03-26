@@ -8,6 +8,7 @@ import Requireddocs from "./components/Requireddocs";
 import Applicationprocess from "./components/Applicationprocess";
 import Eligibilitycriteria from "./components/Eligibilitycriteria";
 import { HeroSkeleton } from "@/components/HeroSkeleton";
+import ScholarshipSuccessChances from "./components/ScholarshipSuccessChances";
 // import { HeroSkeleton } from "@/components/HeroSkeleton";
 type Tab = {
   label: string;
@@ -128,6 +129,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         <Eligibilitycriteria
           eligibilityCriteria={data?.eligibilityCriteria || []}
         />
+      </div>
+      <div>
+        <ScholarshipSuccessChances />
       </div>
 
       <div id="Required Documents">

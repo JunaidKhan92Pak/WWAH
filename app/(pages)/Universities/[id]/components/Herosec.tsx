@@ -81,7 +81,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-100"></div>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center ml-3 sm:ml-0 py-4 sm:py-12  relative z-10 px-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center   py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto">
                 <div className="space-y-2 text-left">
                   <Image
                     src={data?.universityImages?.logo || "/default-logo.png"}

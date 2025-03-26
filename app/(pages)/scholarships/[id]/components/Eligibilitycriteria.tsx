@@ -18,10 +18,10 @@ const Eligibilitycriteria: React.FC<EligibilityCriteriaProps> = ({
 }) => {
   return (
     <div>
-      <section className="w-[90%] mx-auto pb-5">
+      <section className="w-[90%] mx-auto pb-5 md:pt-4">
         <div className="text-center md:w-3/5 mx-auto">
           <h3 className="font-bold text-2xl mb-2">Eligibility Criteria!</h3>
-          <p className="md:py-4">
+          <p className="md:pb-4">
             To be eligible for the Global Korea Scholarship, applicants must
             meet specific academic, age, and residency requirements.
           </p>
@@ -63,7 +63,7 @@ const Eligibilitycriteria: React.FC<EligibilityCriteriaProps> = ({
               <div>
                 <p className="font-medium">{criteria.name}</p>
                 {criteria.detail && (
-                  <p className="text-[12px] 2xl:text-2xl">{criteria.detail}</p>
+                  <p className="">{criteria.detail}</p>
                 )}
               </div>
             </div>
@@ -74,7 +74,7 @@ const Eligibilitycriteria: React.FC<EligibilityCriteriaProps> = ({
         title="Know that you&#39;re Eligible, Take Action! Apply Now and take a
 Step toward your educational goals."
         buttonText="Apply Now!"
-        buttonLink="/contactus"
+        buttonLink="/dashboard"
         backgroundImage="/bg-usa.png"
       />{" "}
     </div>

@@ -113,7 +113,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
   }, [currentSlide, slides]);
 
   return (
-      <div className="relative text-white px-5 md:px-12  mt-8 py-6">
+      <div className="relative text-white px-5 md:px-12  mt-8 ">
         {/* Background Image */}
         <div className="absolute inset-0 -z-10">
           <Image
@@ -138,7 +138,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
             <CarouselContent>
               {slides.map((slide, index) => (
                 <CarouselItem key={index}>
-                  <div className="flex flex-col gap-4 md:gap-6 lg:flex-row  justify-between items-center  w-[85%] md:w-[60%] lg:w-[85%] xl:w-[60%] mx-auto ">
+                  <div className="flex flex-col gap-4 md:gap-6 lg:flex-row  justify-between items-center  w-[80%] md:w-[60%] lg:w-[85%] xl:w-[55%] mx-auto mt-6 2xl:py-8">
                     {/* Image Section */}
                     <div className="w-full">
                       <div className="rounded-3xl overflow-hidden shadow-lg w-full">
@@ -147,12 +147,12 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                           alt={slide.title}
                           width={400}
                           height={300}
-                          className="object-cover w-full h-[170px]  md:h-[250px] lg:h-[300px]"
+                          className="object-cover w-full h-[170px]  md:h-[250px] lg:h-[300px] 2xl:h-[350px]"
                         />
                       </div>
                       </div>
                     {/* Text Section */}
-                    <div className="w-[90%]">
+                    <div className="w-[90%] xl:w-full">
                       <h3>{slide.title}</h3>
                       {slide.isList ? (
                         <ul className="text-gray-300 list-disc pl-0 lg:pl-5">
