@@ -89,7 +89,7 @@ const Navbar = () => {
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <FaCircleUser className="text-gray-800  w-11 h-11 text-xl 2xl:text-4xl" />
+                    <FaCircleUser className="text-gray-800  w-8 h-8 text-xl 2xl:text-4xl" />
                   </button>
 
                   {/* Dropdown Menu */}

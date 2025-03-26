@@ -275,6 +275,7 @@ export default function Home() {
                   accept="image/*"
                   onChange={(e) => handleImageChange(e, imageType)}
                   className="block w-full border p-4 rounded-lg shadow-md my-2"
+                  required
                 />
               </div>
             ))}
@@ -304,7 +305,7 @@ export default function Home() {
               {uploadStatus}
             </p>
           )}
-        </form>
+                </form>
       </div>
       <div className="w-[400px] ml-4 border-2 border-dashed border-gray-300 rounded-lg p-4">
         <div className="mb-4 w-[100%] h-screen">
