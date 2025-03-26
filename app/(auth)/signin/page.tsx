@@ -13,7 +13,6 @@ import {
 import { useAuth } from "../auth/authProvider";
 import { useUserStore } from "@/store/userStore";
 
-
 const Page = () => {
   const router = useRouter();
   const { loginAction } = useAuth(); // Get login function from context
@@ -26,6 +25,8 @@ const Page = () => {
     email: "",
     password: "",
   });
+  const [isDisabled, setIsDisabled] = useState(false); // Add state for disabling button
+
   const [generalError, setGeneralError] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,14 +36,13 @@ const Page = () => {
     setGeneralError("");
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userData.email || !userData.password) {
       setGeneralError("Please fill in all fields.");
       return;
     }
-
+    setIsDisabled(true);
     try {
       const loginRes = await loginAction(userData);
       if (loginRes.success && loginRes.user) {
@@ -55,9 +55,7 @@ const Page = () => {
       setGeneralError("Login failed, please try again.");
       console.error("Login failed", err);
     }
-
   };
-
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
@@ -100,10 +98,11 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type="text"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.email || generalError
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
+                    errors.email || generalError
                       ? "border-red-600"
                       : "border-gray-300"
-                    } rounded text-base 2xl:text-lg`}
+                  } rounded text-base 2xl:text-lg`}
                   placeholder="Enter your email address"
                   name="email"
                   value={userData.email}
@@ -117,10 +116,11 @@ const Page = () => {
                 <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.password || generalError
+                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
+                    errors.password || generalError
                       ? "border-red-600"
                       : "border-gray-300"
-                    } rounded`}
+                  } rounded`}
                   placeholder="Enter your password"
                   name="password"
                   value={userData.password}
@@ -128,7 +128,7 @@ const Page = () => {
                 />
                 {showPassword ? (
                   <IoEyeOffOutline
-                    className="absolute left-3 2xl:right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl cursor-pointer"
+                    className="absolute right-3 2xl:right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl cursor-pointer"
                     onClick={() => setShowPassword(false)}
                   />
                 ) : (
@@ -154,7 +154,7 @@ const Page = () => {
                 </span>
               </Link>
             </div>
-
+ 
             <div className="flex items-center text-center text-gray-500 my-4">
               <hr className="flex-grow border-gray-300" />
               <p className="mx-3">or</p>
@@ -162,10 +162,16 @@ const Page = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-red-700 text-white p-2 rounded 2xl:p-4"
+              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${
+                isDisabled
+                  ? "bg-red-600 opacity-30 cursor-not-allowed"
+                  : "bg-red-700"
+              }`}
+              disabled={isDisabled}
             >
               {loading ? "Processing..." : "Sign In"}
             </button>
+
             <span className="block text-[12px] lg:text-[14px] 2xl:text-[24px] text-center 2xl:w-full">
               Don&#39;t have an account?{" "}
               <Link

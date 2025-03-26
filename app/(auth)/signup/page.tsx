@@ -32,6 +32,7 @@ const Page = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false); // Add state for disabling button
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,8 +52,8 @@ const Page = () => {
       email: !formData.email
         ? "Email is required."
         : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-          ? ""
-          : "Enter a valid email address.",
+        ? ""
+        : "Enter a valid email address.",
       password: !formData.password ? "Password is required." : "",
       confirmPassword:
         formData.password !== formData.confirmPassword
@@ -64,6 +65,7 @@ const Page = () => {
       setErrors(newErrors);
       return;
     }
+    setIsDisabled(true);
 
     try {
       const res = await signupAction(formData);
@@ -76,8 +78,7 @@ const Page = () => {
           email: res.message, // Correct reference of res.message
         }));
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error("Login failed", err);
     }
   };
@@ -193,10 +194,10 @@ const Page = () => {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-gray-800 font-normal pt-2  ">
+              <label className="block text-gray-800 font-normal pt-2  mt-1">
                 Confirm Password
               </label>
-              <div className="relative">
+              <div className="relative mb-3">
                 <IoKeyOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -224,11 +225,23 @@ const Page = () => {
             </div>
 
             {/* Submit Button */}
-            <button
+            {/* <button
               type="submit"
               className="w-full bg-red-700 text-white p-2 mt-4 rounded 2xl:p-6"
             >
               {loading ? "Processing..." : "Go to my dashboard"}
+            </button> */}
+
+            <button
+              type="submit"
+              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${
+                isDisabled
+                  ? "bg-red-600 opacity-30 cursor-not-allowed"
+                  : "bg-red-700"
+              }`}
+              disabled={isDisabled}
+            >
+              {loading ? "Processing..." : "Sign Up"}
             </button>
             <p className="text-center mt-2 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
               Already have an account?{" "}
