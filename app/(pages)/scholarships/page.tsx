@@ -105,6 +105,15 @@ const Page = () => {
     debouncedSetSearch(value);
   };
 
+   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  
+    const toggleFavorite = (id: string) => {
+      setFavorites((prev) => ({
+        ...prev,
+        [id]: !prev[id], // Toggle favorite status for specific university
+      }));
+    };
+
   return (
     <>
       <div className="w-[95%] mx-auto">
@@ -407,16 +416,43 @@ const Page = () => {
                     key={item._id}
                     className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3"
                   >
-                    {/* Image Section */}
-                    <div>
+                    <div className="relative w-full">
+                      {/* Background Image */}
                       <Image
-                        src={"/course1.svg"}
+                        src={"/uniar.svg"}
                         alt="University Image"
                         width={400}
                         height={250}
-                        className="w-full object-cover"
+                        className="w-full object-cover rounded-lg"
                       />
+
+                      {/* Logo Overlay */}
+                      <div className="absolute top-8">
+                        <Image
+                          src="/unilogo.svg"
+                          alt="University Logo"
+                          width={180}
+                          height={130}
+                          className="object-contain"
+                        />
+                      </div>
+
+                      {/* Share & Favorite Buttons */}
+                      <div className="absolute top-4 right-2 md:right-4 flex items-center space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
+                        <button>
+                          <Image src="/share.svg" width={24} height={24} alt="Share" />
+                        </button>
+                        <button onClick={() => toggleFavorite(item._id)}>
+                          {favorites[item._id] ? (
+                            <Image src="/redheart.svg" width={24} height={24} alt="Favorite" />
+                          ) : (
+                            <Image src="/whiteheart.svg" width={24} height={24} alt="Favorite" />
+                          )}
+                        </button>
+                      </div>
                     </div>
+
+
                     {/* Content Section */}
                     <div className="p-2 flex-grow">
                       <p className="font-bold">{item.name}</p>
