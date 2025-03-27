@@ -1,6 +1,6 @@
 "use client";
 
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Calculator } from "lucide-react";
@@ -16,13 +16,12 @@ const healthcareItems = [
   { text: "Healthcare Policy", image: "/countrypage/img1.svg" },
 ];
 function Page() {
- const [isExpanded, setIsExpanded] = useState(false);
- const [activeTab, setActiveTab] = useState("scholarship");
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState("scholarship");
 
- const toggleReadMore = () => {
-   setIsExpanded((prev) => !prev);
- };
-
+  const toggleReadMore = () => {
+    setIsExpanded((prev) => !prev);
+  };
 
   const tabs = [
     { name: "Course Overview", id: "courseOverview" },
@@ -32,28 +31,27 @@ function Page() {
     { name: "Application Process", id: "applicationProcess" },
   ];
 
- const [activeTabPro, setActiveTabPro] = useState(
-   tabs.length > 0 ? tabs[0].id : ""
- );
+  const [activeTabPro, setActiveTabPro] = useState(
+    tabs.length > 0 ? tabs[0].id : ""
+  );
 
- useEffect(() => {
-   if (!activeTabPro && tabs.length > 0) {
-     setActiveTabPro(tabs[0].id);
-   }
- }, [tabs, activeTabPro]);
+  useEffect(() => {
+    if (!activeTabPro && tabs.length > 0) {
+      setActiveTabPro(tabs[0].id);
+    }
+  }, [tabs, activeTabPro]);
 
-const handleTabClick = (id: string) => {
-  setActiveTabPro(id);
+  const handleTabClick = (id: string) => {
+    setActiveTabPro(id);
 
-  const element = document.getElementById(id);
-  if (element) {
-    const yOffset = -100; // Adjust this value based on your header height or margin
-    const yPosition =
-      element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({ top: yPosition, behavior: "smooth" });
-  }
-};
-
+    const element = document.getElementById(id);
+    if (element) {
+      const yOffset = -100; // Adjust this value based on your header height or margin
+      const yPosition =
+        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: yPosition, behavior: "smooth" });
+    }
+  };
 
   const [activeTabUni, setActiveTabUni] = useState(
     "University Application Docs"
@@ -156,7 +154,6 @@ const handleTabClick = (id: string) => {
       title: "University of Victoria",
     },
   ];
-
 
   return (
     <div>
@@ -570,14 +567,14 @@ const handleTabClick = (id: string) => {
             <p className="text-center">
               Academic Results <br /> 70%
             </p>
-            <span className="vertical-line w-[1px] h-32 bg-gray-500"></span>
+            <span className="vertical-line w-[1px] h-20 bg-gray-500"></span>
           </div>
           {/* Academic Match Section */}
           <div className="w-full lg:w-1/2 bg-white shadow rounded-3xl p-4 md:p-6">
             {academicData.map((item, index) => (
               <div key={index} className="mb-6">
                 {/* Progress Bar */}
-                <div className="relative w-full h-[4.7rem] rounded-2xl bg-[#f7f7f7] overflow-hidden flex items-center px-4">
+                <div className="relative w-full h-[4rem] rounded-2xl bg-[#f7f7f7] overflow-hidden flex items-center px-4">
                   <div
                     className={`absolute top-0 left-0 h-full rounded-2xl transition-all duration-300 flex items-center px-4 text-black`}
                     style={{
@@ -606,7 +603,7 @@ const handleTabClick = (id: string) => {
             {financialData.map((item, index) => (
               <div key={index} className="mb-6">
                 {/* Progress Bar */}
-                <div className="relative w-full h-56 rounded-2xl bg-[#f7f7f7] overflow-hidden flex items-center px-4">
+                <div className="relative w-full h-[6rem] rounded-2xl bg-[#f7f7f7] overflow-hidden flex items-center px-4">
                   <div
                     className={`absolute top-0 left-0 h-full rounded-2xl transition-all duration-300 flex items-center px-4 text-black`}
                     style={{
