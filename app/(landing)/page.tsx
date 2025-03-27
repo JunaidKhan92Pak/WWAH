@@ -11,17 +11,17 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Bot, Headphones, Trophy, Users, Send } from "lucide-react";
 import Footer from "@/components/Footer";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// import { ScrollArea } from "@/components/ui/scroll-area";
 import { FaCircleUser } from "react-icons/fa6";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
 import { useUserStore } from "@/store/userStore";
@@ -29,20 +29,25 @@ import { useUserStore } from "@/store/userStore";
 
 function Page() {
   const router = useRouter();
-  const Countries = [
-    "USA",
-    "China",
-    "Canada",
-    "Italy",
-    "United Kingdom",
-    "Ireland",
-    "New Zealand",
-    "Denmark",
-    "France",
-  ];
+  // const Countries = [
+  //   "USA",
+  //   "China",
+  //   "Canada",
+  //   "Italy",
+  //   "United Kingdom",
+  //   "Ireland",
+  //   "New Zealand",
+  //   "Denmark",
+  //   "France",
+  // ];
   const [input, setInput] = useState("");
-  const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
-    useUniversityStore();
+  // const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
+  //   useUniversityStore();
+   const {
+     universities,
+     fetchUniversities,
+     loading: uniLoading,
+   } = useUniversityStore();
   const { isAuthenticate, loading, logout, user } = useUserStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
@@ -74,22 +79,22 @@ function Page() {
         "At WWAH, we are committed to your long-term success. Our career counseling support ensure that you're not only prepared for your studies but also equipped for a successful career.",
     },
   ];
-  function handleCheckboxChange(destination: string): void {
+  // function handleCheckboxChange(destination: string): void {
 
 
-    if (destination === "All") {
-      if (country.length === country.length) {
-        setCountry([]); // Uncheck all
-      } else {
-        setCountry(country); // Select all
-      }
-    } else {
-      const updatedSelected = country.includes(destination)
-        ? country.filter((item) => item !== destination) // Remove if exists
-        : [...country, destination]; // Add if not exists
-      setCountry(updatedSelected); //  Set array directly
-    }
-  }
+  //   if (destination === "All") {
+  //     if (country.length === country.length) {
+  //       setCountry([]); // Uncheck all
+  //     } else {
+  //       setCountry(country); // Select all
+  //     }
+  //   } else {
+  //     const updatedSelected = country.includes(destination)
+  //       ? country.filter((item) => item !== destination) // Remove if exists
+  //       : [...country, destination]; // Add if not exists
+  //     setCountry(updatedSelected); //  Set array directly
+  //   }
+  // }
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
@@ -187,8 +192,8 @@ function Page() {
               <>
                 <Link href="/signin">
                   <Button
-                    className="bg-[#C7161E] text-white text-base"
-                    variant="outline"
+                    className="bg-[#C7161E] hover:bg-[#C7161E] text-white text-base"
+                    // variant="outline"
                     size="lg"
                   >
                     Login
@@ -320,7 +325,7 @@ function Page() {
           {/* Section Header */}
           <div className="flex justify-between items-center mb-8">
             <h3 className="font-bold">Top Universities!</h3>
-            <Badge variant="outline" className=" bg-[#F1F1F1]">
+            {/* <Badge variant="outline" className=" bg-[#F1F1F1]">
               <DropdownMenu>
                 <DropdownMenuTrigger className="text-sm text-gray-900 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-8">
                   <Image
@@ -357,7 +362,7 @@ function Page() {
                   </ScrollArea>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </Badge>
+            </Badge> */}
           </div>
           {/* University Cards Grid */}
           {!uniLoading ? (

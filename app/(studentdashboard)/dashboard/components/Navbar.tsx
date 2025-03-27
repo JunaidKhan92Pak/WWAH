@@ -4,6 +4,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "./sd-mobile-nav";
+import Link from "next/link";
 // import SdMobileNav from "@/app/(studentdashboard)/dashboard/components/sd-mobile-nav"
 
 export function Navbar() {
@@ -13,22 +14,26 @@ export function Navbar() {
         <MobileNav />
         {/* Logo */}
         <div className="flex items-center">
-          <Image
-            src="/DashboardPage/wwahframe.svg"
-            alt="Worldwide Admissions Hub Logo"
-            width={250}
-            height={32}
-            priority
-            className="hidden md:block"
-          />
-          <Image
-            src="/DashboardPage/wwah.svg"
-            alt="Worldwide Admissions Hub Logo for larger screens"
-            width={150}
-            height={32}
-            priority
-            className="block md:hidden h-[80px] w-[80px]"
-          />
+          <Link href="/">
+            <Image
+              src="/DashboardPage/wwahframe.svg"
+              alt="Worldwide Admissions Hub Logo"
+              width={250}
+              height={32}
+              priority
+              className="hidden md:block"
+            />
+          </Link>
+          <Link href="/">
+            <Image
+              src="/DashboardPage/wwah.svg"
+              alt="Worldwide Admissions Hub Logo for larger screens"
+              width={150}
+              height={32}
+              priority
+              className="block md:hidden h-[80px] w-[80px]"
+            />
+          </Link>
         </div>
       </div>
 
@@ -45,7 +50,7 @@ export function Navbar() {
           <span className="hidden lg:inline">Favourites</span>
         </Button>
 
-        <Button className="relative flex items-center bg-[#F1F1F1] text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">
+        {/* <Button className="relative flex items-center bg-[#F1F1F1] text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">
           <Image
             src="/DashboardPage/bell.svg"
             alt="Notifications"
@@ -57,7 +62,7 @@ export function Navbar() {
           <span className="px-2 py-0.5 text-xs bg-[#FCE7D2] rounded-sm hidden lg:inline">
             2
           </span>
-        </Button>
+        </Button> */}
       </div>
     </nav>
   );

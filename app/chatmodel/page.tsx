@@ -133,7 +133,7 @@ export default function Home() {
                       </div>
                     </Avatar>
                     <Card
-                      className={`p-4 ${
+                      className={`px-4 py-2 ${
                         message.isUser
                           ? "bg-[#F9CEA5] text-black"
                           : "bg-[#F9CEA5]"
@@ -181,15 +181,21 @@ export default function Home() {
             </div>
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row justify-center gap-3 mt-2">
-              <Button className="bg-[#FED7B1] text-sm text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                Explore Top Universities
-              </Button>
-              <Button className="bg-[#FED7B1] text-sm text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                Explore Study Destinations
-              </Button>
-              <Button className="bg-[#FED7B1] text-sm text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                Explore Latest Scholarships
-              </Button>
+              <Link href="/Universities">
+                <Button className="bg-[#FED7B1] text-sm text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                  Explore Top Universities
+                </Button>
+              </Link>
+              <Link href="/countries">
+                <Button className="bg-[#FED7B1] text-sm text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                  Explore Study Destinations
+                </Button>
+              </Link>
+              <Link href="/scholarships">
+                <Button className="bg-[#FED7B1] text-sm text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                  Explore Latest Scholarships
+                </Button>
+              </Link>
             </div>
             <p className="text-gray-500 mt-1 text-[13px] text-center">
               ZEUS adapts to your preferences — change them anytime!

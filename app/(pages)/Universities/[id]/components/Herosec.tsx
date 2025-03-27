@@ -126,10 +126,15 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                   className="w-full md:w-4/5 md:h-4/5 lg:w-[60%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
 py-4 md:py-1 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
                 >
-                  <p className="text-white w-[90%] md:w-[90%]">
-                    Book Your Online Video Counselling Session with WWAH
-                    Advisor!
-                  </p>
+                  <Link
+                    href="/schedulesession"
+                    className="[text-align:-webkit-center]"
+                  >
+                    <p className="text-white w-4/5 hover:underline">
+                      Book Your Online Video Counselling Session with WWAH
+                      Advisor!
+                    </p>
+                  </Link>
                   <div className="flex items-center w-[50%] my-2">
                     <div className="flex-1 border-t border-gray-100"></div>
                     <p className="mx-4 text-white">Or</p>

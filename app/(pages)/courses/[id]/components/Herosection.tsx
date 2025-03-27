@@ -94,17 +94,17 @@ const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: s
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center justify-items-center sm:px-6 md:py-12 py-2 relative z-10">
               {/* Left Section */}
               <div className="w-[90%] flex flex-col items-center md:items-start text-center md:text-left space-y-2 pl-0 lg:pl-12">
-                {/* <Image
+                <Image
                   src="/CourseDetailPage/dcu.svg"
                   alt="Dcu Logo"
                   width={130}
                   height={130}
-                  className="object-contain w-[100px] h-[100px] md:w-[130px] md:h-[130px]"
-                /> */}
-                <h2 className="text-white text-start font-bold">
+                  className="object-contain w-[80px] h-[80px]"
+                />
+                <h2 className="text-white text-center md:text-start font-semibold">
                   {data.course_title}
                 </h2>
-                <p className="text-white">{data.universityname}</p>
+                <p className="text-white ">{data.universityname}</p>
                 <div className="bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
                   <div className="flex items-center gap-1 py-1">
                     <CiLocationOn className="h-4  w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
@@ -116,13 +116,18 @@ const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: s
                     </p>
                   </div>
                 </div>
-
               </div>
 
-              <div className="w-[90%] md:w-full lg:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
-                <p className="text-white w-4/5">
-                  Book Your Online Video Counselling Session with WWAH Advisor!
-                </p>
+              <div className="w-[90%] md:w-full lg:w-[75%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
+                <Link
+                  href="/schedulesession"
+                  className="[text-align:-webkit-center]"
+                >
+                  <p className="text-white w-4/5 hover:underline">
+                    Book Your Online Video Counselling Session with WWAH
+                    Advisor!
+                  </p>
+                </Link>
                 <div className="flex items-center w-[50%] my-2">
                   <div className="flex-1 border-t border-gray-100"></div>
                   <p className="mx-4 text-white">Or</p>
@@ -179,8 +184,6 @@ const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: s
             ))}
           </div>
         </div>
-
-
       </section>
     </div>
   );

@@ -28,7 +28,7 @@ const Page = () => {
   const [isDisabled, setIsDisabled] = useState(false); // Add state for disabling button
 
   const [generalError, setGeneralError] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });

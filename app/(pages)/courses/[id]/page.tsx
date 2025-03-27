@@ -309,7 +309,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     <span className="text-[#F0851D]">AI - Powered </span>
                     platform Zeus to find your dream university in 3 minutes.
                   </p>
-                  <Link href="/universityarchievepage">
+                  <Link href="/chatmodel">
                     <Button className="mt-4 bg-white text-red-700 hover:bg-gray-300 w-4/5">
                       Start your Abroad Journey
                     </Button>

@@ -63,7 +63,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const tabs: Tab[] = [
     { label: "Scholarship Overview", id: "Scholarship Overview" },
     { label: "Benefits", id: "Benefits" },
-    { label: "Application Departments", id: "Application-departments" },
+    { label: "Applicable Departments", id: "Applicable-Departments" },
     { label: "Eligibility Criteria", id: "Eligibility Criteria" },
     { label: "Required Documents", id: "Required Documents" },
     { label: "Application Process", id: "Application Process" },
@@ -119,7 +119,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       <div id="Benefits">
         <GKSscholarships benefit={data?.benefits || []} />
       </div>
-      <div id="Application-departments">
+      <div id="Applicable-Departments">
         <Applicationdepartment
           applicableDepartments={data?.applicableDepartments || []}
         />

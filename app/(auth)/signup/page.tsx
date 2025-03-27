@@ -254,7 +254,7 @@ const Page = () => {
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:flex justify-center md:w-[50%] lg:w-[50%] p-4">
+      <div className="hidden md:flex justify-center md:w-[50%] lg:w-[38%] p-4">
         <div className="relative xl:w-[100%] xl:h-[100%] h-[95%] w-[100%]">
           <Image
             src="/Group.png" // Replace with your decorative image

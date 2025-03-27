@@ -270,7 +270,7 @@ const handleTabClick = (id: string) => {
                       </p>
                       <Link href="/universityarchievepage">
                         <button className="bg-white text-[#C7161E] font-normal px-1 md:px-8 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition ">
-                          Watch? Discover More
+                          Discover More
                         </button>
                       </Link>
                     </div>

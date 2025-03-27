@@ -33,7 +33,7 @@ export const Sidebar = () => {
       </div>
       <hr className="mx-6" />
 
-      <ScrollArea className="p-4 md:h-full h-[500px]">
+      <ScrollArea className="p-4 md:h-full h-[500px] bg-red-300 ">
         <p className="text-xl">Country:</p>
         <div className="">
           <ul className="py-4 space-y-6">
@@ -232,7 +232,7 @@ export const Sidebar = () => {
               <Checkbox id="deadline-dec" />
             </li>
           </ul>
-
+          
         </div>
       </ScrollArea>
     </div>
