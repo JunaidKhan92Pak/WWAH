@@ -31,7 +31,7 @@ export async function GET(req: Request) {
         }
 
         if (country.length > 0) {
-            query.country_name = { $in: country.map((c) => new RegExp(`^${c}$`, "i")) };
+            query.country_name = { $in: country.map((c) => new RegExp(c, "i")) };
         }
 
         // Get total count for pagination
@@ -41,7 +41,7 @@ export async function GET(req: Request) {
 
         // Fetch universities with pagination
         const universities = await University.find(query)
-            .select("_id university_name country_name acceptance_rate universityImages.banner ranking universityImages.logo")
+            .select("_id university_name qs_world_university_ranking times_higher_education_ranking country_name acceptance_rate universityImages.banner  universityImages.logo")
             .skip(skip)
             .limit(limit)
             .lean();

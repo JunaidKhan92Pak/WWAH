@@ -116,6 +116,7 @@ const Page = () => {
   const displayedUniversities = showFavorites
     ? universities.filter((uni) => favorites[uni._id])
     : universities;
+  console.log(universities, "universities");
 
   return (
     <section className="w-[90%] mx-auto">
@@ -209,9 +210,9 @@ const Page = () => {
                 >
                   <div className="relative h-[200px]">
                     <div className="absolute z-10 top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
-                      <p className="text-sm font-medium">QS World:</p>
+                      <p className="text-sm font-medium">QS World: {item.qs_world_university_ranking || "N/A"}</p>
                       <p className="text-sm font-semibold">
-                        Ranking: {item.ranking[1]?.detail || "N/A"}
+                        Ranking: {item.times_higher_education_ranking || "N/A"}
                       </p>
                     </div>
 

@@ -52,8 +52,8 @@ const Page = () => {
       email: !formData.email
         ? "Email is required."
         : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-        ? ""
-        : "Enter a valid email address.",
+          ? ""
+          : "Enter a valid email address.",
       password: !formData.password ? "Password is required." : "",
       confirmPassword:
         formData.password !== formData.confirmPassword
@@ -71,7 +71,9 @@ const Page = () => {
       const res = await signupAction(formData);
       if (res.success) {
         setUser(res.user);
-        router.push("/");
+        if (res.user) {
+          router.push("/");
+        }
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -234,11 +236,10 @@ const Page = () => {
 
             <button
               type="submit"
-              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${
-                isDisabled
-                  ? "bg-red-600 opacity-30 cursor-not-allowed"
-                  : "bg-red-700"
-              }`}
+              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${isDisabled
+                ? "bg-red-600 opacity-30 cursor-not-allowed"
+                : "bg-red-700"
+                }`}
               disabled={isDisabled}
             >
               {loading ? "Processing..." : "Sign Up"}

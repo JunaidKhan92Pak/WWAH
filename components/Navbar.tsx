@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { useUserStore } from "@/store/userStore";
+import Loading from "@/app/loading";
 
 const Navbar = () => {
   const { isAuthenticate, loading, logout, user } = useUserStore();
@@ -19,7 +20,7 @@ const Navbar = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
-  if (loading) return <span className="text-gray-500">Checking...</span>;
+  if (loading) return <Loading />;
   return (
     <header className="h-0 md:h-[50px] lg:mb-10">
       <div className="fixed z-20 w-full mb-2 p-2 bg-white top-0 hidden md:block ">
@@ -32,7 +33,7 @@ const Navbar = () => {
                 alt="logo"
                 width={113}
                 height={45}
-                // className="2xl:w-[150px] 2xl:h-[60px]"
+              // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}

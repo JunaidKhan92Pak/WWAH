@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 
 import Image from "next/image";
+import { getAuthToken } from "@/utils/authHelper";
 
 const Step5 = () => {
   // const router=useRouter();
@@ -33,12 +34,15 @@ const Step5 = () => {
     console.log(formData);
 
     try {
+      const token = getAuthToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/userPreference`,
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`, // Send token in Authorization header
             "Content-Type": "application/json",
+
           },
           credentials: "include",
           body: JSON.stringify(formData),
