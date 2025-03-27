@@ -360,27 +360,6 @@ export default function Home() {
                   )}
                 />
                 {/* Document Upload Section */}
-                {/* <FormField
-                  control={form.control}
-                  name="ticket"
-                  render={({ field: {  onChange, ...fieldProps } }) => (
-                    <FormItem>
-                      <FormLabel>Upload Ticket</FormLabel>
-                      <FormControl className="bg-[#f1f1f1]">
-                        <Input
-                          type="file"
-                          {...fieldProps}
-                          onChange={(e) => {
-                            onChange(e.target.files);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {String(form.formState.errors.ticket?.message || "")}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                /> */}
                 <FormField
                   control={form.control}
                   name="ticket"

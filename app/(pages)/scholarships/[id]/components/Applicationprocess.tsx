@@ -59,7 +59,7 @@ const Applicationprocess = () => {
               <p className="text-gray-700 mt-1">
                 Click on{" "}
                 <Link
-                  href="/dashboard"
+                  href="/dashboard/overview"
                   className="text-red-500 hover:underline font-semibold"
                 >
                   Apply Now
@@ -214,7 +214,7 @@ const Applicationprocess = () => {
           </div>
         </div>
       </section> */}
-      <Exploresection/>
+      <Exploresection />
     </div>
   );
 };

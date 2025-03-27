@@ -42,7 +42,7 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
   });
 
   async function onSubmit(values: z.infer<typeof nameSchema>) {
-    console.log(values ,"values")
+    console.log(values, "values");
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updatePersonalInformation`,
@@ -68,11 +68,6 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
       console.error("Network error:", error);
     }
   }
-// useEffect(() => {
-//   if (!open) {
-//     setTimeout(() => setConfirmOpen(true), 300);
-//   }
-// }, [open]);
 
   return (
     <>

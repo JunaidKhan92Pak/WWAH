@@ -1,7 +1,7 @@
-"use client"
+"use client";
 // import useUser from "@/hooks/useUser";
 import { deleteAuthToken } from "@/utils/authHelper";
-import React, { createContext, useContext, useState, } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useUserStore } from "@/store/userStore";
 const AuthContext = createContext();
 
@@ -10,32 +10,7 @@ export const AuthProvider = ({ children }) => {
   const { setUser } = useUserStore(); // ✅ Zustand state management
   const [user, setUserState] = useState(null);
   const [token, setToken] = useState(null);
-  // const loginAction = async (userData) => {
-  //   try {
-  //     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}signin`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(userData),
-  //     });
 
-  //     const loggedInUser = await res.json();
-  //     console.log(loggedInUser, "login");
-
-  //     if (loggedInUser.success) {
-  //       document.cookie = `authToken=${loggedInUser.token}; path=/`;
-  //       setToken(loggedInUser.token);
-  //       // ✅ Fetch user data immediately after login
-  //       const { user } = await useUser();
-  //       setUser(user); // Update Zustand
-  //       setUserState(user); // Update local state
-  //     }
-
-  //     return loggedInUser; // ✅ Always return the response
-  //   } catch (err) {
-  //     console.error("Login error", err);
-  //     return { success: false, message: "Login failed" }; // ✅ Ensure a fallback response
-  //   }
-  // };
   const loginAction = async (userData) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}signin`, {
@@ -59,11 +34,14 @@ export const AuthProvider = ({ children }) => {
   // Signup function
   const signupAction = async (userData) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        }
+      );
 
       const res = await response.json();
       if (!response.ok || !res.signup) {
@@ -72,34 +50,93 @@ export const AuthProvider = ({ children }) => {
 
       document.cookie = `authToken=${res.token}; path=/`;
       setToken(res.token);
-
-      // ✅ Fetch user data immediately after signup
-      // const { user } = await useUser();
-      // setUser(user); // Update Zustand
-      // setUserState(user); // Update local state
-
       return { success: true };
     } catch (err) {
       console.error("Signup error", err);
       return { success: false, message: "An error occurred during sign-up." };
     }
   };
+//create admin action
+  // const createAdminAction = async (userData) => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}createAdmin`,
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(userData),
+  //       }
+  //     );
+
+  //     const res = await response.json();
+  //   if (!response.ok || !res.adminId) {
+  //     return { success: false, message: res.message || "Admin not created." };
+  //   }
+
+  //     document.cookie = `authToken=${res.token}; path=/`;
+  //     setToken(res.token);
+  //     return { success: true };
+  //   } catch (err) {
+  //     console.error("create admin error", err);
+  //     return { success: false, message: "An error occurred while creating error." };
+  //   }
+  // };
+const createAdminAction = async (userData) => {
+  console.log("Sending request to backend with data:", userData);
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}createAdmin`, // Ensure correct API URL
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      }
+    );
+
+    console.log("Response received:", response);
+
+    const res = await response.json();
+    console.log("Response JSON:", res);
+
+    if (!response.ok || !res.adminId) {
+      return { success: false, message: res.message || "Admin not created." };
+    }
+
+    document.cookie = `authToken=${res.token}; path=/`;
+    return { success: true };
+  } catch (err) {
+    console.error("Create admin error:", err);
+    return {
+      success: false,
+      message: "An error occurred while creating admin.",
+    };
+  }
+};
 
   // Forget Password function
 
   const forgetAction = async (email) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}forgotpassword`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}forgotpassword`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         const errorRes = await response.json();
-        console.error(`Error ${response.status}: ${errorRes.message || "Unknown error"}`);
-        return { success: false, message: errorRes.message || "Failed to process request." };
+        console.error(
+          `Error ${response.status}: ${errorRes.message || "Unknown error"}`
+        );
+        return {
+          success: false,
+          message: errorRes.message || "Failed to process request.",
+        };
       }
 
       // Ensure the structure of the response is consistent
@@ -108,27 +145,31 @@ export const AuthProvider = ({ children }) => {
         success: forgotRes.success || false,
         message: forgotRes.message || "Unexpected response structure.",
       };
-
     } catch (error) {
       console.error("Network or server error in forgetAction:", error);
-      return { success: false, message: "An unexpected error occurred. Please try again later." };
+      return {
+        success: false,
+        message: "An unexpected error occurred. Please try again later.",
+      };
     }
   };
   const verifyOtpAction = async (enteredOtp) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}verifyOtp`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ enteredOtp }),
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}verifyOtp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ enteredOtp }),
+          credentials: "include",
+        }
+      );
       const verifyRes = await response.json();
       return verifyRes;
     } catch (error) {
       console.error("Error during OTP verification:", error);
-
     }
   };
 
@@ -136,17 +177,18 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("Sending reset request with payload:", { newPassword });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}resetpassword`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}resetpassword`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
 
-        },
-        credentials: "include",
-
-        body: JSON.stringify({ newPassword }),
-
-      });
+          body: JSON.stringify({ newPassword }),
+        }
+      );
 
       if (!response.ok) {
         const errorRes = await response.json();
@@ -166,10 +208,13 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     console.log("Logging out...");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}logout`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}logout`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to log out");
@@ -196,6 +241,7 @@ export const AuthProvider = ({ children }) => {
         signupAction,
         forgetAction,
         verifyOtpAction,
+        createAdminAction,
         resetPasswordAction,
         logout,
       }}

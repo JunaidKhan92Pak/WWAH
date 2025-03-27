@@ -28,6 +28,7 @@
     "@radix-ui/react-tabs": "^1.1.2",
     "@reduxjs/toolkit": "^2.5.1",
     "@shadcn/ui": "^0.0.4",
+    "axios": "^1.8.4",
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
