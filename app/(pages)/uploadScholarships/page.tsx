@@ -34,7 +34,7 @@ const ExcelUploader = () => {
             const sheetName = workbook.SheetNames[0]; // Using the first sheet
             const worksheet = workbook.Sheets[sheetName];
             type ScholarshipData = {
-                [key: string]: any;
+                [key: string]: string | number | undefined;
                 "Name of Scholarship"?: string;
                 "Deadline"?: number | string;
             };
