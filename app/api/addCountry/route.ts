@@ -19,9 +19,6 @@ export async function POST(req: Request) {
     // Connect to the database
     await connectToDatabase();
 
-    // Process each university in the array
-
-    // Check if the university already exists
     const existingCountry = await Country.findOne({
       country_name: data.country_name,
     });

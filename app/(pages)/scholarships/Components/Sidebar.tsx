@@ -183,19 +183,56 @@ export const Sidebar = () => {
           </ul>
           <p className="text-xl">Application Deadline:</p>
           <ul className="py-4 space-y-6">
-            <li className="flex justify-between ">
-              <label htmlFor="us">Jan,2024</label>
-              <Checkbox />
+            <li className="flex justify-between">
+              <label htmlFor="deadline-jan">January-2024</label>
+              <Checkbox id="deadline-jan" />
             </li>
-            <li className="flex justify-between ">
-              <label htmlFor="us">Feb,2024</label>
-              <Checkbox />
+            <li className="flex justify-between">
+              <label htmlFor="deadline-feb">February-2024</label>
+              <Checkbox id="deadline-feb" />
             </li>
-            <li className="flex justify-between ">
-              <label htmlFor="us">Mar,2024</label>
-              <Checkbox />
+            <li className="flex justify-between">
+              <label htmlFor="deadline-mar">March-2024</label>
+              <Checkbox id="deadline-mar" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-apr">April-2024</label>
+              <Checkbox id="deadline-apr" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-may">May-2024</label>
+              <Checkbox id="deadline-may" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-jun">June-2024</label>
+              <Checkbox id="deadline-jun" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-jul">July-2024</label>
+              <Checkbox id="deadline-jul" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-aug">August-2024</label>
+              <Checkbox id="deadline-aug" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-sep">September-2024</label>
+              <Checkbox id="deadline-sep" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-oct">October-2024</label>
+              <Checkbox id="deadline-oct" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-nov">November-2024</label>
+              <Checkbox id="deadline-nov" />
+            </li>
+            <li className="flex justify-between">
+              <label htmlFor="deadline-dec">December-2024</label>
+              <Checkbox id="deadline-dec" />
             </li>
           </ul>
+
         </div>
       </ScrollArea>
     </div>

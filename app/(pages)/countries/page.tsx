@@ -22,8 +22,8 @@ const Page = () => {
 
   const filteredCountries = search
     ? countries.filter((country) =>
-        country.short_name.toLowerCase().includes(search.toLowerCase())
-      )
+      country.short_name.toLowerCase().includes(search.toLowerCase())
+    )
     : countries;
 
   return (
@@ -55,7 +55,7 @@ const Page = () => {
             <BookLoader />
           </div>
         ) : filteredCountries.length === 0 ? (
-          <p className="col-span-full text-center">No data found</p>
+          <p className="col-span-full text-center">No Countries found</p>
         ) : (
           filteredCountries.map((country) => (
             <Link

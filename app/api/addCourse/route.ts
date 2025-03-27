@@ -6,7 +6,6 @@ import { University } from "@/models/universities"; // Assuming you have a Unive
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-
     // Validate input
     if (
       !data.country ||
@@ -74,8 +73,9 @@ export async function POST(req: Request) {
     // }
     // Fetch the university ID based on the university name
     const university = await University.findOne({
-      country_name: data.country,
-      university_name: data.university,
+      country_name: data.country.trim(),
+      university_name: data.university.trim()
+
     });
 
     if (!university) {
@@ -87,14 +87,19 @@ export async function POST(req: Request) {
     for (const course of data.courses) {
       // Include university_id in each course object
       course.university_id = university._id;
-
       try {
+        // Create a filter that uses course_link if available, otherwise course_title
+        const filter = {
+          countryname: data.country.trim(),
+          universityname: data.university.trim(),
+          ...(course.course_link
+            ? { course_link: course.course_link }
+            : { course_title: course.course_title }
+          )
+        };
+
         const updatedCourse = await Courses.updateOne(
-          {
-            countryname: data.country,
-            universityname: data.university,
-            course_link: course.course_link, // Ensures uniqueness
-          },
+          filter,
           {
             $setOnInsert: {  // This ensures only new courses are inserted
               countryname: data.country,
@@ -144,6 +149,7 @@ export async function POST(req: Request) {
         );
       }
     }
+
     if (addedCourses.length === 0) {
       return NextResponse.json(
         { message: "All provided courses already exist for this university and country." },

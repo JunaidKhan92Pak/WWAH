@@ -6,8 +6,8 @@ export async function GET(req: Request) {
     try {
         await connectToDatabase();
         const { searchParams } = new URL(req.url);
-        const page = parseInt(searchParams.get('page') || '1', 10);
-        const limit = parseInt(searchParams.get('limit') || '10', 10);
+        const page = parseInt(searchParams.get('page') || '1', 9);
+        const limit = parseInt(searchParams.get('limit') || '9', 9);
         const search = searchParams.get("search")?.trim() || "";
 
         // Get filters from query string and convert to lowercase arrays
@@ -45,13 +45,15 @@ export async function GET(req: Request) {
         }
 
         // Filter by hostCountry using "hostCountry" field from the model
+        // if (countryFilter.length > 0) {
+        //     query.hostCountry = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
+        // }
         if (countryFilter.length > 0) {
-            query.hostCountry = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
+            query.hostCountry = { $in: countryFilter.map((c) => new RegExp(c, "i")) };
         }
-
         // Filter by degreeLevel (programs)
         if (programFilter.length > 0) {
-            query.degreeLevel = { $regex: new RegExp(programFilter.join("|"), "i") };
+            query.programs = { $regex: new RegExp(programFilter.join("|"), "i") };
         }
 
         // Filter by scholarshipType (exact match using regex)
@@ -61,7 +63,7 @@ export async function GET(req: Request) {
 
         // Filter by deadline (as a string; assumes deadline stored as string)
         if (deadlineFilter.length > 0) {
-            query.deadline = { $in: deadlineFilter.map(d => new RegExp(`^${d}$`, "i")) };
+            query.deadline = { $in: deadlineFilter.map(d => new RegExp(d, "i")) };
         }
 
         const scholarships = await Scholarship.find(query)
@@ -69,7 +71,7 @@ export async function GET(req: Request) {
             .limit(limit);
 
         const total = await Scholarship.countDocuments(query);
-        return NextResponse.json({ scholarships, total, page, limit, success: true });
+        return NextResponse.json({ scholarships, total, page, limit, totalPages: Math.ceil(total / limit), success: true });
     } catch (error) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
