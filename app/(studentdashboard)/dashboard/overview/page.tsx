@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-// import Image from "next/image"; // Import the Image component
-// import { Button } from "@/components/ui/button";
+
 import Herosection from "./components/Herosection";
 import CounsellorSection from "./components/CounsellorSection";
 import ApplyingSection from "./components/ApplyingSection";
