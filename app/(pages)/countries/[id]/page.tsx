@@ -24,6 +24,8 @@ export default function Countrypage({
   interface Country {
     id: string;
     country_name: string;
+    short_name: string;
+
     capital: string;
     language: string;
     population: number;
@@ -57,6 +59,7 @@ export default function Countrypage({
   const [country, setCountry] = useState<Country>({
     id: "",
     country_name: "",
+    short_name: "",
     capital: "",
     language: "",
     population: 0,
@@ -126,6 +129,7 @@ export default function Countrypage({
       <PermanentResidency
         residency={country.residency}
         countryName={country.country_name || ""}
+        country={{ short_name: country.short_name }}
       />
       <PopularPrograms country={country.popular_programs} countryName={country.country_name} />
 
