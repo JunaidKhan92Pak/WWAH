@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import { useState } from "react";
 import Image from "next/image";
 import { CiLocationOn } from "react-icons/ci";
 import { IoCallOutline, IoMailUnreadOutline } from "react-icons/io5";
@@ -8,8 +9,16 @@ import { FaInstagram } from "react-icons/fa6";
 import { IoLogoLinkedin } from "react-icons/io5";
 import { FaYoutube } from "react-icons/fa";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Footer = () => {
+  const [openModal, setOpenModal] = useState<string | null>(null);
   return (
     <footer className="bg-[#F1F1F1] text-gray-800 py-8 w-full flex justify-center">
       <div className="footerChild flex flex-col w-[90%] justify-center ">
@@ -34,13 +43,26 @@ const Footer = () => {
                 LDA Office, Johar Town, Lahore
               </p>
             </div>
-            <div className="flex items-center space-x-4">
+            <div
+              className="flex items-center space-x-4 cursor-pointer"
+              onClick={() =>
+                window.open("https://wa.me/923289911998", "_blank")
+              }
+            >
               <IoCallOutline />
               <p className="text-sm 2xl:text-base">92 328 99 11 998</p>
             </div>
-            <div className="flex items-center space-x-4">
+            <div
+              className="flex items-center space-x-4 cursor-pointer"
+              onClick={() =>
+                (window.location.href =
+                  "mailto:info@worldwideadmissionshub.com")
+              }
+            >
               <IoMailUnreadOutline />
-              <p className="text-sm 2xl:text-base">info@worldwidehub.com</p>
+              <p className="text-sm 2xl:text-base">
+                info@worldwideadmissionshub.com
+              </p>
             </div>
             <div className="flex items-center space-x-4">
               <TfiWorld />
@@ -68,12 +90,61 @@ const Footer = () => {
             <div>
               <p className="font-semibold mb-2">Other Pages</p>
               <div className="space-y-2">
-                <p className="text-sm 2xl:text-base hover:underline cursor-pointer">
-                  Terms & Conditions
-                </p>
-                <p className="text-sm 2xl:text-base hover:underline cursor-pointer">
-                  Privacy Policy
-                </p>
+                {/* Terms & Conditions Modal */}
+                <Dialog
+                  open={openModal === "terms"}
+                  onOpenChange={(isOpen) =>
+                    setOpenModal(isOpen ? "terms" : null)
+                  }
+                >
+                  <DialogTrigger asChild>
+                    <p
+                      className="text-sm 2xl:text-base hover:underline cursor-pointer"
+                      onClick={() => setOpenModal("terms")}
+                    >
+                      Terms & Conditions
+                    </p>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Terms & Conditions</DialogTitle>
+                    </DialogHeader>
+                    <p>
+                      These Terms and Conditions govern your use of our website
+                      and services. By accessing our platform, you agree to
+                      comply with these terms. Unauthorized use of this website
+                      may give rise to a claim for damages.
+                    </p>
+                  </DialogContent>
+                </Dialog>
+
+                {/* Privacy Policy Modal */}
+                <Dialog
+                  open={openModal === "privacy"}
+                  onOpenChange={(isOpen) =>
+                    setOpenModal(isOpen ? "privacy" : null)
+                  }
+                >
+                  <DialogTrigger asChild>
+                    <p
+                      className="text-sm 2xl:text-base hover:underline cursor-pointer"
+                      onClick={() => setOpenModal("privacy")}
+                    >
+                      Privacy Policy
+                    </p>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Privacy Policy</DialogTitle>
+                    </DialogHeader>
+                    <p>
+                      We are committed to protecting your privacy. Your personal
+                      data is collected and processed securely, and we do not
+                      share it with third parties without your consent. Learn
+                      more about how we handle your information.
+                    </p>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>
@@ -88,23 +159,18 @@ const Footer = () => {
           <div className="flex-1 border-t border-[#313131]"></div>
         </div>
 
-
         <div className="flex justify-center items-center mt-4 space-x-6">
-          <Link href="#">
-           
-            <FaFacebook className="text-blue-600 text-2xl"/>
+          <Link href="https://www.facebook.com/share/1DgaYoeBCf/">
+            <FaFacebook className="text-blue-600 text-2xl" />
           </Link>
-          <Link href="#">
-           
-            <FaInstagram className="text-red-600 text-2xl"/>
+          <Link href="https://www.instagram.com/wwah.ai/">
+            <FaInstagram className="text-red-600 text-2xl" />
           </Link>
-          <Link href="#">
-            <IoLogoLinkedin className="text-blue-600 text-2xl"/>
-           
+          <Link href="https://www.linkedin.com/company/wwah-ai">
+            <IoLogoLinkedin className="text-blue-600 text-2xl" />
           </Link>
-          <Link href="#">
-            <FaYoutube className="text-3xl text-red-600"/>
-
+          <Link href="https://www.youtube.com/@intimestudyadvisors8015">
+            <FaYoutube className="text-3xl text-red-600" />
           </Link>
         </div>
       </div>
