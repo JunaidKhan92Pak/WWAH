@@ -6,15 +6,21 @@ interface ScholarshipState {
     scholarships: any[];
     country: string[];
     programs: string[];
-    scholarshipType: string[]; // New state for scholarship type filters
-    deadlineFilters: string[]; // New state for deadline filters
+    scholarshipType: string[];
+    deadlineFilters: string[];
+    page: number;
+    limit: number;
+    totalPages: number;
     setCountry: (country: string[]) => void;
     setSearch: (search: string) => void;
     setPrograms: (programs: string[]) => void;
-    setScholarshipType: (types: string[]) => void; // New setter for scholarship types
-    setDeadlineFilters: (deadlines: string[]) => void; // New setter for deadline filters
-    setscholarships: (scholarships: any[]) => void;
-    fetchscholarships: () => Promise<void>;
+    setScholarshipType: (types: string[]) => void;
+    setDeadlineFilters: (deadlines: string[]) => void;
+    setPage: (page: number) => void;
+    setLimit: (limit: number) => void;
+    setScholarships: (scholarships: any[]) => void;
+    setTotalPages: (totalPages: number) => void;
+    fetchScholarships: () => Promise<void>;
 }
 
 export const useScholarships = create<ScholarshipState>((set, get) => ({
@@ -25,33 +31,47 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
     programs: [],
     scholarshipType: [],
     deadlineFilters: [],
+    page: 1,
+    limit: 10,
+    totalPages: 1,
     setCountry: (country) => {
         set({ country: Array.isArray(country) ? country : [] });
-        get().fetchscholarships();
+        get().fetchScholarships();
     },
     setSearch: (search) => {
         set({ search });
-        get().fetchscholarships();
+        get().fetchScholarships();
     },
     setPrograms: (programs) => {
         set({ programs: Array.isArray(programs) ? programs : [] });
-        get().fetchscholarships();
+        get().fetchScholarships();
     },
     setScholarshipType: (types) => {
         set({ scholarshipType: Array.isArray(types) ? types : [] });
-        get().fetchscholarships();
+        get().fetchScholarships();
     },
     setDeadlineFilters: (deadlines) => {
         set({ deadlineFilters: Array.isArray(deadlines) ? deadlines : [] });
-        get().fetchscholarships();
+        get().fetchScholarships();
     },
-    setscholarships: (scholarships) => {
+    setPage: (page) => {
+        set({ page });
+        get().fetchScholarships();
+    },
+    setLimit: (limit) => {
+        set({ limit });
+        get().fetchScholarships();
+    },
+    setScholarships: (scholarships) => {
         set({ scholarships });
     },
-    fetchscholarships: async () => {
+    setTotalPages: (totalPages) => {
+        set({ totalPages });
+    },
+    fetchScholarships: async () => {
         set({ loading: true });
         try {
-            const { search, country, programs, scholarshipType, deadlineFilters } = get();
+            const { search, country, programs, scholarshipType, deadlineFilters, page, limit } = get();
             const queryParams = new URLSearchParams();
             if (country.length > 0) {
                 queryParams.append("countryFilter", country.join(","));
@@ -66,12 +86,15 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
                 queryParams.append("deadlineFilter", deadlineFilters.join(","));
             }
             if (search) queryParams.append("search", search);
+            queryParams.append("page", page.toString());
+            queryParams.append("limit", limit.toString());
             const res = await fetch(`/api/getScholarships?${queryParams.toString()}`);
             if (!res.ok) throw new Error(`Failed to fetch: ${res.statusText}`);
             const data = await res.json();
             console.log(data.scholarships);
             if (data.success) {
                 set({ scholarships: data.scholarships });
+                set({ totalPages: data.totalPages });
             } else {
                 console.error("Unexpected API response structure:", data);
             }

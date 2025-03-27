@@ -128,8 +128,6 @@ export default function Home() {
               .toISOString()
               .split("T")[0];
           }
-
-
           return [normalizedKey, normalizedValue];
         })
       )
@@ -314,7 +312,7 @@ export default function Home() {
               {uploadStatus}
             </p>
           )}
-                </form>
+        </form>
       </div>
       <div className="w-[400px] ml-4 border-2 border-dashed border-gray-300 rounded-lg p-4">
         <div className="mb-4 w-[100%] h-screen">

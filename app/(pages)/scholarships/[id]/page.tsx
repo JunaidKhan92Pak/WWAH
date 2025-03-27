@@ -101,11 +101,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-2 md:text-[14px] text-[12px] md:py-2 py-1 rounded-lg w-full hover:bg-[#FCE7D2] hover:text-black ${
-                  activeTabPro === tab.label
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-2 md:text-[14px] text-[12px] md:py-2 py-1 rounded-lg w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
                     ? "bg-[#C7161E] text-white"
                     : "text-gray-800"
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -115,7 +114,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
       <Overview
         overview={data?.overview || ""}
-        duration={data?.duration || { undergraduate: "", master: "", phd: "" }}
+        duration={data?.duration || { undergraduate: "", master: "", phd: "", Diploma: "" }}
       />
       <div id="Benefits">
         <GKSscholarships benefit={data?.benefits || []} />

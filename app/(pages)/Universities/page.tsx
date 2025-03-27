@@ -25,6 +25,7 @@ const Page = () => {
     "New Zealand",
     "Denmark",
     "France",
+    "Australia",
   ];
 
   // Get zustand store values including pagination states
@@ -143,15 +144,15 @@ const Page = () => {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10">
-              <Image src="/filterr.svg" width={16} height={14} alt="filter" />{" "}
+              <Image src="/filterr.svg" width={16} height={14} alt="filter" />
               Filter
             </DropdownMenuTrigger>
             <DropdownMenuContent className="p-2 h-[260px]">
-              <ScrollArea className="p-2 ">
+              <ScrollArea className="p-2">
                 <p className="text-[16px]">Countries:</p>
                 <ul className="py-2 space-y-4">
                   {Countries.map((countryName) => (
-                    <li key={countryName} className="flex justify-between ">
+                    <li key={countryName} className="flex justify-between">
                       <div className="flex gap-2">
                         <Image
                           src={`/${countryName.toLowerCase()}.png`}
@@ -163,7 +164,9 @@ const Page = () => {
                       </div>
                       <input
                         type="checkbox"
+                        id={countryName}
                         onChange={() => handleCheckboxChange(countryName)}
+                        checked={country.includes(countryName)}
                         className="mr-2"
                       />
                     </li>
@@ -179,9 +182,8 @@ const Page = () => {
           </button> */}
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
+            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
           >
             <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
             {showFavorites ? "Show All" : "Favorites"}
