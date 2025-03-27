@@ -47,7 +47,10 @@ const Page = () => {
       const loginRes = await loginAction(userData);
       if (loginRes.success && loginRes.user) {
         setUser(loginRes.user);
-        router.push("/");
+        if (loginRes.user) {
+          router.push("/");
+        }
+
       } else {
         setGeneralError("Invalid email or password");
       }
@@ -98,11 +101,10 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type="text"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
-                    errors.email || generalError
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.email || generalError
                       ? "border-red-600"
                       : "border-gray-300"
-                  } rounded text-base 2xl:text-lg`}
+                    } rounded text-base 2xl:text-lg`}
                   placeholder="Enter your email address"
                   name="email"
                   value={userData.email}
@@ -116,11 +118,10 @@ const Page = () => {
                 <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
-                    errors.password || generalError
+                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.password || generalError
                       ? "border-red-600"
                       : "border-gray-300"
-                  } rounded`}
+                    } rounded`}
                   placeholder="Enter your password"
                   name="password"
                   value={userData.password}
@@ -154,7 +155,7 @@ const Page = () => {
                 </span>
               </Link>
             </div>
- 
+
             <div className="flex items-center text-center text-gray-500 my-4">
               <hr className="flex-grow border-gray-300" />
               <p className="mx-3">or</p>
@@ -162,11 +163,10 @@ const Page = () => {
             </div>
             <button
               type="submit"
-              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${
-                isDisabled
+              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${isDisabled
                   ? "bg-red-600 opacity-30 cursor-not-allowed"
                   : "bg-red-700"
-              }`}
+                }`}
               disabled={isDisabled}
             >
               {loading ? "Processing..." : "Sign In"}

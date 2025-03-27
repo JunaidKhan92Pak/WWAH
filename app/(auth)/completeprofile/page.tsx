@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getAuthToken } from "@/utils/authHelper";
 
 const countries = [
   { value: "USA", label: "United States" },
@@ -45,18 +46,20 @@ const Step1 = () => {
   ) => {
     const { name, value } = e.target;
     setPersonalInfo({ ...personalInfo, [name]: value });
-console.log(value);
+    console.log(value);
 
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      const token = getAuthToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/personal-Information`,
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
@@ -70,7 +73,7 @@ console.log(value);
       console.log(`There Is SOme Error ${error}`);
     }
   };
-  console.log(personalInfo.countryCode,"country code");
+  console.log(personalInfo.countryCode, "country code");
   return (
     <div className="w-full">
       <section className="w-full">
@@ -116,17 +119,17 @@ console.log(value);
                   className="py-2 w-2/5 md:w-1/2 xl:w-1/4 bg-[#F1F1F1] text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="+44">🇬🇧 +44 (UK)</option>
-  <option value="+86">🇨🇳 +86 (China)</option>
-  <option value="+61">🇦🇺 +61 (Australia)</option>
-  <option value="+1">🇨🇦 +1 (Canada)</option>
-  <option value="+1">🇺🇸 +1 (USA)</option>
-  <option value="+353">🇮🇪 +353 (Ireland)</option>
-  <option value="+64">🇳🇿 +64 (New Zealand)</option>
-  <option value="+49">🇩🇪 +49 (Germany)</option>
-  <option value="+39">🇮🇹 +39 (Italy)</option>
-  <option value="+60">🇲🇾 +60 (Malaysia)</option>
-  <option value="+33">🇫🇷 +33 (France)</option>
-  <option value="+45">🇩🇰 +45 (Denmark)</option>
+                  <option value="+86">🇨🇳 +86 (China)</option>
+                  <option value="+61">🇦🇺 +61 (Australia)</option>
+                  <option value="+1">🇨🇦 +1 (Canada)</option>
+                  <option value="+1">🇺🇸 +1 (USA)</option>
+                  <option value="+353">🇮🇪 +353 (Ireland)</option>
+                  <option value="+64">🇳🇿 +64 (New Zealand)</option>
+                  <option value="+49">🇩🇪 +49 (Germany)</option>
+                  <option value="+39">🇮🇹 +39 (Italy)</option>
+                  <option value="+60">🇲🇾 +60 (Malaysia)</option>
+                  <option value="+33">🇫🇷 +33 (France)</option>
+                  <option value="+45">🇩🇰 +45 (Denmark)</option>
                 </select>
                 <input
                   type="text"

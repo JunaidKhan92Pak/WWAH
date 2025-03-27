@@ -25,6 +25,7 @@ import { FaCircleUser } from "react-icons/fa6";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
 import { useUserStore } from "@/store/userStore";
+import Loading from "../loading";
 // import Loading from "@/app/loading";
 
 function Page() {
@@ -40,15 +41,19 @@ function Page() {
   //   "Denmark",
   //   "France",
   // ];
+  useEffect(() => {
+
+    fetchUser(); // Fetch user on mount
+  }, []);
   const [input, setInput] = useState("");
   // const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
   //   useUniversityStore();
-   const {
-     universities,
-     fetchUniversities,
-     loading: uniLoading,
-   } = useUniversityStore();
-  const { isAuthenticate, loading, logout, user } = useUserStore();
+  const {
+    universities,
+    fetchUniversities,
+    loading: uniLoading,
+  } = useUniversityStore();
+  const { isAuthenticate, loading, logout, user, fetchUser } = useUserStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
@@ -102,12 +107,9 @@ function Page() {
   };
   const [successOpen, setSuccessOpen] = useState(false);
   if (uniLoading || loading) {
-    return <span className="text-gray-500">Checking...</span>;
+    return <Loading />
   }
 
-  // if (uniLoading || userLoading) {
-  //   return <span className="text-gray-500">loading</span>;
-  // }
   const handleNavigate = () => {
     if (input.trim()) {
       router.push(`/chatmodel?message=${encodeURIComponent(input)}`);

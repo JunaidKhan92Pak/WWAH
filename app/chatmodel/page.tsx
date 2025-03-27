@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useUserStore } from "@/store/userStore";
 
 interface Message {
   id: number;
@@ -21,7 +22,7 @@ export default function Home() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get("message"); // Get message from URL
-
+  const { isAuthenticate, user } = useUserStore();
   // ✅ Handle sending input
   const handleSend = async (messageText?: string) => {
     const trimmedInput = messageText?.trim() || input.trim();
@@ -96,8 +97,16 @@ export default function Home() {
               <Image src="/logo.png" alt="Logo" width={100} height={45} />
             </Link>
             <div className="ml-auto flex gap-2 items-center">
-              <h6>Hello, Asma Kazmi!</h6>
-              <Image src="/profile.png" alt="profile" width={30} height={45} />
+              {isAuthenticate ? (
+                <>
+                  <h6>Hello,  {user?.personalInfo.firstName || "Newbie"}</h6>
+                  <Image src="/profile.png" alt="profile" width={30} height={45} />
+                </>
+              ) : (
+                <Link href="/signin">  <Button className="bg-[#FED7B1] text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                  SignIn
+                </Button></Link>
+              )}
             </div>
           </div>
         </header>
@@ -109,20 +118,17 @@ export default function Home() {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${
-                    message.isUser ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${message.isUser ? "justify-end" : "justify-start"
+                    }`}
                 >
                   <div
-                    className={`flex gap-3 max-w-[55%] ${
-                      message.isUser ? "flex-row-reverse" : "flex-row"
-                    }`}
+                    className={`flex gap-3 max-w-[55%] ${message.isUser ? "flex-row-reverse" : "flex-row"
+                      }`}
                   >
                     <Avatar className="h-8 w-8">
                       <div
-                        className={`h-full w-full ${
-                          message.isUser ? "bg-blue-500" : "bg-gray-500"
-                        } flex items-center justify-center text-white`}
+                        className={`h-full w-full ${message.isUser ? "bg-blue-500" : "bg-gray-500"
+                          } flex items-center justify-center text-white`}
                       >
                         <Image
                           src={message.isUser ? "/user-dp.png" : "/zues-dp.png"}
@@ -133,11 +139,10 @@ export default function Home() {
                       </div>
                     </Avatar>
                     <Card
-                      className={`px-4 py-2 ${
-                        message.isUser
-                          ? "bg-[#F9CEA5] text-black"
-                          : "bg-[#F9CEA5]"
-                      }`}
+                      className={`p-4 ${message.isUser
+                        ? "bg-[#F9CEA5] text-black"
+                        : "bg-[#F9CEA5]"
+                        }`}
                     >
                       <p className="whitespace-pre-line">{message.text}</p>
                     </Card>

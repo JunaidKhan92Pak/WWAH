@@ -1,4 +1,5 @@
 "use client";
+import { getAuthToken } from "@/utils/authHelper";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -32,32 +33,36 @@ const Step3 = () => {
     setWorkExperience({ ...workExperience, hasWorkExperience: value });
   };
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  // Use the workExperience state directly.
-  const submissionData = workExperience.hasWorkExperience
-    ? { ...workExperience }
-    : { hasWorkExperience: workExperience.hasWorkExperience };
+    // Use the workExperience state directly.
+    const submissionData = workExperience.hasWorkExperience
+      ? { ...workExperience }
+      : { hasWorkExperience: workExperience.hasWorkExperience };
 
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/workExperience`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(submissionData),
-      }
-    );
+    try {
+      const token = getAuthToken();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/workExperience`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify(submissionData),
+        }
+      );
 
-    const res = await response.json();
-    console.log(res);
-    router.push("/completeprofile/languageproficiency");
-  } catch (error) {
-    console.error("There was an error:", error);
-  }
-};
+      const res = await response.json();
+      console.log(res);
+      router.push("/completeprofile/languageproficiency");
+    } catch (error) {
+      console.error("There was an error:", error);
+    }
+  };
 
 
   return (

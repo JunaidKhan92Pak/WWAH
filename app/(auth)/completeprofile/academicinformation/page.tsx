@@ -1,4 +1,5 @@
 "use client";
+import { getAuthToken } from "@/utils/authHelper";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -26,11 +27,13 @@ const AcademicInformation = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      const token = getAuthToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/academic-Information`,
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include", // Move this out of headers
