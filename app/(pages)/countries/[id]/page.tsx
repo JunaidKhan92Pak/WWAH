@@ -109,7 +109,7 @@ export default function Countrypage({
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(country.health, "Country from parent");
+
 
   return country ? (
     <div>

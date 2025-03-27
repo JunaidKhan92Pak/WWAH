@@ -72,7 +72,7 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
                 <div className="relative md:h-[120px] lg:h-[200px]">
                   <div className="absolute top-3 left-0 bg-gradient-to-r from-[#fce7d2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">
                     <p className="md:text-sm text-[10px] font-medium">
-                      QS World:
+                      QS World:{item.qs_world_university_ranking}
                     </p>
                     <p className="md:text-sm text-[10px] font-semibold">
                       Ranking:{item.ranking[0].detail}
