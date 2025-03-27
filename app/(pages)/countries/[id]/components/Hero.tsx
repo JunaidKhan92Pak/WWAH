@@ -5,6 +5,7 @@ interface HeroProps {
     id: string;
     country_name: string;
     capital: string;
+    short_name: string;
     language: string;
     population: number;
     currency: string;
@@ -84,13 +85,15 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
       <div
         className="relative h-[170px] sm:h-[75vh] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center md:mt-4"
         style={{
-          backgroundImage: "url('/countrypage/bg-image.png')",
+          // backgroundImage: "url('/countrypage/bg-image.png')",
+          backgroundImage: `url('/countryarchive/${country.short_name}_banner.png')`,
         }}
       >
-        <div className="w-4/5 text-left my-5">
+        <div className="absolute bg-black bg-opacity-50 w-full h-full"></div>
+        <div className="z-10 w-4/5 text-left my-5">
           <div className="flex items-center gap-2 md:gap-5">
             <Image
-              src="/flag.png"
+              src={`/countryarchive/${country.short_name}_logo.png`}
               alt="flag"
               width={80}
               height={80}
