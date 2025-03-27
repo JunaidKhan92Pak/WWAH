@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -62,7 +63,15 @@ export default function AdminDashboard() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex flex-col items-center">
+    <div
+      className="flex flex-col items-center bg-[#FCE7D2] min-h-screen p-8"
+      style={{
+        backgroundImage: "url('/bg-usa.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        imageRendering: "crisp-edges",
+      }}
+    >
       <h1 className="text-2xl font-bold mb-4">All Students</h1>
       {users.length === 0 ? (
         <div>No users found</div>
