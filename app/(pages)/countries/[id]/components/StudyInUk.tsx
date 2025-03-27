@@ -64,7 +64,7 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
               msOverflowStyle: "none",
             }}
           >
-            {universities.map((item) => (
+            {universities.slice(2, 6).map((item) => (
               <div
                 key={item._id}
                 className=" bg-white shadow-xl rounded-2xl overflow-hidden p-1 md:p-3"

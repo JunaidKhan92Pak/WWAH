@@ -1,10 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 // import Image from "next/image";
 // import { Button } from "@/components/ui/button";
 import Banner from "@/components/ui/enrollment/Banner";
 import Exploresection from "@/app/(pages)/Universities/[id]/components/Exploresection";
 
+interface ReadMoreProps {
+  children: React.ReactNode;
+}
+const ReadMore: React.FC<ReadMoreProps> = ({ children }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <div>
+      <div
+        className={`${
+          isExpanded ? "line-clamp-none" : "line-clamp-2"
+        }`}
+      >
+        {children}
+      </div>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="text-red-500 underline underline-offset-4 font-normal hover:font-semibold my-2"
+      >
+        {isExpanded ? "Show Less" : "Read More..."}
+      </button>
+    </div>
+  );
+};
 const Applicationprocess = () => {
   // const sliderData = [
   //   {
@@ -36,7 +59,7 @@ const Applicationprocess = () => {
               <p className="text-gray-700 mt-1">
                 Click on{" "}
                 <Link
-                  href="/dashboard"
+                  href="/dashboard/overview"
                   className="text-red-500 hover:underline font-semibold"
                 >
                   Apply Now
@@ -74,6 +97,7 @@ const Applicationprocess = () => {
                 secure online payment system.
               </p>
             </div>
+            <ReadMore>
 
             {/* Step 4 */}
             <div>
@@ -84,6 +108,7 @@ const Applicationprocess = () => {
                 real-time updates and notifications.
               </p>
             </div>
+
             <div>
               <h6 className="mt-1 font-bold">Receive Your Offer Letter</h6>
               <p className="text-gray-700 mt-1">
@@ -116,6 +141,7 @@ const Applicationprocess = () => {
                 journey for any assistance{" "}
               </p>
             </div>
+            </ReadMore>
           </div>
         </div>
       </section>
@@ -188,7 +214,7 @@ const Applicationprocess = () => {
           </div>
         </div>
       </section> */}
-      <Exploresection/>
+      <Exploresection />
     </div>
   );
 };

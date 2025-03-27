@@ -13,11 +13,11 @@ import { SkeletonCard } from "@/components/skeleton";
 const Page = () => {
   // List of countries for filters
   const countries = [
-    { name: "United States", value: "usa", img: "/usa.png" },
+    { name: "United States", value: "United States", img: "/usa.png" },
     { name: "China", value: "china", img: "/china.png" },
     { name: "Canada", value: "canada", img: "/canada.png" },
     { name: "Italy", value: "italy", img: "/italy.png" },
-    { name: "United Kingdom", value: "uk", img: "/ukflag.png" },
+    { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
     { name: "Ireland", value: "ireland", img: "/ireland.png" },
     { name: "New Zealand", value: "new-zealand", img: "/new-zealand.png" },
     { name: "Denmark", value: "denmark", img: "/denmark.png" },
@@ -28,7 +28,7 @@ const Page = () => {
   const {
     scholarships,
     loading,
-    fetchscholarships,
+    fetchScholarships,
     setSearch,
     setCountry,
     programs,
@@ -36,12 +36,15 @@ const Page = () => {
     scholarshipType, // New: current scholarship type filters
     setScholarshipType, // New setter
     deadlineFilters, // New: current application deadline filters
-    setDeadlineFilters, // New setter
+    setDeadlineFilters,
+    page,
+    totalPages,
+    setPage  // New setter
   } = useScholarships();
 
   useEffect(() => {
-    fetchscholarships();
-  }, [fetchscholarships]);
+    fetchScholarships();
+  }, [fetchScholarships]);
 
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   // We'll still use local state for search input; others are synced with Zustand.
@@ -104,7 +107,26 @@ const Page = () => {
     setLocalSearch(value);
     debouncedSetSearch(value);
   };
+  const handlePrev = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
 
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => ({
+      ...prev,
+      [id]: !prev[id], // Toggle favorite status for specific university
+    }));
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
   return (
     <>
       <div className="w-[95%] mx-auto">
@@ -357,7 +379,7 @@ const Page = () => {
                   Application Deadline:
                 </p>
                 <ul className="py-4 space-y-3 md:space-y-4">
-                  {["Jan 2025", "Feb 2025", "March 2025"].map((deadline) => (
+                  {["January-2025", "February-2025", "March-2025", "April-2025", "May-2025", "June-2025", "July-2025", "August-2025", "September-2025", "October-2025", "November-2025", "December-2025"].map((deadline) => (
                     <li
                       key={deadline}
                       className="flex items-center justify-between"
@@ -403,113 +425,159 @@ const Page = () => {
             {loading ? (
               <SkeletonCard arr={8} />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-2">
-                {scholarships.map((item) => (
-                  <div
-                    key={item._id}
-                    className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3"
-                  >
-                    {/* Image Section */}
-                    <div>
-                      <Image
-                        src={"/course1.svg"}
-                        alt="University Image"
-                        width={400}
-                        height={250}
-                        className="w-full object-cover"
-                      />
-                    </div>
-                    {/* Content Section */}
-                    <div className="p-2 flex-grow">
-                      <p className="font-bold">{item.name}</p>
-                      <p className="text-sm text-gray-600">
-                        {" "}
-                        <span className="font-semibold">
-                          Min Requirment :
-                        </span>{" "}
-                        {item.minRequirement}{" "}
-                      </p>
-                      <div className="flex flex-col md:flex-row justify-between flex-wrap">
-                        <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                          <Image
-                            src={"/location.svg"}
-                            alt="location"
-                            width={16}
-                            height={16}
-                          />
-                          <p className="text-sm md:text-base text-gray-600 font-bold truncate">
-                            {item.hostCountry}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                          <Image
-                            src={"/money.svg"}
-                            alt="scholarship type"
-                            width={16}
-                            height={16}
-                          />
-                          <p className="text-sm md:text-base text-gray-600 font-bold truncate">
-                            {item.scholarshipType}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col md:flex-row justify-between flex-wrap">
-                        <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                          <Image
-                            src={"/Notebook.svg"}
-                            alt="degree level"
-                            width={16}
-                            height={16}
-                          />
-                          <p className="text-sm md:text-base text-gray-600 font-bold truncate">
-                            {item.degreeLevel
-                              ? item.degreeLevel
-                              : "Not Specified"}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                          <Image
-                            src={"/clock.svg"}
-                            alt="deadline"
-                            width={16}
-                            height={16}
-                          />
-                          <p className="text-sm md:text-base text-gray-600 font-bold truncate">
-                            {item.deadline}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Divider */}
-                    <hr className="mx-4 mb-4" />
-                    {/* Buttons Section */}
-                    <div className="flex gap-2 w-full">
-                      <Link
-                        href={`/scholarships/${item._id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
-                      >
-                        View Details
-                      </Link>
-
-                      <Link
-                        href="/dashboard"
-                        className="flex-1 flex items-center justify-center border border-[#F0851D] text-[#F0851D] text-xs md:text-[13px] px-1 py-2 rounded-lg hover:bg-red-500 hover:text-white text-center"
-                      >
-                        Start Your Application
-                      </Link>
-                    </div>
+              <div>
+                {scholarships.length === 0 ? (
+                  <div className="flex items-center justify-center w-full h-96 border-2 border-gray-200 rounded-lg">
+                    <p className="text-lg font-bold">No Scholarships Available</p>
                   </div>
-                ))}
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-2">
+                    {scholarships.map((item) => (
+                      <div
+                        key={item._id}
+                        className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3"
+                      >
+                        <div className="relative w-full">
+                          {/* Background Image */}
+                          <Image
+                            src={"/uniar.svg"}
+                            alt="University Image"
+                            width={400}
+                            height={250}
+                            className="w-full object-cover rounded-lg"
+                          />
+
+                          {/* Logo Overlay */}
+                          <div className="absolute top-8">
+                            <Image
+                              src="/unilogo.svg"
+                              alt="University Logo"
+                              width={180}
+                              height={130}
+                              className="object-contain"
+                            />
+                          </div>
+
+                          {/* Share & Favorite Buttons */}
+                          <div className="absolute top-4 right-2 md:right-4 flex items-center space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
+                            <button>
+                              <Image src="/share.svg" width={24} height={24} alt="Share" />
+                            </button>
+                            <button onClick={() => toggleFavorite(item._id)}>
+                              {favorites[item._id] ? (
+                                <Image src="/redheart.svg" width={24} height={24} alt="Favorite" />
+                              ) : (
+                                <Image src="/whiteheart.svg" width={24} height={24} alt="Favorite" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+
+                        {/* Content Section */}
+                        <div className="p-2 flex-grow">
+                          <p className="font-bold">{item.name}</p>
+                          <p className="text-sm text-gray-600">
+                            <span className="font-semibold">Min Requirements:</span>{" "}
+                            {item.minRequirements}
+                          </p>
+                          <div className="flex flex-col md:flex-row justify-between flex-wrap">
+                            <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                              <Image
+                                src={"/location.svg"}
+                                alt="location"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                                {item.hostCountry}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                              <Image
+                                src={"/money.svg"}
+                                alt="scholarship type"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                                {item.scholarshipType}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex flex-col md:flex-row justify-between flex-wrap">
+                            <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                              <Image
+                                src={"/Notebook.svg"}
+                                alt="degree level"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                                {item.programs ? item.programs : "Not Specified"}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                              <Image
+                                src={"/clock.svg"}
+                                alt="deadline"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                                {item.deadline}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Divider */}
+                        <hr className="mx-4 mb-4" />
+                        {/* Buttons Section */}
+                        <div className="flex gap-2 w-full">
+                          <Link
+                            href={`/scholarships/${item._id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
+                          >
+                            View Details
+                          </Link>
+                          <Link
+                            href="/dashboard"
+                            className="flex-1 flex items-center justify-center border border-[#F0851D] text-[#F0851D] text-xs md:text-[13px] px-1 py-2 rounded-lg hover:bg-red-500 hover:text-white text-center"
+                          >
+                            Start Your Application
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {/* Pagination Controls */}
+                {scholarships.length > 0 && ( // Only show pagination if scholarships exist in the list   
+                  <div className="flex justify-center items-center m-4 gap-4 p-2">
+                    <button
+                      onClick={handlePrev}
+                      disabled={page === 1}
+                      className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
+                    >
+                      Previous
+                    </button>
+                    <span className="text-lg font-semibold text-gray-700">
+                      Page {page} of {totalPages}
+                    </span>
+                    <button
+                      onClick={handleNext}
+                      disabled={page === totalPages}
+                      className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
+                    >
+                      Next
+                    </button>
+                  </div>
+
+                )}
               </div>
             )}
-            {/* <div className="w-28 mx-auto py-10">
-            <div className="flex justify-between items-center">
-              <p>Show More</p>
-              <Image src="/arrowDown.png" alt="arrow" width={20} height={20} />
-            </div>
-          </div> */}
           </section>
         </div>
       </div>

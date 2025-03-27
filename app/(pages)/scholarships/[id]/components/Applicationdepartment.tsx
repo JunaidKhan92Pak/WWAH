@@ -25,7 +25,7 @@ const Applicationdepartment: React.FC<ApplicationdepartmentProps> = ({
   return (
     <section className="w-[90%] mx-auto mb-10 lg:pt-10">
       <div className="lg:flex">
-        <div className="flex justify-center items-center md:pb-10 pb-5">
+        <div className="flex justify-center items-center pb-4 pt-4 lg:pt-0">
           <h4 className="font-extrabold px-2 2xl:px-4">
             Applicable Department!
           </h4>

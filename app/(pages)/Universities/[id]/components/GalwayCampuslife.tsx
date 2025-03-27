@@ -92,7 +92,7 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
 
   return (
     <div>
-      <div className="relative text-white py-4 sm:py-12 md:px-10 px-4 w-full">
+      <div className="relative text-white py-4 sm:py-8 md:px-10 px-4 mt-4 md:mt-10 w-full">
         {/* Background Image */}
         <div className="absolute inset-0 -z-10 bg-black">
           <Image

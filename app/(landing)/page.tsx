@@ -131,7 +131,7 @@ function Page() {
                   onClick={toggleDropdown}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <FaCircleUser className="text-gray-800  w-11 h-11 text-xl 2xl:text-4xl" />
+                  <FaCircleUser className="text-gray-800  w-8 h-8 text-xl 2xl:text-4xl" />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -151,7 +151,7 @@ function Page() {
                     <ul className="py-2">
                       <li>
                         <Link
-                          href="/dashboard"
+                          href="/dashboard/overview"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                         >
                           Dashboard
@@ -361,7 +361,10 @@ function Page() {
           </div>
           {/* University Cards Grid */}
           {!uniLoading ? (
-            <div className="flex gap-6 overflow-x-auto  scrollbar-hide p-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            <div
+              className="flex gap-6 overflow-x-auto  scrollbar-hide p-4"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
               {universities.length === 0 ? (
                 <p className="text-[20px] font-semibold text-center p-4 w-full">
                   No Universities Found

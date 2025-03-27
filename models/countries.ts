@@ -14,7 +14,7 @@ interface ICountry extends Document {
   why_study: string;
   work_while_studying: string;
   work_after_study: string;
-  residency: string;
+  residency: string[];
   popular_programs: string[];
   rent: string;
   groceries: string;
@@ -47,7 +47,7 @@ const CountrySchema = new Schema<ICountry>({
   why_study: { type: String, },
   work_while_studying: { type: String, },
   work_after_study: { type: String, },
-  residency: { type: String, },
+  residency: [{ type: String }],
   popular_programs: [{ type: String, }],
   rent: { type: String, },
   groceries: { type: String, },
@@ -63,7 +63,7 @@ const CountrySchema = new Schema<ICountry>({
       description: [{ type: String, }],
     },
   ],
-  scholarships: [{ type: String,}],
+  scholarships: [{ type: String, }],
   visa_requirements: [{ type: String, }],
   accomodation_options: [
     {

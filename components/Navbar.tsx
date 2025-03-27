@@ -89,7 +89,7 @@ const Navbar = () => {
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <FaCircleUser className="text-gray-800  w-11 h-11 text-xl 2xl:text-4xl" />
+                    <FaCircleUser className="text-gray-800  w-8 h-8 text-xl 2xl:text-4xl" />
                   </button>
 
                   {/* Dropdown Menu */}
@@ -109,7 +109,7 @@ const Navbar = () => {
                       <ul className="py-2">
                         <li>
                           <Link
-                            href="/dashboard"
+                            href="/dashboard/overview"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           >
                             Dashboard
