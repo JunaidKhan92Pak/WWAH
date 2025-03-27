@@ -41,7 +41,7 @@ export async function GET(req: Request) {
 
         // Fetch universities with pagination
         const universities = await University.find(query)
-            .select("_id university_name qs_world_university_ranking times_higher_education_ranking country_name acceptance_rate universityImages.banner  universityImages.logo")
+            .select("_id university_name qs_world_university_ranking times_higher_education_ranking country_name acceptance_rate universityImages.banner ranking  universityImages.logo")
             .skip(skip)
             .limit(limit)
             .lean();
