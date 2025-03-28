@@ -59,7 +59,7 @@ export default function FilterContent() {
   const [localMinBudget, setLocalMinBudget] = useState(minBudget || '');
   const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget || '');
   const [searchTerm, setSearchTerm] = useState("");
-  const studyDestinations = useMemo(() => ["USA", "United Kingdom", "Canada", "Australia", "Germany"], []);
+  const studyDestinations = useMemo(() => ["USA", "United Kingdom", "Canada", "Australia", "Germany" , "New Zealand"], []);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [localSearch, setLocalSearch] = useState('')

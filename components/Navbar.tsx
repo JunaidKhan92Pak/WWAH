@@ -33,7 +33,7 @@ const Navbar = () => {
                 alt="logo"
                 width={113}
                 height={45}
-              // className="2xl:w-[150px] 2xl:h-[60px]"
+                // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}
@@ -94,7 +94,7 @@ const Navbar = () => {
                   </button>
 
                   {/* Dropdown Menu */}
-                  {isDropdownOpen && (
+                  {/* {isDropdownOpen && (
                     <div
                       id="user-dropdown"
                       className="absolute right-1 top-10 z-20 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
@@ -136,6 +136,55 @@ const Navbar = () => {
                           >
                             Logout
                           </a>
+                        </li>
+                      </ul>
+                    </div>
+                  )} */}
+                  {isDropdownOpen && (
+                    <div
+                      id="user-dropdown"
+                      className="absolute right-1 top-12 z-20 w-56 bg-white shadow-lg rounded-xl border border-gray-200 dark:bg-gray-800 dark:border-gray-700 transition-all duration-200"
+                    >
+                      <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-600">
+                        <span className="block text-sm font-semibold text-gray-900 dark:text-white">
+                          {user?.personalInfo.firstName || "User"}
+                        </span>
+                        <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
+                          {user?.personalInfo?.email || "user12gmail.com"}
+                        </span>
+                      </div>
+                      <ul className="py-2">
+                        <li>
+                          <Link
+                            href="/dashboard/overview"
+                            className="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300 dark:hover:text-white transition-all duration-200"
+                          >
+                            🏠 Dashboard
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/chatmodel"
+                            className="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300 dark:hover:text-white transition-all duration-200"
+                          >
+                            🤖 Chat with ZEUS
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/settings"
+                            className="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300 dark:hover:text-white transition-all duration-200"
+                          >
+                            ⚙️ Settings
+                          </Link>
+                        </li>
+                        <li>
+                          <button
+                            className="w-full text-left px-5 py-3 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-700 dark:text-red-400 dark:hover:text-white transition-all duration-200"
+                            onClick={logout}
+                          >
+                            🚪 Logout
+                          </button>
                         </li>
                       </ul>
                     </div>
