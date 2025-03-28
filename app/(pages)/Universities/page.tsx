@@ -252,12 +252,12 @@ const Page = () => {
                       className="h-[180px] w-[400px] object-cover rounded-xl"
                       alt={`${item.university_name} Banner`}
                     />
-                    <div className="absolute bottom-1 left-5 w-14 h-14">
+                    <div className="absolute bottom-1 left-5">
                       <Image
                         src={item.universityImages?.logo ?? "/banner.jpg"}
-                        width={56}
-                        height={56}
-                        className="rounded-full bg-white border border-black"
+                        width={100}
+                        height={90}
+                        className="rounded-full bg-white border border-black w-[56px] h-[56px]"
                         alt="University Logo"
                       />
                     </div>
