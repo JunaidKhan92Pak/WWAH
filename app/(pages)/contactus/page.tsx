@@ -18,7 +18,7 @@ export default function ContactUs() {
     { code: "+91", flag: "/india.png", country: "India" },
     { code: "+61", flag: "/australia.png", country: "Australia" },
     { code: "+39", flag: "/italy.png", country: "Italy" },
-    { code: "+44", flag: "/uk.png", country: "United Kingdom" },
+    { code: "+44", flag: "/ukflag.png", country: "United Kingdom" },
     { code: "+1", flag: "/canada.png", country: "Canada" },
     { code: "+86", flag: "/china.png", country: "China" },
     { code: "+353", flag: "/ireland.png", country: "Ireland" },
@@ -141,8 +141,8 @@ export default function ContactUs() {
                     <SelectTrigger className="flex items-center border rounded-md focus:outline-none focus:ring-0 focus:ring-gray-300 bg-[#F1F1F1]">
                       <SelectValue
                         placeholder={
-                          form.countryCode
-                            ? `${form.countryCode} (${countries.find(c => c.code === form.countryCode)?.country || ''})`
+                          form.countryCode && form.country
+                            ? `${form.countryCode} (${form.country})`
                             : (
                               <div className="flex items-center space-x-2">
                                 <Image
@@ -160,7 +160,7 @@ export default function ContactUs() {
                     </SelectTrigger>
                     <SelectContent>
                       {countries.map((country) => (
-                        <SelectItem key={`${country.code}-${country.country}`} value={country.code}>
+                        <SelectItem key={`${country.code}-${country.country}`} value={`${country.code}-${country.country}`}>
                           <div className="flex items-center space-x-2">
                             <Image
                               src={country.flag}
@@ -175,6 +175,7 @@ export default function ContactUs() {
                       ))}
                     </SelectContent>
                   </Select>
+
                 </div>
                 {/* Input Field for Phone Number */}
                 <div className="w-full">
