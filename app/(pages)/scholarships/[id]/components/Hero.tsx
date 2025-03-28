@@ -56,7 +56,7 @@ const Hero: React.FC<HeroProps> = ({
             </div>
 
             {/* Right Section */}
-            <div className="w-full sm:w-[90%] md:w-full lg:w-[45%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
+            <div className="w-[95%]  md:w-[90%] lg:w-[65%] xl:w-[50%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
               <p className="text-white w-4/5">
                 Book Your Online Video Counselling Session with WWAH Advisor!
               </p>

@@ -23,14 +23,14 @@ import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 const countries = [
-  { name: "United States", code: "+1", flag: "/flags/us.png" },
-  { name: "India", code: "+91", flag: "/flags/in.png" },
-  { name: "Pakistan", code: "+92", flag: "/flags/pk.png" },
-  { name: "United Kingdom", code: "+44", flag: "/flags/uk.png" },
-  { name: "Canada", code: "+1", flag: "/flags/ca.png" },
-  { name: "Australia", code: "+61", flag: "/flags/au.png" },
-  { name: "China", code: "+86", flag: "/flags/cn.png" },
-  { name: "Germany", code: "+49", flag: "/flags/de.png" },
+  { name: "United States", code: "+1", flag: "/usa.png" },
+  { name: "India", code: "+91", flag: "/india.png" },
+  { name: "Pakistan", code: "+92", flag: "/pakflag.png" },
+  { name: "United Kingdom", code: "+44", flag: "/ukflag.png" },
+  { name: "Canada", code: "+1", flag: "/canada.png" },
+  { name: "Australia", code: "+61", flag: "/australia.png" },
+  { name: "China", code: "+86", flag: "/china.png" },
+  { name: "Germany", code: "+49", flag: "/germany.png" },
 ];
 type FormValues = z.infer<typeof formSchema>;
 
@@ -125,54 +125,74 @@ const ContactDetailForm =({ form }: { form: UseFormReturn<FormValues> })  => {
               <div className="flex gap-2">
                 <FormField
                   control={form.control}
-                  name="countryCode"
-                  render={({ field: countryCodeField }) => (
-                    <Select
-                      value={form.watch("countryCode") || "+92"}
-                      onValueChange={countryCodeField.onChange}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
-                          <SelectValue>
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src={
-                                  countries.find(
-                                    (c) => c.name === form.watch("country")
-                                  )?.flag || "/default-flag.png"
-                                }
-                                alt="Country Flag"
-                                width={20}
-                                height={20}
-                                className="object-contain"
-                                unoptimized
-                              />
-                              <span className="text-sm">
-                                {form.watch("countryCode") || "+92"}
-                              </span>
-                            </div>
-                          </SelectValue>
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {countries.map((country) => (
-                          <SelectItem key={country.code} value={country.code}>
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src={country.flag}
-                                alt={`${country.name} Flag`}
-                                width={20}
-                                height={20}
-                                className="object-contain"
-                                unoptimized
-                              />
-                              <span className="text-sm">{`${country.code} (${country.name})`}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
+                  name="country"
+                  render={({ field: countryField }) => {
+                    // Find the selected country based on BOTH country name and code
+                    const selectedCountry = countries.find(
+                      (c) =>
+                        c.code === form.watch("countryCode") &&
+                        c.name === form.watch("country")
+                    ) || countries.find((c) => c.name === "Pakistan"); // Default to Pakistan
+
+                    return (
+                      <Select
+                        value={selectedCountry?.name || "Pakistan"}
+                        onValueChange={(selectedCountryName) => {
+                          // Get full country object
+                          const matchedCountry = countries.find(
+                            (c) => c.name === selectedCountryName
+                          );
+
+                          if (matchedCountry) {
+                            form.setValue("country", matchedCountry.name); // Store exact country name
+                            form.setValue("countryCode", matchedCountry.code); // Store country code
+                          }
+
+                          countryField.onChange(selectedCountryName);
+                        }}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
+                            <SelectValue>
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  src={selectedCountry?.flag || "/pakflag.png"}
+                                  alt="Country Flag"
+                                  width={20}
+                                  height={20}
+                                  className="object-contain"
+                                  unoptimized
+                                />
+                                <span className="text-sm">
+                                  {selectedCountry?.code || "+92"}
+                                </span>
+                              </div>
+                            </SelectValue>
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem
+                              key={`${country.code}-${country.name}`} //  Unique key
+                              value={country.name}
+                            >
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  src={country.flag}
+                                  alt={`${country.name} Flag`}
+                                  width={20}
+                                  height={20}
+                                  className="object-contain"
+                                  unoptimized
+                                />
+                                <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    );
+                  }}
                 />
                 <Input
                   {...field}
@@ -184,6 +204,9 @@ const ContactDetailForm =({ form }: { form: UseFormReturn<FormValues> })  => {
             </FormItem>
           )}
         />
+
+
+
       </div>
     </div>
   );
