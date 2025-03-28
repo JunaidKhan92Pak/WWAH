@@ -29,20 +29,52 @@ const Page = () => {
 
   const [generalError, setGeneralError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setUserData({ ...userData, [name]: value });
+  //   setErrors({ ...errors, [name]: "" });
+  //   setGeneralError("");
+  // };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
     setErrors({ ...errors, [name]: "" });
     setGeneralError("");
+    setIsDisabled(false); // Re-enable button when user types again
   };
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!userData.email || !userData.password) {
+  //     setGeneralError("Please fill in all fields.");
+  //     return;
+  //   }
+  //   setIsDisabled(true);
+  //   try {
+  //     const loginRes = await loginAction(userData);
+  //     if (loginRes.success && loginRes.user) {
+  //       setUser(loginRes.user);
+  //       router.push("/");
+  //     } else {
+  //       setGeneralError("Invalid email or password");
+  //     }
+  //   } catch (err) {
+  //     setGeneralError("Login failed, please try again.");
+  //     console.error("Login failed", err);
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userData.email || !userData.password) {
       setGeneralError("Please fill in all fields.");
+      setIsDisabled(false); // Enable the button again
       return;
     }
-    setIsDisabled(true);
+
+    setIsDisabled(true); // Disable the button only while processing
+
     try {
       const loginRes = await loginAction(userData);
       if (loginRes.success && loginRes.user) {
@@ -53,10 +85,12 @@ const Page = () => {
 
       } else {
         setGeneralError("Invalid email or password");
+        setIsDisabled(false); // Re-enable the button so the user can try again
       }
     } catch (err) {
       setGeneralError("Login failed, please try again.");
       console.error("Login failed", err);
+      setIsDisabled(false); // Enable button on failure
     }
   };
 
