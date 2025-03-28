@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { IoLogoWhatsapp } from "react-icons/io";
 const WhatsAppWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const phoneNumber = "+92 312 0762039"; // Replace with your WhatsApp number
+  const phoneNumber = "923120762039"; // Replace with your WhatsApp number
   const message = encodeURIComponent("Hello! I'm interested in your services.");
 
   return (
