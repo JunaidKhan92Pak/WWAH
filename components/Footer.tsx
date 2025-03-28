@@ -37,7 +37,7 @@ const Footer = () => {
           {/* Left Section: Contact Details */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 items-start">
             <div className="flex  space-x-4">
-              <CiLocationOn className="h-8  sm:h-12 lg:h-8 w-8 sm:w-12 lg:w-8" />
+              <CiLocationOn className="h-8  sm:h-12 lg:h-9 w-8 sm:w-12 lg:w-10 xl:w-8" />
               <p className="text-sm 2xl:text-base">
                 12 Block F1, Main Boulevard, Khayaban-e-Firdousi, opposite to
                 LDA Office, Johar Town, Lahore
