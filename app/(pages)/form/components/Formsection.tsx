@@ -112,13 +112,17 @@ const Formsection = () => {
       console.log("Hello");
     }
     else {
-      const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}sendMail`, {
-        method: "POST",
-        body: JSON.stringify(form),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
+      const data = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}sendMail`,
+        {
+          method: "POST",
+          body: JSON.stringify(form),
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
       if (data.ok) {
         const response = await data.json();
         console.log(response);

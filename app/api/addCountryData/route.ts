@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
-import Country from "@/models/countryData";
+import CountryData from "@/models/countryData";
 
 export async function POST(req: Request) {
     try {
         // Parse incoming request data
+        
         const data = await req.json();
+        console.log(data,"countrydata")
         // Validate input
         if (!data || !data.countryname) {
             return NextResponse.json(
@@ -17,14 +19,16 @@ export async function POST(req: Request) {
         await connectToDatabase();
 
         // Find if the country already exists
-        const existingCountry = await Country.findOne({ countryname: data.countryname });
+        const existingCountry = await CountryData.findOne({
+          countryname: data.countryname,
+        });
 
         if (existingCountry) {
             // Update the existing country data
-            const updatedCountry = await Country.findOneAndUpdate(
-                { countryname: data.countryname },  // Find the document
-                { $set: data },                     // Update with new data
-                { new: true }                       // Return updated document
+            const updatedCountry = await CountryData.findOneAndUpdate(
+              { countryname: data.countryname }, // Find the document
+              { $set: data }, // Update with new data
+              { new: true } // Return updated document
             );
             return NextResponse.json(
                 { message: "Country data updated successfully.", updatedCountry },
@@ -32,7 +36,7 @@ export async function POST(req: Request) {
             );
         } else {
             // Create a new Country document
-            const newCountry = new Country(data);
+            const newCountry = new CountryData(data);
             const savedCountry = await newCountry.save();
             console.log(savedCountry, "New Country Added");
             return NextResponse.json(

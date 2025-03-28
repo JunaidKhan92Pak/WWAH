@@ -1,5 +1,3 @@
-
-
 import mongoose from "mongoose";
 
 const LifestyleSchema = new mongoose.Schema({
@@ -45,3 +43,5 @@ const Expense =
   mongoose.models.Expense || mongoose.model("Expense", ExpenseSchema);
 
 export default Expense;
+
+

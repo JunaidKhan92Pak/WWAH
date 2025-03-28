@@ -91,13 +91,17 @@ export default function Home() {
     setResponseMessage("");
     console.log(values, "these will be send ")
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/scheduleSession`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values), // Corrected form submission
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/scheduleSession`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values), // Corrected form submission
+        }
+      );
 
       const data = await response.json();
       console.log(data);
