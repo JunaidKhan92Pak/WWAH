@@ -46,11 +46,11 @@ const Footer = () => {
             <div
               className="flex items-center space-x-4 cursor-pointer"
               onClick={() =>
-                window.open("https://wa.me/923289911998", "_blank")
+                window.open("https://wa.me/923120762039", "_blank")
               }
             >
               <IoCallOutline />
-              <p className="text-sm 2xl:text-base">92 328 99 11 998</p>
+              <p className="text-sm 2xl:text-base">+92 312 0762039</p>
             </div>
             <div
               className="flex items-center space-x-4 cursor-pointer"
@@ -64,9 +64,17 @@ const Footer = () => {
                 info@worldwideadmissionshub.com
               </p>
             </div>
+
             <div className="flex items-center space-x-4">
               <TfiWorld />
-              <p className="text-sm 2xl:text-base">www.worldwidehub.com</p>
+              <Link
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm 2xl:text-base  hover:underline"
+              >
+                www.worldwideadmissionshub.com
+              </Link>
             </div>
           </div>
 
@@ -154,7 +162,7 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 mt-4 space-y-4 sm:space-y-0">
           <div className="flex-1 border-t border-[#313131]"></div>
           <p className="text-center text-xs text-[#313131]">
-            2024 Copyrights reserved by Worldwide Admissions Hub.
+            2025 Copyrights reserved by Worldwide Admissions Hub.
           </p>
           <div className="flex-1 border-t border-[#313131]"></div>
         </div>
