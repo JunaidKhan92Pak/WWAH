@@ -35,7 +35,7 @@ const Page = () => {
     { name: "Romania", value: "romania", img: "/romania.svg" },
     { name: "Turkiye", value: "turkiye", img: "/turkiye.svg" },
   ];
-  const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
+  // const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
   const minimumRequirements = [
     "Excellent Academic Achievement",
     "2.5-3.0 CGPA",
