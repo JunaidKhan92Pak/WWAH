@@ -43,14 +43,21 @@ const Footer = () => {
                 LDA Office, Johar Town, Lahore
               </p>
             </div>
-            <div
+            {/* <div
               className="flex items-center space-x-4 cursor-pointer"
               onClick={() =>
-                window.open("https://wa.me/923120762039", "_blank")
+                window.open("https://wa.me/+923120762039", "_blank")
               }
             >
               <IoCallOutline />
-              <p className="text-sm 2xl:text-base">+92 312 0762039</p>
+              <p className="text-sm 2xl:text-base">+92 3120762039</p>
+            </div> */}
+            <div
+              className="flex items-center space-x-4 cursor-pointer"
+              onClick={() => (window.location.href = "tel:+923120762039")}
+            >
+              <IoCallOutline />
+              <p className="text-sm 2xl:text-base"> 03120762039</p>
             </div>
             <div
               className="flex items-center space-x-4 cursor-pointer"
@@ -61,7 +68,7 @@ const Footer = () => {
             >
               <IoMailUnreadOutline />
               <p className="text-sm 2xl:text-base">
-                info@worldwideadmissionshub.com
+                www.worldwideadmissionshub.com{" "}
               </p>
             </div>
 
