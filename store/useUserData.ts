@@ -1,3 +1,4 @@
+import { deleteAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
 interface AcademmicInfo {
   highestQualification: string;
@@ -71,6 +72,7 @@ interface UserStore {
   error: string | null;
   fetchUserProfile: (token: string) => Promise<void>;
   setUser: (user: User) => void;
+  logout: () => void;
 }
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
@@ -105,4 +107,8 @@ export const useUserStore = create<UserStore>((set) => ({
     }
   },
   setUser: (user) => set({ user }),
+      logout: () => {
+          deleteAuthToken(); // ✅ Remove token first
+          set(() => ({ user: null, isAuthenticate: false, loading: false })); // ✅ Reset store state
+      },
 }));

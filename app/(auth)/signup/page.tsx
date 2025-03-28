@@ -9,7 +9,6 @@ import { CiUser } from "react-icons/ci";
 import { IoMailOutline, IoKeyOutline } from "react-icons/io5";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useUserStore } from "@/store/userStore";
-
 const Page = () => {
   const router = useRouter();
   const { signupAction } = useAuth();
