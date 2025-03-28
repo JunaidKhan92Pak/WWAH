@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "./(auth)/auth/authProvider";
 import UserProvider from "@/components/UserProvider";
+import WhatsAppWidget from "@/components/WhatsAppWidget"; // Import the WhatsApp widget
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -33,6 +35,7 @@ export default function RootLayout({
         <AuthProvider>
           <UserProvider />
           {children}
+          <WhatsAppWidget /> {/* WhatsApp widget added globally */}
         </AuthProvider>
       </body>
     </html>
