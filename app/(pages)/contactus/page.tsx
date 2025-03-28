@@ -9,7 +9,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 export default function ContactUs() {
   const countries = [
@@ -102,7 +101,7 @@ export default function ContactUs() {
     <section className="sm:w-[90%] mx-auto">
       <div className="flex flex-col lg:flex-row gap-6 py-5 md:py-10 justify-center items-stretch p-2">
         {/* Left Section */}
-        <div className="w-full lg:w-1/2 bg-white rounded-2xl p-2 md:p-6 border flex flex-col xl:space-y-4">
+        <div className="w-full md:lg:w-1/2 bg-white rounded-2xl p-2 md:p-6 border flex flex-col xl:space-y-4">
           <h6 className="text-red-500 ">Contact Us</h6>
           <h4>Let&#39;s Chat, Reach Out to Us!</h4>
           <p className="text-gray-600 mb-3 xl:mb-0">
@@ -131,6 +130,7 @@ export default function ContactUs() {
                   onChange={handleChange}
                   placeholder="Enter your last name"
                   className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
+
                 />
               </label>
             </div>
@@ -140,45 +140,40 @@ export default function ContactUs() {
               </label>
               <div className="flex flex-row gap-2">
                 {/* Dropdown for Country Code */}
-                <div className="flex items-center justify-center w-full sm:w-1/3 lg:w-2/3 xl:w-1/3">
-                  <Select onValueChange={handleCountryCodeChange}>
-                    <SelectTrigger className="flex items-center border rounded-md focus:outline-none focus:ring-0 focus:ring-gray-300 bg-[#F1F1F1]">
-                      <SelectValue
-                        placeholder={
-                          form.countryCode && form.country
-                            ? `${form.countryCode} (${form.country})`
-                            : (
-                              <div className="flex items-center space-x-2">
-                                <Image
-                                  src={countries[0].flag}
-                                  alt="Default Country Flag"
-                                  width={20}
-                                  height={20}
-                                  className="object-cover"
-                                />
-                                <p className="text-xs">{`${countries[0].code} (${countries[0].country})`}</p>
-                              </div>
-                            )
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={`${country.code}-${country.country}`} value={`${country.code}-${country.country}`}>
+                                    <div className="flex items-center justify-center w-[50%] md:w-[25%]   bg-white bg-opacity-20 rounded-md">
+
+                      <Select onValueChange={handleCountryCodeChange}>
+                    <SelectTrigger className="flex items-center  border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1]">
                           <div className="flex items-center space-x-2">
                             <Image
-                              src={country.flag}
-                              alt={`${country.country} Flag`}
+                              src={countries.find(c => `${c.country}_${c.code}` === form.countryCode)?.flag || countries[0].flag}
+                              alt="Country Flag"
                               width={20}
                               height={20}
                               className="object-cover"
                             />
-                            <p className="text-xs truncate">{`${country.code} (${country.country})`}</p>
+                            <p className="text-xs">{form.countryCode?.split('_')[1] || countries[0].code}</p> {/* Show only code */}
                           </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem key={country.country} value={`${country.country}_${country.code}`}>
+                              <div className="flex items-center space-x-2">
+                                <Image
+                                  src={country.flag}
+                                  alt={`${country.country} Flag`}
+                                  width={20}
+                                  height={20}
+                                  className="object-cover"
+                                />
+                                <p className="text-xs truncate">{country.code}</p> 
+                                <p className="text-xs truncate">({country.country})</p> 
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
 
                 </div>
                 {/* Input Field for Phone Number */}
@@ -236,7 +231,7 @@ export default function ContactUs() {
               alt="Contact Person"
               width={560}
               height={400}
-              className="w-[700px] h-[290px] xl:h-[410px] object-cover rounded-2xl"
+              className="w-[700px] h-[290px] xl:h-[410px] 2xl:w-full 2xl:h-[500px] object-cover rounded-2xl"
             />
           </div>
           <div className="w-full border rounded-2xl p-4 flex flex-col gap-3">

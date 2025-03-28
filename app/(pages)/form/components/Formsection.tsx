@@ -34,7 +34,7 @@ const Formsection = () => {
       country: "Italy"
     },
     {
-      code: "+44", flag: "/uk.png",
+      code: "+44", flag: "/ukflag.png",
       country: "United Kingdom"
     },
     {
@@ -144,7 +144,7 @@ const Formsection = () => {
         <div className="flex gap-1 sm:space-y-0 sm:space-x-2 justify-center items-center text-center md:mb-12 mb-4">
           <Button
             onClick={() => setFormType("Register Now")}
-            className={`text-white p-6 2xl:p-14 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Register Now" ? "bg-white" : "bg-transparent"
+            className={`text-white p-6 2xl:p-8 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Register Now" ? "bg-white" : "bg-transparent"
               }`}
           >
             <h6 className={formType === "Register Now" ? "text-[#C7161E]" : "text-white"}>
@@ -153,7 +153,7 @@ const Formsection = () => {
           </Button>
           <Button
             onClick={() => setFormType("Book a Demo")}
-            className={`text-white p-6 2xl:p-14 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Book a Demo" ? "bg-white" : "bg-transparent"
+            className={`text-white p-6 2xl:p-8 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Book a Demo" ? "bg-white" : "bg-transparent"
               }`}
           >
             <h6 className={formType === "Book a Demo" ? "text-[#C7161E]" : "text-white"}>
@@ -224,31 +224,22 @@ const Formsection = () => {
                     {/* Dropdown for Country Code */}
                     <div className="flex items-center justify-center w-[60%] lg:w-[30%] xl:w-[20%]  bg-white bg-opacity-20 rounded-md">
                       <Select onValueChange={handleCountryCodeChange}>
-                        <SelectTrigger className="flex items-center bg-transparent 2xl:py-8">
-                          {/* Conditionally render Pakistan's country code, name, and flag as the placeholder */}
-                          <SelectValue placeholder={
-                            form.countryCode
-                              ? `${form.countryCode} (${countries.find(c => c.code === form.countryCode)?.country || ''})`
-                              : (
-                                <div className="flex items-center space-x-2">
-                                  <Image
-                                    src={countries[0].flag}
-                                    alt="Pakistan Flag"
-                                    width={20}
-                                    height={20}
-                                    className="object-cover"
-                                  />
-                                  <p className="text-xs">{`${countries[0].code} `}</p>
-
-                                </div>
-                              )
-                          } />
+                        <SelectTrigger className="flex items-center bg-transparent">
+                          <div className="flex items-center space-x-2">
+                            <Image
+                              src={countries.find(c => `${c.country}_${c.code}` === form.countryCode)?.flag || countries[0].flag}
+                              alt="Country Flag"
+                              width={20}
+                              height={20}
+                              className="object-cover"
+                            />
+                            <p className="text-xs">{form.countryCode?.split('_')[1] || countries[0].code}</p> {/* Show only code */}
+                          </div>
                         </SelectTrigger>
-                        <SelectContent>
-                          {/* Dynamically render options from the countries array */}
-                          {countries.map((country) => (
-                            <SelectItem key={`${country.code}-${country.country}`} value={`${country.code}-${country.country}`}>
 
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem key={country.country} value={`${country.country}_${country.code}`}>
                               <div className="flex items-center space-x-2">
                                 <Image
                                   src={country.flag}
@@ -257,13 +248,15 @@ const Formsection = () => {
                                   height={20}
                                   className="object-cover"
                                 />
-                                <p className="text-xs truncate">{`${country.code} (${country.country})`}</p> {/* Show country code and country name with smaller text */}
-
+                                <p className="text-xs truncate">{country.code}</p> 
+                                <p className="text-xs truncate">({country.country})</p> 
                               </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
+
+
                     </div>
 
 
@@ -385,32 +378,24 @@ const Formsection = () => {
                   <label className="block mb-2 font-semibold">Contact Number</label>
                   <div className="flex flex-row gap-2">
                     {/* Dropdown for Country Code */}
-                    <div className="flex items-center justify-center w-2/5 sm:w-1/2 lg:w-1/3  bg-white bg-opacity-20 rounded-md">
+                    <div className="flex items-center justify-center w-[60%] lg:w-[30%] xl:w-[20%]  bg-white bg-opacity-20 rounded-md">
                       <Select onValueChange={handleCountryCodeChange}>
-                        <SelectTrigger className="flex items-center bg-transparent 2xl:py-8">
-                          {/* Conditionally render Pakistan's country code, name, and flag as the placeholder */}
-                          <SelectValue placeholder={
-                            form.countryCode
-                              ? `${form.countryCode} ${countries.find(c => c.code === form.countryCode)?.country}`
-                              : (
-                                <div className="flex items-center space-x-4">
-                                  <Image
-                                    src={countries[0].flag}
-                                    alt="Pakistan Flag"
-                                    width={20}
-                                    height={20}
-                                    className="object-cover"
-                                  />
-                                  <span>{`${countries[0].code}`}</span>
-
-                                </div>
-                              )
-                          } />
+                        <SelectTrigger className="flex items-center bg-transparent">
+                          <div className="flex items-center space-x-2">
+                            <Image
+                              src={countries.find(c => `${c.country}_${c.code}` === form.countryCode)?.flag || countries[0].flag}
+                              alt="Country Flag"
+                              width={20}
+                              height={20}
+                              className="object-cover"
+                            />
+                            <p className="text-xs">{form.countryCode?.split('_')[1] || countries[0].code}</p> {/* Show only code */}
+                          </div>
                         </SelectTrigger>
+
                         <SelectContent>
-                          {/* Dynamically render options from the countries array */}
                           {countries.map((country) => (
-                            <SelectItem key={country.code} value={country.code}>
+                            <SelectItem key={country.country} value={`${country.country}_${country.code}`}>
                               <div className="flex items-center space-x-2">
                                 <Image
                                   src={country.flag}
@@ -419,13 +404,14 @@ const Formsection = () => {
                                   height={20}
                                   className="object-cover"
                                 />
-                                <p className="text-xs truncate">{`${country.code} (${country.country})`}</p> {/* Show country code and country name with smaller text */}
-
+                                <p className="text-xs truncate">{country.code}</p> 
+                                <p className="text-xs truncate">({country.country})</p>
                               </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
+
                     </div>
 
 
