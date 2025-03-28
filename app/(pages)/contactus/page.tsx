@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { useState } from "react";
-import React from 'react';
+import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -15,17 +15,37 @@ export default function ContactUs() {
     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
     { code: "+1", flag: "/usa.png", country: "USA" },
     { code: "+91", flag: "/countryarchive/india_logo.png", country: "India" },
-    { code: "+61", flag: "/countryarchive/australia_logo.png", country: "Australia" },
+    {
+      code: "+61",
+      flag: "/countryarchive/australia_logo.png",
+      country: "Australia",
+    },
     { code: "+39", flag: "/countryarchive/italy_logo.png", country: "Italy" },
     { code: "+44", flag: "/ukflag.png", country: "United Kingdom" },
     { code: "+1", flag: "/countryarchive/canada_logo.png", country: "Canada" },
     { code: "+86", flag: "/countryarchive/china_logo.png", country: "China" },
-    { code: "+353", flag: "/countryarchive/ireland_logo.png", country: "Ireland" },
+    {
+      code: "+353",
+      flag: "/countryarchive/ireland_logo.png",
+      country: "Ireland",
+    },
     { code: "+64", flag: "/nz.png", country: "New Zealand" },
-    { code: "+49", flag: "/countryarchive/germany_logo.png", country: "Germany" },
-    { code: "+60", flag: "/countryarchive/malaysia_logo.png", country: "Malaysia" },
+    {
+      code: "+49",
+      flag: "/countryarchive/germany_logo.png",
+      country: "Germany",
+    },
+    {
+      code: "+60",
+      flag: "/countryarchive/malaysia_logo.png",
+      country: "Malaysia",
+    },
     { code: "+33", flag: "/countryarchive/france_logo.png", country: "France" },
-    { code: "+45", flag: "/countryarchive/denmark_logo.png", country: "Denmark" },
+    {
+      code: "+45",
+      flag: "/countryarchive/denmark_logo.png",
+      country: "Denmark",
+    },
   ];
   const [form, setForm] = useState({
     firstName: "",
@@ -37,7 +57,9 @@ export default function ContactUs() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
@@ -53,7 +75,12 @@ export default function ContactUs() {
     e.preventDefault();
     setIsSubmitting(true);
     // Validate form data before submitting
-    if (!form.firstName || !form.lastName || !form.phoneNumber || !form.message) {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.phoneNumber ||
+      !form.message
+    ) {
       setResponseMessage("Please fill out all fields before submitting.");
       setIsSubmitting(false); // Stop submitting
       return; // Prevent form submission
@@ -105,10 +132,13 @@ export default function ContactUs() {
           <h6 className="text-red-500 ">Contact Us</h6>
           <h4>Let&#39;s Chat, Reach Out to Us!</h4>
           <p className="text-gray-600 mb-3 xl:mb-0">
-            Have questions or feedback? We&#39;re here to help. Send us a message, and
-            we&#39;ll respond within 24 hours.
+            Have questions or feedback? We&#39;re here to help. Send us a
+            message, and we&#39;ll respond within 24 hours.
           </p>
-          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5 flex-1 flex flex-col">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 md:space-y-5 flex-1 flex flex-col"
+          >
             <div className="grid md:grid-cols-2 gap-2">
               <label htmlFor="firstname" className="block text-gray-700">
                 First Name
@@ -130,7 +160,6 @@ export default function ContactUs() {
                   onChange={handleChange}
                   placeholder="Enter your last name"
                   className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[13px] placeholder:lg:text-[14px]"
-
                 />
               </label>
             </div>
@@ -140,41 +169,52 @@ export default function ContactUs() {
               </label>
               <div className="flex flex-row gap-2">
                 {/* Dropdown for Country Code */}
-                                    <div className="flex items-center justify-center w-[50%] md:w-[25%]   bg-white bg-opacity-20 rounded-md">
-
-                      <Select onValueChange={handleCountryCodeChange}>
+                <div className="flex items-center justify-center w-[50%] md:w-[25%]   bg-white bg-opacity-20 rounded-md">
+                  <Select onValueChange={handleCountryCodeChange}>
                     <SelectTrigger className="flex items-center  border rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300 bg-[#F1F1F1]">
+                      <div className="flex items-center space-x-2">
+                        <Image
+                          src={
+                            countries.find(
+                              (c) =>
+                                `${c.country}_${c.code}` === form.countryCode
+                            )?.flag || countries[0].flag
+                          }
+                          alt="Country Flag"
+                          width={16}
+                          height={16}
+                          className="object-cover"
+                        />
+                        <p className="text-xs">
+                          {form.countryCode?.split("_")[1] || countries[0].code}
+                        </p>{" "}
+                        {/* Show only code */}
+                      </div>
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem
+                          key={country.country}
+                          value={`${country.country}_${country.code}`}
+                        >
                           <div className="flex items-center space-x-2">
                             <Image
-                              src={countries.find(c => `${c.country}_${c.code}` === form.countryCode)?.flag || countries[0].flag}
-                              alt="Country Flag"
-                              width={20}
-                              height={20}
+                              src={country.flag}
+                              alt={`${country.country} Flag`}
+                              width={16}
+                              height={16}
                               className="object-cover"
                             />
-                            <p className="text-xs">{form.countryCode?.split('_')[1] || countries[0].code}</p> {/* Show only code */}
+                            <p className="text-xs truncate">{country.code}</p>
+                            <p className="text-xs truncate">
+                              ({country.country})
+                            </p>
                           </div>
-                        </SelectTrigger>
-
-                        <SelectContent>
-                          {countries.map((country) => (
-                            <SelectItem key={country.country} value={`${country.country}_${country.code}`}>
-                              <div className="flex items-center space-x-2">
-                                <Image
-                                  src={country.flag}
-                                  alt={`${country.country} Flag`}
-                                  width={20}
-                                  height={20}
-                                  className="object-cover"
-                                />
-                                <p className="text-xs truncate">{country.code}</p> 
-                                <p className="text-xs truncate">({country.country})</p> 
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Input Field for Phone Number */}
                 <div className="w-full">
@@ -247,7 +287,7 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Email Address</p>
-                <p className="text-gray-600">info@worldwidehub.com</p>
+                <p className="text-gray-600">info@worldwideadmissionshub.com</p>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
@@ -262,7 +302,7 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Phone Number</p>
-                <p className="text-gray-600">+92 328 99 11 998</p>
+                <p className="text-gray-600">+923120762039</p>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
@@ -277,7 +317,7 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Website</p>
-                <p className="text-gray-600">www.worldwidehub.com</p>
+                <p className="text-gray-600">www.worldwideadmissionshub.com</p>
               </div>
             </div>
           </div>
