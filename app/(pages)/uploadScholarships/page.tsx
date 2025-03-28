@@ -60,9 +60,10 @@ const ExcelUploader = () => {
 
             // Send the JSON data to your API endpoint
             const res = await fetch("/api/addScholarship", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(jsonData),
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(jsonData),
+              credentials: "include",
             });
             const json = await res.json();
             setResult(JSON.stringify(json, null, 2));

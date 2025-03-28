@@ -21,17 +21,18 @@ import { Input } from "@/components/ui/input";
 import { formSchema } from "./Schema";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+import { countries } from "@/lib/countries";
 
-const countries = [
-  { name: "United States", code: "+1", flag: "/usa.png" },
-  { name: "India", code: "+91", flag: "/india.png" },
-  { name: "Pakistan", code: "+92", flag: "/pakflag.png" },
-  { name: "United Kingdom", code: "+44", flag: "/ukflag.png" },
-  { name: "Canada", code: "+1", flag: "/canada.png" },
-  { name: "Australia", code: "+61", flag: "/australia.png" },
-  { name: "China", code: "+86", flag: "/china.png" },
-  { name: "Germany", code: "+49", flag: "/germany.png" },
-];
+// const countries = [
+//   { name: "United States", code: "+1", flag: "/flags/us.png" },
+//   { name: "India", code: "+91", flag: "/flags/in.png" },
+//   { name: "Pakistan", code: "+92", flag: "/flags/pk.png" },
+//   { name: "United Kingdom", code: "+44", flag: "/flags/uk.png" },
+//   { name: "Canada", code: "+1", flag: "/flags/ca.png" },
+//   { name: "Australia", code: "+61", flag: "/flags/au.png" },
+//   { name: "China", code: "+86", flag: "/flags/cn.png" },
+//   { name: "Germany", code: "+49", flag: "/flags/de.png" },
+// ];
 type FormValues = z.infer<typeof formSchema>;
 
 const ContactDetailForm =({ form }: { form: UseFormReturn<FormValues> })  => {
@@ -116,7 +117,7 @@ const ContactDetailForm =({ form }: { form: UseFormReturn<FormValues> })  => {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="phoneNo"
           render={({ field }) => (
@@ -203,10 +204,144 @@ const ContactDetailForm =({ form }: { form: UseFormReturn<FormValues> })  => {
               <FormMessage />
             </FormItem>
           )}
-        />
-
-
-
+        /> */}
+        {/* <FormField
+          control={form.control}
+          name="phoneNo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone No.</FormLabel>
+              <div className="flex">
+                <FormField
+                  control={form.control}
+                  name="countryCode"
+                  render={({ field: countryField }) => (
+                    <Select
+                      onValueChange={countryField.onChange}
+                      defaultValue={countryField.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-r-none border-r-0">
+                          <SelectValue>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={
+                                  countries.find(
+                                    (c) =>
+                                      c.code + c.name === countryField.value
+                                  )?.flag || countries[0].flag
+                                }
+                                alt="Country Flag"
+                                width={20}
+                                height={20}
+                                className="object-contain"
+                                unoptimized
+                              />
+                              <span className="text-sm">
+                                {countryField.value}
+                              </span>
+                            </div>
+                          </SelectValue>
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={country.flag}
+                                alt={`${country.name} Flag`}
+                                width={20}
+                                height={20}
+                                className="object-contain"
+                                unoptimized
+                              />
+                              <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <Input
+                  {...field}
+                  className="rounded-l-none bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm"
+                  placeholder="Enter your phone number"
+                  name="phoneNumber"
+                />
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+         <FormField
+                  control={form.control}
+                  name="phoneNo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone No.</FormLabel>
+                      <div className="flex gap-2">
+                        <FormField
+                          control={form.control}
+                          name="currentCountryCode"
+                          render={({ field: countryCodeField }) => (
+                            <Select
+                              value={countryCodeField.value || "+92"}
+                              onValueChange={countryCodeField.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
+                                  <SelectValue>
+                                    <div className="flex items-center gap-2">
+                                      <Image
+                                        src={
+                                          countries.find(
+                                            (c) =>
+                                              c.code ===
+                                              (countryCodeField.value || "+92")
+                                          )?.flag || "/default-flag.png"
+                                        }
+                                        alt="Country Flag"
+                                        width={20}
+                                        height={20}
+                                      />
+                                      <span className="text-sm">
+                                        {countryCodeField.value || "+92"}
+                                      </span>
+                                    </div>
+                                  </SelectValue>
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {countries.map((country) => (
+                                  <SelectItem key={country.code} value={country.code}>
+                                    <div className="flex items-center gap-2">
+                                      <Image
+                                        src={country.flag}
+                                        alt={`${country.name} Flag`}
+                                        width={20}
+                                        height={20}
+                                      />
+                                      <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        <Input
+                          {...field}
+                          value={field.value || ""}
+                          placeholder="Enter your phone number"
+                          className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
+                        />
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
       </div>
     </div>
   );

@@ -49,10 +49,11 @@ export default function Page() {
     e.preventDefault();
     console.log(formData.course);
     try {
-      const response = await fetch('/api/addCourse', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/addCourse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
       if (response.ok) {
         setMessage('Form submitted successfully!');

@@ -64,13 +64,17 @@ export default function ContactUs() {
     console.log(form, "Hi hello");
     // Make API request to send data
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}contactus`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}contactus`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
       console.log(data);

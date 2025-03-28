@@ -29,8 +29,8 @@ console.log(errors);
       ...formData,
       [e.target.name]: e.target.value,
     });
+    console.log(e.target.value, "e.target.value");
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
