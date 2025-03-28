@@ -618,7 +618,7 @@ const Page = () => {
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                              <Image src={"/Notebook.svg"} alt="degree level" width={16} height={16} />
+                              <Image src={"/notebook.svg"} alt="degree level" width={16} height={16} />
                               <p className="text-sm md:text-base text-gray-600 font-bold truncate">
                                 {item.programs
                                   ? item.programs
