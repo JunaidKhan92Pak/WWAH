@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { Courses } from "@/models/courses";
-import Country from "@/models/countryData";
+import CountryData from "@/models/countryData";
 import mongoose from "mongoose";
 import { ICourse } from "@/models/courses"; // Import your ICourse interface
 import { University } from "@/models/universities";
@@ -22,13 +22,13 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Course Not Found" }, { status: 404 });
         }
 
-        const countryData = await Country.findOne(
+        const countryData = await CountryData.findOne(
             { countryname: courseData.countryname },
             {
                 _id: 1,
                 countryname: 1,
                 embassyDocuments: 1,
-                universityDocuments: { $elemMatch: { course_level: courseData.education_level } },
+                universityDocuments: { $elemMatch: { course_level: courseData.course_level } },
             }
         ).lean();
         const universityData = await University.findById(courseData.university_id).select("universityImages").lean();
