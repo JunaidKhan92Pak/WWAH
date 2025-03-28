@@ -142,13 +142,28 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
                 <FormItem>
                   <FormLabel>Degree Start Date</FormLabel>
                   <FormControl>
+                    {/* <Input
+                      {...field}
+                      type="date"
+                      placeholder="YYYY/MM/DD"
+                      // value={
+                      //   field.value
+                      //     ? field.value.toISOString().split("T")[0]
+                      //     : ""
+                      // }
+                      value={
+                        field.value
+                          ? format(new Date(field.value), "yyyy-MM-dd")
+                          : ""
+                      }
+                    /> */}
                     <Input
                       {...field}
                       type="date"
                       placeholder="YYYY/MM/DD"
                       value={
                         field.value
-                          ? field.value.toISOString().split("T")[0]
+                          ? new Date(field.value).toISOString().split("T")[0]
                           : ""
                       }
                     />

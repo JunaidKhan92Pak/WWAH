@@ -12,7 +12,7 @@ import {
   ArrowLeftToLine,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import CompleteApplicationModal from "../completeapplication/components/CompleteApplicationModal";
@@ -51,7 +51,7 @@ const sidebarItems = [
   },
 ];
 export function Sidebar() {
-  const { user, fetchUserProfile } = useUserStore();
+  const { user, fetchUserProfile, logout } = useUserStore();
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   useEffect(() => {
@@ -60,6 +60,12 @@ export function Sidebar() {
       fetchUserProfile(token);
     }
   }, []);
+    const router = useRouter(); // Initialize Next.js router
+
+    const handleLogout = async () => {
+      await logout(); // Ensure logout is completed
+      router.push("/"); // Redirect to home page
+    };
   useEffect(() => {
     // Auto open modal when navigating to "Complete your application"
     if (pathname === "/dashboard/completeapplication") {
@@ -109,8 +115,15 @@ export function Sidebar() {
         ))}
         {/* Logout Button */}
         <div className="w-full pt-4">
-          <Button className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center">
+          {/* <Button className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center">
             <ArrowLeftToLine size={16} className="mr-2" /> Logout
+          </Button> */}
+          <Button
+            className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center"
+            onClick={handleLogout}
+          >
+            <ArrowLeftToLine size={16} className="mr-2" />
+            Logout             
           </Button>
         </div>
       </div>

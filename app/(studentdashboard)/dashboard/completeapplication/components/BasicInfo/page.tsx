@@ -112,7 +112,7 @@ const BasicInfo = () => {
 
       if (result.success) {
         toast.success("Basic information saved successfully!");
-        router.push("/completeprofile/academicinformation");
+        router.push("/dashboard/completeapplication");
       } else {
         toast.error(result.message || "Failed to save information");
       }
