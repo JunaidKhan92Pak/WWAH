@@ -65,6 +65,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
     { label: "Benefits", id: "Benefits" },
     { label: "Applicable Departments", id: "Applicable-Departments" },
     { label: "Eligibility Criteria", id: "Eligibility Criteria" },
+    {
+      label: "Scholarship Success Chances",
+      id: "Scholarship Success Chances",
+    },
     { label: "Required Documents", id: "Required Documents" },
     { label: "Application Process", id: "Application Process" },
   ];
@@ -101,7 +105,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-2 md:text-[14px] text-[12px] md:py-2 py-1 rounded-lg w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-2 md:text-[16px] text-[12px] md:py-2 py-1 rounded-lg w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
                     ? "bg-[#C7161E] text-white"
                     : "text-gray-800"
                   }`}
@@ -129,7 +133,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           eligibilityCriteria={data?.eligibilityCriteria || []}
         />
       </div>
-      <div>
+      <div id="Scholarship Success Chances">
         <ScholarshipSuccessChances />
       </div>
 

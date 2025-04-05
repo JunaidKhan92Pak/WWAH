@@ -147,14 +147,14 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
           </div>
 
           {/* Right Section: Show Image or Document Details */}
-          <div className="items-center justify-center rounded-3xl shadow-lg h-full block p-6 bg-red-50">
+          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full p-6 bg-red-50 min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]">
             {selectedDoc ? (
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">
+              <div className="text-center px-4 sm:px-8 lg:px-16">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
                   {selectedDoc.name} Details
                 </h3>
                 <p
-                  className="text-gray-700 mt-2"
+                  className="text-gray-700 mt-2 text-sm sm:text-base lg:text-lg"
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(selectedDoc.detail),
                   }}
@@ -164,7 +164,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
               <Image
                 src="/scholarshipdetail/illustration.png"
                 alt="Illustration"
-                className="w-full h-full object-cover rounded-3xl"
+                className="w-full h-auto object-cover rounded-3xl"
                 width={500}
                 height={500}
               />

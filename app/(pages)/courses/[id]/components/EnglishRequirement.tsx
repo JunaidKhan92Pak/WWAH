@@ -20,13 +20,13 @@ export const EnglishRequirement: React.FC<EnglishRequirementProps> = ({
       description: `${data.required_ielts_score}`,
     },
     {
-      name: "TOEFL iBET",
-      link: "pte",
+      name: "TOEFL iBT",
+      link: "toefl",
       description: `${data.required_toefl_score}`,
     },
     {
       name: "PTE",
-      link: "toefl",
+      link: "pte",
       description: `${data.required_pte_score}`,
     },
   ];
