@@ -49,15 +49,15 @@ const Hero: React.FC<HeroProps> = ({
             backgroundImage: "url('/scholarshipdetail/scholarshipdetail.png')",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 justify-items-center px-4 sm:px-6 py-4 md:py-8 sm:py-12  relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 justify-items-center px-4 sm:px-6 py-4 md:py-8 sm:py-12  relative z-10 w-full">
             {/* Left Section */}
             <div className="w-[90%] flex flex-col justify-center items-center text-center md:text-left">
               <h2 className="text-white md:leading-10 lg:leading-12">{name}</h2>
             </div>
 
             {/* Right Section */}
-            <div className="w-[95%]  md:w-[90%] lg:w-[65%] xl:w-[50%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
-              <p className="text-white w-4/5">
+            <div className="w-[95%]  md:w-[90%] lg:w-[50%] xl:w-[50%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
+              <p className="text-white w-full">
                 Book Your Online Video Counselling Session with WWAH Advisor!
               </p>
               <div className="flex items-center w-[50%] my-2">
@@ -65,7 +65,7 @@ const Hero: React.FC<HeroProps> = ({
                 <p className="mx-4 text-white">Or</p>
                 <div className="flex-1 border-t border-gray-100"></div>
               </div>
-              <Link href="/contactus">
+              <Link href="/dashboard">
                 <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
                   Apply Now
                 </Button>

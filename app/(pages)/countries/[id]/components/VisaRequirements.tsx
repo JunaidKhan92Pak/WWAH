@@ -6,11 +6,13 @@ import Image from "next/image";
 interface VisaRequirementsProps {
   visaRequirements: string[];
   countryName: string;
+  country: { short_name: string };
 }
 
 export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
   visaRequirements,
   countryName,
+  country,
 }) => {
   interface requiremtProps {
     id: number;
@@ -73,6 +75,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
                   <div className="flex items-center space-x-3 ">
                     <Image
                       src={requirement.src}
+                      // src={`/countryarchive/${country.short_name}_visa.png`}
                       alt={requirement.content}
                       className="rounded-lg  w-10 h-10"
                       width={10}
@@ -90,7 +93,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
             <div
               className=" relative   text-white rounded-3xl bg-cover flex overflow-hidden shadow-lg"
               style={{
-                backgroundImage: "url('/studyuk.png')",
+                backgroundImage: `url('/countryarchive/${country.short_name}_visa.png')`,
                 height: "100%",
               }}
             >
@@ -110,7 +113,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
                   {/* Button */}
                   <div className="w-full flex items-center justify-center">
                     <Link href="/visaguide">
-                      <Button className="bg-red-700 2xl:w-60 2xl:h-35 2xl:py-10 2xl:text-[30px]">
+                      <Button className="bg-red-700 2xl:w-60 2xl:h-35 2xl:py-10 2xl:text-[30px] hover:bg-red-800">
                         Find out More
                       </Button>
                     </Link>

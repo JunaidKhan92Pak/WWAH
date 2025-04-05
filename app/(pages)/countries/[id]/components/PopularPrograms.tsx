@@ -45,7 +45,10 @@ const data = [
   },
 ];
 
-const PopularPrograms: React.FC<PopularProgramsProps> = ({ country  , countryName} )  => {
+const PopularPrograms: React.FC<PopularProgramsProps> = ({
+  country,
+  countryName,
+}) => {
   const arr1 = [
     {
       icon: "/Suitcasesvg.svg",
@@ -56,11 +59,12 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({ country  , countryNam
       caption: `${country?.[0]}`,
     },
     {
-      icon: "/Laptopsvg.svg",
+      icon: "/solarbroken.svg",
+
       caption: `${country?.[1]}`,
     },
     {
-      icon: "/solarbroken.svg",
+      icon: "/Laptopsvg.svg",
       caption: `${country?.[2]}`,
     },
     {

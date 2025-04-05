@@ -141,6 +141,7 @@ export default function Countrypage({
       <VisaRequirements
         visaRequirements={country.visa_requirements || []}
         countryName={country.country_name}
+        country={{ short_name: country.short_name }}
       />
       <AccomodationOptions accomodation={country?.accomodation_options} />
       <AccCrousel

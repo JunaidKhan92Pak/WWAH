@@ -110,7 +110,7 @@ const StudyInUk = ({ countryName }: StudyInUkProps) => {
             ))}
           </div>
           <Link href="/Universities">
-            <Button className="bg-red-700 mt-3">
+            <Button className="bg-red-700 mt-3 hover:bg-red-800">
               Explore All Universities
             </Button>
           </Link>
