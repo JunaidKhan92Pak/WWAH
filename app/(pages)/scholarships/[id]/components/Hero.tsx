@@ -49,27 +49,38 @@ const Hero: React.FC<HeroProps> = ({
             backgroundImage: "url('/scholarshipdetail/scholarshipdetail.png')",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 justify-items-center px-4 sm:px-6 py-4 md:py-8 sm:py-12  relative z-10 w-full">
-            {/* Left Section */}
-            <div className="w-[90%] flex flex-col justify-center items-center text-center md:text-left">
-              <h2 className="text-white md:leading-10 lg:leading-12">{name}</h2>
-            </div>
-
-            {/* Right Section */}
-            <div className="w-[95%]  md:w-[90%] lg:w-[50%] xl:w-[50%] 2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
-              <p className="text-white w-full">
-                Book Your Online Video Counselling Session with WWAH Advisor!
-              </p>
-              <div className="flex items-center w-[50%] my-2">
-                <div className="flex-1 border-t border-gray-100"></div>
-                <p className="mx-4 text-white">Or</p>
-                <div className="flex-1 border-t border-gray-100"></div>
+          <div className="relative w-[95%] sm:w-[85%] mx-auto rounded-3xl overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center">
+            {/* Wrapper to center content and control layout */}
+            <div className="flex flex-col md:flex-row w-full justify-between items-center gap-6">
+              {/* Left Section */}
+              <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start text-center md:text-left">
+                <h2 className="text-white md:leading-10 lg:leading-12">
+                  {name}
+                </h2>
               </div>
-              <Link href="/dashboard">
-                <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
-                  Apply Now
-                </Button>
-              </Link>
+
+              {/* Right Section */}
+              <div className="w-full md:w-[43%]  bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
+                <Link
+                  href="/schedulesession"
+                  className="[text-align:-webkit-center]"
+                >
+                  <p className="text-white w-4/5 hover:underline">
+                    Book Your Online Video Counselling Session with WWAH
+                    Advisor!
+                  </p>
+                </Link>
+                <div className="flex items-center w-[50%] my-2">
+                  <div className="flex-1 border-t border-gray-100"></div>
+                  <p className="mx-4 text-white">Or</p>
+                  <div className="flex-1 border-t border-gray-100"></div>
+                </div>
+                <Link href="/contactus">
+                  <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md text-white rounded-lg hover:bg-gray-300 transition duration-300">
+                    Apply Now
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

@@ -12,6 +12,7 @@ interface Step {
   icon: string;
   alt: string;
   text: string;
+  link?: string;
 }
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
       icon: "/Shield-User--Streamline-Solar-Broken.png",
       alt: "Calendar Icon",
       text: "1. Create a Pearson PTE Account",
+      link: "https://www.pearsonpte.com/",
     },
     {
       icon: "/Login--Streamline-Solar-Broken.png",

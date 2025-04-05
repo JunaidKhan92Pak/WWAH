@@ -213,14 +213,14 @@ function Page() {
             {/* Hero Content */}
             <div className="hero-content space-y-8 ">
               <div className="space-y-8">
-                <h1 className=" text-white">
+                <h1 className=" text-white leading-snug">
                   Hello! <em>Zeus</em> Here!
                   <br />
                   How can I Help You?
                 </h1>
                 <div className="HeroRightSide relative block lg:hidden">
                   <Image
-                    src="/Hero_Robot.png"
+                    src="/Hero_Robot.svg"
                     alt="Robot"
                     width={499}
                     height={633}
@@ -313,7 +313,7 @@ function Page() {
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[600px] hidden lg:block">
             <Image
-              src="/Hero_Robot.png"
+              src="/Hero_Robot.svg"
               alt="Robot"
               width={499}
               height={633}
@@ -501,7 +501,7 @@ function Page() {
                     />
                     <DialogHeader>
                       <DialogTitle className="text-lg font-semibold text-gray-900">
-                        The mobile app is coming soon!
+                        The WWAH mobile app is coming soon!
                       </DialogTitle>
                     </DialogHeader>
                   </DialogContent>

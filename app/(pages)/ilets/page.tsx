@@ -14,6 +14,7 @@ interface Step {
   icon: string;
   alt: string;
   text: string;
+  link?: string;
 }
 
 export default function Home() {
@@ -42,6 +43,7 @@ export default function Home() {
       icon: "/Clipboard.png",
       alt: "Clipboard Icon",
       text: "2. Register Online",
+      link: "https://ielts.org/take-a-test/booking-your-test",
     },
     {
       icon: "/Shield-User.png",
@@ -230,13 +232,35 @@ export default function Home() {
 
           {/* IELTS Offline Content */}
           <TabsContent value="offline" className="mt-4">
-            <p>
-              Paper based IELTS Conducted on paper at an official IELTS test
-              center. It Typically offers fewer test dates compared to the
-              computer-delivered format. It is Suitable for candidates who
-              prefer writing by hand. Results are generally available within 13
-              days after the test.
-            </p>
+            <section className="parentdiv w-[90%] mx-auto flex flex-col lg:flex-row items-center justify-center gap-8">
+              {/* Text Div */}
+              <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] p-6 shadow-2xl rounded-3xl flex flex-col">
+                <div className="w-full flex flex-col">
+                  <h6 className="text-[#313131] w-full">
+                    IELTS Offline:
+                  </h6>
+                  <p className="mt-2 lg:mt-6">
+                    Paper based IELTS Conducted on paper at an official IELTS
+                    test center. It Typically offers fewer test dates compared
+                    to the computer-delivered format. It is Suitable for
+                    candidates who prefer writing by hand. Results are generally
+                    available within 13 days after the test.
+                  </p>
+                 
+                </div>
+              </div>
+
+              {/* Image Div */}
+              <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] relative shadow-2xl rounded-3xl overflow-hidden">
+                <Image
+                  src="/girl.png"
+                  alt="Image representing IELTS"
+                  width={500}
+                  height={20}
+                  className="rounded-3xl w-full h-full object-cover"
+                />
+              </div>
+            </section>
           </TabsContent>
         </Tabs>
       </div>

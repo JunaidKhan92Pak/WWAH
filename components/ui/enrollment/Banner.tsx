@@ -16,7 +16,7 @@ export default function Banner({
   backgroundImage,
 }: BannerProps) {
   return (
-    <section className="relative w-full h-auto mt-10 flex items-center justify-center px-4 sm:px-8 md:px-12">
+    <section className="relative w-full h-auto mt-6  flex items-center justify-center px-4 sm:px-8 md:px-12">
       <div className="flex w-full items-center justify-center">
         {/* Background Image */}
         <div className="absolute top-0 left-0 w-full h-full z-0">
@@ -31,7 +31,7 @@ export default function Banner({
         <div className="absolute inset-0 bg-[#FCE7D2] opacity-80 z-0"></div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center w-full gap-4 sm:flex-row sm:justify-between  my-4 sm:my-10 ">
+        <div className="relative z-10 flex flex-col items-center w-full gap-4 sm:flex-row sm:justify-between  my-4 sm:my-6 leading-tight ">
           {/* Left Side - Text */}
           <div className="w-full text-center sm:text-left sm:w-[65%] lg:w-[50%]">
             <h5 className="font-semibold">

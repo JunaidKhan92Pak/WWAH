@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface Step {
   icon: string;
   alt: string;
   text: string;
+  link?: string;
 }
 
 interface RegistrationProps {
@@ -23,7 +25,7 @@ export default function Registration({
     <section className="relative bg-black h-auto flex flex-col lg:flex-row items-center justify-center mt-12">
       {/* Background Image */}
       {/* <div className="absolute inset-0 z-0"> */}
-        {/* <Image
+      {/* <Image
           src="/bg-usa.png"
           alt="Background Image"
           layout="fill"
@@ -41,7 +43,7 @@ export default function Registration({
             {title}
           </h4>
           <ol className="mt-2 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full">
-            {steps.map((step, index) => (
+            {/* {steps.map((step, index) => (
               <li key={index} className="flex items-center">
                 <Image
                   src={step.icon}
@@ -54,6 +56,26 @@ export default function Registration({
                   {step.text}
                 </span>
               </li>
+            ))} */}
+            {steps.map((step, index) => (
+              <div key={index} className="step-item flex items-center">
+                <Image
+                  src={step.icon}
+                  alt={step.alt}
+                  width={30}
+                  height={30}
+                  className="mr-4"
+                />
+                {step.link ? (
+                  <Link href={step.link}>
+                    <p className="text-link cursor-pointer text-[#DD7378]  hover:underline">
+                      {step.text}
+                    </p>
+                  </Link>
+                ) : (
+                  <p className="text-[#9D9D9D]">{step.text}</p>
+                )}
+              </div>
             ))}
           </ol>
         </div>
@@ -70,7 +92,8 @@ export default function Registration({
               return (
                 <>
                   <span className="text-[#DD7378]">${part.split(" ")[0]}</span>
-                  {part.substring(part.split(" ")[0].length)} {/* Remainder of the sentence */}
+                  {part.substring(part.split(" ")[0].length)}{" "}
+                  {/* Remainder of the sentence */}
                 </>
               );
             })}

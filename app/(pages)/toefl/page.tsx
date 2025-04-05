@@ -12,6 +12,7 @@ interface Step {
   icon: string;
   alt: string;
   text: string;
+  link?: string;
 }
 
 export default function Home() {
@@ -31,6 +32,7 @@ export default function Home() {
       icon: "/Shield-User--Streamline-Solar-Broken.png",
       alt: "Calendar Icon",
       text: "1. Create an ETS Account",
+      link: "https://www.ets.org/toefl.html",
     },
     {
       icon: "/Login--Streamline-Solar-Broken.png",
@@ -42,7 +44,7 @@ export default function Home() {
       alt: "Shield Icon",
       text: "3. Pick a Test Date and Time",
     },
-   
+
     {
       icon: "/Archive.png",
       alt: "Dollar Icon",
