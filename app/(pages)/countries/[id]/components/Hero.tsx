@@ -70,7 +70,7 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
     {
       img: "/countrypage/code.svg",
       Heading: "Dialing Codes",
-      Name: `${country.dialing_code}`,
+      Name: `+${country.dialing_code}`,
     },
     {
       img: "/countrypage/gdp.svg",
@@ -89,7 +89,7 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
           backgroundImage: `url('/countryarchive/${country.short_name}_banner.png')`,
         }}
       >
-        <div className="absolute bg-black bg-opacity-50 w-full h-full"></div>
+        <div className="absolute bg-black bg-opacity-50 w-full h-full rounded-2xl"></div>
         <div className="z-10 w-4/5 text-left my-5">
           <div className="flex items-center gap-2 md:gap-5">
             <Image

@@ -30,7 +30,7 @@ const images = [
   { src: "/australia.png", name: "Australia", alt: "Australia" },
   { src: "/china.png", name: "China", alt: "China" },
   { src: "/canada.png", name: "Canada", alt: "Canada" },
-  { src: "/japan.png", name: "Japan", alt: "Japan" },
+  // { src: "/japan.png", name: "Japan", alt: "Japan" },
   { src: "/ireland.png", name: "Ireland", alt: "Ireland" },
   { src: "/new-zealand.png", name: "New Zealand", alt: "New Zealand" },
   { src: "/france.png", name: "France", alt: "France" },
@@ -182,11 +182,11 @@ const Page = () => {
             </div>
             <div className="w-full mx-auto">
               <p className="text-[#313131] text-justify lg:text-center">
-                Planning your study abroad journey? We&aposv;e made budgeting
-                easy! With our living expense calculator, you can break down
-                your expected costs in no time. Just follow these quick steps to
-                get an accurate snapshot of your monthly expenses for housing,
-                food, transportation, and more.
+                Planning your study abroad journey? We&#39;ve made budgeting easy!
+                With our living expense calculator, you can break down your
+                expected costs in no time. Just follow these quick steps to get
+                an accurate snapshot of your monthly expenses for housing, food,
+                transportation, and more.
               </p>
             </div>
           </div>

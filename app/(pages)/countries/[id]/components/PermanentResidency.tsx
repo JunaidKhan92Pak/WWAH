@@ -11,10 +11,9 @@ interface PermanentResidencyProps {
 const PermanentResidency: React.FC<PermanentResidencyProps> = ({
   residency,
   countryName,
-  country,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const maxLength = 1200;
+  const maxLength = 800;
   // const toggleText = () => {
   //   setIsExpanded((prevState) => !prevState);
   // };
@@ -57,7 +56,8 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({
       {/* Image Section (50%) */}
       <div className="relative z-10 lg:w-1/2 hidden lg:flex justify-center items-center mt-6 lg:mt-0">
         <Image
-          src={`/countryarchive/${country?.short_name}_visa.png`} 
+          // src={`/countryarchive/${country?.short_name}_visa.png`}
+          src="/pr.png"
           alt={`${countryName} Visa`}
           width={600}
           height={600}

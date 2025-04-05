@@ -68,7 +68,7 @@ const Footer = () => {
             >
               <IoMailUnreadOutline />
               <p className="text-sm 2xl:text-base">
-                www.worldwideadmissionshub.com{" "}
+                info@worldwideadmissionshub.com{" "}
               </p>
             </div>
 

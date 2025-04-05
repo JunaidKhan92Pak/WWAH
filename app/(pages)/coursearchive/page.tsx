@@ -36,7 +36,28 @@ const CourseArchive = () => {
     loading,
     fetchCourses,
   } = useCourseStore();
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        console.log("Copied to clipboard successfully!");
+      },
+      (err) => {
+        console.error("Failed to copy to clipboard: ", err);
+      }
+    );
+  };
+
   const [localSearch, setLocalSearch] = useState("");
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  const [showFavorites, setShowFavorites] = useState(false);
+
+  useEffect(() => {
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "{}"
+    );
+    setFavorites(storedFavorites);
+  }, []);
   const handleSearch = useCallback(
     debounce((value: string) => {
       setSearch(value);
@@ -47,6 +68,19 @@ const CourseArchive = () => {
     fetchCourses();
   }, []);
 
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => {
+      const updatedFavorites = { ...prev, [id]: !prev[id] };
+
+      // Store favorites in local storage to persist on refresh
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+
+      return updatedFavorites;
+    });
+  };
+  const displayedCourses = showFavorites
+    ? courses.filter((course) => favorites[course._id])
+    : courses;
   return (
     <section className="w-[95%] mx-auto p-2 ">
       <div className="md:flex items-center">
@@ -93,6 +127,24 @@ const CourseArchive = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* <button
+            onClick={() => setShowFavorites((prev) => !prev)}
+            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
+          >
+            <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
+            {showFavorites ? "Show All" : "Favorites"}
+          </button> */}
+          <button
+            onClick={() => setShowFavorites((prev) => !prev)}
+            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
+          >
+            <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
+            {showFavorites ? "Show All" : "Favorites"}
+          </button>
           <FilterComponent />
         </div>
       </div>
@@ -107,7 +159,7 @@ const CourseArchive = () => {
               No courses Found{" "}
             </p>
           ) : (
-            courses.map((item, idx) => (
+            displayedCourses.map((item, idx) => (
               <div
                 key={idx}
                 className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3 "
@@ -122,9 +174,37 @@ const CourseArchive = () => {
                     sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
                     className="object-cover  rounded-2xl"
                   />
+                  <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
+                    <button onClick={() => copyToClipboard(item._id)}>
+                      <Image
+                        src="/share.svg"
+                        width={20}
+                        height={20}
+                        alt="Share"
+                      />
+                    </button>
+
+                    <button onClick={() => toggleFavorite(item._id)}>
+                      {favorites[item._id] ? (
+                        <Image
+                          src="/redheart.svg"
+                          width={20}
+                          height={20}
+                          alt="Favorite"
+                        />
+                      ) : (
+                        <Image
+                          src="/whiteheart.svg"
+                          width={20}
+                          height={20}
+                          alt="Favorite"
+                        />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <div className="p-4 flex-grow">
-                  <h3 className="text-base md:text-lg font-bold text-gray-800 truncate">
+                  <h3 className="text-base md:text-lg font-bold text-gray-800 truncate hover:underline underline-offset-4">
                     {item?.course_title}
                   </h3>
                   <div className="grid grid-cols-2 gap-x-2 gap-y-4 mt-3">

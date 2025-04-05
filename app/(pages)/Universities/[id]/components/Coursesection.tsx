@@ -109,6 +109,13 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       </option>
                       <option value="Undergraduate">Undergraduate</option>
                       <option value="Postgraduate">Postgraduate</option>
+                      <option value="foundation">Foundation</option>
+                      <option value="Pre-Master">Pre-Master</option>
+                      <option value="Bachelors">Bachelors</option>
+                      <option value="master">Master</option>
+                      <option value="PhD">PhD</option>
+                      <option value="Diploma">Diploma</option>
+                      <option value="Certificate">Certificate</option>
                     </select>
                   </div>
                   {/* choosee by subject */}
@@ -131,6 +138,9 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       </option>
                       <option value="Engineering">Engineering</option>
                       <option value="Business">Business</option>
+                      <option value="Medical">Medical</option>
+                      <option value="Humanities">Art and Humanities</option>
+                      <option value="Social Sciences">Social Sciences</option>
                     </select>
                   </div>
                 </div>
