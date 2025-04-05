@@ -103,12 +103,18 @@ const AccCrousel = ({
                         </div>
 
                         {/* Right Side - Static Text (Bullet Points) */}
-                        <div className="flex flex-col md:w-[45%] xl:w-[70%]">
-                          <ul className="md:text-start text-center text-white list-disc list-inside ">
-                            {slide.list?.map((item, index) => (
-                              <li key={index} className="text-sm md:text-lg">{item.text}</li>
-                            ))}
+                        <div className="flex flex-col  md:w-[50%] xl:w-[72%]">
+                          <ul className="md:text-start text-center text-white list-disc list-inside">
+                            {slide.list?.map(
+                              (item, index) =>
+                                item.text && (
+                                  <li key={index} className="text-sm md:text-lg">
+                                    {item.text}
+                                  </li>
+                                )
+                            )}
                           </ul>
+
                         </div>
                       </div>
                     ) : (
