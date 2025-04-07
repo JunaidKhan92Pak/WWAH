@@ -44,23 +44,28 @@ const Hero: React.FC<HeroProps> = ({
       <section className="mx-auto w-[90%] md:w-[95%] md:mt-4">
         {/* Hero Section */}
         <div
-          className="relative md:h-[80vh] h-[270px] flex justify-center items-center text-center rounded-3xl text-white bg-cover bg-center"
+          className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
           style={{
             backgroundImage: "url('/scholarshipdetail/scholarshipdetail.png')",
           }}
         >
+          <div className="absolute bg-black bg-opacity-50 w-full h-full rounded-2xl"></div>
+
           <div className="relative w-[95%] sm:w-[85%] mx-auto rounded-3xl overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center">
             {/* Wrapper to center content and control layout */}
-            <div className="flex flex-col md:flex-row w-full justify-between items-center gap-6">
+            <div className="flex flex-col md:flex-row w-full justify-between items-center gap-2 md:gap-6">
               {/* Left Section */}
-              <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start text-center md:text-left">
+              <div className="w-full md:w-[50%] flex flex-col justify-center items-start md:items-start text-left">
                 <h2 className="text-white md:leading-10 lg:leading-12">
                   {name}
                 </h2>
               </div>
 
               {/* Right Section */}
-              <div className="w-full md:w-[43%]  bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
+              <div
+                className="w-full md:w-[40%] md:h-4/5 lg:w-[28%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
+py-4 md:py-6 lg:py-8 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0 "
+              >
                 <Link
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"

@@ -40,7 +40,13 @@ interface CourseData {
   career_opportunity_5?: string;
 }
 
-const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: string } }) => {
+const Herosection = ({
+  data,
+  uniData,
+}: {
+  data: CourseData;
+  uniData: { banner: string };
+}) => {
   const arr1 = [
     {
       Image: "/CourseDetailPage/Notebook.svg",
@@ -83,18 +89,22 @@ const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: s
     <div>
       {/* Hero section */}
       <section className="mt-4 ">
-        <div className="w-full mx-auto ">
+        <div className="w-[90%] md:w-[95%] mx-auto ">
           {/* Hero Section */}
           <div
-            className="relative w-[95%] mx-auto rounded-3xl overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center"
+            className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             // style={{ backgroundImage: `url("/dcu-hero-img.png")` }}
-            style={{ backgroundImage: `url(${uniData.banner}  ) `, backgroundSize: "cover" }}
+            style={{
+              backgroundImage: `url(${uniData.banner}  ) `,
+              backgroundSize: "cover",
+            }}
           >
             {/* Black overlay */}
             <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center justify-items-center sm:px-6 md:py-12 py-2 relative z-10">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center justify-items-center sm:px-6 md:py-12 py-2 relative z-10"> */}
+            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center   py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto">
               {/* Left Section */}
-              <div className="w-[90%] flex flex-col items-center md:items-start text-center md:text-left space-y-2 pl-0 lg:pl-12">
+              <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-2 pl-0 lg:pl-12">
                 <Image
                   src="/CourseDetailPage/dcu.svg"
                   alt="Dcu Logo"
@@ -119,7 +129,7 @@ const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: s
                 </div>
               </div>
 
-              <div className="w-[90%] md:w-full lg:w-[75%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
+              {/* <div className="w-[90%] md:w-full lg:w-[75%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
                 <Link
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"
@@ -136,6 +146,31 @@ const Herosection = ({ data, uniData }: { data: CourseData; uniData: { banner: s
                 </div>
                 <Link href="/contactus">
                   <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
+                    Apply Now
+                  </Button>
+                </Link>
+              </div> */}
+              <div
+                className="w-full md:w-4/5 md:h-4/5 lg:w-[50%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
+py-4 md:py-1 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
+              >
+                <Link
+                  href="/schedulesession"
+                  className="[text-align:-webkit-center]"
+                >
+                  <p className="text-white w-4/5 hover:underline">
+                    Book Your Online Video Counselling Session with WWAH
+                    Advisor!
+                  </p>
+                </Link>
+                <div className="flex items-center w-[50%] my-2">
+                  <div className="flex-1 border-t border-gray-100"></div>
+                  <p className="mx-4 text-white">Or</p>
+                  <div className="flex-1 border-t border-gray-100"></div>
+                </div>
+                {/* <Link href="/contactus"> */}
+                <Link href="/dashboard">
+                  <Button className="w-full px-[12vw] md:px-[5vw] md:py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
                     Apply Now
                   </Button>
                 </Link>
