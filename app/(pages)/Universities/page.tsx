@@ -117,7 +117,7 @@ const Page = () => {
     ? universities.filter((uni) => favorites[uni._id])
     : universities;
   console.log(universities, "universities");
- 
+
   return (
     <section className="w-[90%] mx-auto">
       <div className="md:flex md:justify-between py-5 md:pt-10 gap-4">
@@ -210,15 +210,16 @@ const Page = () => {
                   className="bg-white shadow-xl rounded-2xl overflow-hidden p-3"
                 >
                   <div className="relative h-[200px]">
-                    <div className="absolute z-10 top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-lg">
+                    <div className="absolute z-10 top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-xl w-1/2">
                       <p className="text-sm font-medium">
-                        QS World: {item.qs_world_university_ranking || "N/A"}
+                        QS World Ranking:{" "}
+                        {item.qs_world_university_ranking || "N/A"}
                       </p>
                       <p className="text-sm font-semibold">
                         {/* Ranking: {item.times_higher_education_ranking || "N/A"} */}
                       </p>
                     </div>
-  
+
                     {/* Share & Favorite Buttons */}
                     <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
                       <button onClick={() => copyToClipboard(item._id)}>
@@ -276,7 +277,6 @@ const Page = () => {
                       <p className="font-bold hover:underline underline-offset-2">
                         {item.university_name}
                       </p>
-                      
                     </Link>
 
                     <div className="flex justify-between">

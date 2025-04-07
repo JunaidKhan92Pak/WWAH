@@ -18,13 +18,29 @@ const Page = () => {
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "united-kingdom", img: "/ukflag.png" },
-    { name: "Ireland", value: "ireland", img: "/countryarchive/ireland_logo.png" },
+    {
+      name: "Ireland",
+      value: "ireland",
+      img: "/countryarchive/ireland_logo.png",
+    },
     { name: "New Zealand", value: "new-zealand", img: "/nz.png" },
-    { name: "Denmark", value: "denmark", img: "/countryarchive/denmark_logo.png" },
+    {
+      name: "Denmark",
+      value: "denmark",
+      img: "/countryarchive/denmark_logo.png",
+    },
     { name: "France", value: "france", img: "/countryarchive/france_logo.png" },
-    { name: "Australia", value: "australia", img: "/countryarchive/australia_logo.png" },
+    {
+      name: "Australia",
+      value: "australia",
+      img: "/countryarchive/australia_logo.png",
+    },
     { name: "Austria", value: "austria", img: "/austria.svg" },
-    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
+    {
+      name: "Germany",
+      value: "germany",
+      img: "/countryarchive/germany_logo.png",
+    },
     { name: "Portugal", value: "portugal", img: "/portugal.svg" },
     { name: "Poland", value: "poland", img: "/poland.svg" },
     { name: "Norway", value: "norway", img: "/norway.svg" },
@@ -137,7 +153,7 @@ const Page = () => {
     }
   };
 
-    const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
+  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
   const [showFavorites, setShowFavorites] = useState(false);
 
   // const toggleFavorite = (id: string) => {
@@ -147,22 +163,22 @@ const Page = () => {
   //   }));
   // };
 
-   const toggleFavorite = (id: string) => {
-      setFavorites((prev) => {
-        const updatedFavorites = { ...prev, [id]: !prev[id] };
-  
-        // Store favorites in local storage to persist on refresh
-        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-  
-        return updatedFavorites;
-      });
-    };
-    useEffect(() => {
-      const storedFavorites = localStorage.getItem("favorites");
-      if (storedFavorites) {
-        setFavorites(JSON.parse(storedFavorites));
-      }
-    }, []);
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => {
+      const updatedFavorites = { ...prev, [id]: !prev[id] };
+
+      // Store favorites in local storage to persist on refresh
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+
+      return updatedFavorites;
+    });
+  };
+  useEffect(() => {
+    const storedFavorites = localStorage.getItem("favorites");
+    if (storedFavorites) {
+      setFavorites(JSON.parse(storedFavorites));
+    }
+  }, []);
 
   // Filtered list based on "Favorites" button
   const displayedScholarships = showFavorites
@@ -528,16 +544,23 @@ const Page = () => {
               </div>
               <div className="flex items-start justify-start mt-4 md:mt-0">
                 <div className="flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg    ">
-       <button
-                   onClick={() => setShowFavorites((prev) => !prev)}
+                  <button
+                    onClick={() => setShowFavorites((prev) => !prev)}
                     className={`text-sm flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg py-2 px-4   ${
-                     showFavorites ? "text-red-500 font-semibold" : "text-gray-600"
-                   }`}
-                 >
-                   <Image src="/hearti.svg" width={20} height={20} alt="favorites" />
-                   {showFavorites ? "ShowAll" : "Favorites"}
-                 </button>
-      </div>
+                      showFavorites
+                        ? "text-red-500 font-semibold"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    <Image
+                      src="/hearti.svg"
+                      width={20}
+                      height={20}
+                      alt="favorites"
+                    />
+                    {showFavorites ? "ShowAll" : "Favorites"}
+                  </button>
+                </div>
               </div>
             </div>
             {loading ? (
@@ -547,11 +570,16 @@ const Page = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-2">
                   {displayedScholarships.length === 0 ? (
                     <p className="text-[20px] font-semibold col-span-4 text-center p-4">
-                      {showFavorites ? "No Favorite Scholarships Found" : "No Scholarships Found"}
+                      {showFavorites
+                        ? "No Favorite Scholarships Found"
+                        : "No Scholarships Found"}
                     </p>
                   ) : (
                     displayedScholarships.map((item) => (
-                      <div key={item._id} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3">
+                      <div
+                        key={item._id}
+                        className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3"
+                      >
                         <div className="relative w-full">
                           {/* Background Image */}
                           <Image
@@ -564,7 +592,13 @@ const Page = () => {
 
                           {/* Logo Overlay */}
                           <div className="absolute top-8">
-                            <Image src="/unilogo.svg" alt="University Logo" width={180} height={130} className="object-contain" />
+                            <Image
+                              src="/unilogo.svg"
+                              alt="University Logo"
+                              width={180}
+                              height={130}
+                              className="object-contain"
+                            />
                           </div>
 
                           {/* Share & Favorite Buttons */}
@@ -608,12 +642,26 @@ const Page = () => {
                           </p>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                              <Image src={"/location.svg"} alt="location" width={16} height={16} />
-                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">{item.hostCountry}</p>
+                              <Image
+                                src={"/location.svg"}
+                                alt="location"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                                {item.hostCountry}
+                              </p>
                             </div>
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                              <Image src={"/money.svg"} alt="scholarship type" width={16} height={16} />
-                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">{item.scholarshipType}</p>
+                              <Image
+                                src={"/money.svg"}
+                                alt="scholarship type"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                                {item.scholarshipType}
+                              </p>
                             </div>
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
@@ -626,8 +674,15 @@ const Page = () => {
                               </p>
                             </div>
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                              <Image src={"/clock.svg"} alt="deadline" width={16} height={16} />
-                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">{item.deadline}</p>
+                              <Image
+                                src={"/clock.svg"}
+                                alt="deadline"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                                {item.deadline}
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -667,7 +722,9 @@ const Page = () => {
                     >
                       Previous
                     </button>
-                    <span className="text-lg font-semibold text-gray-700">Page {page} of {totalPages}</span>
+                    <span className="text-lg font-semibold text-gray-700">
+                      Page {page} of {totalPages}
+                    </span>
                     <button
                       onClick={handleNext}
                       disabled={page === totalPages}
@@ -679,7 +736,6 @@ const Page = () => {
                 )}
               </>
             )}
-
           </section>
         </div>
       </div>

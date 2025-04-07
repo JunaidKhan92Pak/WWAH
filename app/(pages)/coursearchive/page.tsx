@@ -174,6 +174,16 @@ const CourseArchive = () => {
                     sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
                     className="object-cover  rounded-2xl"
                   />
+                  {/* Logo on the left */}
+                  <div className="absolute bottom-2 left-4">
+                    <Image
+                      src="/logo.svg"
+                      width={56}
+                      height={56}
+                      className="rounded-full bg-white border border-black w-[56px] h-[56px]"
+                      alt="University Logo"
+                    />
+                  </div>
                   <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
                     <button onClick={() => copyToClipboard(item._id)}>
                       <Image
