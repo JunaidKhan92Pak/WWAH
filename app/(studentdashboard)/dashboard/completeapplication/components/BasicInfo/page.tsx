@@ -54,14 +54,25 @@ const BasicInfo = () => {
       hasStudiedAbroad: false,
       countryCode: "+1",
       isFamilyNameEmpty: false,
+      isGivenNameEmpty: false,
     },
   });
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form submitted"); // Check if it logs
-    form.handleSubmit(onSubmit)();
-  };
+    console.log("Form submitted");
 
+    // Check if the form is valid
+    const isValid = await form.trigger();
+    console.log("Form valid?", isValid);
+
+    if (isValid) {
+      form.handleSubmit(onSubmit)();
+    } else {
+      console.log("Form validation failed:", form.formState.errors);
+    }
+
+    console.log("Form submitted after handleSubmit");
+  };
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("jkj");
     try {
@@ -143,6 +154,7 @@ const BasicInfo = () => {
           "countryOfResidence",
           "maritalStatus",
           "religion",
+          "nativeLanguage",
         ]);
       case 2:
         return form.trigger([
@@ -202,9 +214,9 @@ const BasicInfo = () => {
     }
   };
   // Use watch to observe form values
-  // const watchedValues = form.watch();
+  const watchedValues = form.watch();
   // Log watched values dynamically
-  // console.log("Watched Values:", watchedValues);
+  console.log("Watched Values:", watchedValues);
   return (
     <div className="w-[90%] xl:w-[60%] mx-auto mt-4">
       {/* Page Titles */}
@@ -241,7 +253,7 @@ const BasicInfo = () => {
           {/* Page 1: Personal Information */}
           {currentPage === 1 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-end my-4">
-              {/* familyName */}
+              {/*  Family Name field  */}
               <FormField
                 control={form.control}
                 name="familyName"
@@ -259,9 +271,12 @@ const BasicInfo = () => {
                             checked={checkboxField.value}
                             onCheckedChange={(checked) => {
                               checkboxField.onChange(checked);
-                              if (checked) {
-                                form.setValue("familyName", "");
-                              }
+                              // When checkbox is checked, set familyName to empty string
+                              // When unchecked, keep the current value or set to empty string
+                              form.setValue(
+                                "familyName",
+                                checked === true ? "" : field.value || ""
+                              );
                             }}
                           />
                           <label
@@ -280,7 +295,11 @@ const BasicInfo = () => {
                           type="text"
                           placeholder="Enter Family Name"
                           className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm pl-10"
-                          {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                           disabled={form.watch("isFamilyNameEmpty")}
                         />
                         <span className="absolute left-3 top-1/2 -translate-y-1/2">
@@ -298,20 +317,52 @@ const BasicInfo = () => {
                   </FormItem>
                 )}
               />
-              {/* givenName */}
+              {/*  Given Name field  */}
               <FormField
                 control={form.control}
                 name="givenName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Given Name (As per your Passport):</FormLabel>
+                    <FormField
+                      control={form.control}
+                      name="isGivenNameEmpty"
+                      render={({ field: checkboxField }) => (
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id="isGivenNameEmpty"
+                            checked={checkboxField.value}
+                            onCheckedChange={(checked) => {
+                              checkboxField.onChange(checked);
+                              // When checkbox is checked, set givenName to empty string
+                              // When unchecked, keep the current value or set to empty string
+                              form.setValue(
+                                "givenName",
+                                checked === true ? "" : field.value || ""
+                              );
+                            }}
+                          />
+                          <label
+                            htmlFor="isGivenNameEmpty"
+                            className="text-sm text-gray-600 cursor-pointer"
+                          >
+                            The Given name in the passport is empty.
+                          </label>
+                        </div>
+                      )}
+                    />
                     <FormControl>
                       <div className="relative w-full">
                         <Input
                           type="text"
                           placeholder="Enter Given Name"
                           className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm pl-10"
-                          {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                          disabled={form.watch("isGivenNameEmpty")}
                         />
                         <span className="absolute left-3 top-1/2 -translate-y-1/2">
                           <Image
@@ -364,15 +415,6 @@ const BasicInfo = () => {
                     <FormControl>
                       <Input
                         type="date"
-                        // value={
-                        //   field.value ? format(field.value, "yyyy-MM-dd") : ""
-                        // }
-                        // onChange={(e) => {
-                        //   const date = e.target.value
-                        //     ? new Date(e.target.value)
-                        //     : undefined;
-                        //   field.onChange(date);
-                        // }}
                         value={
                           field.value
                             ? format(new Date(field.value), "yyyy-MM-dd")
@@ -488,7 +530,6 @@ const BasicInfo = () => {
                   </FormItem>
                 )}
               />
-              {/* religion */}
               <FormField
                 control={form.control}
                 name="religion"
@@ -498,9 +539,36 @@ const BasicInfo = () => {
                     <FormControl>
                       <Input
                         type="text"
+                        value={field.value || ""} // Use empty string if undefined
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         placeholder="Write..."
                         className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="nativeLanguage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Native Language</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        value={field.value || ""} // Use empty string if undefined
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                        placeholder="Write..."
+                        className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                       />
                     </FormControl>
                     <FormMessage />
@@ -519,7 +587,7 @@ const BasicInfo = () => {
           {currentPage === 7 && <FamilyMembers form={form} />}
 
           {/* Navigation and Submit */}
-          <div className="mt-6 flex justify-between">
+          {/* <div className="mt-6 flex justify-between">
             {currentPage === totalPages ? (
               <Button type="submit" className="ml-auto" disabled={isSubmitting}>
                 {isSubmitting ? "Saving..." : "Save and Continue"}
@@ -566,6 +634,51 @@ const BasicInfo = () => {
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
+            )}
+          </div> */}
+          <div className="mt-6 flex justify-between">
+            <Pagination>
+              <PaginationContent className="flex justify-center mt-4 gap-4 items-center">
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage((prev) => Math.max(prev - 1, 1));
+                    }}
+                    className={`p-2 text-sm ${
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }`}
+                  >
+                    Previous
+                  </PaginationPrevious>
+                </PaginationItem>
+
+                <span className="px-4 py-2 text-sm font-semibold rounded-lg border">
+                  {currentPage} of {totalPages}
+                </span>
+
+                {currentPage !== totalPages && (
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNextPage();
+                      }}
+                      className="p-2 text-sm"
+                    >
+                      Next
+                    </PaginationNext>
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+
+            {currentPage === totalPages && (
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save and Continue"}
+              </Button>
             )}
           </div>
         </form>

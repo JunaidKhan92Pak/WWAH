@@ -163,14 +163,14 @@ const FinancialSponsorInformation = ({
         />
 
         {/* Phone Number */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="sponsorsPhoneNo"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Phone No.</FormLabel>
               <div className="flex gap-2">
-                {/* Country Code Dropdown - Removed Nested FormField */}
+              
                 <Select
                   value={form.watch("sponsorsCountryCode") || "+92"}
                   onValueChange={(value) =>
@@ -220,11 +220,78 @@ const FinancialSponsorInformation = ({
                   </SelectContent>
                 </Select>
 
-                {/* Phone Number Input */}
+           
                 <Input
                   {...field}
                   placeholder="Enter your phone number"
                   className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm"
+                />
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+        <FormField
+          control={form.control}
+          name="sponsorsPhoneNo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone No.</FormLabel>
+              <div className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name="sponsorsCountryCode"
+                  render={({ field: countryCodeField }) => (
+                    <Select
+                      value={countryCodeField.value || "+92"}
+                      onValueChange={countryCodeField.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
+                          <SelectValue>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={
+                                  countries.find(
+                                    (c) =>
+                                      c.code ===
+                                      (countryCodeField.value || "+92")
+                                  )?.flag || "/default-flag.png"
+                                }
+                                alt="Country Flag"
+                                width={20}
+                                height={20}
+                              />
+                              <span className="text-sm">
+                                {countryCodeField.value || "+92"}
+                              </span>
+                            </div>
+                          </SelectValue>
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={country.flag}
+                                alt={`${country.name} Flag`}
+                                width={20}
+                                height={20}
+                              />
+                              <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <Input
+                  {...field}
+                  value={field.value || ""}
+                  placeholder="Enter your phone number"
+                  className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
                 />
               </div>
               <FormMessage />

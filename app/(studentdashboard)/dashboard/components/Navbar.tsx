@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export function Navbar() {
   return (
-    <nav className=" border-b h-16 flex items-center px-2 sm:px-6 justify-between bg-white">
+    <nav className="  h-16 flex items-center px-2 sm:px-6 justify-between bg-white">
       <div className="flex items-center gap-4">
         <MobileNav />
         {/* Logo */}

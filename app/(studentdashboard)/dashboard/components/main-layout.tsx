@@ -15,7 +15,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         >
           <Sidebar />
         </aside>
-        <main className="flex-1 overflow-y-auto my-2">{children}</main>
+        <main className="flex-1 overflow-y-auto mb-2">{children}</main>
       </div>
     </div>
   );
