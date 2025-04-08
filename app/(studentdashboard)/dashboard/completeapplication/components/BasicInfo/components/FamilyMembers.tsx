@@ -1,6 +1,4 @@
-
 "use client";
-
 import { useFieldArray } from "react-hook-form";
 import {
   FormControl,
@@ -21,19 +19,16 @@ import { Button } from "@/components/ui/button";
 import { countries } from "@/lib/countries";
 import { Plus, Trash } from "lucide-react";
 // import Image from "next/image";
-
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "./Schema";
-
+import Image from "next/image";
 type FormValues = z.infer<typeof formSchema>;
-
 const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
   const { fields, append, remove } = useFieldArray({
     name: "familyMembers",
     control: form.control, // ✅ Using parent form control
   });
-
   return (
     <div className="my-4">
       {fields.map((field, index) => (
@@ -148,13 +143,70 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
             {/* Phone Number */}
             <FormField
               control={form.control}
-              name={`familyMembers.${index}.phoneNo`}
+              name="phoneNo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone No.</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter Phone Number" {...field} />
-                  </FormControl>
+                  <div className="flex gap-2">
+                    <FormField
+                      control={form.control}
+                      name="countryCode"
+                      render={({ field: countryCodeField }) => (
+                        <Select
+                          value={countryCodeField.value || "+92"}
+                          onValueChange={countryCodeField.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
+                              <SelectValue>
+                                <div className="flex items-center gap-2">
+                                  <Image
+                                    src={
+                                      countries.find(
+                                        (c) =>
+                                          c.code ===
+                                          (countryCodeField.value || "+92")
+                                      )?.flag || "/default-flag.png"
+                                    }
+                                    alt="Country Flag"
+                                    width={20}
+                                    height={20}
+                                  />
+                                  <span className="text-sm">
+                                    {countryCodeField.value || "+92"}
+                                  </span>
+                                </div>
+                              </SelectValue>
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {countries.map((country) => (
+                              <SelectItem
+                                key={country.code}
+                                value={country.code}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <Image
+                                    src={country.flag}
+                                    alt={`${country.name} Flag`}
+                                    width={20}
+                                    height={20}
+                                  />
+                                  <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      placeholder="Enter your phone number"
+                      className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
+                    />
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -177,6 +229,7 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
               nationality: "",
               occupation: "",
               email: "",
+              countryCode: "",
               phoneNo: "",
             })
           }
@@ -187,5 +240,5 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
       </div>
     </div>
   );
-}
+};
 export default StandardizedTest;

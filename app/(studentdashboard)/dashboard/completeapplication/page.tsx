@@ -25,12 +25,12 @@ const Page = () => {
     <>
       <div className="w-[98%] mx-auto ">
         {/* <h5 className="text-center font-bold lg:mb-10">Complete your Application</h5> */}
-        <div className="w-full lg:w-[95%] flex overflow-x-auto scrollbar-hide border-b border-gray-200">
+        <div className="w-full  flex overflow-x-auto scrollbar-hide ">
           {tabs.map((tab) => (
             <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`transition md:w-1/4 px-4 font-semibold text-sm sm:text-base py-4 border-b sm:border-0 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
+              className={`transition md:w-1/4 px-4 font-semibold text-sm sm:text-base py-4  rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
                         ${
                           activeTab === tab.id
                             ? "bg-[#C7161E] text-white"

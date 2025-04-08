@@ -123,7 +123,7 @@ export function Sidebar() {
             onClick={handleLogout}
           >
             <ArrowLeftToLine size={16} className="mr-2" />
-            Logout             
+            Logout
           </Button>
         </div>
       </div>

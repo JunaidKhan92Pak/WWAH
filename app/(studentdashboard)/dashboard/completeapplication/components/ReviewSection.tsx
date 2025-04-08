@@ -129,7 +129,10 @@ export default function ReviewPage() {
       familyName: `${data1?.familyName}`,
       givenName: `${data1?.givenName}`,
       nationality: `${data1?.nationality}`,
-      dateOfBirth: `${data1?.DOB}`,
+      // dateOfBirth: `${data1?.DOB}`,
+      dateOfBirth: data1?.DOB
+        ? new Date(data1.DOB).toLocaleDateString("en-GB")
+        : "N/A",
       countryOfResidence: `${data1?.countryOfResidence}`,
       gender: `${data1?.gender}`,
       maritalStatus: `${data1?.maritalStatus}`,
@@ -155,15 +158,21 @@ export default function ReviewPage() {
     },
     passportInfo: {
       passportNumber: `${data1?.passportNumber}`,
-      passportExpiryDate: `${data1?.passportExpiryDate}`,
+      passportExpiryDate: data1?.passportExpiryDate
+        ? new Date(data1.passportExpiryDate).toLocaleDateString("en-GB")
+        : "N/A",
       oldPassportNumber: `${data1?.oldPassportNumber}`,
-      oldPassportExpiryDate: `${data1?.oldPassportExpiryDate}`,
+      oldPassportExpiryDate: data1?.oldPassportExpiryDate
+        ? new Date(data1.oldPassportExpiryDate).toLocaleDateString("en-GB")
+        : "N/A",
     },
     learningExperienceAbroad: {
       countryName: `${data1?.visitedCountry}`,
       institutionAttended: `${data1?.institution}`,
       visaType: `${data1?.visaType}`,
-      visaExpiryDate: `${data1?.visaExpiryDate}`,
+      visaExpiryDate: data1?.visaExpiryDate
+        ? new Date(data1.visaExpiryDate).toLocaleDateString("en-GB")
+        : "N/A",
       durationOfStudy: `${data1?.durationOfStudyAbroad}`,
     },
     financialSponsorInfo: {
@@ -304,13 +313,18 @@ export default function ReviewPage() {
 
               {/* Degree Start Date */}
               <p className="text-sm text-muted-foreground">Degree Start Date</p>
-              <p className="font-medium">{education.degreeStartDate}</p>
+
+              <p className="font-medium">
+                {new Date(education.degreeStartDate).toLocaleDateString()}
+              </p>
 
               {/* Degree Completion Date */}
               <p className="text-sm text-muted-foreground">
                 Degree Completion Date
               </p>
-              <p className="font-medium">{education.degreeEndDate}</p>
+              <p className="font-medium">
+                {new Date(education.degreeEndDate).toLocaleDateString()}
+              </p>
 
               {/* Divider */}
               <hr className="col-span-2" />
@@ -344,11 +358,16 @@ export default function ReviewPage() {
 
               {/* Date From */}
               <p className="text-sm text-muted-foreground">Start Date</p>
-              <p className="font-medium">{experience.from}</p>
+
+              <p className="font-medium">
+                {new Date(experience.from).toLocaleDateString()}
+              </p>
 
               {/* Date To */}
               <p className="text-sm text-muted-foreground">End Date</p>
-              <p className="font-medium">{experience.to}</p>
+              <p className="font-medium">
+                {new Date(experience.to).toLocaleDateString()}
+              </p>
 
               {/* Divider */}
               <hr className="col-span-2" />

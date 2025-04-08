@@ -8,11 +8,7 @@ export const formSchema = z.object({
   gender: z.enum(["Male", "Female", "Other", "Prefer not to say"], {
     required_error: "Please select your gender.",
   }),
-  DOB: z
-    .date()
-    .refine((date) => date >= new Date("1900-01-01") && date <= new Date(), {
-      message: "Please enter a valid date of birth.",
-    }),
+  DOB: z.date().optional(),
   nationality: z.string().nonempty("Please select your nationality."),
   countryOfResidence: z
     .string()
@@ -24,7 +20,7 @@ export const formSchema = z.object({
     }
   ),
   religion: z.string().optional(),
-
+  nativeLanguage: z.string().optional(),
   // Contact Details
   homeAddress: z.string().optional(),
   detailedAddress: z.string().optional(),
@@ -97,6 +93,7 @@ export const formSchema = z.object({
 
   // Form control flags
   isFamilyNameEmpty: z.boolean().optional(),
+  isGivenNameEmpty: z.boolean().optional(),
 });
 
 // Type for use in components
