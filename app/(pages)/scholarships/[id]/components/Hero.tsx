@@ -44,7 +44,7 @@ const Hero: React.FC<HeroProps> = ({
       <section className="mx-auto w-[90%] md:w-[95%] md:mt-4">
         {/* Hero Section */}
         <div
-          className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
+          className="relative min-h-[250px] sm:min-h-[400px] flex justify-center items-center text-center rounded-3xl text-white bg-cover bg-center"
           style={{
             backgroundImage: "url('/scholarshipdetail/scholarshipdetail.png')",
           }}
@@ -62,10 +62,7 @@ const Hero: React.FC<HeroProps> = ({
               </div>
 
               {/* Right Section */}
-              <div
-                className="w-full md:w-[40%] md:h-4/5 lg:w-[28%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
-py-4 md:py-6 lg:py-8 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0 "
-              >
+              <div className="w-full md:w-[45%] lg:w-[33%]  bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
                 <Link
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"
@@ -100,7 +97,7 @@ py-4 md:py-6 lg:py-8 2xl:py-6 flex flex-col justify-center items-center text-cen
             {scholarshipArr.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center lg:justify-between p-1 w-full h-28 sm:h-36 md:h-32 2xl:h-[200px] bg-white py-1 rounded-lg text-center"
+                className="flex flex-col items-center lg:justify-between p-1 w-full h-28 sm:h-36 md:h-32  bg-white py-1 rounded-lg text-center"
               >
                 {/* Icon Wrapper */}
                 <div className="bg-[#FEE7D1] flex items-center justify-center rounded-lg">
@@ -109,15 +106,15 @@ py-4 md:py-6 lg:py-8 2xl:py-6 flex flex-col justify-center items-center text-cen
                     alt={item.Heading}
                     width={120} // Adjusted for better scaling
                     height={160}
-                    className="object-contain 2xl:w-16 2xl:h-16"
+                    className="object-contain"
                   />
                 </div>
                 {/* Text Content */}
                 <div className="mt-4 flex flex-col justify-center items-center">
-                  <p className="font-bold text-[10px] sm:text-[12px] 2xl:text-2xl">
+                  <p className="font-bold text-[10px] sm:text-[12px] 2xl:text-base">
                     {item.Heading}
                   </p>
-                  <p className="text-gray-600 text-[10px] sm:text-[12px] 2xl:text-2xl">
+                  <p className="text-gray-600 text-[10px] sm:text-[12px] 2xl:text-base">
                     {item.Name}
                   </p>
                 </div>

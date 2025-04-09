@@ -173,7 +173,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
             </form>
           </div>
           {/* Right Side: Image */}
-          <div className="relative rounded-3xl overflow-hidden shadow-lg w-[100%] h-[250px] md:h-[200px] lg:h-[300px]  2xl:h-[600px]">
+          <div className="relative rounded-3xl overflow-hidden shadow-lg w-[100%] h-[250px] md:h-[200px] lg:h-[300px]  2xl:h-[400px]">
             <Image
               src="/Hero_Robot.png" // Replace with actual image path
               alt="Zeus Guide"

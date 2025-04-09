@@ -80,7 +80,7 @@ export const ScholarshipSuccessChances = () => {
     //         </div>
     //     </div>
     // </section>
-    <section className="md:my-4 min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
+    <section className="md:my-4 flex flex-col items-center justify-center p-4 sm:p-6">
       <h3 className="">Scholarship Success Chances!</h3>
       <p className="text-gray-600 mb-2">
         Your scholarship success chances are:

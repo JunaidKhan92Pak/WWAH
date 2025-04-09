@@ -263,7 +263,7 @@ input::placeholder {
   }
 }
 /* 2XL screens (extra extra large screens) */
-@media (min-width: 1536px) {
+/* @media (min-width: 1536px) {
   h1 {
     font-size: 3rem;
   }
@@ -291,7 +291,7 @@ input::placeholder {
   ::placeholder {
     font-size: 1.2rem;
   }
-}
+} */
 
 @layer base {
   * {

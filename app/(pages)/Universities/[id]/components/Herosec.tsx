@@ -70,7 +70,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
         <div>
           <div
             // className="relative md:h-[80vh] h-[95%] flex justify-center items-center text-center rounded-2xl text-white sm:bg-cover sm:bg-center"
-            className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
+            className="relative min-h-[250px] sm:min-h-[400px] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             style={{
               backgroundImage: `url(${
                 data?.universityImages?.banner
@@ -108,7 +108,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <div className="px-4 py-1 mt-1 md:mt-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
+                    <div className="px-4 py-1 my-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
                       <Image
                         src="/university/camera.svg"
                         alt="Battery Low Icon"

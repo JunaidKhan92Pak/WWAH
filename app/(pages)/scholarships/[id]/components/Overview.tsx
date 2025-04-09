@@ -32,7 +32,7 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration }) => {
                 </p>
               </div>
             </div>
-            <div className="w-full lg:w-1/2 lg:h-screen md:block hidden">
+            <div className="w-full lg:w-1/2  md:block hidden">
               <Image
                 src="/imeg.png"
                 alt="postgraduate"
