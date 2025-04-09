@@ -67,7 +67,7 @@ export const EnglishRequirement: React.FC<EnglishRequirementProps> = ({
             <Link href="/form">
               <Button
                 className="w-full bg-[#545454] hover:bg-zinc-700 text-white py-2 rounded"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Register Now!
               </Button>

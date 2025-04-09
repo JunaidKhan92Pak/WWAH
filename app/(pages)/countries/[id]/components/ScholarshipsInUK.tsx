@@ -6,26 +6,15 @@ import Banner from "@/components/ui/enrollment/Banner";
 
 interface ScholarshipsInUKProps {
   countryName: string;
+  scholarships: string[]; // Removed from props
+
 }
 
 export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
-  countryName,
+  countryName, scholarships,
 }) => {
-  // Scholarships are defined inside the component, NOT as a prop
-  const scholarships = [
-    "Chevening Scholarships",
-    "Rhodes Scholarships",
-    "Great Scholarships",
-    "Gates Cambridge Scholarships",
-    "Rhodes Scholarships",
-  ];
 
-  const scholarshipItems = [
-    { text: "Chevening Scholarships", image: "/countrypage/yellow.svg" },
-    { text: "Rhodes Scholarships", image: "/countrypage/orange.svg" },
-    { text: "Great Scholarships", image: "/countrypage/red.svg" },
-    { text: "Gates Cambridge Scholarships", image: "/countrypage/sky.svg" },
-    { text: "Rhodes Scholarships", image: "/countrypage/blue.svg" },
+  const scholarshipsIcon = ["/countrypage/yellow.svg", "/countrypage/orange.svg", "/countrypage/red.svg", "/countrypage/sky.svg", "/countrypage/blue.svg"
   ];
 
   return (
@@ -43,10 +32,10 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
             height={300}
             className="w-full md:w-[80%]  lg:w-[70%]"
           />
-        </div> 
+        </div>
 
-        {/* Scholarship List Below Image */} 
-         <div className="flex w-full md:w-[95%] lg:w-[85%] mt-4">
+        {/* Scholarship List Below Image */}
+        <div className="flex w-full md:w-[95%] lg:w-[85%] mt-4">
           {scholarships.map((scholarship, index) => (
             <p
               key={index}
@@ -56,23 +45,20 @@ export const ScholarshipsInUK: React.FC<ScholarshipsInUKProps> = ({
             </p>
           ))}
         </div>
-      </section> 
+      </section>
 
-       <div className="md:hidden flex flex-col items-start bg-black text-white py-8 px-6 mt-10">
-         <h4>Scholarships in {countryName}!</h4>
+      <div className="md:hidden flex flex-col items-start bg-black text-white py-8 px-6 mt-10">
+        <h4>Scholarships in {countryName}!</h4>
 
-         <div className="flex flex-col space-y-3 mt-4">
-           {scholarshipItems.map((item, index) => (
+        <div className="flex flex-col space-y-3 mt-4">
+          {scholarships.map((item, index) => (
             <div key={index} className="flex items-center space-x-2">
-              <Image src={item.image} alt={item.text} width={15} height={15} />
-              <p>{item.text}</p>
+              <Image src={scholarshipsIcon[index]} alt={"icon"} width={15} height={15} />
+              <p>{item}</p>
             </div>
           ))}
         </div>
       </div>
-   
-
-     
       <Banner
         title={`Get Personalized Help with Your ${countryName} Visa Application!`}
         buttonText="Schedule a Session with WWAH Advisors Now!"

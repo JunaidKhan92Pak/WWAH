@@ -24,11 +24,19 @@ export interface ICourse extends Document {
   course_structure?: string;
   year_1?: string;
   year_2?: string;
+  year_3?: string;
+  year_4?: string;
+  year_5?: string;
   career_opportunity_1?: string;
   career_opportunity_2?: string;
   career_opportunity_3?: string;
   career_opportunity_4?: string;
   career_opportunity_5?: string;
+  scholarship_details?: string;
+  scholarship_link?: string;
+  funding_details?: string;
+  payment_methods?: string;
+  university_youtube_video?: string;
 }
 
 // Define the Course Schema

@@ -17,7 +17,7 @@ export async function getUserData(token: string) {
     // 🔹 Try to parse JSON, handle errors gracefully
     try {
         const data = await response.json();
-        console.log("✅ User data fetched:", data);
+        // console.log("🔹 User data fetched successfully:", data);
         return data.user;
     } catch (error) {
         console.error("❌ Error parsing JSON response:", error);

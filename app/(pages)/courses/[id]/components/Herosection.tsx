@@ -45,7 +45,7 @@ const Herosection = ({
   uniData,
 }: {
   data: CourseData;
-  uniData: { banner: string };
+  uniData: { banner: string, logo: string };
 }) => {
   const arr1 = [
     {
@@ -91,8 +91,7 @@ const Herosection = ({
       <section className="mt-4 ">
         <div className="w-[90%] md:w-[95%] mx-auto ">
           {/* Hero Section */}
-          <div
-            className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
+          <div className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             // style={{ backgroundImage: `url("/dcu-hero-img.png")` }}
             style={{
               backgroundImage: `url(${uniData.banner}  ) `,
@@ -101,58 +100,39 @@ const Herosection = ({
           >
             {/* Black overlay */}
             <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center justify-items-center sm:px-6 md:py-12 py-2 relative z-10"> */}
-            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center   py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto">
+            <div className="flex flex-wrap md:gap-6 gap-2 items-center justify-around py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto ">
               {/* Left Section */}
-              <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-2 pl-0 lg:pl-12">
-                <Image
-                  src="/CourseDetailPage/dcu.svg"
-                  alt="Dcu Logo"
-                  width={130}
-                  height={130}
-                  className="object-contain w-[80px] h-[80px]"
-                />
-                <h2 className="text-white text-center md:text-start font-semibold">
-                  {data.course_title}
-                </h2>
-                <p className="text-white ">{data.universityname}</p>
-                <div className="bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
-                  <div className="flex items-center gap-1 py-1">
-                    <CiLocationOn className="h-4  w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
+              <div className=" w-[100%]  md:w-[50%]  flex flex-col  md:items-start md:text-left space-y-2 pl-0 lg:pl-12">
+                <div className="bg-white rounded-full w-[80px] h-[80px]">
+                  <Image
+                    src={uniData.logo}
+                    alt="Uni Logo"
+                    width={130}
+                    height={130}
+                    className="object-cover object-center w-[80px] h-[80px] border-2 border-white rounded-full"
+                  />
+                </div>
+                <div className="pl-2">
+                  <h2 className="text-white text-start font-semibold">
+                    {data.course_title}
+                  </h2>
+                </div>
+                <div className="pl-2">
+                  <p className="text-white text-start ">{data.universityname}</p>
+                </div>
 
-                    <p className="ml-2 text-base">
-                      {data.location_campus
-                        ? data.location_campus
+                <div className="w-[120px] bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
+                  <div className="  flex items-center  ">
+                    <CiLocationOn className="h-4 w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
+                    <p className="text-base">
+                      {data.countryname
+                        ? data.countryname
                         : "Not Avialable"}
                     </p>
                   </div>
                 </div>
               </div>
-
-              {/* <div className="w-[90%] md:w-full lg:w-[75%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
-                <Link
-                  href="/schedulesession"
-                  className="[text-align:-webkit-center]"
-                >
-                  <p className="text-white w-4/5 hover:underline">
-                    Book Your Online Video Counselling Session with WWAH
-                    Advisor!
-                  </p>
-                </Link>
-                <div className="flex items-center w-[50%] my-2">
-                  <div className="flex-1 border-t border-gray-100"></div>
-                  <p className="mx-4 text-white">Or</p>
-                  <div className="flex-1 border-t border-gray-100"></div>
-                </div>
-                <Link href="/contactus">
-                  <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
-                    Apply Now
-                  </Button>
-                </Link>
-              </div> */}
-              <div
-                className="w-full md:w-4/5 md:h-4/5 lg:w-[50%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
-py-4 md:py-1 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
+              <div className=" w-[80%]  md:w-[30%]  lg-w-[25%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl py-4 md:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
               >
                 <Link
                   href="/schedulesession"

@@ -246,11 +246,10 @@ const Page = () => {
                                     onClick={() =>
                                       handleSelectCountry(image.name)
                                     }
-                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${
-                                      selectedCountry === image.name
+                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${selectedCountry === image.name
                                         ? "border-[#F0851D] border-2"
                                         : "border-0"
-                                    }`}
+                                      }`}
                                   />
                                 </div>
                                 <p className="pt-2 tracking-wide text-center text-[8px] font-bold md:text-[13px]">
@@ -347,15 +346,13 @@ const Page = () => {
                           return (
                             <button
                               key={lifestyle.type}
-                              className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${
-                                lifestyle.type === "luxury_lifestyle"
+                              className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${lifestyle.type === "luxury_lifestyle"
                                   ? "col-span-2"
                                   : "col-span-1"
-                              } ${
-                                selectedLifestyle === lifestyle.type
+                                } ${selectedLifestyle === lifestyle.type
                                   ? "bg-gray-100"
                                   : "bg-none"
-                              }`}
+                                }`}
                               onClick={() =>
                                 setSelectedLifestyle(lifestyle.type)
                               }

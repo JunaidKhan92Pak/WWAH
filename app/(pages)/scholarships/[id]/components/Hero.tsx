@@ -106,7 +106,7 @@ const Hero: React.FC<HeroProps> = ({
                     alt={item.Heading}
                     width={120} // Adjusted for better scaling
                     height={160}
-                    className="object-contain"
+                    className="object-contain "
                   />
                 </div>
                 {/* Text Content */}

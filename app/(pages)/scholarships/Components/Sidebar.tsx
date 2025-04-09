@@ -40,7 +40,7 @@ export const Sidebar = () => {
             <li className="flex justify-between ">
               <div className="flex gap-2">
                 <Image
-                  src="/usa.png"
+                  src="/countryarchive/usa_logo.png"
                   width={20}
                   height={20}
                   alt="favourite"
@@ -92,13 +92,13 @@ export const Sidebar = () => {
             <li className="flex justify-between ">
               <div className="flex gap-2">
                 <Image
-                  src="/uk.png"
+                  src="/ukflag.png"
                   width={20}
                   height={20}
                   alt="favourite"
                   className="2xl:w-[42px] 2xl:h-[42px] ml-2"
                 />
-                <label htmlFor="us">United Kingdom</label>
+                <label htmlFor="uk">United Kingdom</label>
               </div>
               <Checkbox />
             </li>
@@ -232,7 +232,7 @@ export const Sidebar = () => {
               <Checkbox id="deadline-dec" />
             </li>
           </ul>
-          
+
         </div>
       </ScrollArea>
     </div>

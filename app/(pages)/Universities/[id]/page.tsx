@@ -19,6 +19,7 @@ type Tab = {
 
 type UniversityData = {
   university_name: string;
+  country_name: string;
   overview: string;
   origin_and_establishment: string;
   establishment_year: string;
@@ -200,8 +201,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         backgroundImage="/bg-usa.png"
       />
       <FAQ title="Frequently Asked Questions:" items={data?.universityData?.faq || []} />
-     
-      <Exploresection />
+
+      <Exploresection countryName={data?.universityData?.country_name} />
     </div>
   );
 }

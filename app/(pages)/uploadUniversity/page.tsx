@@ -73,8 +73,6 @@ export default function Home() {
 
   const handleFileRead = () => {
     if (!file) {
-      console.log("jo");
-
       setError("Please select an Excel file to read.");
       return;
     }
@@ -83,18 +81,15 @@ export default function Home() {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
       const workbook = XLSX.read(data, { type: "array" });
       const sheetName = workbook.SheetNames[0];
-
       const worksheet = workbook.Sheets[sheetName];
-      const json: Record<string, string | number>[] = XLSX.utils.sheet_to_json(
-        worksheet,
-        { raw: false }
-      );
+      const json: Record<string, string | number>[] = XLSX.utils.sheet_to_json(worksheet, { raw: false });
       const normalizedData = normalizeData(json);
       setParsedData((prev) => ({
         ...prev,
         university: normalizedData,
       }));
       setError(null);
+
 
       if (normalizedData.length === 0) {
         setError("The file does not contain any university.");
@@ -236,12 +231,9 @@ export default function Home() {
   return (
     <div className="bg-gradient-to-br from-indigo-100 to-purple-50 min-h-screen flex justify-center  py-10">
       <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">
-          University Data Upload
-        </h1>
-        {error && (
-          <p className="text-red-600 text-sm mt-4 text-center">{error}</p>
-        )}
+
+        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
+        {error && <p className="text-red-600 text-sm mt-4 text-center">{error}</p>}
         <form onSubmit={uploadDataToServer} className="space-y-4">
           <div className="mb-4">
             <label
@@ -256,9 +248,7 @@ export default function Home() {
               name="country"
               placeholder="Enter Country"
               value={parsedData.country}
-              onChange={(e) =>
-                setParsedData({ ...parsedData, country: e.target.value })
-              }
+              onChange={(e) => setParsedData({ ...parsedData, country: e.target.value })}
               className="w-full py-3 px-4 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

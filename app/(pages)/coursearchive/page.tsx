@@ -37,15 +37,23 @@ const CourseArchive = () => {
     fetchCourses,
   } = useCourseStore();
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(
-      () => {
-        console.log("Copied to clipboard successfully!");
-      },
-      (err) => {
-        console.error("Failed to copy to clipboard: ", err);
-      }
-    );
+  // const copyToClipboard = (text: string) => {
+  //   navigator.clipboard.writeText(text).then(
+  //     () => {
+  //       console.log("Copied to clipboard successfully!");
+  //     },
+  //     (err) => {
+  //       console.error("Failed to copy to clipboard: ", err);
+  //     }
+  //   );
+  // };
+  const copyToClipboard = (id: string) => {
+    const url = `${window.location.origin}/Universities/${id}`;
+
+    navigator.clipboard
+      .writeText(url)
+      .then(() => alert("Link copied to clipboard!"))
+      .catch((err) => console.error("Failed to copy: ", err));
   };
 
   const [localSearch, setLocalSearch] = useState("");
@@ -127,20 +135,11 @@ const CourseArchive = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <button
-            onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
-          >
-            <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
-            {showFavorites ? "Show All" : "Favorites"}
-          </button> */}
+
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
+            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
           >
             <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
             {showFavorites ? "Show All" : "Favorites"}
@@ -152,7 +151,7 @@ const CourseArchive = () => {
       {loading ? (
         <SkeletonCard arr={12} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4  md:p-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4  md:p-0">
           {courses.length === 0 ? (
             <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
               {" "}
@@ -174,17 +173,27 @@ const CourseArchive = () => {
                     sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
                     className="object-cover  rounded-2xl"
                   />
-                  {/* Logo on the left */}
-                  <div className="absolute bottom-2 left-4">
-                    <Image
-                      src="/logo.svg"
-                      width={56}
-                      height={56}
-                      className="rounded-full bg-white border border-black w-[56px] h-[56px]"
-                      alt="University Logo"
-                    />
+
+                  <div className="absolute top-4 left-0">
+                    <div className=" bg-gradient-to-r from-white to-transparent opacity-100 w-[70%] ">
+                      <div className="flex items-center gap-2 ">
+                        <div className=" sm:w-16 sm:h-12 w-10 h-10 ">
+                          <img
+                            src={item.universityData?.universityImages.logo || "/logo.png"}
+                            alt="alumini"
+                            className="rounded-full border object-cover  object-center  sm:w-16 sm:h-10 w-10 h-10 "
+                          />
+                        </div>
+                        <div className="py-1">
+                          <p className="leading-none text-sm font-medium">
+                            {item.universityData?.university_name}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
+
+                  <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
                     <button onClick={() => copyToClipboard(item._id)}>
                       <Image
                         src="/share.svg"
@@ -214,6 +223,7 @@ const CourseArchive = () => {
                   </div>
                 </div>
                 <div className="p-4 flex-grow">
+                  {/* University Name and Course Title */}
                   <h3 className="text-base md:text-lg font-bold text-gray-800 truncate hover:underline underline-offset-4">
                     {item?.course_title}
                   </h3>
@@ -269,23 +279,7 @@ const CourseArchive = () => {
                     </div>
                   </div>
                 </div>
-                {/* <div className="flex justify-around mb-4 mt-auto gap-2">
-                  <Link
-                    href={`/courses/${item._id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[50%] bg-red-500 rounded-lg"
-                  >
-                    <button className="w-full text-white text-sm p-2">
-                      Course Details
-                    </button>
-                  </Link>
-                  <Link href="dashboard">
-                    <button className="w-[50%] border border-red-500 text-red-500 text-sm p-2 rounded-lg">
-                      Create Application
-                    </button>
-                  </Link>
-                </div> */}
+
                 <div className="flex justify-between items-center mb-4 mt-auto gap-2">
                   <Link
                     href={`/courses/${item._id}`}
@@ -310,27 +304,21 @@ const CourseArchive = () => {
         </div>
       )}
       <div className="flex justify-center items-center mt-6 gap-2">
-        {courses.length === 0 ? (
-          <span>{`Page ${currentPage} of ${totalPages}`}</span>
-        ) : (
-          <>
-            <Button
-              className="bg-red-600"
-              disabled={currentPage === 1}
-              onClick={() => setPage(currentPage - 1)}
-            >
-              Previous
-            </Button>
-            <span>{`Page ${currentPage} of ${totalPages}`}</span>
-            <Button
-              className="bg-red-600"
-              disabled={currentPage === totalPages}
-              onClick={() => setPage(currentPage + 1)}
-            >
-              Next
-            </Button>
-          </>
-        )}
+        <Button
+          className="bg-red-600"
+          disabled={currentPage === 1}
+          onClick={() => setPage(currentPage - 1)}
+        >
+          Previous
+        </Button>
+        <span>{`Page ${currentPage} of ${totalPages}`}</span>
+        <Button
+          className="bg-red-600"
+          disabled={currentPage === totalPages}
+          onClick={() => setPage(currentPage + 1)}
+        >
+          Next
+        </Button>
       </div>
     </section>
   );

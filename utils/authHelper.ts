@@ -3,7 +3,6 @@ import { parse as cookieParse } from "cookie";
 export const getAuthToken = () => {
   if (typeof document !== "undefined") {
     const cookies = cookieParse(document.cookie);
-    console.log(cookies.authToken, "auth helper cookies")
     return cookies.authToken || null;
   }
   return null;

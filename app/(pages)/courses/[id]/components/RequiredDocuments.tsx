@@ -44,22 +44,20 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
       <div className="flex flex-col md:flex-row gap-2 md:mb-8">
         <Button
           variant="outline"
-          className={`px-4 py-2 rounded-lg border-2 h-12 hover:bg-red-700 hover:text-white ${
-            activeTabUni === "University Application Docs"
-              ? "border-red-700 text-red-700 font-semibold bg-transparent"
-              : "border-gray-900 text-gray-900 bg-transparent"
-          }`}
+          className={`px-4 py-2 rounded-lg border-2 h-12 hover:bg-red-700 hover:text-white ${activeTabUni === "University Application Docs"
+            ? "border-red-700 text-red-700 font-semibold bg-transparent"
+            : "border-gray-900 text-gray-900 bg-transparent"
+            }`}
           onClick={() => setActiveTabUni("University Application Docs")}
         >
           University Application Docs
         </Button>
         <Button
           variant="outline"
-          className={`px-4 py-2 rounded-lg border-2 h-12 ${
-            activeTabUni === "Embassy Documents"
-              ? "border-red-500 text-red-700 font-semibold bg-transparent"
-              : "border-gray-900 text-gray-900 bg-transparent"
-          }`}
+          className={`px-4 py-2 rounded-lg border-2 h-12 ${activeTabUni === "Embassy Documents"
+            ? "border-red-500 text-red-700 font-semibold bg-transparent"
+            : "border-gray-900 text-gray-900 bg-transparent"
+            }`}
           onClick={() => setActiveTabUni("Embassy Documents")}
         >
           Embassy Documents
@@ -147,7 +145,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
           </div>
 
           {/* Right Section: Show Image or Document Details */}
-          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 ">
+          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full p-6 bg-red-50 min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]">
             {selectedDoc ? (
               <div className="text-center px-4 sm:px-8 lg:px-16">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">

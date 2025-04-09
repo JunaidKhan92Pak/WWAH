@@ -150,6 +150,7 @@ export async function GET(req: Request) {
           duration: 1,
           annual_tuition_fee: 1,
           "universityData.universityImages.banner": 1,
+          "universityData.universityImages.logo": 1,
           "universityData.university_name": 1,
         },
       },

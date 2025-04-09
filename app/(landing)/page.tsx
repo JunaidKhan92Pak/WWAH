@@ -106,9 +106,6 @@ function Page() {
     setDropdownOpen(!isDropdownOpen);
   };
   const [successOpen, setSuccessOpen] = useState(false);
-  if (uniLoading || loading) {
-    return <Loading />
-  }
 
   const handleNavigate = () => {
     if (input.trim()) {
@@ -117,6 +114,10 @@ function Page() {
       router.push("/chatmodel"); // Navigate without message if input is empty
     }
   };
+  if (uniLoading || loading) {
+    return <Loading />
+  }
+
   return (
     // landing page container starts
     <div className="landingPage">
@@ -325,7 +326,7 @@ function Page() {
       <section className="py-5 bg-gray-50">
         <div className=" mx-auto px-0 sm:px-4 w-[90%]">
           {/* Section Header */}
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center ">
             <h3 className="font-bold">Top Universities!</h3>
             {/* <Badge variant="outline" className=" bg-[#F1F1F1]">
               <DropdownMenu>
@@ -409,15 +410,13 @@ function Page() {
                     </Link>
                     {/* University Details */}
                     <div className="p-4">
-                      <h6 className="font-semibold text-base mb-2">
+                      <h6 className="font-semibold mb-2">
                         {uni.university_name}
                       </h6>
                       <div className="flex flex-col justify-between items-start xl:items-center text-muted-foreground">
                         <div className="w-full flex items-center justify-between gap-2">
-                          <p className="text-xs md:text-sm">
-                            {uni.country_name}
-                          </p>
-                          <p className="text-xs md:text-sm">Public</p>
+                          <p>{uni.country_name}</p>
+                          <p>Public</p>
                         </div>
                         <p className="w-full text-xs md:text-sm">
                           Acceptance Rate: {uni.acceptance_rate}

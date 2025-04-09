@@ -72,15 +72,13 @@ const Herosec = ({ data }: { data: UniversityData }) => {
             // className="relative md:h-[80vh] h-[95%] flex justify-center items-center text-center rounded-2xl text-white sm:bg-cover sm:bg-center"
             className="relative min-h-[250px] sm:min-h-[400px] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             style={{
-              backgroundImage: `url(${
-                data?.universityImages?.banner
-                  ? data.universityImages.banner
-                  : "/banner.jpg"
-              })`,
+              backgroundImage: `url(${data?.universityImages?.banner
+                ? data.universityImages.banner
+                : "/banner.jpg"
+                })`,
             }}
           >
-            <div className="absolute bg-black bg-opacity-50 w-full h-full rounded-2xl"></div>
-
+            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-100"></div>
             <div className="w-full">
               <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center   py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto">
                 <div className="space-y-2 text-left">
@@ -95,7 +93,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                     {data.university_name}
                   </h3>
 
-                  <div className="bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">  
+                  <div className="bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
                     <div className="flex items-center gap-1 py-1">
                       {" "}
                       <CiLocationOn className="h-4  w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
@@ -108,7 +106,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <div className="px-4 py-1 my-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
+                    <div className="px-4 py-1 mt-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
                       <Image
                         src="/university/camera.svg"
                         alt="Battery Low Icon"

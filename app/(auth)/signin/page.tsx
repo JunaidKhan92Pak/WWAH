@@ -72,9 +72,7 @@ const Page = () => {
       setIsDisabled(false); // Enable the button again
       return;
     }
-
     setIsDisabled(true); // Disable the button only while processing
-
     try {
       const loginRes = await loginAction(userData);
       if (loginRes.success && loginRes.user) {
@@ -84,7 +82,7 @@ const Page = () => {
         }
 
       } else {
-        setGeneralError("Invalid email or password");
+        setGeneralError("Server In Busy, please try again later.");
         setIsDisabled(false); // Re-enable the button so the user can try again
       }
     } catch (err) {
@@ -136,8 +134,8 @@ const Page = () => {
                 <input
                   type="text"
                   className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.email || generalError
-                      ? "border-red-600"
-                      : "border-gray-300"
+                    ? "border-red-600"
+                    : "border-gray-300"
                     } rounded text-base 2xl:text-lg`}
                   placeholder="Enter your email address"
                   name="email"
@@ -153,8 +151,8 @@ const Page = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.password || generalError
-                      ? "border-red-600"
-                      : "border-gray-300"
+                    ? "border-red-600"
+                    : "border-gray-300"
                     } rounded`}
                   placeholder="Enter your password"
                   name="password"
@@ -198,8 +196,8 @@ const Page = () => {
             <button
               type="submit"
               className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${isDisabled
-                  ? "bg-red-600 opacity-30 cursor-not-allowed"
-                  : "bg-red-700"
+                ? "bg-red-600 opacity-30 cursor-not-allowed"
+                : "bg-red-700"
                 }`}
               disabled={isDisabled}
             >
