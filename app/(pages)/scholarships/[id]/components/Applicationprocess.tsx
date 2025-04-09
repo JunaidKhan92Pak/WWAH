@@ -26,7 +26,6 @@ const ReadMore: React.FC<ReadMoreProps> = ({ children }) => {
 const Applicationprocess = () => {
   const {
     scholarships,
-    loading,
     fetchScholarships,
     // New setter
   } = useScholarships();
@@ -172,18 +171,20 @@ const Applicationprocess = () => {
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
-      <section className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-4 md:p-8 lg:px-12s overflow-hidden justify-between w-full mt-5">
+      <section className="relative flex flex-col lg:flex-row gap-2 items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
-        <div className="relative z-10 w-full lg:w-[45%] flex flex-col justify-center md:space-y-4 sm:px-4 text-left">
-          <h3 className="mb-2">Explore More Scholarships!</h3>
+
+        <div className="relative z-10 w-full lg:w-[50%] flex flex-col justify-center md:space-y-2 sm:px-4 text-left">
+          <h4 className="">Explore More Scholarships!</h4>
           <p className="text-[#9D9D9D] leading-relaxed">
-            Discover the exciting world of universities in the United Kingdom,
-            where you can gain a high-quality education and experience life in a
-            new culture. Explore the perfect fit for your academic and career
-            aspirations!
+            Discover a range of scholarship opportunities from across the globe!
+            Whether you&apos;re aiming to study in the United States, Europe, or
+            beyond, there are countless scholarships designed to support your
+            academic journey. These scholarships can help you access world-class
+            education without financial barriers.
           </p>
         </div>
-        <div className="relative z-10 w-full lg:w-[55%] mt-6 lg:mt-0">
+        <div className="relative z-10 w-full lg:w-[50%] mt-6 lg:mt-0">
           <div className="relative w-full flex justify-center overflow-hidden">
             <div
               className="flex overflow-x-auto hide-scrollbar gap-4"
@@ -195,50 +196,30 @@ const Applicationprocess = () => {
               {scholarships.slice(0, 4).map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-[65%] sm:w-[80%] md:w-[40%] lg:w-[60%] xl:w-[50%] h-full flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+                  className="relative w-[85%] md:w-[65%] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
                 >
                   <Image
                     src={"/uniar.svg"}
                     alt="University Image"
-                    width={400}
+                    width={380}
                     height={350}
                     objectFit="cover"
-                    className="rounded-3xl md:w-[260px] md:h-[220px] xl:w-[300px] w-[200px] h-[160px]"
+                    className="rounded-xl w-full h-full"
                   />
-                  {/* <div className="p-2 flex-grow">
-                    <p className="font-bold">{item.name}</p>
-
-                    <div className="flex flex-col md:flex-row justify-between flex-wrap">
-                      <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                        <Image
-                          src={"/location.svg"}
-                          alt="location"
-                          width={16}
-                          height={16}
-                        />
-                        <p className="text-sm md:text-base text-gray-600 font-bold truncate">
-                          {item.hostCountry}
-                        </p>
-                      </div>
-                    </div>
-                  </div> */}
-                  <div className="absolute bottom-0 left-0 w-[90%] bg-gradient-to-t from-black/80 to-transparent p-2 md:p-4 md:w-[80%]">
-                    <p className="text-white font-medium leading-tight">
-                      {item.name}
-                    </p>
-                    <div className="flex items-center gap-2  ">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
+                  <div className="absolute bottom-0 left-0 w-full  text-white px-4 py-3">
+                    <p className="font-semibold mb-2"> {item.name}</p>
+                    <p className=" flex items-center gap-1">
                       <Image
                         src="/location-white.svg"
-                        alt="location"
-                        width={16}
-                        height={16}
-                        className="md:w-4 md:h-4 w-3 h-3"
+                        alt="locationwhite"
+                        width={100}
+                        height={100}
+                        className="w-4 h-4"
                       />
-
-                      <p className="text-white font-medium">
-                        {item.hostCountry}
-                      </p>
-                    </div>
+                      {/* {item.universityName} */}
+                      {item.hostCountry}
+                    </p>
                   </div>
                 </div>
               ))}

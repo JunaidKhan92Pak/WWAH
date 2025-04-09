@@ -22,7 +22,6 @@ export async function GET() {
   } catch (error) {
     // Log error for debugging
     console.error("Error fetching Contry:", error);
-
     // Return an error response
     return NextResponse.json(
       {

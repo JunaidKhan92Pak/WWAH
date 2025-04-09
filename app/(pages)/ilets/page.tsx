@@ -246,7 +246,7 @@ export default function Home() {
                     candidates who prefer writing by hand. Results are generally
                     available within 13 days after the test.
                   </p>
-                 
+
                 </div>
               </div>
 

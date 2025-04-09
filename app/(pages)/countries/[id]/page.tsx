@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Hero from "./components/Hero";
-import StudyInUs from "./components/StudyInUk";
+import WhyStudy from "./components/WhyStudy";
 import WorkOpportunity from "./components/WorkOpportunity";
 import PermanentResidency from "./components/PermanentResidency";
 import PopularPrograms from "./components/PopularPrograms";
@@ -13,7 +13,7 @@ import Healthcare from "./components/Healthcare";
 import Banner from "@/components/ui/enrollment/Banner";
 import FAQ from "@/components/ui/enrollment/FAQ";
 import AccCrousel from "./components/AccCrousel";
-// import AccCrousel from "./components/AccCrousel";
+import Loading from "@/app/loading";
 
 export default function Countrypage({
   params,
@@ -21,11 +21,11 @@ export default function Countrypage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = React.use(params);
+
   interface Country {
     id: string;
     country_name: string;
     short_name: string;
-
     capital: string;
     language: string;
     population: number;
@@ -50,44 +50,15 @@ export default function Countrypage({
     scholarships: string[];
     visa_requirements: string[];
     work_while_studying: string;
-    teaching_and_learning_approach?: string;
-    multicultural_environment?: string;
+    teaching_and_learning_approach?: [];
+    multicultural_environment?: [];
     faqs: [];
     accomodation_options: [];
   }
 
-  const [country, setCountry] = useState<Country>({
-    id: "",
-    country_name: "",
-    short_name: "",
-    capital: "",
-    language: "",
-    population: 0,
-    healthcare: "",
-    currency: "",
-    international_students: 0,
-    academic_intakes: "",
-    dialing_code: 0,
-    gdp: "",
-    why_study: "",
-    work_while_study: "",
-    work_after_study: "",
-    work_while_studying: "",
-    residency: "",
-    popular_programs: [],
-    rent: "",
-    groceries: "",
-    transportation: "",
-    eating_out: "",
-    household_bills: "",
-    miscellaneous: "",
-    health: [{ name: "", description: [""] }],
-    scholarships: [],
-    visa_requirements: [],
-    teaching_and_learning_approach: "",
-    faqs: [],
-    accomodation_options: [],
-  });
+  // Initialize as null to avoid rendering before data is fetched.
+  const [country, setCountry] = useState<Country | null>(null);
+
   const fetchData = async () => {
     try {
       const response = await fetch(`/api/getCountry?id=${id}`);
@@ -96,7 +67,6 @@ export default function Countrypage({
       }
       const posts = await response.json();
       setCountry(posts.country);
-      console.log(posts, "posts");
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error fetching country:", error.message);
@@ -105,18 +75,22 @@ export default function Countrypage({
       }
     }
   };
-  console.log(country, "Country from Parent");
+
   useEffect(() => {
     fetchData();
   }, []);
 
+  // Only display the loading screen until country data is available.
+  if (!country) {
+    return <Loading />;
+  }
 
-  return country ? (
+  return (
     <div>
       <div className="w-[90%] md:w-[95%] mx-auto">
         <Hero country={country} />
       </div>
-      <StudyInUs
+      <WhyStudy
         country={country.why_study}
         countryName={country.country_name || ""}
       />
@@ -124,52 +98,44 @@ export default function Countrypage({
         whileStudying={country.work_while_studying}
         afterStudying={country.work_after_study}
         countryName={country.country_name || ""}
-
       />
       <PermanentResidency
         residency={country.residency}
         countryName={country.country_name || ""}
         country={{ short_name: country.short_name }}
       />
-      <PopularPrograms country={country.popular_programs} countryName={country.country_name} />
-
+      <PopularPrograms
+        country={country.popular_programs}
+        countryName={country.country_name}
+      />
       <ScholarshipsInUK
-        // scholarships={country.scholarships}
+        scholarships={country.scholarships}
         countryName={country.country_name || ""}
       />
-
       <VisaRequirements
         visaRequirements={country.visa_requirements || []}
         countryName={country.country_name}
         country={{ short_name: country.short_name }}
       />
-      <AccomodationOptions accomodation={country?.accomodation_options} />
+      <AccomodationOptions accomodation={country.accomodation_options} />
       <AccCrousel
         countryName={country.country_name}
         teaching_and_learning_approach={
-          country.teaching_and_learning_approach
-            ? [country.teaching_and_learning_approach]
-            : []
+          country.teaching_and_learning_approach || [""]
         }
         multicultural_environment={
-          country.multicultural_environment
-            ? [country.multicultural_environment]
-            : []
+          country.multicultural_environment || [""]
         }
       />
-
-      <Healthcare health={country.health} countryName={country?.country_name} />
-
-      <FAQ title="Frequently Asked Questions:" items={country?.faqs} />
+      <Healthcare health={country.health} countryName={country.country_name} />
+      <FAQ title="Frequently Asked Questions:" items={country.faqs} />
       <Banner
-        title={`Make your dream of studying in the ${country?.country_name} a reality with our expert guidance!`}
-        buttonText="Book a Counselling Session wth WWAH Advisor!"
+        title={`Make your dream of studying in the ${country.country_name} a reality with our expert guidance!`}
+        buttonText="Book a Counselling Session with WWAH Advisor!"
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
       <DreamStudy />
     </div>
-  ) : (
-    <p>Loading....</p>
   );
 }

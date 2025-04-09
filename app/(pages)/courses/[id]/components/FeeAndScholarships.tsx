@@ -122,23 +122,21 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
           <div className="flex w-full rounded-lg bg-[#FDF2E8]">
             <button
               onClick={() => setActiveTab("scholarship")}
-              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
-                activeTab === "scholarship"
+              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "scholarship"
                   ? "bg-[#F57C00] text-white"
                   : "bg-transparent text-black"
-              }`}
+                }`}
             >
-              <Link href="https://mta.ca/costs-financial-aid/scholarships-and-awards-first-year-students">
+              <Link href="">
                 Scholarship Details
               </Link>
             </button>
             <button
               onClick={() => setActiveTab("funding")}
-              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
-                activeTab === "funding"
+              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "funding"
                   ? "bg-[#F57C00] text-white"
                   : "bg-transparent text-black"
-              }`}
+                }`}
             >
               <Link href="https://mta.ca/current-students/student-finances/financial-aid-current-students">
                 Funding Details

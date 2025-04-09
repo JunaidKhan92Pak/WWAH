@@ -59,8 +59,8 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
       caption: `${country?.[0]}`,
     },
     {
-      icon: "/solarbroken.svg",
 
+      icon: "/Atomsvg.svg",
       caption: `${country?.[1]}`,
     },
     {
@@ -68,11 +68,11 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
       caption: `${country?.[2]}`,
     },
     {
-      icon: "/Heartsvg.svg",
+      icon: "/solarbroken.svg",
       caption: `${country?.[3]}`,
     },
     {
-      icon: "/Atomsvg.svg",
+      icon: "/Heartsvg.svg",
       caption: `${country?.[4]}`,
     },
   ];

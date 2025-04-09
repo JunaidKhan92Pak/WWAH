@@ -9,6 +9,7 @@ import { CiUser } from "react-icons/ci";
 import { IoMailOutline, IoKeyOutline } from "react-icons/io5";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useUserStore } from "@/store/userStore";
+
 const Page = () => {
   const router = useRouter();
   const { signupAction } = useAuth();
@@ -31,7 +32,6 @@ const Page = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false); // Add state for disabling button
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,15 +64,14 @@ const Page = () => {
       setErrors(newErrors);
       return;
     }
-    setIsDisabled(true);
+
 
     try {
       const res = await signupAction(formData);
       if (res.success) {
         setUser(res.user);
-        if (res.user) {
-          router.push("/");
-        }
+        router.push("/");
+
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -235,11 +234,8 @@ const Page = () => {
 
             <button
               type="submit"
-              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${isDisabled
-                ? "bg-red-600 opacity-30 cursor-not-allowed"
-                : "bg-red-700"
-                }`}
-              disabled={isDisabled}
+              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity bg-red-700 duration-200`}
+
             >
               {loading ? "Processing..." : "Sign Up"}
             </button>

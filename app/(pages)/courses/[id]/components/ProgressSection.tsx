@@ -122,8 +122,8 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
     userTest === "IELTS"
       ? extractOverallScore(data.required_ielts_score)
       : userTest === "PTE"
-      ? extractOverallScore(data.required_pte_score)
-      : extractOverallScore(data.required_toefl_score);
+        ? extractOverallScore(data.required_pte_score)
+        : extractOverallScore(data.required_toefl_score);
 
   // 🔹 Calculate success percentage
   const englishSuccess = calculateEnglishSuccess(userScore, requiredScore);
@@ -272,9 +272,9 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
         Your application success chances are:
       </p>
       {user &&
-      user?.majorSubject &&
-      user.personalInfo &&
-      user.userPreference ? (
+        user?.majorSubject &&
+        user.personalInfo &&
+        user.userPreference ? (
         <></>
       ) : (
         <div className="text-center py-2 lg:px-4">
@@ -302,7 +302,13 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
           </div>
         </div>
       )}
+      <div className="hidden md:flex items-center gap-4">
+        <p className="text-center border-b border-gray-500">
+          Overall Chance<br />{" "}
+          {overallSuccess ? overallSuccess + "%" : "70%"}
+        </p>
 
+      </div>
       <div className="flex flex-col md:flex-row justify-center gap-5 w-full lg:w-[85%]">
         {/* Left side Academic Results */}
         <div className="hidden md:flex items-center gap-4">

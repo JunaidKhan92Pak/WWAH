@@ -62,8 +62,8 @@ const Footer = () => {
             <div
               className="flex items-center space-x-4 cursor-pointer"
               onClick={() =>
-                (window.location.href =
-                  "mailto:info@worldwideadmissionshub.com")
+              (window.location.href =
+                "mailto:info@worldwideadmissionshub.com")
               }
             >
               <IoMailUnreadOutline />

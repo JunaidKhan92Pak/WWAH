@@ -13,44 +13,29 @@ import { SkeletonCard } from "@/components/skeleton";
 const Page = () => {
   // List of countries for filters
   const countries = [
-    { name: "United States of America", value: "usa", img: "/usa.png" },
+    { name: "United States of America", value: "United States of America", img: "/countryarchive/usa_logo.png" },
     { name: "China", value: "china", img: "/countryarchive/china_logo.png" },
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
-    { name: "United Kingdom", value: "united-kingdom", img: "/ukflag.png" },
-    {
-      name: "Ireland",
-      value: "ireland",
-      img: "/countryarchive/ireland_logo.png",
-    },
-    { name: "New Zealand", value: "new-zealand", img: "/nz.png" },
-    {
-      name: "Denmark",
-      value: "denmark",
-      img: "/countryarchive/denmark_logo.png",
-    },
+    { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
+    { name: "Ireland", value: "ireland", img: "/countryarchive/ireland_logo.png" },
+    { name: "New Zealand", value: "New Zealand", img: "/countryarchive/nz_logo.png" },
+    { name: "Denmark", value: "denmark", img: "/countryarchive/denmark_logo.png" },
     { name: "France", value: "france", img: "/countryarchive/france_logo.png" },
-    {
-      name: "Australia",
-      value: "australia",
-      img: "/countryarchive/australia_logo.png",
-    },
+    { name: "Australia", value: "australia", img: "/countryarchive/australia_logo.png" },
     { name: "Austria", value: "austria", img: "/austria.svg" },
-    {
-      name: "Germany",
-      value: "germany",
-      img: "/countryarchive/germany_logo.png",
-    },
+    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
     { name: "Portugal", value: "portugal", img: "/portugal.svg" },
     { name: "Poland", value: "poland", img: "/poland.svg" },
     { name: "Norway", value: "norway", img: "/norway.svg" },
     { name: "Europe", value: "europe", img: "/europe.svg" },
     { name: "Hungary", value: "hungary", img: "/hungary.svg" },
-    { name: "South Korea", value: "south-korea", img: "/south-korea.svg" },
+    { name: "South Korea", value: "South korea", img: "/south-korea.svg" },
     { name: "Japan", value: "japan", img: "/japan.svg" },
     { name: "Romania", value: "romania", img: "/romania.svg" },
-    { name: "Turkiye", value: "turkiye", img: "/turkiye.svg" },
+    { name: "Turkiye", value: "Turkey", img: "/turkiye.svg" },
   ];
+  // const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
   // const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
   const minimumRequirements = [
     "Excellent Academic Achievement",
@@ -546,11 +531,10 @@ const Page = () => {
                 <div className="flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg    ">
                   <button
                     onClick={() => setShowFavorites((prev) => !prev)}
-                    className={`text-sm flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg py-2 px-4   ${
-                      showFavorites
-                        ? "text-red-500 font-semibold"
-                        : "text-gray-600"
-                    }`}
+                    className={`text-sm flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg py-2 px-4   ${showFavorites
+                      ? "text-red-500 font-semibold"
+                      : "text-gray-600"
+                      }`}
                   >
                     <Image
                       src="/hearti.svg"
@@ -713,27 +697,26 @@ const Page = () => {
                 </div>
 
                 {/* Pagination Controls */}
-                {scholarships.length > 0 && (
-                  <div className="flex justify-center items-center m-4 gap-4 p-2">
-                    <button
-                      onClick={handlePrev}
-                      disabled={page === 1}
-                      className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
-                    >
-                      Previous
-                    </button>
-                    <span className="text-lg font-semibold text-gray-700">
-                      Page {page} of {totalPages}
-                    </span>
-                    <button
-                      onClick={handleNext}
-                      disabled={page === totalPages}
-                      className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
+                <div className="flex justify-center items-center m-4 gap-4 p-2">
+                  <button
+                    onClick={handlePrev}
+                    disabled={page === 1}
+                    className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-lg font-semibold text-gray-700">
+                    Page {page} of {totalPages}
+                  </span>
+                  <button
+                    onClick={handleNext}
+                    disabled={page === totalPages}
+                    className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
+                  >
+                    Next
+                  </button>
+                </div>
+
               </>
             )}
           </section>

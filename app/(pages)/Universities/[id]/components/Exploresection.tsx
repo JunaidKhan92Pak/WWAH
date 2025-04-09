@@ -1,14 +1,48 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
-const Exploresection = () => {
-  // Slider data with image paths and info
-  const { universities, fetchUniversities, loading } = useUniversityStore();
+interface UniversityImages {
+  banner: string;
+  logo: string;
+}
+
+interface UniversityType {
+  university_name: string;
+  country_name: string;
+  acceptance_rate: string;
+  universityImages: UniversityImages;
+}
+
+interface ExploresectionProps {
+  countryName: string;
+}
+
+const Exploresection: React.FC<ExploresectionProps> = ({ countryName }) => {
+  const [universities, setUniversities] = useState<UniversityType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    if (universities.length === 0) fetchUniversities();
-  }, [fetchUniversities]);
+    const fetchUniversities = async () => {
+      try {
+        const res = await fetch(`/api/getUniversities?country=${countryName}&limit=4`);
+        const data = await res.json();
+        if (Array.isArray(data.universities)) {
+          setUniversities(data.universities);
+        } else {
+          console.error("Invalid universities response:", data);
+          setUniversities([]); // fallback to empty
+        }
+      } catch (error) {
+        console.error("Error fetching universities:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUniversities();
+  }, [countryName]);
+
   return (
     <section
       className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full mt-6"

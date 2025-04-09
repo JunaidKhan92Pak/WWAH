@@ -29,8 +29,8 @@ interface HeroProps {
     scholarships: string[];
     visa_requirements: string[];
     work_while_studying: string;
-    teaching_and_learning_approach?: string;
-    multicultural_environment?: string;
+    teaching_and_learning_approach?: string[];
+    multicultural_environment?: string[];
     faqs?: string[];
   };
 }

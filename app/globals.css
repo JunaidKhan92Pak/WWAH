@@ -2,6 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 :root {
   --font-primary: "Source Sans 3", serif;
   --font-secondary: Arial, Helvetica, sans-serif;
@@ -31,6 +32,7 @@
   --chart-5: 27 87% 67%;
   --radius: 0.5rem;
 }
+
 .dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
@@ -57,19 +59,23 @@
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
 }
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-primary);
   }
+
   @keyframes slideIn {
     from {
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -95,35 +101,43 @@
     font-family: var(--font-primary);
   }
 }
+
 span {
   color: inherit;
   font-size: inherit;
   font-family: inherit;
 }
+
 h1 {
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
 }
+
 h2 {
   font-size: clamp(1.8rem, 3.5vw, 2.5rem);
   font-weight: 600;
 }
+
 h3 {
   font-size: clamp(1.6rem, 3vw, 2rem);
   font-weight: 600;
 }
+
 h4 {
   font-size: clamp(1.4rem, 2.5vw, 1.8rem);
   font-weight: 600;
 }
+
 h5 {
   font-size: clamp(1.2rem, 2vw, 1.6rem);
   font-weight: 600;
 }
+
 h6 {
   font-size: clamp(1rem, 1.5vw, 1.4rem);
   font-weight: 600;
 }
+
 p,
 label,
 li,
@@ -134,29 +148,37 @@ button,
   font-size: 1.2rem;
   font-weight: 350;
 }
+
 input::placeholder {
   font-size: 1.1rem;
 }
+
 /* Small screens (mobile) */
 @media (max-width: 640px) {
   h1 {
     font-size: 1.2rem;
   }
+
   h2 {
     font-size: 1.1rem;
   }
+
   h3 {
     font-size: 1.1rem;
   }
+
   h4 {
     font-size: 1.05rem;
   }
+
   h5 {
     font-size: 1rem;
   }
+
   h6 {
     font-size: 0.87rem;
   }
+
   p,
   label,
   li,
@@ -167,26 +189,33 @@ input::placeholder {
     font-size: 0.85rem;
   }
 }
+
 /* Medium screens (tablets) */
 @media (min-width: 641px) and (max-width: 1024px) {
   h1 {
     font-size: 2.2rem;
   }
+
   h2 {
     font-size: 2rem;
   }
+
   h3 {
     font-size: 1.8rem;
   }
+
   h4 {
     font-size: 1.6rem;
   }
+
   h5 {
     font-size: 1.4rem;
   }
+
   h6 {
     font-size: 1.2rem;
   }
+
   p,
   label,
   li,
@@ -197,29 +226,37 @@ input::placeholder {
     font-size: 1rem;
   }
 }
+
 /* Large screens (desktops) */
 @media (min-width: 1025px) and (max-width: 1440px) {
   h1 {
     font-size: 2.5rem;
   }
+
   h2 {
     font-size: 2rem;
   }
+
   h3 {
     font-size: 2rem;
   }
+
   h4 {
     font-size: 1.8rem;
   }
+
   h5 {
     font-size: 1.5rem;
   }
+
   h6 {
     font-size: 1.2rem;
   }
+
   input::placeholder {
     font-size: 0.85px;
   }
+
   p,
   label,
   li,
@@ -229,26 +266,33 @@ input::placeholder {
     font-size: 1rem;
   }
 }
+
 /* Extra large screens (larger desktops) */
 @media (min-width: 1441px) and (max-width: 1535px) {
   h1 {
     font-size: 2.8rem;
   }
+
   h2 {
     font-size: 2.3rem;
   }
+
   h3 {
     font-size: 2.1rem;
   }
+
   h4 {
     font-size: 1.9rem;
   }
+
   h5 {
     font-size: 1.7rem;
   }
+
   h6 {
     font-size: 1.5rem;
   }
+
   p,
   label,
   li,
@@ -257,11 +301,13 @@ input::placeholder {
   button {
     font-size: 1.2rem;
   }
+
   input::placeholder {
     font-size: 0.85px;
     color: black;
   }
 }
+
 /* 2XL screens (extra extra large screens) */
 /* @media (min-width: 1536px) {
   h1 {
@@ -297,13 +343,15 @@ input::placeholder {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
 #right-section {
-  max-height: 836px; /* Adjust based on layout */
+  max-height: 836px;
+  /* Adjust based on layout */
   overflow-y: auto;
   scroll-behavior: smooth;
 }
