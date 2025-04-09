@@ -52,7 +52,7 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
           <div className="absolute inset-0 -z-10 bg-black"></div>
           <div className="w-[90%] mx-auto">
             <div className="flex flex-col gap-6 md:gap-8 lg:gap-10 justify-center items-center w-full px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row justify-between w-full max-w-6xl">
+              <div className="flex flex-col lg:flex-row justify-between w-full">
                 {/* Overview Section */}
                 <div className="lg:w-1/2 space-y-4">
                   <h2 className="mb-2 md:mb-4 text-xl md:text-2xl font-semibold">
@@ -63,7 +63,7 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
 
                 {/* Image Section */}
                 <div className="w-full lg:w-1/2 flex justify-center">
-                  <div className="relative rounded-3xl overflow-hidden shadow-lg w-full sm:w-[80%] h-[200px] sm:h-[250px] md:h-[200px] lg:h-[280px] 2xl:h-[600px]">
+                  <div className="relative rounded-3xl overflow-hidden shadow-lg w-full sm:w-[80%] h-[200px] sm:h-[250px] md:h-[200px] lg:h-[280px]">
                     <Image
                       src={image}
                       alt="University Image"
@@ -92,7 +92,7 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
               </div>
 
               {/* ReadMore Section */}
-              <div className="w-full max-w-6xl">
+              <div className="w-full">
                 <ReadMore image={image}>
                   <h3 className="font-bold text-white pt-5 md:pt-0 text-lg md:text-xl">
                     History

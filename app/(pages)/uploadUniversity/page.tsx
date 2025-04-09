@@ -85,12 +85,10 @@ export default function Home() {
       const sheetName = workbook.SheetNames[0];
 
       const worksheet = workbook.Sheets[sheetName];
-
       const json: Record<string, string | number>[] = XLSX.utils.sheet_to_json(
         worksheet,
         { raw: false }
       );
-
       const normalizedData = normalizeData(json);
       setParsedData((prev) => ({
         ...prev,
