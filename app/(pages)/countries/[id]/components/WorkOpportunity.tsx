@@ -12,7 +12,6 @@ const WorkOpportunity: React.FC<WorkOpportunityProps> = ({ whileStudying, afterS
       <h3 className="text-center md:pt-10 py-4 font-bold">
         Work Opportunity in {countryName}
       </h3>
-
       <div className="flex flex-col md:flex-row gap-5 justify-center">
         {/* Card 1 */}
         <div className="flex flex-col items-start md:items-start w-full lg:w-2/5 py-5 bg-[#F1F1F1] rounded-2xl">
