@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { useCountry } from "@/store/useCountriesStore";
-import BookLoader from "@/components/BookLoader";
 import Link from "next/link";
 import ImageWithLoader from "@/components/ImageWithLoader";
+import Loading from "@/app/loading";
 // A dedicated spinner component for a smooth loading experience
 
 const Page = () => {
@@ -52,7 +52,7 @@ const Page = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-4 md:mx-6 mx-2 py-2">
         {loading ? (
           <div className="col-span-full flex justify-center items-center rounded-lg h-80">
-            <BookLoader />
+            <Loading />
           </div>
         ) : filteredCountries.length === 0 ? (
           <p className="col-span-full text-center">No Countries found</p>
