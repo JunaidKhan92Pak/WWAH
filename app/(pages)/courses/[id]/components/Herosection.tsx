@@ -150,7 +150,7 @@ const Herosection = ({
                 </div>
                 {/* <Link href="/contactus"> */}
                 <Link href="/dashboard">
-                  <Button className="w-full px-[12vw] md:px-[5vw] md:py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
+                  <Button className="w-full px-[12vw] md:px-[5vw] md:py-3  bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
                     Apply Now
                   </Button>
                 </Link>

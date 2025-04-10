@@ -91,7 +91,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
 
         <div className="lg:flex z-10 w-full py-2 sm:py-0">
           {/* Title Section */}
-          <div className="lg:w-2/5 flex items-center justify-center text-center lg:text-left text-gray-600 2xl:justify-center md:mb-6 mb-2 lg:mb-0">
+          <div className="lg:w-2/5 flex items-center justify-center text-center lg:text-left text-gray-600  md:mb-6 mb-2 lg:mb-0">
             <h5 className="md:w-4/5 text-gray-900 font-bold leading-10 text-lg sm:text-xl md:text-2xl">
               Popular Programs to Study in {countryName}
             </h5>

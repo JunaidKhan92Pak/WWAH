@@ -46,7 +46,7 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
   return (
     <>
       <div>
-        <div className="md:my-10 my-5 2xl:my-20 mx-2">
+        <div className="md:my-10 my-5  mx-2">
           <h3 className="text-center">Accommodation Options!</h3>
           <div
             className="flex overflow-x-auto space-x-4 p-4 "
@@ -58,7 +58,7 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
             {arr2.map((image, index) => (
               <div
                 key={index}
-                className="relative flex-shrink-0 max-w-[200px] md:max-w-[400px] 2xl:max-w-[600px]"
+                className="relative flex-shrink-0 max-w-[200px] md:max-w-[400px]"
               >
                 <Image
                   src={image.src}

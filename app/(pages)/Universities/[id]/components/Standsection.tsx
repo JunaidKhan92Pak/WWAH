@@ -15,7 +15,7 @@ const Standsection: React.FC<StandsectionProps> = ({ our_mission, values }) => {
           <h2 className="text-center text-gray-800 pb-3">What we stand for?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Mission */}
-            <div className="bg-[#F1F1F1] md:p-6 p-3 2xl:p-12 rounded-3xl text-center border border-gray-200 shadow-sm">
+            <div className="bg-[#F1F1F1] md:p-6 p-3  rounded-3xl text-center border border-gray-200 shadow-sm">
               <div className="mb-4">
                 <Image
                   src="/Wireless-Charge.png" // Replace with your actual image path
@@ -30,7 +30,7 @@ const Standsection: React.FC<StandsectionProps> = ({ our_mission, values }) => {
             </div>
 
             {/* Values */}
-            <div className="bg-[#F1F1F1] md:p-6 p-2 2xl:p-12 rounded-3xl text-center border border-gray-200 shadow-sm">
+            <div className="bg-[#F1F1F1] md:p-6 p-2  rounded-3xl text-center border border-gray-200 shadow-sm">
               <div className="md:mb-4">
                 <Image
                   src="/Medal-Ribbon.png" // Replace with your actual image path

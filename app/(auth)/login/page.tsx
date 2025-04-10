@@ -87,10 +87,11 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border ${errors.email || generalError
-                    ? "border-red-600"
-                    : "border-gray-300"
-                    } rounded text-base 2xl:text-lg`}
+                  className={`w-full pl-10  pr-2 py-1 sm:py-2  border ${
+                    errors.email || generalError
+                      ? "border-red-600"
+                      : "border-gray-300"
+                  } rounded text-base`}
                   placeholder="Enter your email address"
                   name="email"
                   value={userData.email}
@@ -104,10 +105,11 @@ const Page = () => {
                 <IoKeyOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="password"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border ${errors.password || generalError
-                    ? "border-red-600"
-                    : "border-gray-300"
-                    } rounded`}
+                  className={`w-full pl-10  pr-2 py-1 sm:py-2  border ${
+                    errors.password || generalError
+                      ? "border-red-600"
+                      : "border-gray-300"
+                  } rounded`}
                   placeholder="Enter your password"
                   name="password"
                   value={userData.password}
@@ -158,7 +160,6 @@ const Page = () => {
         </div>
       </div>
     </div>
-   
   );
 };
 

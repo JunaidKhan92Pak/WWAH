@@ -143,24 +143,28 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   if (!data) return <p> Course Not Found</p>;
   return (
     <div>
-      <Herosection data={data?.courseData} uniData={{
-        banner: data?.universityData?.universityImages?.banner || "",
-        logo: data?.universityData?.universityImages?.logo || "",
-      }} />
+      <Herosection
+        data={data?.courseData}
+        uniData={{
+          banner: data?.universityData?.universityImages?.banner || "",
+          logo: data?.universityData?.universityImages?.logo || "",
+        }}
+      />
       {/* Course Overview & Navigation Tabs */}
       <section className="bg-white md:mt-6 lg:mt-12 mb-6">
         <div className=" mx-auto w-[92%]">
           {/* Navigation Tabs */}
-          <div className="w-full lg:w-[95%] flex overflow-x-auto scrollbar-hide border-b border-gray-200 mt-4">
+          <div className="w-full lg:w-[95%] flex overflow-x-auto hide-scrollbar border-b border-gray-200 mt-4">
             {tabs.map((tab) => (
               <Button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
                 className={`font-medium transition text-sm md:text-lg px-10 py-2 md:rounded-t-xl flex-shrink-0 border-b border-gray-400 md:border-none
-        ${activeTabPro === tab.id
-                    ? "bg-[#C7161E] text-white"
-                    : "bg-transparent text-gray-800"
-                  }
+        ${
+          activeTabPro === tab.id
+            ? "bg-[#C7161E] text-white"
+            : "bg-transparent text-gray-800"
+        }
         hover:bg-[#FCE7D2] hover:text-black`}
               >
                 {tab.name}
@@ -354,7 +358,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         />
       </div>
       {/* explore section */}
-      <ExploreSection data={data.courseData.countryname} course={data.courseData.course_title} />
+      <ExploreSection
+        data={data.courseData.countryname}
+        course={data.courseData.course_title}
+      />
     </div>
   );
 }

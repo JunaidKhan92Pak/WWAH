@@ -8,7 +8,7 @@ interface WorkOpportunityProps {
 
 const WorkOpportunity: React.FC<WorkOpportunityProps> = ({ whileStudying, afterStudying, countryName }) => {
   return (
-    <div className="mx-auto w-full mb-10 px-4 2xl:my-20">
+    <div className="mx-auto w-full mb-10 px-4">
       <h3 className="text-center md:pt-10 py-4 font-bold">
         Work Opportunity in {countryName}
       </h3>

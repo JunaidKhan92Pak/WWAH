@@ -58,7 +58,7 @@ const Eligibilitycriteria: React.FC<EligibilityCriteriaProps> = ({
                 width={12}
                 height={12}
                 alt="icon"
-                className="2xl:w-[28px] mt-1"
+                className=" mt-2"
               />
               <div>
                 <p className="font-medium">{criteria.name}</p>

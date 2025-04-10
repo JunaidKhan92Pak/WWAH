@@ -39,7 +39,7 @@ function StepWiseGuide() {
               alt="divider"
               width={50}
               height={100}
-              className="h-full object-cover"
+              className="h-full "
 
             />
           </div>
@@ -86,7 +86,7 @@ function StepWiseGuide() {
               alt="divider"
               width={100}
               height={100}
-              className="h-full object-cover"
+              className="h-full "
             />
           </div>
           <div className="space-y-4 md:space-y-16 ">

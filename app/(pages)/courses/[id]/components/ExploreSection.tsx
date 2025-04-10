@@ -34,7 +34,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data, course }) 
 
       {/* Content Section */}
       <div className="relative z-10 w-full lg:w-[52%] flex flex-col justify-center md:space-y-4 sm:px-4 text-left">
-        <h6 className="mb-2">Explore More Universities!</h6>
+        <h6 className="mb-2">Explore More Courses!</h6>
         <p className="text-[#9D9D9D] leading-relaxed">
           Discover the exciting world of universities in the {data}, where you
           can gain a high-quality education and experience life in a new
@@ -56,7 +56,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data, course }) 
             {courses.slice(0, 4).map((item, index) => (
               <div
                 key={index}
-                className="relative w-[85%] md:w-[65%] aspect-[16/9] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+                className="relative w-[85%]  aspect-[16/9] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
               >
                 <img
                   src={item?.universityData?.universityImages?.banner ?? "/fallback-image.jpg"}

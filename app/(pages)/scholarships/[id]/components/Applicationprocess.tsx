@@ -196,7 +196,7 @@ const Applicationprocess = () => {
               {scholarships.slice(0, 4).map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-[85%] md:w-[65%] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+                  className="relative w-[85%]  flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
                 >
                   <Image
                     src={"/uniar.svg"}
