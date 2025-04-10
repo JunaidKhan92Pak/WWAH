@@ -16,7 +16,7 @@ interface HeroProps {
     why_study: string;
     work_while_study: string;
     work_after_study: string;
-    residency: string;
+    residency: string[];
     popular_programs: string[];
     rent: string;
     groceries: string;
