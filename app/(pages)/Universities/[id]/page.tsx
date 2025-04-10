@@ -139,13 +139,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <div>
         <div className="bg-white my-6 md:mt-12 md:mb-12">
           <div className="w-[95%] mx-auto px-6">
-            <div className="w-full flex whitespace-nowrap overflow-x-auto scrollbar-hide justify-center lg:justify-evenly items-center border-b border-gray-200">
+            <div className="w-full flex whitespace-nowrap overflow-x-auto hide-scrollbar justify-center lg:justify-evenly items-center border-b border-gray-200">
               {tabs.map((tab) => (
                 <button
                   key={tab.label}
                   onClick={() => handleTabClick(tab)}
-                  className={`transition px-10 py-2 rounded-t-xl ${activeTab === tab.label ? "bg-[#C7161E] text-white" : "text-gray-600"
-                    }`}
+                  className={`transition px-10 py-2 rounded-t-xl ${
+                    activeTab === tab.label
+                      ? "bg-[#C7161E] text-white"
+                      : "text-gray-600"
+                  }`}
                   aria-label={`Navigate to ${tab.label}`}
                   aria-selected={activeTab === tab.label}
                 >
@@ -200,7 +203,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
-      <FAQ title="Frequently Asked Questions:" items={data?.universityData?.faq || []} />
+      <FAQ
+        title="Frequently Asked Questions:"
+        items={data?.universityData?.faq || []}
+      />
 
       <Exploresection countryName={data?.universityData?.country_name} />
     </div>

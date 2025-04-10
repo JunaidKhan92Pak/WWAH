@@ -41,7 +41,7 @@ function ServiceBanner() {
 
         {/* <div className="relative flex flex-col lg:flex-row z-10 w-full items-center"> */}
         <div className="lg:flex z-10 w-full">
-          <div className="lg:w-2/5 flex items-center justify-center text-center lg:text-left text-gray-900 2xl:justify-center mb-6 lg:mb-0">
+          <div className="lg:w-2/5 flex items-center justify-center text-center lg:text-left text-gray-900  mb-6 lg:mb-0">
             <h4 className="font-bold">What we Offer!</h4>
           </div>
           <div

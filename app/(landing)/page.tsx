@@ -139,7 +139,7 @@ function Page() {
                   onClick={toggleDropdown}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <FaCircleUser className="text-gray-800  w-8 h-8 text-xl 2xl:text-4xl" />
+                  <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -225,7 +225,7 @@ function Page() {
                     alt="Robot"
                     width={499}
                     height={633}
-                    className="2xl:w-[550px] 2xl:h-[700px]"
+                    // className="2xl:w-[550px] 2xl:h-[700px]"
                   />
                 </div>
 
@@ -318,7 +318,7 @@ function Page() {
               alt="Robot"
               width={499}
               height={633}
-              className="2xl:w-[550px] 2xl:h-[700px]"
+              // className="2xl:w-[550px] 2xl:h-[700px]"
             />
           </div>
         </section>

@@ -94,7 +94,7 @@ const MobileNavbar = () => {
                   className="text-sm bg-gray-800 rounded-full border-2 border-gray-200"
                   onClick={toggleDropdown}
                 >
-                    <FaCircleUser className="text-white  w-8 h-8 text-xl 2xl:text-4xl" />
+                    <FaCircleUser className="text-white  w-8 h-8 text-xl " />
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 top-12 z-20 w-48 bg-white shadow-lg rounded-lg divide-y divide-gray-100">

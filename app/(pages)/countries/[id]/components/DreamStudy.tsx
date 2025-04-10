@@ -24,8 +24,8 @@ const DreamStudy = () => {
         }}
       >
         <div className="absolute inset-0 bg-black opacity-90 z-0"></div>
-        <div className="my-10 2xl:my-20 z-10">
-          <h3 className="text-center text-white text-xl md:text-2xl 2xl:text-3xl 2xl:my-10">
+        <div className="my-10  z-10">
+          <h3 className="text-center text-white text-xl md:text-2xl">
             Choose your Dream Study Abroad Destination!
           </h3>
           <section className="w-[90%] mx-auto">
