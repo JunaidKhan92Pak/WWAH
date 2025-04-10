@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 interface PermanentResidencyProps {
-  residency: string;
+  residency: string[];
   countryName: string;
   country: { short_name: string }; // Add country prop
 }
@@ -14,10 +14,7 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({
   country,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const maxLength = 1200;
-  // const toggleText = () => {
-  //   setIsExpanded((prevState) => !prevState);
-  // };
+
   return (
     <section
       className="relative flex flex-col lg:flex-row lg:gap-5 items-center text-white bg-black bg-cover bg-center h-auto p-6 my-1 overflow-hidden"
@@ -35,13 +32,16 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({
           International Student?
         </h5>
         <div className="text-[rgb(209,207,207)] space-y-3">
-          <p>
-            {isExpanded
-              ? residency
-              : residency.slice(0, maxLength) +
-              (residency.length > maxLength ? "..." : "")}
-          </p>
-          {residency.length > maxLength && (
+          {Array.isArray(residency) &&
+            (isExpanded ? residency : residency.slice(0, 3)).map(
+              (item, index) => (
+                <p key={index} className="leading-relaxed">
+                  {item}
+                </p>
+              )
+            )}
+
+          {Array.isArray(residency) && residency.length > 3 && (
             <p>
               <span
                 onClick={() => setIsExpanded(!isExpanded)}

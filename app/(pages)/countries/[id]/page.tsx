@@ -14,14 +14,12 @@ import Banner from "@/components/ui/enrollment/Banner";
 import FAQ from "@/components/ui/enrollment/FAQ";
 import AccCrousel from "./components/AccCrousel";
 import Loading from "@/app/loading";
-
 export default function Countrypage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = React.use(params);
-
   interface Country {
     id: string;
     country_name: string;
@@ -37,7 +35,7 @@ export default function Countrypage({
     why_study: string;
     work_while_study: string;
     work_after_study: string;
-    residency: string;
+    residency: string[];
     popular_programs: string[];
     rent: string;
     groceries: string;
@@ -55,7 +53,6 @@ export default function Countrypage({
     faqs: [];
     accomodation_options: [];
   }
-
   // Initialize as null to avoid rendering before data is fetched.
   const [country, setCountry] = useState<Country | null>(null);
 
