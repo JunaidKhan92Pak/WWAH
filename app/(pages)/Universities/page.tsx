@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
@@ -13,6 +14,7 @@ import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const countries = [
@@ -21,13 +23,33 @@ const Page = () => {
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
-    { name: "Ireland", value: "ireland", img: "/countryarchive/ireland_logo.png" },
-    { name: "New Zealand", value: "New Zealand", img: "/countryarchive/nz_logo.png" },
-    { name: "Denmark", value: "denmark", img: "/countryarchive/denmark_logo.png" },
+    {
+      name: "Ireland",
+      value: "ireland",
+      img: "/countryarchive/ireland_logo.png",
+    },
+    {
+      name: "New Zealand",
+      value: "New Zealand",
+      img: "/countryarchive/nz_logo.png",
+    },
+    {
+      name: "Denmark",
+      value: "denmark",
+      img: "/countryarchive/denmark_logo.png",
+    },
     { name: "France", value: "france", img: "/countryarchive/france_logo.png" },
-    { name: "Australia", value: "australia", img: "/countryarchive/australia_logo.png" },
+    {
+      name: "Australia",
+      value: "australia",
+      img: "/countryarchive/australia_logo.png",
+    },
     { name: "Austria", value: "austria", img: "/austria.svg" },
-    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
+    {
+      name: "Germany",
+      value: "germany",
+      img: "/countryarchive/germany_logo.png",
+    },
     { name: "Portugal", value: "portugal", img: "/portugal.svg" },
     { name: "Poland", value: "poland", img: "/poland.svg" },
     { name: "Norway", value: "norway", img: "/norway.svg" },
@@ -53,11 +75,42 @@ const Page = () => {
   const [localSearch, setLocalSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  const searchParams = useSearchParams();
+  const initialCountrySet = React.useRef(false);
+
+  // Handle country param from URL - consolidated logic from previous duplicate useEffects
+  useEffect(() => {
+    if (initialCountrySet.current) return;
+
+    const countryParam = searchParams.get("country");
+    if (countryParam && countryParam.length > 0) {
+      // Find the country in our list to get the correct value (case insensitive)
+      const countryObj = countries.find(
+        (c) =>
+          c.name.toLowerCase() === countryParam.toLowerCase() ||
+          c.value.toLowerCase() === countryParam.toLowerCase()
+      );
+
+      if (countryObj) {
+        initialCountrySet.current = true;
+        setCountry([countryObj.value]);
+      }
+    }
+  }, [searchParams, setCountry, countries]);
 
   // Fetch universities when the component mounts or when currentPage changes
   useEffect(() => {
     fetchUniversities(currentPage);
   }, [currentPage, fetchUniversities]);
+
+  // Load favorites from localStorage on component mount
+  useEffect(() => {
+    const storedFavorites = localStorage.getItem("favorites");
+    if (storedFavorites) {
+      setFavorites(JSON.parse(storedFavorites));
+    }
+  }, []);
 
   // Handle Search with debounce
   const handleSearch = useCallback(
@@ -70,10 +123,11 @@ const Page = () => {
   // Handle checkbox changes for country filtering
   function handleCheckboxChange(destination: string): void {
     if (destination === "All") {
-      if (country.length === country.length) {
+      if (country.length === countries.length) {
         setCountry([]); // Uncheck all
       } else {
-        setCountry(country); // Select all
+        // Select all countries by mapping through the countries array
+        setCountry(countries.map((c) => c.value));
       }
     } else {
       const updatedSelected = country.includes(destination)
@@ -82,6 +136,8 @@ const Page = () => {
       setCountry(updatedSelected);
     }
   }
+
+  // Copy university URL to clipboard
   const copyToClipboard = (id: string) => {
     const url = `${window.location.origin}/Universities/${id}`;
 
@@ -100,7 +156,7 @@ const Page = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
 
-  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  // Toggle university favorite status
   const toggleFavorite = (id: string) => {
     setFavorites((prev) => {
       const updatedFavorites = { ...prev, [id]: !prev[id] };
@@ -111,21 +167,33 @@ const Page = () => {
       return updatedFavorites;
     });
   };
-  useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
-    }
-  }, []);
+
+  // Filter universities by favorites if showFavorites is true
   const displayedUniversities = showFavorites
     ? universities.filter((uni) => favorites[uni._id])
     : universities;
+
+  // Generate empty state message based on selected countries
+  const getEmptyStateMessage = () => {
+    if (showFavorites) {
+      return "No Favorite Universities Found";
+    } else if (country.length === 0 || country.length === countries.length) {
+      return "No Universities Found";
+    } else if (country.length === 1) {
+      // Find the country name for the selected value
+      const selectedCountry = countries.find((c) => c.value === country[0]);
+      return `No universities found in ${selectedCountry?.name || country[0]}`;
+    } else {
+      return "No universities found for the selected countries";
+    }
+  };
+
   return (
     <section className="w-[90%] mx-auto">
       <div className="md:flex md:justify-between py-5 md:pt-10 gap-4">
         <h3 className="font-bold">Discover Universities Worldwide</h3>
-        <div className="flex flex-col md:flex-row md:tems-center gap-3">
-          <div className="w-[70%] flex bg-[#F1F1F1] rounded-lg h-10 ">
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <div className="w-full md:w-[70%] flex bg-[#F1F1F1] rounded-lg h-10">
             <Image
               src="/search.svg"
               width={16}
@@ -146,13 +214,40 @@ const Page = () => {
             />
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10">
+            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10">
               <Image src="/filterr.svg" width={16} height={14} alt="filter" />
-              Filter
+              <div className="flex justify-between w-full">
+                <div className="w-1/2">Filter</div>
+                {/* Always reserve space for count by using opacity instead of conditional rendering */}
+                <div
+                  className="w-1/2 transition-opacity duration-200"
+                  style={{ opacity: country.length > 0 ? 1 : 0 }}
+                >
+                  {country.length > 0 ? `(${country.length})` : "(0)"}
+                </div>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="p-2 h-[260px]">
               <ScrollArea className="p-2">
-                <p className="text-[16px]">Countries:</p>
+                <div className="flex justify-between">
+                  <p>Countries:</p>
+                  {/* Always reserve space for the clear button by using visibility instead of conditional rendering */}
+                  <div
+                    className="transition-opacity duration-200"
+                    style={{
+                      opacity: country.length > 0 && !showFavorites ? 1 : 0,
+                    }}
+                  >
+                    <button
+                      onClick={() => setCountry([])}
+                      className="text-blue-500 hover:underline"
+                      aria-hidden={!(country.length > 0 && !showFavorites)}
+                      tabIndex={country.length > 0 && !showFavorites ? 0 : -1}
+                    >
+                      Clear filters
+                    </button>
+                  </div>
+                </div>
                 <ul className="py-2 space-y-4">
                   {countries.map((c, indx) => (
                     <li key={indx} className="flex justify-between">
@@ -169,7 +264,6 @@ const Page = () => {
                         type="checkbox"
                         id={c.value}
                         onChange={() => handleCheckboxChange(c.value)}
-                        // Check if the store's country state includes this country's value
                         checked={country.includes(c.value)}
                         className="mr-2"
                       />
@@ -179,15 +273,11 @@ const Page = () => {
               </ScrollArea>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Favorites Button (Static) */}
-          {/* <button className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10">
-            <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
-            Favorites
-          </button> */}
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
           >
             <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
             {showFavorites ? "Show All" : "Favorites"}
@@ -200,11 +290,27 @@ const Page = () => {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-2">
             {displayedUniversities.length === 0 ? (
-              <p className="text-[20px] font-semibold col-span-4 text-center p-4">
-                {showFavorites
-                  ? "No Favorite Universities Found"
-                  : "No Universities Found"}
-              </p>
+              <div className="col-span-full flex flex-col items-center justify-center p-8">
+                <p className="text-[20px] font-semibold text-center text-gray-700">
+                  {getEmptyStateMessage()}
+                </p>
+                {/* Use opacity for consistent layout */}
+                <div
+                  className="mt-4 transition-opacity duration-200 h-8"
+                  style={{
+                    opacity: country.length > 0 && !showFavorites ? 1 : 0,
+                  }}
+                >
+                  {country.length > 0 && !showFavorites && (
+                    <button
+                      onClick={() => setCountry([])}
+                      className="text-blue-500 hover:underline"
+                    >
+                      Clear filters
+                    </button>
+                  )}
+                </div>
+              </div>
             ) : (
               displayedUniversities.map((item) => (
                 <div
@@ -214,10 +320,8 @@ const Page = () => {
                   <div className="relative h-[200px]">
                     <div className="absolute z-10 top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-xl w-1/2">
                       <p className="text-sm font-medium">
-                        QS World Ranking: {item.qs_world_university_ranking || "N/A"}
-                      </p>
-                      <p className="text-sm font-semibold">
-                        {/* Ranking: {item.times_higher_education_ranking || "N/A"} */}
+                        QS World Ranking:{" "}
+                        {item.qs_world_university_ranking || "N/A"}
                       </p>
                     </div>
 
@@ -233,21 +337,20 @@ const Page = () => {
                       </button>
 
                       <button onClick={() => toggleFavorite(item._id)}>
-                        {favorites[item._id] ? (
-                          <Image
-                            src="/redheart.svg"
-                            width={20}
-                            height={20}
-                            alt="Favorite"
-                          />
-                        ) : (
-                          <Image
-                            src="/whiteheart.svg"
-                            width={20}
-                            height={20}
-                            alt="Favorite"
-                          />
-                        )}
+                        <Image
+                          src={
+                            favorites[item._id]
+                              ? "/redheart.svg"
+                              : "/whiteheart.svg"
+                          }
+                          width={20}
+                          height={20}
+                          alt={
+                            favorites[item._id]
+                              ? "Remove from Favorites"
+                              : "Add to Favorites"
+                          }
+                        />
                       </button>
                     </div>
 
@@ -278,14 +381,15 @@ const Page = () => {
                       <p className="font-bold hover:underline underline-offset-2">
                         {item.university_name}
                       </p>
-
                     </Link>
 
                     <div className="flex justify-between">
                       <p className="text-sm text-gray-600">
                         {item.country_name}
                       </p>
-                      <p className="text-sm text-gray-600">Public</p>
+                      <p className="text-sm text-gray-600">
+                        {item.university_type || "Public"}
+                      </p>
                     </div>
                   </div>
 
@@ -306,26 +410,28 @@ const Page = () => {
             )}
           </div>
 
-          {/* Pagination Controls */}
-          <div className="flex justify-center items-center my-6 gap-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <span className="text-gray-700">
-              Page {currentPage} of {totalPages || 1}
-            </span>
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+          {/* Pagination Controls - Only show if there are results */}
+          {displayedUniversities.length > 0 && (
+            <div className="flex justify-center items-center my-6 gap-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="text-gray-700">
+                Page {currentPage} of {totalPages || 1}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages || totalPages === 0}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </>
       )}
     </section>
