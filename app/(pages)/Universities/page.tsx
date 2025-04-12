@@ -24,41 +24,15 @@ const Page = () => {
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
     {
-      name: "Ireland",
-      value: "ireland",
-      img: "/countryarchive/ireland_logo.png",
-    },
-    {
       name: "New Zealand",
       value: "New Zealand",
       img: "/countryarchive/nz_logo.png",
     },
     {
-      name: "Denmark",
-      value: "denmark",
-      img: "/countryarchive/denmark_logo.png",
-    },
-    { name: "France", value: "france", img: "/countryarchive/france_logo.png" },
-    {
       name: "Australia",
       value: "australia",
       img: "/countryarchive/australia_logo.png",
     },
-    { name: "Austria", value: "austria", img: "/austria.svg" },
-    {
-      name: "Germany",
-      value: "germany",
-      img: "/countryarchive/germany_logo.png",
-    },
-    { name: "Portugal", value: "portugal", img: "/portugal.svg" },
-    { name: "Poland", value: "poland", img: "/poland.svg" },
-    { name: "Norway", value: "norway", img: "/norway.svg" },
-    { name: "Europe", value: "europe", img: "/europe.svg" },
-    { name: "Hungary", value: "hungary", img: "/hungary.svg" },
-    { name: "South Korea", value: "South korea", img: "/south-korea.svg" },
-    { name: "Japan", value: "japan", img: "/japan.svg" },
-    { name: "Romania", value: "romania", img: "/romania.svg" },
-    { name: "Turkiye", value: "Turkey", img: "/turkiye.svg" },
   ];
 
   // Get zustand store values including pagination states
@@ -275,9 +249,8 @@ const Page = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
+            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
           >
             <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
             {showFavorites ? "Show All" : "Favorites"}

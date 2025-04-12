@@ -1,6 +1,21 @@
-import React from "react";
+
 import Image from "next/image";
-const Requireddocs = () => {
+import { useCallback, useState } from "react";
+import DOMPurify from "dompurify";
+interface Document {
+  name: string;
+  details: string;
+}
+interface RequireddocsProps {
+  requiredDocs: Document[]; // Adjust the type based on the actual structure of requiredDocs
+}
+
+const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
+  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
+  const handleMouseEnterDoc = useCallback(
+    (doc: Document) => setSelectedDoc(doc),
+    []
+  );
   return (
     <div>
       <section className="flex flex-col items-center justify-center py-2 lg:py-5 px-4  lg:w-[90%] mx-auto">
@@ -12,50 +27,47 @@ const Requireddocs = () => {
             {/* <h4 className="lg:mb-2 mb-1">University Application Docs:</h4> */}
             <h5 className="lg:mb-2 mb-1">Required Document list:</h5>
             <ul className="grid grid-cols-2 lg:gap-4 md:gap-2 gap-1 text-gray-700 leading-snug ">
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>Passport Images</p>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>Bank Statement</p>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>Any Bill (Electricity, Water, Gas, etc.)</p>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>Proof of Enrollment</p>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>University Acceptance Letter</p>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>Passport-Sized Photos</p>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>Scholarship Proof (if applicable)</p>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-red-500 text-4xl">•</span>
-                <p>Medical Clearance</p>
-              </li>
+              {requiredDocs.map((doc) => (
+                <li
+                  key={doc.name}
+                  className="flex items-center space-x-2 cursor-pointer"
+                >
+                  <span className="text-red-500 text-4xl">•</span>
+                  <p
+                    className="hover:underline"
+                    onMouseEnter={() => handleMouseEnterDoc(doc)}
+                    onClick={() => setSelectedDoc(doc)}
+                  >
+                    {doc.name}
+                  </p>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Image Section */}
           <div className="hidden items-center justify-center rounded-3xl shadow-lg h-full lg:block">
-            <Image
-              src="/scholarshipdetail/illustration.png"
-              alt="Illustration"
-              className="w-full h-full object-cover rounded-3xl"
-              width={500}
-              height={500}
-            />
+            {selectedDoc ? (
+              <div>
+                <h3 className="text-lg font-semibold">
+                  {selectedDoc.name} Details
+                </h3>
+                <p
+                  className="text-gray-700 mt-2"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(selectedDoc.details),
+                  }}
+                ></p>
+              </div>
+            ) : (
+              <Image
+                src="/scholarshipdetail/illustration.png"
+                alt="Illustration"
+                className="w-full h-full object-cover rounded-3xl"
+                width={500}
+                height={500}
+              />
+            )}
           </div>
         </div>
       </section>

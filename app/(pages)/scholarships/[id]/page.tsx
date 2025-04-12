@@ -29,6 +29,8 @@ type ScholarshipData = {
   benefits: string[];
   applicableDepartments: [];
   eligibilityCriteria: [];
+  Document: string[];
+  requiredDocuments: []
 };
 
 const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -75,6 +77,8 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const [activeTabPro, setActiveTabPro] = useState<string>(
     "Overview"
   );
+  console.log(data);
+
   const handleTabClick = (tab: Tab) => {
     setActiveTabPro(tab.label);
     const section = document.getElementById(tab.id);
@@ -105,11 +109,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
-                  activeTabPro === tab.label
-                    ? "bg-[#C7161E] text-white"
-                    : "text-gray-800"
-                }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
+                  ? "bg-[#C7161E] text-white"
+                  : "text-gray-800"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -146,7 +149,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
 
       <div id="Required Documents">
-        <Requireddocs />
+        <Requireddocs requiredDocs={data.requiredDocuments} />
       </div>
       <div id="Application Process">
         {/* <Requireddocs */}
