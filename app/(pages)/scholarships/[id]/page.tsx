@@ -61,19 +61,19 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   }, [id]); // Add id as a dependency
 
   const tabs: Tab[] = [
-    { label: "Scholarship Overview", id: "Scholarship Overview" },
+    { label: "Overview", id: "Overview" },
     { label: "Benefits", id: "Benefits" },
-    { label: "Applicable Departments", id: "Applicable-Departments" },
+    // { label: "Applicable Departments", id: "Applicable-Departments" },
     { label: "Eligibility Criteria", id: "Eligibility Criteria" },
     {
-      label: "Scholarship Success Chances",
-      id: "Scholarship Success Chances",
+      label: "Success Chances",
+      id: "Success Chances",
     },
     { label: "Required Documents", id: "Required Documents" },
     { label: "Application Process", id: "Application Process" },
   ];
   const [activeTabPro, setActiveTabPro] = useState<string>(
-    "Scholarship Overview"
+    "Overview"
   );
   const handleTabClick = (tab: Tab) => {
     setActiveTabPro(tab.label);
@@ -141,7 +141,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           eligibilityCriteria={data?.eligibilityCriteria || []}
         />
       </div>
-      <div id="Scholarship Success Chances">
+      <div id="Success Chances">
         <ScholarshipSuccessChances />
       </div>
 

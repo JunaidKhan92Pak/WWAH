@@ -86,7 +86,7 @@ const Exploresection: React.FC<ExploresectionProps> = ({ countryName }) => {
                     width={400}
                     height={350}
                     objectFit="cover"
-                    className="rounded-3xl w-[235px] md:w-[400px] xl:w-[450px] xl:h-[350px] h-[220px] md:h-[300px]"
+                    className="rounded-3xl w-[235px] md:w-[400px] xl:w-[390px] xl:h-[330px] h-[220px] md:h-[300px]"
                   />
                   {/* Text Overlay */}
 

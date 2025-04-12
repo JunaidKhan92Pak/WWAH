@@ -122,7 +122,7 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
                   <div className="w-full">
                     <Card>
                       <CardContent>
-                        <div className="relative w-full lg:w-[97%] h-[220px]  md:h-[360px] lg:h-[310px] xl:h-[350px] 2xl:h-[450px]">
+                        <div className="relative w-full lg:w-[97%] h-[220px]  md:h-[360px] lg:h-[310px] xl:h-[350px]                                               h-[450px]">
                           <Image
                             src={data?.image ? data.image : "/placeholder.jpg"} // Replace with your actual image path
                             alt={`Campus View ${index + 1}`}
