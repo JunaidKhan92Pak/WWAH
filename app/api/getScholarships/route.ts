@@ -9,6 +9,8 @@ export async function GET(req: Request) {
         const page = parseInt(searchParams.get('page') || '1', 9);
         const limit = parseInt(searchParams.get('limit') || '9', 9);
         const search = searchParams.get("search")?.trim() || "";
+        const minimumRequirements = searchParams.get("minimumRequirements")?.trim() || "";
+        const minimumRequirementsArray = minimumRequirements.split(",").map((req) => req.trim()).filter((req) => req !== "");
 
         // Get filters from query string and convert to lowercase arrays
         const countryFilter = searchParams.get("countryFilter")
@@ -43,11 +45,6 @@ export async function GET(req: Request) {
                 query.name = { $regex: new RegExp(escapeRegex(search), "i") };
             }
         }
-
-        // Filter by hostCountry using "hostCountry" field from the model
-        // if (countryFilter.length > 0) {
-        //     query.hostCountry = { $in: countryFilter.map((c) => new RegExp(`^${c}$`, "i")) };
-        // }
         if (countryFilter.length > 0) {
             query.hostCountry = { $in: countryFilter.map((c) => new RegExp(c, "i")) };
         }
@@ -60,7 +57,9 @@ export async function GET(req: Request) {
         if (scholarshipTypeFilter.length > 0) {
             query.scholarshipType = { $in: scholarshipTypeFilter.map(t => new RegExp(`^${t}$`, "i")) };
         }
-
+        if (minimumRequirementsArray.length > 0) {
+            query.minRequirements = { $in: minimumRequirementsArray.map(req => new RegExp(req, "i")) };
+        }
         // Filter by deadline (as a string; assumes deadline stored as string)
         if (deadlineFilter.length > 0) {
             query.deadline = { $in: deadlineFilter.map(d => new RegExp(d, "i")) };
