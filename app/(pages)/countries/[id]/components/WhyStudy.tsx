@@ -77,19 +77,24 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
         style={{ backgroundImage: "url('/bg-usa.png')" }}
       >
         <div className="absolute inset-0 bg-black opacity-90 z-0" />
-        <div className="relative z-10 w-full md:px-6 space-y-2">
+        <div className="relative z-10 w-full  space-y-2">
           <h2 className="py-2">Popular Universities in {countryName}</h2>
 
-          <div className="flex overflow-x-auto justify-center px-4 md:space-x-4 md:p-4 hide-scrollbar gap-1 mx-auto">
+          <div className="flex overflow-x-auto space-x-2 md:space-x-4 p-6 hide-scrollbar justify-start xl:justify-center"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
             {loading ? (
               <p className="text-white">Loading...</p>
             ) : (
               universities.map((item) => (
                 <div
                   key={item._id}
-                  className="bg-white shadow-xl rounded-2xl overflow-hidden p-1 md:p-3"
+                  className="bg-white shadow-xl rounded-2xl overflow-hidden p-2 md:p-3 relative flex-shrink-0 max-w-[180px] md:max-w-[230px] lg:max-w-[300px] xl:max-w-[320px]"
                 >
-                  <div className="relative md:h-[120px] lg:h-[200px]">
+                  <div className="relative h-[130px] md:h-[150px] lg:h-[210px]">
                     <div className="absolute top-3 left-0 bg-gradient-to-r from-[#fce7d2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">
                       <p className="md:text-sm text-[10px] font-medium">
                         QS World: {item.qs_world_university_ranking}
@@ -104,21 +109,21 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
                       alt={item.university_name}
                       width={400}
                       height={250}
-                      className="lg:h-[180px] lg:w-[350px] md:w-[320px] md:h-[100px] h-[100px] w-[300px] object-cover rounded-xl shadow-2xl border border-black"
+                      className="lg:h-[180px] lg:w-[350px] md:w-[320px] md:h-[135px] h-[120px] w-[300px] object-cover rounded-xl shadow-2xl border border-black"
                     />
 
-                    <div className="absolute lg:bottom-1 -bottom-7 left-3 lg:left-5 w-14 h-14">
+                    <div className="absolute lg:bottom-1 -bottom-8 md:-bottom-6 left-3 lg:left-5 w-14 h-14">
                       <Image
                         src={item.universityImages.logo}
                         alt={`${item.university_name} Logo`}
                         width={56}
                         height={56}
-                        className="object-fit lg:w-[56px] lg:h-[56px] md:h-[35px] md:w-[35px] w-[25px] h-[30px] rounded-full bg-white border border-gray-200"
+                        className="object-cover lg:w-[56px] lg:h-[56px] h-[35px] w-[35px]  rounded-full bg-white border border-gray-200"
                       />
                     </div>
                   </div>
 
-                  <div className="md:px-4 lg:h-[40px] flex flex-col justify-between">
+                  <div className="md:px-4 my-2 flex flex-col justify-between">
                     <p className="text-gray-900 text-left text-[10px] leading-3 md:text-[12px] font-semibold lg:text-[14px] p-1 md:p-0">
                       {item.university_name}
                     </p>
