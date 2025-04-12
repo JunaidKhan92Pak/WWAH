@@ -319,29 +319,6 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
           <span className="vertical-line w-[1px] h-32 bg-gray-500"></span>
         </div>
 
-        {/* Academic Match Section */}
-
-        {/* <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-6">
-          {academicFactors.map((item, index) => (
-            <div key={index} className="flex flex-col ">
-              <div className="relative w-full h-[3.8rem] rounded-2xl bg-[#f7f7f7] overflow-hidden flex items-center px-4">
-                <div
-                  className="absolute top-0 left-0 h-full rounded-2xl transition-all duration-300 flex items-center px-4 text-black"
-                  style={{
-                    width: `${item.value}%`,
-                    backgroundColor: getProgressBarColor(item.value),
-                  }}
-                >
-                  <p className="flex items-center gap-2 text-[14px]">
-                    {item.icon}
-                    {item.label}
-                  </p>
-                </div>
-                <p className="absolute right-4 text-black">{item.value}%</p>
-              </div>
-            </div>
-          ))}
-        </div> */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-6">
           {academicFactors.map((item, index) => (
             <div key={index} className="flex flex-col">

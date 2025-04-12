@@ -51,6 +51,7 @@ export default function Countrypage({
     teaching_and_learning_approach?: [];
     multicultural_environment?: [];
     faqs: [];
+    
     accomodation_options: [];
   }
   // Initialize as null to avoid rendering before data is fetched.
