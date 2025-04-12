@@ -24,6 +24,7 @@ export async function GET(req: Request) {
     const minBudget = parseFloat(searchParams.get("minBudget") || "0");
     const maxBudget = parseFloat(searchParams.get("maxBudget") || "999999");
     const intakeMonth = searchParams.get("intakeMonth") || "";
+    const subjectAreaFilterStr = searchParams.get("subjectAreaFilter");
     // Extract and process country filter
     const countryFilter = searchParams.get("countryFilter")
       ?.split(",")
@@ -99,7 +100,7 @@ export async function GET(req: Request) {
     if (searchCourse) {
       courseTitleFilter = { $regex: new RegExp(searchCourse, "i") };
     }
-    const subjectAreaFilterStr = searchParams.get("subjectAreaFilter");
+
     if (subjectAreaFilterStr) {
       const subjectAreas = subjectAreaFilterStr
         .split(",")

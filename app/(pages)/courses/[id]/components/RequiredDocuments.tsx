@@ -17,13 +17,10 @@ interface Data {
 export const RequiredDocuments = ({ data }: { data: Data }) => {
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
   const [selectedDocUni, setSelectedDocUni] = useState<Document | null>(null);
-  const [activeTabUni, setActiveTabUni] = useState(
-    "University Application Docs"
-  );
+  const [activeTabUni, setActiveTabUni] = useState("University Application Docs");
   // Memoize document lists to prevent recalculations on every render
-  const universityDocs = useMemo(
-    () =>
-      (data?.universityDocuments || [])?.flatMap((degree) => degree.doc || []),
+  const universityDocs = useMemo(() =>
+    (data?.universityDocuments || [])?.flatMap((degree) => degree.doc || []),
     [data]
   );
   const embassyDocs = useMemo(() => data?.embassyDocuments || [], [data]);
