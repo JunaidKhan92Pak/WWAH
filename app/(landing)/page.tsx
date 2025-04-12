@@ -192,7 +192,7 @@ function Page() {
                         "How can I help you?",
                         "Looking for a university?",
                         "Need help with eligibility?",
-                        "Ask me anything about admissions!",
+                        "Need admission info?",
                       ]}
                       loop={true}
                       cursor
