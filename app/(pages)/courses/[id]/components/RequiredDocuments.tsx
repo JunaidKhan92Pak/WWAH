@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React, { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
 
 interface Document {
@@ -58,7 +58,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
           onClick={() => setActiveTabUni("Embassy Documents")}
         >
           Embassy Documents
-        </Button>
+        </Button> 
       </div>
 
       {/* University Application Docs */}
@@ -135,9 +135,9 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
                     onClick={() => setSelectedDoc(doc)}
                   >
                     {doc.name}
-                  </p>
+                  </p>  
                 </li>
-              ))}
+              ))} 
             </ul>
           </div>
 

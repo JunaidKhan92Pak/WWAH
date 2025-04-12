@@ -30,9 +30,8 @@ type ScholarshipData = {
   applicableDepartments: [];
   eligibilityCriteria: [];
   Document: string[];
-  requiredDocuments: []
+  requiredDocuments: [];
 };
-
 const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = React.use(params);
   const [data, setData] = useState<ScholarshipData | null>(null);
@@ -58,10 +57,8 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [id]); // Add id as a dependency
-
   const tabs: Tab[] = [
     { label: "Overview", id: "Overview" },
     { label: "Benefits", id: "Benefits" },
@@ -74,11 +71,8 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
     { label: "Required Documents", id: "Required Documents" },
     { label: "Application Process", id: "Application Process" },
   ];
-  const [activeTabPro, setActiveTabPro] = useState<string>(
-    "Overview"
-  );
+  const [activeTabPro, setActiveTabPro] = useState<string>("Overview");
   console.log(data);
-
   const handleTabClick = (tab: Tab) => {
     setActiveTabPro(tab.label);
     const section = document.getElementById(tab.id);
@@ -89,7 +83,6 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       window.scrollTo({ top: yPosition, behavior: "smooth" });
     }
   };
-
   if (loading) return <HeroSkeleton />;
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p> Not Aviable</p>;
@@ -109,10 +102,11 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
-                  ? "bg-[#C7161E] text-white"
-                  : "text-gray-800"
-                  }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
+                  activeTabPro === tab.label
+                    ? "bg-[#C7161E] text-white"
+                    : "text-gray-800"
+                }`}
               >
                 {tab.label}
               </button>
@@ -147,7 +141,6 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       <div id="Success Chances">
         <ScholarshipSuccessChances />
       </div>
-
       <div id="Required Documents">
         <Requireddocs requiredDocs={data.requiredDocuments} />
       </div>
@@ -158,5 +151,4 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
     </>
   );
 };
-
 export default Scholarshipdetail;

@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Typewriter } from "react-simple-typewriter";
+
 import {
   Dialog,
   DialogContent,
@@ -17,11 +19,7 @@ import { Bot, Headphones, Trophy, Users, Send } from "lucide-react";
 import Footer from "@/components/Footer";
 // import { ScrollArea } from "@/components/ui/scroll-area";
 import { FaCircleUser } from "react-icons/fa6";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
+
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
 import { useUserStore } from "@/store/userStore";
@@ -30,24 +28,12 @@ import Loading from "../loading";
 
 function Page() {
   const router = useRouter();
-  // const Countries = [
-  //   "USA",
-  //   "China",
-  //   "Canada",
-  //   "Italy",
-  //   "United Kingdom",
-  //   "Ireland",
-  //   "New Zealand",
-  //   "Denmark",
-  //   "France",
-  // ];
-  useEffect(() => {
 
+  useEffect(() => {
     fetchUser(); // Fetch user on mount
   }, []);
   const [input, setInput] = useState("");
-  // const { universities, country, setCountry, fetchUniversities, loading: uniLoading } =
-  //   useUniversityStore();
+
   const {
     universities,
     fetchUniversities,
@@ -84,22 +70,6 @@ function Page() {
         "At WWAH, we are committed to your long-term success. Our career counseling support ensure that you're not only prepared for your studies but also equipped for a successful career.",
     },
   ];
-  // function handleCheckboxChange(destination: string): void {
-
-
-  //   if (destination === "All") {
-  //     if (country.length === country.length) {
-  //       setCountry([]); // Uncheck all
-  //     } else {
-  //       setCountry(country); // Select all
-  //     }
-  //   } else {
-  //     const updatedSelected = country.includes(destination)
-  //       ? country.filter((item) => item !== destination) // Remove if exists
-  //       : [...country, destination]; // Add if not exists
-  //     setCountry(updatedSelected); //  Set array directly
-  //   }
-  // }
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
@@ -115,7 +85,7 @@ function Page() {
     }
   };
   if (uniLoading || loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -208,24 +178,40 @@ function Page() {
         </header>
         {/* header section ends */}
         {/* Hero Section Start */}
-        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly my-6 w-[95%] sm:w-[90%]">
+        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly my-6 w-[95%] sm:w-[100%]">
           {/* hero Section Left Side starts */}
           <div className="HeroLeftSection w-[95%] md:w-[70%] lg:w-[50%] ">
             {/* Hero Content */}
             <div className="hero-content space-y-8 ">
               <div className="space-y-8">
-                <h1 className=" text-white leading-snug">
-                  Hello! <em>Zeus</em> Here!
-                  <br />
-                  How can I Help You?
-                </h1>
-                <div className="HeroRightSide relative block lg:hidden">
+                <div className="text-center lg:text-left space-y-2">
+                  <h1 className="text-white">Hi there, I am ZEUS!</h1>
+                  <h1 className="text-white leading-snug">
+                    <Typewriter
+                      words={[
+                        "How can I help you?",
+                        "Looking for a university?",
+                        "Need help with eligibility?",
+                        "Ask me anything about admissions!",
+                      ]}
+                      loop={true}
+                      cursor
+                      cursorStyle="|"
+                      typeSpeed={90}
+                      deleteSpeed={40}
+                      delaySpeed={1000}
+                    />
+                  </h1>
+                </div>
+
+                <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/Hero_Robot.svg"
+                    src="/Hero_Robot.png"
                     alt="Robot"
-                    width={499}
-                    height={633}
-                    // className="2xl:w-[550px] 2xl:h-[700px]"
+                    width={0}
+                    height={0}
+                    sizes="60vw"
+                    className="w-[220px] h-auto "
                   />
                 </div>
 
@@ -312,12 +298,12 @@ function Page() {
           </div>
           {/* hero Section Left Side ends */}
           {/* hero Section Right Side starts */}
-          <div className="HeroRightSide relative h-[600px] hidden lg:block">
+          <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Image
               src="/Hero_Robot.svg"
               alt="Robot"
-              width={499}
-              height={633}
+              width={400}
+              height={300}
               // className="2xl:w-[550px] 2xl:h-[700px]"
             />
           </div>
