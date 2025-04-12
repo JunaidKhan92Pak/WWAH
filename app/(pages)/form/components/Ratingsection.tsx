@@ -44,7 +44,7 @@ const RatingSection = () => {
   ];
   return (
     <div
-      className="relative flex flex-col items-center justify-center text-white bg-black bg-cover py-4"
+      className="relative flex flex-col items-center justify-center text-white bg-black bg-cover py-6"
       style={{ backgroundImage: "url('/bg-usa.png')" }}
     >
       {/* Black Overlay */}
@@ -52,13 +52,13 @@ const RatingSection = () => {
 
       {/* Content */}
       <div className="relative w-full mx-auto z-10 text-center">
-        <h2 className="text-white mb-8">
+        <h3 className="text-white mb-2 md:mb-4">
           Our Students&apos; Journeys to Success!
-        </h2>
+        </h3>
 
         {/* Slider */}
         <div
-          className="flex overflow-x-auto space-x-4 p-12"
+          className="flex overflow-x-auto space-x-4 pt-12 px-6 md:px-8"
           style={{
              scrollbarWidth: "none",
             msOverflowStyle: "none",
@@ -67,7 +67,7 @@ const RatingSection = () => {
           {testimonials.map((testimonial, idx) => (
             <div
               key={idx}
-              className="relative bg-gray-700 bg-opacity-80 w-[90%] md:w-[50%] lg:w-[45%] xl:w-[30%] h-[240px] md:h-[250px]  flex-shrink-0 rounded-3xl shadow-lg"
+              className="relative bg-gray-700 bg-opacity-80 w-[90%] md:w-[50%] lg:w-[40%] xl:w-[30%] h-[200px] md:h-[250px]  flex-shrink-0 rounded-3xl shadow-lg"
             >
               {/* Image */}
               <div className="absolute -top-11 left-1/2 transform -translate-x-1/2">
@@ -81,8 +81,7 @@ const RatingSection = () => {
               </div>
 
               {/* Content */}
-              <div className="absolute bottom-0 w-full bg-opacity-60 text-white rounded-b-3xl  ">
-                <div className="text-center">
+              <div className="absolute bottom-0  w-full bg-opacity-60 text-white text-center">
                   <h6>{testimonial.name}</h6>
                   <div className="flex justify-center space-x-1"
                   >
@@ -99,10 +98,9 @@ const RatingSection = () => {
                       </h6>
                     ))}
                   </div>
-                  <p className="px-4 pb-4">{testimonial.message}</p>
+                  <p className="px-4 pb-2">{testimonial.message}</p>
                 </div>
               </div>
-            </div>
           ))}
         </div>
       </div>

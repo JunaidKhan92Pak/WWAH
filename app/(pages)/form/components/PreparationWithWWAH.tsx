@@ -47,13 +47,13 @@ const PreparationWithWWAH = () => {
             </p>
           </div>
         </div>
-        <div className="bg-white rounded-3xl shadow-xl border-transparent w-full mx-auto p-4 md:my-8       md:w-[70%]">
+        <div className="bg-white rounded-3xl shadow-xl border-transparent w-full mx-auto p-4 md:my-8 md:w-[90%] xl:w-[65%]">
           {/* 4 Divs in a Row */}
           <div className="grid  grid-cols-2 lg:grid-cols-4 gap-4">
             {expenseData.map((item, index) => (
               <div
                 key={index}
-                className={`flex flex-col items-center justify-evenly w-full h-[80px] md:h-[23vh] 2xl:h-[50vh] rounded-3xl ${item.bgColor}`}
+                className={`flex flex-col items-center justify-center h-[100px] md:h-[200px] lg:h-[250px] gap-2  rounded-3xl ${item.bgColor}`}
               >
                 {/* Image */}
                 <div className="flex items-center justify-center w-full overflow-hidden">

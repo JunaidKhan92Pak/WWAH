@@ -140,11 +140,11 @@ const Formsection = () => {
     >
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
-      <div className="relative z-10 bg-gray-700 bg-opacity-70 border text-white rounded-3xl shadow-lg p-3 md:p-10 2xl:p-20 w-[90%] mx-auto">
+      <div className="relative z-10 bg-gray-700 bg-opacity-70 border text-white rounded-3xl shadow-lg p-3 md:p-10  w-[90%] mx-auto">
         <div className="flex gap-1 sm:space-y-0 sm:space-x-2 justify-center items-center text-center md:mb-12 mb-4">
           <Button
             onClick={() => setFormType("Register Now")}
-            className={`text-white p-6 2xl:p-8 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Register Now" ? "bg-white" : "bg-transparent"
+            className={`text-white py-4 px-6 md:py-6 md:px-8 rounded-lg shadow-lg border border-[#C7161E] ${formType === "Register Now" ? "bg-white" : "bg-transparent"
               }`}
           >
             <h6 className={formType === "Register Now" ? "text-[#C7161E]" : "text-white"}>
@@ -153,7 +153,7 @@ const Formsection = () => {
           </Button>
           <Button
             onClick={() => setFormType("Book a Demo")}
-            className={`text-white p-6 2xl:p-8 w-full md:w-[30%] xl:w-[20%] rounded-lg shadow-lg border border-[#C7161E] ${formType === "Book a Demo" ? "bg-white" : "bg-transparent"
+            className={`text-white py-4 px-6 md:py-6 md:px-8 rounded-lg shadow-lg border border-[#C7161E] ${formType === "Book a Demo" ? "bg-white" : "bg-transparent"
               }`}
           >
             <h6 className={formType === "Book a Demo" ? "text-[#C7161E]" : "text-white"}>

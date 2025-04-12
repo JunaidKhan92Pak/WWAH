@@ -91,15 +91,15 @@ const CourseArchive = () => {
     : courses;
   return (
     <section className="w-[95%] mx-auto p-2 ">
-      <div className="md:flex items-center">
+      <div className="flex flex-col lg:flex-row lg:items-center">
         <div className="w-full">
           <h3 className="font-bold mb-1 flex items-center md:mb-0">
             Explore Courses from Every Discipline!
           </h3>
           <p className="text-gray-600">Over 1000 courses available.</p>
         </div>
-        <div className="w-[70%] md:w-[90%] lg:w-[75%] xl:w-[60%] mt-3 md:mt-10 flex flex-wrap md:flex-nowrap items-center gap-4 md:justify-end">
-          <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 w-full md:w-[60%] md:max-w-[280px]">
+        <div className="w-full md:w-[60%] lg:w-[90%] xl:w-[60%] my-4 lg:mt-10 grid grid-cols-2 md:grid-cols-4 md:flex gap-2 items-center">
+          <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 w-[100%] xl:w-[80%]">
             <Image
               src="/search.svg"
               width={20}
@@ -120,7 +120,7 @@ const CourseArchive = () => {
             />
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger className="bg-[#F1F1F1] rounded-md py-2 px-6 flex items-center gap-2 text-base text-gray-600">
+            <DropdownMenuTrigger className="bg-[#F1F1F1] rounded-md py-2 px-6 flex items-center gap-2 text-base text-gray-600 ">
               <MdOutlineSortByAlpha className="w-4 h-4" />
               <span>Sorting</span>
             </DropdownMenuTrigger>
@@ -138,7 +138,7 @@ const CourseArchive = () => {
 
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            className={`text-sm flex items-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 md:w-[70%] lg:w-[90%] xl:w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
               }`}
           >
             <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
@@ -151,7 +151,7 @@ const CourseArchive = () => {
       {loading ? (
         <SkeletonCard arr={12} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4  md:p-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-4  md:p-0">
           {courses.length === 0 ? (
             <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
               {" "}
