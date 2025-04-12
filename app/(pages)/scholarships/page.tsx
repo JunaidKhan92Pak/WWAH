@@ -73,9 +73,7 @@ const Page = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   // We'll still use local state for search input; others are synced with Zustand.
   const [localSearch, setLocalSearch] = useState("");
-  const [selectedRequirements, setSelectedRequirements] = useState<string[]>(
-    []
-  );
+
 
   // Debounced search to optimize rapid input changes
   const debouncedSetSearch = useCallback(
@@ -337,7 +335,7 @@ const Page = () => {
                           name={requirement}
                           value={requirement}
                           onChange={handleRequirementChange}
-                          checked={selectedRequirements.includes(requirement)}
+                          checked={minimumRequirements.includes(requirement)}
                           className="ml-2"
                         />
                       </li>
