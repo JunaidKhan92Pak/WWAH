@@ -11,6 +11,8 @@ interface ScholarshipState {
     page: number;
     limit: number;
     totalPages: number;
+    minimumRequirements: string[]
+    setMinimumRequirements: (requirements: string[]) => void;
     setCountry: (country: string[]) => void;
     setSearch: (search: string) => void;
     setPrograms: (programs: string[]) => void;
@@ -34,6 +36,11 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
     page: 1,
     limit: 10,
     totalPages: 1,
+    minimumRequirements: [],
+    setMinimumRequirements: (requirements) => {
+        set({ minimumRequirements: Array.isArray(requirements) ? requirements : [] });
+        get().fetchScholarships();
+    },
     setCountry: (country) => {
         set({ country: Array.isArray(country) ? country : [] });
         get().fetchScholarships();
@@ -71,7 +78,7 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
     fetchScholarships: async () => {
         set({ loading: true });
         try {
-            const { search, country, programs, scholarshipType, deadlineFilters, page, limit } = get();
+            const { search, country, programs, scholarshipType, minimumRequirements, deadlineFilters, page, limit } = get();
             const queryParams = new URLSearchParams();
             if (country.length > 0) {
                 queryParams.append("countryFilter", country.join(","));
@@ -84,6 +91,9 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
             }
             if (deadlineFilters.length > 0) {
                 queryParams.append("deadlineFilter", deadlineFilters.join(","));
+            }
+            if (minimumRequirements.length > 0) {
+                queryParams.append("minimumRequirements", minimumRequirements.join(","));
             }
             if (search) queryParams.append("search", search);
             queryParams.append("page", page.toString());

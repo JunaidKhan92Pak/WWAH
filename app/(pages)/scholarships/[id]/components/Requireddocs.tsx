@@ -74,5 +74,4 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
     </div>
   );
 };
-
 export default Requireddocs;

@@ -37,7 +37,7 @@ const Page = () => {
   ];
   // const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
   // const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
-  const minimumRequirements = [
+  const minimumRequirement = [
     "Excellent Academic Achievement",
     "2.5-3.0 CGPA",
     "3.0-3.5 CGPA",
@@ -48,6 +48,8 @@ const Page = () => {
   ];
   // Extract actions and state from Zustand store (including new filter states)
   const {
+    minimumRequirements,
+    setMinimumRequirements,
     scholarships,
     loading,
     fetchScholarships,
@@ -82,7 +84,6 @@ const Page = () => {
     }, 500),
     [setSearch]
   );
-
   // Sync country filter selections to Zustand state
   useEffect(() => {
     setCountry(selectedValues);
@@ -96,7 +97,6 @@ const Page = () => {
         : [...prev, value]
     );
   };
-
   // For Programs, update directly using store values
   const handleProgramChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -106,7 +106,6 @@ const Page = () => {
         : [...programs, value]
     );
   };
-
   // New: Scholarship Type filter handler
   const handleScholarshipTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -116,7 +115,6 @@ const Page = () => {
         : [...scholarshipType, value]
     );
   };
-
   // New: Application Deadline filter handler
   const handleDeadlineChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -126,7 +124,16 @@ const Page = () => {
         : [...deadlineFilters, value]
     );
   };
-
+  const handleRequirementChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = event.target;
+    setMinimumRequirements(
+      checked
+        ? [...minimumRequirements, value]
+        : minimumRequirements.filter((r) => r !== value)
+    );
+  };
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalSearch(value);
@@ -140,13 +147,6 @@ const Page = () => {
 
   const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
   const [showFavorites, setShowFavorites] = useState(false);
-
-  // const toggleFavorite = (id: string) => {
-  //   setFavorites((prev) => ({
-  //     ...prev,
-  //     [id]: !prev[id],
-  //   }));
-  // };
 
   const toggleFavorite = (id: string) => {
     setFavorites((prev) => {
@@ -164,7 +164,6 @@ const Page = () => {
       setFavorites(JSON.parse(storedFavorites));
     }
   }, []);
-
   // Filtered list based on "Favorites" button
   const displayedScholarships = showFavorites
     ? scholarships.filter((item) => favorites[item._id])
@@ -174,16 +173,6 @@ const Page = () => {
     if (page < totalPages) {
       setPage(page + 1);
     }
-  };
-  const handleRequirementChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value, checked } = event.target;
-    setSelectedRequirements(
-      checked
-        ? [...selectedRequirements, value]
-        : selectedRequirements.filter((r) => r !== value)
-    );
   };
 
   return (
@@ -339,8 +328,7 @@ const Page = () => {
                     ].map((requirement) => (
                       <li
                         key={requirement}
-                        className="flex items-center justify-between"
-                      >
+                        className="flex items-center justify-between">
                         <span className="text-[16px] truncate">
                           {requirement}
                         </span>
@@ -498,18 +486,16 @@ const Page = () => {
                   Minimum Requirement:
                 </p>
                 <ul className="py-2 space-y-3">
-                  {minimumRequirements.map((requirement) => (
-                    <li
-                      key={requirement}
-                      className="flex items-center justify-between"
-                    >
+                  {minimumRequirement.map((requirement) => (
+                    <li key={requirement}
+                      className="flex items-center justify-between">
                       <span className="text-[16px] truncate">
                         {requirement}
                       </span>
                       <input
                         type="checkbox"
                         value={requirement}
-                        checked={selectedRequirements.includes(requirement)}
+                        checked={minimumRequirements.includes(requirement)}
                         onChange={handleRequirementChange}
                         className="ml-2"
                       />
