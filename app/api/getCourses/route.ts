@@ -46,7 +46,7 @@ export async function GET(req: Request) {
       if (textSearchSupported && !/[&|]/.test(search)) {
         query.$text = { $search: search };
       } else if (words.length > 0) {
-        query.$or = words.map((word) => ({
+        query.$and = words.map((word) => ({
           course_title: { $regex: new RegExp(escapeRegex(word), "i") },
         }));
       }
@@ -101,7 +101,7 @@ export async function GET(req: Request) {
     }
 
     // Apply course title filters
-    const filters: any[] = [];
+    const filters = [];
 
     if (subject) {
       const words = subject.replace(/[&|]/g, "").split(/\s+/).filter(Boolean);
@@ -128,20 +128,19 @@ export async function GET(req: Request) {
     if (subjectAreaFilterStr) {
       const subjectAreas = subjectAreaFilterStr
         .split(",")
-        .map((s) => s.trim())
+        .map((s) => s.trim().replace(/[&|]/g, ""))
         .filter(Boolean);
-
       if (subjectAreas.length > 0) {
         filters.push({
-          $or: subjectAreas.flatMap((area) => {
-            const words = area.split(/\s+/).filter(Boolean);
-            return words.map((word) => ({
-              course_title: { $regex: new RegExp(escapeRegex(word), "i") },
-            }));
-          }),
+          $or: subjectAreas.map((area) => ({
+            course_title: {
+              $regex: new RegExp(`.*${escapeRegex(area)}.*`, "i"),
+            },
+          })),
         });
       }
     }
+
     // Final Query
     if (filters.length > 0) {
       query.$and = filters;

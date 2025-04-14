@@ -2,13 +2,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import Image from "next/image";
@@ -27,6 +32,23 @@ import Loading from "../loading";
 // import Loading from "@/app/loading";
 
 function Page() {
+  const countries = [
+    { name: "USA", value: "USA", img: "/countryarchive/usa_logo.png" },
+    { name: "China", value: "china", img: "/countryarchive/china_logo.png" },
+    { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
+    { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
+    { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
+    {
+      name: "New Zealand",
+      value: "New Zealand",
+      img: "/countryarchive/nz_logo.png",
+    },
+    {
+      name: "Australia",
+      value: "australia",
+      img: "/countryarchive/australia_logo.png",
+    },
+  ];
   const router = useRouter();
 
   useEffect(() => {
@@ -37,13 +59,29 @@ function Page() {
   const {
     universities,
     fetchUniversities,
+    country,
+    setCountry,
     loading: uniLoading,
   } = useUniversityStore();
   const { isAuthenticate, loading, logout, user, fetchUser } = useUserStore();
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);
-
+  function handleCheckboxChange(destination: string): void {
+    if (destination === "All") {
+      if (country.length === countries.length) {
+        setCountry([]); // Uncheck all
+      } else {
+        // Select all countries by mapping through the countries array
+        setCountry(countries.map((c) => c.value));
+      }
+    } else {
+      const updatedSelected = country.includes(destination)
+        ? country.filter((item) => item !== destination)
+        : [...country, destination];
+      setCountry(updatedSelected);
+    }
+  }
   const features = [
     {
       icon: <Bot className="h-8 w-8" />,
@@ -84,7 +122,7 @@ function Page() {
       router.push("/chatmodel"); // Navigate without message if input is empty
     }
   };
-  if (uniLoading || loading) {
+  if (loading) {
     return <Loading />;
   }
 
@@ -304,7 +342,7 @@ function Page() {
               alt="Robot"
               width={400}
               height={300}
-              // className="2xl:w-[550px] 2xl:h-[700px]"
+            // className="2xl:w-[550px] 2xl:h-[700px]"
             />
           </div>
         </section>
@@ -314,44 +352,66 @@ function Page() {
           {/* Section Header */}
           <div className="flex justify-between items-center ">
             <h3 className="font-bold">Top Universities!</h3>
-            {/* <Badge variant="outline" className=" bg-[#F1F1F1]">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="text-sm text-gray-900 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[48%] h-8">
-                  <Image
-                    src="/filterr.svg"
-                    width={16}
-                    height={16}
-                    alt="filter"
-                  />{" "}
-                  Filter
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="p-2 h-[360px]">
-                  <ScrollArea className="p-2 ">
-                    <p className="text-[16px]">Countries:</p>
-                    <ul className="py-2 space-y-4">
-                      {Countries.map((country) => (
-                        <li key={country} className="flex justify-between ">
-                          <div className="flex gap-2">
-                            <Image
-                              src={`/${country.toLowerCase()}.png`}
-                              width={30}
-                              height={30}
-                              alt={country}
-                            />
-                            <label htmlFor={country}>{country}</label>
-                          </div>
-                          <input
-                            type="checkbox"
-                            onChange={() => handleCheckboxChange(country)}
-                            className="mr-2"
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[10%] h-10">
+                <Image src="/filterr.svg" width={16} height={14} alt="filter" />
+                <div className="flex justify-between w-full">
+                  <div className="w-1/2">Filter</div>
+                  {/* Always reserve space for count by using opacity instead of conditional rendering */}
+                  <div
+                    className="w-1/2 transition-opacity duration-200"
+                    style={{ opacity: country.length > 0 ? 1 : 0 }}
+                  >
+                    {country.length > 0 ? `(${country.length})` : "(0)"}
+                  </div>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-2 h-[260px]">
+                <ScrollArea className="p-2">
+                  <div className="flex justify-between">
+                    <p>Countries:</p>
+                    {/* Always reserve space for the clear button by using visibility instead of conditional rendering */}
+                    <div
+                      className="transition-opacity duration-200"
+                      style={{
+                        opacity: country.length > 0 ? 1 : 0,
+                      }}
+                    >
+                      <button
+                        onClick={() => setCountry([])}
+                        className="text-blue-500 hover:underline"
+                        aria-hidden={!(country.length > 0)}
+                        tabIndex={country.length > 0 ? 0 : -1}
+                      >
+                        Clear filters
+                      </button>
+                    </div>
+                  </div>
+                  <ul className="py-2 space-y-4">
+                    {countries.map((c, indx) => (
+                      <li key={indx} className="flex justify-between">
+                        <div className="flex gap-2">
+                          <Image
+                            src={c.img}
+                            width={30}
+                            height={30}
+                            alt={c.name}
                           />
-                        </li>
-                      ))}
-                    </ul>
-                  </ScrollArea>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </Badge> */}
+                          <label htmlFor={c.value}>{c.name}</label>
+                        </div>
+                        <input
+                          type="checkbox"
+                          id={c.value}
+                          onChange={() => handleCheckboxChange(c.value)}
+                          checked={country.includes(c.value)}
+                          className="mr-2"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           {/* University Cards Grid */}
           {!uniLoading ? (
