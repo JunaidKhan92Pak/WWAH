@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 
 interface PermanentResidencyProps {
@@ -13,11 +13,11 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({
   countryName,
   country,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  // const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <section
-      className="relative flex flex-col lg:flex-row lg:gap-5 items-center text-white bg-black bg-cover bg-center h-auto p-6 my-1 overflow-hidden"
+      className="relative justify-between flex flex-col lg:flex-row lg:gap-5 items-center text-white bg-black bg-cover bg-center h-auto p-6 my-1 overflow-hidden"
       style={{
         backgroundImage: "url('/bg-usa.png')",
       }}
@@ -31,31 +31,21 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({
           How to Get Permanent Residency in the {countryName} as an
           International Student?
         </h5>
-        <div className="text-[rgb(209,207,207)] space-y-3">
+        <div className="text-[rgb(209,207,207)] space-y-3 max-h-60 overflow-y-scroll hide-scrollbar">
           {Array.isArray(residency) &&
-            (isExpanded ? residency : residency.slice(0, 3)).map(
-              (item, index) => (
-                <p key={index} className="leading-relaxed">
-                  {item}
-                </p>
-              )
-            )}
-
-          {Array.isArray(residency) && residency.length > 3 && (
-            <p>
-              <span
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-red-600 font-semibold underline hover:font-bold underline-offset-4 cursor-pointer ml-2"
+            residency.map((item, index) => (
+              <p
+                key={index}
+                className="leading-snug p-1 border-gray-600 rounded"
               >
-                {isExpanded ? "Read less" : "Read more..."}
-              </span>
-            </p>
-          )}
+                {item}
+              </p>
+            ))}
         </div>
       </div>
 
       {/* Image Section (50%) */}
-      <div className="relative z-10 lg:w-1/2 hidden lg:flex justify-center items-center mt-6 lg:mt-0">
+      <div className="relative z-10 lg:w-[43%] hidden lg:flex justify-center items-center mt-6 lg:mt-0">
         <Image
           src={`/countryarchive/${country?.short_name}_visa.png`}
           alt={`${countryName} Visa`}

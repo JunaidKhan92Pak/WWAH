@@ -91,7 +91,8 @@ const Herosection = ({
       <section className="mt-4 ">
         <div className="w-[90%] md:w-[95%] mx-auto ">
           {/* Hero Section */}
-          <div className="relative md:h-[80vh] h-[95%] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
+          <div
+            className="relative min-h-[250px] sm:min-h-[400px] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             // style={{ backgroundImage: `url("/dcu-hero-img.png")` }}
             style={{
               backgroundImage: `url(${uniData.banner}  ) `,
@@ -118,22 +119,21 @@ const Herosection = ({
                   </h2>
                 </div>
                 <div className="pl-2">
-                  <p className="text-white text-start ">{data.universityname}</p>
+                  <p className="text-white text-start ">
+                    {data.universityname}
+                  </p>
                 </div>
 
                 <div className="w-[120px] bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
                   <div className="  flex items-center  ">
                     <CiLocationOn className="h-4 w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
                     <p className="text-base">
-                      {data.countryname
-                        ? data.countryname
-                        : "Not Avialable"}
+                      {data.countryname ? data.countryname : "Not Avialable"}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className=" w-[80%]  md:w-[30%]  lg-w-[25%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl py-4 md:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
-              >
+              <div className=" w-[80%]  md:w-[30%]  lg-w-[25%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl py-4 md:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0">
                 <Link
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"

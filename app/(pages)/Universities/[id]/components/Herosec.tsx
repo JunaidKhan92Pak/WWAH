@@ -122,7 +122,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
 
                 {/* Right Section */}
                 <div
-                  className="w-full md:w-4/5 md:h-4/5 lg:w-[50%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
+                  className="w-full md:w-4/5 md:h-[70%] lg:w-[60%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
 py-4 md:py-1 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
                 >
                   <Link
