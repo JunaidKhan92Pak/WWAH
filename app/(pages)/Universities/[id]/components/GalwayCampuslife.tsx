@@ -91,7 +91,7 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
   ];
 
   return (
-    <div className="relative text-white  md:px-12  mt-8 ">
+    <div className="relative text-white  md:px-8  mt-8 ">
 
       {/* Background Image */}
       <div className="absolute inset-0 -z-10 bg-black">
@@ -111,9 +111,9 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
         <CarouselContent>
           {carouselData.map((data, index) => (
             <CarouselItem key={index}>
-              <div className="flex justify-center items-center h-full min-h-[420px] md:py-8"> {/* ensures full height */}
+              <div className="flex justify-center items-center h-full min-h-[400px] md:py-6"> {/* ensures full height */}
                 {/* Left Side: Text */}
-                <div className="flex flex-col gap-4 lg:flex-row w-[78%] md:w-[75%] lg:w-[90%] xl:w-[70%] mx-auto py-4 justify-center items-center">
+                <div className="flex flex-col gap-4 md:gap-6 lg:flex-row w-[78%] md:w-[70%] lg:w-[90%] xl:w-[80%] mx-auto py-4 justify-between items-center">
                   <div className="w-full">
                     <h4 className="leading-tight">Campus Life at {uniname}</h4>
                     <h5 className="text-[#F6B677]">{data.title}</h5>
@@ -124,7 +124,7 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
                   <div className="w-full">
                     <Card>
                       <CardContent>
-                        <div className="relative w-full lg:w-[97%] h-[200px] md:h-[270px] lg:h-[340px]">
+                        <div className="relative w-full lg:w-[97%] h-[200px] md:h-[270px] lg:h-[300px]">
                           <Image
                             src={data?.image ? data.image : "/placeholder.jpg"} // Replace with your actual image path
                             alt={`Campus View ${index + 1}`}

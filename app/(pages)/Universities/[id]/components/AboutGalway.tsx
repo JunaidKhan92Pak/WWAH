@@ -35,7 +35,6 @@ interface AboutGalwayProps {
     city_transportation_3: string;
   };
 }
-
 const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
   // Memoize the slides to prevent unnecessary re-renders
   const slides = React.useMemo(
@@ -138,13 +137,13 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={index}>
-              <div className="flex justify-center items-center h-full min-h-[420px] py-6 md:py-8"> {/* ensures full height */}
+              <div className="flex justify-center items-center h-full min-h-[350px] py-6 md:py-8"> {/* ensures full height */}
 
                 {index === 0 ? (
                   // First slide: TEXT ONLY
                   <div className="flex flex-col items-center justify-center text-center w-[85%] md:w-[70%] lg:w-[60%] xl:w-[50%]">
                     <h2 className="text-white text-4xl md:text-[86px] tracking-wider font-bold text-center">
-                      About City
+                      ABOUT CITY
                     </h2>
                   </div>
                 ) : (
@@ -158,7 +157,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                           alt={slide.title}
                           width={400}
                           height={300}
-                          className="object-cover w-full h-[150px] md:h-[250px] lg:h-[315px]"
+                          className="object-cover w-full h-[150px] md:h-[250px] lg:h-[290px]"
                         />
                       </div>
                     </div>
