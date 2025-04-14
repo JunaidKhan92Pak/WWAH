@@ -77,7 +77,7 @@ const Hero: React.FC<HeroProps> = ({
                   <p className="mx-4 text-white">Or</p>
                   <div className="flex-1 border-t border-gray-100"></div>
                 </div>
-                <Link href="/contactus">
+                <Link href="/dashboard">
                   <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md text-white rounded-lg hover:bg-gray-300 transition duration-300">
                     Apply Now
                   </Button>

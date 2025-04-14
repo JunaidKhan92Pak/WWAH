@@ -99,13 +99,21 @@ export default function Home() {
             <div className="ml-auto flex gap-2 items-center">
               {isAuthenticate ? (
                 <>
-                  <h6>Hello,  {user?.personalInfo.firstName || "Newbie"}</h6>
-                  <Image src="/profile.png" alt="profile" width={30} height={45} />
+                  <h6>Hello, {user?.personalInfo.firstName || "Newbie"}</h6>
+                  <Image
+                    src="/profile.png"
+                    alt="profile"
+                    width={30}
+                    height={45}
+                  />
                 </>
               ) : (
-                <Link href="/signin">  <Button className="bg-[#FED7B1] text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                  SignIn
-                </Button></Link>
+                <Link href="/signin">
+                  {" "}
+                  <Button className="bg-[#FED7B1] text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                    SignIn
+                  </Button>
+                </Link>
               )}
             </div>
           </div>
@@ -118,17 +126,20 @@ export default function Home() {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.isUser ? "justify-end" : "justify-start"
-                    }`}
+                  className={`flex ${
+                    message.isUser ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
-                    className={`flex gap-3 max-w-[55%] ${message.isUser ? "flex-row-reverse" : "flex-row"
-                      }`}
+                    className={`flex gap-3 max-w-[80%] sm:max-w-[55%] ${
+                      message.isUser ? "flex-row-reverse" : "flex-row"
+                    }`}
                   >
                     <Avatar className="h-8 w-8">
                       <div
-                        className={`h-full w-full ${message.isUser ? "bg-blue-500" : "bg-gray-500"
-                          } flex items-center justify-center text-white`}
+                        className={`h-full w-full ${
+                          message.isUser ? "bg-blue-500" : "bg-gray-500"
+                        } flex items-center justify-center text-white`}
                       >
                         <Image
                           src={message.isUser ? "/user-dp.png" : "/zues-dp.png"}
@@ -139,10 +150,11 @@ export default function Home() {
                       </div>
                     </Avatar>
                     <Card
-                      className={`p-4 ${message.isUser
-                        ? "bg-[#F9CEA5] text-black"
-                        : "bg-[#F9CEA5]"
-                        }`}
+                      className={`p-4 ${
+                        message.isUser
+                          ? "bg-[#F9CEA5] text-black"
+                          : "bg-[#F9CEA5]"
+                      }`}
                     >
                       <p className="whitespace-pre-line">{message.text}</p>
                     </Card>
@@ -174,7 +186,7 @@ export default function Home() {
               <Button
                 onClick={() => handleSend()}
                 size="icon"
-                className="p-0 bg-transparent rounded-full"
+                className="p-0 bg-transparent hover:bg-transparent rounded-full"
               >
                 <Image
                   src="/Streamline-Solar-Broken.png"
@@ -185,7 +197,7 @@ export default function Home() {
               </Button>
             </div>
             {/* Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center gap-3 mt-2">
+            <div className="flex flex-row justify-center overflow-x-auto hide-scrollbar gap-3 mt-2">
               <Link href="/Universities">
                 <Button className="bg-[#FED7B1] text-sm text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Top Universities
