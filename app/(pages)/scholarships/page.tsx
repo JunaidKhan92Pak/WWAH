@@ -616,7 +616,7 @@ const Page = () => {
                                 width={16}
                                 height={16}
                               />
-                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                              <p className="text-sm text-gray-600 truncate">
                                 {item.hostCountry}
                               </p>
                             </div>
@@ -627,7 +627,7 @@ const Page = () => {
                                 width={16}
                                 height={16}
                               />
-                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                              <p className="text-sm text-gray-600 truncate">
                                 {item.scholarshipType}
                               </p>
                             </div>
@@ -635,7 +635,7 @@ const Page = () => {
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
                               <Image src={"/Notebooksvg.svg"} alt="degree level" width={16} height={16} />
-                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                              <p className="text-sm text-gray-600 truncate">
                                 {item.programs
                                   ? item.programs
                                   : "Not Specified"}
@@ -648,7 +648,7 @@ const Page = () => {
                                 width={16}
                                 height={16}
                               />
-                              <p className="text-sm md:text-base text-gray-600 font-bold truncate">
+                              <p className="text-sm text-gray-600 truncate">
                                 {item.deadline}
                               </p>
                             </div>

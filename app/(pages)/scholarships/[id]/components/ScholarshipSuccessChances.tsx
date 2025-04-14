@@ -9,8 +9,8 @@ export const ScholarshipSuccessChances = () => {
     { label: "English Proficiency", value: 60, icon: "/lang-icon.svg" },
   ];
   const financialFactors = [
-    { label: "Nationality", value: 40, icon: "/icons/nationality_icon.svg" },
-    { label: "Age", value: 50, icon: "/icons/age-icon.svg" },
+    { label: "Nationality", value: 40, icon: "/nationality.svg" },
+    { label: "Age", value: 50, icon: "/age.svg" },
   ];
   const getProgressBarColor = (value: number): string => {
     return value >= 75 ? "#E5EDDE" : value >= 50 ? "#E5EDDE" : "#F4D0D2";

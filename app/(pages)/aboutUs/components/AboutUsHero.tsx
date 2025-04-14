@@ -12,7 +12,7 @@ function AboutUsHero() {
         Your browser does not support the video tag.
       </video> */}
       <video autoPlay loop muted className="w-full h-full object-cover">
-        <source src="/WWAH.mp4" type="video/mp4" />
+        <source src="/Why choose WWAH Video.mp4" type="video/mp4" />
       </video>
     </div>
   );

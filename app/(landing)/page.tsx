@@ -385,12 +385,14 @@ function Page() {
                       />
 
                       {/* University Logo Overlay */}
-                      <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-md">
+                      <div className="absolute bottom-1 left-5">
                         <Image
                           src={uni.universityImages.logo}
                           alt={`${uni.university_name} logo`}
                           width={40}
                           height={40}
+                          className="rounded-full bg-white border border-black w-[56px] h-[56px]"
+
                         />
                       </div>
                     </Link>

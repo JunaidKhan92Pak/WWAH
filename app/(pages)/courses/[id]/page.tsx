@@ -295,7 +295,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         {data?.courseData?.universityname}!
                       </p>
                       <Link href="/universityarchievepage">
-                        <Button className="bg-white text-[#C7161E] font-normal px-1 md:px-8 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition ">
+                        <Button className="bg-white text-[#C7161E] font-normal px-1 md:px-8 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
                           Discover More
                         </Button>
                       </Link>

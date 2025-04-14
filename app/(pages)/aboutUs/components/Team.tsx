@@ -3,6 +3,20 @@
 import React from "react";
 import Image from "next/image";
 
+const teamCards = [
+  {
+    src: "/counselling.svg",
+    alt: "WWAH Counselling Team",
+  },
+  {
+    src: "/studentcare.svg",
+    alt: "WWAH Service Team",
+  },
+  {
+    src: "/serviceteam.svg",
+    alt: "WWAH Student Care Team",
+  },
+];
 function  Team() {
   return (
     <div className="lg:py-12 py-4 bg-black text-white">
@@ -17,40 +31,26 @@ function  Team() {
           make up the WWAH team:
         </p>
         {/* Image Cards */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-4 lg:gap-8">
-          {/* Card 1 */}
-          <div className="w-full sm:w-[32%] lg:w-[25%] rounded-lg shadow-lg flex-shrink-0">
-            <Image
-              src="/counselling.svg"
-              alt="WWAH Counselling Team"
-              className="rounded-t-lg w-[450px] h-[230px] object-fit rounded-xl"
-              width={200}
-              height={100}
-            />
-            
-          </div>
-
-          {/* Card 2 */}
-          <div className="w-full sm:w-[32%] lg:w-[25%] rounded-lg  shadow-lg flex-shrink-0">
-            <Image
-              src="/studentcare.svg"
-              alt="WWAH Service Team"
-              className="rounded-t-lg w-[450px] h-[230px] rounded-xl object-fit"
-              width={200}
-              height={100}
-            />
-          </div>
-
-          {/* Card 3 */}
-          <div className="w-full sm:w-[32%] lg:w-[25%] rounded-lg shadow-lg flex-shrink-0">
-            <Image
-              src="/serviceteam.svg"
-              alt="WWAH Student Care Team"
-              className="rounded-t-lg w-[450px] h-[230px] rounded-xl"
-              width={200}
-              height={100}
-            />
+        <div className="flex overflow-x-auto space-x-2 md:space-x-4 md:p-4 hide-scrollbar justify-start lg:justify-center"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          {teamCards.map((card, index) => (
+            <div
+              key={index}
+              className="overflow-hidden relative flex-shrink-0 max-w-[200px] md:max-w-[240px] lg:max-w-[300px] xl:max-w-[320px] rounded-lg shadow-lg"
+            >
+              <Image
+                src={card.src}
+                alt={card.alt}
+                className="w-[450px] md:h-[200px] lg:h-[230px] object-cover rounded-xl"
+                width={200}
+                height={100}
+              />
             </div>
+          ))}
         </div>
       </div>
     </div>

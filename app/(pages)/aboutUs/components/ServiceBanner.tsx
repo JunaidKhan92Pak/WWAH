@@ -4,7 +4,7 @@ import Image from "next/image";
 function ServiceBanner() {
   const arr2 = [
     {
-      icon: "/Notebook.svg",
+      icon: "/notebook.svg",
       caption: "Comprehensive Course Listings",
     },
     {
