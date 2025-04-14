@@ -11,6 +11,7 @@ import Herosec from './components/Herosec';
 import { HeroSkeleton } from '@/components/HeroSkeleton';
 import FAQ from '@/components/ui/enrollment/FAQ';
 import Banner from '@/components/ui/enrollment/Banner';
+import { Button } from "@/components/ui/button";
 
 type Tab = {
   label: string;
@@ -139,21 +140,24 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <div>
         <div className="bg-white my-6 md:mt-12 md:mb-12">
           <div className="w-[95%] mx-auto px-6">
-            <div className="w-full flex whitespace-nowrap overflow-x-auto hide-scrollbar justify-center lg:justify-evenly items-center border-b border-gray-200">
+            <div className="w-full lg:w-[95%] flex overflow-x-auto hide-scrollbar border-b border-gray-200 mt-4">
+
               {tabs.map((tab) => (
-                <button
+                <Button
                   key={tab.label}
                   onClick={() => handleTabClick(tab)}
-                  className={`transition px-10 py-2 rounded-t-xl ${
+                  className={`font-medium transition text-sm md:text-lg px-10 py-2 md:rounded-t-xl flex-shrink-0 border-b border-gray-400 md:border-none ${
                     activeTab === tab.label
-                      ? "bg-[#C7161E] text-white"
-                      : "text-gray-600"
-                  }`}
+                    ? "bg-[#C7161E] text-white"
+                    : "bg-transparent text-gray-800"
+                  }
+                          hover:bg-[#FCE7D2] hover:text-black`}
+
                   aria-label={`Navigate to ${tab.label}`}
                   aria-selected={activeTab === tab.label}
                 >
                   {tab.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

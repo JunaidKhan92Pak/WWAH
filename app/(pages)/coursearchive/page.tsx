@@ -224,9 +224,16 @@ const CourseArchive = () => {
                 </div>
                 <div className="p-4 flex-grow">
                   {/* University Name and Course Title */}
+                  <Link
+                    href={`/courses/${item._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-1/2"
+                  >
                   <h3 className="text-base md:text-lg font-bold text-gray-800 truncate hover:underline underline-offset-4">
                     {item?.course_title}
                   </h3>
+                  </Link>
                   <div className="grid grid-cols-2 gap-x-2 gap-y-4 mt-3">
                     <div className="flex items-center gap-2">
                       <Image
