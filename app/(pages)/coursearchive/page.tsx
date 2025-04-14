@@ -138,8 +138,9 @@ const CourseArchive = () => {
 
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 md:w-[70%] lg:w-[90%] xl:w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+            className={`text-sm flex items-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 md:w-[70%] lg:w-[90%] xl:w-[50%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
           >
             <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
             {showFavorites ? "Show All" : "Favorites"}
@@ -179,13 +180,16 @@ const CourseArchive = () => {
                       <div className="flex items-center gap-2 ">
                         <div className=" sm:w-16 sm:h-12 w-10 h-10 ">
                           <img
-                            src={item.universityData?.universityImages.logo || "/logo.png"}
+                            src={
+                              item.universityData?.universityImages.logo ||
+                              "/logo.png"
+                            }
                             alt="alumini"
                             className="rounded-full border object-cover  object-center  sm:w-16 sm:h-10 w-10 h-10 "
                           />
                         </div>
                         <div className="py-1">
-                          <p className="leading-none text-sm font-medium">
+                          <p className="leading-none text-sm font-medium cursor-pointer">
                             {item.universityData?.university_name}
                           </p>
                         </div>
@@ -230,7 +234,10 @@ const CourseArchive = () => {
                     rel="noopener noreferrer"
                     className="w-1/2"
                   >
-                  <h3 className="text-base md:text-lg font-bold text-gray-800 truncate hover:underline underline-offset-4">
+                  <h3
+                    className="text-base md:text-lg font-bold text-gray-800 truncate hover:underline underline-offset-4 cursor-pointer "
+                    title={item?.course_title}
+                  >
                     {item?.course_title}
                   </h3>
                   </Link>

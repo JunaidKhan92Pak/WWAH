@@ -10,23 +10,26 @@ import { useRouter } from "next/navigation";
 interface CoursesectionProps {
   name: string;
 }
-
 const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
   const router = useRouter();
   const {
     search,
+    subjectAreaFilter,
     setSearch,
     studyLevel,
     setStudyLevel,
     selectedUniversity,
     setSelectedUniversity,
+    setSubjectAreaFilter,
   } = useCourseStore(); // Zustand state
 
   // ✅ Initialize local state from Zustand if values exist
   const [courseInfo, setCourseInfo] = useState({
     search: search || "",
     level: studyLevel || "",
-    subject: "",
+    subject: Array.isArray(subjectAreaFilter)
+      ? subjectAreaFilter[0] || ""
+      : subjectAreaFilter || "",
     university: selectedUniversity || name || "",
   });
 
@@ -36,6 +39,9 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
       ...prev,
       search: search || "",
       level: studyLevel || "",
+      subject: Array.isArray(subjectAreaFilter)
+        ? subjectAreaFilter[0] || ""
+        : subjectAreaFilter || "",
       university: selectedUniversity || name || "",
     }));
   }, []); // Runs only on mount
@@ -63,12 +69,19 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
 
     setStudyLevel(courseInfo.level); // ✅ Update study level in Zustand
     setSelectedUniversity(courseInfo.university); // ✅ Update selected university in Zustand
+   setSubjectAreaFilter(courseInfo.subject ? [courseInfo.subject] : []); // ✅ Update selected subject in Zustand
 
     // Build query params dynamically
     const queryParams = new URLSearchParams();
     if (courseInfo.search) queryParams.append("search", courseInfo.search);
     if (courseInfo.level) queryParams.append("studyLevel", courseInfo.level);
-    if (courseInfo.subject) queryParams.append("subject", courseInfo.subject);
+    if (courseInfo.subject)
+      queryParams.append(
+        "subject",
+        Array.isArray(courseInfo.subject)
+          ? courseInfo.subject.join(",")
+          : courseInfo.subject
+      );
     if (courseInfo.university)
       queryParams.append("university", courseInfo.university);
 
@@ -111,15 +124,15 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       <option value="Postgraduate">Postgraduate</option>
                       <option value="foundation">Foundation</option>
                       <option value="Pre-Master">Pre-Master</option>
-                      <option value="Bachelors">Bachelors</option>
-                      <option value="master">Master</option>
+                      <option value="Bachelor">Bachelors</option>
+                      <option value="Master">Master</option>
                       <option value="PhD">PhD</option>
                       <option value="Diploma">Diploma</option>
                       <option value="Certificate">Certificate</option>
                     </select>
                   </div>
                   {/* choosee by subject */}
-                  <div>
+                  {/* <div>
                     <label
                       htmlFor="subject"
                       className="block text-gray-600 mb-1"
@@ -136,11 +149,176 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       <option value="" disabled selected>
                         Select
                       </option>
-                      <option value="Engineering">Engineering</option>
-                      <option value="Business">Business</option>
+                      <option value="Physics">Physics</option>
+                      <option value="Chemistry">Chemistry</option>
                       <option value="Medical">Medical</option>
                       <option value="Humanities">Art and Humanities</option>
                       <option value="Social Sciences">Social Sciences</option>
+                    </select>
+                  </div> */}
+                  <div>
+                    <label
+                      htmlFor="subject"
+                      className="block text-gray-600 mb-1"
+                    >
+                      Choose by Subject
+                    </label>
+                    <select
+                      name="subject"
+                      value={courseInfo.subject}
+                      onChange={handleChange}
+                      id="subjectAreaFilter"
+                      className="w-full p-1 md:p-1 border rounded-lg bg-gray-100"
+                    >
+                      <option value="" disabled selected>
+                        Select
+                      </option>
+                      <option value="Physics">Physics</option>
+                      <option value="Chemistry">Chemistry</option>
+                      <option value="Biology">Biology</option>
+                      <option value="Earth & Environmental Sciences">
+                        Earth & Environmental Sciences
+                      </option>
+                      <option value="Astronomy">Astronomy</option>
+                      <option value="Biotechnology">Biotechnology</option>
+                      <option value="Geology">Geology</option>
+                      <option value="Oceanography">Oceanography</option>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="Information Technology">
+                        Information Technology
+                      </option>
+                      <option value="Artificial Intelligence (AI)">
+                        Artificial Intelligence (AI)
+                      </option>
+                      <option value="Cybersecurity">Cybersecurity</option>
+                      <option value="Data Science & Analytics">
+                        Data Science & Analytics
+                      </option>
+                      <option value="Software Engineering">
+                        Software Engineering
+                      </option>
+                      <option value="Game Development">Game Development</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Robotics & Automation">
+                        Robotics & Automation
+                      </option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="Statistics">Statistics</option>
+                      <option value="Actuarial Science">
+                        Actuarial Science
+                      </option>
+                      <option value="Medicine (MBBS, MD)">
+                        Medicine (MBBS, MD)
+                      </option>
+                      <option value="Dentistry">Dentistry</option>
+                      <option value="Nursing">Nursing</option>
+                      <option value="Pharmacy">Pharmacy</option>
+                      <option value="Physiotherapy">Physiotherapy</option>
+                      <option value="Public Health">Public Health</option>
+                      <option value="Veterinary Science">
+                        Veterinary Science
+                      </option>
+                      <option value="Biochemistry">Biochemistry</option>
+                      <option value="Molecular Biology">
+                        Molecular Biology
+                      </option>
+                      <option value="Neuroscience">Neuroscience</option>
+                      <option value="Genetics">Genetics</option>
+                      <option value="Microbiology">Microbiology</option>
+                      <option value="Immunology">Immunology</option>
+                      <option value="Radiology & Medical Imaging">
+                        Radiology & Medical Imaging
+                      </option>
+                      <option value="Nutrition & Dietetics">
+                        Nutrition & Dietetics
+                      </option>
+                      <option value="Occupational Therapy">
+                        Occupational Therapy
+                      </option>
+                      <option value="Speech & Language Therapy">
+                        Speech & Language Therapy
+                      </option>
+                      <option value="Business Administration">
+                        Business Administration
+                      </option>
+                      <option value="Marketing">Marketing</option>
+                      <option value="Human Resource Management">
+                        Human Resource Management
+                      </option>
+                      <option value="Operations Management">
+                        Operations Management
+                      </option>
+                      <option value="Supply Chain Management">
+                        Supply Chain Management
+                      </option>
+                      <option value="Financial Management">
+                        Financial Management
+                      </option>
+                      <option value="Investment & Asset Management">
+                        Investment & Asset Management
+                      </option>
+                      <option value="Banking & Risk Management">
+                        Banking & Risk Management
+                      </option>
+                      <option value="Accounting & Auditing">
+                        Accounting & Auditing
+                      </option>
+                      <option value="Economics">Economics</option>
+                      <option value="Law">Law</option>
+                      <option value="International Law">
+                        International Law
+                      </option>
+                      <option value="Political Science">
+                        Political Science
+                      </option>
+                      <option value="Public Administration">
+                        Public Administration
+                      </option>
+                      <option value="International Relations">
+                        International Relations
+                      </option>
+                      <option value="Psychology">Psychology</option>
+                      <option value="Social Work">Social Work</option>
+                      <option value="Graphic Design">Graphic Design</option>
+                      <option value="Fashion Design">Fashion Design</option>
+                      <option value="Interior Design">Interior Design</option>
+                      <option value="Architecture">Architecture</option>
+                      <option value="Theatre & Drama">Theatre & Drama</option>
+                      <option value="Film & Television">
+                        Film & Television
+                      </option>
+                      <option value="Music Performance & Production">
+                        Music Performance & Production
+                      </option>
+                      <option value="Dance">Dance</option>
+                      <option value="Journalism">Journalism</option>
+                      <option value="Public Relations (PR)">
+                        Public Relations (PR)
+                      </option>
+                      <option value="Digital Media">Digital Media</option>
+                      <option value="Advertising">Advertising</option>
+                      <option value="Education & Pedagogy">
+                        Education & Pedagogy
+                      </option>
+                      <option value="Agricultural Sciences">
+                        Agricultural Sciences
+                      </option>
+                      <option value="Food Science & Technology">
+                        Food Science & Technology
+                      </option>
+                      <option value="Tourism & Travel Management">
+                        Tourism & Travel Management
+                      </option>
+                      <option value="Event Management">Event Management</option>
+                      <option value="Culinary Arts">Culinary Arts</option>
+                      <option value="Gender Studies">Gender Studies</option>
+                      <option value="Visual Arts">Visual Arts</option>
+                      <option value="Sports and Exercise Sciences">
+                        Sports and Exercise Sciences
+                      </option>
+                      <option value="Media & Communication">
+                        Media & Communication
+                      </option>
                     </select>
                   </div>
                 </div>
