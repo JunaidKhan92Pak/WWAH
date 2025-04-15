@@ -1,7 +1,7 @@
 "use client";
 
 
-// import { DateRangeDialog } from "./components/dataRangeDialogue";
+
 import {
   Table,
   TableBody,
@@ -20,7 +20,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
+import DataRangeDialog from "./components/DateRangeDialog";
 
 // Define the transaction status type
 type Status = "pending" | "approved";
@@ -74,7 +74,7 @@ export default function Home() {
           Date range
         </Button> */}
         <div className=" bg-gray-100 flex items-center justify-center">
-          {/* <DateRangeDialog /> */}
+        <DataRangeDialog/>
         </div>
       </div>
 

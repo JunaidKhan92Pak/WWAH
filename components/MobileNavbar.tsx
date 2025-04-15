@@ -7,33 +7,23 @@ import { getAuthToken } from "@/utils/authHelper";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import {
+  Home,
+  Globe,
+  School,
+  BookOpen,
+  Gift,
+  Languages,
+  Book,
+  Info,
+  PhoneCall,
+} from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { IoIosArrowForward } from "react-icons/io";
 
 const MobileNavbar = () => {
-  // const [isMounted, setIsMounted] = useState(false);
-  // const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-  // const [isOpen, setIsOpen] = useState(false);
-
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const auth = useAuth();
-
-  // useEffect(() => {
-  //   const token = getAuthToken();
-  //   if (token) {
-  //     setIsAuthenticated(true);
-  //   }
-  // }, []);
-  // const toggleDropdown = () => {
-  //   setDropdownOpen(!isDropdownOpen);
-  // };
-  // useEffect(() => {
-  //   setIsMounted(true);
-  // }, []);
-  // if (!isMounted) {
-  //   return null;
-  // }
   const [isMounted, setIsMounted] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -59,7 +49,6 @@ const MobileNavbar = () => {
     return null;
   }
   return (
-
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button
@@ -73,14 +62,14 @@ const MobileNavbar = () => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="p-4 w-[80%] sm:w-[80%] md:w-[60%] lg:w-[40%] bg-gray-100"
+        className="p-4 w-[80%] sm:w-[80%] md:w-[60%] lg:w-[40%] bg-gray-100 overflow-y-auto hide-scrollbar h-full"
       >
         <div className="mt-8 border border-gray-200 mx-auto py-3 px-4 shadow-lg rounded-xl bg-white text-black">
           {/* Header */}
           <div className="flex items-center justify-between border-b pb-3 ">
             <div className="w-[35%] md:w-[40%] h-1 border-3  flex justify-center items-center">
               <Image
-                src="/logo.png"
+                src="/logo.svg"
                 alt="logo"
                 width={150}
                 height={50}
@@ -94,7 +83,7 @@ const MobileNavbar = () => {
                   className="text-sm bg-gray-800 rounded-full border-2 border-gray-200"
                   onClick={toggleDropdown}
                 >
-                    <FaCircleUser className="text-white  w-8 h-8 text-xl " />
+                  <FaCircleUser className="text-white  w-8 h-8 text-xl " />
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 top-12 z-20 w-48 bg-white shadow-lg rounded-lg divide-y divide-gray-100">
@@ -149,23 +138,100 @@ const MobileNavbar = () => {
           </div>
 
           {/* Navigation */}
-          <nav className="mt-6">
-            <ul className="flex flex-col text-sm space-y-4">
-              {[
-                { href: "/countries", label: "Study Destination" },
-                { href: "/Universities", label: "Universities" },
-                { href: "/coursearchive", label: "Courses" },
-                { href: "/scholarships", label: "Scholarships" },
-              ].map((item) => (
-                <li key={item.href} className="border-b pb-2">
-                  <Link href={item.href} onClick={() => setIsOpen(false)}>
-                    <span className="block w-full hover:text-red-600">
-                      {item.label}
+          <nav className="mt-6  ">
+            {/* Scrollable Navigation */}
+            <div className="flex-1 overflow-y-auto space-y-6">
+              {/* Account Section */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2">Account</h3>
+                <div className="space-y-2">
+                  {[
+                    { href: "/", label: "Home", icon: Home },
+                    {
+                      href: "/countries",
+                      label: "Study Destination",
+                      icon: Globe,
+                    },
+                    {
+                      href: "/Universities",
+                      label: "Universities",
+                      icon: School,
+                    },
+                    {
+                      href: "/coursearchive",
+                      label: "Courses",
+                      icon: BookOpen,
+                    },
+                    {
+                      href: "/scholarships",
+                      label: "Scholarships",
+                      icon: Gift,
+                    },
+                    {
+                      href: "/form",
+                      label: "English Proficiency Prep",
+                      icon: Languages,
+                    },
+                  ].map(({ href, label, icon: Icon }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-2  px-3 py-2 text-sm hover:bg-gray-100"
+                    >
+                      <Icon className="w-4 h-4" />
+                      {label}
+                    </Link>
+                  ))}
+
+                  {/* Counseling session box with arrow */}
+                  <Link
+                    href="/schedulesession"
+                    onClick={() => setIsOpen(false)}
+                    className="flex justify-between items-center border rounded-lg px-3 py-2 text-sm bg-gray-100 hover:bg-gray-100"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Book className="w-4 h-4" />
+                      Book online counselling session
                     </span>
+                    <IoIosArrowForward />
                   </Link>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </div>
+
+              {/* Support Section */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2">Support</h3>
+                <div className="space-y-2">
+                  {[
+                    { href: "/aboutUs", label: "About WWAH", icon: Info },
+                    {
+                      href: "/contactus",
+                      label: "Contact Us",
+                      icon: PhoneCall,
+                    },
+                  ].map(({ href, label, icon: Icon }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-2  px-3 py-2 text-sm hover:bg-gray-100"
+                    >
+                      <Icon className="w-4 h-4" />
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Log Out Button */}
+            <button
+              onClick={() => auth.logout()}
+              className="mt-4 w-full bg-red-700 hover:bg-red-700 text-white font-semibold py-2 rounded"
+            >
+              Log out
+            </button>
           </nav>
         </div>
       </SheetContent>

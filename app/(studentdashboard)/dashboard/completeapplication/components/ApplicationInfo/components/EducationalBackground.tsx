@@ -199,7 +199,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
         </div>
       ))}
 
-      <div className="flex justify-between">
+      <div className="flex justify-between mt-2">
         <Button
           type="button"
           variant="outline"
@@ -216,7 +216,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
             })
           }
         >
-          <Plus className="w-4 h-4" /> Add Qualification
+          <Plus className="w-4 h-11" /> Add Qualification
         </Button>
       </div>
     </div>
