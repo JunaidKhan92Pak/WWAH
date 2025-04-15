@@ -21,7 +21,7 @@ const Page = () => {
 
   return (
     <>
-      <div className="border rounded-xl w-[97%] mx-auto p-2 md:p-8 h-auto  lg:h-[85vh]">
+      <div className="border rounded-xl w-[97%] mx-auto p-2 md:p-8 h-auto  ">
         <h5 className="text-center mb-4">Application Status Tracker</h5>
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-start w-full mb-4">
           {tabs.map((tab) => (

@@ -676,7 +676,7 @@ const BasicInfo = () => {
             </Pagination>
 
             {currentPage === totalPages && (
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" className="bg-red-700 hover:bg-red-700" disabled={isSubmitting}>
                 {isSubmitting ? "Saving..." : "Save and Continue"}
               </Button>
             )}

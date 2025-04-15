@@ -1,4 +1,6 @@
 "use client";
+
+import { useEffect } from "react";
 import { useFieldArray } from "react-hook-form";
 import {
   FormControl,
@@ -18,34 +20,58 @@ import {
 import { Button } from "@/components/ui/button";
 import { countries } from "@/lib/countries";
 import { Plus, Trash } from "lucide-react";
-// import Image from "next/image";
+import Image from "next/image";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "./Schema";
-import Image from "next/image";
+
 type FormValues = z.infer<typeof formSchema>;
+
 const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
   const { fields, append, remove } = useFieldArray({
     name: "familyMembers",
-    control: form.control, // ✅ Using parent form control
+    control: form.control,
   });
+
+  // ✅ Ensure at least one family member field exists on initial load
+useEffect(() => {
+  const members = form.getValues("familyMembers");
+  if (!members || members.length === 0) {
+    append({
+      name: "",
+      relationship: "",
+      nationality: "",
+      occupation: "",
+      email: "",
+      countryCode: "+92",
+      phoneNo: "",
+    });
+  }
+}, [append, form]);
+
   return (
     <div className="my-4">
       {fields.map((field, index) => (
-        <div key={field.id} className="border p-4 rounded-md relative mb-4">
-          <div className="absolute top-2 right-2">
-            <Button
-              variant="destructive"
-              size="icon"
-              onClick={() => remove(index)}
-            >
-              <Trash className="w-4 h-4" />
-            </Button>
-          </div>
+        <div key={field.id} className=" p-4 rounded-md relative mb-4">
+          <div className="border rounded-lg p-3 mb-2">
+            <div className="absolute  top-6 right-6">
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  if (fields.length > 1) {
+                    remove(index);
+                  }
+                }}
+              >
+                <Trash className="w-4 h-4" />
+              </Button>
+            </div>
 
-          <h2 className="text-base font-semibold text-center text-gray-900 mb-2">
-            Family Member {index + 1}
-          </h2>
+            <h2 className="text-base font-semibold text-center text-gray-900 mb-2">
+              Family Member {index + 1}
+            </h2>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Name */}
@@ -55,7 +81,7 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
-                  <FormControl>
+                  <FormControl className="bg-[#f1f1f1]">
                     <Input placeholder="Enter Name" {...field} />
                   </FormControl>
                   <FormMessage />
@@ -70,7 +96,7 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Relationship</FormLabel>
-                  <FormControl>
+                  <FormControl className="bg-[#f1f1f1]">
                     <Input placeholder="Enter Relationship" {...field} />
                   </FormControl>
                   <FormMessage />
@@ -89,7 +115,7 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <FormControl>
+                    <FormControl className="bg-[#f1f1f1]">
                       <SelectTrigger>
                         <SelectValue placeholder="Select Nationality" />
                       </SelectTrigger>
@@ -98,7 +124,6 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       {countries.map((country) => (
                         <SelectItem key={country.code} value={country.code}>
                           <span className="flex items-center gap-2">
-                            {/* <span className="text-lg">{country.flag}</span> */}
                             {country.name}
                           </span>
                         </SelectItem>
@@ -117,7 +142,7 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Occupation</FormLabel>
-                  <FormControl>
+                  <FormControl className="bg-[#f1f1f1]">
                     <Input placeholder="Enter Occupation" {...field} />
                   </FormControl>
                   <FormMessage />
@@ -132,7 +157,7 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
-                  <FormControl>
+                  <FormControl className="bg-[#f1f1f1]">
                     <Input type="email" placeholder="Enter Email" {...field} />
                   </FormControl>
                   <FormMessage />
@@ -143,14 +168,14 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
             {/* Phone Number */}
             <FormField
               control={form.control}
-              name="phoneNo"
+              name={`familyMembers.${index}.phoneNo`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone No.</FormLabel>
                   <div className="flex gap-2">
                     <FormField
                       control={form.control}
-                      name="countryCode"
+                      name={`familyMembers.${index}.countryCode`}
                       render={({ field: countryCodeField }) => (
                         <Select
                           value={countryCodeField.value || "+92"}
@@ -221,7 +246,7 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
           type="button"
           variant="outline"
           size="sm"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 rounded-3xl bg-[#f1f1f1] "
           onClick={() =>
             append({
               name: "",
@@ -229,16 +254,17 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
               nationality: "",
               occupation: "",
               email: "",
-              countryCode: "",
+              countryCode: "+92",
               phoneNo: "",
             })
           }
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-11" />
           Add Family Member
         </Button>
       </div>
     </div>
   );
 };
+
 export default StandardizedTest;

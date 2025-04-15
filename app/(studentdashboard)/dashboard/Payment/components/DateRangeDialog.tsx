@@ -1,162 +1,223 @@
-// "use client";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 
-// import { useState } from "react";
-// import { Calendar } from "@/components/ui/calendar";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
+function DataRangeDialog() {
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [isSelectingStart, setIsSelectingStart] = useState(true);
 
-// import { format } from "date-fns";
-// import Image from "next/image";
+  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStartDate(e.target.value);
+    setIsSelectingStart(false);
+  };
 
-// export function DateRangeDialog() {
-//   const [startDate, setStartDate] = useState<Date>();
-//   const [endDate, setEndDate] = useState<Date>();
+  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEndDate(e.target.value);
+  };
 
-//   const handleReset = () => {
-//     setStartDate(undefined);
-//     setEndDate(undefined);
-//   };
+  // Generate calendar data
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
 
-//   return (
-//     <Dialog>
-//       <DialogTrigger asChild>
-//         <Button
-//           variant="outline"
-//           className="text-black px-4 border-orange-200 bg-orange-50 hover:bg-orange-100"
-//         >
-//           <Image
-//             src="/paymentStudentDashboard/data-range.svg"
-//             alt="data"
-//             width={20}
-//             height={20}
-//             className="mr-2"
-//           />
-//           Date range
-//         </Button>
-//       </DialogTrigger>
-//       <DialogContent className="sm:max-w-[95%] md:max-w-[604px] bg-white rounded-lg shadow-md p-4 sm:p-6">
-//         <DialogHeader>
-//           <DialogTitle className="text-lg sm:text-xl font-semibold text-black">
-//             Date range
-//           </DialogTitle>
-//         </DialogHeader>
-//         {/* Flex container */}
-//         <div className="flex flex-col lg:flex-row justify-between gap-6 mt-4">
-//           {/* Left Section: Buttons and Inputs */}
-//           <div className="space-y-4 sm:space-y-6 w-full lg:w-1/2">
-//             <div className="space-y-3 sm:space-y-4">
-//               {/* Start Date */}
-//               <div className="w-full">
-//                 <div className="w-full bg-gray-100 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-sm flex items-start gap-2">
-//                   <Image
-//                     src="/paymentStudentDashboard/data-range.svg"
-//                     alt="data"
-//                     width={20}
-//                     height={20}
-//                     className="mt-1 flex-shrink-0"
-//                   />
-//                   <div className="flex flex-col">
-//                     {startDate ? (
-//                       <span className="text-sm sm:text-base">
-//                         {format(startDate, "PPP")}
-//                       </span>
-//                     ) : (
-//                       <span className="font-semibold text-sm sm:text-base">
-//                         Start Date
-//                       </span>
-//                     )}
-//                     <span className="text-gray-500 font-light text-xs sm:text-sm">
-//                       Add date
-//                     </span>
-//                   </div>
-//                 </div>
-//               </div>
-//               {/* End Date */}
-//               <div className="w-full">
-//                 <div className="w-full bg-gray-100 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-sm flex items-start gap-2">
-//                   <Image
-//                     src="/paymentStudentDashboard/data-range.svg"
-//                     alt="data"
-//                     width={20}
-//                     height={20}
-//                     className="mt-1 flex-shrink-0"
-//                   />
-//                   <div className="flex flex-col">
-//                     {endDate ? (
-//                       <span className="text-sm sm:text-base">
-//                         {format(endDate, "PPP")}
-//                       </span>
-//                     ) : (
-//                       <span className="font-semibold text-sm sm:text-base">
-//                         End Date
-//                       </span>
-//                     )}
-//                     <span className="text-gray-500 font-light text-xs sm:text-sm">
-//                       Add date
-//                     </span>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//             {/* Buttons */}
-//             <div className="flex gap-3 sm:gap-4">
-//               <Button
-//                 className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-lg py-2 text-sm sm:text-base"
-//                 onClick={() => {
-//                   // apply logic will come here
-//                 }}
-//               >
-//                 Apply
-//               </Button>
-//               <Button
-//                 variant="outline"
-//                 className="flex-1 border-orange-200 text-orange-500 hover:bg-orange-50 rounded-lg py-2 text-sm sm:text-base"
-//                 onClick={handleReset}
-//               >
-//                 Reset
-//               </Button>
-//             </div>
-//           </div>
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
 
-//           {/* Right Section: Calendar */}
-//           <div className="w-full lg:w-1/2">
-//             <Calendar
-//               mode="range"
-//               selected={{
-//                 from: startDate,
-//                 to: endDate,
-//               }}
-//               onSelect={(range) => {
-//                 setStartDate(range?.from);
-//                 setEndDate(range?.to);
-//               }}
-//               numberOfMonths={1}
-//               className="rounded-md border-gray-200 w-full"
-//               classNames={{
-//                 nav: "flex items-center justify-between w-full mb-2",
-//                 nav_button: "p-2",
-//                 day_selected: "bg-orange-500 text-white hover:bg-orange-400",
-//                 day_today: "bg-orange-100 text-orange-900",
-//                 day_range_middle: "bg-orange-100 text-orange-900",
-//                 day_range_end: "bg-orange-500 text-white hover:bg-orange-400",
-//                 day_range_start: "bg-orange-500 text-white hover:bg-orange-400",
-//                 months: "w-full",
-//                 month: "w-full text-center",
-//                 table: "w-full",
-//                 head_cell: "text-xs sm:text-sm",
-//                 cell: "text-center text-sm sm:text-base h-8 w-8 sm:h-9 sm:w-9 p-0",
-//                 day: "h-8 w-8 sm:h-9 sm:w-9 p-0 font-normal",
-//               }}
-//             />
-//           </div>
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toISOString().split("T")[0];
+  };
+
+  const handleDayClick = (day: number | null) => {
+    if (day === null) return;
+
+    const selectedDate = new Date(currentYear, currentMonth, day);
+    const formattedDate = formatDate(selectedDate);
+
+    if (isSelectingStart) {
+      setStartDate(formattedDate);
+      setIsSelectingStart(false);
+    } else {
+      const startDateTime = new Date(startDate).getTime();
+      const selectedDateTime = selectedDate.getTime();
+
+      if (selectedDateTime < startDateTime) {
+        setStartDate(formattedDate);
+        setEndDate("");
+      } else {
+        setEndDate(formattedDate);
+        setIsSelectingStart(true);
+      }
+    }
+  };
+
+  const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+  const firstDayOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
+
+  const days = [];
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    days.push(null);
+  }
+  for (let i = 1; i <= daysInMonth; i++) {
+    days.push(i);
+  }
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const isDateInRange = (day: number) => {
+    if (!startDate) return false;
+    if (!endDate)
+      return formatDate(new Date(currentYear, currentMonth, day)) === startDate;
+
+    const currentDate = new Date(currentYear, currentMonth, day);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return currentDate >= start && currentDate <= end;
+  };
+
+  const handleReset = () => {
+    setStartDate("");
+    setEndDate("");
+    setIsSelectingStart(true);
+  };
+
+  return (
+    <div className="flex items-center justify-center bg-background">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="gap-2 bg-[#FCE7D2] hover:bg-[#FCE7D2]"
+          >
+            <Calendar className="h-4 w-4" />
+            Date Range
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-full sm:max-w-[800px] p-4">
+          <DialogHeader>
+            <DialogTitle>Select Date Range</DialogTitle>
+          </DialogHeader>
+
+          {/* Responsive layout: stack vertically on small screens */}
+          {/* Responsive grid with scroll on small screens */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-h-[80vh] md:max-h-full overflow-y-auto md:overflow-visible">
+            {/* Left: Inputs */}
+            <div className="flex-1">
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <label htmlFor="start-date" className="text-sm font-medium">
+                    Start Date
+                  </label>
+                  <Input
+                    id="start-date"
+                    type="date"
+                    value={startDate}
+                    onChange={handleStartDateChange}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <label htmlFor="end-date" className="text-sm font-medium">
+                    End Date
+                  </label>
+                  <Input
+                    id="end-date"
+                    type="date"
+                    value={endDate}
+                    onChange={handleEndDateChange}
+                    className="col-span-3"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  className="border-[#F0851D] text-[#F0851D]"
+                  onClick={handleReset}
+                >
+                  Reset
+                </Button>
+                <Button type="submit" className="bg-red-700 text-white">
+                  Apply
+                </Button>
+              </div>
+            </div>
+
+            {/* Right: Calendar */}
+            <div className="lg:border-l lg:pl-8">
+              <div className="w-full max-w-[300px] mx-auto">
+                <div className="flex items-center justify-between mb-4">
+                  <Button variant="outline" size="icon">
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <h2 className="text-lg font-semibold">
+                    {monthNames[currentMonth]} {currentYear}
+                  </h2>
+                  <Button variant="outline" size="icon">
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+                    <div
+                      key={day}
+                      className="text-sm font-medium text-muted-foreground"
+                    >
+                      {day}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {days.map((day, index) => (
+                    <div
+                      key={index}
+                      className={`aspect-square flex items-center justify-center rounded-md text-sm
+                        ${day === null ? "" : "hover:bg-accent cursor-pointer"}
+                        ${
+                          isDateInRange(day as number)
+                            ? "bg-primary text-primary-foreground"
+                            : ""
+                        }
+                      `}
+                      onClick={() => handleDayClick(day)}
+                    >
+                      {day}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+export default DataRangeDialog;

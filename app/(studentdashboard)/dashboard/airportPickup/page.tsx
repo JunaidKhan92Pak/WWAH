@@ -221,10 +221,16 @@ export default function Home() {
   return (
     <div className="p-4">
       <div className="mx-auto max-w-3xl">
-        <p className="text-center text-xl font-semibold">
-          Fill out the airport pickup form below with your travel details so we
-          can arrange a hassle-free pickup for you.
-        </p>
+        <div className="text-center mb-2">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Airport Pickup Form
+          </h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Fill out the airport pickup form below with your travel details so
+            we can arrange a hassle-free pickup for you.
+          </p>
+        </div>
+        
 
         {submitMessage.message && (
           <div
