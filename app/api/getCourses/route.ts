@@ -33,18 +33,26 @@ export async function GET(req: Request) {
 
     // Initialize the query object
     const query: Record<string, unknown> = {};
-
+    const escapeRegex = (text: string) =>
+      text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     // Support text search if an index exists; otherwise, use regex search
     const textSearchSupported = await Courses.collection.indexExists("course_title_text");
     if (search) {
-      if (textSearchSupported) {
+      const words = search
+        .replace(/[&|]/g, "")          // remove special characters like &, |
+        .split(/\s+/)                  // split by space
+        .filter(Boolean)              // remove empty strings
+
+      if (textSearchSupported && !/[&|]/.test(search)) {
         query.$text = { $search: search };
-      } else {
-        const escapeRegex = (text: string) =>
-          text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*");
-        query.course_title = { $regex: new RegExp(escapeRegex(search), "i") };
+      } else if (words.length > 0) {
+        query.$and = words.map((word) => ({
+          course_title: { $regex: new RegExp(escapeRegex(word), "i") },
+        }));
       }
     }
+
+
 
     // Budget filtering
     if (minBudget > 0 && maxBudget < 999999) {
@@ -93,33 +101,49 @@ export async function GET(req: Request) {
     }
 
     // Apply course title filters
-    let courseTitleFilter: Record<string, unknown> | undefined;
+    const filters = [];
+
     if (subject) {
-      courseTitleFilter = { $regex: new RegExp(subject, "i") };
+      const words = subject.replace(/[&|]/g, "").split(/\s+/).filter(Boolean);
+      if (words.length > 0) {
+        filters.push({
+          $or: words.map((word) => ({
+            course_title: { $regex: new RegExp(escapeRegex(word), "i") },
+          })),
+        });
+      }
     }
+
     if (searchCourse) {
-      courseTitleFilter = { $regex: new RegExp(searchCourse, "i") };
+      const words = searchCourse.replace(/[&|]/g, "").split(/\s+/).filter(Boolean);
+      if (words.length > 0) {
+        filters.push({
+          $or: words.map((word) => ({
+            course_title: { $regex: new RegExp(escapeRegex(word), "i") },
+          })),
+        });
+      }
     }
 
     if (subjectAreaFilterStr) {
       const subjectAreas = subjectAreaFilterStr
         .split(",")
-        .map((s) => s.trim())
-        .filter((s) => s !== "");
+        .map((s) => s.trim().replace(/[&|]/g, ""))
+        .filter(Boolean);
       if (subjectAreas.length > 0) {
-        const regexPattern = subjectAreas.join("|");
-        const subjectAreaCondition = { $regex: new RegExp(regexPattern, "i") };
-        if (courseTitleFilter) {
-          query.$and = [
-            { course_title: courseTitleFilter },
-            { course_title: subjectAreaCondition },
-          ];
-        } else {
-          query.course_title = subjectAreaCondition;
-        }
+        filters.push({
+          $or: subjectAreas.map((area) => ({
+            course_title: {
+              $regex: new RegExp(`.*${escapeRegex(area)}.*`, "i"),
+            },
+          })),
+        });
       }
-    } else if (courseTitleFilter) {
-      query.course_title = courseTitleFilter;
+    }
+
+    // Final Query
+    if (filters.length > 0) {
+      query.$and = filters;
     }
 
     // Build aggregation pipeline with $lookup to join university data
