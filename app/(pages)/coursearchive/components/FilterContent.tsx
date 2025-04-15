@@ -237,8 +237,10 @@ export default function FilterContent() {
     [countryFilter, setCountryFilter, studyDestinations]
   );
   const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  }, []);
+    const val = event.target.value;
+    setSearchTerm(val);
+    debouncedSetSearch(val);
+  }, [debouncedSetSearch]);
   useEffect(() => {
     if (universities.length === 0) {
       fetchUniversities().catch((error) => {
@@ -519,6 +521,7 @@ export default function FilterContent() {
                   className="w-full text-center text-2xl font-medium focus:outline-none"
                   min={values[0] + 1}
                   max={MAX}
+
                 />
               </div>
             </div>
