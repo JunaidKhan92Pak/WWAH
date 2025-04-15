@@ -23,6 +23,7 @@ export const connectToDatabase = async (): Promise<mongoose.Connection> => {
   const cache = globalWithMongoose.mongooseCache; // ✅ Always exists
 
   if (cache.conn) {
+    console.log("Using existing database connection");
     return cache.conn;
   }
 
@@ -32,6 +33,7 @@ export const connectToDatabase = async (): Promise<mongoose.Connection> => {
 
   try {
     cache.conn = await cache.promise;
+    console.log("New database connection established");
   } catch (error) {
     cache.promise = null; // Reset on failure
     throw new Error("Failed to connect to the database: " + error);

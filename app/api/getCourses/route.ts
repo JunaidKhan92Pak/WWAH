@@ -55,7 +55,9 @@ export async function GET(req: Request) {
 
 
     // Budget filtering
-    if (minBudget > 0 && maxBudget < 999999) {
+    if (minBudget >= 0 && maxBudget < 999999) {
+      console.log(minBudget, maxBudget);
+
       if (!isNaN(minBudget) || !isNaN(maxBudget)) {
         query["annual_tuition_fee.amount"] = { $gte: minBudget, $lte: maxBudget };
       }
