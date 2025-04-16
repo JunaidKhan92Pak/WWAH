@@ -364,10 +364,10 @@ function Page() {
           <div className="flex justify-between items-center ">
             <h3 className="font-bold">Top Universities!</h3>
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[10%] h-10">
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[30%] md:w-[15%] xl:w-[10%] h-10">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
                 <div className="flex justify-between w-full">
-                  <div className="w-1/2">Filter</div>
+                  Filter
                   {/* Always reserve space for count by using opacity instead of conditional rendering */}
                   <div
                     className="w-1/2 transition-opacity duration-200"
@@ -427,7 +427,7 @@ function Page() {
           {/* University Cards Grid */}
           {!uniLoading ? (
             <div
-              className="flex gap-6 overflow-x-auto  scrollbar-hide p-4"
+              className="flex gap-6 overflow-x-auto  scrollbar-hide p-3 md:p-4"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {universities.length === 0 ? (
@@ -493,8 +493,25 @@ function Page() {
       {/* Features Section */}
       <section className="md:py-5 bg-muted/50">
         <div className=" mx-auto w-[90%]">
-          <h2 className=" font-bold text-center mb-5 md:mb-5">
-            Why Choose WWAH?
+              {/* <h2 className="font-extrabold text-center mb-5 md:mb-5">
+            Why Choose{' '}
+            <span className="bg-gradient-to-r from-[#8e0000] via-[#d31900] to-[#ffcc33] bg-clip-text text-transparent">
+              WWAH
+            </span>
+            ?
+          </h2> */}
+
+<h2 className="font-extrabold text-center mb-5 md:mb-5">
+            Why Choose{' '}
+            <Link href="/aboutUs">
+            <Image
+              src="/wwah.svg"
+              alt="WWAH"
+              width={100} // adjust as needed
+              height={40} // adjust as needed
+              className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[100px]"
+            />
+            </Link>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
