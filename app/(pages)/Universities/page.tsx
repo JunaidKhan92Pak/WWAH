@@ -166,7 +166,7 @@ const Page = () => {
     <section className="w-[90%] mx-auto">
       <div className="md:flex md:justify-between py-5 md:pt-10 gap-4">
         <h3 className="font-bold">Discover Universities Worldwide</h3>
-        <div className="flex flex-col md:flex-row md:items-center gap-3">
+        <div className="flex flex-col md:flex-row md:items-start gap-3">
           <div className="w-full md:w-[70%] flex bg-[#F1F1F1] rounded-lg h-10">
             <Image
               src="/search.svg"
@@ -187,11 +187,12 @@ const Page = () => {
               aria-label="Search Universities"
             />
           </div>
+          <div className="flex flex-row gap-3 w-full">
           <DropdownMenu>
             <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10">
               <Image src="/filterr.svg" width={16} height={14} alt="filter" />
-              <div className="flex justify-between w-full">
-                <div className="w-1/2">Filter</div>
+              <div className="flex ">
+                Filter
                 {/* Always reserve space for count by using opacity instead of conditional rendering */}
                 <div
                   className="w-1/2 transition-opacity duration-200"
@@ -249,12 +250,13 @@ const Page = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            className={`text-sm flex items-center gap-1 lg:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
               }`}
           >
             <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
             {showFavorites ? "Show All" : "Favorites"}
           </button>
+          </div>
         </div>
       </div>
       {loading ? (
