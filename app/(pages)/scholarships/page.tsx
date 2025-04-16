@@ -9,12 +9,7 @@ import { useScholarships } from "@/store/useScholarships";
 import { debounce } from "lodash";
 import Link from "next/link";
 import { SkeletonCard } from "@/components/skeleton";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 
 const Page = () => {
   // List of countries for filters
