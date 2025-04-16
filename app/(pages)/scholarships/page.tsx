@@ -9,22 +9,52 @@ import { useScholarships } from "@/store/useScholarships";
 import { debounce } from "lodash";
 import Link from "next/link";
 import { SkeletonCard } from "@/components/skeleton";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Page = () => {
   // List of countries for filters
   const countries = [
-    { name: "United States of America", value: "United States of America", img: "/countryarchive/usa_logo.png" },
+    {
+      name: "United States of America",
+      value: "United States of America",
+      img: "/countryarchive/usa_logo.png",
+    },
     { name: "China", value: "china", img: "/countryarchive/china_logo.png" },
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
-    { name: "Ireland", value: "ireland", img: "/countryarchive/ireland_logo.png" },
-    { name: "New Zealand", value: "New Zealand", img: "/countryarchive/nz_logo.png" },
-    { name: "Denmark", value: "denmark", img: "/countryarchive/denmark_logo.png" },
+    {
+      name: "Ireland",
+      value: "ireland",
+      img: "/countryarchive/ireland_logo.png",
+    },
+    {
+      name: "New Zealand",
+      value: "New Zealand",
+      img: "/countryarchive/nz_logo.png",
+    },
+    {
+      name: "Denmark",
+      value: "denmark",
+      img: "/countryarchive/denmark_logo.png",
+    },
     { name: "France", value: "france", img: "/countryarchive/france_logo.png" },
-    { name: "Australia", value: "australia", img: "/countryarchive/australia_logo.png" },
+    {
+      name: "Australia",
+      value: "australia",
+      img: "/countryarchive/australia_logo.png",
+    },
     { name: "Austria", value: "austria", img: "/austria.svg" },
-    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
+    {
+      name: "Germany",
+      value: "germany",
+      img: "/countryarchive/germany_logo.png",
+    },
     { name: "Portugal", value: "portugal", img: "/portugal.svg" },
     { name: "Poland", value: "poland", img: "/poland.svg" },
     { name: "Norway", value: "norway", img: "/norway.svg" },
@@ -73,7 +103,6 @@ const Page = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   // We'll still use local state for search input; others are synced with Zustand.
   const [localSearch, setLocalSearch] = useState("");
-
 
   // Debounced search to optimize rapid input changes
   const debouncedSetSearch = useCallback(
@@ -222,9 +251,9 @@ const Page = () => {
                   />
                 </div>
                 <hr className="mx-4" />
-                <ScrollArea className="p-4 md:h-full h-[400px]">
+                <ScrollArea className="p-2 md:h-full h-[400px]">
                   <h6 className="text-lg">Country:</h6>
-                  <ul className="py-2 space-y-3 mb-2">
+                  <ul className="py-2 space-y-3 mb-2 ">
                     {countries.map((country) => (
                       <li
                         key={country.value}
@@ -326,7 +355,8 @@ const Page = () => {
                     ].map((requirement) => (
                       <li
                         key={requirement}
-                        className="flex items-center justify-between">
+                        className="flex items-center justify-between"
+                      >
                         <span className="text-[16px] truncate">
                           {requirement}
                         </span>
@@ -348,14 +378,14 @@ const Page = () => {
         </Sheet>
         {/* Desktop Filter Sidebar */}
         <div className="flex gap-2 pt-1">
-          <section className="hidden lg:block lg:w-[30%] xl:w-[20%]">
-            <div className="border-2 rounded-3xl p-4 md:p-0">
+          <section className="hidden lg:block lg:w-[30%] xl:w-[25%]">
+            <div className="border-2 rounded-3xl p-4 md:p-0  bg-gray-100">
               <div className="hidden md:flex items-center gap-2 p-4">
                 <Image src="/filterr.svg" width={20} height={20} alt="filter" />
                 <h6 className="font-bold">Filters</h6>
               </div>
               <div className="flex justify-center">
-                <div className="flex justify-evenly bg-[#F1F1F1] rounded-lg px-3 w-[80%]">
+                <div className="flex justify-evenly bg-white rounded-lg px-3 w-[80%]">
                   <Image
                     src="/search.svg"
                     width={16}
@@ -367,139 +397,154 @@ const Page = () => {
                     name="search"
                     value={localSearch}
                     onChange={handleSearchChange}
-                    className="border-none bg-[#F1F1F1] outline-none focus:ring-0 flex-1 p-2 placeholder:text-[12px] w-[50%] rounded-lg"
+                    className="border-none bg-white outline-none focus:ring-0 flex-1 p-2 placeholder:text-[12px] w-[50%] rounded-lg"
                   />
                 </div>
               </div>
-              <hr className="mx-4 md:m-4" />
-              <ScrollArea className="p-4 h-[500px] md:h-screen overflow-y-auto">
-                {/* Desktop Country Filter */}
-                <p className="font-bold text-base md:text-xl">Country:</p>
-                <ul className="py-4 space-y-3 md:space-y-4">
-                  {countries.map((country) => (
-                    <li
-                      key={country.value}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Image
-                          src={country.img}
-                          width={18}
-                          height={18}
-                          alt={country.name}
-                          className="w-[26px]"
+              <hr className="mx-4 md:mx-4 mt-3" />
+              <ScrollArea className="px-4 pb-4 h-[500px] md:h-[800px] overflow-y-auto">
+                <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2">
+                  <p className="text-base md:text-lg font-bold">Country:</p>
+                  <ScrollArea className="h-[200px] overflow-y-auto p-2">
+                    <ul className="py-4 space-y-3 md:space-y-4 pr-2">
+                      {countries.map((country) => (
+                        <li
+                          key={country.value}
+                          className="flex items-center justify-between"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src={country.img}
+                              width={18}
+                              height={18}
+                              alt={country.name}
+                              className="w-[26px]"
+                            />
+                            <span className="text-[16px] truncate">
+                              {country.name}
+                            </span>
+                          </div>
+                          <input
+                            type="checkbox"
+                            value={country.value}
+                            checked={selectedValues.includes(country.value)}
+                            onChange={handleCheckboxChange}
+                            className="ml-2"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </ScrollArea>
+                </div>
+                <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2">
+                  <p className="text-base md:text-lg font-bold">Programs:</p>
+                  <ul className="py-4 space-y-3 md:space-y-4">
+                    {["Bachelors", "Master", "PhD"].map((program) => (
+                      <li
+                        key={program}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-[16px] truncate">{program}</span>
+                        <input
+                          type="checkbox"
+                          name={program.toLowerCase()}
+                          value={program.toLowerCase()}
+                          onChange={handleProgramChange}
+                          checked={programs.includes(program.toLowerCase())}
+                          className="ml-2"
                         />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2">
+                  <p className="text-base md:text-lg font-bold">
+                    Scholarship Type:
+                  </p>
+                  <ul className="py-4 space-y-3 md:space-y-4">
+                    {["Fully Funded", "Partial Funded"].map((type) => (
+                      <li
+                        key={type}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-[16px] truncate">{type}</span>
+                        <input
+                          type="checkbox"
+                          name={type}
+                          value={type}
+                          onChange={handleScholarshipTypeChange}
+                          checked={scholarshipType.includes(type)}
+                          className="ml-2"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2">
+                  <p className="text-base md:text-lg font-bold">
+                    Application Deadline:
+                  </p>
+                  <ScrollArea className="h-[300px] overflow-y-auto p-2 ">
+                    <ul className="py-4 space-y-3 md:space-y-4 pr-2">
+                      {[
+                        "January-2025",
+                        "February-2025",
+                        "March-2025",
+                        "April-2025",
+                        "May-2025",
+                        "June-2025",
+                        "July-2025",
+                        "August-2025",
+                        "September-2025",
+                        "October-2025",
+                        "November-2025",
+                        "December-2025",
+                      ].map((deadline) => (
+                        <li
+                          key={deadline}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="text-[16px] truncate">
+                            {deadline}
+                          </span>
+                          <input
+                            type="checkbox"
+                            name={deadline}
+                            value={deadline}
+                            onChange={handleDeadlineChange}
+                            checked={deadlineFilters.includes(deadline)}
+                            className="ml-2"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </ScrollArea>
+                </div>
+                <div className="border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2">
+                  {" "}
+                  <p className="text-base md:text-lg font-bold">
+                    Minimum Requirement:
+                  </p>
+                  <ul className="py-2 space-y-3">
+                    {minimumRequirement.map((requirement) => (
+                      <li
+                        key={requirement}
+                        className="flex items-center justify-between"
+                      >
                         <span className="text-[16px] truncate">
-                          {country.name}
+                          {requirement}
                         </span>
-                      </div>
-                      <input
-                        type="checkbox"
-                        value={country.value}
-                        checked={selectedValues.includes(country.value)}
-                        onChange={handleCheckboxChange}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-                {/* Desktop Programs Filter */}
-                <p className="text-base md:text-xl font-medium">Programs:</p>
-                <ul className="py-4 space-y-3 md:space-y-4">
-                  {["Bachelors", "Master", "PhD"].map((program) => (
-                    <li
-                      key={program}
-                      className="flex items-center justify-between"
-                    >
-                      <span className="text-[16px] truncate">{program}</span>
-                      <input
-                        type="checkbox"
-                        name={program.toLowerCase()}
-                        value={program.toLowerCase()}
-                        onChange={handleProgramChange}
-                        checked={programs.includes(program.toLowerCase())}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-                {/* Desktop Scholarship Type Filter */}
-                <p className="text-base md:text-xl font-medium">
-                  Scholarship Type:
-                </p>
-                <ul className="py-4 space-y-3 md:space-y-4">
-                  {["Fully Funded", "Partial Funded"].map((type) => (
-                    <li
-                      key={type}
-                      className="flex items-center justify-between"
-                    >
-                      <span className="text-[16px] truncate">{type}</span>
-                      <input
-                        type="checkbox"
-                        name={type}
-                        value={type}
-                        onChange={handleScholarshipTypeChange}
-                        checked={scholarshipType.includes(type)}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-                {/* Desktop Application Deadline Filter */}
-                <p className="text-base md:text-xl font-medium">
-                  Application Deadline:
-                </p>
-                <ul className="py-4 space-y-3 md:space-y-4">
-                  {[
-                    "January-2025",
-                    "February-2025",
-                    "March-2025",
-                    "April-2025",
-                    "May-2025",
-                    "June-2025",
-                    "July-2025",
-                    "August-2025",
-                    "September-2025",
-                    "October-2025",
-                    "November-2025",
-                    "December-2025",
-                  ].map((deadline) => (
-                    <li
-                      key={deadline}
-                      className="flex items-center justify-between"
-                    >
-                      <span className="text-[16px] truncate">{deadline}</span>
-                      <input
-                        type="checkbox"
-                        name={deadline}
-                        value={deadline}
-                        onChange={handleDeadlineChange}
-                        checked={deadlineFilters.includes(deadline)}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-base md:text-xl font-medium">
-                  Minimum Requirement:
-                </p>
-                <ul className="py-2 space-y-3">
-                  {minimumRequirement.map((requirement) => (
-                    <li key={requirement}
-                      className="flex items-center justify-between">
-                      <span className="text-[16px] truncate">
-                        {requirement}
-                      </span>
-                      <input
-                        type="checkbox"
-                        value={requirement}
-                        checked={minimumRequirements.includes(requirement)}
-                        onChange={handleRequirementChange}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
+                        <input
+                          type="checkbox"
+                          value={requirement}
+                          checked={minimumRequirements.includes(requirement)}
+                          onChange={handleRequirementChange}
+                          className="ml-2"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </ScrollArea>
             </div>
           </section>
@@ -515,10 +560,11 @@ const Page = () => {
                 <div className="flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg    ">
                   <button
                     onClick={() => setShowFavorites((prev) => !prev)}
-                    className={`text-sm flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg py-2 px-4   ${showFavorites
-                      ? "text-red-500 font-semibold"
-                      : "text-gray-600"
-                      }`}
+                    className={`text-sm flex items-center justify-center gap-1 lg:gap-2 bg-gray-100 rounded-lg py-2 px-4   ${
+                      showFavorites
+                        ? "text-red-500 font-semibold"
+                        : "text-gray-600"
+                    }`}
                   >
                     <Image
                       src="/hearti.svg"
@@ -634,7 +680,12 @@ const Page = () => {
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                              <Image src={"/Notebooksvg.svg"} alt="degree level" width={16} height={16} />
+                              <Image
+                                src={"/Notebooksvg.svg"}
+                                alt="degree level"
+                                width={16}
+                                height={16}
+                              />
                               <p className="text-sm text-gray-600 truncate">
                                 {item.programs
                                   ? item.programs
@@ -700,7 +751,6 @@ const Page = () => {
                     Next
                   </button>
                 </div>
-
               </>
             )}
           </section>

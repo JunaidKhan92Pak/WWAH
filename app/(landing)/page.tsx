@@ -223,23 +223,34 @@ function Page() {
             <div className="hero-content space-y-8 ">
               <div className="space-y-8">
                 <div className="text-center lg:text-left space-y-2">
-                  <h1 className="text-white">Hi there, I am ZEUS!</h1>
+                  {/* <h1 className="text-white">Hi there, I am ZEUS!</h1> */}
                   <h1 className="text-white leading-snug">
                     <Typewriter
-                      words={[
-                        "How can I help you?",
-                        "Looking for a university?",
-                        "Need help with eligibility?",
-                        "Need admission info?",
-                      ]}
-                      loop={true}
-                      cursor
-                      cursorStyle="|"
-                      typeSpeed={90}
+                      words={["Hey, Zeus Here!"]}
+                      loop={1}
+                      // cursor
+                      // cursorStyle="|"
+                      typeSpeed={120}
                       deleteSpeed={40}
                       delaySpeed={1000}
                     />
                   </h1>
+                  <h3 className="text-white leading-snug">
+                    <Typewriter
+                      words={[
+                        "Need help choosing a country?",
+                        "Ready to find your dream university?",
+                        "Got a Budget? I'll find what fits",
+                        "Let's make your study abroad journey easy",
+                      ]}
+                      loop={true}
+                      cursor
+                      cursorStyle="|"
+                      typeSpeed={120}
+                      deleteSpeed={40}
+                      delaySpeed={1000}
+                    />
+                  </h3>
                 </div>
 
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
@@ -342,7 +353,7 @@ function Page() {
               alt="Robot"
               width={400}
               height={300}
-            // className="2xl:w-[550px] 2xl:h-[700px]"
+              // className="2xl:w-[550px] 2xl:h-[700px]"
             />
           </div>
         </section>
@@ -452,7 +463,6 @@ function Page() {
                           width={40}
                           height={40}
                           className="rounded-full bg-white border border-black w-[56px] h-[56px]"
-
                         />
                       </div>
                     </Link>

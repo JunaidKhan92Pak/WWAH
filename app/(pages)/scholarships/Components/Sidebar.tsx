@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import Image from "next/image";
-import React from "react";
+// import React from "react";
 
 export const Sidebar = () => {
   return (
@@ -33,7 +33,7 @@ export const Sidebar = () => {
       </div>
       <hr className="mx-6" />
 
-      <ScrollArea className="p-4 md:h-full h-[500px] bg-red-300 ">
+      {/* <ScrollArea className="md:p-4 md:h-full h-[500px] bg-red-300 ">
         <p className="text-xl">Country:</p>
         <div className="">
           <ul className="py-4 space-y-6">
@@ -234,7 +234,7 @@ export const Sidebar = () => {
           </ul>
 
         </div>
-      </ScrollArea>
+      </ScrollArea> */}
     </div>
   );
 };
