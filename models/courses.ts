@@ -10,7 +10,7 @@ export interface ICourse extends Document {
   required_ielts_score?: string;
   required_pte_score?: string;
   required_toefl_score?: string;
-  entry_requirement?: string;
+  entry_requirements?: string;
   education_level?: string;
   course_level?: string;
   intake?: [string];
@@ -49,7 +49,7 @@ const CourseSchema = new Schema<ICourse>({
   required_ielts_score: { type: String },
   required_pte_score: { type: String },
   required_toefl_score: { type: String },
-  entry_requirement: { type: String },
+  entry_requirements: { type: String },
   education_level: { type: String },
   course_level: { type: String },
   intake: { type: Array },

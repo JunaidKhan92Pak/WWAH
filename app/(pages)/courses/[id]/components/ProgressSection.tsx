@@ -27,6 +27,7 @@ interface progressProps {
     required_pte_score: string;
     required_toefl_score: string;
     entry_requirement: string;
+    entry_requirements: string
     education_level: string;
     course_level: string;
     intake: string;
@@ -64,6 +65,8 @@ const calculateDegreeSuccess = (
     Bachelor: ["Intermediate", "IB Diploma", "GCSE", "Bachelor"],
     Master: ["Bachelor", "Master", "PhD"],
     PhD: ["Master", "PhD"],
+    Certificate: ["High School", "Intermediate", "Certificate", "Diploma", "Bachelor"],
+    Diploma: ["High School", "Intermediate", "Certificate", "Diploma", "Bachelor"],
   };
   const allowedDegrees = eligibilityMap[requiredDegree];
   if (!allowedDegrees) return 10;
@@ -94,7 +97,6 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
   const [overallAcademic, setOverallAcademic] = useState<number>(0);
   const [overallFinancial, setOverallFinancial] = useState<number>(0);
   const [overallSuccess, setOverallSuccess] = useState<number | null>(null);
-  console.log(overallSuccess);
   const { user } = useUserStore();
   // Function to determine progress bar background color (kept per your design)
   const getProgressBarColor = (value: number) => {
@@ -102,21 +104,21 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
   };
 
   const userExperienceYears = 0.1; // Example: 8 months (0.67 years)
-
   // 🔹 Calculate work experience success percentage
-  const workExperienceSuccess =
-    calculateWorkExperienceSuccess(userExperienceYears);
+  const workExperienceSuccess = calculateWorkExperienceSuccess(userExperienceYears);
+
   const requiredMajor = extractMajorFromTitle(
     String(data.course_title || "").trim()
   );
-  const userMajor = user?.majorSubject?.majorSubject || "Music"; // Replace with real user major from profile
+
+  const userMajor = user?.majorSubject?.majorSubject || "90"; // Replace with real user major from profile
   const majorSuccess = calculateMajorSuccess(
     userMajor,
     requiredMajor,
     synonyms
   );
-  const userTest = user?.langPro?.proficiencyTest || "Not Mention"; // "IELTS" | "PTE" | "TOEFL"
-  const userScore = user?.langPro?.proficiencyTestScore || 100; // Example user's overall score
+  const userTest = user?.langPro?.proficiencyTest || "IELTS"; // "IELTS" | "PTE" | "TOEFL"
+  const userScore = user?.langPro?.proficiencyTestScore || 0; // Example user's overall score
   // 🔹 Extract required overall score from text data
   const requiredScore =
     userTest === "IELTS"
@@ -126,8 +128,7 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
         : extractOverallScore(data.required_toefl_score);
 
   // 🔹 Calculate success percentage
-  const englishSuccess = calculateEnglishSuccess(userScore, requiredScore);
-
+  const englishSuccess = calculateEnglishSuccess(userTest, userScore, requiredScore);
   useEffect(() => {
     // Dummy values for demonstration:
     const studentDegree = user?.majorSubject?.highestQualification || ""; // Example: student's degree
@@ -136,12 +137,9 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
     // Grade Success calculation:
     // Assume user's grade and grading scale come from user.profile
     // For example, user's previous grading scale is "percentage" and their score is 45.
-    const requiredGradeValue = extractGrades(
-      data?.entry_requirement || "60%"
-    ).percentage; // e.g., 60%
+    const requiredGradeValue = extractGrades(data?.entry_requirement || data?.entry_requirements || "60").percentage;
     const studentGrade = user?.majorSubject?.previousGradingScore || 0; // Replace with actual value if available
-    const studentScale: "percentage" | "letter" | "cgpa" | "passfail" =
-      user?.majorSubject?.previousGradingScale || "percentage";
+    const studentScale: "percentage" | "letter" | "cgpa" | "passfail" = user?.majorSubject?.previousGradingScale || "percentage";
     const gradeSuccess = calculateGradeSuccess(
       studentGrade,
       requiredGradeValue,
@@ -228,7 +226,7 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
         },
         {
           label: "Cost of Living",
-          value: 50,
+          value: 10,
           icon: (
             <Image
               src="/Tea-Cup.svg"
@@ -260,7 +258,6 @@ export const ProgressSection = ({ data }: { data: progressProps["data"] }) => {
       setOverallSuccess(Number(overall.toFixed(2)));
     }, 1000);
   }, [data, calculateMajorSuccess]);
-  console.log(data);
 
   if (loading) return <p>Loading synonyms...</p>;
   if (error) return <p>Error loading synonyms: {error}</p>;

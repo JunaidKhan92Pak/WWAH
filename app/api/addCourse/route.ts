@@ -97,20 +97,15 @@ export async function POST(req: Request) {
             : { course_title: course.course_title }
           )
         };
-
         const updatedCourse = await Courses.updateOne(
           filter,
           {
-            $setOnInsert: {  // This ensures only new courses are inserted
-              countryname: data.country,
-              universityname: data.university,
-              university_id: course.university_id,
-              course_link: course.course_link,
-              course_title: course.course_title,
+            $set: {
+              // ✅ These fields will be updated even if the course already exists
               required_ielts_score: course.required_ielts_score || null,
               required_pte_score: course.required_pte_score || null,
               required_toefl_score: course.required_toefl_score || null,
-              entry_requirements: course.entry_requirements || null,
+              entry_requirements: course.entry_requirements || course.entry_requirement || null,
               education_level: course.education_level || null,
               course_level: course.course_level || null,
               intake: course.intake || null,
@@ -132,10 +127,19 @@ export async function POST(req: Request) {
               career_opportunity_3: course.career_opportunity_3 || null,
               career_opportunity_4: course.career_opportunity_4 || null,
               career_opportunity_5: course.career_opportunity_5 || null,
+            },
+            $setOnInsert: {
+              // ✅ These will only be set if a new course is being inserted
+              countryname: data.country,
+              universityname: data.university,
+              university_id: course.university_id,
+              course_link: course.course_link,
+              course_title: course.course_title,
             }
           },
           { upsert: true }
         );
+
 
         if (updatedCourse.upsertedCount > 0) {
           console.log(`Inserted new course: ${course.course_title}`);
