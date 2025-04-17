@@ -27,6 +27,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       required_pte_score: string;
       required_toefl_score: string;
       entry_requirement: string;
+      entry_requirements: string;
       education_level: string;
       course_level: string;
       intake: string;
@@ -160,11 +161,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
                 className={`font-medium transition text-sm md:text-lg px-10 py-2 md:rounded-t-xl flex-shrink-0 border-b border-gray-400 md:border-none
-        ${
-          activeTabPro === tab.id
-            ? "bg-[#C7161E] text-white"
-            : "bg-transparent text-gray-800"
-        }
+        ${activeTabPro === tab.id
+                    ? "bg-[#C7161E] text-white"
+                    : "bg-transparent text-gray-800"
+                  }
         hover:bg-[#FCE7D2] hover:text-black`}
               >
                 {tab.name}

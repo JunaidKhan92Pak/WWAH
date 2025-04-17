@@ -7,7 +7,7 @@ interface HeroProps {
   country: string;
   type: string;
   deadline: string;
-  university: string;
+  NumberOfScholarships: number;
 }
 
 const Hero: React.FC<HeroProps> = ({
@@ -15,7 +15,7 @@ const Hero: React.FC<HeroProps> = ({
   country,
   type,
   deadline,
-  university,
+  NumberOfScholarships
 }) => {
   const scholarshipArr = [
     {
@@ -25,8 +25,8 @@ const Hero: React.FC<HeroProps> = ({
     },
     {
       Image: "/scholarshipdetail/university.svg",
-      Heading: "Host University",
-      Name: `${university}`,
+      Heading: "Number of Scholarships",
+      Name: `${NumberOfScholarships}`,
     },
     {
       Image: "/scholarshipdetail/scholarship.svg",
