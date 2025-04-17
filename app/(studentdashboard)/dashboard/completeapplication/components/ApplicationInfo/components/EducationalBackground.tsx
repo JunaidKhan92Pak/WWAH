@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash } from "lucide-react";
+import { z } from "zod";
+import { formSchema } from "./Schema";
+
 const degrees = [
   "Bachelor's Degree",
   "Master's Degree",
@@ -25,17 +29,31 @@ const degrees = [
   "Diploma",
   "Certificate",
 ];
-import { z } from "zod";
-import { formSchema } from "./Schema";
 
 interface Props {
   form: UseFormReturn<z.infer<typeof formSchema>>;
 }
+
 const EducationalBackground: React.FC<Props> = ({ form }) => {
   const { fields, append, remove } = useFieldArray({
     name: "educationalBackground",
     control: form.control,
   });
+
+  // ✅ Ensure one entry is there on mount
+  useEffect(() => {
+    const background = form.getValues("educationalBackground");
+    if (!background || background.length === 0) {
+      append({
+        highestDegree: "",
+        subjectName: "",
+        institutionAttended: "",
+        marks: "",
+        degreeStartDate: undefined,
+        degreeEndDate: undefined,
+      });
+    }
+  }, [append, form]);
 
   return (
     <div className="mx-auto max-w-3xl my-4">
@@ -56,6 +74,8 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Fields go here (unchanged) */}
+            {/* Degree */}
             <FormField
               control={form.control}
               name={`educationalBackground.${index}.highestDegree`}
@@ -80,7 +100,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
                 </FormItem>
               )}
             />
-
+            {/* Subject */}
             <FormField
               control={form.control}
               name={`educationalBackground.${index}.subjectName`}
@@ -98,7 +118,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
                 </FormItem>
               )}
             />
-
+            {/* Institution */}
             <FormField
               control={form.control}
               name={`educationalBackground.${index}.institutionAttended`}
@@ -116,7 +136,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
                 </FormItem>
               )}
             />
-
+            {/* Marks */}
             <FormField
               control={form.control}
               name={`educationalBackground.${index}.marks`}
@@ -134,7 +154,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
                 </FormItem>
               )}
             />
-
+            {/* Start Date */}
             <FormField
               control={form.control}
               name={`educationalBackground.${index}.degreeStartDate`}
@@ -142,21 +162,6 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
                 <FormItem>
                   <FormLabel>Degree Start Date</FormLabel>
                   <FormControl>
-                    {/* <Input
-                      {...field}
-                      type="date"
-                      placeholder="YYYY/MM/DD"
-                      // value={
-                      //   field.value
-                      //     ? field.value.toISOString().split("T")[0]
-                      //     : ""
-                      // }
-                      value={
-                        field.value
-                          ? format(new Date(field.value), "yyyy-MM-dd")
-                          : ""
-                      }
-                    /> */}
                     <Input
                       {...field}
                       type="date"
@@ -172,7 +177,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
                 </FormItem>
               )}
             />
-
+            {/* End Date */}
             <FormField
               control={form.control}
               name={`educationalBackground.${index}.degreeEndDate`}
@@ -222,4 +227,5 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
     </div>
   );
 };
+
 export default EducationalBackground;

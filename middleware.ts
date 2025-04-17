@@ -6,9 +6,12 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 🔒 Redirect unauthenticated users away from protected pages
-  if (!token && ["/home", "/dashboard", "/profile"].includes(pathname)) {
+  if (!token && ["/home","/profile"].includes(pathname)) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
+  //  if (!token && ["/home", "/dashboard", "/profile"].includes(pathname)) {
+  //    return NextResponse.redirect(new URL("/signin", request.url));
+  //  }
 
   // 🚫 Prevent authenticated users from accessing signin and register pages
   if (token && ["/signin", "/register"].includes(pathname)) {

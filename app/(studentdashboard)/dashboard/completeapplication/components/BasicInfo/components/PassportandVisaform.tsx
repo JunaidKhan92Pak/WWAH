@@ -3,7 +3,6 @@
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-
 import {
   FormControl,
   FormField,
@@ -11,7 +10,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { UseFormReturn } from "react-hook-form";
 import { formSchema } from "./Schema";
 import { z } from "zod";
@@ -19,6 +17,8 @@ import { z } from "zod";
 type FormValues = z.infer<typeof formSchema>;
 
 const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
+  const hasPassport = form.watch("hasPassport");
+
   return (
     <div className="my-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -35,11 +35,6 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     onCheckedChange={(checked) => {
                       field.onChange(true);
                       form.setValue("noPassport", false);
-                      form.setValue("passportNumber", checked ? "" : "");
-                      form.setValue(
-                        "passportExpiryDate",
-                        checked ? undefined : undefined
-                      );
                     }}
                   />
                   <Input
@@ -54,6 +49,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             </FormItem>
           )}
         />
+
         {/* No Passport Field */}
         <FormField
           control={form.control}
@@ -67,6 +63,10 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     onCheckedChange={() => {
                       field.onChange(true);
                       form.setValue("hasPassport", false);
+                      form.setValue("passportNumber", "");
+                      form.setValue("passportExpiryDate", null);
+                      form.setValue("oldPassportNumber", "");
+                      form.setValue("oldPassportExpiryDate", null);
                     }}
                   />
                   <Input
@@ -81,100 +81,109 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             </FormItem>
           )}
         />
-        {/* Passport Number. Field (Conditionally Required) */}
-        <FormField
-          control={form.control}
-          name="passportNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Passport No.</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Write..."
-                  disabled={!form.watch("hasPassport")}
-                  className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Passport Expiry Date */}
-        <FormField
-          control={form.control}
-          name="passportExpiryDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Passport Expiry Date</FormLabel>
-              <Input
-                type="date"
-                // value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
-                // onChange={field.onChange}
-                value={
-                  field.value ? format(new Date(field.value), "yyyy-MM-dd") : ""
-                }
-                onChange={(e) =>
-                  field.onChange(
-                    e.target.value ? new Date(e.target.value) : null
-                  )
-                }
-                onBlur={field.onBlur}
-                name={field.name}
-                ref={field.ref}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* oldPassportNumber */}
-        <FormField
-          control={form.control}
-          name="oldPassportNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Old Passport No.</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Write..."
-                  disabled={!form.watch("hasPassport")}
-                  className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* oldPassportExpiryDate */}
-        <FormField
-          control={form.control}
-          name="oldPassportExpiryDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Old Passport Expiry Date:</FormLabel>
-              <Input
-                type="date"
-                // value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
-                // onChange={field.onChange}
-                value={
-                  field.value ? format(new Date(field.value), "yyyy-MM-dd") : ""
-                }
-                onChange={(e) =>
-                  field.onChange(
-                    e.target.value ? new Date(e.target.value) : null
-                  )
-                }
-                onBlur={field.onBlur}
-                name={field.name}
-                ref={field.ref}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
+        {/* Show these fields only if hasPassport is true */}
+        {hasPassport && (
+          <>
+            {/* Passport Number */}
+            <FormField
+              control={form.control}
+              name="passportNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Passport No.</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Write..."
+                      className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Passport Expiry Date */}
+            <FormField
+              control={form.control}
+              name="passportExpiryDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Passport Expiry Date</FormLabel>
+                  <Input
+                    type="date"
+                    className="bg-[#f1f1f1]"
+                    value={
+                      field.value
+                        ? format(new Date(field.value), "yyyy-MM-dd")
+                        : ""
+                    }
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? new Date(e.target.value) : null
+                      )
+                    }
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Old Passport Number */}
+            <FormField
+              control={form.control}
+              name="oldPassportNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Old Passport No.</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Write..."
+                      className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Old Passport Expiry Date */}
+            <FormField
+              control={form.control}
+              name="oldPassportExpiryDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Old Passport Expiry Date:</FormLabel>
+                  <Input
+                    type="date"
+                    className="bg-[#f1f1f1]"
+                    value={
+                      field.value
+                        ? format(new Date(field.value), "yyyy-MM-dd")
+                        : ""
+                    }
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? new Date(e.target.value) : null
+                      )
+                    }
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
       </div>
     </div>
   );
