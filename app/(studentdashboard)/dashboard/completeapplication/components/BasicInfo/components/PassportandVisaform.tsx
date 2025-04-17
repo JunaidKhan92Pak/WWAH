@@ -32,7 +32,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                 <div className="flex items-center bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm pl-6 rounded-lg py-0.5 border">
                   <Checkbox
                     checked={field.value === true}
-                    onCheckedChange={(checked) => {
+                    onCheckedChange={() => {
                       field.onChange(true);
                       form.setValue("noPassport", false);
                     }}
@@ -64,9 +64,9 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       field.onChange(true);
                       form.setValue("hasPassport", false);
                       form.setValue("passportNumber", "");
-                      form.setValue("passportExpiryDate", null);
+                      form.setValue("passportExpiryDate", "");
                       form.setValue("oldPassportNumber", "");
-                      form.setValue("oldPassportExpiryDate", null);
+                      form.setValue("oldPassportExpiryDate", undefined);
                     }}
                   />
                   <Input

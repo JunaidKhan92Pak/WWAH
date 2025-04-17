@@ -57,7 +57,7 @@ const LearningExperienceAbroad = ({
                         form.setValue("visitedCountry", "");
                         form.setValue("institution", "");
                         form.setValue("visaType", "");
-                        form.setValue("visaExpiryDate", null);
+                        form.setValue("visaExpiryDate", undefined);
                         form.setValue("durationOfStudyAbroad", "");
                       }
                     }}
