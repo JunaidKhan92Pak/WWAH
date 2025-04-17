@@ -25,7 +25,7 @@ const Page = () => {
     <>
       <div className="w-[98%] mx-auto ">
         {/* <h5 className="text-center font-bold lg:mb-10">Complete your Application</h5> */}
-        <div className="w-full  flex overflow-x-auto scrollbar-hide ">
+        <div className="w-full  flex overflow-x-auto hide-scrollbar  ">
           {tabs.map((tab) => (
             <Button
               key={tab.id}

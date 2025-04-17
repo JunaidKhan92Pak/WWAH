@@ -17,6 +17,7 @@ import { Form } from "@/components/ui/form";
 import EducationalBackground from "./components/EducationalBackground";
 import { toast } from "sonner";
 import { formSchema } from "./components/Schema";
+import { Button } from "@/components/ui/button";
 
 const ApplicationInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -209,13 +210,14 @@ const ApplicationInfo = () => {
 
           {/* ✅ Submit Button (Only on Last Page) */}
           {currentPage === totalPages && (
-            <button
+            <Button
               type="submit"
-              className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full"
+              size="lg"
+              className="mt-4 p-2 bg-red-700  text-white rounded-md "
               disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit"}
-            </button>
+            </Button>
           )}
         </form>
       </Form>

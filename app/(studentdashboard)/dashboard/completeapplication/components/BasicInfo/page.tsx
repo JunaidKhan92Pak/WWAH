@@ -69,6 +69,8 @@ const BasicInfo = () => {
       form.handleSubmit(onSubmit)();
     } else {
       console.log("Form validation failed:", form.formState.errors);
+alert("error submitting form");
+
     }
 
     console.log("Form submitted after handleSubmit");
@@ -128,8 +130,20 @@ const BasicInfo = () => {
         toast.error(result.message || "Failed to save information");
       }
     } catch (error) {
-      console.error(`Error submitting form:`, error);
-      toast.error("An error occurred while saving your information");
+      console.error("Error submitting form:", error);
+      // Enhanced error toast for exceptions
+      toast.error("An error occurred while saving your information", {
+        duration: 5000, // Show for 5 seconds
+        position: "top-center",
+        style: {
+          backgroundColor: "#f44336",
+          color: "white",
+          fontSize: "16px",
+          padding: "16px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+        },
+      });
     } finally {
       setIsSubmitting(false);
     }

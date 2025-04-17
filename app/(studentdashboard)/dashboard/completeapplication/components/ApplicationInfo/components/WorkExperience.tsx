@@ -292,7 +292,6 @@
 //   );
 // };
 // export default WorkExperience;
-
 "use client";
 
 import { useFieldArray, UseFormReturn } from "react-hook-form";
@@ -306,20 +305,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
 import { useEffect } from "react";
 import { formSchema } from "./Schema";
 import { format } from "date-fns";
-
+import { Plus, Trash } from "lucide-react";
 import { z } from "zod";
 interface Props {
   form: UseFormReturn<z.infer<typeof formSchema>>;
 }
 const WorkExperience: React.FC<Props> = ({ form }) => {
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "workExperience",
   });
+
+  // Add default field if none exist
+  useEffect(() => {
+    if (fields.length === 0) {
+      append({
+        jobTitle: "",
+        organizationName: "",
+        from: undefined,
+        to: undefined,
+        employmentType: undefined,
+        isFullTime: false,
+        isPartTime: false,
+      });
+    }
+  }, [fields, append]);
 
   // Helper function to convert checkbox states to database value
   const convertCheckboxesToEmploymentType = (
@@ -364,12 +377,22 @@ const WorkExperience: React.FC<Props> = ({ form }) => {
   return (
     <div className="mx-auto max-w-3xl my-4">
       {fields.map((field, index) => (
-        <div key={field.id} className="bg-white">
-          <div className="mb-6">
+        <div key={field.id} className="bg-white p-4 rounded-md  relative mt-4">
+          <div className="border rounded-lg p-3 mb-2">
+            <div className="absolute top-[1.3rem] right-6 ">
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => remove(index)}
+              >
+                <Trash className="w-4 h-4" />
+              </Button>
+            </div>
             <h2 className="text-base font-semibold text-center text-gray-900">
               Work Experience {index + 1}
             </h2>
           </div>
+
           <div className="grid gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
@@ -424,10 +447,8 @@ const WorkExperience: React.FC<Props> = ({ form }) => {
                                   }
                                   handleEmploymentTypeChange(
                                     index,
-                                    false,
-                                    Boolean(field.value)
-
-                                    // checked,
+                                    Boolean(checked),
+                                    false
                                   );
                                 }}
                               />
@@ -457,7 +478,7 @@ const WorkExperience: React.FC<Props> = ({ form }) => {
                                   handleEmploymentTypeChange(
                                     index,
                                     false,
-                                    Boolean(field.value)
+                                    Boolean(checked)
                                   );
                                 }}
                               />
@@ -465,12 +486,7 @@ const WorkExperience: React.FC<Props> = ({ form }) => {
                             <div className="space-y-1 leading-none">
                               <FormLabel>Part Time</FormLabel>
                             </div>
-                            <FormMessage>
-                              {
-                                form.formState.errors.workExperience?.[index]
-                                  ?.isPartTime?.message
-                              }
-                            </FormMessage>
+                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -499,12 +515,6 @@ const WorkExperience: React.FC<Props> = ({ form }) => {
                     <FormControl>
                       <Input
                         type="date"
-                        {...field}
-                        // value={
-                        //   field.value
-                        //     ? field.value.toISOString().split("T")[0]
-                        //     : ""
-                        // }
                         value={
                           field.value
                             ? format(new Date(field.value), "yyyy-MM-dd")
@@ -531,23 +541,8 @@ const WorkExperience: React.FC<Props> = ({ form }) => {
                   <FormItem>
                     <FormLabel>Date To</FormLabel>
                     <FormControl>
-                      {/* <Input
-                        type="date"
-                        {...field}
-                        value={
-                          field.value
-                            ? field.value.toISOString().split("T")[0]
-                            : ""
-                        }
-                      /> */}
                       <Input
                         type="date"
-                        {...field}
-                        // value={
-                        //   field.value
-                        //     ? field.value.toISOString().split("T")[0]
-                        //     : ""
-                        // }
                         value={
                           field.value
                             ? format(new Date(field.value), "yyyy-MM-dd")
@@ -597,3 +592,4 @@ const WorkExperience: React.FC<Props> = ({ form }) => {
   );
 };
 export default WorkExperience;
+
