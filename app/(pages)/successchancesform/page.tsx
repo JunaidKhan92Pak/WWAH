@@ -122,7 +122,7 @@ const questions = [
 export default function Home() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [answers, setAnswers] = useState<Record<number, string>>({});
   const [calendarDate, setCalendarDate] = useState<Date | undefined>(undefined);
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
@@ -259,20 +259,20 @@ export default function Home() {
                   smartDropdown(
                     q.title.includes("Country")
                       ? [
-                          "Pakistan",
-                          "India",
-                          "USA",
-                          "UK",
-                          "Germany",
-                          "Any Other (Specify)",
-                        ]
+                        "Pakistan",
+                        "India",
+                        "USA",
+                        "UK",
+                        "Germany",
+                        "Any Other (Specify)",
+                      ]
                       : [
-                          "Computer Science",
-                          "Engineering",
-                          "Business",
-                          "Psychology",
-                          "Any Other (Specify)",
-                        ],
+                        "Computer Science",
+                        "Engineering",
+                        "Business",
+                        "Psychology",
+                        "Any Other (Specify)",
+                      ],
                     q.id
                   )}
 
