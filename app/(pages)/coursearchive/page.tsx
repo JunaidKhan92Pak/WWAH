@@ -17,6 +17,19 @@ import { Button } from "@/components/ui/button";
 import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
+import { Copy } from "lucide-react"
+ 
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -47,48 +60,59 @@ const CourseArchive = () => {
   //     }
   //   );
   // };
-  const copyToClipboard = (id: string) => {
-    const url = `${window.location.origin}/Universities/${id}`;
+  // const copyToClipboard = (id: string) => {
+  //   const url = `${window.location.origin}/Universities/${id}`;
 
-    navigator.clipboard
-      .writeText(url)
-      .then(() => alert("Link copied to clipboard!"))
-      .catch((err) => console.error("Failed to copy: ", err));
-  };
+  //   navigator.clipboard
+  //     .writeText(url)
+  //     .then(() => alert("Link copied to clipboard!"))
+  //     .catch((err) => console.error("Failed to copy: ", err));
+  // };
 
-  const [localSearch, setLocalSearch] = useState("");
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  const [favoritesCount, setFavoritesCount] = useState(0);
+  const [localSearch, setLocalSearch] = useState("");
   const [showFavorites, setShowFavorites] = useState(false);
-
-  useEffect(() => {
-    const storedFavorites = JSON.parse(
-      localStorage.getItem("favorites") || "{}"
-    );
-    setFavorites(storedFavorites);
-  }, []);
-  const handleSearch = useCallback(
-    debounce((value: string) => {
-      setSearch(value);
-    }, 500),
-    [setSearch]
-  );
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
+  const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+  
+  // No need to load favorites from localStorage
+  
   const toggleFavorite = (id: string) => {
     setFavorites((prev) => {
       const updatedFavorites = { ...prev, [id]: !prev[id] };
-
-      // Store favorites in local storage to persist on refresh
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-
+  
+      // Update count
+      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+      setFavoritesCount(newCount);
+  
+      // Animate heart
+      setHeartAnimation(id);
+      setTimeout(() => setHeartAnimation(null), 1000);
+  
       return updatedFavorites;
     });
   };
+  
+  // Debounced search
+  const handleSearch = useCallback(
+    debounce((value: string) => {
+      setSearch(value); // assuming setSearch is defined
+    }, 500),
+    []
+  );
+  
+  // Fetch courses on mount
+  useEffect(() => {
+    fetchCourses(); // assuming fetchCourses is defined
+  }, []);
+  
+  // Filtered courses based on favorites toggle
   const displayedCourses = showFavorites
     ? courses.filter((course) => favorites[course._id])
     : courses;
+  
+    
   return (
     <section className="w-[95%] mx-auto p-2 ">
       <div className="flex flex-col lg:flex-row lg:items-center">
@@ -98,8 +122,8 @@ const CourseArchive = () => {
           </h3>
           <p className="text-gray-600">Over 1000 courses available.</p>
         </div>
-        <div className="w-full md:w-[60%] lg:w-[90%] xl:w-[60%] my-4 lg:mt-10 grid grid-cols-2 md:grid-cols-4 md:flex gap-2 items-center">
-          <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 w-[100%] xl:w-[80%]">
+        <div className="w-full md:w-[60%] lg:w-[90%] xl:w-[70%] my-4 lg:mt-10 grid grid-cols-2 md:grid-cols-4 md:flex gap-2 items-center">
+          <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 w-[100%] xl:w-[90%]">
             <Image
               src="/search.svg"
               width={20}
@@ -135,16 +159,23 @@ const CourseArchive = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        <button
+  onClick={() => setShowFavorites((prev) => !prev)}
+  className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+    showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+  }`}
+>
+  <Image
+    src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
+    width={20}
+    height={18}
+    alt="favorites"
+  />
+  {showFavorites ? "Show All" : "Favorites"} 
+  <span>({favoritesCount})</span>
+</button>
 
-          <button
-            onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 md:w-[70%] lg:w-[90%] xl:w-[50%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
-          >
-            <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
-            {showFavorites ? "Show All" : "Favorites"}
-          </button>
+
           <FilterComponent />
         </div>
       </div>
@@ -165,6 +196,12 @@ const CourseArchive = () => {
                 className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3 "
               >
                 <div className="relative h-52 p-2">
+                <Link
+                    href={`/courses/${item._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-1/2"
+                  >
                   <ImageWithLoader
                     src={
                       item.universityData?.universityImages.banner ||
@@ -174,7 +211,7 @@ const CourseArchive = () => {
                     sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
                     className="object-cover  rounded-2xl"
                   />
-
+                 </Link>
                   <div className="absolute top-4 left-0">
                     <div className=" bg-gradient-to-r from-white to-transparent opacity-100 w-[70%] ">
                       <div className="flex items-center gap-2 ">
@@ -198,32 +235,86 @@ const CourseArchive = () => {
                   </div>
 
                   <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
-                    <button onClick={() => copyToClipboard(item._id)}>
-                      <Image
-                        src="/share.svg"
-                        width={20}
-                        height={20}
-                        alt="Share"
-                      />
-                    </button>
+                   
+                  <Dialog>
+  <DialogTrigger asChild>
+    <button>
+      <Image src="/share.svg" width={20} height={20} alt="Share" />
+    </button>
+  </DialogTrigger>
+  <DialogContent className="sm:max-w-md">
+    <DialogHeader>
+      <DialogTitle>Share link</DialogTitle>
+      <DialogDescription>
+        Anyone who has this link will be able to view this.
+      </DialogDescription>
+    </DialogHeader>
 
-                    <button onClick={() => toggleFavorite(item._id)}>
-                      {favorites[item._id] ? (
-                        <Image
-                          src="/redheart.svg"
-                          width={20}
-                          height={20}
-                          alt="Favorite"
-                        />
-                      ) : (
-                        <Image
-                          src="/whiteheart.svg"
-                          width={20}
-                          height={20}
-                          alt="Favorite"
-                        />
-                      )}
-                    </button>
+    <div className="flex items-center space-x-2">
+      <div className="grid flex-1 gap-2">
+        <Label htmlFor={`link-${item._id}`} className="sr-only">
+          Link
+        </Label>
+        <Input
+          id={`link-${item._id}`}
+          value={`${typeof window !== "undefined" ? window.location.origin : ""}/courses/${item._id}`}
+          readOnly
+        />
+      </div>
+      <Button
+        type="button"
+        size="sm"
+        className="px-3"
+        onClick={() => {
+          const link = `${window.location.origin}/courses/${item._id}`;
+          navigator.clipboard.writeText(link).then(() => {
+            setCopiedLinkId(item._id);
+            setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
+          });
+        }}
+      >
+        <span className="sr-only">Copy</span>
+        <Copy />
+      </Button>
+    </div>
+
+    {/* 👇 Show message conditionally */}
+    {copiedLinkId === item._id && (
+      <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
+    )}
+
+    <DialogFooter className="sm:justify-start">
+      <DialogClose asChild>
+        <Button type="button" variant="secondary">
+          Close
+        </Button>
+      </DialogClose>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
+
+                    <button
+  onClick={() => toggleFavorite(item._id)}
+  className={`relative ${heartAnimation === item._id ? 'animate-pop' : ''}`}
+>
+  {favorites[item._id] ? (
+    <Image
+      src="/redheart.svg"
+      width={20}
+      height={20}
+      alt="Favorite"
+    />
+  ) : (
+    <Image
+      src="/whiteheart.svg"
+      width={20}
+      height={20}
+      alt="Favorite"
+    />
+  )}
+</button>
+
                   </div>
                 </div>
                 <div className="p-4 flex-grow">
@@ -256,7 +347,7 @@ const CourseArchive = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
-                        src="/year.png"
+                        src="/shop.svg"
                         alt="year"
                         width={16}
                         height={16}
@@ -268,7 +359,7 @@ const CourseArchive = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
-                        src="/clock.png"
+                        src="/clock.svg"
                         alt="duration"
                         width={16}
                         height={16}
@@ -280,7 +371,7 @@ const CourseArchive = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
-                        src="/money.png"
+                        src="/money.svg"
                         alt="fees"
                         width={16}
                         height={16}
@@ -339,3 +430,4 @@ const CourseArchive = () => {
 };
 
 export default Page;
+
