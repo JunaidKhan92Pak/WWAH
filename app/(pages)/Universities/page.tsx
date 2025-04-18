@@ -15,6 +15,20 @@ import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
 import { useSearchParams } from "next/navigation";
+import { Copy } from "lucide-react"
+import { Button } from "@/components/ui/button";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 
 const Page = () => {
   const countries = [
@@ -52,6 +66,7 @@ const Page = () => {
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
   const searchParams = useSearchParams();
   const initialCountrySet = React.useRef(false);
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
 
   // Handle country param from URL - consolidated logic from previous duplicate useEffects
   useEffect(() => {
@@ -79,12 +94,12 @@ const Page = () => {
   }, [currentPage, fetchUniversities]);
 
   // Load favorites from localStorage on component mount
-  useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedFavorites = localStorage.getItem("favorites");
+  //   if (storedFavorites) {
+  //     setFavorites(JSON.parse(storedFavorites));
+  //   }
+  // }, []);
 
   // Handle Search with debounce
   const handleSearch = useCallback(
@@ -112,14 +127,14 @@ const Page = () => {
   }
 
   // Copy university URL to clipboard
-  const copyToClipboard = (id: string) => {
-    const url = `${window.location.origin}/Universities/${id}`;
+  // const copyToClipboard = (id: string) => {
+  //   const url = `${window.location.origin}/Universities/${id}`;
 
-    navigator.clipboard
-      .writeText(url)
-      .then(() => alert("Link copied to clipboard!"))
-      .catch((err) => console.error("Failed to copy: ", err));
-  };
+  //   navigator.clipboard
+  //     .writeText(url)
+  //     .then(() => alert("Link copied to clipboard!"))
+  //     .catch((err) => console.error("Failed to copy: ", err));
+  // };
 
   // Pagination handlers
   const handlePrevPage = () => {
@@ -129,18 +144,26 @@ const Page = () => {
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
+  const [favoritesCount, setFavoritesCount] = useState(0);
+    const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+  
+ // No need to load favorites from localStorage
+  
+ const toggleFavorite = (id: string) => {
+  setFavorites((prev) => {
+    const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-  // Toggle university favorite status
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const updatedFavorites = { ...prev, [id]: !prev[id] };
+    // Update count
+    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+    setFavoritesCount(newCount);
 
-      // Store favorites in local storage to persist on refresh
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    // Animate heart
+    setHeartAnimation(id);
+    setTimeout(() => setHeartAnimation(null), 1000);
 
-      return updatedFavorites;
-    });
-  };
+    return updatedFavorites;
+  });
+};
 
   // Filter universities by favorites if showFavorites is true
   const displayedUniversities = showFavorites
@@ -249,13 +272,20 @@ const Page = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           <button
-            onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center gap-1 lg:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
-          >
-            <Image src="/hearti.svg" width={20} height={18} alt="favorites" />
-            {showFavorites ? "Show All" : "Favorites"}
-          </button>
+           onClick={() => setShowFavorites((prev) => !prev)}
+           className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+             showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+           }`}
+         >
+           <Image
+             src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
+             width={20}
+             height={18}
+             alt="favorites"
+           />
+           {showFavorites ? "Show All" : "Favorites"} 
+           <span>({favoritesCount})</span>
+         </button>
           </div>
         </div>
       </div>
@@ -302,31 +332,92 @@ const Page = () => {
 
                     {/* Share & Favorite Buttons */}
                     <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
-                      <button onClick={() => copyToClipboard(item._id)}>
+                      {/* <button onClick={() => copyToClipboard(item._id)}>
                         <Image
                           src="/share.svg"
                           width={20}
                           height={20}
                           alt="Share"
                         />
-                      </button>
+                      </button> */}
+                         <Dialog>
+  <DialogTrigger asChild>
+    <button>
+      <Image src="/share.svg" width={20} height={20} alt="Share" />
+    </button>
+  </DialogTrigger>
+  <DialogContent className="sm:max-w-md">
+    <DialogHeader>
+      <DialogTitle>Share link</DialogTitle>
+      <DialogDescription>
+        Anyone who has this link will be able to view this.
+      </DialogDescription>
+    </DialogHeader>
 
-                      <button onClick={() => toggleFavorite(item._id)}>
-                        <Image
-                          src={
-                            favorites[item._id]
-                              ? "/redheart.svg"
-                              : "/whiteheart.svg"
-                          }
-                          width={20}
-                          height={20}
-                          alt={
-                            favorites[item._id]
-                              ? "Remove from Favorites"
-                              : "Add to Favorites"
-                          }
-                        />
+    <div className="flex items-center space-x-2">
+      <div className="grid flex-1 gap-2">
+        <Label htmlFor={`link-${item._id}`} className="sr-only">
+          Link
+        </Label>
+        <Input
+          id={`link-${item._id}`}
+          value={`${typeof window !== "undefined" ? window.location.origin : ""}/Universities/${item._id}`}
+          readOnly
+        />
+      </div>
+      <Button
+        type="button"
+        size="sm"
+        className="px-3"
+        onClick={() => {
+          const link = `${window.location.origin}/Universities/${item._id}`;
+          navigator.clipboard.writeText(link).then(() => {
+            setCopiedLinkId(item._id);
+            setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
+          });
+        }}
+      >
+        <span className="sr-only">Copy</span>
+        <Copy />
+      </Button>
+    </div>
+
+    {/* 👇 Show message conditionally */}
+    {copiedLinkId === item._id && (
+      <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
+    )}
+
+    <DialogFooter className="sm:justify-start">
+      <DialogClose asChild>
+        <Button type="button" variant="secondary">
+          Close
+        </Button>
+      </DialogClose>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
+                       <button
+                        onClick={() => toggleFavorite(item._id)}
+                        className={`relative ${heartAnimation === item._id ? 'animate-pop' : ''}`}
+                      >
+                        {favorites[item._id] ? (
+                          <Image
+                            src="/redheart.svg"
+                            width={20}
+                            height={20}
+                            alt="Favorite"
+                          />
+                        ) : (
+                          <Image
+                            src="/whiteheart.svg"
+                            width={20}
+                            height={20}
+                            alt="Favorite"
+                          />
+                        )}
                       </button>
+                      
                     </div>
 
                     <ImageWithLoader
