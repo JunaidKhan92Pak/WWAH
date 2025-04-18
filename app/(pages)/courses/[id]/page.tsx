@@ -282,7 +282,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 {/* Card 2 */}
                 <div className="relative rounded-3xl shadow-lg w-full h-[180px] lg:h-[275px]">
                   <Image
-                    src="/dcu.jpg"
+                    src={
+                      data?.universityData?.universityImages?.banner ||
+                      "/default-banner.jpg"
+                    }
                     alt="Future at DCU"
                     layout="fill"
                     objectFit="cover"

@@ -498,14 +498,14 @@ export default function FilterContent() {
         </select>
         <div className="mt-4 space-y-6">
           {/* Inputs */}
-          <div className="flex justify-between items-center space-x-4">
+          <div className="flex justify-between items-center space-x-6">
             <div className="flex-1">
-              <div className="bg-white rounded-lg shadow p-4 text-center">
+              <div className="bg-white rounded-lg shadow p-2 text-center">
                 <input
                   type="number"
                   value={values[0]}
                   onChange={handleMinChange}
-                  className="w-full text-center text-2xl font-medium focus:outline-none"
+                  className="w-full text-center text-xl font-medium focus:outline-none"
                   min={MIN}
                   max={values[1] - 1}
                 />
@@ -513,12 +513,12 @@ export default function FilterContent() {
             </div>
 
             <div className="flex-1">
-              <div className="bg-white rounded-lg shadow p-4 text-center">
+              <div className="bg-white rounded-lg shadow p-2 text-center">
                 <input
                   type="number"
                   value={values[1]}
                   onChange={handleMaxChange}
-                  className="w-full text-center text-2xl font-medium focus:outline-none"
+                  className="w-full text-center text-xl font-medium focus:outline-none"
                   min={values[0] + 1}
                   max={MAX}
 
@@ -543,7 +543,7 @@ export default function FilterContent() {
                     width: "100%",
                     background: getTrackBackground({
                       values,
-                      colors: ["#d1d5db", "#0ea5e9", "#d1d5db"],
+                      colors: ["#d1d5db", "#F6B677", "#d1d5db"],
                       min: MIN,
                       max: MAX,
                     }),
@@ -562,7 +562,7 @@ export default function FilterContent() {
                     height: "15px",
                     width: "15px",
                     borderRadius: "50%",
-                    backgroundColor: "#0ea5e9",
+                    backgroundColor: "#F6B677",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
