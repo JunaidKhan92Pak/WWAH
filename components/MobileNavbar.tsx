@@ -15,8 +15,8 @@ import {
   Gift,
   Languages,
   Book,
-  Info,
-  PhoneCall,
+  // Info,
+  // PhoneCall,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
@@ -200,7 +200,7 @@ const MobileNavbar = () => {
               </div>
 
               {/* Support Section */}
-              <div>
+              {/* <div>
                 <h3 className="text-sm font-semibold mb-2">Support</h3>
                 <div className="space-y-2">
                   {[
@@ -222,7 +222,7 @@ const MobileNavbar = () => {
                     </Link>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Log Out Button */}
