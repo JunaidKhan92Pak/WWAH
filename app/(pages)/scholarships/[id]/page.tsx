@@ -9,6 +9,7 @@ import Applicationprocess from "./components/Applicationprocess";
 import Eligibilitycriteria from "./components/Eligibilitycriteria";
 import { HeroSkeleton } from "@/components/HeroSkeleton";
 import ScholarshipSuccessChances from "./components/ScholarshipSuccessChances";
+import SuccessChances from "@/components/SuccessChances";
 // import { HeroSkeleton } from "@/components/HeroSkeleton";
 type Tab = {
   label: string;
@@ -94,7 +95,11 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         country={data?.hostCountry || "Unknown"}
         type={data?.scholarshipType || "Unknown"}
         deadline={data?.deadline || "Unknown"}
-        NumberOfScholarships={typeof data?.numberOfScholarships === "number" ? data.numberOfScholarships : 0}
+        NumberOfScholarships={
+          typeof data?.numberOfScholarships === "number"
+            ? data.numberOfScholarships
+            : 0
+        }
       />
       <div className="bg-white my-4 lg:mt-40 2xl:mt-[12%] lg:my-6">
         <div className=" mx-auto sm:w-[88%] w-[90%]">
@@ -103,10 +108,11 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
-                  ? "bg-[#C7161E] text-white"
-                  : "text-gray-800"
-                  }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
+                  activeTabPro === tab.label
+                    ? "bg-[#C7161E] text-white"
+                    : "text-gray-800"
+                }`}
               >
                 {tab.label}
               </button>
@@ -138,10 +144,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           eligibilityCriteria={data?.eligibilityCriteria || []}
         />
       </div>
+
       <div id="Success Chances">
-        <ScholarshipSuccessChances
-          scholarship={data}
-        />
+        <SuccessChances/>
+        <ScholarshipSuccessChances scholarship={data} />
       </div>
       <div id="Required Documents">
         <Requireddocs requiredDocs={data.requiredDocuments} />
