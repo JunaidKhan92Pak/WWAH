@@ -32,13 +32,12 @@ const ExcelUploader = () => {
     }
 
     // Process Excel data to match our schema structure
-    const processExcelData = (rawData: any[]) => {
+    const processExcelData = (rawData) => {
         return rawData.map(item => {
             // Format date if it's a number
             if (item["Deadline"] && typeof item["Deadline"] === "number") {
                 item["Deadline"] = formatExcelDate(item["Deadline"]);
             }
-
             // Create structured object that matches our MongoDB schema
             return {
                 name: item["Name of Scholarship"]?.trim() || "Unnamed Scholarship",
@@ -143,9 +142,7 @@ const ExcelUploader = () => {
 
             // Process the data to match our schema
             const processedData = processExcelData(jsonData);
-
             console.log("Processed data:", processedData);
-
             // Send the processed JSON data to your API endpoint
             const res = await fetch("/api/addScholarship", {
                 method: "POST",
