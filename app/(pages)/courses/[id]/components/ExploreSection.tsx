@@ -2,11 +2,22 @@
 import React, { useEffect, useState } from "react";
 interface ExploreSectionProps {
   data: string;
-  course: string;// Adjust the type according to the actual data type
+  course: string; // Adjust the type according to the actual data type
 }
 
-export const ExploreSection: React.FC<ExploreSectionProps> = ({ data, course }) => {
-  const [courses, setCourses] = useState<{ universityData?: { universityImages?: { banner?: string }; university_name?: string }; course_title?: string }[]>([]); // Define the type explicitly
+export const ExploreSection: React.FC<ExploreSectionProps> = ({
+  data,
+  course,
+}) => {
+  const [courses, setCourses] = useState<
+    {
+      universityData?: {
+        universityImages?: { banner?: string };
+        university_name?: string;
+      };
+      course_title?: string;
+    }[]
+  >([]); // Define the type explicitly
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
@@ -43,7 +54,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data, course }) 
       </div>
 
       {/* Slider Section */}
-      <div className="relative z-10 w-full lg:w-[40%] mt-6 lg:mt-0">
+      <div className="relative z-10 w-full lg:w-[50%] mt-6 lg:mt-0">
         <div className="relative w-full flex justify-center overflow-hidden">
           <div
             className="flex overflow-x-auto space-x-4 hide-scrollbar"
@@ -58,7 +69,10 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data, course }) 
                 className="relative w-[85%]  aspect-[16/9] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
               >
                 <img
-                  src={item?.universityData?.universityImages?.banner ?? "/fallback-image.jpg"}
+                  src={
+                    item?.universityData?.universityImages?.banner ??
+                    "/fallback-image.jpg"
+                  }
                   alt="University Banner"
                   className="w-full h-full object-cover rounded-xl"
                 />
@@ -80,7 +94,6 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({ data, course }) 
           </div>
         </div>
       </div>
-
     </section>
   );
 };

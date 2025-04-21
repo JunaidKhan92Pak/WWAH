@@ -91,7 +91,6 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({
 );
 
 const Page = () => {
-  
   const { expenses, loading, error, setUniversity, fetchExpenses } =
     useExpenseStore();
   const { universities, fetchUniversities } = useUniversityStore();
@@ -341,7 +340,7 @@ const Page = () => {
                   </div>
                 </div>
                 {/* Lifestyle Selection */}
-                <div>
+                {/* <div>
                   <h5 className="text-gray-800 mt-4 mb-2">Lifestyle</h5>
                   <div className="grid grid-cols-2 gap-6">
                     {expenses && expenses[0]?.lifestyles.map(
@@ -372,10 +371,49 @@ const Page = () => {
                         }
                       )}
                   </div>
+                </div> */}
+                <div className="mt-6">
+                  <h5 className="text-gray-800 mb-2">Lifestyle</h5>
+                  <div className="grid grid-cols-2 gap-6">
+                    {(expenses && expenses[0]?.lifestyles?.length > 0
+                      ? expenses[0].lifestyles
+                      : [
+                          { type: "basic_lifestyle" },
+                          { type: "moderate_lifestyle" },
+                          { type: "luxury_lifestyle" },
+                        ]
+                    ).map(
+                      (lifestyle: { type: keyof typeof lifestyleIcons }) => {
+                        const LifestyleIcon =
+                          lifestyleIcons[lifestyle.type] || BsBagCheck;
+                        return (
+                          <button
+                            key={lifestyle.type}
+                            className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${
+                              lifestyle.type === "luxury_lifestyle"
+                                ? "col-span-2"
+                                : "col-span-1"
+                            } ${
+                              selectedLifestyle === lifestyle.type
+                                ? "bg-gray-100"
+                                : "bg-none"
+                            }`}
+                            onClick={() => setSelectedLifestyle(lifestyle.type)}
+                          >
+                            <LifestyleIcon className="w-8 h-8 mb-2 text-gray-700" />
+                            <p className="font-normal text-gray-700">
+                              {lifestyle.type.replace("_", " ").toUpperCase()}
+                            </p>
+                          </button>
+                        );
+                      }
+                    )}
+                  </div>
                 </div>
+
                 <div className="w-full flex items-center justify-center">
                   <Button
-                    className="px-8 mt-3 sm:mt-2 bg-red-700"
+                    className="px-8 mt-3 sm:mt-2 bg-red-700 hover:bg-red-800"
                     onClick={() => setShowData(true)}
                   >
                     Calculate

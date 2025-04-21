@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useAuth } from "../auth/authProvider";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Page = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -40,7 +41,7 @@ const Page = () => {
       if (resetResponse.success) {
         setSuccessMessage(resetResponse.message);
         // Wait for the state to update before redirecting
-         setTimeout(() => {
+        setTimeout(() => {
           router.push("/");
         }, 1500); // Redirect after 1.5 seconds
       } else {
@@ -57,16 +58,16 @@ const Page = () => {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="flex-1 max-w-2xl px-5 lg:px-20">
-        <Image
-          src="/logo.png"
-          width={100}
-          height={100}
-          alt="Logo"
-          className="mb-4 w-28 mx-auto"
-        />
-        <div className="mb-2 text-center">
-          Reset Password
-        </div>
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            width={100}
+            height={100}
+            alt="Logo"
+            className="mb-4 w-28 mx-auto"
+          />
+        </Link>
+        <div className="mb-2 text-center">Reset Password</div>
         <p className="text-gray-600 text-center lg:px-20 mb-6">
           Please enter your new password to secure your account.
         </p>
@@ -105,7 +106,9 @@ const Page = () => {
 
           <button
             type="submit"
-            className={`w-full bg-red-700 text-white p-2 rounded-lg ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full bg-red-700 text-white p-2 rounded-lg ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             disabled={loading}
           >
             {loading ? "Resetting..." : "Reset my password"}
@@ -114,16 +117,16 @@ const Page = () => {
       </div>
 
       <div className="hidden  md:block">
-    <div className="flex items-center justify-center my-2">
-      <Image
-        src="/Group.png"
-        width={400}
-        height={400}
-        alt="Decorative"
-        className="object-contain h-auto"
-      />
-    </div>
-  </div>
+        <div className="flex items-center justify-center my-2">
+          <Image
+            src="/Group.png"
+            width={400}
+            height={400}
+            alt="Decorative"
+            className="object-contain h-auto"
+          />
+        </div>
+      </div>
     </div>
   );
 };

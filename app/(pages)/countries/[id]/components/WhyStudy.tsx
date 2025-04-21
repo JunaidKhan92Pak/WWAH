@@ -27,9 +27,10 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
 
   useEffect(() => {
     const fetchUniversities = async () => {
-
       try {
-        const res = await fetch(`/api/getUniversities?country=${countryName}&limit=4`);
+        const res = await fetch(
+          `/api/getUniversities?country=${countryName}&limit=4`
+        );
         const data = await res.json();
         if (Array.isArray(data.universities)) {
           setUniversities(data.universities);
@@ -80,7 +81,8 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
         <div className="relative z-10 w-full  space-y-2">
           <h2 className="py-2">Popular Universities in {countryName}</h2>
 
-          <div className="flex overflow-x-auto space-x-2 md:space-x-4 p-6 hide-scrollbar justify-start xl:justify-center"
+          <div
+            className="flex overflow-x-auto space-x-2 md:space-x-4 pl-28 pr-4 p-6 hide-scrollbar justify-start xl:justify-center"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -133,9 +135,14 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
             )}
           </div>
 
-          <Link href={`/Universities?country=${countryName}`} target="_blank"
-            className="cursor-pointer">
-            <Button className="bg-red-700 mt-3">Explore All Universities</Button>
+          <Link
+            href={`/Universities?country=${countryName}`}
+            target="_blank"
+            className="cursor-pointer"
+          >
+            <Button className="bg-red-700 mt-3">
+              Explore All Universities
+            </Button>
           </Link>
         </div>
       </section>
