@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from "@/lib/db";
 import Scholarship from '@/models/scholarship';
-
+type ScholarshipData = {
+    name: string;
+}
 export async function POST(req: Request) {
     try {
         await connectToDatabase();
@@ -19,7 +21,7 @@ export async function POST(req: Request) {
         }
 
         // Validation function
-        const validateScholarship = (scholarship: any) => {
+        const validateScholarship = (scholarship: ScholarshipData) => {
             // Basic validation - add more as needed
             if (!scholarship.name) {
                 throw new Error("Scholarship name is required");
