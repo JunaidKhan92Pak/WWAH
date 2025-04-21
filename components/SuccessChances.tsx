@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -70,7 +71,7 @@ const questions: Question[] = [
   {
     id: 6,
     title: "Do you have any work experience?",
-    type: "input", 
+    type: "input",
     placeholder: "Describe your work experience (if any)",
   },
   {
@@ -95,7 +96,7 @@ const questions: Question[] = [
     id: 10,
     title: "Which country are you dreaming of studying in?",
     type: "smart-select", // changed from multiselect
-  options: ["USA", "UK", "Germany", "Canada", "Australia", "Any Other (Specify)"],
+    options: ["USA", "UK", "Germany", "Canada", "Australia", "Any Other (Specify)"],
   },
   {
     id: 11,
@@ -281,20 +282,20 @@ const SuccessChances = () => {
                     smartDropdown(
                       q.title.includes("Country")
                         ? [
-                            "Pakistan",
-                            "India",
-                            "USA",
-                            "UK",
-                            "Germany",
-                            "Any Other (Specify)",
-                          ]
+                          "Pakistan",
+                          "India",
+                          "USA",
+                          "UK",
+                          "Germany",
+                          "Any Other (Specify)",
+                        ]
                         : [
-                            "Computer Science",
-                            "Engineering",
-                            "Business",
-                            "Psychology",
-                            "Any Other (Specify)",
-                          ],
+                          "Computer Science",
+                          "Engineering",
+                          "Business",
+                          "Psychology",
+                          "Any Other (Specify)",
+                        ],
                       q.id
                     )}
 
@@ -305,8 +306,8 @@ const SuccessChances = () => {
                       value={
                         answer
                           ? new Date(answer as string)
-                              .toISOString()
-                              .split("T")[0]
+                            .toISOString()
+                            .split("T")[0]
                           : ""
                       }
                       onChange={(e) => handleAnswer(e.target.value, q.id)}

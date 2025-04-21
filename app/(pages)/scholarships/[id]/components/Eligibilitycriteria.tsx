@@ -5,8 +5,8 @@ import Banner from "@/components/ui/enrollment/Banner";
 
 interface EligibilityItem {
   _id?: string;
-  name: string;
-  detail: string;
+  criterion: string;
+  details: string;
 }
 
 interface EligibilityCriteriaProps {
@@ -61,9 +61,9 @@ const Eligibilitycriteria: React.FC<EligibilityCriteriaProps> = ({
                 className=" mt-2"
               />
               <div>
-                <p className="font-medium">{criteria.name}</p>
-                {criteria.detail && (
-                  <p className="">{criteria.detail}</p>
+                <p className="font-medium">{criteria.criterion}</p>
+                {criteria.details && (
+                  <p className="">{criteria.details}</p>
                 )}
               </div>
             </div>
