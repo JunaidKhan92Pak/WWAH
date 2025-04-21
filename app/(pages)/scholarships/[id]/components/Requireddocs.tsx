@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import DOMPurify from "dompurify";
@@ -45,28 +44,30 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
           </div>
 
           {/* Image Section */}
-          <div className="hidden items-center justify-center rounded-3xl shadow-lg h-full lg:block">
-            {selectedDoc ? (
-              <div>
-                <h3 className="text-lg font-semibold">
-                  {selectedDoc.name} Details
-                </h3>
-                <p
-                  className="text-gray-700 mt-2"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(selectedDoc.details),
-                  }}
-                ></p>
-              </div>
-            ) : (
-              <Image
-                src="/scholarshipdetail/illustration.png"
-                alt="Illustration"
-                className="w-full h-full object-cover rounded-3xl"
-                width={500}
-                height={500}
-              />
-            )}
+          <div className="hidden h-full lg:block bg-[#FEF2F2] rounded-3xl">
+            <div className="h-full flex items-center justify-center rounded-3xl shadow-lg">
+              {selectedDoc ? (
+                <div className="text-center px-6">
+                  <h3 className="text-lg font-semibold">
+                    {selectedDoc.name} Details
+                  </h3>
+                  <p
+                    className="text-gray-700 mt-2"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(selectedDoc.details),
+                    }}
+                  ></p>
+                </div>
+              ) : (
+                <Image
+                  src="/scholarshipdetail/illustration.png"
+                  alt="Illustration"
+                  className="w-full h-full object-cover rounded-3xl"
+                  width={500}
+                  height={500}
+                />
+              )}
+            </div>
           </div>
         </div>
       </section>

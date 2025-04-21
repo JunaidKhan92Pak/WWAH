@@ -31,6 +31,7 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({
           How to Get Permanent Residency in the {countryName} as an
           International Student?
         </h5>
+
         <div className="text-[rgb(209,207,207)] space-y-3 max-h-60 overflow-y-scroll hide-scrollbar">
           {Array.isArray(residency) &&
             residency.map((item, index) => (

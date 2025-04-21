@@ -9,7 +9,8 @@ import Applicationprocess from "./components/Applicationprocess";
 import Eligibilitycriteria from "./components/Eligibilitycriteria";
 import { HeroSkeleton } from "@/components/HeroSkeleton";
 import ScholarshipSuccessChances from "./components/ScholarshipSuccessChances";
-import SuccessChances from "@/components/SuccessChances";
+// import { Explora } from "next/font/google";
+import ExploreScholarships from "./components/ExploreScholarships";
 // import { HeroSkeleton } from "@/components/HeroSkeleton";
 type Tab = {
   label: string;
@@ -146,7 +147,6 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
 
       <div id="Success Chances">
-        <SuccessChances/>
         <ScholarshipSuccessChances scholarship={data} />
       </div>
       <div id="Required Documents">
@@ -156,6 +156,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         {/* <Requireddocs */}
         <Applicationprocess />
       </div>
+      <ExploreScholarships />
     </>
   );
 };

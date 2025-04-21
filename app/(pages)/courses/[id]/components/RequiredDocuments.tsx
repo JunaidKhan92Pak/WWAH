@@ -17,10 +17,13 @@ interface Data {
 export const RequiredDocuments = ({ data }: { data: Data }) => {
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
   const [selectedDocUni, setSelectedDocUni] = useState<Document | null>(null);
-  const [activeTabUni, setActiveTabUni] = useState("University Application Docs");
+  const [activeTabUni, setActiveTabUni] = useState(
+    "University Application Docs"
+  );
   // Memoize document lists to prevent recalculations on every render
-  const universityDocs = useMemo(() =>
-    (data?.universityDocuments || [])?.flatMap((degree) => degree.doc || []),
+  const universityDocs = useMemo(
+    () =>
+      (data?.universityDocuments || [])?.flatMap((degree) => degree.doc || []),
     [data]
   );
   const embassyDocs = useMemo(() => data?.embassyDocuments || [], [data]);
@@ -41,24 +44,26 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
       <div className="flex flex-col md:flex-row gap-2 md:mb-8">
         <Button
           variant="outline"
-          className={`px-4 py-2 rounded-lg border-2 h-12 hover:bg-red-700 hover:text-white ${activeTabUni === "University Application Docs"
-            ? "border-red-700 text-red-700 font-semibold bg-transparent"
-            : "border-gray-900 text-gray-900 bg-transparent"
-            }`}
+          className={`px-4 py-2 rounded-lg border-2 h-12 hover:bg-red-700 hover:text-white ${
+            activeTabUni === "University Application Docs"
+              ? "border-red-700 text-red-700 font-semibold bg-transparent"
+              : "border-gray-900 text-gray-900 bg-transparent"
+          }`}
           onClick={() => setActiveTabUni("University Application Docs")}
         >
           University Application Docs
         </Button>
         <Button
           variant="outline"
-          className={`px-4 py-2 rounded-lg border-2 h-12 ${activeTabUni === "Embassy Documents"
-            ? "border-red-500 text-red-700 font-semibold bg-transparent"
-            : "border-gray-900 text-gray-900 bg-transparent"
-            }`}
+          className={`px-4 py-2 rounded-lg border-2 h-12 ${
+            activeTabUni === "Embassy Documents"
+              ? "border-red-500 text-red-700 font-semibold bg-transparent"
+              : "border-gray-900 text-gray-900 bg-transparent"
+          }`}
           onClick={() => setActiveTabUni("Embassy Documents")}
         >
           Embassy Documents
-        </Button> 
+        </Button>
       </div>
 
       {/* University Application Docs */}
@@ -88,7 +93,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
           </div>
 
           {/* Image Section */}
-          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 ">
+          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 p-4">
             {selectedDocUni ? (
               <div>
                 <h3 className="text-lg font-semibold">
@@ -135,9 +140,9 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
                     onClick={() => setSelectedDoc(doc)}
                   >
                     {doc.name}
-                  </p>  
+                  </p>
                 </li>
-              ))} 
+              ))}
             </ul>
           </div>
 

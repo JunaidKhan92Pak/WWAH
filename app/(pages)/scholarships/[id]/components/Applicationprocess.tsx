@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
 // import { Button } from "@/components/ui/button";
 import Banner from "@/components/ui/enrollment/Banner";
-import { useScholarships } from "@/store/useScholarships";
 interface ReadMoreProps {
   children: React.ReactNode;
 }
@@ -24,14 +23,7 @@ const ReadMore: React.FC<ReadMoreProps> = ({ children }) => {
   );
 };
 const Applicationprocess = () => {
-  const {
-    scholarships,
-    fetchScholarships,
-    // New setter
-  } = useScholarships();
-  useEffect(() => {
-    fetchScholarships();
-  }, [fetchScholarships]);
+  
   // const sliderData = [
   //   {
   //     src: "/scholarshipdetail/slideee.png",
@@ -171,7 +163,7 @@ const Applicationprocess = () => {
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
-      <section className="relative flex flex-col lg:flex-row gap-2 items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
+      {/* <section className="relative flex flex-col lg:flex-row gap-2 items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
         <div className="relative z-10 w-full lg:w-[50%] flex flex-col justify-center md:space-y-2 sm:px-4 text-left">
@@ -217,7 +209,6 @@ const Applicationprocess = () => {
                         height={100}
                         className="w-4 h-4"
                       />
-                      {/* {item.universityName} */}
                       {item.hostCountry}
                     </p>
                   </div>
@@ -226,7 +217,7 @@ const Applicationprocess = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };
