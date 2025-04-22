@@ -29,12 +29,6 @@ const Page = () => {
 
   const [generalError, setGeneralError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setUserData({ ...userData, [name]: value });
-  //   setErrors({ ...errors, [name]: "" });
-  //   setGeneralError("");
-  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,27 +37,6 @@ const Page = () => {
     setGeneralError("");
     setIsDisabled(false); // Re-enable button when user types again
   };
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (!userData.email || !userData.password) {
-  //     setGeneralError("Please fill in all fields.");
-  //     return;
-  //   }
-  //   setIsDisabled(true);
-  //   try {
-  //     const loginRes = await loginAction(userData);
-  //     if (loginRes.success && loginRes.user) {
-  //       setUser(loginRes.user);
-  //       router.push("/");
-  //     } else {
-  //       setGeneralError("Invalid email or password");
-  //     }
-  //   } catch (err) {
-  //     setGeneralError("Login failed, please try again.");
-  //     console.error("Login failed", err);
-  //   }
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +53,6 @@ const Page = () => {
         if (loginRes.user) {
           router.push("/");
         }
-
       } else {
         setGeneralError("Server In Busy, please try again later.");
         setIsDisabled(false); // Re-enable the button so the user can try again
@@ -98,22 +70,16 @@ const Page = () => {
       <div className="md:w-1/2 flex items-center justify-center">
         <div className="w-6/7 pt-5 md:pt-0 px-8 flex flex-col items-end justify-center">
           <div className="w-full sm:w-full lg:w-4/5">
-            {/* <Image
-              src={logo}
-              alt="Logo"
-              width={100}
-              height={100}
-              unoptimized={true}
-              className="lg:mb-0 w-16 sm:w-24 mx-auto md:w-[100px] 2xl:w-40 2xl:h-34"
-            /> */}
-            <Image
-              src={logo}
-              alt="Logo"
-              width={100}
-              height={100}
-              className="lg:mb-0 w-16 sm:w-24 mx-auto md:w-[120px] 2xl:w-40 2xl:h-36"
-              unoptimized={true}
-            />
+            <Link href="/">
+              <Image
+                src={logo}
+                alt="Logo"
+                width={100}
+                height={100}
+                className="lg:mb-0 w-16 sm:w-24 mx-auto md:w-[120px] 2xl:w-40 2xl:h-36"
+                unoptimized={true}
+              />
+            </Link>
             <h3 className="text-center lg:mb-2">Welcome back</h3>
             <p className="text-gray-600 mb-2 text-center sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
               Achieve your study dreams in your ideal country with global
@@ -133,10 +99,11 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type="text"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.email || generalError
-                    ? "border-red-600"
-                    : "border-gray-300"
-                    } rounded text-base 2xl:text-lg`}
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
+                    errors.email || generalError
+                      ? "border-red-600"
+                      : "border-gray-300"
+                  } rounded text-base 2xl:text-lg`}
                   placeholder="Enter your email address"
                   name="email"
                   value={userData.email}
@@ -150,10 +117,11 @@ const Page = () => {
                 <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.password || generalError
-                    ? "border-red-600"
-                    : "border-gray-300"
-                    } rounded`}
+                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
+                    errors.password || generalError
+                      ? "border-red-600"
+                      : "border-gray-300"
+                  } rounded`}
                   placeholder="Enter your password"
                   name="password"
                   value={userData.password}
@@ -195,10 +163,11 @@ const Page = () => {
             </div>
             <button
               type="submit"
-              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${isDisabled
-                ? "bg-red-600 opacity-30 cursor-not-allowed"
-                : "bg-red-700"
-                }`}
+              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${
+                isDisabled
+                  ? "bg-red-600 opacity-30 cursor-not-allowed"
+                  : "bg-red-700"
+              }`}
               disabled={isDisabled}
             >
               {loading ? "Processing..." : "Sign In"}

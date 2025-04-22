@@ -1,23 +1,24 @@
+"use client"
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { Check, ArrowRight, GraduationCap, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import { Progress } from "./ui/progress";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { ArrowRight, GraduationCap } from "lucide-react";
+import { Combobox } from "@/components/ui/combobox";
+import { majorsAndDisciplines, studyDestinations } from "../lib/constant";
+import { getNames } from "country-list";
+import currencyListRaw from "currency-codes/data";
+
+const nationalities = getNames();
+const currencyOptions = currencyListRaw.map(
+  (currency: { code: string; currency: string }) =>
+    `${currency.code} - ${currency.currency}`
+);
 
 interface Question {
   id: number;
@@ -32,14 +33,52 @@ interface Question {
   };
 }
 
-type AnswerType = string | Date | null;
+type AnswerType = string | Date | boolean | number | null;
+
+// Student data interface
+interface StudentData {
+  personalInfo: {
+    nationality: string;
+    dateOfBirth: string;
+  };
+  academicInfo: {
+    currentStudyLevel: string;
+    major: string;
+    grades: string;
+  };
+  workExperience: {
+    hasExperience: boolean;
+    years?: number;
+  };
+  languageProficiency: {
+    level: string;
+    test?: string;
+    score?: string;
+  };
+  studyPreferences: {
+    destinationCountry: string;
+    plannedStudyLevel: string;
+    preferredMajor: string;
+  };
+  budget: {
+    tuition: {
+      amount: string;
+      currency: string;
+    };
+    livingCosts: {
+      amount: string;
+      currency: string;
+    };
+  };
+  submissionDate: string;
+}
 
 const questions: Question[] = [
   {
     id: 1,
     title: "What is your Country of Nationality?",
-    type: "input",
-    placeholder: "Enter your country",
+    type: "nationality",
+    placeholder: "Select your nationality",
   },
   { id: 2, title: "What is your Date of Birth?", type: "date" },
   {
@@ -58,21 +97,15 @@ const questions: Question[] = [
   {
     id: 4,
     title: "What is your Major or field of study?",
-    type: "input",
-    placeholder: "Enter your major or field",
+    type: "major",
+    placeholder: "Select your major or field",
   },
   {
     id: 5,
     title: "Obtained Grades/CGPA in your previous study?",
-    type: "input",
-    placeholder: "Enter your grades or CGPA",
+    type: "grades",
   },
-  {
-    id: 6,
-    title: "Do you have any work experience?",
-    type: "input", 
-    placeholder: "Describe your work experience (if any)",
-  },
+  { id: 6, title: "Do you have any work experience?", type: "work_experience" },
   {
     id: 7,
     title: "What is your English Proficiency level?",
@@ -94,8 +127,7 @@ const questions: Question[] = [
   {
     id: 10,
     title: "Which country are you dreaming of studying in?",
-    type: "smart-select", // changed from multiselect
-  options: ["USA", "UK", "Germany", "Canada", "Australia", "Any Other (Specify)"],
+    type: "study_destination",
   },
   {
     id: 11,
@@ -106,19 +138,19 @@ const questions: Question[] = [
   {
     id: 12,
     title: "What major or discipline are you interested in?",
-    type: "input",
-    placeholder: "Enter your preferred major",
+    type: "major",
+    placeholder: "Select your preferred major",
   },
   {
     id: 13,
-    title: "What’s your preferred annual tuition budget?",
-    type: "currency_input",
+    title: "What's your preferred annual tuition budget?",
+    type: "currency",
     placeholder: "Enter tuition budget",
   },
   {
     id: 14,
     title: "And your estimated cost of living per year?",
-    type: "currency_input",
+    type: "currency",
     placeholder: "Enter cost of living",
   },
 ];
@@ -130,11 +162,11 @@ const questionGroups: number[][] = [
   [4],
   [5],
   [6],
-  [7, 8, 9], // English Proficiency Group
+  [7, 8, 9],
   [10],
   [11],
   [12],
-  [13, 14], // Budget Group
+  [13, 14],
 ];
 
 const SuccessChances = () => {
@@ -142,7 +174,11 @@ const SuccessChances = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, AnswerType>>({});
-
+  const [selectedCurrency, setSelectedCurrency] = useState<
+    Record<number, string>
+  >({});
+  // New state for the final student data object
+  const [studentData, setStudentData] = useState<StudentData | null>(null);
   const progress = ((currentQuestion + 1) / questionGroups.length) * 100;
 
   useEffect(() => {
@@ -158,8 +194,6 @@ const SuccessChances = () => {
   const handleNext = () => {
     if (currentQuestion < questionGroups.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
-    } else {
-      console.log("Final Answers:", answers);
     }
   };
 
@@ -170,88 +204,161 @@ const SuccessChances = () => {
   };
 
   const handleAnswer = (value: AnswerType, id: number) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+    setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
-  const currentGroup = questionGroups[currentQuestion];
-  const groupQuestions = questions.filter((q) => currentGroup.includes(q.id));
+  const handleCurrency = (value: string, id: number) => {
+    setSelectedCurrency((prev) => ({ ...prev, [id]: value }));
+  };
 
-  const smartDropdown = (options: string[], qId: number) => {
-    const selected = (answers[qId] as string) || "";
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Submitted Answers:", answers);
+
+    // Compile all answers into a structured student data object
+    const compiledStudentData: StudentData = {
+      personalInfo: {
+        nationality: (answers[1] as string) || "",
+        dateOfBirth: (answers[2] as string) || "",
+      },
+      academicInfo: {
+        currentStudyLevel: (answers[3] as string) || "",
+        major: (answers[4] as string) || "",
+        grades: (answers[5] as string) || "",
+      },
+      workExperience: {
+        hasExperience: (answers[6] as boolean) || false,
+        years: (answers[106] as number) || 0,
+      },
+      languageProficiency: {
+        level: (answers[7] as string) || "",
+        test: (answers[8] as string) || "",
+        score: (answers[9] as string) || "",
+      },
+      studyPreferences: {
+        destinationCountry: (answers[10] as string) || "",
+        plannedStudyLevel: (answers[11] as string) || "",
+        preferredMajor: (answers[12] as string) || "",
+      },
+      budget: {
+        tuition: {
+          amount: (answers[13] as string) || "0",
+          currency: selectedCurrency[13] || "",
+        },
+        livingCosts: {
+          amount: (answers[14] as string) || "0",
+          currency: selectedCurrency[14] || "",
+        },
+      },
+      submissionDate: new Date().toISOString(),
+    };
+
+    // Save the compiled data to state
+    setStudentData(compiledStudentData);
+
+    // Log the structured student data for verification
+    console.log("Compiled Student Data:", compiledStudentData);
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(compiledStudentData),
+    });
+    if (!resp.ok) {
+      console.error("Error submitting data:", resp.statusText);
+      return;
+    }
+    const data = await resp.json();
+
+    console.log("Response from server:", data);
+    // Reset the form and close the dialog
+
+    setOpen(false);
+  };
+
+  const renderWorkExperience = (q: Question) => {
+    const hasWorkExperience = answers[q.id] === true;
     return (
-      <>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              className="w-full justify-between"
-            >
-              {selected || "Select an option"}
-              <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
-            <Command>
-              <CommandInput placeholder="Search..." />
-              <CommandEmpty>No match found.</CommandEmpty>
-              <CommandGroup>
-                {options.map((option) => (
-                  <CommandItem
-                    key={option}
-                    onSelect={() => handleAnswer(option, qId)}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selected === option ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {option}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
-        {selected === "Any Other (Specify)" && (
-          <input
-            type="text"
-            placeholder="Please specify"
-            className="w-full mt-2 rounded-lg border border-gray-300 p-3"
-            onChange={(e) =>
-              handleAnswer(`Any Other (Specify) - ${e.target.value}`, qId)
-            }
-          />
+      <div className="space-y-4">
+        <RadioGroup
+          value={
+            answers[q.id] === true ? "yes" : answers[q.id] === false ? "no" : ""
+          }
+          onValueChange={(value) => handleAnswer(value === "yes", q.id)}
+          className="flex flex-col space-y-2"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="yes" id="yes" />
+            <Label htmlFor="yes">Yes</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="no" id="no" />
+            <Label htmlFor="no">No</Label>
+          </div>
+        </RadioGroup>
+        {hasWorkExperience && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="pt-2"
+          >
+            <Label htmlFor="years-experience">Years of Experience</Label>
+            <Input
+              id="years-experience"
+              type="number"
+              min="0"
+              placeholder="Enter number of years"
+              value={
+                typeof answers[q.id + 100] === "number"
+                  ? (answers[q.id + 100] as number)
+                  : undefined
+              }
+              onChange={(e) => handleAnswer(Number(e.target.value), q.id + 100)}
+              className="mt-2"
+            />
+          </motion.div>
         )}
-      </>
+      </div>
     );
   };
 
-  const renderDialogContent = () => {
-    if (showWelcome) {
-      return (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="text-center p-8"
-        >
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Let Zeus Get to know you!
-          </h1>
-          <p className="text-gray-600">
-            Just a few questions to better understand your background and
-            preferences.
-          </p>
-        </motion.div>
-      );
-    }
-
+  const renderCurrencyInput = (q: Question) => {
+    const currency = selectedCurrency[q.id] ?? currencyOptions[0];
     return (
+      <div className="space-y-4">
+        <Combobox
+          options={currencyOptions}
+          value={currency}
+          onChange={(value) => handleCurrency(value, q.id)}
+          placeholder="Select currency"
+        />
+        <Input
+          type="number"
+          min="0"
+          placeholder={q.placeholder}
+          value={(answers[q.id] as string) || ""}
+          onChange={(e) => handleAnswer(e.target.value, q.id)}
+          className="mt-2"
+        />
+      </div>
+    );
+  };
+
+  const renderInput = (q: Question) => (
+    <Input
+      type="text"
+      placeholder={q.placeholder}
+      className="w-full"
+      value={(answers[q.id] as string) || ""}
+      onChange={(e) => handleAnswer(e.target.value, q.id)}
+    />
+  );
+
+  const renderDialogContent = () => (
+    <form onSubmit={handleSubmit}>
       <Card className="p-6 shadow-lg bg-white border-0">
         <div className="mb-6 flex flex-col items-center">
           <Progress value={progress} className="h-3 w-[90%]" />
@@ -259,7 +366,6 @@ const SuccessChances = () => {
             {currentQuestion + 1} / {questionGroups.length}
           </p>
         </div>
-
         <AnimatePresence mode="wait">
           <motion.div
             key={currentQuestion}
@@ -268,56 +374,63 @@ const SuccessChances = () => {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-8"
           >
-            {groupQuestions.map((q) => {
-              const answer = answers[q.id] || "";
-              return (
+            {questions
+              .filter((q) => questionGroups[currentQuestion].includes(q.id))
+              .map((q) => (
                 <div key={q.id} className="space-y-4">
                   <div className="flex items-center gap-3 text-black">
                     <GraduationCap className="h-6 w-6" />
                     <h2 className="text-xl font-semibold">{q.title}</h2>
                   </div>
-
-                  {q.type === "smart-select" &&
-                    smartDropdown(
-                      q.title.includes("Country")
-                        ? [
-                            "Pakistan",
-                            "India",
-                            "USA",
-                            "UK",
-                            "Germany",
-                            "Any Other (Specify)",
-                          ]
-                        : [
-                            "Computer Science",
-                            "Engineering",
-                            "Business",
-                            "Psychology",
-                            "Any Other (Specify)",
-                          ],
-                      q.id
-                    )}
-
+                  {q.type === "nationality" && (
+                    <Combobox
+                      options={nationalities}
+                      value={(answers[q.id] as string) || ""}
+                      onChange={(val) => handleAnswer(val, q.id)}
+                      placeholder="Select your nationality"
+                      emptyMessage="No countries found"
+                    />
+                  )}
+                  {q.type === "major" && (
+                    <Combobox
+                      options={majorsAndDisciplines}
+                      value={(answers[q.id] as string) || ""}
+                      onChange={(val) => handleAnswer(val, q.id)}
+                      placeholder={q.placeholder}
+                      emptyMessage="No majors found"
+                    />
+                  )}
+                  {q.type === "study_destination" && (
+                    <Combobox
+                      options={studyDestinations}
+                      value={(answers[q.id] as string) || ""}
+                      onChange={(val) => handleAnswer(val, q.id)}
+                      placeholder="Select country"
+                      emptyMessage="No countries found"
+                    />
+                  )}
+                  {q.type === "work_experience" && renderWorkExperience(q)}
+                  {q.type === "currency" && renderCurrencyInput(q)}
+                  {q.type === "input" && renderInput(q)}
                   {q.type === "date" && (
-                    <input
+                    <Input
                       type="date"
-                      className="w-full rounded-lg border border-gray-300 p-3"
+                      className="w-full"
                       value={
-                        answer
-                          ? new Date(answer as string)
-                              .toISOString()
-                              .split("T")[0]
+                        answers[q.id]
+                          ? new Date(answers[q.id] as string)
+                            .toISOString()
+                            .split("T")[0]
                           : ""
                       }
                       onChange={(e) => handleAnswer(e.target.value, q.id)}
                     />
                   )}
-
                   {q.type === "select" && (
                     <>
                       <select
                         className="w-full rounded-lg border border-gray-300 p-3"
-                        value={answer as string}
+                        value={(answers[q.id] as string) || ""}
                         onChange={(e) => handleAnswer(e.target.value, q.id)}
                       >
                         <option value="">Select an option</option>
@@ -327,11 +440,11 @@ const SuccessChances = () => {
                           </option>
                         ))}
                       </select>
-                      {answer === "Any Other (Specify)" && (
-                        <input
+                      {answers[q.id] === "Any Other (Specify)" && (
+                        <Input
                           type="text"
+                          className="mt-2"
                           placeholder="Please specify"
-                          className="w-full mt-2 rounded-lg border border-gray-300 p-3"
                           onChange={(e) =>
                             handleAnswer(
                               `Any Other (Specify) - ${e.target.value}`,
@@ -342,22 +455,53 @@ const SuccessChances = () => {
                       )}
                     </>
                   )}
-
-                  {q.type === "input" || q.type === "currency_input" ? (
-                    <input
-                      type="text"
-                      placeholder={q.placeholder}
-                      className="w-full rounded-lg border border-gray-300 p-3"
-                      value={answer as string}
-                      onChange={(e) => handleAnswer(e.target.value, q.id)}
-                    />
-                  ) : null}
+                  {q.type === "grades" && (
+                    <>
+                      <select
+                        className="w-full rounded-lg border border-gray-300 p-3"
+                        value={
+                          typeof answers[q.id] === "string" &&
+                            (answers[q.id] as string).includes(" - ")
+                            ? (answers[q.id] as string).split(" - ")[0]
+                            : typeof answers[q.id] === "string"
+                              ? (answers[q.id] as string)
+                              : ""
+                        }
+                        onChange={(e) => handleAnswer(e.target.value, q.id)}
+                      >
+                        <option value="">Select an option</option>
+                        {[
+                          "Percentage Grade scale",
+                          "Grade Point Average (GPA) Scale",
+                          "Letter Grade Scale (A-F)",
+                          "Pass/Fail",
+                          "Any other (Specify)",
+                        ].map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      {answers[q.id] && (
+                        <Input
+                          type="text"
+                          placeholder="Enter your grade/CGPA"
+                          className="w-full mt-2"
+                          onChange={(e) =>
+                            handleAnswer(
+                              `${answers[q.id]?.toString().split(" - ")[0]} - ${e.target.value
+                              }`,
+                              q.id
+                            )
+                          }
+                        />
+                      )}
+                    </>
+                  )}
                 </div>
-              );
-            })}
+              ))}
           </motion.div>
         </AnimatePresence>
-
         <div className="mt-8 flex justify-between">
           <Button
             variant="outline"
@@ -367,8 +511,17 @@ const SuccessChances = () => {
             Previous
           </Button>
           <Button
+            type={
+              currentQuestion === questionGroups.length - 1
+                ? "submit"
+                : "button"
+            }
             className="bg-blue-600 hover:bg-blue-700 text-white"
-            onClick={handleNext}
+            onClick={
+              currentQuestion === questionGroups.length - 1
+                ? undefined
+                : handleNext
+            }
           >
             {currentQuestion === questionGroups.length - 1 ? "Submit" : "Next"}
             {currentQuestion !== questionGroups.length - 1 && (
@@ -377,23 +530,55 @@ const SuccessChances = () => {
           </Button>
         </div>
       </Card>
+    </form>
+  );
+
+  // Display submitted data (for demonstration purposes)
+  const renderSubmittedData = () => {
+    if (!studentData) return null;
+
+    return (
+      <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
+        <h3 className="text-lg font-medium text-green-800 mb-2">
+          Form Submitted Successfully!
+        </h3>
+
+      </div>
     );
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          size="sm"
-          className="bg-red-700 hover:bg-red-700 text-white px-6 py-6 text-lg"
-        >
-          Generate
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px] p-0">
-        {renderDialogContent()}
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button className="bg-red-700 hover:bg-red-700 text-white px-6 py-6 text-lg">
+            Generate
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[525px] p-0">
+          {showWelcome ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-center p-8"
+            >
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Let Zeus Get to know you!
+              </h1>
+              <p className="text-gray-600">
+                Just a few questions to better understand your background and
+                preferences.
+              </p>
+            </motion.div>
+          ) : (
+            renderDialogContent()
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {studentData && renderSubmittedData()}
+    </>
   );
 };
 

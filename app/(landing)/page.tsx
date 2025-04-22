@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FaUser } from "react-icons/fa";
+
 import {
   Dialog,
   DialogContent,
@@ -23,7 +25,6 @@ import { Card } from "@/components/ui/card";
 import { Bot, Headphones, Trophy, Users, Send } from "lucide-react";
 import Footer from "@/components/Footer";
 // import { ScrollArea } from "@/components/ui/scroll-area";
-import { FaCircleUser } from "react-icons/fa6";
 
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
@@ -147,7 +148,15 @@ function Page() {
                   onClick={toggleDropdown}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " />
+                  {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
+                  <FaUser className="text-gray-800  w-8 h-8 text-xl p-1" />
+                  {/* <Image
+                    src="/icons/user.png"
+                    alt="user"
+                    width={40}
+                    height={40}
+                    className="rounded-full w-8 h-8 "
+                  /> */}
                 </button>
 
                 {/* Dropdown Menu */}
@@ -493,7 +502,7 @@ function Page() {
       {/* Features Section */}
       <section className="md:py-5 bg-muted/50">
         <div className=" mx-auto w-[90%]">
-              {/* <h2 className="font-extrabold text-center mb-5 md:mb-5">
+          {/* <h2 className="font-extrabold text-center mb-5 md:mb-5">
             Why Choose{' '}
             <span className="bg-gradient-to-r from-[#8e0000] via-[#d31900] to-[#ffcc33] bg-clip-text text-transparent">
               WWAH
@@ -501,16 +510,16 @@ function Page() {
             ?
           </h2> */}
 
-<h2 className="font-extrabold text-center mb-5 md:mb-5">
-            Why Choose{' '}
+          <h2 className="font-extrabold text-center mb-5 md:mb-5">
+            Why Choose{" "}
             <Link href="/aboutUs">
-            <Image
-              src="/wwah.svg"
-              alt="WWAH"
-              width={100} // adjust as needed
-              height={40} // adjust as needed
-              className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[100px]"
-            />
+              <Image
+                src="/wwah.svg"
+                alt="WWAH"
+                width={100} // adjust as needed
+                height={40} // adjust as needed
+                className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[100px]"
+              />
             </Link>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

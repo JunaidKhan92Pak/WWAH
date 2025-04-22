@@ -257,9 +257,11 @@ import { Card } from "@/components/ui/card";
 
 export default function Home() {
   const [messages, setMessages] = useState<MessageType[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const initialMessage = searchParams.get("message"); // Get message from URL
   const { isAuthenticate, user } = useUserStore();
@@ -316,6 +318,7 @@ export default function Home() {
     const userMessage: MessageType = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
+    setIsLoading(true);
     setIsLoading(true);
 
     try {
@@ -376,15 +379,21 @@ export default function Home() {
 
       const data = await response.json();
       setMessages((prev) => [...prev, data.message]);
+      setMessages((prev) => [...prev, data.message]);
     } catch (error) {
+      console.error(error);
       console.error(error);
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           content: "Sorry, there was an error processing your request.",
+          role: "assistant",
+          content: "Sorry, there was an error processing your request.",
         },
       ]);
+    } finally {
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -392,7 +401,10 @@ export default function Home() {
   useEffect(() => {
     if (initialMessage) {
       handleInitialMessage(initialMessage);
+    if (initialMessage) {
+      handleInitialMessage(initialMessage);
     }
+  }, [initialMessage]);
   }, [initialMessage]);
   return (
     <div className="flex min-h-screen flex-col">
@@ -416,6 +428,8 @@ export default function Home() {
               {isAuthenticate ? (
                 <>
                   <h6>Hello, {user?.personalInfo.firstName || "Newbie"}</h6>
+
+                  <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
 
                   <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
                 </>
@@ -510,19 +524,56 @@ export default function Home() {
                 </Button>
               </div>
             </form>
+          <div className="absolute inset-0 bg-[#D9D9D966] opacity-80 z-0 blur-2xl "></div>
+          <div className="relative w-[90%] sm:w-[70%] lg:w-[58%] mx-auto pb-1 ">
+            <form onSubmit={handleSubmit}>
+              <div className="flex items-center rounded-xl shadow-sm bg-white gap-2 px-3 py-1">
+                <Image
+                  src="/chatbot.svg"
+                  alt="chatrobot"
+                  width={20}
+                  height={20}
+                />
+                <Input
+                  placeholder="Chat with ZEUS"
+                  className="flex-1 border-none focus:ring-0 xl:placeholder:text-[16px]"
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  // onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                  disabled={isLoading}
+                />
+                <Button
+                  type="submit"
+                  size="icon"
+                  disabled={isLoading}
+                  className="p-0 bg-transparent hover:bg-transparent rounded-full"
+                >
+                  <Image
+                    src="/icons/sendicon.svg"
+                    alt="Send"
+                    width={24}
+                    height={24}
+                  />
+                </Button>
+              </div>
+            </form>
             {/* Buttons */}
             <div className="flex flex-row justify-center overflow-x-auto hide-scrollbar gap-3 mt-2">
               <Link href="/Universities">
+                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Top Universities
                 </Button>
               </Link>
               <Link href="/countries">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Study Destinations
                 </Button>
               </Link>
               <Link href="/scholarships">
+                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Latest Scholarships
                 </Button>

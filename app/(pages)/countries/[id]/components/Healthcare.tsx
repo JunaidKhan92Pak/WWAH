@@ -25,10 +25,10 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
 
               {/* Text Section */}
               <div className="text-center md:text-left w-full md:w-[50%] pl-0 md:pl-8">
-                <h3 className=" text-gray-900 mb-2">
+                <h4 className=" text-gray-900 mb-2">
                   {/* National Health Service (NHS) */}
                   {health ? health[0].name : "nill"}
-                </h3>
+                </h4>
                 <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
                   {health ? health[0].description : "nill"}
                 </p>
@@ -57,34 +57,12 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                   height={297}
                 />
               </div>
-              {/* <div className="text-center md:text-left w-full md:w-[50%] ">
-                {health?.slice(1).map((item, index) => (
-                  <div key={index}>
-                    <h3 className="text-gray-900 mb-2">{item.name}</h3>
-                    <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
-                      {item.description ? (
-                        <ul className="list-disc pl-5">
-                          {item.description.map((point, i) => (
-                            <li key={i}>{point}</li>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </p>
-                  </div>
-                ))}
-              </div> */}
+            
               <div className="text-left w-full md:w-[50%]">
-                {/* First Item (Visible by Default) */}
                 <div>
                   {/* <h3 className="text-gray-900 mb-2">{health[1].name}</h3> */}
                   <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
-                    {/* {health[1].description ? (
-                      <ul className="list-disc pl-5">
-                        {health[1].description.map((point, index) => (
-                          <li key={index}>{point}</li>
-                        ))}
-                      </ul>
-                    ) : null} */}
+                  
                   </p>
                 </div>
 
@@ -93,9 +71,9 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                   <>
                     {/* Always show health[1] */}
                     <div className="md:mt-4 mt-2">
-                      <h3 className="text-gray-900 mb-2 px-4 md:px-0">
+                      <h4 className="text-gray-900 mb-2 px-4 md:px-0">
                         {health[1].name}
-                      </h3>
+                      </h4>
                       <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
                         {health[1].description && (
                           <ul className="list-disc pl-5">
@@ -160,4 +138,6 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
 };
 
 export default Healthcare;
-{/* <Healthcare health={country.health} countryName={country?.country_name} /> */ }
+{
+  /* <Healthcare health={country.health} countryName={country?.country_name} /> */
+}

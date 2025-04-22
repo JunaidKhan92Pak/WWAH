@@ -179,39 +179,39 @@ const Page = () => {
   };
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
 
-const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
-const [showFavorites, setShowFavorites] = useState(false);
-const [favoritesCount, setFavoritesCount] = useState<number>(0);
-const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [favoritesCount, setFavoritesCount] = useState<number>(0);
+  const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
 
-// Removed localStorage-related useEffects
+  // Removed localStorage-related useEffects
 
-// Filtered list based on "Favorites" button
-const displayedScholarships = showFavorites
-  ? scholarships.filter((item) => favorites[item._id])
-  : scholarships;
+  // Filtered list based on "Favorites" button
+  const displayedScholarships = showFavorites
+    ? scholarships.filter((item) => favorites[item._id])
+    : scholarships;
 
-const handleNext = () => {
-  if (page < totalPages) {
-    setPage(page + 1);
-  }
-};
+  const handleNext = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
 
-const toggleFavorite = (id: string) => {
-  setFavorites((prev) => {
-    const updatedFavorites = { ...prev, [id]: !prev[id] };
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => {
+      const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-    // Update favorites count
-    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-    setFavoritesCount(newCount);
+      // Update favorites count
+      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+      setFavoritesCount(newCount);
 
-    // Trigger heart animation
-    setHeartAnimation(id);
-    setTimeout(() => setHeartAnimation(null), 1000);
+      // Trigger heart animation
+      setHeartAnimation(id);
+      setTimeout(() => setHeartAnimation(null), 1000);
 
-    return updatedFavorites;
-  });
-};
+      return updatedFavorites;
+    });
+  };
 
 
   return (
@@ -569,22 +569,21 @@ const toggleFavorite = (id: string) => {
                 </h3>
               </div>
               <div className="mt-4 md:mt-0">
-  <button
-    onClick={() => setShowFavorites((prev) => !prev)}
-    className={`text-sm flex items-center justify-center  gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4  whitespace-nowrap h-10 ${
-      showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-    }`}
-  >
-    <Image
-      src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
-      width={20}
-      height={18}
-      alt="favorites"
-    />
-    {showFavorites ? "Show All" : "Favorites"}
-    <span>({favoritesCount})</span>
-  </button>
-</div>
+                <button
+                  onClick={() => setShowFavorites((prev) => !prev)}
+                  className={`text-sm flex items-center justify-center  gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4  whitespace-nowrap h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+                    }`}
+                >
+                  <Image
+                    src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
+                    width={20}
+                    height={18}
+                    alt="favorites"
+                  />
+                  {showFavorites ? "Show All" : "Favorites"}
+                  <span>({favoritesCount})</span>
+                </button>
+              </div>
 
             </div>
             {loading ? (
@@ -635,83 +634,83 @@ const toggleFavorite = (id: string) => {
                                 alt="Share"
                               />
                             </button> */}
-                               <Dialog>
-  <DialogTrigger asChild>
-    <button>
-      <Image src="/share.svg" width={20} height={20} alt="Share" />
-    </button>
-  </DialogTrigger>
-  <DialogContent className="sm:max-w-md">
-    <DialogHeader>
-      <DialogTitle>Share link</DialogTitle>
-      <DialogDescription>
-        Anyone who has this link will be able to view this.
-      </DialogDescription>
-    </DialogHeader>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <button>
+                                  <Image src="/share.svg" width={20} height={20} alt="Share" />
+                                </button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-md">
+                                <DialogHeader>
+                                  <DialogTitle>Share link</DialogTitle>
+                                  <DialogDescription>
+                                    Anyone who has this link will be able to view this.
+                                  </DialogDescription>
+                                </DialogHeader>
 
-    <div className="flex items-center space-x-2">
-      <div className="grid flex-1 gap-2">
-        <Label htmlFor={`link-${item._id}`} className="sr-only">
-          Link
-        </Label>
-        <Input
-          id={`link-${item._id}`}
-          value={`${typeof window !== "undefined" ? window.location.origin : ""}/scholarships/${item._id}`}
-          readOnly
-        />
-      </div>
-      <Button
-        type="button"
-        size="sm"
-        className="px-3"
-        onClick={() => {
-          const link = `${window.location.origin}/scholarships/${item._id}`;
-          navigator.clipboard.writeText(link).then(() => {
-            setCopiedLinkId(item._id);
-            setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
-          });
-        }}
-      >
-        <span className="sr-only">Copy</span>
-        <Copy />
-      </Button>
-    </div>
+                                <div className="flex items-center space-x-2">
+                                  <div className="grid flex-1 gap-2">
+                                    <Label htmlFor={`link-${item._id}`} className="sr-only">
+                                      Link
+                                    </Label>
+                                    <Input
+                                      id={`link-${item._id}`}
+                                      value={`${typeof window !== "undefined" ? window.location.origin : ""}/scholarships/${item._id}`}
+                                      readOnly
+                                    />
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    className="px-3"
+                                    onClick={() => {
+                                      const link = `${window.location.origin}/scholarships/${item._id}`;
+                                      navigator.clipboard.writeText(link).then(() => {
+                                        setCopiedLinkId(item._id);
+                                        setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
+                                      });
+                                    }}
+                                  >
+                                    <span className="sr-only">Copy</span>
+                                    <Copy />
+                                  </Button>
+                                </div>
 
-    {/* 👇 Show message conditionally */}
-    {copiedLinkId === item._id && (
-      <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
-    )}
+                                {/* 👇 Show message conditionally */}
+                                {copiedLinkId === item._id && (
+                                  <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
+                                )}
 
-    <DialogFooter className="sm:justify-start">
-      <DialogClose asChild>
-        <Button type="button" variant="secondary">
-          Close
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+                                <DialogFooter className="sm:justify-start">
+                                  <DialogClose asChild>
+                                    <Button type="button" variant="secondary">
+                                      Close
+                                    </Button>
+                                  </DialogClose>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
 
-                             <button
-                             onClick={() => toggleFavorite(item._id)}
-                             className={`relative ${heartAnimation === item._id ? 'animate-pop' : ''}`}
-                           >
-                             {favorites[item._id] ? (
-                               <Image
-                                 src="/redheart.svg"
-                                 width={20}
-                                 height={20}
-                                 alt="Favorite"
-                               />
-                             ) : (
-                               <Image
-                                 src="/whiteheart.svg"
-                                 width={20}
-                                 height={20}
-                                 alt="Favorite"
-                               />
-                             )}
-                           </button>
+                            <button
+                              onClick={() => toggleFavorite(item._id)}
+                              className={`relative ${heartAnimation === item._id ? 'animate-pop' : ''}`}
+                            >
+                              {favorites[item._id] ? (
+                                <Image
+                                  src="/redheart.svg"
+                                  width={20}
+                                  height={20}
+                                  alt="Favorite"
+                                />
+                              ) : (
+                                <Image
+                                  src="/whiteheart.svg"
+                                  width={20}
+                                  height={20}
+                                  alt="Favorite"
+                                />
+                              )}
+                            </button>
                           </div>
                         </div>
 
@@ -744,7 +743,7 @@ const toggleFavorite = (id: string) => {
                                 height={16}
                               />
                               <p className="text-sm text-gray-600 truncate">
-                                {item.scholarshipType}
+                                {item.type}
                               </p>
                             </div>
                           </div>
