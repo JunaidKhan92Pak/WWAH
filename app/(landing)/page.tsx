@@ -130,12 +130,43 @@ function Page() {
   return (
     // landing page container starts
     <div className="landingPage">
-      <div className="landingPageBg bg-custom-gradient w-full flex flex-col justify-center items-center">
+      {/* <div className="landingPageBg bg-custom-gradient w-full flex flex-col justify-center items-center"> */}
+      {/* <div
+        className="landingPageBg w-full flex flex-col justify-center items-center"
+        style={{ */}
+      {/* // backgroundImage: 'url("/bgblue.JPG")',
+          // backgroundImage: 'url("/bgblue.JPG")',
+          // backgroundImage: 'url("/premiumbg.JPG")',
+          backgroundImage: 'url("/robotic.JPG")',
+
+          backgroundSize: "cover",
+          backgroundPosition: "center", */}
+      {/* }}
+      > */}
+
+      <div
+        className="landingPageBg relative w-full flex flex-col justify-center items-center"
+        style={{
+          // backgroundImage: 'url("/robotic.JPG")',
+          backgroundImage: 'url("/bgblue.JPG")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* <div className="absolute bg-black bg-opacity-80 w-full h-full rounded-2xl"></div>{" "}
+         */}
+        <div className="absolute inset-0 bg-black bg-opacity-10 z-0"></div>
+
         {/* header section starts */}
-        <header className="w-[90%] flex justify-between mt-5 ">
+        <header className="w-[90%] flex justify-between mt-5 z-10">
           <div className=" w-full  flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="/logo.png" alt="WWAH Logo" width={112} height={45} />
+              <Image
+                src="/wwah_logo2.svg"
+                alt="WWAH Logo"
+                width={112}
+                height={45}
+              />
             </Link>
             {isAuthenticate ? (
               // Profile Dropdown for Logged-in Users
@@ -225,7 +256,7 @@ function Page() {
         </header>
         {/* header section ends */}
         {/* Hero Section Start */}
-        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly my-6 w-[95%] sm:w-[100%]">
+        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly my-6 w-[95%] sm:w-[100%] z-10">
           {/* hero Section Left Side starts */}
           <div className="HeroLeftSection w-[95%] md:w-[70%] lg:w-[50%] ">
             {/* Hero Content */}
@@ -264,7 +295,8 @@ function Page() {
 
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/Hero_Robot.png"
+                    // src="/Hero_Robot.png"
+                    src="/zeusup.JPG"
                     alt="Robot"
                     width={0}
                     height={0}
@@ -358,7 +390,7 @@ function Page() {
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Image
-              src="/Hero_Robot.svg"
+              src="/zeus_up.PNG"
               alt="Robot"
               width={400}
               height={300}
@@ -367,7 +399,7 @@ function Page() {
           </div>
         </section>
       </div>
-      <section className="py-5 bg-gray-50">
+      <section className="py-5 bg-gray-50 z-10">
         <div className=" mx-auto px-0 sm:px-4 w-[90%]">
           {/* Section Header */}
           <div className="flex justify-between items-center ">
@@ -500,7 +532,7 @@ function Page() {
         </div>
       </section>
       {/* Features Section */}
-      <section className="md:py-5 bg-muted/50">
+      <section className="md:py-5 bg-muted/50 z-10">
         <div className=" mx-auto w-[90%]">
           {/* <h2 className="font-extrabold text-center mb-5 md:mb-5">
             Why Choose{' '}

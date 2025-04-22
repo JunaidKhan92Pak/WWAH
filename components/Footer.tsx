@@ -6,7 +6,6 @@ import {
   IoCallOutline,
   IoMailUnreadOutline,
   IoLogoLinkedin,
-
 } from "react-icons/io5";
 
 import { FaFacebook, FaYoutube } from "react-icons/fa";
@@ -45,7 +44,7 @@ const Footer = () => {
             {/* Column 1: Logo + Socials */}
             <div className="flex flex-col items-center sm:items-start lg:items-center space-y-4">
               <Image
-                src="/logo.svg"
+                src="/wwah_logo2.svg"
                 alt="WWAH Logo"
                 width={100}
                 height={100}
