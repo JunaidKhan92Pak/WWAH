@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import logo from "@/public/logo.png";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -90,13 +89,12 @@ const Page = () => {
       <div className="w-full md:w-1/2 pt-5 md:pt-0 px-8 flex flex-col items-center justify-center lg:w-[60%] 2xl:px-20 2xl:w-[60%]">
         <div>
           <Link href="/">
-            <Image
-              src={logo}
-              alt="Logo"
-              width={80}
-              height={80}
-              className="w-16 sm:w-20 mx-auto"
-            />
+         <Image
+                         src="/logowwah.svg"
+                         alt="WWAH Logo"
+                         width={150}
+                         height={60}
+                       />
           </Link>
           <h6 className="text-center">Create an Account!</h6>
           <p className="text-gray-600 mb-2 text-center sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
