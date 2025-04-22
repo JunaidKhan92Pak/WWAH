@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
@@ -12,12 +12,11 @@ import { ArrowRight, GraduationCap } from "lucide-react";
 import { Combobox } from "@/components/ui/combobox";
 import { majorsAndDisciplines, studyDestinations } from "../lib/constant";
 import { getNames } from "country-list";
-import currencyListRaw from "currency-codes/data";
+import currency from "currency-codes";
 
 const nationalities = getNames();
-const currencyOptions = currencyListRaw.map(
-  (currency: { code: string; currency: string }) =>
-    `${currency.code} - ${currency.currency}`
+const currencyOptions = currency.data.map(
+  (c: { code: string; currency: string }) => `${c.code} - ${c.currency}`
 );
 
 interface Question {
@@ -35,41 +34,42 @@ interface Question {
 
 type AnswerType = string | Date | boolean | number | null;
 
-// Student data interface
+
 interface StudentData {
-  personalInfo: {
-    nationality: string;
-    dateOfBirth: string;
-  };
-  academicInfo: {
-    currentStudyLevel: string;
-    major: string;
-    grades: string;
-  };
-  workExperience: {
-    hasExperience: boolean;
-    years?: number;
-  };
-  languageProficiency: {
+  nationality: string;
+  dateOfBirth: string;
+ 
+
+  studyLevel: string;
+  majorSubject: string;
+  
+  gradeType: string;
+  grade: string;
+
+
+  hasExperience: boolean;
+  years?: string;
+
+  LanguageProficiency: {
     level: string;
     test?: string;
     score?: string;
   };
-  studyPreferences: {
-    destinationCountry: string;
-    plannedStudyLevel: string;
-    preferredMajor: string;
+  StudyPreferenced: {
+    country: string;
+    degree: string;
+    subject: string;
   };
-  budget: {
-    tuition: {
-      amount: string;
-      currency: string;
-    };
-    livingCosts: {
-      amount: string;
-      currency: string;
-    };
+
+  tuitionfee: {
+    amount: string;
+    currency: string;
   };
+  livingCosts: {
+    amount: string;
+    currency: string;
+  };
+
   submissionDate: string;
 }
 
@@ -177,7 +177,8 @@ const SuccessChances = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<
     Record<number, string>
   >({});
-  // New state for the final student data object
+
+  // State for the final student data object
   const [studentData, setStudentData] = useState<StudentData | null>(null);
   const progress = ((currentQuestion + 1) / questionGroups.length) * 100;
 
@@ -211,44 +212,48 @@ const SuccessChances = () => {
     setSelectedCurrency((prev) => ({ ...prev, [id]: value }));
   };
 
+  // Handle grade type change
+  // const handleGradeTypeChange = (value: string) => {
+  //   setGradesInput((prev) => ({ ...prev, gradeType: value }));
+  // };
+ 
+  // const handleGradeScoreChange = (value: string) => {
+  //   handleAnswer((prev) => ({ ...prev, score: value })); // Stores the actual grade/CGPA
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submitted Answers:", answers);
 
     // Compile all answers into a structured student data object
     const compiledStudentData: StudentData = {
-      personalInfo: {
-        nationality: (answers[1] as string) || "",
-        dateOfBirth: (answers[2] as string) || "",
-      },
-      academicInfo: {
-        currentStudyLevel: (answers[3] as string) || "",
-        major: (answers[4] as string) || "",
-        grades: (answers[5] as string) || "",
-      },
-      workExperience: {
-        hasExperience: (answers[6] as boolean) || false,
-        years: (answers[106] as number) || 0,
-      },
-      languageProficiency: {
+      nationality: (answers[1] as string) || "",
+      dateOfBirth: (answers[2] as string) || "",
+
+      studyLevel: (answers[3] as string) || "",
+      majorSubject: (answers[4] as string) || "",
+      grade: (answers[5] as string) || "",
+      gradeType: (answers[5] as string) || "",
+      hasExperience: (answers[6] as boolean) || false,
+      years: (answers[106] as string) || "",
+
+      LanguageProficiency: {
         level: (answers[7] as string) || "",
         test: (answers[8] as string) || "",
         score: (answers[9] as string) || "",
       },
-      studyPreferences: {
-        destinationCountry: (answers[10] as string) || "",
-        plannedStudyLevel: (answers[11] as string) || "",
-        preferredMajor: (answers[12] as string) || "",
+      StudyPreferenced: {
+        country: (answers[10] as string) || "",
+        degree: (answers[11] as string) || "",
+        subject: (answers[12] as string) || "",
       },
-      budget: {
-        tuition: {
-          amount: (answers[13] as string) || "0",
-          currency: selectedCurrency[13] || "",
-        },
-        livingCosts: {
-          amount: (answers[14] as string) || "0",
-          currency: selectedCurrency[14] || "",
-        },
+      tuitionfee: {
+        amount: (answers[13] as string) || "0",
+        currency: selectedCurrency[13] || "",
+      },
+      livingCosts: {
+        amount: (answers[14] as string) || "0",
+        currency: selectedCurrency[14] || "",
       },
       submissionDate: new Date().toISOString(),
     };
@@ -258,14 +263,17 @@ const SuccessChances = () => {
 
     // Log the structured student data for verification
     console.log("Compiled Student Data:", compiledStudentData);
-    const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(compiledStudentData),
-    });
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(compiledStudentData),
+      }
+    );
     if (!resp.ok) {
       console.error("Error submitting data:", resp.statusText);
       return;
@@ -357,6 +365,38 @@ const SuccessChances = () => {
     />
   );
 
+  const renderGradesInput = (q: Question) => (
+    <div className="space-y-4">
+      <select
+        className="w-full rounded-lg border border-gray-300 p-3"
+        value={(answers[q.id + 1000] as string) || ""}
+        onChange={(e) => handleAnswer(e.target.value, q.id + 1000)}
+      >
+        <option value="">Select an option</option>
+        {[
+          "Percentage Grade scale",
+          "Grade Point Average (GPA) Scale",
+          "Letter Grade Scale (A-F)",
+          "Pass/Fail",
+          "Any other (Specify)",
+        ].map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      {answers[q.id + 1000] && (
+        <Input
+          type="text"
+          placeholder="Enter your grade/CGPA"
+          className="w-full mt-2"
+          value={(answers[q.id] as string) || ""}
+          onChange={(e) => handleAnswer(e.target.value, q.id)}
+        />
+      )}
+    </div>
+  );
+
   const renderDialogContent = () => (
     <form onSubmit={handleSubmit}>
       <Card className="p-6 shadow-lg bg-white border-0">
@@ -419,8 +459,8 @@ const SuccessChances = () => {
                       value={
                         answers[q.id]
                           ? new Date(answers[q.id] as string)
-                            .toISOString()
-                            .split("T")[0]
+                              .toISOString()
+                              .split("T")[0]
                           : ""
                       }
                       onChange={(e) => handleAnswer(e.target.value, q.id)}
@@ -455,49 +495,7 @@ const SuccessChances = () => {
                       )}
                     </>
                   )}
-                  {q.type === "grades" && (
-                    <>
-                      <select
-                        className="w-full rounded-lg border border-gray-300 p-3"
-                        value={
-                          typeof answers[q.id] === "string" &&
-                            (answers[q.id] as string).includes(" - ")
-                            ? (answers[q.id] as string).split(" - ")[0]
-                            : typeof answers[q.id] === "string"
-                              ? (answers[q.id] as string)
-                              : ""
-                        }
-                        onChange={(e) => handleAnswer(e.target.value, q.id)}
-                      >
-                        <option value="">Select an option</option>
-                        {[
-                          "Percentage Grade scale",
-                          "Grade Point Average (GPA) Scale",
-                          "Letter Grade Scale (A-F)",
-                          "Pass/Fail",
-                          "Any other (Specify)",
-                        ].map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                      {answers[q.id] && (
-                        <Input
-                          type="text"
-                          placeholder="Enter your grade/CGPA"
-                          className="w-full mt-2"
-                          onChange={(e) =>
-                            handleAnswer(
-                              `${answers[q.id]?.toString().split(" - ")[0]} - ${e.target.value
-                              }`,
-                              q.id
-                            )
-                          }
-                        />
-                      )}
-                    </>
-                  )}
+                  {q.type === "grades" && renderGradesInput(q)}
                 </div>
               ))}
           </motion.div>
@@ -542,7 +540,6 @@ const SuccessChances = () => {
         <h3 className="text-lg font-medium text-green-800 mb-2">
           Form Submitted Successfully!
         </h3>
-
       </div>
     );
   };

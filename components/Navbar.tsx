@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
+import { FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const { isAuthenticate, loading, logout, user } = useUserStore();
@@ -29,7 +30,7 @@ const Navbar = () => {
             {/* Logo */}
             <Link href="/">
               <Image
-                src="/logo.svg"
+                src="/logowwah.svg"
                 alt="logo"
                 width={113}
                 height={45}
@@ -91,13 +92,7 @@ const Navbar = () => {
                   >
                     <span className="sr-only">Open user menu</span>
                     {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
-                    <Image
-                      src="/user.png"
-                      alt="user"
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
+                    <FaUser className="text-gray-800  w-8 h-8 text-xl p-1" />
                   </button>
 
                   {/* Dropdown Menu */}

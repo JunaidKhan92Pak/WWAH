@@ -19,15 +19,15 @@ const Message: React.FC<MessageProps> = ({ message }) => {
           </p>
         </Card>
       ) : (
-        <div className="max-w-[80%] sm:max-w-[55%]">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="flex gap-5 justify-center items-center max-w-[80%] sm:max-w-[55%]">
+          <div className="flex flex-col items-center justify-center">
             <Image
               src="/icons/zeusrobo.svg"
               width={32}
               height={32}
               alt="Zeus Avatar"
             />
-            <h6 className="font-bold text-gray-800">ZEUS</h6>
+            <p className="font-bold text-gray-800 italic">ZEUS</p>
           </div>
           <Card className="px-4 py-3 bg-white text-black">
             <p className="whitespace-pre-line font-medium md:text-[18px]"></p>
