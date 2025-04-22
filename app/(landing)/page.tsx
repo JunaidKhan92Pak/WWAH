@@ -148,7 +148,7 @@ function Page() {
         className="landingPageBg relative w-full flex flex-col justify-center items-center"
         style={{
           // backgroundImage: 'url("/robotic.JPG")',
-          backgroundImage: 'url("/bgblue.JPG")',
+          backgroundImage: 'url("/bgblue.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -390,7 +390,7 @@ function Page() {
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Image
-              src="/zeus_up.PNG"
+              src="/zeus_up.png"
               alt="Robot"
               width={400}
               height={300}
