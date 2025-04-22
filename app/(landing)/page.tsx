@@ -448,22 +448,22 @@ function Page() {
                       key={uni._id}
                       className="relative h-48 block"
                     >
-                      <Image
+                      {/* <Image
                         src={uni.universityImages.banner}
                         alt={uni.name}
                         layout="fill"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
+                      /> */}
 
                       {/* University Logo Overlay */}
                       <div className="absolute bottom-1 left-5">
-                        <Image
+                        {/* <Image
                           src={uni.universityImages.logo}
                           alt={`${uni.university_name} logo`}
                           width={40}
                           height={40}
                           className="rounded-full bg-white border border-black w-[56px] h-[56px]"
-                        />
+                        /> */}
                       </div>
                     </Link>
                     {/* University Details */}

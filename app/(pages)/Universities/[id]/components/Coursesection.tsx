@@ -69,7 +69,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
 
     setStudyLevel(courseInfo.level); // ✅ Update study level in Zustand
     setSelectedUniversity(courseInfo.university); // ✅ Update selected university in Zustand
-   setSubjectAreaFilter(courseInfo.subject ? [courseInfo.subject] : []); // ✅ Update selected subject in Zustand
+    setSubjectAreaFilter(courseInfo.subject ? [courseInfo.subject] : []); // ✅ Update selected subject in Zustand
 
     // Build query params dynamically
     const queryParams = new URLSearchParams();
@@ -132,30 +132,6 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                     </select>
                   </div>
                   {/* choosee by subject */}
-                  {/* <div>
-                    <label
-                      htmlFor="subject"
-                      className="block text-gray-600 mb-1"
-                    >
-                      Choose by Subject
-                    </label>
-                    <select
-                      name="subject"
-                      value={courseInfo.subject}
-                      onChange={handleChange}
-                      id="subject"
-                      className="w-full p-1 md:p-1 border rounded-lg bg-gray-100"
-                    >
-                      <option value="" disabled selected>
-                        Select
-                      </option>
-                      <option value="Physics">Physics</option>
-                      <option value="Chemistry">Chemistry</option>
-                      <option value="Medical">Medical</option>
-                      <option value="Humanities">Art and Humanities</option>
-                      <option value="Social Sciences">Social Sciences</option>
-                    </select>
-                  </div> */}
                   <div>
                     <label
                       htmlFor="subject"
