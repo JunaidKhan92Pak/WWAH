@@ -162,10 +162,10 @@ function Page() {
           <div className=" w-full  flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/wwah_logo2.svg"
+                src="/logowwah.svg"
                 alt="WWAH Logo"
-                width={112}
-                height={45}
+                width={150}
+                height={60}
               />
             </Link>
             {isAuthenticate ? (
@@ -180,14 +180,14 @@ function Page() {
                 >
                   <span className="sr-only">Open user menu</span>
                   {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
-                  <FaUser className="text-gray-800  w-8 h-8 text-xl p-1" />
-                  {/* <Image
-                    src="/icons/user.png"
+                  {/* <FaUser className="text-gray-800  w-8 h-8 text-xl p-1" /> */}
+                  <Image
+                    src="/icons/userred.svg"
                     alt="user"
                     width={40}
                     height={40}
                     className="rounded-full w-8 h-8 "
-                  /> */}
+                  />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -256,7 +256,7 @@ function Page() {
         </header>
         {/* header section ends */}
         {/* Hero Section Start */}
-        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly my-6 w-[95%] sm:w-[100%] z-10">
+        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly mt-6 w-[95%] sm:w-[100%] z-10">
           {/* hero Section Left Side starts */}
           <div className="HeroLeftSection w-[95%] md:w-[70%] lg:w-[50%] ">
             {/* Hero Content */}
@@ -296,12 +296,12 @@ function Page() {
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
                     // src="/Hero_Robot.png"
-                    src="/zeusup.JPG"
+                    src="/zeus-up.png"
                     alt="Robot"
                     width={0}
                     height={0}
                     sizes="60vw"
-                    className="w-[220px] h-auto "
+                    className="w-[180px] h-auto "
                   />
                 </div>
 
@@ -390,10 +390,10 @@ function Page() {
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Image
-              src="/zeus_up.png"
+              src="/zeus-up.png"
               alt="Robot"
               width={400}
-              height={300}
+              height={700}
               // className="2xl:w-[550px] 2xl:h-[700px]"
             />
           </div>

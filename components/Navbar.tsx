@@ -32,8 +32,8 @@ const Navbar = () => {
               <Image
                 src="/logowwah.svg"
                 alt="logo"
-                width={113}
-                height={45}
+                width={150}
+                height={60}
                 // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
@@ -92,7 +92,13 @@ const Navbar = () => {
                   >
                     <span className="sr-only">Open user menu</span>
                     {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
-                    <FaUser className="text-gray-800  w-8 h-8 text-xl p-1" />
+                    <Image
+                      src="/icons/userred.svg"
+                      alt="user"
+                      width={40}
+                      height={40}
+                      className="rounded-full w-8 h-8 "
+                    />{" "}
                   </button>
 
                   {/* Dropdown Menu */}
