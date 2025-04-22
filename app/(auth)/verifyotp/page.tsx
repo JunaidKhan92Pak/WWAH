@@ -3,13 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Logo from "@/public/logo.png";
 import plane from "@/public/plane.png";
 import Image1 from "@/public/SigninImage1.png";
 import { useAuth } from "../auth/authProvider";
 
 const VerifyOtp = () => {
-  const {verifyOtpAction} = useAuth()
+  const { verifyOtpAction } = useAuth();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -25,7 +24,6 @@ const VerifyOtp = () => {
       setIsOtpExpired(true);
     }
   }, [timer]);
-
 
   const handleInputChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return; // Onl    y allow numeric input
@@ -48,23 +46,20 @@ const VerifyOtp = () => {
       setErrorMessage("Please enter a 6-digit OTP.");
       return;
     }
-    try{
-       const verifyRes =  await verifyOtpAction(enteredOtp)
-       if (verifyRes?.success) {
-         setSuccessMessage("OTP verified successfully!");
+    try {
+      const verifyRes = await verifyOtpAction(enteredOtp);
+      if (verifyRes?.success) {
+        setSuccessMessage("OTP verified successfully!");
         console.log("OTP verified successfully! Redirecting...");
       } else {
         setErrorMessage(verifyRes?.message || "Invalid OTP. Please try again.");
-      }  
-    router.push("/resetpassword");
-
-    }
-
-    catch(error){
+      }
+      router.push("/resetpassword");
+    } catch (error) {
       setErrorMessage(`Something went wrong. Please try again `);
-      console.log(`Something went wrong. Please try again ${error} `);}
+      console.log(`Something went wrong. Please try again ${error} `);
+    }
   };
-  
 
   const handleResendOtp = () => {
     setOtp(["", "", "", "", "", ""]);
@@ -84,7 +79,8 @@ const VerifyOtp = () => {
     <div className="flex items-center justify-center h-screen">
       {/* Sign-in Form Section */}
       <div className="flex-1 max-w-2xl sm:pl-44 px-20 sm:pr-28">
-        <Image src={Logo} alt="Logo" className="mb-4 w-28 mx-auto" />
+        {/* <Image src={Logo} alt="Logo" className="mb-4 w-28 mx-auto" /> */}
+        <Image src="/logowwah.svg" alt="WWAH Logo" width={150} height={60} />
         <div className="text-2xl font-bold mb-2 text-center">Verify OTP!</div>
         <p className="text-gray-600 text-center text-sm sm:px-10 mb-6">
           We have sent a 6-digit OTP to your email!
@@ -116,7 +112,9 @@ const VerifyOtp = () => {
                 Resend OTP
               </button>
             ) : (
-              <span className="text-gray-600">OTP expires in {formatTime(timer)}</span>
+              <span className="text-gray-600">
+                OTP expires in {formatTime(timer)}
+              </span>
             )}
           </div>
 

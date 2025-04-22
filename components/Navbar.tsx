@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
-import { FaUser } from "react-icons/fa";
+
 
 const Navbar = () => {
   const { isAuthenticate, loading, logout, user } = useUserStore();

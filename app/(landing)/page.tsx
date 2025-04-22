@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FaUser } from "react-icons/fa";
 
 import {
   Dialog,

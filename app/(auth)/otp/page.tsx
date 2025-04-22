@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Logo from "@/public/logo.png";
 import Link from "next/link";
 
 const Page = () => {
@@ -9,8 +8,12 @@ const Page = () => {
         {/* Sign-in Form Section */}
         <div className="flex-1 max-w-2xl sm:pl-44 px-20 sm:pr-28">
           <Link href="/">
-            <Image src={Logo} alt="Logo" className="mb-4 w-28 mx-auto" />
-          </Link>
+  <Image
+                src="/logowwah.svg"
+                alt="WWAH Logo"
+                width={150}
+                height={60}
+              />          </Link>
           <div className="mb-2 text-center">Reset Password</div>
           <p className="text-gray-600 text-center sm:px-10 mb-6">
             Please enter your new password to secure your account.

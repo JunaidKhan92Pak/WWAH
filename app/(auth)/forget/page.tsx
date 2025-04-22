@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Logo from "@/public/logo.png";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/authProvider";
 import { z } from "zod";
@@ -129,8 +128,7 @@ const Page = () => {
       {/* Form Section */}
       <div className="flex-1 max-w-xl px-10 lg:px-20">
         <Link href="/">
-          {" "}
-          <Image src={Logo} alt="Logo" className="mb-4 w-28 mx-auto" />
+          <Image src="/logowwah.svg" alt="WWAH Logo" width={150} height={60} />
         </Link>
         <h2 className="mb-2 text-center">Forget Password</h2>
         <p className="text-gray-600 text-center lg:px-4 mb-6">
