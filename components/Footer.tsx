@@ -33,18 +33,21 @@ const Footer = () => {
 
   return (
     <>
-      <h2 className="relative z-10 -mb-1 translate-y-3   mx-auto px-6 py-4 w-[85%] sm:w-fit bg-white rounded-3xl shadow-lg text-center text-lg md:text-3xl  font-extrabold text-gray-800">
-        Your AI-Powered Passport to Global Education!
-      </h2>
+      <div className="relative -mb-1 translate-y-3 border border-gray-100  mx-auto px-6 py-4 w-[85%] sm:w-fit bg-white rounded-3xl shadow-lg">
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-500 to-transparent opacity-30 rounded-3xl shadow-lg"></div>
+        <h2 className="z-10 text-center text-lg md:text-3xl  font-extrabold text-gray-800">
+          Your AI-Powered Passport to Global Education!
+        </h2>
+      </div>
 
       <footer className="bg-[#F1F1F1] text-gray-800 py-6 w-full flex justify-center rounded-t-[2rem] sm:rounded-t-[5rem]">
         <div className="footerChild w-[90%] lg:w-[95%] flex flex-col justify-center text-sm font-normal">
           {/* Grid-based Footer Content */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[27%,25%,12%,12%,15%] gap-4 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[27%,25%,12%,12%,15%] gap-4 sm:gap-8 lg:gap-6 xl:gap-8">
             {/* Column 1: Logo + Socials */}
             <div className="flex flex-col items-center sm:items-start lg:items-center space-y-4">
               <Image
-                src="/wwah_logo2.svg"
+                src="/logowwah.svg"
                 alt="WWAH Logo"
                 width={100}
                 height={100}
@@ -74,7 +77,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3 text-justify sm:text-start">
                 <PiHouseLineBold className="text-xl min-w-[23px]" />
                 <p className="text-sm font-normal">
-                  Head Office: Johar Town, Lahore, Pakistan.
+                  Head Office: Al Waheeda , Dubai.
                 </p>
               </div>
               <div className="flex items-start space-x-3 text-justify sm:text-start">
@@ -93,7 +96,7 @@ const Footer = () => {
                 onClick={() => (window.location.href = "tel:+923120762039")}
               >
                 <IoCallOutline className="text-xl min-w-[20px]" />
-                <p className="text-sm font-normal">03120762039</p>
+                <p className="text-sm font-normal">+971582514675</p>
               </div>
               <div
                 className="flex items-center space-x-3 cursor-pointer"
