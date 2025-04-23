@@ -42,6 +42,7 @@ interface StudentData {
   nationality: string;
   dateOfBirth: string;
 
+
   studyLevel: string;
   majorSubject: string;
   grade: Grade;
@@ -259,6 +260,14 @@ const SuccessChances = () => {
     setSelectedCurrency((prev) => ({ ...prev, [id]: value }));
   };
 
+  // Handle grade type change
+  // const handleGradeTypeChange = (value: string) => {
+  //   setGradesInput((prev) => ({ ...prev, gradeType: value }));
+  // };
+
+  // const handleGradeScoreChange = (value: string) => {
+  //   handleAnswer((prev) => ({ ...prev, score: value })); // Stores the actual grade/CGPA
+  // };
   const handleGradeTypeChange = (value: string) => {
     setGradeData((prev) => ({ ...prev, gradeType: value }));
   };
@@ -516,8 +525,8 @@ const SuccessChances = () => {
                       value={
                         answers[q.id]
                           ? new Date(answers[q.id] as string)
-                              .toISOString()
-                              .split("T")[0]
+                            .toISOString()
+                            .split("T")[0]
                           : ""
                       }
                       onChange={(e) => handleAnswer(e.target.value, q.id)}

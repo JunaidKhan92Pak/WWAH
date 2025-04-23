@@ -15,15 +15,12 @@ interface ScholarshipSuccessChancesProps {
   };
 }
 
-export const ScholarshipSuccessChances = ({
-  successChances,
-}: ScholarshipSuccessChancesProps) => {
+export const ScholarshipSuccessChances = ({ successChances }: ScholarshipSuccessChancesProps) => {
   const [successGenerated, setSuccessGenerated] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [showProfilePrompt, setShowProfilePrompt] = useState(false);
-  const { userSuccessInfo, isLoggedIn, hasData, fetchUserSuccessInfo } =
-    useUserInfo();
+  const { userSuccessInfo, isLoggedIn, hasData, fetchUserSuccessInfo } = useUserInfo();
   // const [user,] = useState({
   //   langPro: {
   //     proficiencyTest: "TOEFL",
@@ -46,7 +43,7 @@ export const ScholarshipSuccessChances = ({
     degreeSuccess: 10,
     workExperienceSuccess: 50,
     nationalitySuccess: 50,
-    ageSuccess: 100,
+    ageSuccess: 100
   });
   useEffect(() => {
     fetchUserSuccessInfo();
@@ -80,10 +77,7 @@ export const ScholarshipSuccessChances = ({
         setShowProfilePrompt(true);
         return;
       }
-      const metrics = calculateAllSuccessMetrics(
-        userSuccessInfo,
-        successChances
-      );
+      const metrics = calculateAllSuccessMetrics(userSuccessInfo, successChances);
       setSuccessMetrics(metrics);
       setSuccessGenerated(true);
     }, 1500);
@@ -91,34 +85,14 @@ export const ScholarshipSuccessChances = ({
 
   // Prepare data for rendering based on whether metrics have been generated
   const academicFactors = [
-    {
-      label: "Academic Background",
-      value: successMetrics.degreeSuccess,
-      icon: "/degree-icon.svg",
-    },
-    {
-      label: "Grades/CGPA",
-      value: successMetrics.gradeSuccess,
-      icon: "/grade-icon.svg",
-    },
-    {
-      label: "Work Experience",
-      value: successMetrics.workExperienceSuccess,
-      icon: "/work-icon.svg",
-    },
-    {
-      label: "English Proficiency",
-      value: successMetrics.englishSuccess,
-      icon: "/lang-icon.svg",
-    },
+    { label: "Academic Background", value: successMetrics.degreeSuccess, icon: "/degree-icon.svg" },
+    { label: "Grades/CGPA", value: successMetrics.gradeSuccess, icon: "/grade-icon.svg" },
+    { label: "Work Experience", value: successMetrics.workExperienceSuccess, icon: "/work-icon.svg" },
+    { label: "English Proficiency", value: successMetrics.englishSuccess, icon: "/lang-icon.svg" },
   ];
 
   const financialFactors = [
-    {
-      label: "Nationality",
-      value: successMetrics.nationalitySuccess,
-      icon: "/nationality.svg",
-    },
+    { label: "Nationality", value: successMetrics.nationalitySuccess, icon: "/nationality.svg" },
     { label: "Age", value: successMetrics.ageSuccess, icon: "/age.svg" },
   ];
 
@@ -127,8 +101,7 @@ export const ScholarshipSuccessChances = ({
     (successMetrics.degreeSuccess +
       successMetrics.gradeSuccess +
       successMetrics.workExperienceSuccess +
-      successMetrics.englishSuccess) /
-      4
+      successMetrics.englishSuccess) / 4
   );
 
   const financialOverall = Math.round(
@@ -140,9 +113,7 @@ export const ScholarshipSuccessChances = ({
   };
   const LoginPrompt = () => (
     <div className="flex flex-col items-center justify-center h-full">
-      <p className="text-center text-gray-600 mb-4">
-        Please log in to see your scholarship success chances
-      </p>
+      <p className="text-center text-gray-600 mb-4">Please log in to see your scholarship success chances</p>
       <Link href="/signin">
         <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-full transition-colors duration-300 shadow-lg">
           Login
@@ -154,9 +125,7 @@ export const ScholarshipSuccessChances = ({
   // Profile completion prompt content
   const ProfilePrompt = () => (
     <div className="flex flex-col items-center justify-center h-full">
-      <p className="text-center text-gray-600 mb-4">
-        Please complete your profile to see your scholarship success chances
-      </p>
+      <p className="text-center text-gray-600 mb-4">Please complete your profile to see your scholarship success chances</p>
       <Link href="/successratioform">
         <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-full transition-colors duration-300 shadow-lg">
           Complete Profile
@@ -190,7 +159,7 @@ export const ScholarshipSuccessChances = ({
                   <div
                     className="absolute top-0 left-0 h-full rounded-2xl transition-all duration-500 flex items-center px-4 text-black"
                     style={{
-                      width: successGenerated ? `${item.value}%` : "0%",
+                      width: successGenerated ? `${item.value}%` : '0%',
                       backgroundColor: getProgressBarColor(item.value),
                     }}
                   >
@@ -205,13 +174,9 @@ export const ScholarshipSuccessChances = ({
                       {item.label}
                     </p>
                   </div>
-                  <p className="absolute right-4 text-black">
-                    {successGenerated ? `${item.value}%` : "0%"}
-                  </p>
+                  <p className="absolute right-4 text-black">{successGenerated ? `${item.value}%` : '0%'}</p>
                 </div>
-                {index !== academicFactors.length - 1 && (
-                  <div className="h-4"></div>
-                )}
+                {index !== academicFactors.length - 1 && <div className="h-4"></div>}
               </div>
             ))}
           </div>
@@ -224,7 +189,7 @@ export const ScholarshipSuccessChances = ({
                   <div
                     className="absolute top-0 left-0 h-full rounded-2xl transition-all duration-500 flex items-center px-4 text-black"
                     style={{
-                      width: successGenerated ? `${item.value}%` : "0%",
+                      width: successGenerated ? `${item.value}%` : '0%',
                       backgroundColor: getProgressBarColor(item.value),
                     }}
                   >
@@ -239,9 +204,7 @@ export const ScholarshipSuccessChances = ({
                       {item.label}
                     </p>
                   </div>
-                  <p className="absolute right-4 text-black">
-                    {successGenerated ? `${item.value}%` : "0%"}
-                  </p>
+                  <p className="absolute right-4 text-black">{successGenerated ? `${item.value}%` : '0%'}</p>
                 </div>
               </div>
             ))}
@@ -251,8 +214,7 @@ export const ScholarshipSuccessChances = ({
           <div className="hidden md:flex items-center gap-4">
             <span className="vertical-line w-[1px] h-32 bg-gray-500"></span>
             <p className="text-center">
-              Financial Results <br /> {successGenerated ? financialOverall : 0}
-              %
+              Financial Results <br /> {successGenerated ? financialOverall : 0}%
             </p>
           </div>
         </div>
@@ -263,9 +225,7 @@ export const ScholarshipSuccessChances = ({
             {isAnalyzing ? (
               <div className="flex flex-col items-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
-                <p className="text-blue-600 font-medium">
-                  AI is analyzing your Chance...
-                </p>
+                <p className="text-blue-600 font-medium">AI is analyzing your Chance...</p>
               </div>
             ) : showLoginPrompt ? (
               <LoginPrompt />

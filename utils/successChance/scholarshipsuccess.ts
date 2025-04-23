@@ -1,3 +1,4 @@
+import { getAgeFromDOB } from "./ageExtracter";
 
 // Extract language proficiency scores from text description
 export const extractLangScore = (langProficiency: string) => {
@@ -130,7 +131,6 @@ export const calculateWorkExperienceSuccess = (userExp: number, scholarshipWorkE
     if (!userExp || !scholarshipWorkExpText) return 10;
 
     const workExpRequirement = extractWorkExpRequirement(scholarshipWorkExpText);
-
     if (workExpRequirement === 0) return 100; // No experience required
     if (userExp >= workExpRequirement) return 100; // Meets or exceeds requirement
     if (userExp >= workExpRequirement * 0.75) return 85; // At least 75% of required
@@ -154,6 +154,7 @@ export const calculateNationalitySuccess = (userNationality: string, scholarship
     const nationalityRequirement = extractNationalityRequirement(scholarshipNationalityText);
     const lowerUserNationality = userNationality.toLowerCase();
 
+
     if (nationalityRequirement.length === 0) return 100; // No nationality preference
     if (nationalityRequirement.includes(lowerUserNationality)) return 100; // Preferred nationality
     return 30; // Not a preferred nationality
@@ -168,11 +169,12 @@ export const extractAgeRequirement = (ageText: string) => {
 };
 
 // Calculate age success percentage
-export const calculateAgeSuccess = (userAge: number, scholarshipAgeText: string) => {
-    if (!userAge || !scholarshipAgeText) return 10;
+export const calculateAgeSuccess = (userDob: string, scholarshipAgeText: string) => {
+    if (!userDob || !scholarshipAgeText) return 10;
 
     const ageRequirement = extractAgeRequirement(scholarshipAgeText);
-
+    const userAge = getAgeFromDOB(userDob);
+    console.log(userAge, "hello ");
     if (ageRequirement === 0) return 100; // No age limit
     if (userAge <= ageRequirement) return 100; // Within age limit
     if (userAge <= ageRequirement + 2) return 80; // Slightly over
@@ -183,19 +185,20 @@ export const calculateAgeSuccess = (userAge: number, scholarshipAgeText: string)
 
 // Calculate all success metrics at once
 export const calculateAllSuccessMetrics = (user: any, scholarship: any) => {
+
     return {
         englishSuccess: calculateEnglishSuccess(
-            user?.langPro?.proficiencyTest || "",
-            user?.langPro?.proficiencyTestScore || 0,
+            user?.languageProficiency?.test || "IELTS",
+            user?.languageProficiency?.score || 0,
             scholarship?.englishProficiency || ""
         ),
         gradeSuccess: calculateGradeSuccess(
-            user?.majorSubject?.previousGradingScore || 0,
-            user?.majorSubject?.previousGradingScale || "percentage",
+            user?.grade || 0,
+            user?.gradetype || "percentage",
             scholarship?.gradesAndCGPA || ""
         ),
         degreeSuccess: calculateDegreeSuccess(
-            user?.majorSubject?.qualification || "",
+            user?.studyLevel || "",
             scholarship?.academicBackground || ""
         ),
         workExperienceSuccess: calculateWorkExperienceSuccess(
@@ -207,7 +210,7 @@ export const calculateAllSuccessMetrics = (user: any, scholarship: any) => {
             scholarship?.nationality || ""
         ),
         ageSuccess: calculateAgeSuccess(
-            user?.age || 0,
+            user?.dateOfBirth || "",
             scholarship?.age || ""
         )
     };
