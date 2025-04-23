@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import logo from "@/public/logo.png";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -21,6 +20,7 @@ const Page = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    phone: "",
   });
   const [errors, setErrors] = useState({
     firstName: "",
@@ -28,6 +28,7 @@ const Page = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    phone: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -48,11 +49,12 @@ const Page = () => {
     const newErrors = {
       firstName: !formData.firstName ? "First name is required." : "",
       lastName: !formData.lastName ? "Last name is required." : "",
+      phone : !formData.phone ? "Phone number is required." : "",
       email: !formData.email
         ? "Email is required."
         : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-          ? ""
-          : "Enter a valid email address.",
+        ? ""
+        : "Enter a valid email address.",
       password: !formData.password ? "Password is required." : "",
       confirmPassword:
         formData.password !== formData.confirmPassword
@@ -65,13 +67,11 @@ const Page = () => {
       return;
     }
 
-
     try {
       const res = await signupAction(formData);
       if (res.success) {
         setUser(res.user);
         router.push("/");
-
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -88,15 +88,15 @@ const Page = () => {
       {/* Sign-up Form Section */}
       <div className="w-full md:w-1/2 pt-5 md:pt-0 px-8 flex flex-col items-center justify-center lg:w-[60%] 2xl:px-20 2xl:w-[60%]">
         <div>
-          <Image
-            src={logo}
-            alt="Logo"
-            width={80}
-            height={80}
-            className="w-16 sm:w-24 mx-auto"
-          />
-
-          <h4 className="text-center">Create an Account!</h4>
+          <Link href="/">
+         <Image
+                         src="/logowwah.svg"
+                         alt="WWAH Logo"
+                         width={150}
+                         height={60}
+                       />
+          </Link>
+          <h6 className="text-center">Create an Account!</h6>
           <p className="text-gray-600 mb-2 text-center sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
             Please provide your information below to begin your learning journey
           </p>
@@ -163,7 +163,25 @@ const Page = () => {
                 <p className="text-red-600 mt-1">{errors.email}</p>
               )}
             </div>
-
+            <div className="w-full">
+              <label className="block text-gray-800 font-normal pt-2">
+                Phone{" "}
+              </label>
+              <div className="relative">
+                <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
+                <input
+                  type="text"
+                  name="phone"
+                  className="w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border border-gray-300 rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                  placeholder="Enter Number"
+                  onChange={handleChange}
+                  value={formData.phone}
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-red-600 mt-1">{errors.phone}</p>
+              )}
+            </div>
             {/* Password */}
             <div>
               <label className="block text-gray-800 font-normal pt-2">
@@ -235,13 +253,12 @@ const Page = () => {
             <button
               type="submit"
               className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity bg-red-700 duration-200`}
-
             >
               {loading ? "Processing..." : "Sign Up"}
             </button>
             <p className="text-center mt-2 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
               Already have an account?{" "}
-              <Link href="/signup" className="text-[#F0851D]">
+              <Link href="/signin" className="text-[#F0851D]">
                 Sign In
               </Link>
             </p>

@@ -1,24 +1,22 @@
-
-
+"use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import { Progress } from "./ui/progress";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 import { ArrowRight, GraduationCap } from "lucide-react";
 import { Combobox } from "@/components/ui/combobox";
-import { majorsAndDisciplines, studyDestinations } from "@/lib/constants";
+import { majorsAndDisciplines, studyDestinations } from "../lib/constant";
 import { getNames } from "country-list";
-import currencyListRaw from "currency-codes/data";
+import currency from "currency-codes";
 
 const nationalities = getNames();
-const currencyOptions = currencyListRaw.map(
-  (currency: { code: string; currency: string }) =>
-    `${currency.code} - ${currency.currency}`
+const currencyOptions = currency.data.map(
+  (c: { code: string; currency: string }) => `${c.code} - ${c.currency}`
 );
 
 interface Question {
@@ -35,6 +33,45 @@ interface Question {
 }
 
 type AnswerType = string | Date | boolean | number | null;
+
+
+interface StudentData {
+  nationality: string;
+  dateOfBirth: string;
+ 
+
+  studyLevel: string;
+  majorSubject: string;
+  
+  gradeType: string;
+  grade: string;
+
+
+  hasExperience: boolean;
+  years?: string;
+
+  LanguageProficiency: {
+    level: string;
+    test?: string;
+    score?: string;
+  };
+  StudyPreferenced: {
+    country: string;
+    degree: string;
+    subject: string;
+  };
+
+  tuitionfee: {
+    amount: string;
+    currency: string;
+  };
+  livingCosts: {
+    amount: string;
+    currency: string;
+  };
+
+  submissionDate: string;
+}
 
 const questions: Question[] = [
   {
@@ -140,6 +177,9 @@ const SuccessChances = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<
     Record<number, string>
   >({});
+
+  // State for the final student data object
+  const [studentData, setStudentData] = useState<StudentData | null>(null);
   const progress = ((currentQuestion + 1) / questionGroups.length) * 100;
 
   useEffect(() => {
@@ -172,9 +212,78 @@ const SuccessChances = () => {
     setSelectedCurrency((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle grade type change
+  // const handleGradeTypeChange = (value: string) => {
+  //   setGradesInput((prev) => ({ ...prev, gradeType: value }));
+  // };
+ 
+  // const handleGradeScoreChange = (value: string) => {
+  //   handleAnswer((prev) => ({ ...prev, score: value })); // Stores the actual grade/CGPA
+  // };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submitted Answers:", answers);
+
+    // Compile all answers into a structured student data object
+    const compiledStudentData: StudentData = {
+      nationality: (answers[1] as string) || "",
+      dateOfBirth: (answers[2] as string) || "",
+
+      studyLevel: (answers[3] as string) || "",
+      majorSubject: (answers[4] as string) || "",
+      grade: (answers[5] as string) || "",
+      gradeType: (answers[5] as string) || "",
+      hasExperience: (answers[6] as boolean) || false,
+      years: (answers[106] as string) || "",
+
+      LanguageProficiency: {
+        level: (answers[7] as string) || "",
+        test: (answers[8] as string) || "",
+        score: (answers[9] as string) || "",
+      },
+      StudyPreferenced: {
+        country: (answers[10] as string) || "",
+        degree: (answers[11] as string) || "",
+        subject: (answers[12] as string) || "",
+      },
+      tuitionfee: {
+        amount: (answers[13] as string) || "0",
+        currency: selectedCurrency[13] || "",
+      },
+      livingCosts: {
+        amount: (answers[14] as string) || "0",
+        currency: selectedCurrency[14] || "",
+      },
+      submissionDate: new Date().toISOString(),
+    };
+
+    // Save the compiled data to state
+    setStudentData(compiledStudentData);
+
+    // Log the structured student data for verification
+    console.log("Compiled Student Data:", compiledStudentData);
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(compiledStudentData),
+      }
+    );
+    if (!resp.ok) {
+      console.error("Error submitting data:", resp.statusText);
+      return;
+    }
+    const data = await resp.json();
+
+    console.log("Response from server:", data);
+    // Reset the form and close the dialog
+
+    setOpen(false);
   };
 
   const renderWorkExperience = (q: Question) => {
@@ -254,6 +363,38 @@ const SuccessChances = () => {
       value={(answers[q.id] as string) || ""}
       onChange={(e) => handleAnswer(e.target.value, q.id)}
     />
+  );
+
+  const renderGradesInput = (q: Question) => (
+    <div className="space-y-4">
+      <select
+        className="w-full rounded-lg border border-gray-300 p-3"
+        value={(answers[q.id + 1000] as string) || ""}
+        onChange={(e) => handleAnswer(e.target.value, q.id + 1000)}
+      >
+        <option value="">Select an option</option>
+        {[
+          "Percentage Grade scale",
+          "Grade Point Average (GPA) Scale",
+          "Letter Grade Scale (A-F)",
+          "Pass/Fail",
+          "Any other (Specify)",
+        ].map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      {answers[q.id + 1000] && (
+        <Input
+          type="text"
+          placeholder="Enter your grade/CGPA"
+          className="w-full mt-2"
+          value={(answers[q.id] as string) || ""}
+          onChange={(e) => handleAnswer(e.target.value, q.id)}
+        />
+      )}
+    </div>
   );
 
   const renderDialogContent = () => (
@@ -354,50 +495,7 @@ const SuccessChances = () => {
                       )}
                     </>
                   )}
-                  {q.type === "grades" && (
-                    <>
-                      <select
-                        className="w-full rounded-lg border border-gray-300 p-3"
-                        value={
-                          typeof answers[q.id] === "string" &&
-                          (answers[q.id] as string).includes(" - ")
-                            ? (answers[q.id] as string).split(" - ")[0]
-                            : typeof answers[q.id] === "string"
-                            ? (answers[q.id] as string)
-                            : ""
-                        }
-                        onChange={(e) => handleAnswer(e.target.value, q.id)}
-                      >
-                        <option value="">Select an option</option>
-                        {[
-                          "Percentage Grade scale",
-                          "Grade Point Average (GPA) Scale",
-                          "Letter Grade Scale (A-F)",
-                          "Pass/Fail",
-                          "Any other (Specify)",
-                        ].map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                      {answers[q.id] && (
-                        <Input
-                          type="text"
-                          placeholder="Enter your grade/CGPA"
-                          className="w-full mt-2"
-                          onChange={(e) =>
-                            handleAnswer(
-                              `${answers[q.id]?.toString().split(" - ")[0]} - ${
-                                e.target.value
-                              }`,
-                              q.id
-                            )
-                          }
-                        />
-                      )}
-                    </>
-                  )}
+                  {q.type === "grades" && renderGradesInput(q)}
                 </div>
               ))}
           </motion.div>
@@ -433,34 +531,51 @@ const SuccessChances = () => {
     </form>
   );
 
+  // Display submitted data (for demonstration purposes)
+  const renderSubmittedData = () => {
+    if (!studentData) return null;
+
+    return (
+      <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
+        <h3 className="text-lg font-medium text-green-800 mb-2">
+          Form Submitted Successfully!
+        </h3>
+      </div>
+    );
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-red-700 hover:bg-red-700 text-white px-6 py-6 text-lg">
-          Generate
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px] p-0">
-        {showWelcome ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="text-center p-8"
-          >
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Let Zeus Get to know you!
-            </h1>
-            <p className="text-gray-600">
-              Just a few questions to better understand your background and
-              preferences.
-            </p>
-          </motion.div>
-        ) : (
-          renderDialogContent()
-        )}
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button className="bg-red-700 hover:bg-red-700 text-white px-6 py-6 text-lg">
+            Generate
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[525px] p-0">
+          {showWelcome ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-center p-8"
+            >
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Let Zeus Get to know you!
+              </h1>
+              <p className="text-gray-600">
+                Just a few questions to better understand your background and
+                preferences.
+              </p>
+            </motion.div>
+          ) : (
+            renderDialogContent()
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {studentData && renderSubmittedData()}
+    </>
   );
 };
 

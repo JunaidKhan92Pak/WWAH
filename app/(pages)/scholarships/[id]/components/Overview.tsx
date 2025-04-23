@@ -4,8 +4,10 @@ interface OverviewProps {
   overview: string;
   duration: {
     undergraduate: string;
-    master: string;
+    bachelors: string;
+    masters: string;
     phd: string;
+    Diploma: string,
   };
 }
 
@@ -24,8 +26,8 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration }) => {
 
                 <p className="font-bold  mb-2">Duration of the Scholarship:</p>
                 <p>
-                  <strong>Degree:</strong> {duration?.undergraduate},
-                  {duration?.master} , {duration?.phd}{" "}
+                  <strong>Degree:</strong> {duration?.bachelors},
+                  {duration?.masters} , {duration?.phd}{" "}
                 </p>
                 <p>
                   <strong>Research:</strong> 6 months or 1 year

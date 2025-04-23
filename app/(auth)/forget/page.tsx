@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Logo from "@/public/logo.png";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/authProvider";
 import { z } from "zod";
 import { IoMailOutline } from "react-icons/io5";
+import Link from "next/link";
 
 // Define password validation schema
 const passwordSchema = z
@@ -127,7 +127,9 @@ const Page = () => {
     <div className="flex items-center justify-center h-[80vh] md:h-screen">
       {/* Form Section */}
       <div className="flex-1 max-w-xl px-10 lg:px-20">
-        <Image src={Logo} alt="Logo" className="mb-4 w-28 mx-auto" />
+        <Link href="/">
+          <Image src="/logowwah.svg" alt="WWAH Logo" width={150} height={60} />
+        </Link>
         <h2 className="mb-2 text-center">Forget Password</h2>
         <p className="text-gray-600 text-center lg:px-4 mb-6">
           Enter your registered email to receive a password reset OTP.

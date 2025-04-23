@@ -55,7 +55,7 @@ export async function GET(req: Request) {
 
         // Filter by scholarshipType (exact match using regex)
         if (scholarshipTypeFilter.length > 0) {
-            query.scholarshipType = { $in: scholarshipTypeFilter.map(t => new RegExp(`^${t}$`, "i")) };
+            query.type = { $in: scholarshipTypeFilter.map(t => new RegExp(`^${t}$`, "i")) };
         }
         if (minimumRequirementsArray.length > 0) {
             query.minRequirements = { $in: minimumRequirementsArray.map(req => new RegExp(req, "i")) };

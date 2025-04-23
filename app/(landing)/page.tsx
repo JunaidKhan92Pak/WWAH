@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
 import {
   Dialog,
   DialogContent,
@@ -23,7 +24,6 @@ import { Card } from "@/components/ui/card";
 import { Bot, Headphones, Trophy, Users, Send } from "lucide-react";
 import Footer from "@/components/Footer";
 // import { ScrollArea } from "@/components/ui/scroll-area";
-import { FaCircleUser } from "react-icons/fa6";
 
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
@@ -129,12 +129,43 @@ function Page() {
   return (
     // landing page container starts
     <div className="landingPage">
-      <div className="landingPageBg bg-custom-gradient w-full flex flex-col justify-center items-center">
+      {/* <div className="landingPageBg bg-custom-gradient w-full flex flex-col justify-center items-center"> */}
+      {/* <div
+        className="landingPageBg w-full flex flex-col justify-center items-center"
+        style={{ */}
+      {/* // backgroundImage: 'url("/bgblue.JPG")',
+          // backgroundImage: 'url("/bgblue.JPG")',
+          // backgroundImage: 'url("/premiumbg.JPG")',
+          backgroundImage: 'url("/robotic.JPG")',
+
+          backgroundSize: "cover",
+          backgroundPosition: "center", */}
+      {/* }}
+      > */}
+
+      <div
+        className="landingPageBg relative w-full flex flex-col justify-center items-center"
+        style={{
+          // backgroundImage: 'url("/robotic.JPG")',
+          backgroundImage: 'url("/bgblue.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* <div className="absolute bg-black bg-opacity-80 w-full h-full rounded-2xl"></div>{" "}
+         */}
+        <div className="absolute inset-0 bg-black bg-opacity-10 z-0"></div>
+
         {/* header section starts */}
-        <header className="w-[90%] flex justify-between mt-5 ">
+        <header className="w-[90%] flex justify-between mt-5 z-10">
           <div className=" w-full  flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="/logo.png" alt="WWAH Logo" width={112} height={45} />
+              <Image
+                src="/logowwah.svg"
+                alt="WWAH Logo"
+                width={150}
+                height={60}
+              />
             </Link>
             {isAuthenticate ? (
               // Profile Dropdown for Logged-in Users
@@ -147,7 +178,15 @@ function Page() {
                   onClick={toggleDropdown}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " />
+                  {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
+                  {/* <FaUser className="text-gray-800  w-8 h-8 text-xl p-1" /> */}
+                  <Image
+                    src="/icons/userred.svg"
+                    alt="user"
+                    width={40}
+                    height={40}
+                    className="rounded-full w-8 h-8 "
+                  />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -216,7 +255,7 @@ function Page() {
         </header>
         {/* header section ends */}
         {/* Hero Section Start */}
-        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly my-6 w-[95%] sm:w-[100%]">
+        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly mt-6 w-[95%] sm:w-[100%] z-10">
           {/* hero Section Left Side starts */}
           <div className="HeroLeftSection w-[95%] md:w-[70%] lg:w-[50%] ">
             {/* Hero Content */}
@@ -255,12 +294,13 @@ function Page() {
 
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/Hero_Robot.png"
+                    // src="/Hero_Robot.png"
+                    src="/zeus-up.png"
                     alt="Robot"
                     width={0}
                     height={0}
                     sizes="60vw"
-                    className="w-[220px] h-auto "
+                    className="w-[180px] h-auto "
                   />
                 </div>
 
@@ -349,16 +389,16 @@ function Page() {
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Image
-              src="/Hero_Robot.svg"
+              src="/zeus-up.png"
               alt="Robot"
               width={400}
-              height={300}
+              height={700}
               // className="2xl:w-[550px] 2xl:h-[700px]"
             />
           </div>
         </section>
       </div>
-      <section className="py-5 bg-gray-50">
+      <section className="py-5 bg-gray-50 z-10">
         <div className=" mx-auto px-0 sm:px-4 w-[90%]">
           {/* Section Header */}
           <div className="flex justify-between items-center ">
@@ -491,9 +531,9 @@ function Page() {
         </div>
       </section>
       {/* Features Section */}
-      <section className="md:py-5 bg-muted/50">
+      <section className="md:py-5 bg-muted/50 z-10">
         <div className=" mx-auto w-[90%]">
-              {/* <h2 className="font-extrabold text-center mb-5 md:mb-5">
+          {/* <h2 className="font-extrabold text-center mb-5 md:mb-5">
             Why Choose{' '}
             <span className="bg-gradient-to-r from-[#8e0000] via-[#d31900] to-[#ffcc33] bg-clip-text text-transparent">
               WWAH
@@ -501,16 +541,16 @@ function Page() {
             ?
           </h2> */}
 
-<h2 className="font-extrabold text-center mb-5 md:mb-5">
-            Why Choose{' '}
+          <h2 className="font-extrabold text-center mb-5 md:mb-5">
+            Why Choose{" "}
             <Link href="/aboutUs">
-            <Image
-              src="/wwah.svg"
-              alt="WWAH"
-              width={100} // adjust as needed
-              height={40} // adjust as needed
-              className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[100px]"
-            />
+              <Image
+                src="/wwah.svg"
+                alt="WWAH"
+                width={100} // adjust as needed
+                height={40} // adjust as needed
+                className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[100px]"
+              />
             </Link>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

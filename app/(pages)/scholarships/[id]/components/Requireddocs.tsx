@@ -1,9 +1,8 @@
-
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import DOMPurify from "dompurify";
 interface Document {
-  name: string;
+  document: string;
   details: string;
 }
 interface RequireddocsProps {
@@ -28,7 +27,7 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
             <ul className="grid grid-cols-2 lg:gap-4 md:gap-2 gap-1 text-gray-700 leading-snug ">
               {requiredDocs.map((doc) => (
                 <li
-                  key={doc.name}
+                  key={doc.document}
                   className="flex items-center space-x-2 cursor-pointer"
                 >
                   <span className="text-red-500 text-4xl">•</span>
@@ -37,7 +36,7 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
                     onMouseEnter={() => handleMouseEnterDoc(doc)}
                     onClick={() => setSelectedDoc(doc)}
                   >
-                    {doc.name}
+                    {doc.document}
                   </p>
                 </li>
               ))}
@@ -49,7 +48,7 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
             {selectedDoc ? (
               <div>
                 <h3 className="text-lg font-semibold">
-                  {selectedDoc.name} Details
+                  {selectedDoc.document} Details
                 </h3>
                 <p
                   className="text-gray-700 mt-2"

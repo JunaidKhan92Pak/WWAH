@@ -9,7 +9,8 @@ import Applicationprocess from "./components/Applicationprocess";
 import Eligibilitycriteria from "./components/Eligibilitycriteria";
 import { HeroSkeleton } from "@/components/HeroSkeleton";
 import ScholarshipSuccessChances from "./components/ScholarshipSuccessChances";
-import SuccessChances from "@/components/SuccessChances";
+// import { Explora } from "next/font/google";
+import ExploreScholarships from "./components/ExploreScholarships";
 // import { HeroSkeleton } from "@/components/HeroSkeleton";
 type Tab = {
   label: string;
@@ -25,8 +26,11 @@ type ScholarshipData = {
   numberOfScholarships: number;
   duration: {
     undergraduate: string;
-    master: string;
+    masters: string;
     phd: string;
+    bachelors: string;
+    Diploma: string
+
   };
   benefits: string[];
   applicableDepartments: [];
@@ -34,6 +38,14 @@ type ScholarshipData = {
   programs: string[];
   Document: string[];
   requiredDocuments: [];
+  successChances?: {
+    academicBackground?: string;
+    age?: string;
+    englishProficiency?: string;
+    gradesAndCGPA?: string;
+    nationality?: string;
+    workExperience?: string;
+  }
 };
 const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = React.use(params);
@@ -65,7 +77,6 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const tabs: Tab[] = [
     { label: "Overview", id: "Overview" },
     { label: "Benefits", id: "Benefits" },
-    // { label: "Applicable Departments", id: "Applicable-Departments" },
     { label: "Eligibility Criteria", id: "Eligibility Criteria" },
     {
       label: "Success Chances",
@@ -108,11 +119,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
-                  activeTabPro === tab.label
-                    ? "bg-[#C7161E] text-white"
-                    : "text-gray-800"
-                }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
+                  ? "bg-[#C7161E] text-white"
+                  : "text-gray-800"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -122,13 +132,13 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
       <Overview
         overview={data?.overview || ""}
-        duration={
-          data?.duration || {
-            undergraduate: "",
-            master: "",
-            phd: "",
-            Diploma: "",
-          }
+        duration={data?.duration || {
+          undergraduate: "",
+          bachelors: "",
+          masters: "",
+          phd: "",
+          Diploma: "",
+        }
         }
       />
       <div id="Benefits">
@@ -146,8 +156,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
 
       <div id="Success Chances">
-        <SuccessChances/>
-        <ScholarshipSuccessChances scholarship={data} />
+        <ScholarshipSuccessChances
+          successChances={data?.successChances}
+        />
       </div>
       <div id="Required Documents">
         <Requireddocs requiredDocs={data.requiredDocuments} />
@@ -156,6 +167,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         {/* <Requireddocs */}
         <Applicationprocess />
       </div>
+      <ExploreScholarships />
     </>
   );
 };

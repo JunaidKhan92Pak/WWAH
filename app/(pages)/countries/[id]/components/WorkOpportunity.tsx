@@ -6,7 +6,11 @@ interface WorkOpportunityProps {
   countryName: string;
 }
 
-const WorkOpportunity: React.FC<WorkOpportunityProps> = ({ whileStudying, afterStudying, countryName }) => {
+const WorkOpportunity: React.FC<WorkOpportunityProps> = ({
+  whileStudying,
+  afterStudying,
+  countryName,
+}) => {
   return (
     <div className="mx-auto w-full mb-10 px-4">
       <h3 className="text-center md:pt-10 py-4 font-bold">
@@ -17,7 +21,7 @@ const WorkOpportunity: React.FC<WorkOpportunityProps> = ({ whileStudying, afterS
         <div className="flex flex-col items-start md:items-start w-full lg:w-2/5 py-5 bg-[#F1F1F1] rounded-2xl">
           <div className="md:px-5 p-2">
             <Image
-              src="/countrypage/diploma.png"
+              src="/countrypage/suitcase.svg"
               alt="diploma"
               width={50}
               height={50}
@@ -33,7 +37,7 @@ const WorkOpportunity: React.FC<WorkOpportunityProps> = ({ whileStudying, afterS
         <div className="flex flex-col items-center md:items-start w-full lg:w-2/5 md:py-5 bg-[#F1F1F1] rounded-2xl">
           <div className="md:px-5 p-2">
             <Image
-              src="/countrypage/suitecase.png"
+              src="/countrypage/diploma.svg"
               alt="suite"
               width={50}
               height={50}

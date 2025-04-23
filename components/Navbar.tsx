@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { FaCircleUser } from "react-icons/fa6";
+import { useState } from "react";
+// import { FaCircleUser } from "react-icons/fa6";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
+
 
 const Navbar = () => {
   const { isAuthenticate, loading, logout, user } = useUserStore();
@@ -29,11 +30,11 @@ const Navbar = () => {
             {/* Logo */}
             <Link href="/">
               <Image
-                src="/logo.svg"
+                src="/logowwah.svg"
                 alt="logo"
-                width={113}
-                height={45}
-              // className="2xl:w-[150px] 2xl:h-[60px]"
+                width={150}
+                height={60}
+                // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}
@@ -90,7 +91,14 @@ const Navbar = () => {
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " />
+                    {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
+                    <Image
+                      src="/icons/userred.svg"
+                      alt="user"
+                      width={40}
+                      height={40}
+                      className="rounded-full w-8 h-8 "
+                    />{" "}
                   </button>
 
                   {/* Dropdown Menu */}
