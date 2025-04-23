@@ -4,12 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { ArrowRight, GraduationCap } from "lucide-react";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox } from "./ui/combobox";
 import { majorsAndDisciplines, studyDestinations } from "../lib/constant";
 import { getNames } from "country-list";
 import currency from "currency-codes";
@@ -34,18 +33,18 @@ interface Question {
 
 type AnswerType = string | Date | boolean | number | null;
 
+interface Grade {
+  gradeType: string;
+  score: string;
+}
 
 interface StudentData {
   nationality: string;
   dateOfBirth: string;
- 
 
   studyLevel: string;
   majorSubject: string;
-  
-  gradeType: string;
-  grade: string;
-
+  grade: Grade;
 
   hasExperience: boolean;
   years?: string;
@@ -170,35 +169,37 @@ const questionGroups: number[][] = [
 ];
 
 const SuccessChances = () => {
-  const [open, setOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, AnswerType>>({});
   const [selectedCurrency, setSelectedCurrency] = useState<
     Record<number, string>
   >({});
-
-  // State for the final student data object
+  const [gradeData, setGradeData] = useState<Grade>({
+    gradeType: "",
+    score: "",
+  });
   const [studentData, setStudentData] = useState<StudentData | null>(null);
   const progress = ((currentQuestion + 1) / questionGroups.length) * 100;
 
   useEffect(() => {
-    if (open) {
-      const timer = setTimeout(() => setShowWelcome(false), 3000);
-      return () => clearTimeout(timer);
-    } else {
-      setCurrentQuestion(0);
-      setShowWelcome(true);
-    }
-  }, [open]);
+    const timer = setTimeout(() => setShowWelcome(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const handleNext = () => {
+  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent any form submission when clicking Next
+    e.preventDefault();
+
     if (currentQuestion < questionGroups.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
     }
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent any form submission when clicking Previous
+    e.preventDefault();
+
     if (currentQuestion > 0) {
       setCurrentQuestion((prev) => prev - 1);
     }
@@ -212,31 +213,26 @@ const SuccessChances = () => {
     setSelectedCurrency((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Handle grade type change
-  // const handleGradeTypeChange = (value: string) => {
-  //   setGradesInput((prev) => ({ ...prev, gradeType: value }));
-  // };
- 
-  // const handleGradeScoreChange = (value: string) => {
-  //   handleAnswer((prev) => ({ ...prev, score: value })); // Stores the actual grade/CGPA
-  // };
+  const handleGradeTypeChange = (value: string) => {
+    setGradeData((prev) => ({ ...prev, gradeType: value }));
+  };
+
+  const handleGradeScoreChange = (value: string) => {
+    setGradeData((prev) => ({ ...prev, score: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("Form submission triggered!", new Date().toISOString());
     e.preventDefault();
-    console.log("Submitted Answers:", answers);
 
-    // Compile all answers into a structured student data object
     const compiledStudentData: StudentData = {
       nationality: (answers[1] as string) || "",
       dateOfBirth: (answers[2] as string) || "",
-
       studyLevel: (answers[3] as string) || "",
       majorSubject: (answers[4] as string) || "",
-      grade: (answers[5] as string) || "",
-      gradeType: (answers[5] as string) || "",
+      grade: gradeData,
       hasExperience: (answers[6] as boolean) || false,
       years: (answers[106] as string) || "",
-
       LanguageProficiency: {
         level: (answers[7] as string) || "",
         test: (answers[8] as string) || "",
@@ -258,32 +254,40 @@ const SuccessChances = () => {
       submissionDate: new Date().toISOString(),
     };
 
-    // Save the compiled data to state
+    console.log("Student data compiled:", compiledStudentData);
     setStudentData(compiledStudentData);
 
-    // Log the structured student data for verification
-    console.log("Compiled Student Data:", compiledStudentData);
-    const resp = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/add`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(compiledStudentData),
+    try {
+      console.log("Attempting to submit data to backend...");
+      const resp = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API || "/api/"}success-chance/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(compiledStudentData),
+        }
+      );
+
+      if (!resp.ok) {
+        console.error("Error submitting data:", resp.statusText);
+        return;
       }
-    );
-    if (!resp.ok) {
-      console.error("Error submitting data:", resp.statusText);
-      return;
+
+      const data = await resp.json();
+      console.log("Response from server:", data);
+
+      // Reset form after successful submission
+      setCurrentQuestion(0);
+      setAnswers({});
+      setSelectedCurrency({});
+      setGradeData({ gradeType: "", score: "" });
+      setShowWelcome(true);
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
-    const data = await resp.json();
-
-    console.log("Response from server:", data);
-    // Reset the form and close the dialog
-
-    setOpen(false);
   };
 
   const renderWorkExperience = (q: Question) => {
@@ -365,12 +369,12 @@ const SuccessChances = () => {
     />
   );
 
-  const renderGradesInput = (q: Question) => (
+  const renderGradesInput = () => (
     <div className="space-y-4">
       <select
         className="w-full rounded-lg border border-gray-300 p-3"
-        value={(answers[q.id + 1000] as string) || ""}
-        onChange={(e) => handleAnswer(e.target.value, q.id + 1000)}
+        value={gradeData.gradeType}
+        onChange={(e) => handleGradeTypeChange(e.target.value)}
       >
         <option value="">Select an option</option>
         {[
@@ -385,20 +389,20 @@ const SuccessChances = () => {
           </option>
         ))}
       </select>
-      {answers[q.id + 1000] && (
+      {gradeData.gradeType && (
         <Input
           type="text"
           placeholder="Enter your grade/CGPA"
           className="w-full mt-2"
-          value={(answers[q.id] as string) || ""}
-          onChange={(e) => handleAnswer(e.target.value, q.id)}
+          value={gradeData.score}
+          onChange={(e) => handleGradeScoreChange(e.target.value)}
         />
       )}
     </div>
   );
 
-  const renderDialogContent = () => (
-    <form onSubmit={handleSubmit}>
+  const renderFormContent = () => (
+    <form onSubmit={handleSubmit} className="w-full max-w-[525px]">
       <Card className="p-6 shadow-lg bg-white border-0">
         <div className="mb-6 flex flex-col items-center">
           <Progress value={progress} className="h-3 w-[90%]" />
@@ -495,43 +499,42 @@ const SuccessChances = () => {
                       )}
                     </>
                   )}
-                  {q.type === "grades" && renderGradesInput(q)}
+                  {q.type === "grades" && renderGradesInput()}
                 </div>
               ))}
           </motion.div>
         </AnimatePresence>
         <div className="mt-8 flex justify-between">
           <Button
+            type="button"
             variant="outline"
             onClick={handlePrevious}
             disabled={currentQuestion === 0}
           >
             Previous
           </Button>
-          <Button
-            type={
-              currentQuestion === questionGroups.length - 1
-                ? "submit"
-                : "button"
-            }
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-            onClick={
-              currentQuestion === questionGroups.length - 1
-                ? undefined
-                : handleNext
-            }
-          >
-            {currentQuestion === questionGroups.length - 1 ? "Submit" : "Next"}
-            {currentQuestion !== questionGroups.length - 1 && (
+          {currentQuestion === questionGroups.length - 1 ? (
+            <Button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={handleNext}
+            >
+              Next
               <ArrowRight className="ml-2 h-4 w-4" />
-            )}
-          </Button>
+            </Button>
+          )}
         </div>
       </Card>
     </form>
   );
 
-  // Display submitted data (for demonstration purposes)
   const renderSubmittedData = () => {
     if (!studentData) return null;
 
@@ -545,37 +548,28 @@ const SuccessChances = () => {
   };
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="bg-red-700 hover:bg-red-700 text-white px-6 py-6 text-lg">
-            Generate
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[525px] p-0">
-          {showWelcome ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="text-center p-8"
-            >
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Let Zeus Get to know you!
-              </h1>
-              <p className="text-gray-600">
-                Just a few questions to better understand your background and
-                preferences.
-              </p>
-            </motion.div>
-          ) : (
-            renderDialogContent()
-          )}
-        </DialogContent>
-      </Dialog>
+    <div className="w-full max-w-[525px] mx-auto">
+      {showWelcome ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="text-center p-8 bg-white rounded-lg shadow-lg"
+        >
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Let Zeus Get to know you!
+          </h1>
+          <p className="text-gray-600">
+            Just a few questions to better understand your background and
+            preferences.
+          </p>
+        </motion.div>
+      ) : (
+        renderFormContent()
+      )}
 
       {studentData && renderSubmittedData()}
-    </>
+    </div>
   );
 };
 
