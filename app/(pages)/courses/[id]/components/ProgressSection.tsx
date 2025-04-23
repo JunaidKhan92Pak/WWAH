@@ -17,7 +17,7 @@ interface CourseData {
   course_level: string;
   annual_tuition_fee: {
     currency: string;
-    amount: string;
+    amount: number;
   };
 }
 
@@ -45,7 +45,7 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
     requiredSubject: "",
     englishProficiency: { ielts: "", pte: "", tofel: "" },
     requiredGrade: "",
-    tutionfee: "",
+    tutionfee: { amount: 0, currency: "" },
     costofliving: 2,
   });
 
@@ -67,10 +67,9 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
           tofel: data.required_toefl_score,
         },
         requiredGrade: data?.entry_requirement || data?.entry_requirements,
-        tutionfee: data.annual_tuition_fee.amount,
+        tutionfee: { amount: data?.annual_tuition_fee.amount, currency: data.annual_tuition_fee.currency },
         costofliving: 2,
       };
-
       // Reset states when course data changes
       setSuccessGenerated(false);
       setShowLoginPrompt(false);
@@ -111,6 +110,22 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
       //   tuitionFee: userSuccessInfo.tuitionFee || "$200",
       //   costofliving: userSuccessInfo.livingCosts || "$200",
       // };
+      // const userInfo = {
+      //   languageProficiency: {
+      //     test: userSuccessInfo.languageProficiency.test,
+      //     score: parseInt(userSuccessInfo.languageProficiency.score) || 0
+      //   },
+      //   majorSubject: {
+      //     previousGradingScore: userSuccessInfo.grade || 20,
+      //     previousGradingScale: userSuccessInfo.gradetype || "percentage",
+      //     qualification: userSuccessInfo.studyLevel || "Inter",
+      //   },
+      //   subject: userSuccessInfo.majorSubject || "Computer",
+      //   workExperience: parseInt(userSuccessInfo.workExperience) || 2,
+      //   isProfileComplete: true,
+      //   tuitionFee: userSuccessInfo.tuitionFee || "$200",
+      //   costofliving: userSuccessInfo.livingCosts || "$200",
+      // };
 
       const metrics = calculateAllSuccessMetrics(
         userSuccessInfo,
@@ -120,7 +135,6 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
       setSuccessGenerated(true);
     }, 1500);
   };
-
   // Define factors for rendering
   const academicFactors = [
     {
@@ -161,12 +175,12 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   // Calculate overall scores
   const academicOverall = Math.round(
     academicFactors.reduce((sum, factor) => sum + factor.value, 0) /
-      academicFactors.length
+    academicFactors.length
   );
 
   const financialOverall = Math.round(
     financialFactors.reduce((sum, factor) => sum + factor.value, 0) /
-      financialFactors.length
+    financialFactors.length
   );
 
   // Helper function for progress bar color

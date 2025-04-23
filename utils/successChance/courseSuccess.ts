@@ -1,6 +1,7 @@
 import useSynonyms from "@/hooks/useSynonyms";
 import { calculateMajorSuccess } from "../calculateMajorSuccess";
 import { extractMajorFromTitle } from "../extractMajor";
+import { convertCurrency, runFeeMatch } from "./fetchExchangeRates";
 
 // Extract language proficiency scores from text description
 export const extractLangScore = (langProficiency: string) => {
@@ -72,20 +73,20 @@ export const calculateEnglishSuccess = (userTest: string, userScore: number, req
 // Extract grade requirements from text description
 export const extractGradeRequirement = (gradesText: string) => {
     if (!gradesText) return { percentage: 0, cgpa: 0 };
-
     const percentageMatch = gradesText.match(/(\d+(?:\.\d+)?)%/);
     const cgpaMatch = gradesText.match(/(\d+(?:\.\d+)?)\s*CGPA/i);
 
     return {
-        percentage: percentageMatch ? parseFloat(percentageMatch[1]) : 0,
-        cgpa: cgpaMatch ? parseFloat(cgpaMatch[1]) : 0
+        percentage: percentageMatch ? parseFloat(percentageMatch[1]) : 65,
+        cgpa: cgpaMatch ? parseFloat(cgpaMatch[1]) : 3.0
     };
 };
 
 // Calculate grade success percentage
 export const calculateGradeSuccess = (studentScore: number | string, studentScale: string, courseGradeText: string) => {
-    if (!studentScore || !courseGradeText) return 10;
 
+    console.log("studentScore", studentScore, studentScale, courseGradeText);
+    if (!studentScore || !courseGradeText) return 10;
     const score = typeof studentScore === 'string' ? parseFloat(studentScore) : studentScore;
     const gradeRequirement = extractGradeRequirement(courseGradeText);
 
@@ -147,6 +148,16 @@ export const calculateWorkExperienceSuccess = (userExp: number) => {
     if (userExp >= workExpRequirement * 0.25) return 40; // At least 25% of required
     return 20; // Less than 25% of required
 };
+// export const calculateFeeSuccess = (
+//     userAmountInCourseCurrency: number,
+//     courseFeeAmount: number
+// ): number => {
+//     if (userAmountInCourseCurrency >= courseFeeAmount) return 100;
+//     if (userAmountInCourseCurrency >= courseFeeAmount * 0.9) return 80;
+//     if (userAmountInCourseCurrency >= courseFeeAmount * 0.75) return 60;
+//     if (userAmountInCourseCurrency >= courseFeeAmount * 0.5) return 40;
+//     return 20;
+// };
 
 // Calculate all success metrics at once
 export const calculateAllSuccessMetrics = (user: any, course: any) => {
@@ -154,22 +165,28 @@ export const calculateAllSuccessMetrics = (user: any, course: any) => {
     //     String(course.course_title || "").trim()
     // );
     // const userSubject = user?.majorSubject?.majorSubject || "90";
+    // const exchangeRates = await runFeeMatch(user.tutionfee.currency); // Fetch exchange rates based on user's currency
+    // const userInCourseCurrency = convertCurrency(
+    //     user.tutionfee.amount,
+    //     user.tustion.rrency,
+    //     course.tutionfee.currency,
+    //     exchangeRates
+    // );
     return {
         // subjectSuccess: calculateMajorSuccess(userSubject, requiredSubject, useSynonyms),
         englishSuccess: calculateEnglishSuccess(
-            user?.langPro?.proficiencyTest || "IELTS",
-            user?.langPro?.proficiencyTestScore || 0,
+            user?.languageProficiency?.test || "IELTS",
+            user?.languageProficiency?.score || 0,
             course?.englishProficiency || ""
         ),
         gradeSuccess: calculateGradeSuccess(
-            user?.majorSubject?.previousGradingScore || 0,
-            user?.majorSubject?.previousGradingScale || "percentage",
-            course?.gradesAndCGPA || ""
+            user?.grade || 0,
+            user?.gradetype || "percentage",
+            course?.requiredGrade || ""
         ),
-        degreeSuccess: calculateDegreeSuccess(user?.majorSubject?.qualification || "",
-            course?.academicBackground || ""
-        ),
+        degreeSuccess: calculateDegreeSuccess(user?.studyLevel || "", course?.requiredDegree || ""),
         workExperienceSuccess: calculateWorkExperienceSuccess(user?.workExperience || 0),
+        // tuitionFeeSuccess: calculateFeeSuccess(userInCourseCurrency, course.amount) || 10,
         tuitionFeeSuccess: 10,
         costofliving: 20
     };
