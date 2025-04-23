@@ -33,14 +33,14 @@ const Footer = () => {
 
   return (
     <>
-      <div className="relative -mb-1 translate-y-3 border border-gray-100  mx-auto px-6 py-4 w-[85%] sm:w-fit bg-white rounded-3xl shadow-lg">
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-500 to-transparent opacity-30 rounded-3xl shadow-lg"></div>
-        <h2 className="z-10 text-center text-lg md:text-3xl  font-extrabold text-gray-800">
-          Your AI-Powered Passport to Global Education!
-        </h2>
+      <div className="relative -mb-1 translate-y-3   mx-auto md:px-6 py-3 md:py-4 w-[85%] sm:w-fit bg-white rounded-3xl ">
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-3xl "></div>
+        <h5 className="z-10 text-center   font-extrabold text-gray-800">
+          Global Education, Powered by AI
+        </h5>
       </div>
 
-      <footer className="bg-[#F1F1F1] text-gray-800 py-6 w-full flex justify-center rounded-t-[2rem] sm:rounded-t-[5rem]">
+      <footer className="bg-[#F1F1F1] text-gray-800 pt-10 pb-6 md:py-10 w-full flex justify-center rounded-t-[2rem] sm:rounded-t-[5rem]">
         <div className="footerChild w-[90%] lg:w-[95%] flex flex-col justify-center text-sm font-normal">
           {/* Grid-based Footer Content */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[27%,25%,12%,12%,15%] gap-4 sm:gap-8 lg:gap-6 xl:gap-8">
@@ -101,8 +101,8 @@ const Footer = () => {
               <div
                 className="flex items-center space-x-3 cursor-pointer"
                 onClick={() =>
-                  (window.location.href =
-                    "mailto:info@worldwideadmissionshub.com")
+                (window.location.href =
+                  "mailto:info@worldwideadmissionshub.com")
                 }
               >
                 <IoMailUnreadOutline className="text-xl min-w-[20px]" />
