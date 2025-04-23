@@ -85,10 +85,13 @@ const questions: Question[] = [
     title: "What is your current level of study?",
     type: "select",
     options: [
-      "Matric/O Levels",
-      "Intermediate/A Levels",
+      "Matric",
+      "O Levels",
+      "Intermediate",
+      "A Levels",
       "Bachelor",
-      "Master/MPhil",
+      "Master",
+      "MPhil",
       "PhD",
       "Any Other (Specify)",
     ],
@@ -167,6 +170,48 @@ const questionGroups: number[][] = [
   [12],
   [13, 14],
 ];
+const gradingScaleMap: Record<string, string> = {
+  percentage: "Percentage Grade scale",
+  cgpa: "Grade Point Average (GPA) Scale",
+  letter: "Letter Grade Scale (A-F)",
+  passfail: "Pass/Fail",
+  other: "Any other (Specify)",
+};
+
+const letterToPercentage: Record<string, number> = {
+  "A+": 95,
+  A: 90,
+  "A-": 85,
+  "B+": 80,
+  B: 75,
+  "B-": 70,
+  "C+": 65,
+  C: 60,
+  "C-": 55,
+  "D+": 50,
+  D: 45,
+  "D-": 40,
+  F: 30,
+};
+
+const isValidGradeInput = (type: string, score: string) => {
+  if (type === "percentage") {
+    const value = parseFloat(score);
+    return !isNaN(value) && value >= 0 && value <= 100;
+  }
+  if (type === "cgpa") {
+    const value = parseFloat(score);
+    return !isNaN(value) && value >= 0 && value <= 4.0;
+  }
+  if (type === "letter") {
+    return Object.keys(letterToPercentage).includes(score.toUpperCase());
+  }
+  if (type === "passfail") {
+    return ["Pass", "Fail"].includes(score.trim());
+  }
+  return score.trim().length > 0;
+};
+
 
 const SuccessChances = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -179,6 +224,7 @@ const SuccessChances = () => {
     gradeType: "",
     score: "",
   });
+
   const [studentData, setStudentData] = useState<StudentData | null>(null);
   const progress = ((currentQuestion + 1) / questionGroups.length) * 100;
 
@@ -369,37 +415,44 @@ const SuccessChances = () => {
     />
   );
 
-  const renderGradesInput = () => (
-    <div className="space-y-4">
-      <select
-        className="w-full rounded-lg border border-gray-300 p-3"
-        value={gradeData.gradeType}
-        onChange={(e) => handleGradeTypeChange(e.target.value)}
-      >
-        <option value="">Select an option</option>
-        {[
-          "Percentage Grade scale",
-          "Grade Point Average (GPA) Scale",
-          "Letter Grade Scale (A-F)",
-          "Pass/Fail",
-          "Any other (Specify)",
-        ].map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      {gradeData.gradeType && (
-        <Input
-          type="text"
-          placeholder="Enter your grade/CGPA"
-          className="w-full mt-2"
-          value={gradeData.score}
-          onChange={(e) => handleGradeScoreChange(e.target.value)}
-        />
-      )}
-    </div>
-  );
+  const renderGradesInput = () => {
+    const isValid = isValidGradeInput(gradeData.gradeType, gradeData.score);
+
+    return (
+      <div className="space-y-4">
+        <select
+          className="w-full rounded-lg border border-gray-300 p-"
+          value={gradeData.gradeType}
+          onChange={(e) => handleGradeTypeChange(e.target.value)}
+        >
+          <option value="">Select an option</option>
+          {Object.entries(gradingScaleMap).map(([key, label]) => (
+            <option key={key} value={key}>
+              {label}
+            </option>
+          ))}
+        </select>
+
+        {gradeData.gradeType && (
+          <>
+            <Input
+              type="text"
+              placeholder="Enter your grade/CGPA"
+              className={`w-full mt-2 ${isValid ? "" : "border-red-500"}`}
+              value={gradeData.score}
+              onChange={(e) => handleGradeScoreChange(e.target.value)}
+            />
+            {!isValid && (
+              <p className="text-sm text-red-600">
+                Please enter a valid value for {gradeData.gradeType}.
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    );
+  };
+
 
   const renderFormContent = () => (
     <form onSubmit={handleSubmit} className="w-full max-w-[525px]">
@@ -422,7 +475,7 @@ const SuccessChances = () => {
               .filter((q) => questionGroups[currentQuestion].includes(q.id))
               .map((q) => (
                 <div key={q.id} className="space-y-4">
-                  <div className="flex items-center gap-3 text-black">
+                  <div className="flex items-center ga text-black">
                     <GraduationCap className="h-6 w-6" />
                     <h2 className="text-xl font-semibold">{q.title}</h2>
                   </div>
