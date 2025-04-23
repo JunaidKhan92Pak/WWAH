@@ -11,6 +11,9 @@ type StudyPreferenced = {
     degree: string;
     subject: string;
 };
+
+
+
 type SuccessData = {
     studyLevel: string;
     gradetype: string;
