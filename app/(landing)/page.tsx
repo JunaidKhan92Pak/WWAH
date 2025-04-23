@@ -157,11 +157,11 @@ function Page() {
         <div className="absolute inset-0 bg-black bg-opacity-10 z-0"></div>
 
         {/* header section starts */}
-        <header className="w-[90%] flex justify-between mt-5 z-10">
+        <header className="w-[90%] flex justify-between mt-5 z-20">
           <div className=" w-full  flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/logowwah.svg"
+                src="/logofooter.svg"
                 alt="WWAH Logo"
                 width={150}
                 height={60}
@@ -172,7 +172,7 @@ function Page() {
               <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
                 <button
                   type="button"
-                  className="flex text-sm bg-white  rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                  className="flex text-sm bg-white  rounded-full focus:ring-1 focus:ring-gray-100 dark:focus:ring-gray-600"
                   id="user-menu-button"
                   aria-expanded={isDropdownOpen}
                   onClick={toggleDropdown}
@@ -294,8 +294,8 @@ function Page() {
 
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    // src="/Hero_Robot.png"
-                    src="/zeus-up.png"
+                    src="/Hero_Robot.png"
+                    // src="/zeus-up.png"
                     alt="Robot"
                     width={0}
                     height={0}
@@ -389,11 +389,12 @@ function Page() {
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Image
-              src="/zeus-up.png"
+              src="/Hero_Robot.png"
+              // src="/zeus-up.png"
               alt="Robot"
               width={400}
               height={700}
-              // className="2xl:w-[550px] 2xl:h-[700px]"
+            // className="2xl:w-[550px] 2xl:h-[700px]"
             />
           </div>
         </section>
@@ -545,11 +546,11 @@ function Page() {
             Why Choose{" "}
             <Link href="/aboutUs">
               <Image
-                src="/wwah.svg"
+                src="/logowwah.svg"
                 alt="WWAH"
                 width={100} // adjust as needed
                 height={40} // adjust as needed
-                className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[100px]"
+                className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[150px]"
               />
             </Link>
           </h2>
