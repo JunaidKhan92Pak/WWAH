@@ -33,7 +33,7 @@ interface UserPref {
   updatedAt: Date;
 }
 interface user {
-  id: string;
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -70,6 +70,7 @@ interface UserStore {
   user: User | null;
   loading: boolean;
   error: string | null;
+  isAuthenticate: boolean; // Add this property
   fetchUserProfile: (token: string) => Promise<void>;
   setUser: (user: User) => void;
   logout: () => void;
@@ -77,6 +78,7 @@ interface UserStore {
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
   loading: false,
+  isAuthenticate: false,
   error: null,
   fetchUserProfile: async (token) => {
     try {
@@ -86,10 +88,10 @@ export const useUserStore = create<UserStore>((set) => ({
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
+            Authorization: `Bearer ${token}`, // :white_tick: Send token in Authorization header
             "Content-Type": "application/json",
           },
-          credentials: "include", // ✅ Ensure cookies are sent
+          credentials: "include", // :white_tick: Ensure cookies are sent
         }
       );
       if (!response) {
@@ -100,15 +102,18 @@ export const useUserStore = create<UserStore>((set) => ({
       const user: User = {
         ...userData,
       };
-      set({ user, loading: false });
+      set({ user, loading: false, isAuthenticate: true });
     } catch (error) {
       console.error("Error fetching profile in wwah:", error);
       set({ error: (error as Error).message, loading: false });
     }
   },
-  setUser: (user) => set({ user }),
+  setUser: (user) => set({ user, isAuthenticate: !!user }),
   logout: () => {
-    deleteAuthToken(); // ✅ Remove token first
-    set(() => ({ user: null, isAuthenticate: false, loading: false })); // ✅ Reset store state
+    deleteAuthToken(); // :white_tick: Remove token first
+    set(() => ({ user: null, isAuthenticate: false, loading: false })); // :white_tick: Reset store state
   },
 }));
+
+
+

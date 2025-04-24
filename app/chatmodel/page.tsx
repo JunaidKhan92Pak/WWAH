@@ -249,67 +249,47 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/useUserData";
 import { FaUser } from "react-icons/fa";
 import { Message as MessageType } from "@/lib/types";
 import Message from "./components/Message";
 import { Card } from "@/components/ui/card";
-
+import { getAuthToken } from "@/utils/authHelper";
 export default function Home() {
-  const [messages, setMessages] = useState<MessageType[]>([]);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const initialMessage = searchParams.get("message"); // Get message from URL
-  const { isAuthenticate, user } = useUserStore();
-  console.log(user?.personalInfo.id, "userId from chat model");
-
+  const { user, fetchUserProfile } = useUserStore();
+  const store = useUserStore();
+  console.log("User store:", store);
   const scrollToBottom = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const fetchUser = async () => {
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        // router.push("/login"); // Redirect if not authenticated
+        console.log("Token not found, redirecting to login...");
+        return;
+      }
+      fetchUserProfile(token);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+  console.log(user, "user data from chat component");
+  useEffect(() => {
+    fetchUser();
+  }, []);
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  // const handleInitialMessage = async (message: string) => {
-  //   if (!message.trim()) return;
+  console.log(user?.user._id, "userId from chat model");
 
-  //   const userMessage: MessageType = { role: "user", content: message };
-  //   setMessages((prev) => [...prev, userMessage]);
-  //   setIsLoading(true);
-
-  //   try {
-  //     const response = await fetch("/api/chat", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         message,
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to send message");
-  //     }
-
-  //     const data = await response.json();
-  //     setMessages((prev) => [...prev, data.message]);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       {
-  //         role: "assistant",
-  //         content: "Sorry, there was an error processing your request.",
-  //       },
-  //     ]);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -318,7 +298,6 @@ export default function Home() {
     const userMessage: MessageType = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setIsLoading(true);
     setIsLoading(true);
 
     try {
@@ -329,7 +308,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           message: input,
-          userId: user?.personalInfo.id, // Include user ID here
+          userId: user?.user._id || null, // Include user ID here
           conversationHistory: messages,
         }),
       });
@@ -353,7 +332,6 @@ export default function Home() {
       setIsLoading(false);
     }
   };
-
   // Similarly update handleInitialMessage function to include user ID
   const handleInitialMessage = async (message: string) => {
     if (!message.trim()) return;
@@ -370,7 +348,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           message,
-          userId: user?.personalInfo.id, // Include user ID here too
+          userId: user?.user._id, // Include user ID here too
         }),
       });
       if (!response.ok) {
@@ -379,21 +357,15 @@ export default function Home() {
 
       const data = await response.json();
       setMessages((prev) => [...prev, data.message]);
-      setMessages((prev) => [...prev, data.message]);
     } catch (error) {
-      console.error(error);
       console.error(error);
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           content: "Sorry, there was an error processing your request.",
-          role: "assistant",
-          content: "Sorry, there was an error processing your request.",
         },
       ]);
-    } finally {
-      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -401,10 +373,7 @@ export default function Home() {
   useEffect(() => {
     if (initialMessage) {
       handleInitialMessage(initialMessage);
-    if (initialMessage) {
-      handleInitialMessage(initialMessage);
     }
-  }, [initialMessage]);
   }, [initialMessage]);
   return (
     <div className="flex min-h-screen flex-col">
@@ -425,11 +394,9 @@ export default function Home() {
               </div>
             </Link>
             <div className="ml-auto flex gap-2 items-center">
-              {isAuthenticate ? (
+              {user ? (
                 <>
-                  <h6>Hello, {user?.personalInfo.firstName || "Newbie"}</h6>
-
-                  <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
+                  <h6>Hello, {user?.user.firstName || "Newbie"}!</h6>
 
                   <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
                 </>
@@ -444,7 +411,6 @@ export default function Home() {
             </div>
           </div>
         </header>
-
         {/* Chat Area */}
         <main className="relative flex-1 w-[90%] mx-auto sm:px-4 pt-16 pb-18">
           <ScrollArea className="h-[calc(100vh-8rem)] overflow-hidden p-6 scrollbar-hide">
@@ -458,13 +424,7 @@ export default function Home() {
                   <Message key={index} message={message} />
                 ))
               )}
-              {/* {isLoading && (
-                <div className="flex justify-start mb-4">
-                  <div className="bg-gray-600 p-3 rounded-lg">
-                    <p>Thinking...</p>
-                  </div>
-                </div>
-              )} */}
+
               {isLoading && (
                 <div className="flex gap-10 md:max-w-[20%] lg:max-w-[15%] xl:max-w-[10%] max-w-[50%]">
                   <div className="flex items-center gap-2 mb-3">
@@ -524,56 +484,19 @@ export default function Home() {
                 </Button>
               </div>
             </form>
-          <div className="absolute inset-0 bg-[#D9D9D966] opacity-80 z-0 blur-2xl "></div>
-          <div className="relative w-[90%] sm:w-[70%] lg:w-[58%] mx-auto pb-1 ">
-            <form onSubmit={handleSubmit}>
-              <div className="flex items-center rounded-xl shadow-sm bg-white gap-2 px-3 py-1">
-                <Image
-                  src="/chatbot.svg"
-                  alt="chatrobot"
-                  width={20}
-                  height={20}
-                />
-                <Input
-                  placeholder="Chat with ZEUS"
-                  className="flex-1 border-none focus:ring-0 xl:placeholder:text-[16px]"
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  // onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                  disabled={isLoading}
-                />
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={isLoading}
-                  className="p-0 bg-transparent hover:bg-transparent rounded-full"
-                >
-                  <Image
-                    src="/icons/sendicon.svg"
-                    alt="Send"
-                    width={24}
-                    height={24}
-                  />
-                </Button>
-              </div>
-            </form>
             {/* Buttons */}
             <div className="flex flex-row justify-center overflow-x-auto hide-scrollbar gap-3 mt-2">
               <Link href="/Universities">
-                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Top Universities
                 </Button>
               </Link>
               <Link href="/countries">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Study Destinations
                 </Button>
               </Link>
               <Link href="/scholarships">
-                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Latest Scholarships
                 </Button>

@@ -64,7 +64,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       field.onChange(true);
                       form.setValue("hasPassport", false);
                       form.setValue("passportNumber", "");
-                      form.setValue("passportExpiryDate", "");
+                      form.setValue("passportExpiryDate", undefined);
                       form.setValue("oldPassportNumber", "");
                       form.setValue("oldPassportExpiryDate", undefined);
                     }}

@@ -22,7 +22,7 @@ interface CareerOpportunitiesProps {
     location_campus: string;
     annual_tuition_fee: {
       currency: string;
-      amount: string;
+      amount: number;
     };
     initial_deposit: string;
     overview: string;

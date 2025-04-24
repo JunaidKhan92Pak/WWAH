@@ -13,6 +13,7 @@ import {
 import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
 
+
 const Navbar = () => {
   const { isAuthenticate, loading, logout, user } = useUserStore();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -29,10 +30,10 @@ const Navbar = () => {
             {/* Logo */}
             <Link href="/">
               <Image
-                src="/logo.svg"
+                src="/logowwah.svg"
                 alt="logo"
-                width={113}
-                height={45}
+                width={150}
+                height={60}
                 // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
@@ -92,12 +93,12 @@ const Navbar = () => {
                     <span className="sr-only">Open user menu</span>
                     {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
                     <Image
-                      src="/user.png"
+                      src="/icons/userred.svg"
                       alt="user"
                       width={40}
                       height={40}
-                      className="rounded-full"
-                    />
+                      className="rounded-full w-8 h-8 "
+                    />{" "}
                   </button>
 
                   {/* Dropdown Menu */}
