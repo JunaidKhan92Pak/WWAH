@@ -33,7 +33,7 @@ interface UserPref {
   updatedAt: Date;
 }
 interface user {
-  id: string;
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;

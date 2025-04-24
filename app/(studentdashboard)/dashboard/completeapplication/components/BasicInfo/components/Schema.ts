@@ -19,18 +19,10 @@ export const formSchema = z.object({
   }),
 
   DOB: z
-    .string()
-    .refine(
-      (val) => {
-        const date = new Date(val);
-        return !isNaN(date.getTime()) && date <= new Date();
-      },
-      {
-        message:
-          "Please enter a valid date of birth that is not in the future.",
-      }
-    )
-    .or(z.literal("")),
+    .date()
+    .refine((date) => date >= new Date("1900-01-01") && date <= new Date(), {
+      message: "Please enter a valid date of birth.",
+    }),
 
   nationality: z
     .string()
@@ -140,19 +132,8 @@ export const formSchema = z.object({
     .or(z.literal("")),
 
   passportExpiryDate: z
-    .string()
-    .refine(
-      (val) => {
-        if (!val) return true;
-        const date = new Date(val);
-        return !isNaN(date.getTime()) && date >= new Date();
-      },
-      {
-        message:
-          "Please enter a valid passport expiry date that is not in the past.",
-      }
-    )
-    .or(z.literal("")),
+    .date()
+   .optional(),
   oldPassportNumber: z.string().optional(),
   oldPassportExpiryDate: z.date().optional(),
 
@@ -210,9 +191,7 @@ export const formSchema = z.object({
         relationship: z.string().optional(),
         nationality: z.string().optional(),
         occupation: z.string().optional(),
-        email: z
-          .string()
-          .optional(),
+        email: z.string().optional(),
         countryCode: z.string().optional(),
         phoneNo: z.string().optional(),
       })

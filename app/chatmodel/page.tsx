@@ -254,7 +254,7 @@ import { FaUser } from "react-icons/fa";
 import { Message as MessageType } from "@/lib/types";
 import Message from "./components/Message";
 import { Card } from "@/components/ui/card";
-
+import { getAuthToken } from "@/utils/authHelper";
 export default function Home() {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState("");
@@ -262,15 +262,34 @@ export default function Home() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const initialMessage = searchParams.get("message"); // Get message from URL
-  const { isAuthenticate, user } = useUserStore();
-  console.log(user?.user.id, "userId from chat model");
-
+  const { user, fetchUserProfile } = useUserStore();
+  const store = useUserStore();
+  console.log("User store:", store);
   const scrollToBottom = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const fetchUser = async () => {
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        // router.push("/login"); // Redirect if not authenticated
+        console.log("Token not found, redirecting to login...");
+        return;
+      }
+      fetchUserProfile(token);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+  console.log(user, "user data from chat component");
+  useEffect(() => {
+    fetchUser();
+  }, []);
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  console.log(user?.user._id, "userId from chat model");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -289,7 +308,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           message: input,
-          userId: user?.user?.id || null, // Include user ID here
+          userId: user?.user._id || null, // Include user ID here
           conversationHistory: messages,
         }),
       });
@@ -313,7 +332,6 @@ export default function Home() {
       setIsLoading(false);
     }
   };
-
   // Similarly update handleInitialMessage function to include user ID
   const handleInitialMessage = async (message: string) => {
     if (!message.trim()) return;
@@ -330,7 +348,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           message,
-          userId: user?.user.id, // Include user ID here too
+          userId: user?.user._id, // Include user ID here too
         }),
       });
       if (!response.ok) {
@@ -376,9 +394,9 @@ export default function Home() {
               </div>
             </Link>
             <div className="ml-auto flex gap-2 items-center">
-              {isAuthenticate ? (
+              {user ? (
                 <>
-                  <h6>Hello, {user?.user.firstName || "Newbie"}</h6>
+                  <h6>Hello, {user?.user.firstName || "Newbie"}!</h6>
 
                   <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
                 </>
@@ -393,7 +411,6 @@ export default function Home() {
             </div>
           </div>
         </header>
-
         {/* Chat Area */}
         <main className="relative flex-1 w-[90%] mx-auto sm:px-4 pt-16 pb-18">
           <ScrollArea className="h-[calc(100vh-8rem)] overflow-hidden p-6 scrollbar-hide">
@@ -407,7 +424,7 @@ export default function Home() {
                   <Message key={index} message={message} />
                 ))
               )}
-             
+
               {isLoading && (
                 <div className="flex gap-10 md:max-w-[20%] lg:max-w-[15%] xl:max-w-[10%] max-w-[50%]">
                   <div className="flex items-center gap-2 mb-3">
