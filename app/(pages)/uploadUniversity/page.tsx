@@ -169,8 +169,9 @@ export default function Home() {
     try {
       // Continue with upload if all images are present
       const selectedImages = Object.entries(imageFiles).filter(
-        ([_, file]) => file
+        ([, file]) => file
       );
+
 
       const imagesData: { [key: string]: string } = {};
       await Promise.all(
@@ -208,8 +209,12 @@ export default function Home() {
       } else {
         setError(result.error || "Image upload failed.");
       }
-    } catch (error: any) {
-      setError(`An error occurred while uploading images: ${error.message || error}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(`An error occurred while uploading images: ${error.message}`);
+      } else {
+        setError(`An error occurred while uploading images: ${String(error)}`);
+      }
     } finally {
       setUploading(false);
     }
@@ -269,8 +274,12 @@ export default function Home() {
         );
         setUploadStatus(null);
       }
-    } catch (error: any) {
-      setError(`An error occurred while uploading data: ${error.message || error}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(`An error occurred while uploading data: ${error.message}`);
+      } else {
+        setError(`An error occurred while uploading data: ${String(error)}`);
+      }
       setUploadStatus(null);
     } finally {
       setUploading(false);
