@@ -14,8 +14,10 @@ const nextConfig: NextConfig = {
       "res.cloudinary.com",
       "encrypted-tbn1.gstatic.com",
       "ichef.bbci.co.uk",
-      "flagcdn.com"
+      "flagcdn.com",
+      'wwah-bucket.s3.us-east-1.amazonaws.com'
     ],
+
     // Allow images from Cloudinary
   },
   async rewrites() {
