@@ -93,9 +93,17 @@ export async function POST(req: Request) {
                 const buffer = Buffer.from(matches[2], 'base64');
 
                 // Get file extension from mime type
-                const fileExtension = mimeType.split('/')[1];
-                if (!['jpeg', 'jpg', 'png'].includes(fileExtension)) {
-                    throw new Error(`Unsupported file type: ${mimeType} for ${imageType}`);
+                // Update: Allow only jpeg, jpg, and png - explicitly convert the extension to ensure consistency
+                let fileExtension;
+                if (mimeType === 'image/jpeg' || mimeType === 'image/jpg') {
+                    fileExtension = 'jpg';
+                } else if (mimeType === 'image/png') {
+                    fileExtension = 'png';
+                } else if (mimeType === 'image/webp') {
+                    fileExtension = 'webp';
+                }
+                else {
+                    throw new Error(`Unsupported file type: ${mimeType} for ${imageType}. Only JPEG and PNG formats are supported.`);
                 }
 
                 // Generate a unique filename

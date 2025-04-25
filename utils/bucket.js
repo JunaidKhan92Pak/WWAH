@@ -31,6 +31,7 @@ exports.uploadImages = async (images, folderName, uploadType = 'image') => {
         'image/jpeg': 'jpeg',
         'image/jpg': 'jpg',
         'image/png': 'png',
+        'image/webp': 'webp',
         ...(uploadType === 'document' && { 'application/pdf': 'pdf' }),
     };
 
