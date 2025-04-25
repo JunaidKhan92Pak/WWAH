@@ -44,9 +44,13 @@
 // }
 // /api/addUniversityImges.js
 import { NextResponse } from 'next/server';
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 // Initialize S3 client with environment variables
+if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    throw new Error("AWS credentials are not defined in the environment variables.");
+}
+
 const s3 = new S3Client({
     region: process.env.AWS_REGION || "us-east-1",
     credentials: {
