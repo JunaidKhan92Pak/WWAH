@@ -114,7 +114,7 @@ export async function POST(req: Request) {
     // Connect to the database
     await connectToDatabase();
     if (!University) {
-      return NextResponse.json({ message: "Database model not found." }, { status: 500 });
+      return NextResponse.json({ message: "Database model not found.", success: false }, { status: 500 });
     }
 
     // Parse JSON request
@@ -124,7 +124,7 @@ export async function POST(req: Request) {
     // Validate input: ensure 'university' is present (as an object or an array)
     if (!data.university || (typeof data.university !== "object" && !Array.isArray(data.university))) {
       return NextResponse.json(
-        { message: "Invalid input. University details are required." },
+        { message: "Invalid input. University details are required.", success: false },
         { status: 400 }
       );
     }
@@ -222,17 +222,18 @@ export async function POST(req: Request) {
     } else {
       // Create a new university record
       await University.create(universityData);
+      console.log("New university created:");
     }
 
     return NextResponse.json(
-      { message: "University data added/updated successfully." },
+      { message: "University data added/updated successfully.", success: true },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error processing request:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { message: "Failed to process request.", error: errorMessage },
+      { message: "Failed to process request.", error: errorMessage, success: false },
       { status: 500 }
     );
   }

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.787.0",
     "@hookform/resolvers": "^4.1.0",
     "@langchain/community": "^0.3.41",
     "@langchain/mongodb": "^0.1.0",
@@ -45,6 +46,7 @@
     "dompurify": "^3.2.4",
     "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.5.1",
+    "file-type": "^20.4.1",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.4.1",

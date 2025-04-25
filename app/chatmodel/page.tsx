@@ -301,7 +301,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}chatZeus`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -424,6 +424,7 @@ export default function Home() {
                   <Message key={index} message={message} />
                 ))
               )}
+
 
               {isLoading && (
                 <div className="flex gap-10 md:max-w-[20%] lg:max-w-[15%] xl:max-w-[10%] max-w-[50%]">
