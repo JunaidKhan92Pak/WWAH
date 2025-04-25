@@ -12,6 +12,14 @@ import { Combobox } from "./ui/combobox";
 import { majorsAndDisciplines, studyDestinations } from "../lib/constant";
 import { getNames } from "country-list";
 import currency from "currency-codes";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import Image from "next/image";
+import { useRouter } from "next/navigation"; // for Next.js 13+ App Router
 
 const nationalities = getNames();
 const currencyOptions = currency.data.map(
@@ -72,11 +80,10 @@ interface StudentData {
 
   submissionDate: string;
 }
-
 const questions: Question[] = [
   {
     id: 1,
-    title: "What is your Country of Nationality?",
+    title: "What is your Nationality?",
     type: "nationality",
     placeholder: "Select your nationality",
   },
@@ -99,13 +106,13 @@ const questions: Question[] = [
   },
   {
     id: 4,
-    title: "What is your Major or field of study?",
+    title: "What is your Major discipline?",
     type: "major",
     placeholder: "Select your major or field",
   },
   {
     id: 5,
-    title: "Obtained Grades/CGPA in your previous study?",
+    title: "Obtained Grades in your previous study?",
     type: "grades",
   },
   { id: 6, title: "Do you have any work experience?", type: "work_experience" },
@@ -129,7 +136,7 @@ const questions: Question[] = [
   },
   {
     id: 10,
-    title: "Which country are you dreaming of studying in?",
+    title: "What is your preferred study destination?",
     type: "study_destination",
   },
   {
@@ -140,7 +147,7 @@ const questions: Question[] = [
   },
   {
     id: 12,
-    title: "What major or discipline are you interested in?",
+    title: "Which major are you interested in applying for?",
     type: "major",
     placeholder: "Select your preferred major",
   },
@@ -213,8 +220,22 @@ const isValidGradeInput = (type: string, score: string) => {
   return score.trim().length > 0;
 };
 
-
 const SuccessChances = () => {
+  const [successOpen, setSuccessOpen] = useState(false);
+  const router = useRouter();
+
+  // Open the dialog when the form is successfully submitted
+  useEffect(() => {
+    if (successOpen) {
+      const timer = setTimeout(() => {
+        setSuccessOpen(false); // Close the modal
+        router.back(); // Go back to the previous page
+      }, 2000); // Close after 2 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [successOpen, router]);
+
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, AnswerType>>({});
@@ -384,7 +405,7 @@ const SuccessChances = () => {
                   : undefined
               }
               onChange={(e) => handleAnswer(Number(e.target.value), q.id + 100)}
-              className="mt-2"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
             />
           </motion.div>
         )}
@@ -408,7 +429,7 @@ const SuccessChances = () => {
           placeholder={q.placeholder}
           value={(answers[q.id] as string) || ""}
           onChange={(e) => handleAnswer(e.target.value, q.id)}
-          className="mt-2"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
         />
       </div>
     );
@@ -418,7 +439,7 @@ const SuccessChances = () => {
     <Input
       type="text"
       placeholder={q.placeholder}
-      className="w-full"
+      className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
       value={(answers[q.id] as string) || ""}
       onChange={(e) => handleAnswer(e.target.value, q.id)}
     />
@@ -430,7 +451,7 @@ const SuccessChances = () => {
     return (
       <div className="space-y-4">
         <select
-          className="w-full rounded-lg border border-gray-300 p-"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
           value={gradeData.gradeType}
           onChange={(e) => handleGradeTypeChange(e.target.value)}
         >
@@ -447,7 +468,9 @@ const SuccessChances = () => {
             <Input
               type="text"
               placeholder="Enter your grade/CGPA"
-              className={`w-full mt-2 ${isValid ? "" : "border-red-500"}`}
+              className={` w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500w-full mt-2 ${
+                isValid ? "" : "border-red-500"
+              }`}
               value={gradeData.score}
               onChange={(e) => handleGradeScoreChange(e.target.value)}
             />
@@ -462,175 +485,208 @@ const SuccessChances = () => {
     );
   };
 
+  // Helper function to determine if a question should be rendered
+  const shouldRenderQuestion = (questionId: number) => {
+    // Always render questions that are not 8 or 9
+    if (questionId !== 8 && questionId !== 9) {
+      return true;
+    }
+
+    // Only render questions 8 and 9 if user selected "Completed a test" for question 7
+    return answers[7] === "Completed a test";
+  };
 
   const renderFormContent = () => (
-    <form onSubmit={handleSubmit} className="w-full max-w-[525px]">
-      <Card className="p-6 shadow-lg bg-white border-0">
-        <div className="mb-6 flex flex-col items-center">
-          <Progress value={progress} className="h-3 w-[90%]" />
-          <p className="text-xs text-gray-500 mt-2">
-            {currentQuestion + 1} / {questionGroups.length}
-          </p>
-        </div>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestion}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-8"
-          >
-            {questions
-              .filter((q) => questionGroups[currentQuestion].includes(q.id))
-              .map((q) => (
-                <div key={q.id} className="space-y-4">
-                  <div className="flex items-center ga text-black">
-                    <GraduationCap className="h-6 w-6" />
-                    <h2 className="text-xl font-semibold">{q.title}</h2>
-                  </div>
-                  {q.type === "nationality" && (
-                    <Combobox
-                      options={nationalities}
-                      value={(answers[q.id] as string) || ""}
-                      onChange={(val) => handleAnswer(val, q.id)}
-                      placeholder="Select your nationality"
-                      emptyMessage="No countries found"
-                    />
-                  )}
-                  {q.type === "major" && (
-                    <Combobox
-                      options={majorsAndDisciplines}
-                      value={(answers[q.id] as string) || ""}
-                      onChange={(val) => handleAnswer(val, q.id)}
-                      placeholder={q.placeholder}
-                      emptyMessage="No majors found"
-                    />
-                  )}
-                  {q.type === "study_destination" && (
-                    <Combobox
-                      options={studyDestinations}
-                      value={(answers[q.id] as string) || ""}
-                      onChange={(val) => handleAnswer(val, q.id)}
-                      placeholder="Select country"
-                      emptyMessage="No countries found"
-                    />
-                  )}
-                  {q.type === "work_experience" && renderWorkExperience(q)}
-                  {q.type === "currency" && renderCurrencyInput(q)}
-                  {q.type === "input" && renderInput(q)}
-                  {q.type === "date" && (
-                    <Input
-                      type="date"
-                      className="w-full"
-                      value={
-                        answers[q.id]
-                          ? new Date(answers[q.id] as string)
-                            .toISOString()
-                            .split("T")[0]
-                          : ""
-                      }
-                      onChange={(e) => handleAnswer(e.target.value, q.id)}
-                    />
-                  )}
-                  {q.type === "select" && (
-                    <>
-                      <select
-                        className="w-full rounded-lg border border-gray-300 p-3"
-                        value={(answers[q.id] as string) || ""}
-                        onChange={(e) => handleAnswer(e.target.value, q.id)}
-                      >
-                        <option value="">Select an option</option>
-                        {q.options?.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                      {answers[q.id] === "Any Other (Specify)" && (
-                        <Input
-                          type="text"
-                          className="mt-2"
-                          placeholder="Please specify"
-                          onChange={(e) =>
-                            handleAnswer(
-                              `Any Other (Specify) - ${e.target.value}`,
-                              q.id
-                            )
-                          }
-                        />
-                      )}
-                    </>
-                  )}
-                  {q.type === "grades" && renderGradesInput()}
-                </div>
-              ))}
-          </motion.div>
-        </AnimatePresence>
-        <div className="mt-8 flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentQuestion === 0}
-          >
-            Previous
-          </Button>
-          {currentQuestion === questionGroups.length - 1 ? (
-            <Button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+    <div className="min-h-screen flex items-center justify-center ">
+      <form onSubmit={handleSubmit} className="w-full ">
+        <Card className="p-8 shadow-2xl bg-white rounded-2xl border border-gray-200 max-w-3xl w-full">
+          <div className="mb-6 flex flex-col items-center">
+            <Progress value={progress} className="h-3 w-[90%]" />
+            <p className="text-xs text-gray-500 mt-2">
+              {currentQuestion + 1} / {questionGroups.length}
+            </p>
+          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuestion}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-8"
             >
-              Submit
-            </Button>
-          ) : (
+              {questions
+                .filter(
+                  (q) =>
+                    questionGroups[currentQuestion].includes(q.id) &&
+                    shouldRenderQuestion(q.id)
+                )
+                .map((q) => (
+                  <div key={q.id} className="space-y-4">
+                    <div className="flex items-center gap-2 text-black">
+                      <GraduationCap className="h-6 w-6" />
+                      <h2 className="text-xl font-semibold">{q.title}</h2>
+                    </div>
+                    {q.type === "nationality" && (
+                      <Combobox
+                        options={nationalities}
+                        value={(answers[q.id] as string) || ""}
+                        onChange={(val) => handleAnswer(val, q.id)}
+                        placeholder="Select your nationality"
+                        emptyMessage="No countries found"
+                      />
+                    )}
+                    {q.type === "major" && (
+                      <Combobox
+                        options={majorsAndDisciplines}
+                        value={(answers[q.id] as string) || ""}
+                        onChange={(val) => handleAnswer(val, q.id)}
+                        placeholder={q.placeholder}
+                        emptyMessage="No majors found"
+                      />
+                    )}
+                    {q.type === "study_destination" && (
+                      <Combobox
+                        options={studyDestinations}
+                        value={(answers[q.id] as string) || ""}
+                        onChange={(val) => handleAnswer(val, q.id)}
+                        placeholder="Select country"
+                        emptyMessage="No countries found"
+                      />
+                    )}
+                    {q.type === "work_experience" && renderWorkExperience(q)}
+                    {q.type === "currency" && renderCurrencyInput(q)}
+                    {q.type === "input" && renderInput(q)}
+                    {q.type === "date" && (
+                      <Input
+                        type="date"
+                        className="w-full  px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+                        value={
+                          answers[q.id]
+                            ? new Date(answers[q.id] as string)
+                                .toISOString()
+                                .split("T")[0]
+                            : ""
+                        }
+                        onChange={(e) => handleAnswer(e.target.value, q.id)}
+                      />
+                    )}
+                    {q.type === "select" && (
+                      <>
+                        <select
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+                          value={(answers[q.id] as string) || ""}
+                          onChange={(e) => handleAnswer(e.target.value, q.id)}
+                        >
+                          <option value="">Select an option</option>
+                          {q.options?.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                        {(answers[q.id] as string)?.startsWith(
+                          "Any Other (Specify)"
+                        ) && (
+                          <Input
+                            type="text"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+                            placeholder="Please specify"
+                            onChange={(e) =>
+                              handleAnswer(
+                                `Any Other (Specify) - ${e.target.value}`,
+                                q.id
+                              )
+                            }
+                          />
+                        )}
+                      </>
+                    )}
+                    {q.type === "grades" && renderGradesInput()}
+                  </div>
+                ))}
+            </motion.div>
+          </AnimatePresence>
+          <div className="mt-8 flex justify-between">
             <Button
               type="button"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-              onClick={handleNext}
+              variant="outline"
+              onClick={handlePrevious}
+              disabled={currentQuestion === 0}
             >
-              Next
-              <ArrowRight className="ml-2 h-4 w-4" />
+              Previous
             </Button>
-          )}
-        </div>
-      </Card>
-    </form>
+            {currentQuestion === questionGroups.length - 1 ? (
+              <Button
+                type="submit"
+                className="bg-red-700 hover:bg-red-700 text-white"
+                onClick={() => setSuccessOpen(true)}
+              >
+                Submit
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                className="bg-red-700 hover:bg-red-700 text-white"
+                onClick={handleNext}
+              >
+                Next
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </Card>
+      </form>
+    </div>
   );
 
   const renderSubmittedData = () => {
-    if (!studentData) return null;
-
     return (
-      <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
-        <h3 className="text-lg font-medium text-green-800 mb-2">
-          Form Submitted Successfully!
-        </h3>
+      <div>
+        {/* ShadCN Dialog for Success Message */}
+        <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
+          <DialogContent className="flex flex-col justify-center items-center max-w-72 md:max-w-96 !rounded-3xl">
+            <Image
+              src="/DashboardPage/success.svg"
+              alt="Success"
+              width={150}
+              height={150}
+            />
+            <DialogHeader>
+              <DialogTitle className="text-lg font-semibold text-gray-900">
+                Form Submitted Successfully!
+              </DialogTitle>
+            </DialogHeader>
+          
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
 
   return (
-    <div className="w-full max-w-[525px] mx-auto">
-      {showWelcome ? (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="text-center p-8 bg-white rounded-lg shadow-lg"
-        >
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Let Zeus Get to know you!
-          </h1>
-          <p className="text-gray-600">
-            Just a few questions to better understand your background and
-            preferences.
-          </p>
-        </motion.div>
-      ) : (
-        renderFormContent()
-      )}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
+      <div className="w-full max-w-3xl mx-auto">
+        {showWelcome ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="text-center p-10 bg-white rounded-2xl shadow-2xl border border-gray-200"
+          >
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Let Zeus Get to know you!
+            </h1>
+            <p className="text-gray-600">
+              Just a few questions to better understand your background and
+              preferences.
+            </p>
+          </motion.div>
+        ) : (
+          renderFormContent()
+        )}
 
-      {studentData && renderSubmittedData()}
+        {studentData && renderSubmittedData()}
+      </div>
     </div>
   );
 };
