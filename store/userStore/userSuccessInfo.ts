@@ -11,9 +11,6 @@ type StudyPreferenced = {
     degree: string;
     subject: string;
 };
-
-
-
 type SuccessData = {
     studyLevel: string;
     gradetype: string;
@@ -27,7 +24,6 @@ type SuccessData = {
     workExperience: string;
     studyPreferenced: StudyPreferenced;
 };
-
 type Store = {
     userSuccessInfo: SuccessData | null;
     loading: boolean;
@@ -48,6 +44,7 @@ export const useUserInfo = create<Store>((set, get) => ({
 
     fetchUserSuccessInfo: async () => {
         const token = getAuthToken();
+
         if (!token) {
             set({
                 isLoggedIn: false,
@@ -66,15 +63,15 @@ export const useUserInfo = create<Store>((set, get) => ({
         set({ loading: true, error: null, isLoggedIn: true });
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/get`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}success-chance`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             const result = await res.json();
+            console.log(result, "result from success chance api");
 
-            if (result.success && result.userSuccessData) {
+            if (result.success && result.data) {
                 set({
-                    userSuccessInfo: result.userSuccessData,
+                    userSuccessInfo: result.data,
                     hasData: true,
                     error: null,
                 });

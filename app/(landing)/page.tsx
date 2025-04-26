@@ -38,22 +38,15 @@ function Page() {
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
-    {
-      name: "New Zealand",
-      value: "New Zealand",
-      img: "/countryarchive/nz_logo.png",
-    },
-    {
-      name: "Australia",
-      value: "australia",
-      img: "/countryarchive/australia_logo.png",
-    },
+    { name: "New Zealand", value: "New Zealand", img: "/countryarchive/nz_logo.png" },
+    { name: "Australia", value: "australia", img: "/countryarchive/australia_logo.png" },
+    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
+    { name: "Ireland", value: "Ireland", img: "/countryarchive/ireland_logo.png" },
+    { name: "Malayshia", value: "malayshia", img: "/countryarchive/malayshia_logo.png" },
   ];
   const router = useRouter();
+  const { isAuthenticate, loading, logout, user } = useUserStore();
 
-  useEffect(() => {
-    fetchUser(); // Fetch user on mount
-  }, []);
   const [input, setInput] = useState("");
 
   const {
@@ -63,7 +56,7 @@ function Page() {
     setCountry,
     loading: uniLoading,
   } = useUniversityStore();
-  const { isAuthenticate, loading, logout, user, fetchUser } = useUserStore();
+
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
   }, [fetchUniversities]);

@@ -37,7 +37,7 @@ const Navbar = () => {
                 alt="logo"
                 width={150}
                 height={60}
-                // className="2xl:w-[150px] 2xl:h-[60px]"
+              // className="2xl:w-[150px] 2xl:h-[60px]"
               />
             </Link>
             {/* Navigation Menu */}
@@ -108,7 +108,7 @@ const Navbar = () => {
                     >
                       <div className="px-4 py-3">
                         <span className="block text-sm text-gray-900 dark:text-white">
-                          {user?.personalInfo.firstName || "Hi"}
+                          {user?.personalInfo?.firstName || "Loading"}
                         </span>
                         <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
                           {user?.personalInfo?.email || "user12gmail.com"}
