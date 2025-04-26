@@ -18,11 +18,10 @@ export const formSchema = z.object({
     required_error: "Please select your gender.",
   }),
 
-  DOB: z
-    .date()
-    .refine((date) => date >= new Date("1900-01-01") && date <= new Date(), {
-      message: "Please enter a valid date of birth.",
-    }),
+  DOB: z.date().optional(),
+
+    
+    
 
   nationality: z
     .string()
@@ -131,9 +130,9 @@ export const formSchema = z.object({
     })
     .or(z.literal("")),
 
-  passportExpiryDate: z
-    .date()
-   .optional(),
+  passportExpiryDate: z.date().optional(),
+   
+    
   oldPassportNumber: z.string().optional(),
   oldPassportExpiryDate: z.date().optional(),
 

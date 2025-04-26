@@ -405,7 +405,7 @@ function Page() {
           <div className="flex justify-between items-center ">
             <h3 className="font-bold">Top Universities!</h3>
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[30%] md:w-[15%] xl:w-[10%] h-10">
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[30%] md:w-[15%] xl:w-[10%] h-10">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
                 <div className="flex justify-between w-full">
                   Filter

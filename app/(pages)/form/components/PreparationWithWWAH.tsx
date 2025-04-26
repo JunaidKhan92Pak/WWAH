@@ -53,7 +53,7 @@ const PreparationWithWWAH = () => {
             {expenseData.map((item, index) => (
               <div
                 key={index}
-                className={`flex flex-col items-center justify-center h-[100px] md:h-[200px] lg:h-[250px] gap-2  rounded-3xl ${item.bgColor}`}
+                className={`flex flex-col items-center justify-center h-[100px] md:h-[200px]  gap-2  rounded-3xl ${item.bgColor}`}
               >
                 {/* Image */}
                 <div className="flex items-center justify-center w-full overflow-hidden">

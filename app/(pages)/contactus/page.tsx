@@ -13,7 +13,7 @@ import {
 export default function ContactUs() {
   const countries = [
     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
-    { code: "+1", flag: "/usa.png", country: "USA" },
+    { code: "+1", flag: "/countryarchive/usa_logo.png", country: "USA" },
     { code: "+91", flag: "/countryarchive/india_logo.png", country: "India" },
     {
       code: "+61",
@@ -35,11 +35,7 @@ export default function ContactUs() {
       flag: "/countryarchive/germany_logo.png",
       country: "Germany",
     },
-    {
-      code: "+60",
-      flag: "/countryarchive/malaysia_logo.png",
-      country: "Malaysia",
-    },
+    { code: "+60", flag: "/countryarchive/my_logo.png", country: "Malaysia" },
     { code: "+33", flag: "/countryarchive/france_logo.png", country: "France" },
     {
       code: "+45",

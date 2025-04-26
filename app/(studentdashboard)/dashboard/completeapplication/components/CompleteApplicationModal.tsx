@@ -15,57 +15,51 @@ interface CompleteApplicationModalProps {
   onCompleteApplication: () => void;
 }
 
-export default function CompleteApplicationModal({ isOpen, onClose, onCompleteApplication }: CompleteApplicationModalProps) {
+export default function CompleteApplicationModal({
+  isOpen,
+  onClose,
+  onCompleteApplication,
+}: CompleteApplicationModalProps) {
   const [isChecked, setIsChecked] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedStatus, setSubmittedStatus] = useState<null | boolean>(null); // null = loading, true/false = actual value
 
-  // Check session storage when component mounts
   useEffect(() => {
-    const hasSubmitted = sessionStorage.getItem("applicationSubmitted");
-    if (hasSubmitted) {
-      setIsSubmitted(true);
-    }
+    const hasSubmitted = sessionStorage.getItem("applicationSubmitted") === "true";
+    setSubmittedStatus(hasSubmitted);
   }, []);
 
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+    setIsChecked((prev) => !prev);
   };
 
   const handleSubmit = () => {
     if (isChecked) {
-      setIsSubmitted(true);
-      sessionStorage.setItem("applicationSubmitted", "true"); // Store submission state in sessionStorage
-      console.log("Form submitted successfully");
+      sessionStorage.setItem("applicationSubmitted", "true");
+      setSubmittedStatus(true);
       onCompleteApplication();
       onClose();
     }
   };
 
-  return (
-    <Dialog 
-      open={isOpen && !isSubmitted} 
-      onOpenChange={() => { 
-        if (isSubmitted) onClose(); 
-      }} 
-    >
-      <DialogContent 
-        className="max-w-[300px] md:max-w-[550px] max-h-[80vh] overflow-y-auto"
+  const shouldRenderModal = submittedStatus === false && isOpen;
+
+  return shouldRenderModal ? (
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="max-w-[300px] md:max-w-[550px] max-h-[80vh] overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        
       >
-        {/* Hide the default close button */}
-        <style>{`
+         <style>{`
           [data-state="open"] button.absolute {
             display: none !important;
           }
-          }
-        `}</style>
-        
+        `}</style> 
+
         <DialogHeader>
           <DialogTitle className="justify-center flex">
             Student Consent & Declaration Form
           </DialogTitle>
         </DialogHeader>
+
         <div className="flex flex-col items-start space-y-2">
           <p className="text-base leading-4 font-medium">
             *Important: Please read this form carefully before proceeding. Your agreement is required to continue with the application process.
@@ -87,23 +81,30 @@ export default function CompleteApplicationModal({ isOpen, onClose, onCompleteAp
             </li>
             <li className="text-sm">I understand that if I decide to withdraw my application after submission, I must inform World Wide Admissions Hub (WWAH) and the institution immediately. Any application fees paid may not be refundable.</li>
           </ul>
+
           <p className="font-semibold text-base">I Agree to the Terms and Conditions.</p>
+
           <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="terms" 
-              className="peer" 
-              checked={isChecked} 
-              onCheckedChange={handleCheckboxChange} 
+            <Checkbox
+              id="terms"
+              className="peer"
+              checked={isChecked}
+              onCheckedChange={handleCheckboxChange}
             />
             <label htmlFor="terms" className="text-sm peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               By ticking this box, I acknowledge that I have read, understood, and accepted the terms and conditions of this consent form.
             </label>
           </div>
         </div>
-        <Button disabled={!isChecked} onClick={handleSubmit} className="w-full bg-[#C7161E] hover:bg-[#C7161E]">
+
+        <Button
+          disabled={!isChecked}
+          onClick={handleSubmit}
+          className="w-full bg-[#C7161E] hover:bg-[#C7161E]"
+        >
           Submit
         </Button>
       </DialogContent>
     </Dialog>
-  );
+  ) : null;
 }

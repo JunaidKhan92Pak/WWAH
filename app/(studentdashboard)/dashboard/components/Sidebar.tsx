@@ -66,24 +66,24 @@ export function Sidebar() {
       await logout(); // Ensure logout is completed
       router.push("/"); // Redirect to home page
     };
-  useEffect(() => {
-    // Auto open modal when navigating to "Complete your application"
-    if (pathname === "/dashboard/completeapplication") {
-      setIsModalOpen(true);
-    } else {
-      setIsModalOpen(false);
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   // Auto open modal when navigating to "Complete your application"
+  //   if (pathname === "/dashboard/completeapplication") {
+  //     setIsModalOpen(true);
+  //   } else {
+  //     setIsModalOpen(false);
+  //   }
+  // }, [pathname]);
   return (
     <div className="flex flex-col ">
       {/* Profile Section */}
       <Card className="p-2 m-2 flex flex-col items-center text-center bg-white rounded-lg">
-        <Image
-          src="/DashboardPage/group.svg"
-          alt="Profile"
-          width={64}
-          height={64}
-          className="w-16 h-16 rounded-full mb-2"
+      <Image
+          src="/icons/userred.svg"
+          alt="user"
+          width={54}
+          height={54}
+          className="w-12 h-12 rounded-full mb-2"
         />
         <h2 className="text-sm font-semibold">
           {user?.user?.firstName} {user?.user?.lastName}
