@@ -129,7 +129,7 @@ const Page = () => {
                 <input type="checkbox" className="mr-2" />
                 <span>Remember me</span>
               </div>
-              <Link href="/forget" className="text-red-400">
+              <Link  href="/forget" className="text-red-400">
                 Forget password?
               </Link>
             </div>
@@ -141,7 +141,7 @@ const Page = () => {
             </button>
             <span className="block text-center">
               Don&#39;t have an account?{" "}
-              <Link href="/signup" className="text-[#F0851D]">
+              <Link target="blank" href="/signup" className="text-[#F0851D]">
                 Register
               </Link>
             </span>

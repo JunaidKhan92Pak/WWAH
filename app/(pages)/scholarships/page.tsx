@@ -18,10 +18,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Copy } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Copy } from "lucide-react";
 
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 const Page = () => {
   // List of countries for filters
   const countries = [
@@ -212,7 +212,6 @@ const Page = () => {
       return updatedFavorites;
     });
   };
-
 
   return (
     <>
@@ -571,8 +570,9 @@ const Page = () => {
               <div className="mt-4 md:mt-0">
                 <button
                   onClick={() => setShowFavorites((prev) => !prev)}
-                  className={`text-sm flex items-center justify-center  gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4  whitespace-nowrap h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-                    }`}
+                  className={`text-sm flex items-center justify-center  gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4  whitespace-nowrap h-10 ${
+                    showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+                  }`}
                 >
                   <Image
                     src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -584,7 +584,6 @@ const Page = () => {
                   <span>({favoritesCount})</span>
                 </button>
               </div>
-
             </div>
             {loading ? (
               <SkeletonCard arr={8} />
@@ -637,25 +636,38 @@ const Page = () => {
                             <Dialog>
                               <DialogTrigger asChild>
                                 <button>
-                                  <Image src="/share.svg" width={20} height={20} alt="Share" />
+                                  <Image
+                                    src="/share.svg"
+                                    width={20}
+                                    height={20}
+                                    alt="Share"
+                                  />
                                 </button>
                               </DialogTrigger>
                               <DialogContent className="sm:max-w-md">
                                 <DialogHeader>
                                   <DialogTitle>Share link</DialogTitle>
                                   <DialogDescription>
-                                    Anyone who has this link will be able to view this.
+                                    Anyone who has this link will be able to
+                                    view this.
                                   </DialogDescription>
                                 </DialogHeader>
 
                                 <div className="flex items-center space-x-2">
                                   <div className="grid flex-1 gap-2">
-                                    <Label htmlFor={`link-${item._id}`} className="sr-only">
+                                    <Label
+                                      htmlFor={`link-${item._id}`}
+                                      className="sr-only"
+                                    >
                                       Link
                                     </Label>
                                     <Input
                                       id={`link-${item._id}`}
-                                      value={`${typeof window !== "undefined" ? window.location.origin : ""}/scholarships/${item._id}`}
+                                      value={`${
+                                        typeof window !== "undefined"
+                                          ? window.location.origin
+                                          : ""
+                                      }/scholarships/${item._id}`}
                                       readOnly
                                     />
                                   </div>
@@ -665,10 +677,15 @@ const Page = () => {
                                     className="px-3"
                                     onClick={() => {
                                       const link = `${window.location.origin}/scholarships/${item._id}`;
-                                      navigator.clipboard.writeText(link).then(() => {
-                                        setCopiedLinkId(item._id);
-                                        setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
-                                      });
+                                      navigator.clipboard
+                                        .writeText(link)
+                                        .then(() => {
+                                          setCopiedLinkId(item._id);
+                                          setTimeout(
+                                            () => setCopiedLinkId(null),
+                                            2000
+                                          ); // auto-hide after 2s
+                                        });
                                     }}
                                   >
                                     <span className="sr-only">Copy</span>
@@ -678,7 +695,9 @@ const Page = () => {
 
                                 {/* 👇 Show message conditionally */}
                                 {copiedLinkId === item._id && (
-                                  <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
+                                  <p className="text-black text-sm mt-2">
+                                    Link copied to clipboard!
+                                  </p>
                                 )}
 
                                 <DialogFooter className="sm:justify-start">
@@ -693,7 +712,9 @@ const Page = () => {
 
                             <button
                               onClick={() => toggleFavorite(item._id)}
-                              className={`relative ${heartAnimation === item._id ? 'animate-pop' : ''}`}
+                              className={`relative ${
+                                heartAnimation === item._id ? "animate-pop" : ""
+                              }`}
                             >
                               {favorites[item._id] ? (
                                 <Image
@@ -781,14 +802,16 @@ const Page = () => {
                         {/* Buttons Section */}
                         <div className="flex gap-2 w-full">
                           <Link
+                            target="blank"
                             href={`/scholarships/${item._id}`}
-                            target="_blank"
+                            
                             rel="noopener noreferrer"
                             className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
                           >
                             View Details
                           </Link>
                           <Link
+                            target="blank"
                             href="/dashboard"
                             className="flex-1 flex items-center justify-center border border-[#F0851D] text-[#F0851D] text-xs md:text-[13px] px-1 py-2 rounded-lg hover:bg-red-500 hover:text-white text-center"
                           >

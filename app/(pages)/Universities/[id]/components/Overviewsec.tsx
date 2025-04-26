@@ -10,8 +10,9 @@ const ReadMore: React.FC<ReadMoreProps> = ({ children }) => {
   return (
     <div>
       <div
-        className={`text-[#9D9D9D] leading-relaxed ${isExpanded ? "line-clamp-none" : "line-clamp-3"
-          }`}
+        className={`text-[#9D9D9D] leading-relaxed ${
+          isExpanded ? "line-clamp-none" : "line-clamp-3"
+        }`}
       >
         {children}
       </div>
@@ -76,8 +77,9 @@ const Overviewsection: React.FC<OverviewSectionProps> = ({
                           Get a glimpse of your future at {name}!
                         </p>
                         <Link
+                          target="blank"
                           href={univideo}
-                          target="_blank"
+                         
                           rel="noopener noreferrer"
                         >
                           <button className="bg-white text-[#C7161E] px-3 md:px-5 py-1.5 rounded-md hover:bg-gray-300 transition">

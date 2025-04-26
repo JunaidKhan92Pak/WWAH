@@ -104,7 +104,9 @@ const Page = () => {
                 type="submit"
                 className="w-full bg-red-600 hover:bg-red-500 text-white py-6 rounded-lg text-base"
               >
-                <Link href="/adminportal/verifyotp">Send OTP</Link>
+                <Link  href="/adminportal/verifyotp">
+                  Send OTP
+                </Link>
               </Button>
             </form>
           </Form>

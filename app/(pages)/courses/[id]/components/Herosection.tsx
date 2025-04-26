@@ -45,7 +45,7 @@ const Herosection = ({
   uniData,
 }: {
   data: CourseData;
-  uniData: { banner: string, logo: string };
+  uniData: { banner: string; logo: string };
 }) => {
   const arr1 = [
     {
@@ -100,7 +100,7 @@ const Herosection = ({
             }}
           >
             {/* Black overlay */}
-            <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-100"></div>
             <div className="flex flex-wrap md:gap-6 gap-2 items-center justify-around py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto ">
               {/* Left Section */}
               <div className=" w-[100%]  md:w-[50%]  flex flex-col  md:items-start md:text-left space-y-2 pl-0 lg:pl-12">
@@ -135,6 +135,7 @@ const Herosection = ({
               </div>
               <div className=" w-[80%]  md:w-[30%]  lg-w-[25%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl py-4 md:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0">
                 <Link
+                  target="blank"
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"
                 >
@@ -148,8 +149,8 @@ const Herosection = ({
                   <p className="mx-4 text-white">Or</p>
                   <div className="flex-1 border-t border-gray-100"></div>
                 </div>
-                {/* <Link href="/contactus"> */}
-                <Link href="/dashboard">
+                {/* <Link target="blank" href="/contactus"> */}
+                <Link target="blank" href="/dashboard">
                   <Button className="w-full px-[12vw] md:px-[5vw] md:py-3  bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
                     Apply Now
                   </Button>

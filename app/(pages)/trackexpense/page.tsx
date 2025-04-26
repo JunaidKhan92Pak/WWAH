@@ -132,6 +132,11 @@ const Page = () => {
   }, []);
 
   const [showData, setShowData] = useState(false);
+  const [activeOption, setActiveOption] = useState<string | null>(null);
+
+  const toggleOption = (option: string) => {
+    setActiveOption((prev) => (prev === option ? null : option));
+  };
 
   return (
     <>
@@ -318,7 +323,7 @@ const Page = () => {
                   <h5 className="text-gray-800 mb-2 mt-4">
                     Accommodation Type
                   </h5>
-                  <div className="grid grid-cols-2 gap-6">
+                  {/* <div className="grid grid-cols-2 gap-6">
                     <button className="flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg hover:bg-gray-100">
                       <GoShareAndroid className="w-8 h-8 mb-2" />
                       <div className="flex flex-col items-center">
@@ -329,6 +334,37 @@ const Page = () => {
                       </div>
                     </button>
                     <button className="flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg hover:bg-gray-100">
+                      <PiPersonSimpleCircleLight className="w-8 h-8 mb-2" />
+                      <div className="flex flex-col items-center">
+                        <p className="text-gray-700 font-normal">Single</p>
+                        <p className="text-gray-700 font-normal">
+                          Accommodation
+                        </p>
+                      </div>
+                    </button>
+                  </div> */}
+                  <div className="grid grid-cols-2 gap-6">
+                    <button
+                      onClick={() => toggleOption("shared")}
+                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${
+                        activeOption === "shared" ? "bg-gray-100" : ""
+                      }`}
+                    >
+                      <GoShareAndroid className="w-8 h-8 mb-2" />
+                      <div className="flex flex-col items-center">
+                        <p className="text-gray-700 font-normal">Shared</p>
+                        <p className="text-gray-700 font-normal">
+                          Accommodation
+                        </p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => toggleOption("single")}
+                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${
+                        activeOption === "single" ? "bg-gray-100" : ""
+                      }`}
+                    >
                       <PiPersonSimpleCircleLight className="w-8 h-8 mb-2" />
                       <div className="flex flex-col items-center">
                         <p className="text-gray-700 font-normal">Single</p>

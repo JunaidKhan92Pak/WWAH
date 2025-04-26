@@ -44,7 +44,7 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
           </div>
 
           {/* Image Section */}
-          <div className="hidden items-center justify-center rounded-3xl shadow-lg h-full lg:block">
+          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 p-4">
             {selectedDoc ? (
               <div>
                 <h3 className="text-lg font-semibold">

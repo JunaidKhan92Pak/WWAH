@@ -33,7 +33,10 @@ export const RightSection = ({ data }: { data: DataType }) => {
         </div>
         <p>
           Choose the program and University you are interested in.{" "}
-          <Link href="#" className="text-[#F0851D] underline font-bold">
+          <Link
+            href="#"
+            className="text-[#F0851D] underline font-bold"
+          >
             Find out
           </Link>{" "}
           the Programs of your choice.
@@ -66,12 +69,20 @@ export const RightSection = ({ data }: { data: DataType }) => {
         </div>
         <p>
           Click on{" "}
-          <Link href="#" className="text-[#C7161E] underline font-bold">
+          <Link
+            target="blank"
+            href="#"
+            className="text-[#C7161E] underline font-bold"
+          >
             Apply Now{" "}
           </Link>
           after creating your personalized profile through registered account.
           You can monitor your applications and receive regular updates.{" "}
-          <Link href="#" className="text-[#F0851D] underline font-bold">
+          <Link
+            target="blank"
+            href="#"
+            className="text-[#F0851D] underline font-bold"
+          >
             Register here.
           </Link>
         </p>
@@ -216,7 +227,11 @@ export const RightSection = ({ data }: { data: DataType }) => {
           <div>
             <p className="font-semibold ">
               If you need any help with your embassy process, Contact with{" "}
-              <Link href="#" className="text-[#F0851D]  underline font-bold">
+              <Link
+                target="blank"
+                href="#"
+                className="text-[#F0851D]  underline font-bold"
+              >
                 WWAH advisor
               </Link>{" "}
               and get a quick reply!
@@ -314,7 +329,11 @@ export const RightSection = ({ data }: { data: DataType }) => {
         <div className="flex md:flex-row flex-col bg-[#F1F1F1] p-4 rounded-2xl w-full justify-center my-4 gap-2">
           <div className="">
             <p className="font-semibold ">
-              <Link href="#" className="text-[#C7161E] underline font-bold">
+              <Link
+                target="blank"
+                href="#"
+                className="text-[#C7161E] underline font-bold"
+              >
                 Reach out to your WWAH Advisor
               </Link>{" "}
               to organize your travel arrangements.

@@ -20,12 +20,12 @@ const Herosection = () => {
             Book IELTS | PTE | TOEFL classes with WWAH
           </p>
           <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center md:justify-start items-start md:items-start">
-            <Link href="#book-demo">
+            <Link  href="#book-demo">
               <Button className="bg-[#C7161E] rounded-lg text-white hover:bg-red-500 transition px-4 py-2 w-40 md:w-auto md:px-12 md:py-6">
                 Register Now
               </Button>
             </Link>
-            <Link href="#book-demo">
+            <Link  href="#book-demo">
               <Button className="bg-white bg-opacity-20 text-white rounded-lg hover:bg-gray-200 hover:text-black transition px-8 py-2 w-40 md:w-auto md:px-12 md:py-6  border border-transparent">
                 Book a Free Demo
               </Button>

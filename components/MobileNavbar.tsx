@@ -129,7 +129,11 @@ const MobileNavbar = () => {
                 )}
               </div>
             ) : (
-              <Link href="/signin" onClick={() => setIsOpen(false)}>
+              <Link
+                target="blank"
+                href="/signin"
+                onClick={() => setIsOpen(false)}
+              >
                 <Button className="text-sm w-20 sm:w-24  h-8 sm:h-10 bg-red-700 text-white">
                   Login
                 </Button>
@@ -174,6 +178,7 @@ const MobileNavbar = () => {
                     },
                   ].map(({ href, label, icon: Icon }) => (
                     <Link
+                      target="blank"
                       key={href}
                       href={href}
                       onClick={() => setIsOpen(false)}
@@ -186,6 +191,7 @@ const MobileNavbar = () => {
 
                   {/* Counseling session box with arrow */}
                   <Link
+                    target="blank"
                     href="/schedulesession"
                     onClick={() => setIsOpen(false)}
                     className="flex justify-between items-center border rounded-lg px-3 py-2 text-sm bg-gray-100 hover:bg-gray-100"
@@ -211,7 +217,7 @@ const MobileNavbar = () => {
                       icon: PhoneCall,
                     },
                   ].map(({ href, label, icon: Icon }) => (
-                    <Link
+                    <Link target="blank"
                       key={href}
                       href={href}
                       onClick={() => setIsOpen(false)}

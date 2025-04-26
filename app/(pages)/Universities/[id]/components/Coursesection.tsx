@@ -343,7 +343,6 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                 </p>
                 <Link
                   href={"/chatmodel"}
-                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   <button className="bg-white text-[#C7161E] px-4  py-2 sm:py-3 rounded-md hover:bg-gray-300 transition">

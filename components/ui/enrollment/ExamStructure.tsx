@@ -48,7 +48,10 @@ export default function ExamStructure({
               ? textSectionDescription.map((point, index) => (
                   <p key={index}>
                     {point.includes("Click here") ? (
-                      <Link href="/form" className="text-[#F0851D] underline">
+                      <Link
+                        href="/form"
+                        className="text-[#F0851D] underline"
+                      >
                         {point}
                       </Link>
                     ) : (
@@ -59,7 +62,11 @@ export default function ExamStructure({
               : textSectionDescription.slice(0, 3).map((point, index) => (
                   <p key={index}>
                     {point.includes("Click here") ? (
-                      <Link href="/form" className="text-[#F0851D] underline">
+                      <Link
+                        target="blank"
+                        href="/form"
+                        className="text-[#F0851D] underline"
+                      >
                         {point}
                       </Link>
                     ) : (
@@ -90,7 +97,7 @@ export default function ExamStructure({
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-6">
             {sections.map((section, index) => {
-              const IconComponent = icons[section.icon] || PenTool; 
+              const IconComponent = icons[section.icon] || PenTool;
               return (
                 <div className="text-center" key={index}>
                   <div className="bg-[#F4D0D2] p-4 rounded-lg shadow-md inline-block">

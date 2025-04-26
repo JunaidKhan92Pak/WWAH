@@ -22,8 +22,8 @@ const Page = () => {
 
   const filteredCountries = search
     ? countries.filter((country) =>
-      country.short_name.toLowerCase().includes(search.toLowerCase())
-    )
+        country.short_name.toLowerCase().includes(search.toLowerCase())
+      )
     : countries;
 
   return (
@@ -33,12 +33,7 @@ const Page = () => {
           Explore the Most Viewed Study Destinations!
         </h3>
         <div className="mt-4 md:mt-0 flex items-center bg-gray-100 rounded-lg px-3">
-          <Image
-            src="/search.svg"
-            width={16}
-            height={16}
-            alt="search"
-          />
+          <Image src="/search.svg" width={16} height={16} alt="search" />
           <Input
             placeholder="Search..."
             onChange={handleFilter}
@@ -59,9 +54,10 @@ const Page = () => {
         ) : (
           filteredCountries.map((country) => (
             <Link
+              target="blank"
               key={country._id}
               href={`/countries/${country._id}`}
-              target="_blank"
+
               className="cursor-pointer"
             >
               <div className="overflow-hidden rounded-xl relative min-h-[255px] md:min-h-[250px]">

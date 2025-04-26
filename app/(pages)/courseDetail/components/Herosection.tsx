@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+// import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -74,24 +74,10 @@ const Herosection = () => {
                   <p className="ml-2 text-base">Dubai, Ireland</p>
                 </div>
               </div>
-              {/* Right Section */}
-              {/* <div className="w-full sm:w-[90%] md:w-full lg:w-[60%] xl:w-[60%] 2xl:w-[60%] bg-white bg-opacity-30 shadow-xl backdrop-blur-sm rounded-3xl p-4 flex flex-col items-center text-center">
-                <p className="text-white w-4/5">
-                  Book Your Online Video Counselling Session with WWAH Advisor!
-                </p>
-                <div className="flex items-center w-[50%] my-2 sm:my-4">
-                  <div className="flex-1 border-t border-gray-100"></div>
-                  <p className="mx-4 text-white">Or</p>
-                  <div className="flex-1 border-t border-gray-100"></div>
-                </div>
-                <Link href="/contactus">
-                <Button className="w-full px-[7vw] py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg shadow-xl hover:bg-gray-300 transition duration-300 ">
-                  Apply Now
-                </Button>
-              </Link>
-              </div> */}
+             
               <div className="w-[90%] md:w-full lg:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm  rounded-3xl py-2  md:p-4 2xl:p-12 flex flex-col items-center text-center">
                 <Link
+                  target="blank"
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"
                 >
@@ -105,7 +91,7 @@ const Herosection = () => {
                   <p className="mx-4 text-white">Or</p>
                   <div className="flex-1 border-t border-gray-100"></div>
                 </div>
-                <Link href="/dashboard">
+                <Link target="blank" href="/dashboard">
                   <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
                     Apply Now
                   </Button>
@@ -114,27 +100,7 @@ const Herosection = () => {
             </div>
           </div>
         </div>
-        {/* Icon Grid Section */}
-        {/* <div className="relative mt-0 lg:-mt-10 flex justify-center">
-          <div className="flex lg:grid lg:grid-cols-7 bg-white text-black py-8 px-4 rounded-2xl shadow-lg mx-auto w-[70%] overflow-x-auto whitespace-nowrap lg:whitespace-normal lg:overflow-visible ">
-            {arr1.map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center text-center space-y-2"
-              >
-                <Image
-                  src={item.Image}
-                  alt={item.Heading}
-                  width={40}
-                  height={40}
-                  className="w-16 h-16"
-                />
-                <p className="font-semibold text-sm ">{item.Heading}</p>
-                <p className="text-xs">{item.Name}</p>
-              </div>
-            ))}
-          </div>
-        </div> */}
+       
         <div className="relative mt-2 lg:-mt-10 flex justify-center">
           <div
             className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4  rounded-2xl shadow-lg mx-auto w-[90%] lg:w-[70%] lg:grid lg:grid-cols-7"

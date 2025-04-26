@@ -121,7 +121,7 @@
 //         {/* Header */}
 //         <header className="fixed top-0 w-full bg-white border-b z-10">
 //           <div className="w-[90%] mx-auto sm:px-4 py-2 flex items-center">
-//             <Link href="/">
+//             <Link target="blank" href="/">
 //               <div className="flex items-center gap-4">
 //                 <Image
 //                   src="/icons/zeusrobo.svg"
@@ -140,7 +140,7 @@
 //                   <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
 //                 </>
 //               ) : (
-//                 <Link href="/signin">
+//                 <Link target="blank" href="/signin">
 //                   {" "}
 //                   <Button className=" text-white border-[#F0851D] rounded-xl bg-red-700">
 //                     Log In
@@ -215,17 +215,17 @@
 //             </form>
 //             {/* Buttons */}
 //             <div className="flex flex-row justify-center overflow-x-auto hide-scrollbar gap-3 mt-2">
-//               <Link href="/Universities">
+//               <Link target="blank" href="/Universities">
 //                 <Button className="bg-[#FED7B1] text-sm md:text-md text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
 //                   Explore Top Universities
 //                 </Button>
 //               </Link>
-//               <Link href="/countries">
+//               <Link target="blank" href="/countries">
 //                 <Button className="bg-[#FED7B1] text-sm md:text-md text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
 //                   Explore Study Destinations
 //                 </Button>
 //               </Link>
-//               <Link href="/scholarships">
+//               <Link target="blank" href="/scholarships">
 //                 <Button className="bg-[#FED7B1] text-sm md:text-md text-[#C7161E] hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
 //                   Explore Latest Scholarships
 //                 </Button>
@@ -382,7 +382,7 @@ export default function Home() {
         {/* Header */}
         <header className="fixed top-0 w-full bg-white border-b z-10">
           <div className="w-[90%] mx-auto sm:px-4 py-2 flex items-center">
-            <Link href="/">
+            <Link target="blank" href="/">
               <div className="flex items-center gap-4">
                 <Image
                   src="/icons/zeusrobo.svg"
@@ -390,7 +390,21 @@ export default function Home() {
                   width={40}
                   height={20}
                 />
-                <h4>Zeus by WWAH</h4>
+                <div className="flex gap-2 items-center">
+                  <h4>Zeus by </h4>
+                  <Link
+                    target="blank"
+                    href="/"
+                    className="flex items-center space-x-2"
+                  >
+                    <Image
+                      src="/logofooter.svg"
+                      alt="WWAH Logo"
+                      width={130}
+                      height={70}
+                    />
+                  </Link>
+                </div>
               </div>
             </Link>
             <div className="ml-auto flex gap-2 items-center">
@@ -401,7 +415,7 @@ export default function Home() {
                   <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
                 </>
               ) : (
-                <Link href="/signin">
+                <Link target="blank" href="/signin">
                   {" "}
                   <Button className=" text-white border-[#F0851D] rounded-xl bg-red-700">
                     Log In
@@ -487,17 +501,17 @@ export default function Home() {
             </form>
             {/* Buttons */}
             <div className="flex flex-row justify-center overflow-x-auto hide-scrollbar gap-3 mt-2">
-              <Link href="/Universities">
+              <Link target="blank" href="/Universities">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Top Universities
                 </Button>
               </Link>
-              <Link href="/countries">
+              <Link target="blank" href="/countries">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Study Destinations
                 </Button>
               </Link>
-              <Link href="/scholarships">
+              <Link target="blank" href="/scholarships">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Latest Scholarships
                 </Button>
