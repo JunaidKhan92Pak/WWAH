@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useRouter } from "next/navigation"; // for Next.js 13+ App Router
+import { getAuthToken } from "@/utils/authHelper";
 
 const nationalities = getNames();
 const currencyOptions = currency.data.map(
@@ -233,7 +234,7 @@ const SuccessChances = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [successOpen, router]);
+  }, [successOpen]);
 
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -334,18 +335,20 @@ const SuccessChances = () => {
 
     try {
       console.log("Attempting to submit data to backend...");
+      const token = getAuthToken();
       const resp = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API || "/api/"}success-chance/add`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/add`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           credentials: "include",
           body: JSON.stringify(compiledStudentData),
         }
       );
-
+      console.log(resp)
       if (!resp.ok) {
         console.error("Error submitting data:", resp.statusText);
         return;
@@ -470,9 +473,8 @@ const SuccessChances = () => {
             <Input
               type="text"
               placeholder="Enter your grade/CGPA"
-              className={` w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500w-full mt-2 ${
-                isValid ? "" : "border-red-500"
-              }`}
+              className={` w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500w-full mt-2 ${isValid ? "" : "border-red-500"
+                }`}
               value={gradeData.score}
               onChange={(e) => handleGradeScoreChange(e.target.value)}
             />
@@ -566,8 +568,8 @@ const SuccessChances = () => {
                           value={
                             answers[q.id]
                               ? new Date(answers[q.id] as string)
-                                  .toISOString()
-                                  .split("T")[0]
+                                .toISOString()
+                                .split("T")[0]
                               : ""
                           }
                           onChange={(e) => handleAnswer(e.target.value, q.id)}
@@ -591,18 +593,18 @@ const SuccessChances = () => {
                         {(answers[q.id] as string)?.startsWith(
                           "Any Other (Specify)"
                         ) && (
-                          <Input
-                            type="text"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
-                            placeholder="Please specify"
-                            onChange={(e) =>
-                              handleAnswer(
-                                `Any Other (Specify) - ${e.target.value}`,
-                                q.id
-                              )
-                            }
-                          />
-                        )}
+                            <Input
+                              type="text"
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+                              placeholder="Please specify"
+                              onChange={(e) =>
+                                handleAnswer(
+                                  `Any Other (Specify) - ${e.target.value}`,
+                                  q.id
+                                )
+                              }
+                            />
+                          )}
                       </>
                     )}
                     {q.type === "grades" && renderGradesInput()}
