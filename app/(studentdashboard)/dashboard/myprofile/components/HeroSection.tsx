@@ -25,7 +25,7 @@ const HeroSection = ({ user }: HeroSectionProps) => {
     "/DashboardPage/profileflow.svg"
   );
   const [profilePic, setProfilePic] = useState<string>(
-    "/DashboardPage/group.svg"
+    "/DashboardPage/image.jpg"
   );
   // const [profile] = useState({
   //   name: "Asma Kazmi",

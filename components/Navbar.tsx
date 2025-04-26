@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
+import { usePathname, useRouter } from "next/navigation";
 
 
 const Navbar = () => {
@@ -19,6 +20,12 @@ const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
+  };
+  const router = useRouter();
+  const pathname = usePathname(); // current page path
+
+  const handleLoginClick = () => {
+    router.push(`/signin?callbackUrl=${encodeURIComponent(pathname)}`);
   };
 
   if (loading) return <Loading />;
@@ -147,15 +154,17 @@ const Navbar = () => {
               ) : (
                 // Login/Signup Buttons for Guests
                 <>
-                  <Link href="/signin">
+                  {/* <Link href="/signin"> */}
                     <Button
                       className="bg-[#C7161E] text-white text-base"
                       variant="outline"
                       size="lg"
+                      onClick={handleLoginClick}
+
                     >
                       Login
                     </Button>
-                  </Link>
+                  {/* </Link> */}
                 </>
               )}
             </div>

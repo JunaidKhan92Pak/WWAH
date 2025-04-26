@@ -43,7 +43,7 @@ useEffect(() => {
       nationality: "",
       occupation: "",
       email: "",
-      countryCode: "+92",
+      countryCode: "",
       phoneNo: "",
     });
   }
@@ -103,37 +103,44 @@ useEffect(() => {
                 </FormItem>
               )}
             />
+<FormField
+  control={form.control}
+  name={`familyMembers.${index}.nationality`}
+  render={({ field }) => {
+    const selected = countries.find(
+      (c) => `${c.code}-${c.name}` === field.value
+    );
+    return (
+      <FormItem>
+        <FormLabel>Nationality</FormLabel>
+        <Select
+          value={field.value ?? ""}
+          onValueChange={field.onChange}
+        >
+          <FormControl>
+            <SelectTrigger className="bg-[#f1f1f1]">
+              <SelectValue placeholder="Select Nationality">
+                {selected ? selected.name : "Select Nationality"}
+              </SelectValue>
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            {countries.map((country) => {
+              const fullValue = `${country.code}-${country.name}`;
+              return (
+                <SelectItem key={fullValue} value={fullValue}>
+                  {country.name}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+        <FormMessage />
+      </FormItem>
+    );
+  }}
+/>
 
-            {/* Nationality */}
-            <FormField
-              control={form.control}
-              name={`familyMembers.${index}.nationality`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nationality</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className="bg-[#f1f1f1]">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Nationality" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={country.code} value={country.code}>
-                          <span className="flex items-center gap-2">
-                            {country.name}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {/* Occupation */}
             <FormField
@@ -165,77 +172,78 @@ useEffect(() => {
               )}
             />
 
-            {/* Phone Number */}
-            <FormField
-              control={form.control}
-              name={`familyMembers.${index}.phoneNo`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone No.</FormLabel>
-                  <div className="flex gap-2">
-                    <FormField
-                      control={form.control}
-                      name={`familyMembers.${index}.countryCode`}
-                      render={({ field: countryCodeField }) => (
-                        <Select
-                          value={countryCodeField.value || "+92"}
-                          onValueChange={countryCodeField.onChange}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
-                              <SelectValue>
-                                <div className="flex items-center gap-2">
-                                  <Image
-                                    src={
-                                      countries.find(
-                                        (c) =>
-                                          c.code ===
-                                          (countryCodeField.value || "+92")
-                                      )?.flag || "/default-flag.png"
-                                    }
-                                    alt="Country Flag"
-                                    width={20}
-                                    height={20}
-                                  />
-                                  <span className="text-sm">
-                                    {countryCodeField.value || "+92"}
-                                  </span>
-                                </div>
-                              </SelectValue>
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {countries.map((country) => (
-                              <SelectItem
-                                key={country.code}
-                                value={country.code}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <Image
-                                    src={country.flag}
-                                    alt={`${country.name} Flag`}
-                                    width={20}
-                                    height={20}
-                                  />
-                                  <span className="text-sm">{`${country.code} (${country.name})`}</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    <Input
-                      {...field}
-                      value={field.value || ""}
-                      placeholder="Enter your phone number"
-                      className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
-                    />
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+<FormField
+  control={form.control}
+  name={`familyMembers.${index}.phoneNo`}
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Phone No.</FormLabel>
+      <div className="flex gap-2">
+        <FormField
+          control={form.control}
+          name={`familyMembers.${index}.countryCode`}
+          render={({ field: countryCodeField }) => (
+            <Select
+              value={countryCodeField.value || "+92-Pakistan"}
+              onValueChange={countryCodeField.onChange}
+            >
+              <FormControl>
+                <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
+                  <SelectValue>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={
+                          countries.find(
+                            (c) =>
+                              `${c.code}-${c.name}` ===
+                              (countryCodeField.value || "+92-Pakistan")
+                          )?.flag || "/default-flag.png"
+                        }
+                        alt="Country Flag"
+                        width={20}
+                        height={20}
+                      />
+                      <span className="text-sm">
+                        {(countryCodeField.value || "+92-Pakistan").split("-")[0]}
+                      </span>
+                    </div>
+                  </SelectValue>
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {countries.map((country) => {
+                  const fullValue = `${country.code}-${country.name}`;
+                  return (
+                    <SelectItem key={fullValue} value={fullValue}>
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={country.flag}
+                          alt={`${country.name} Flag`}
+                          width={20}
+                          height={20}
+                        />
+                        <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        <Input
+          {...field}
+          value={field.value || ""}
+          placeholder="Enter your phone number"
+          className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
+        />
+      </div>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
           </div>
         </div>
       ))}

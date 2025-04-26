@@ -29,6 +29,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Combobox } from "@/components/ui/combobox";
+import { studyDestinations } from "@/lib/constant";
+import { majorsAndDisciplines } from "@/lib/constant";
+import currency from "currency-codes";
+const currencyOptions = currency.data.map(
+  (c: { code: string; currency: string }) => `${c.code} - ${c.currency}`
+);
 
 // Define validation schema
 const formSchema = z.object({
@@ -64,7 +71,6 @@ interface StudentPreferenceData {
 const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  const [currency, setCurrency] = useState(data?.currency || "");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -74,7 +80,7 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
       degreeLevel: `${data?.degreeLevel}`,
       fieldOfStudy: `${data?.fieldOfStudy}`,
       tuitionBudget: `${data?.tutionfees}`,
-      livingBudget:`${data?.livingcost}`,
+      livingBudget: `${data?.livingcost}`,
       studyMode: `${data?.studyMode}`,
       currency: "USD",
     },
@@ -122,9 +128,15 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
   }
   return (
     <>
-      <div className="flex flex-col items-start space-y-4">
+      <div className="flex flex-col items-start space-y-2">
         <p className="text-gray-600 text-base">Student Preference:</p>
         <div className="flex flex-row items-center gap-x-2">
+           <Image
+                      src="/DashboardPage/Backpack.svg"
+                      alt="Icon"
+                      width={18}
+                      height={18}
+                    />
           <p className="text-sm">
             last updated on{" "}
             {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
@@ -141,7 +153,11 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh] overflow-y-auto ">
+        <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh] overflow-y-auto"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}>
           <DialogHeader>
             <DialogTitle>Edit Student Preference</DialogTitle>
             <p className="text-sm text-gray-500">
@@ -159,7 +175,29 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        What is your preferred country for studying abroad?
+                        Which country are you dreaming of studying in?
+                      </FormLabel>
+                      <FormControl>
+                        <Combobox
+                          options={studyDestinations}
+                          value={field.value} // Ensure this is connected to the form value
+                          onChange={(val) => field.onChange(val)} // Handle the change event to update the form value
+                          placeholder="Select country"
+                          emptyMessage="No countries found"
+                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="degreeLevel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        What level of study are you planning next?
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -167,26 +205,17 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
                       >
                         <FormControl>
                           <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                            <SelectValue placeholder="Select a country" />
+                            <SelectValue placeholder="Select degree level" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="USA">United States</SelectItem>
-                          <SelectItem value="China">China</SelectItem>
-                          <SelectItem value="Australia">Australia</SelectItem>
-                          <SelectItem value="Italy">Italy</SelectItem>
-                          <SelectItem value="Malaysia">Malaysia</SelectItem>
-                          <SelectItem value="Germany">Germany</SelectItem>
-                          <SelectItem value="Canada">Canada</SelectItem>
-                          <SelectItem value="United Kingdom">
-                            United Kingdom
+                          <SelectItem value="bachelor">Bachelor</SelectItem>
+                          <SelectItem value="master">Master</SelectItem>
+                          <SelectItem value="phd">PhD</SelectItem>
+                          <SelectItem value="diploma">Diploma</SelectItem>
+                          <SelectItem value="certificate">
+                            Certificate
                           </SelectItem>
-                          <SelectItem value="Ireland">Ireland</SelectItem>
-                          <SelectItem value="New Zealand">
-                            New Zealand
-                          </SelectItem>
-                          <SelectItem value="Denmark">Denmark</SelectItem>
-                          <SelectItem value="France">France</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -195,7 +224,7 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
                 />
 
                 {/* City Selection */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="city"
                   render={({ field }) => (
@@ -231,43 +260,34 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 {/* Degree Level */}
-                <FormField
-                  control={form.control}
-                  name="degreeLevel"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Which degree level are you interested in?
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                            <SelectValue placeholder="Select degree level" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="foundation">Foundation</SelectItem>
-                          <SelectItem value="bachelor">Bachelor</SelectItem>
-                          <SelectItem value="preMaster">Pre Master</SelectItem>
-                          <SelectItem value="master">Master</SelectItem>
-                          <SelectItem value="phd">PhD</SelectItem>
-                          <SelectItem value="diploma">Diploma</SelectItem>
-                          <SelectItem value="certificate">
-                            Certificate
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
+                {/* Tuition Fee Budget */}
+
+                {/* <div className="flex items-center space-x-2"> */}
+                {/* <Select
+                          // defaultValue="PKR"
+                          // name="currency"
+                          value={currency}
+                          onValueChange={setCurrency}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
+                              <SelectValue placeholder="PKR" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="pkr">PKR</SelectItem>
+                            <SelectItem value="usd">USD</SelectItem>
+                            <SelectItem value="euro">Euro</SelectItem>
+                            <SelectItem value="sar">SAR</SelectItem>
+                          </SelectContent>
+                        </Select> */}
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
                 {/* Field of Study */}
                 <FormField
                   control={form.control}
@@ -275,130 +295,111 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Which field of study would you like to pursue?
+                        What major or discipline are you interested in?
                       </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                            <SelectValue placeholder="Select a field" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Science">Science</SelectItem>
-                          <SelectItem value="Engineering">
-                            Engineering
-                          </SelectItem>
 
-                          <SelectItem value="Business">Business</SelectItem>
+                      <FormControl>
+                        <Combobox
+                          options={majorsAndDisciplines}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          placeholder="Select your major or field"
+                          emptyMessage="No majors found"
+                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                        />
+                      </FormControl>
 
-                          <SelectItem value="Arts & Humanities">
-                            Arts & Humanities
-                          </SelectItem>
-                          <SelectItem value="Medicine">Medicine</SelectItem>
-                          <SelectItem value="Law">Law</SelectItem>
-                          <SelectItem value="Information Technology">
-                            Information Technology
-                          </SelectItem>
-                          <SelectItem value="Social Sciences">
-                            Social Sciences
-                          </SelectItem>
-
-                          <SelectItem value="Education">Education</SelectItem>
-                          <SelectItem value="Environmental Studies">
-                            Environmental Studies
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Tuition Fee Budget */}
+                {/* Currency Field */}
+                <FormField
+                  control={form.control}
+                  name="currency"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        What&apos;s your preferred annual tuition budget?
+                      </FormLabel>
+                      <FormControl>
+                        <Combobox
+                          options={currencyOptions}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Choose currency"
+                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Tuition Budget Field */}
                 <FormField
                   control={form.control}
                   name="tuitionBudget"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Preferred Tuition Fee Budget</FormLabel>
-                      <div className="flex items-center space-x-2">
-                        <Select
-                          // defaultValue="PKR"
-                          // name="currency"
-                          value={currency}
-                          onValueChange={setCurrency}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
-                              <SelectValue placeholder="PKR" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="pkr">PKR</SelectItem>
-                            <SelectItem value="usd">USD</SelectItem>
-                            <SelectItem value="euro">Euro</SelectItem>
-                            <SelectItem value="sar">SAR</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Enter tuition fee"
-                            {...field}
-                            className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          />
-                        </FormControl>
-                      </div>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Enter tuition fee"
+                          {...field}
+                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
 
-                {/* Living Cost Budget */}
-                <FormField
-                  control={form.control}
-                  name="livingBudget"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Preferred Living Cost Budget</FormLabel>
-                      <div className="flex items-center space-x-2">
-                        <Select
-                          // defaultValue="PKR"
-                          // name="currency"
-                          value={currency}
-                          onValueChange={setCurrency}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
-                              <SelectValue placeholder="PKR" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="pkr">PKR</SelectItem>
-                            <SelectItem value="usd">USD</SelectItem>
-                            <SelectItem value="euro">Euro</SelectItem>
-                            <SelectItem value="sar">SAR</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Enter living fee"
-                            {...field}
-                            className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      And your estimated cost of living per year?
+                    </FormLabel>
+                    <FormControl>
+                      <Combobox
+                        options={currencyOptions}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Choose currency"
+                        className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                {/* Study Mode */}
-                <FormField
+              {/* Living Cost Budget */}
+              <FormField
+                control={form.control}
+                name="livingBudget"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter tuition fee"
+                        {...field}
+                        className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Study Mode */}
+              {/* <FormField
                   control={form.control}
                   name="studyMode"
                   render={({ field }) => (
@@ -422,8 +423,7 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-              </div>
+                /> */}
               <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
                 Update My Preferences
               </Button>

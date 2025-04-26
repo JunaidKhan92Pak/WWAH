@@ -12,9 +12,13 @@ import {
 } from "react-icons/io5";
 import { useAuth } from "../auth/authProvider";
 import { useUserStore } from "@/store/userStore";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const { loginAction } = useAuth(); // Get login function from context
   const { setUser, loading } = useUserStore();
   const [userData, setUserData] = useState({
@@ -51,10 +55,11 @@ const Page = () => {
       if (loginRes.success && loginRes.user) {
         setUser(loginRes.user);
         if (loginRes.user) {
-          router.push("/");
+          router.push(callbackUrl);
+
         }
       } else {
-        setGeneralError("Server In Busy, please try again later.");
+        setGeneralError("Invalid credentials");
         setIsDisabled(false); // Re-enable the button so the user can try again
       }
     } catch (err) {

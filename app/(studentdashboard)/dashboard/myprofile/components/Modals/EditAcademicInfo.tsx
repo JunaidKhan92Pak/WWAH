@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -27,31 +27,39 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format } from "date-fns";
+// import { format } from "date-fns";
+import { Combobox } from "@/components/ui/combobox";
+import { majorsAndDisciplines } from './../../../../../../lib/constant';
+import { Input } from "@/components/ui/input";
 
 const formSchema = z
   .object({
     qualification: z.string().min(1, { message: "Qualification is required" }),
     subject: z.string().min(1, { message: "Major Subject is required" }),
-    gradingScale: z.string().min(1, { message: "Grading Scale is required" }),
-    obtainedScore: z
-      .string()
-      .regex(/^\d+%?$/, { message: "Enter a valid percentage (e.g., 65%)" }),
-    startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
-      message: "Invalid start date",
-    }),
-    endDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
-      message: "Invalid end date",
-    }),
-    institution: z.string().min(1, { message: "Institution name is required" }),
-    test: z.string().min(1, { message: "Test selection is required" }),
-    testScore: z
-      .string()
-      .regex(/^\d+%?$/, { message: "Enter a valid percentage (e.g., 65%)" }),
-  })
-  .refine((data) => new Date(data.endDate) > new Date(data.startDate), {
-    message: "End date must be after start date",
-    path: ["endDate"], // Show error on End Date field
+    gradingScale: z.string().min(1, { message: "Major Subject is required" }),
+    fieldofstudy: z.string().min(1, { message: "Field of study is required" }),
+      otherGradingScale: z.string().optional(), // <-- Ensure it's part of the schema
+
+    // obtainedScore: z
+    //   .string()
+    //   .regex(/^\d+%?$/, { message: "Enter a valid percentage (e.g., 65%)" }),
+    // startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    //   message: "Invalid start date",
+    // }),
+    // endDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    //   message: "Invalid end date",
+    // }),
+    // otherGradingScale: z.string().optional(),
+
+    // institution: z.string().min(1, { message: "Institution name is required" }),
+    // test: z.string().min(1, { message: "Test selection is required" }),
+    // testScore: z
+    //   .string()
+    //   .regex(/^\d+%?$/, { message: "Enter a valid percentage (e.g., 65%)" }),
+  // })
+  // .refine((data) => new Date(data.endDate) > new Date(data.startDate), {
+  //   message: "End date must be after start date",
+  //   path: ["endDate"], // Show error on End Date field
   });
 interface AcademicData {
   highestQualification: string;
@@ -65,6 +73,7 @@ interface AcademicData {
   endDate: Date;
   createdAt: Date;
   updatedAt: Date;
+
 }
 
 const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
@@ -77,12 +86,16 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
       qualification: `${data?.highestQualification}`,
       subject: `${data?.majorSubject}`,
       gradingScale: `${data?.previousGradingScale}`,
-      obtainedScore: `${data?.previousGradingScore}`,
-      startDate: `${data?.startDate}`,
-      endDate: `${data?.endDate}`,
-      institution: `${data?.institutionName}`,
-      test: `${data?.standardizedTest}`,
-      testScore: `${data?.standardizedTestScore}`,
+      // obtainedScore: `${data?.previousGradingScore}`,
+      // startDate: `${data?.startDate}`,
+      // endDate: `${data?.endDate}`,
+      // institution: `${data?.institutionName}`,
+      // test: `${data?.standardizedTest}`,
+      // testScore: `${data?.standardizedTestScore}`,
+      // otherGradingScale: "",
+      fieldofstudy: "",
+
+
     },
   });
 
@@ -117,10 +130,13 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
       console.error("Network error:", error);
     }
   }
+
+  const [selectedScale, setSelectedScale] = useState("");
+
   return (
     <>
       {/* Academic Information */}
-      <div className="flex flex-col items-start space-y-4">
+      <div className="flex flex-col items-start space-y-2">
         <p className="text-gray-600 text-base">Academic Information:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
@@ -146,7 +162,7 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
 
       {/* Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh] overflow-y-auto">
+        <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Edit Academic Info</DialogTitle>
             <p className="text-sm text-gray-500">
@@ -156,7 +172,7 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-end">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {/* Qualification */}
                 <FormField
                   control={form.control}
@@ -164,7 +180,7 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        What is your Highest Qualification Obtained?
+                        What is your current level of study?
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -175,17 +191,18 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Matric">
-                            Matric/O Levels/Secondary School Certificates
+                            Matric
                           </SelectItem>
-                          <SelectItem value="Intermediate">
-                            Intermediate/A Levels/High School
+                          <SelectItem value="O Levels">
+                            O Levels
                           </SelectItem>
-                          <SelectItem value="IB Diploma">IB Diploma</SelectItem>
-                          <SelectItem value="GCSE">GCSE</SelectItem>
+                          <SelectItem value="Intermediate">Intermediate</SelectItem>
+                          <SelectItem value="A Levels">A Levels</SelectItem>
                           <SelectItem value="Bachelors">Bachelors</SelectItem>
-                          <SelectItem value="Masters">Master/MPhil</SelectItem>
+                          <SelectItem value="Masters">Master</SelectItem>
+                          <SelectItem value="MPhil">MPhil</SelectItem>
                           <SelectItem value="PhD">PhD</SelectItem>
-                          <SelectItem value="others">Others</SelectItem>
+                          <SelectItem value="Any Other">Any Other (Specify)</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormItem>
@@ -193,7 +210,7 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                 />
 
                 {/* Major Subject */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="subject"
                   render={({ field }) => (
@@ -208,42 +225,31 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                       </FormControl>
                     </FormItem>
                   )}
-                />
+                /> */}
 
-                {/* Grading Scale */}
+                {/* MAjor or Field of Study */}
                 <FormField
                   control={form.control}
-                  name="gradingScale"
+                  name="fieldofstudy"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Which grading scale was used?</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                          <SelectValue placeholder="Select grading scale" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="percentage">
-                            Percentage Grade Scale
-                          </SelectItem>
-                          <SelectItem value="gpa">
-                            Grade Point Average (GPA) Scale
-                          </SelectItem>
-                          <SelectItem value="letter">
-                            Letter Grade Scale (A-F)
-                          </SelectItem>
-                          <SelectItem value="pass/fail">Pass/Fail</SelectItem>
-                          <SelectItem value="others">Others</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
+      <FormLabel>What is your Major or field of study?</FormLabel>
+      <FormControl>
+        <Combobox
+          options={majorsAndDisciplines}
+          value={field.value || ""}
+          onChange={field.onChange}
+          placeholder="Select your major or field"
+          emptyMessage="No majors found"
+          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+        />
+      </FormControl>
+    </FormItem>
                   )}
                 />
 
                 {/* Obtained Score */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="obtainedScore"
                   render={({ field }) => (
@@ -258,16 +264,16 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                       </FormControl>
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 {/* Start Date */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="startDate"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Degree Start Date</FormLabel>
-                      <FormControl>
+                      <FormControl> */}
                         {/* <Popover>
                           <PopoverTrigger asChild>
                             <Button
@@ -297,7 +303,7 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                             />
                           </PopoverContent>
                         </Popover> */}
-                        <Input
+                        {/* <Input
                           type="date"
                           value={
                             field.value ? format(field.value, "yyyy-MM-dd") : ""
@@ -310,16 +316,16 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                       </FormControl>
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 {/* End Date */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="endDate"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Degree End Date</FormLabel>
-                      <FormControl>
+                      <FormControl> */}
                         {/* <Popover>
                           <PopoverTrigger asChild>
                             <Button
@@ -349,7 +355,7 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                             />
                           </PopoverContent>
                         </Popover> */}
-                        <Input
+                        {/* <Input
                           type="date"
                           value={
                             field.value ? format(field.value, "yyyy-MM-dd") : ""
@@ -362,11 +368,11 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                       </FormControl>
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
 
               {/* Institution */}
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="institution"
                 render={({ field }) => (
@@ -381,42 +387,69 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                     </FormControl>
                   </FormItem>
                 )}
-              />
+              /> */}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-end">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-end">
                 {/* Standardized Test */}
-                <FormField
-                  control={form.control}
-                  name="test"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Which Standardized tests have you taken?
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                          <SelectValue placeholder="Select Test" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="SAT">SAT</SelectItem>
-                          <SelectItem value="ACT">ACT</SelectItem>
-                          <SelectItem value="GRE">GRE</SelectItem>
-                          <SelectItem value="GMAT">GMAT</SelectItem>
-                          <SelectItem value="LSAT">LSAT</SelectItem>
-                          <SelectItem value="MCAT">MCAT</SelectItem>
-                          <SelectItem value="GAMSAT">GAMSAT</SelectItem>
-                          <SelectItem value="others">Others</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
+<FormField
+  control={form.control}
+  name="gradingScale"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Obtained Grades/CGPA in your previous study?</FormLabel>
+
+      <Select
+        onValueChange={(value) => {
+          field.onChange(value);
+          setSelectedScale(value); // Save selected value
+        }}
+        value={field.value || ""} // Ensure it defaults to empty string when no value is selected
+      >
+        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm w-full flex justify-between items-center">
+         
+         <SelectValue>
+  {/* Display default text when no value is selected */}
+  {field.value === "" || !field.value
+    ? "Select an option"
+    : field.value === "percentage"
+    ? "Percentage Grade scale"
+    : field.value === "cgpa"
+    ? "Grade Point Average (GPA) Scale"
+    : field.value === "letter"
+    ? "Letter Grade Scale (A-F)"
+    : field.value === "passfail"
+    ? "Pass/Fail"
+    : field.value === "other"
+    ? "Any other (Specify)"
+    : "Select an option"}
+</SelectValue>
+
+        </SelectTrigger>
+
+        <SelectContent>
+          <SelectItem value="percentage">Percentage Grade scale</SelectItem>
+          <SelectItem value="cgpa">Grade Point Average (GPA) Scale</SelectItem>
+          <SelectItem value="letter">Letter Grade Scale (A-F)</SelectItem>
+          <SelectItem value="passfail">Pass/Fail</SelectItem>
+          <SelectItem value="other">Any other (Specify)</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* ✅ Show input for ANY selected option */}
+      {selectedScale && (
+        <Input
+          className="mt-2"
+          placeholder="Enter your grades/CGPA"
+          {...form.register("otherGradingScale")}
+        />
+      )}
+    </FormItem>
+  )}
+/>
+
 
                 {/* Test Score */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="testScore"
                   render={({ field }) => (
@@ -431,11 +464,11 @@ const EditAcademicInfo = ({ data }: { data: AcademicData }) => {
                       </FormControl>
                     </FormItem>
                   )}
-                />
-              </div>
+                /> 
+              </div>  */}
 
               {/* Submit Button */}
-              <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
+              <Button type="submit" className="w-full md:w-[45%] bg-[#C7161E]">
                 Update Academic Information
               </Button>
             </form>

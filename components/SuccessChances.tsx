@@ -43,25 +43,24 @@ type AnswerType = string | Date | boolean | number | null;
 
 interface Grade {
   gradeType: string;
-  score: string;
+  score: number;
 }
 
 interface StudentData {
   nationality: string;
   dateOfBirth: string;
 
-
   studyLevel: string;
   majorSubject: string;
   grade: Grade;
 
   hasExperience: boolean;
-  years?: string;
+  years?: number;
 
   LanguageProficiency: {
     level: string;
     test?: string;
-    score?: string;
+    score?: number;
   };
   StudyPreferenced: {
     country: string;
@@ -70,11 +69,11 @@ interface StudentData {
   };
 
   tuitionfee: {
-    amount: string;
+    amount: number;
     currency: string;
   };
   livingCosts: {
-    amount: string;
+    amount: number;
     currency: string;
   };
 
@@ -230,7 +229,7 @@ const SuccessChances = () => {
       const timer = setTimeout(() => {
         setSuccessOpen(false); // Close the modal
         router.back(); // Go back to the previous page
-      }, 2000); // Close after 2 seconds
+      }, 15000); // Close after 2 seconds
 
       return () => clearTimeout(timer);
     }
@@ -244,7 +243,7 @@ const SuccessChances = () => {
   >({});
   const [gradeData, setGradeData] = useState<Grade>({
     gradeType: "",
-    score: "",
+    score: 0,
   });
 
   const [studentData, setStudentData] = useState<StudentData | null>(null);
@@ -294,7 +293,7 @@ const SuccessChances = () => {
   };
 
   const handleGradeScoreChange = (value: string) => {
-    setGradeData((prev) => ({ ...prev, score: value }));
+    setGradeData((prev) => ({ ...prev, score: Number(value) }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -308,11 +307,11 @@ const SuccessChances = () => {
       majorSubject: (answers[4] as string) || "",
       grade: gradeData,
       hasExperience: (answers[6] as boolean) || false,
-      years: (answers[106] as string) || "",
+      years: (answers[106] as number) || 0,
       LanguageProficiency: {
         level: (answers[7] as string) || "",
         test: (answers[8] as string) || "",
-        score: (answers[9] as string) || "",
+        score: (answers[9] as number) || 0,
       },
       StudyPreferenced: {
         country: (answers[10] as string) || "",
@@ -320,11 +319,11 @@ const SuccessChances = () => {
         subject: (answers[12] as string) || "",
       },
       tuitionfee: {
-        amount: (answers[13] as string) || "0",
+        amount: Number(answers[13]) || 0,
         currency: selectedCurrency[13] || "",
       },
       livingCosts: {
-        amount: (answers[14] as string) || "0",
+        amount: Number(answers[14]) || 0,
         currency: selectedCurrency[14] || "",
       },
       submissionDate: new Date().toISOString(),
@@ -359,7 +358,7 @@ const SuccessChances = () => {
       setCurrentQuestion(0);
       setAnswers({});
       setSelectedCurrency({});
-      setGradeData({ gradeType: "", score: "" });
+      setGradeData({ gradeType: "", score: 0 });
       setShowWelcome(true);
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -427,8 +426,8 @@ const SuccessChances = () => {
           type="number"
           min="0"
           placeholder={q.placeholder}
-          value={(answers[q.id] as string) || ""}
-          onChange={(e) => handleAnswer(e.target.value, q.id)}
+          value={(answers[q.id] as number) || 0}
+          onChange={(e) => handleAnswer(Number(e.target.value), q.id)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
         />
       </div>
@@ -446,7 +445,10 @@ const SuccessChances = () => {
   );
 
   const renderGradesInput = () => {
-    const isValid = isValidGradeInput(gradeData.gradeType, gradeData.score);
+    const isValid = isValidGradeInput(
+      gradeData.gradeType,
+      gradeData.score.toString()
+    );
 
     return (
       <div className="space-y-4">
@@ -557,18 +559,20 @@ const SuccessChances = () => {
                     {q.type === "currency" && renderCurrencyInput(q)}
                     {q.type === "input" && renderInput(q)}
                     {q.type === "date" && (
-                      <Input
-                        type="date"
-                        className="w-full  px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
-                        value={
-                          answers[q.id]
-                            ? new Date(answers[q.id] as string)
-                                .toISOString()
-                                .split("T")[0]
-                            : ""
-                        }
-                        onChange={(e) => handleAnswer(e.target.value, q.id)}
-                      />
+                      <div className="relative w-full">
+                        <input
+                          type="date"
+                          className="w-full px-4 py-2  border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 appearance-none"
+                          value={
+                            answers[q.id]
+                              ? new Date(answers[q.id] as string)
+                                  .toISOString()
+                                  .split("T")[0]
+                              : ""
+                          }
+                          onChange={(e) => handleAnswer(e.target.value, q.id)}
+                        />
+                      </div>
                     )}
                     {q.type === "select" && (
                       <>
@@ -656,7 +660,6 @@ const SuccessChances = () => {
                 Form Submitted Successfully!
               </DialogTitle>
             </DialogHeader>
-          
           </DialogContent>
         </Dialog>
       </div>

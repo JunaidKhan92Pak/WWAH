@@ -31,27 +31,24 @@ import {
 const formSchema = z.object({
   proficiencyLevel: z.enum(
     ["native speaker", "test", "willingToTest", "undefined", ""],
-    {
-      message: "Select a valid proficiency level",
-    }
+    { message: "Select a valid proficiency level" }
   ),
-  testType: z.enum(
-    [
-      "IELTS",
-      "PTE",
-      "TOEFL",
-      "DUOLINGO",
-      "Language Cert",
-      "others",
-      "",
-      "undefined",
-    ],
-    {
-      message: "Select a valid test type",
-    }
-  ),
-  score: z.string().optional().or(z.literal("")), // Allows an empty string
+  testType: z
+    .preprocess((val) => typeof val === "string" ? val.toUpperCase() : val,
+      z.enum([
+        "IELTS",
+        "PTE",
+        "TOEFL",
+        "DUOLINGO",
+        "Language Cert",
+        "OTHERS",
+        "",
+        "UNDEFINED",
+      ])
+    ),
+  score: z.string().optional().or(z.literal("")),
 });
+
 
 interface Data {
   proficiencyLevel: string;
@@ -108,7 +105,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
 
   return (
     <>
-      <div className="flex flex-col items-start space-y-4">
+      <div className="flex flex-col items-start space-y-2">
         <p className="text-gray-600 text-base">English Language Proficiency:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
@@ -161,10 +158,10 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
                           <SelectItem value="native speaker">
                             Native Speaker
                           </SelectItem>
-                          <SelectItem value="test">Completed a test</SelectItem>
                           <SelectItem value="willingToTest">
                             Willing to take a test
                           </SelectItem>
+                          <SelectItem value="test">Completed a test</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -177,7 +174,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Which English proficiency test have you taken?
+                      Which of the following English Proficiency tests have you taken?
                       </FormLabel>
                       <Select
                         defaultValue={field.value}
@@ -190,11 +187,8 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
                           <SelectItem value="IELTS">IELTS</SelectItem>
                           <SelectItem value="PTE">PTE</SelectItem>
                           <SelectItem value="TOEFL">TOEFL</SelectItem>
-                          <SelectItem value="DUOLINGO">DUOLINGO</SelectItem>
-                          <SelectItem value="Language Cert">
-                            Language Cert
-                          </SelectItem>
-                          <SelectItem value="others">Others</SelectItem>
+                      
+                          <SelectItem value="others">Any others (Specify)</SelectItem>
                         </SelectContent>
                       </Select>
 
@@ -221,7 +215,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full md:w-[50%] bg-[#C7161E]">
+              <Button type="submit" className="w-full md:w-[45%] bg-[#C7161E]">
                 Update English Language Information
               </Button>
             </form>

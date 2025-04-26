@@ -111,19 +111,19 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
   }
   const countries = [
     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
-    { code: "+1", flag: "/usa.png", country: "USA" },
-    { code: "+91", flag: "/india.png", country: "India" },
+    { code: "+1", flag: "/countryarchive/usa_logo.png", country: "USA" },
+    { code: "+91", flag: "/countryarchive/india_logo.png", country: "India" },
     { code: "+61", flag: "/australia.png", country: "Australia" },
-    { code: "+39", flag: "/italy.png", country: "Italy" },
-    { code: "+44", flag: "/uk.png", country: "United Kingdom" },
-    { code: "+1", flag: "/canada.png", country: "Canada" },
-    { code: "+86", flag: "/china.png", country: "China" },
-    { code: "+353", flag: "/ireland.png", country: "Ireland" },
-    { code: "+64", flag: "/new-zealand.png", country: "New Zealand" },
-    { code: "+49", flag: "/germany.png", country: "Germany" },
-    { code: "+60", flag: "/malaysia.png", country: "Malaysia" },
-    { code: "+33", flag: "/france.png", country: "France" },
-    { code: "+45", flag: "/denmark.png", country: "Denmark" },
+    { code: "+39", flag: "/countryarchive/italy_logo.png", country: "Italy" },
+    { code: "+44", flag: "/countryarchive/uk_logo.png", country: "United Kingdom" },
+    { code: "+1", flag: "/countryarchive/canada_logo.png", country: "Canada" },
+    { code: "+86", flag: "/countryarchive/china_logo.png", country: "China" },
+    { code: "+353", flag: "/countryarchive/ireland_logo.png", country: "Ireland" },
+    { code: "+64", flag: "/nz.png", country: "New Zealand" },
+    { code: "+49", flag: "/countryarchive/germany_logo.png", country: "Germany" },
+    { code: "+60", flag: "/countryarchive/my_logo.png", country: "Malaysia" },
+    { code: "+33", flag: "/countryarchive/france_logo.png", country: "France" },
+    { code: "+45", flag: "/countryarchive/denmark_logo.png", country: "Denmark" },
   ];
 
   // Function to get nationality from country
@@ -179,7 +179,7 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
         </div>
       </div> */}
 
-      <div className="flex flex-col items-start space-y-4">
+      <div className="flex flex-col items-start space-y-2">
         <p className="text-gray-600 text-base">Personal Information:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
@@ -205,7 +205,7 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
 
       {/* Edit Personal Info Modal */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh]  overflow-y-auto">
+        <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Edit Personal Info</DialogTitle>
             <p className="text-sm text-gray-500">
@@ -216,16 +216,15 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="contactNo"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Contact No.</FormLabel>
                       <div className="flex gap-2">
-                        {/* Country Code Selector */}
                         <Select
-                          value={form.watch("country")} // Watch country changes
+                          value={form.watch("country")}
                           onValueChange={(selectedCountry) => {
                             const countryData = countries.find(
                               (c) => c.country === selectedCountry
@@ -284,7 +283,6 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
                           </SelectContent>
                         </Select>
 
-                        {/* Phone Number Input */}
                         <Input
                           {...field}
                           className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm truncate"
@@ -294,7 +292,61 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
                       <FormMessage />
                     </FormItem>
                   )}
+                /> */}
+  <FormField
+  name="nationality"
+  control={form.control}
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Nationality</FormLabel>
+      <Select
+        value={field.value}
+        onValueChange={field.onChange}
+      >
+        <FormControl>
+          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+            <SelectValue>
+              <div className="flex items-center gap-2">
+                <Image
+                  src={
+                    countries.find(
+                      (c) => getNationality(c.country) === field.value // Match nationality to country
+                    )?.flag || "/pakflag.png"
+                  }
+                  alt="Nationality Flag"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                  unoptimized
                 />
+                {field.value || "Select Nationality"}
+              </div>
+            </SelectValue>
+          </SelectTrigger>
+        </FormControl>
+
+        <SelectContent>
+          {nationalities.map(({ name, flag }) => (
+            <SelectItem key={name} value={name}>
+              <div className="flex items-center gap-2">
+                <Image
+                  src={flag}
+                  alt={`${name} Flag`}
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                  unoptimized
+                />
+                {name}
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
                 <FormField
                   control={form.control}
@@ -347,13 +399,14 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
                         onBlur={field.onBlur}
                         name={field.name}
                         ref={field.ref}
+                        className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                       />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   name="country"
                   control={form.control}
                   render={({ field }) => (
@@ -417,64 +470,11 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
-                <FormField
-                  name="nationality"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nationality</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                            <SelectValue>
-                              <div className="flex items-center gap-2">
-                                <Image
-                                  src={
-                                    countries.find(
-                                      (c) => c.country === field.value
-                                    )?.flag || "/default-flag.png"
-                                  }
-                                  alt="Nationality Flag"
-                                  width={20}
-                                  height={20}
-                                  className="object-contain"
-                                  unoptimized
-                                />
-                                {field.value || "Select Nationality"}
-                              </div>
-                            </SelectValue>
-                          </SelectTrigger>
-                        </FormControl>
-
-                        <SelectContent>
-                          {nationalities.map(({ name, flag }) => (
-                            <SelectItem key={name} value={name}>
-                              <div className="flex items-center gap-2">
-                                <Image
-                                  src={flag}
-                                  alt={`${name} Flag`}
-                                  width={20}
-                                  height={20}
-                                  className="object-contain"
-                                  unoptimized
-                                />
-                                {name}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              
               </div>
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="city"
                 render={({ field }) => (
@@ -498,13 +498,12 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
                         <SelectItem value="delhi">Delhi</SelectItem>
                         <SelectItem value="mumbai">Mumbai</SelectItem>
                         <SelectItem value="bangalore">Bangalore</SelectItem>
-                        {/* Add more cities here */}
                       </SelectContent>
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
                 Update Personal Information

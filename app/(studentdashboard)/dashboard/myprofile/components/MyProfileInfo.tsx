@@ -1,20 +1,22 @@
 "use client";
 
 import Image from "next/image";
-// import EditFirstAndLastName from "./Modals/EditFirstAndLastName";
-import EditPersonalInfo from "./Modals/EditPersonalInfo";
+// import EditPersonalInfo from "./Modals/EditPhone.jsx";
 import EditAcademicInfo from "./Modals/EditAcademicInfo";
 import EditWorkExperience from "./Modals/EditWorkExperience";
 import EditEnglishLanguageInfo from "./Modals/EditEnglishLanguageInfo";
 import EditStudentPreference from "./Modals/EditStudentPreference";
 import EditfirstandlastName from "./Modals/EditfirstandlastName";
 import Password from "./Modals/PasswordInput";
+import EditPhoneNo from "./Modals/EditPhoneNo";
+import EditPersonalInfo from "./Modals/EditPersonalInfo";
 
 interface UserProfile {
   firstName: string;
   lastName: string;
   email: string;
-  contactNo: string;
+  phoneNo: string;
+  contactNo:string;
   dob: string;
   country: string;
   nationality: string;
@@ -65,6 +67,7 @@ interface workExperience {
   jobTitle: string;
   organizationName: string;
   employmentType: string;
+  duration:number;
   endDate: Date;
   startDate: Date;
   createdAt: Date;
@@ -93,7 +96,7 @@ const MyProfileInfo = ({
   setUser,
 }: UserProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-14 w-[80%] md:w-[70%] mx-auto xl:ml-72 mt-24 sm:mt-56 xl:mt-10 mb-6 xl:mb-32 items-baseline justify-items-start">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12 w-[80%] md:w-[60%] ml-4 md:ml-8 xl:ml-72 mt-24 sm:mt-56 xl:mt-10 mb-6 xl:mb-10 ">
       {/* First Name */}
       <EditfirstandlastName
         firstName={user?.firstName}
@@ -103,7 +106,7 @@ const MyProfileInfo = ({
       />
 
       {/* Email Address */}
-      <div className="flex flex-col items-start space-y-4">
+      <div className="flex flex-col items-start space-y-2">
         <p className="text-gray-600 text-base">Email Address:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
@@ -118,7 +121,9 @@ const MyProfileInfo = ({
       <Password data={user} />
 
       {/* Personal Information */}
-      <EditPersonalInfo data={user} />
+      <EditPhoneNo data={user} />
+
+      <EditPersonalInfo data={user}/>
 
       {/* Academic Information */}
       <EditAcademicInfo data={academicInfo} />

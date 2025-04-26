@@ -12,6 +12,8 @@ interface AcademmicInfo {
   endDate: Date;
   createdAt: Date;
   updatedAt: Date;
+  otherGradingScale: string,
+
 }
 interface LanguageProf {
   proficiencyLevel: string;
@@ -31,6 +33,7 @@ interface UserPref {
   currency: string;
   createdAt: Date;
   updatedAt: Date;
+  tuitionBudget: string;
 }
 interface user {
   _id: string;
@@ -38,6 +41,7 @@ interface user {
   lastName: string;
   email: string;
   contactNo: string;
+  phoneNo: string;
   dob: string;
   country: string;
   nationality: string;
@@ -56,6 +60,7 @@ interface workExp {
   startDate: Date;
   createdAt: Date;
   updatedAt: Date;
+  duration: number;
 }
 interface User {
   firstName: string;

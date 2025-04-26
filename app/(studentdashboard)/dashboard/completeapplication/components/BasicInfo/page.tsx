@@ -39,6 +39,7 @@ import FamilyMembers from "./components/FamilyMembers";
 import { useRouter } from "next/navigation";
 import ContactDetailForm from "./components/ContactDetailform";
 import { formSchema } from "./components/Schema";
+import CompleteApplicationModal from "../CompleteApplicationModal";
 
 const BasicInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -69,7 +70,7 @@ const BasicInfo = () => {
       form.handleSubmit(onSubmit)();
     } else {
       console.log("Form validation failed:", form.formState.errors);
-alert("error submitting form");
+      alert("error submitting form");
 
     }
 
@@ -231,6 +232,26 @@ alert("error submitting form");
   const watchedValues = form.watch();
   // Log watched values dynamically
   console.log("Watched Values:", watchedValues);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false); // To manage the submit button's disabled state
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSaveAndContinue = () => {
+    setIsModalOpen(true);  // Open the modal when the button is clicked
+    setIsSubmitted(true); // Set submitted state to true
+
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);  // Close the modal
+  };
+
+  const handleCompleteApplication = () => {
+    // Handle application completion logic here
+    console.log("Application Completed!");
+    // You can also do form submission, navigate to another page, or whatever action is required
+  };
   return (
     <div className="w-[90%] xl:w-[60%] mx-auto mt-4">
       {/* Page Titles */}
@@ -690,10 +711,23 @@ alert("error submitting form");
             </Pagination>
 
             {currentPage === totalPages && (
-              <Button type="submit" className="bg-red-700 hover:bg-red-700" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save and Continue"}
-              </Button>
-            )}
+        <Button
+          type="button" // Changed to "button" to prevent form submission here
+          className="bg-red-700 hover:bg-red-700"
+          disabled={isSubmitting}
+          onClick={handleSaveAndContinue}  // Trigger the modal when clicked
+        >
+    {isSubmitted ? "Submitted" : "Save and Continue"}
+
+        </Button>
+      )}
+
+      {/* Show the CompleteApplicationModal when isModalOpen is true */}
+      <CompleteApplicationModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}  // Close modal when user closes it
+        onCompleteApplication={handleCompleteApplication}  // Handle the completion logic
+      />
           </div>
         </form>
       </Form>

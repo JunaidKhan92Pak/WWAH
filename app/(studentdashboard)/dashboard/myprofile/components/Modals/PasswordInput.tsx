@@ -431,7 +431,7 @@ const Password = ({ data }: { data: PasswordData }) => {
 
   return (
     <>
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col space-y-2">
         <p className="text-gray-600 text-base">Password:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
@@ -471,6 +471,8 @@ const Password = ({ data }: { data: PasswordData }) => {
                   type={passwordVisible ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+
                 />
                 <Button
                   type="button"
@@ -500,6 +502,8 @@ const Password = ({ data }: { data: PasswordData }) => {
                     type={newPasswordVisible ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+
                   />
                   <Button
                     type="button"
@@ -528,6 +532,8 @@ const Password = ({ data }: { data: PasswordData }) => {
                     type={confirmPasswordVisible ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+
                   />
                   <Button
                     type="button"

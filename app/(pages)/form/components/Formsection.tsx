@@ -13,62 +13,20 @@ import { Button } from "@/components/ui/button";
 
 const Formsection = () => {
   const countries = [
-    {
-      code: "+92", flag: "/pakflag.png",
-      country: "Pakistan"
-    },
-    {
-      code: "+1", flag: "/usa.png",
-      country: "USA"
-    },
-    {
-      code: "+91", flag: "/india.png",
-      country: "India"
-    },
-    {
-      code: "+61", flag: "/australia.png",
-      country: "Australia"
-    },
-    {
-      code: "+39", flag: "/italy.png",
-      country: "Italy"
-    },
-    {
-      code: "+44", flag: "/ukflag.png",
-      country: "United Kingdom"
-    },
-    {
-      code: "+1", flag: "/canada.png",
-      country: "Canada"
-    },
-    {
-      code: "+86", flag: "/china.png",
-      country: "China"
-    },
-    {
-      code: "+353", flag: "/ireland.png",
-      country: "Ireland"
-    },
-    {
-      code: "+64", flag: "/new-zealand.png",
-      country: "New Zealand"
-    },
-    {
-      code: "+49", flag: "/germany.png",
-      country: "Germany"
-    },
-    {
-      code: "+60", flag: "/malaysia.png",
-      country: "Malaysia"
-    },
-    {
-      code: "+33", flag: "/france.png",
-      country: "France"
-    },
-    {
-      code: "+45", flag: "/denmark.png",
-      country: "Denmark"
-    },
+     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
+    { code: "+1", flag: "/countryarchive/usa_logo.png", country: "USA" },
+    { code: "+91", flag: "/countryarchive/india_logo.png", country: "India" },
+    { code: "+61", flag: "/australia.png", country: "Australia" },
+    { code: "+39", flag: "/countryarchive/italy_logo.png", country: "Italy" },
+    { code: "+44", flag: "/countryarchive/uk_logo.png", country: "United Kingdom" },
+    { code: "+1", flag: "/countryarchive/canada_logo.png", country: "Canada" },
+    { code: "+86", flag: "/countryarchive/china_logo.png", country: "China" },
+    { code: "+353", flag: "/countryarchive/ireland_logo.png", country: "Ireland" },
+    { code: "+64", flag: "/nz.png", country: "New Zealand" },
+    { code: "+49", flag: "/countryarchive/germany_logo.png", country: "Germany" },
+    { code: "+60", flag: "/countryarchive/my_logo.png", country: "Malaysia" },
+    { code: "+33", flag: "/countryarchive/france_logo.png", country: "France" },
+    { code: "+45", flag: "/countryarchive/denmark_logo.png", country: "Denmark" },
   ];
 
   const [form, setForm] = useState({
@@ -141,7 +99,7 @@ const Formsection = () => {
       <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
       <div className="relative z-10 bg-gray-700 bg-opacity-70 border text-white rounded-3xl shadow-lg p-3 md:p-10  w-[90%] mx-auto">
-        <div className="flex gap-1 sm:space-y-0 sm:space-x-2 justify-center items-center text-center md:mb-12 mb-4">
+        <div className="flex gap-1 sm:space-y-0 sm:space-x-2 justify-center items-center text-center md:mb-6 mb-4">
           <Button
             onClick={() => setFormType("Register Now")}
             className={`text-white py-4 px-6 md:py-6 md:px-8 rounded-lg shadow-lg border border-[#C7161E] ${formType === "Register Now" ? "bg-white" : "bg-transparent"
