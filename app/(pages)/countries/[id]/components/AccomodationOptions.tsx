@@ -22,19 +22,19 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
       p: "For students who prefer independent living, renting a private flat or house is a popular option, especially for those in their second or third year. You can rent alone or share with friends or other students.",
     },
     {
-      src: "/countrypage/Privaterentals.JPG",
+      src: "/countrypage/Privaterentals.jpg",
       alt: "Private Accommodation",
       heading: "Private Rentals (Flats and Houses)",
       p: "For students who prefer independent living, renting a private flat or house is a popular option, especially for those in their second or third year. You can rent alone or share with friend or other students",
     },
     {
-      src: "/countrypage/Homestay.JPEG",
+      src: "/countrypage/Homestay.jpeg",
       alt: "Private Accommodation",
       heading: "Homestay",
       p: "Living with a local UK family is another accommodation option for international students. This provides a cultural immersion experience and a more familyoriented living arrangement.",
     },
     {
-      src: "/countrypage/shortterm.JPEG",
+      src: "/countrypage/shortterm.jpeg",
       alt: "Private Accommodation",
       heading: "Short-Term Accommodation",
       p: "For students who need temporary accommodation (e.g., for a short course, study abroad, or before securing permanent housing), there are options like Hostels and Hotels.",
@@ -94,14 +94,13 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
 
         {/* Advisor Section */}
         <div className="my-2 md:my-6">
-           <Banner
-          title="Need help finding the perfect place to live abroad? Ask the WWAH Advisor now!"
-          buttonText="Consult with WWAH Advisor"
-          buttonLink="/contactus"
-          backgroundImage="/bg-usa.png"
-        />
+          <Banner
+            title="Need help finding the perfect place to live abroad? Ask the WWAH Advisor now!"
+            buttonText="Consult with WWAH Advisor"
+            buttonLink="/contactus"
+            backgroundImage="/bg-usa.png"
+          />
         </div>
-       
       </div>
     </>
   );

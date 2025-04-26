@@ -50,8 +50,9 @@ const Page = () => {
     <>
       <div
         className="relative w-[98%] my-4 mx-auto bg-cover bg-center bg-no-repeat rounded-3xl h-[96vh]  md:h-[96vh] flex justify-center items-center"
-
-style={{ backgroundImage: "url('/adminportal/loginbackgroundimg.svg')" }}
+        style={{
+          backgroundImage: "url('/adminportal/loginbackgroundimg.svg')",
+        }}
       >
         <div className="flex flex-col justify-center items-center text-center w-full p-4">
           <Image
@@ -65,7 +66,10 @@ style={{ backgroundImage: "url('/adminportal/loginbackgroundimg.svg')" }}
           <h4>Welcome Back!</h4>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full md:w-[55%] lg:w-[40%] xl:w-[30%]">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 w-full md:w-[55%] lg:w-[40%] xl:w-[30%]"
+            >
               {/* Email Field */}
               <div className="flex flex-col text-start">
                 <FormField
@@ -81,7 +85,6 @@ style={{ backgroundImage: "url('/adminportal/loginbackgroundimg.svg')" }}
                             placeholder="Enter your email address"
                             className="placeholder-[#313131] placeholder:text-sm xl:placeholder:text-base pl-10 w-full rounded-lg py-5 md:py-6 border border-gray-300"
                             {...field}
-
                           />
                           <span className="absolute left-3 top-1/2 -translate-y-1/2">
                             <Image
@@ -114,7 +117,6 @@ style={{ backgroundImage: "url('/adminportal/loginbackgroundimg.svg')" }}
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter password"
                             className="placeholder-[#313131] placeholder:text-sm xl:placeholder:text-base pl-10 w-full rounded-lg py-5 md:py-6 border border-gray-300"
-
                             {...field}
                           />
                           <span className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -164,10 +166,13 @@ style={{ backgroundImage: "url('/adminportal/loginbackgroundimg.svg')" }}
                     )}
                   />
                 </div>
-                <Link href="/adminportal/forgetpassword" className="text-[#C06A17] text-sm hover:underline">
+                <Link
+                  target="blank"
+                  href="/adminportal/forgetpassword"
+                  className="text-[#C06A17] text-sm hover:underline"
+                >
                   Forgot Password?
                 </Link>
-
               </div>
 
               {/* Sign In Button */}

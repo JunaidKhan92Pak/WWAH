@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
@@ -15,7 +14,7 @@ import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
 import { useSearchParams } from "next/navigation";
-import { Copy } from "lucide-react"
+import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -27,8 +26,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 const Page = () => {
   const countries = [
@@ -145,25 +144,25 @@ const Page = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
   const [favoritesCount, setFavoritesCount] = useState(0);
-    const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-  
- // No need to load favorites from localStorage
-  
- const toggleFavorite = (id: string) => {
-  setFavorites((prev) => {
-    const updatedFavorites = { ...prev, [id]: !prev[id] };
+  const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
 
-    // Update count
-    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-    setFavoritesCount(newCount);
+  // No need to load favorites from localStorage
 
-    // Animate heart
-    setHeartAnimation(id);
-    setTimeout(() => setHeartAnimation(null), 1000);
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => {
+      const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-    return updatedFavorites;
-  });
-};
+      // Update count
+      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+      setFavoritesCount(newCount);
+
+      // Animate heart
+      setHeartAnimation(id);
+      setTimeout(() => setHeartAnimation(null), 1000);
+
+      return updatedFavorites;
+    });
+  };
 
   // Filter universities by favorites if showFavorites is true
   const displayedUniversities = showFavorites
@@ -211,81 +210,81 @@ const Page = () => {
             />
           </div>
           <div className="flex flex-row gap-3 w-full">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10">
-              <Image src="/filterr.svg" width={16} height={14} alt="filter" />
-              <div className="flex ">
-                Filter
-                {/* Always reserve space for count by using opacity instead of conditional rendering */}
-                <div
-                  className="w-1/2 transition-opacity duration-200"
-                  style={{ opacity: country.length > 0 ? 1 : 0 }}
-                >
-                  {country.length > 0 ? `(${country.length})` : "(0)"}
-                </div>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="p-2 h-[260px]">
-              <ScrollArea className="p-2">
-                <div className="flex justify-between">
-                  <p>Countries:</p>
-                  {/* Always reserve space for the clear button by using visibility instead of conditional rendering */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10">
+                <Image src="/filterr.svg" width={16} height={14} alt="filter" />
+                <div className="flex ">
+                  Filter
+                  {/* Always reserve space for count by using opacity instead of conditional rendering */}
                   <div
-                    className="transition-opacity duration-200"
-                    style={{
-                      opacity: country.length > 0 && !showFavorites ? 1 : 0,
-                    }}
+                    className="w-1/2 transition-opacity duration-200"
+                    style={{ opacity: country.length > 0 ? 1 : 0 }}
                   >
-                    <button
-                      onClick={() => setCountry([])}
-                      className="text-blue-500 hover:underline"
-                      aria-hidden={!(country.length > 0 && !showFavorites)}
-                      tabIndex={country.length > 0 && !showFavorites ? 0 : -1}
-                    >
-                      Clear filters
-                    </button>
+                    {country.length > 0 ? `(${country.length})` : "(0)"}
                   </div>
                 </div>
-                <ul className="py-2 space-y-4">
-                  {countries.map((c, indx) => (
-                    <li key={indx} className="flex justify-between">
-                      <div className="flex gap-2">
-                        <Image
-                          src={c.img}
-                          width={30}
-                          height={30}
-                          alt={c.name}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-2 h-[260px]">
+                <ScrollArea className="p-2">
+                  <div className="flex justify-between">
+                    <p>Countries:</p>
+                    {/* Always reserve space for the clear button by using visibility instead of conditional rendering */}
+                    <div
+                      className="transition-opacity duration-200"
+                      style={{
+                        opacity: country.length > 0 && !showFavorites ? 1 : 0,
+                      }}
+                    >
+                      <button
+                        onClick={() => setCountry([])}
+                        className="text-blue-500 hover:underline"
+                        aria-hidden={!(country.length > 0 && !showFavorites)}
+                        tabIndex={country.length > 0 && !showFavorites ? 0 : -1}
+                      >
+                        Clear filters
+                      </button>
+                    </div>
+                  </div>
+                  <ul className="py-2 space-y-4">
+                    {countries.map((c, indx) => (
+                      <li key={indx} className="flex justify-between">
+                        <div className="flex gap-2">
+                          <Image
+                            src={c.img}
+                            width={30}
+                            height={30}
+                            alt={c.name}
+                          />
+                          <label htmlFor={c.value}>{c.name}</label>
+                        </div>
+                        <input
+                          type="checkbox"
+                          id={c.value}
+                          onChange={() => handleCheckboxChange(c.value)}
+                          checked={country.includes(c.value)}
+                          className="mr-2"
                         />
-                        <label htmlFor={c.value}>{c.name}</label>
-                      </div>
-                      <input
-                        type="checkbox"
-                        id={c.value}
-                        onChange={() => handleCheckboxChange(c.value)}
-                        checked={country.includes(c.value)}
-                        className="mr-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </ScrollArea>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <button
-           onClick={() => setShowFavorites((prev) => !prev)}
-           className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
-             showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-           }`}
-         >
-           <Image
-             src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
-             width={20}
-             height={18}
-             alt="favorites"
-           />
-           {showFavorites ? "Show All" : "Favorites"} 
-           <span>({favoritesCount})</span>
-         </button>
+                      </li>
+                    ))}
+                  </ul>
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <button
+              onClick={() => setShowFavorites((prev) => !prev)}
+              className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+                showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
+            >
+              <Image
+                src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
+                width={20}
+                height={18}
+                alt="favorites"
+              />
+              {showFavorites ? "Show All" : "Favorites"}
+              <span>({favoritesCount})</span>
+            </button>
           </div>
         </div>
       </div>
@@ -332,74 +331,83 @@ const Page = () => {
 
                     {/* Share & Favorite Buttons */}
                     <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
-                      {/* <button onClick={() => copyToClipboard(item._id)}>
-                        <Image
-                          src="/share.svg"
-                          width={20}
-                          height={20}
-                          alt="Share"
-                        />
-                      </button> */}
-                         <Dialog>
-  <DialogTrigger asChild>
-    <button>
-      <Image src="/share.svg" width={20} height={20} alt="Share" />
-    </button>
-  </DialogTrigger>
-  <DialogContent className="sm:max-w-md">
-    <DialogHeader>
-      <DialogTitle>Share link</DialogTitle>
-      <DialogDescription>
-        Anyone who has this link will be able to view this.
-      </DialogDescription>
-    </DialogHeader>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button>
+                            <Image
+                              src="/share.svg"
+                              width={20}
+                              height={20}
+                              alt="Share"
+                            />
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Share link</DialogTitle>
+                            <DialogDescription>
+                              Anyone who has this link will be able to view
+                              this.
+                            </DialogDescription>
+                          </DialogHeader>
 
-    <div className="flex items-center space-x-2">
-      <div className="grid flex-1 gap-2">
-        <Label htmlFor={`link-${item._id}`} className="sr-only">
-          Link
-        </Label>
-        <Input
-          id={`link-${item._id}`}
-          value={`${typeof window !== "undefined" ? window.location.origin : ""}/Universities/${item._id}`}
-          readOnly
-        />
-      </div>
-      <Button
-        type="button"
-        size="sm"
-        className="px-3"
-        onClick={() => {
-          const link = `${window.location.origin}/Universities/${item._id}`;
-          navigator.clipboard.writeText(link).then(() => {
-            setCopiedLinkId(item._id);
-            setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
-          });
-        }}
-      >
-        <span className="sr-only">Copy</span>
-        <Copy />
-      </Button>
-    </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="grid flex-1 gap-2">
+                              <Label
+                                htmlFor={`link-${item._id}`}
+                                className="sr-only"
+                              >
+                                Link
+                              </Label>
+                              <Input
+                                id={`link-${item._id}`}
+                                value={`${
+                                  typeof window !== "undefined"
+                                    ? window.location.origin
+                                    : ""
+                                }/Universities/${item._id}`}
+                                readOnly
+                              />
+                            </div>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="px-3"
+                              onClick={() => {
+                                const link = `${window.location.origin}/Universities/${item._id}`;
+                                navigator.clipboard.writeText(link).then(() => {
+                                  setCopiedLinkId(item._id);
+                                  setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
+                                });
+                              }}
+                            >
+                              <span className="sr-only">Copy</span>
+                              <Copy />
+                            </Button>
+                          </div>
 
-    {/* 👇 Show message conditionally */}
-    {copiedLinkId === item._id && (
-      <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
-    )}
+                          {/* 👇 Show message conditionally */}
+                          {copiedLinkId === item._id && (
+                            <p className="text-black text-sm mt-2">
+                              Link copied to clipboard!
+                            </p>
+                          )}
 
-    <DialogFooter className="sm:justify-start">
-      <DialogClose asChild>
-        <Button type="button" variant="secondary">
-          Close
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+                          <DialogFooter className="sm:justify-start">
+                            <DialogClose asChild>
+                              <Button type="button" variant="secondary">
+                                Close
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
 
-                       <button
+                      <button
                         onClick={() => toggleFavorite(item._id)}
-                        className={`relative ${heartAnimation === item._id ? 'animate-pop' : ''}`}
+                        className={`relative ${
+                          heartAnimation === item._id ? "animate-pop" : ""
+                        }`}
                       >
                         {favorites[item._id] ? (
                           <Image
@@ -417,7 +425,6 @@ const Page = () => {
                           />
                         )}
                       </button>
-                      
                     </div>
 
                     <ImageWithLoader
@@ -426,6 +433,7 @@ const Page = () => {
                       className="h-[180px] w-[400px] object-cover rounded-xl"
                       alt={`${item.university_name} Banner`}
                     />
+
                     <div className="absolute bottom-1 left-5">
                       <Image
                         src={item.universityImages?.logo ?? "/banner.jpg"}
@@ -439,7 +447,7 @@ const Page = () => {
 
                   <div className="px-4 h-[80px] flex flex-col justify-between">
                     <Link
-                      target="_blank"
+                      target="blank"
                       rel="noopener noreferrer"
                       href={`/Universities/${item._id}`}
                       key={item._id}

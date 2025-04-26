@@ -67,7 +67,7 @@ export default function Registration({
                   className="mr-4"
                 />
                 {step.link ? (
-                  <Link href={step.link}>
+                  <Link  href={step.link}>
                     <p className="text-link cursor-pointer text-[#DD7378]  hover:underline">
                       {step.text}
                     </p>

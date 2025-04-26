@@ -10,8 +10,8 @@ export default function NotFound() {
           Page Not Found
         </h3>
         <p className="text-lg text-gray-400 mb-6">
-          The page you&#39;re looking for might have been removed or is temporarily
-          unavailable.
+          The page you&#39;re looking for might have been removed or is
+          temporarily unavailable.
         </p>
         <Link
           href="/"

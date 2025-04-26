@@ -57,16 +57,30 @@ const Footer = () => {
                 Follow us for more
               </p>
               <div className="flex space-x-4">
-                <Link href="https://www.facebook.com/share/1DgaYoeBCf/">
+                <Link
+                  target="_blank"
+                  href="https://www.facebook.com/share/1671drwb7r/?mibextid=wwXIfr"
+                >
                   <FaFacebook className="text-blue-600 text-xl" />
                 </Link>
-                <Link href="https://www.instagram.com/wwah.ai/">
+                <Link
+                  target="blank"
+                  href="https://www.instagram.com/wwah.ai/"
+                >
                   <FaInstagram className="text-red-600 text-xl" />
                 </Link>
-                <Link href="https://www.linkedin.com/company/wwah-ai">
+                <Link
+                  target="blank"
+
+                  href="https://www.linkedin.com/company/wwah-ai"
+                >
                   <IoLogoLinkedin className="text-blue-600 text-xl" />
                 </Link>
-                <Link href="https://www.youtube.com/@intimestudyadvisors8015">
+                <Link
+                  target="blank"
+
+                  href="https://youtube.com/@worldwideadmissionshub-l3r?si=PlJn6vHNsFzCGVPv"
+                >
                   <FaYoutube className="text-red-600 text-xl" />
                 </Link>
               </div>
@@ -112,7 +126,7 @@ const Footer = () => {
               </div>
               {/* <div className="flex items-center space-x-3">
               <TfiWorld className="text-md min-w-[20px]" />
-              <Link
+              <Link target="blank"
                 href="/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -129,13 +143,25 @@ const Footer = () => {
             <div className="text-left hidden lg:block">
               <p className="font-semibold mb-3">About WWAH</p>
               <div className="space-y-2">
-                <Link href="/aboutUs" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/aboutUs"
+                  className="hover:underline block"
+                >
                   Why choose WWAH?
                 </Link>
-                <Link href="/partnerUS" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/partnerUS"
+                  className="hover:underline block"
+                >
                   Become a Partner
                 </Link>
-                <Link href="/contactus" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/contactus"
+                  className="hover:underline block"
+                >
                   Contact Us
                 </Link>
                 <Dialog
@@ -192,13 +218,25 @@ const Footer = () => {
                 <AccordionItem value="about">
                   <AccordionTrigger>About WWAH</AccordionTrigger>
                   <AccordionContent className="space-y-2">
-                    <Link href="/aboutUs" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/aboutUs"
+                      className="hover:underline block"
+                    >
                       Why choose WWAH?
                     </Link>
-                    <Link href="/partnerUS" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/partnerUS"
+                      className="hover:underline block"
+                    >
                       Become a Partner
                     </Link>
-                    <Link href="/contactus" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/contactus"
+                      className="hover:underline block"
+                    >
                       Contact Us
                     </Link>
                     <Dialog
@@ -252,19 +290,39 @@ const Footer = () => {
             <div className="text-left hidden lg:block">
               <p className="font-semibold mb-3">Explore</p>
               <div className="space-y-2">
-                <Link href="/countries" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/countries"
+                  className="hover:underline block"
+                >
                   Study Destination
                 </Link>
-                <Link href="/coursearchive" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/coursearchive"
+                  className="hover:underline block"
+                >
                   Courses
                 </Link>
-                <Link href="/Universities" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/Universities"
+                  className="hover:underline block"
+                >
                   Universities
                 </Link>
-                <Link href="/Scholarships" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/Scholarships"
+                  className="hover:underline block"
+                >
                   Scholarships
                 </Link>
-                <Link href="/chatmodel" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/chatmodel"
+                  className="hover:underline block"
+                >
                   Chat with Zeus
                 </Link>
               </div>
@@ -276,28 +334,39 @@ const Footer = () => {
                 <AccordionItem value="explore">
                   <AccordionTrigger>Explore</AccordionTrigger>
                   <AccordionContent className="space-y-2">
-                    <Link href="/countries" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/countries"
+                      className="hover:underline block"
+                    >
                       Study Destination
                     </Link>
                     <Link
+                      target="blank"
                       href="/coursearchive"
                       className="hover:underline block"
                     >
                       Courses
                     </Link>
                     <Link
+                      target="blank"
                       href="/Universities"
                       className="hover:underline block"
                     >
                       Universities
                     </Link>
                     <Link
+                      target="blank"
                       href="/Scholarships"
                       className="hover:underline block"
                     >
                       Scholarships
                     </Link>
-                    <Link href="/chatmodel" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/chatmodel"
+                      className="hover:underline block"
+                    >
                       Chat with Zeus
                     </Link>
                   </AccordionContent>
@@ -309,19 +378,39 @@ const Footer = () => {
             <div className="text-left hidden lg:block">
               <p className="font-semibold mb-3">Useful Links</p>
               <div className="space-y-2">
-                <Link href="/trackexpense" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/trackexpense"
+                  className="hover:underline block"
+                >
                   Cost of Living Calculator
                 </Link>
-                <Link href="/schedulesession" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/schedulesession"
+                  className="hover:underline block"
+                >
                   WWAH Online counselling session
                 </Link>
-                <Link href="/ilets" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/ilets"
+                  className="hover:underline block"
+                >
                   IELTS Preparation
                 </Link>
-                <Link href="/pte" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/pte"
+                  className="hover:underline block"
+                >
                   PTE Preparation
                 </Link>
-                <Link href="/toefl" className="hover:underline block">
+                <Link
+                  target="blank"
+                  href="/toefl"
+                  className="hover:underline block"
+                >
                   TOEFL Preparation
                 </Link>
               </div>
@@ -334,24 +423,38 @@ const Footer = () => {
                   <AccordionTrigger>Useful Links</AccordionTrigger>
                   <AccordionContent className="space-y-2">
                     <Link
+                      target="blank"
                       href="/trackexpense"
                       className="hover:underline block"
                     >
                       Cost of Living Calculator
                     </Link>
                     <Link
+                      target="blank"
                       href="/schedulesession"
                       className="hover:underline block"
                     >
                       WWAH Online counselling session
                     </Link>
-                    <Link href="/ilets" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/ilets"
+                      className="hover:underline block"
+                    >
                       IELTS Preparation
                     </Link>
-                    <Link href="/pte" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/pte"
+                      className="hover:underline block"
+                    >
                       PTE Preparation
                     </Link>
-                    <Link href="/toefl" className="hover:underline block">
+                    <Link
+                      target="blank"
+                      href="/toefl"
+                      className="hover:underline block"
+                    >
                       TOEFL Preparation
                     </Link>
                   </AccordionContent>

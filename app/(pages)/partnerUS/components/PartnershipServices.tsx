@@ -109,7 +109,7 @@ export default function PartnershipServices() {
                 className="mt-4 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 divide-y-0 border-0 md:gap-4 items-baseline"
               >
                 <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/user-experience.svg"
                       alt="Icon 1"
@@ -125,7 +125,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/real-time-update.svg"
                       alt="Icon 2"
@@ -141,7 +141,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 text-gray-800">
                     <Image
                       src="/partnerUs/document-manager.svg"
                       alt="Icon 3"
@@ -178,7 +178,7 @@ export default function PartnershipServices() {
                 className="mt-4 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 divide-y-0 border-0 gap-2 items-baseline"
               >
                 <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex  items-center justify-start text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/full-time-service.svg"
                       alt="Icon 1"
@@ -195,7 +195,7 @@ export default function PartnershipServices() {
                 </AccordionItem>
 
                 <AccordionItem value="item-2" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 text-gray-800">
+                  <AccordionTrigger className="flex items-center justify-start text-left gap-4 text-gray-800">
                     <Image
                       src="/partnerUs/proactive-communication.svg"
                       alt="Icon 3"
@@ -210,7 +210,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left md:gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left md:gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/counselling-sessions.svg"
                       alt="Icon 2"
@@ -259,7 +259,7 @@ export default function PartnershipServices() {
                 className="mt-4 sm:mt-8 md:space-y-4 grid grid-cols-1 sm:grid-cols-2 divide-y-0 border-0 md:gap-4 items-baseline"
               >
                 <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/broader-student.svg"
                       alt="Icon 1"
@@ -275,7 +275,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/competitive-edge.svg"
                       alt="Icon 2"
@@ -292,7 +292,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 text-gray-800">
                     <Image
                       src="/partnerUs/credibility.svg"
                       alt="Icon 3"
@@ -328,7 +328,7 @@ export default function PartnershipServices() {
                 className="mt-4 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 divide-y-0 border-0 gap-4 items-baseline"
               >
                 <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/Webinars-and-Workshops.svg"
                       alt="Icon 1"
@@ -345,7 +345,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/counselling-sessions.svg"
                       alt="Icon 2"
@@ -360,7 +360,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 text-gray-800">
                     <Image
                       src="/partnerUs/learning-material.svg"
                       alt="Icon 3"
@@ -376,7 +376,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 text-gray-800">
+                  <AccordionTrigger className="flex justify-start items-center text-left gap-4 text-gray-800">
                     <Image
                       src="/partnerUs/Networking-Opportunities.svg"
                       alt="Icon 4"

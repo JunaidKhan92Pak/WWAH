@@ -1,6 +1,5 @@
 "use client";
 
-
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "./sd-mobile-nav";
@@ -14,7 +13,7 @@ export function Navbar() {
         <MobileNav />
         {/* Logo */}
         <div className="flex items-center">
-          <Link href="/">
+          <Link  href="/">
             <Image
               src="/DashboardPage/wwahframe.svg"
               alt="Worldwide Admissions Hub Logo"
@@ -24,7 +23,7 @@ export function Navbar() {
               className="hidden md:block"
             />
           </Link>
-          <Link href="/">
+          <Link target="blank" href="/">
             <Image
               src="/DashboardPage/wwah.svg"
               alt="Worldwide Admissions Hub Logo for larger screens"

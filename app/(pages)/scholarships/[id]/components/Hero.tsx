@@ -15,7 +15,7 @@ const Hero: React.FC<HeroProps> = ({
   country,
   type,
   deadline,
-  NumberOfScholarships
+  NumberOfScholarships,
 }) => {
   const scholarshipArr = [
     {
@@ -64,6 +64,7 @@ const Hero: React.FC<HeroProps> = ({
               {/* Right Section */}
               <div className="w-full md:w-[45%] lg:w-[33%]  bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
                 <Link
+                  target="blank"
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"
                 >
@@ -77,7 +78,7 @@ const Hero: React.FC<HeroProps> = ({
                   <p className="mx-4 text-white">Or</p>
                   <div className="flex-1 border-t border-gray-100"></div>
                 </div>
-                <Link href="/dashboard">
+                <Link target="blank" href="/dashboard">
                   <Button className="w-full px-14 py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md text-white rounded-lg hover:bg-gray-300 transition duration-300">
                     Apply Now
                   </Button>

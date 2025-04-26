@@ -50,6 +50,7 @@ const Page = () => {
       firstName: !formData.firstName ? "First name is required." : "",
       lastName: !formData.lastName ? "Last name is required." : "",
       phone: !formData.phone ? "Phone number is required." : "",
+      // phone: !formData.phone ? "Phone number is required." : "",
       email: !formData.email
         ? "Email is required."
         : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
@@ -260,7 +261,7 @@ const Page = () => {
             </button>
             <p className="text-center mt-2 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
               Already have an account?{" "}
-              <Link href="/signin" className="text-[#F0851D]">
+              <Link target="blank" href="/signin" className="text-[#F0851D]">
                 Sign In
               </Link>
             </p>

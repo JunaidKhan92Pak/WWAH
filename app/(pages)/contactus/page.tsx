@@ -298,7 +298,7 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Phone Number</p>
-                <p className="text-gray-600">+923120762039</p>
+                <p className="text-gray-600">+971582514675</p>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">

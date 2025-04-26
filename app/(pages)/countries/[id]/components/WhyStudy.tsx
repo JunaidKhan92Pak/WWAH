@@ -137,7 +137,6 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
 
           <Link
             href={`/Universities?country=${countryName}`}
-            target="_blank"
             className="cursor-pointer"
           >
             <Button className="bg-red-700 mt-3">

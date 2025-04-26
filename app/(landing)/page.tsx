@@ -129,20 +129,6 @@ function Page() {
   return (
     // landing page container starts
     <div className="landingPage">
-      {/* <div className="landingPageBg bg-custom-gradient w-full flex flex-col justify-center items-center"> */}
-      {/* <div
-        className="landingPageBg w-full flex flex-col justify-center items-center"
-        style={{ */}
-      {/* // backgroundImage: 'url("/bgblue.JPG")',
-          // backgroundImage: 'url("/bgblue.JPG")',
-          // backgroundImage: 'url("/premiumbg.JPG")',
-          backgroundImage: 'url("/robotic.JPG")',
-
-          backgroundSize: "cover",
-          backgroundPosition: "center", */}
-      {/* }}
-      > */}
-
       <div
         className="landingPageBg relative w-full flex flex-col justify-center items-center"
         style={{
@@ -159,12 +145,16 @@ function Page() {
         {/* header section starts */}
         <header className="w-[90%] flex justify-between mt-5 z-20">
           <div className=" w-full  flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link
+              target="blank"
+              href="/"
+              className="flex items-center space-x-2"
+            >
               <Image
                 src="/logofooter.svg"
                 alt="WWAH Logo"
-                width={150}
-                height={60}
+                width={160}
+                height={70}
               />
             </Link>
             {isAuthenticate ? (
@@ -206,6 +196,7 @@ function Page() {
                     <ul className="py-2">
                       <li>
                         <Link
+                          target="blank"
                           href="/dashboard/overview"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                         >
@@ -214,6 +205,7 @@ function Page() {
                       </li>
                       <li>
                         <Link
+                          target="blank"
                           href="/chatmodel"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                         >
@@ -240,7 +232,7 @@ function Page() {
             ) : (
               // Login/Signup Buttons for Guests
               <>
-                <Link href="/signin">
+                <Link target="blank" href="/signin">
                   <Button
                     className="bg-[#C7161E] hover:bg-[#C7161E] text-white text-base"
                     // variant="outline"
@@ -255,20 +247,17 @@ function Page() {
         </header>
         {/* header section ends */}
         {/* Hero Section Start */}
-        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg:justify-evenly mt-6 w-[95%] sm:w-[100%] z-10">
+        <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg: lg:justify-evenly mt-6 w-[95%] sm:w-[100%] z-10">
           {/* hero Section Left Side starts */}
           <div className="HeroLeftSection w-[95%] md:w-[70%] lg:w-[50%] ">
             {/* Hero Content */}
             <div className="hero-content space-y-8 ">
               <div className="space-y-8">
                 <div className="text-center lg:text-left space-y-2">
-                  {/* <h1 className="text-white">Hi there, I am ZEUS!</h1> */}
                   <h1 className="text-white leading-snug">
                     <Typewriter
                       words={["Hey, Zeus Here!"]}
                       loop={1}
-                      // cursor
-                      // cursorStyle="|"
                       typeSpeed={120}
                       deleteSpeed={40}
                       delaySpeed={1000}
@@ -294,8 +283,7 @@ function Page() {
 
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/Hero_Robot.png"
-                    // src="/zeus-up.png"
+                    src="/zeus-up.png"
                     alt="Robot"
                     width={0}
                     height={0}
@@ -304,7 +292,6 @@ function Page() {
                   />
                 </div>
 
-                {/* Chat Input */}
                 <div className="chat-input rounded-lg p-2 flex items-center gap-3 2xl:gap-5 2xl:justify-evenly bg-white bg-opacity-30">
                   <Bot className="h-6 w-6 text-white/80" />
                   <input
@@ -314,14 +301,11 @@ function Page() {
                     onChange={(e) => setInput(e.target.value)}
                     className="flex-1 bg-transparent border-none  focus:outline-none text-white placeholder:text-white/60 placeholder:text-sm "
                   />
-                  {/* <Link
-                    href={`/chatmodel?message=${encodeURIComponent(input)}`}
-                  > */}
+
                   <Send
                     onClick={handleNavigate}
                     className="h-5 w-5 text-white/80 cursor-pointer hover:text-white transition-colors"
                   />
-                  {/* </Link> */}
                 </div>
               </div>
               {/* Action Buttons */}
@@ -351,6 +335,7 @@ function Page() {
                   },
                 ].map((item, i) => (
                   <Link
+                    target="blank"
                     key={i}
                     href={item.href}
                     passHref
@@ -388,14 +373,10 @@ function Page() {
           {/* hero Section Left Side ends */}
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
-            <Image
-              src="/Hero_Robot.png"
-              // src="/zeus-up.png"
-              alt="Robot"
-              width={400}
-              height={700}
-            // className="2xl:w-[550px] 2xl:h-[700px]"
-            />
+            <Link href="/chatmodel" passHref>
+              {" "}
+              <Image src="/Zeushi.png" alt="Robot" width={410} height={510} />
+            </Link>
           </div>
         </section>
       </div>
@@ -467,23 +448,20 @@ function Page() {
           </div>
           {/* University Cards Grid */}
           {!uniLoading ? (
-            <div
-              className="flex gap-6 overflow-x-auto  scrollbar-hide p-3 md:p-4"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-3 md:p-4">
               {universities.length === 0 ? (
-                <p className="text-[20px] font-semibold text-center p-4 w-full">
+                <p className="text-[20px] font-semibold text-center p-4 w-full col-span-full">
                   No Universities Found
                 </p>
               ) : (
                 universities.slice(0, 4).map((uni, index) => (
                   <Card
                     key={index}
-                    className="min-w-[300px] lg:w-full overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                    className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                   >
                     {/* University Image */}
                     <Link
-                      target="_blank"
+                      target="blank"
                       rel="noopener noreferrer"
                       href={`/Universities/${uni._id}`}
                       key={uni._id}
@@ -507,6 +485,7 @@ function Page() {
                         />
                       </div>
                     </Link>
+
                     {/* University Details */}
                     <div className="p-4">
                       <h6 className="font-semibold mb-2">
@@ -544,7 +523,7 @@ function Page() {
 
           <h2 className="font-extrabold text-center mb-5 md:mb-5">
             Why Choose{" "}
-            <Link href="/aboutUs">
+            <Link target="blank" href="/aboutUs">
               <Image
                 src="/logowwah.svg"
                 alt="WWAH"

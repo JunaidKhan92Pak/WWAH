@@ -91,6 +91,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             <p>
               Have Questions about University Fee?{" "}
               <Link
+                
                 href="#"
                 className="text-red-600 hover:underline font-semibold"
               >
@@ -127,7 +128,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
                 : "bg-transparent text-black"
                 }`}
             >
-              <Link href="">
+              <Link target="blank" href="">
                 Scholarship Details
               </Link>
             </button>
@@ -138,13 +139,16 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
                 : "bg-transparent text-black"
                 }`}
             >
-              <Link href="https://mta.ca/current-students/student-finances/financial-aid-current-students">
+              <Link
+                target="blank"
+                href="https://mta.ca/current-students/student-finances/financial-aid-current-students"
+              >
                 Funding Details
               </Link>
             </button>
           </div>
 
-          <Link href="/contactus">
+          <Link target="blank" href="/contactus">
             <Button
               variant="outline"
               className="w-full mt-4 border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
@@ -186,7 +190,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               fee at {data.universityname}.
             </p>
 
-            <Link href="#">
+            <Link target="blank" href="#">
               <Button
                 variant="outline"
                 className="w-full border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
@@ -213,7 +217,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               <p>
                 Calculate your Living Expense at <br /> {data.universityname}
               </p>
-              <Link href="/trackexpense">
+              <Link target="blank" href="/trackexpense">
                 <Button
                   variant="secondary"
                   className="w-full bg-white text-black  px-6 rounded-lg hover:bg-gray-200 transition duration-300 py-4"

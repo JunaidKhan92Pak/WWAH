@@ -58,7 +58,7 @@ const Page = () => {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="flex-1 max-w-2xl px-5 lg:px-20">
-        <Link href="/">
+        <Link  href="/">
           <Image
             src="/logo.png"
             width={100}

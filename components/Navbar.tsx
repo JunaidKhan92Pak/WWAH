@@ -13,8 +13,6 @@ import {
 import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
 import { usePathname, useRouter } from "next/navigation";
-
-
 const Navbar = () => {
   const { isAuthenticate, loading, logout, user } = useUserStore();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -23,11 +21,9 @@ const Navbar = () => {
   };
   const router = useRouter();
   const pathname = usePathname(); // current page path
-
   const handleLoginClick = () => {
     router.push(`/signin?callbackUrl=${encodeURIComponent(pathname)}`);
   };
-
   if (loading) return <Loading />;
   return (
     <header className="h-0 md:h-[50px] lg:mb-10">
@@ -63,7 +59,6 @@ const Navbar = () => {
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
-
                   {/* Link to Programs Page */}
                   <NavigationMenuItem>
                     <Link href="/coursearchive" passHref>
@@ -72,7 +67,6 @@ const Navbar = () => {
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
-
                   {/* Link to Scholarships Page */}
                   <NavigationMenuItem>
                     <Link href="/scholarships" passHref>
@@ -84,7 +78,6 @@ const Navbar = () => {
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
-
             {/* Conditional Rendering */}
             <div className="flex gap-3 lg:gap-5">
               {isAuthenticate ? (
@@ -107,7 +100,6 @@ const Navbar = () => {
                       className="rounded-full w-8 h-8 "
                     />{" "}
                   </button>
-
                   {/* Dropdown Menu */}
                   {isDropdownOpen && (
                     <div
@@ -155,15 +147,14 @@ const Navbar = () => {
                 // Login/Signup Buttons for Guests
                 <>
                   {/* <Link href="/signin"> */}
-                    <Button
-                      className="bg-[#C7161E] text-white text-base"
-                      variant="outline"
-                      size="lg"
-                      onClick={handleLoginClick}
-
-                    >
-                      Login
-                    </Button>
+                  <Button
+                    className="bg-[#C7161E] text-white text-base"
+                    variant="outline"
+                    size="lg"
+                    onClick={handleLoginClick}
+                  >
+                    Login
+                  </Button>
                   {/* </Link> */}
                 </>
               )}
@@ -174,5 +165,4 @@ const Navbar = () => {
     </header>
   );
 };
-
 export default Navbar;

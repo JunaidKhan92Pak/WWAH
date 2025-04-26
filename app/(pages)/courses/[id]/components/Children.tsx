@@ -158,7 +158,7 @@
 //                                             <p className="text-white xl:px-4 mb-3">
 //                                                 NEED MORE INFO ABOUT {data.universityname}?
 //                                             </p>
-//                                             <Link href="/universityarchievepage">
+//                                             <Link target="blank" href="/universityarchievepage">
 //                                                 <Button className="bg-white text-[#C7161E] px-2 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
 //                                                     Explore Here
 //                                                 </Button>
@@ -180,7 +180,7 @@
 //                                             <p className="text-white md:px-2  mb-3">
 //                                                 Get a glimpse of your future at {data.courseData.universityname}!
 //                                             </p>
-//                                             <Link href="/universityarchievepage">
+//                                             <Link target="blank" href="/universityarchievepage">
 //                                                 <Button className="bg-white text-[#C7161E] font-normal px-1 md:px-8 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition ">
 //                                                     Watch? Discover More
 //                                                 </Button>
@@ -205,7 +205,7 @@
 //                                         <span className="text-[#F0851D]">AI - Powered </span>
 //                                         platform Zeus to find your dream university in 3 minutes.
 //                                     </p>
-//                                     <Link href="/universityarchievepage">
+//                                     <Link target="blank" href="/universityarchievepage">
 //                                         <Button className="mt-4 bg-white text-red-700 hover:bg-gray-300 w-4/5">
 //                                             Start your Abroad Journey
 //                                         </Button>
@@ -214,7 +214,6 @@
 //                             </div>
 //                         </div>
 //                     </div>
-
 
 //                 </div>
 //             </section>

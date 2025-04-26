@@ -243,7 +243,7 @@ function Page() {
                       <p className="text-white xl:px-4 mb-3">
                         NEED MORE INFO ABOUT DUBLIN CITY UNIVERSITY?
                       </p>
-                      <Link href="/universityarchievepage">
+                      <Link  href="/universityarchievepage">
                         <Button className="bg-white text-[#C7161E] px-2 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
                           Explore Here
                         </Button>
@@ -265,7 +265,7 @@ function Page() {
                       <p className="text-white md:px-2 xl:px-4 mb-3">
                         Get a glimpse of your future at DCU!
                       </p>
-                      <Link href="/universityarchievepage">
+                      <Link target="blank" href="/universityarchievepage">
                         <button className="bg-white text-[#C7161E] font-normal px-1 md:px-8 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition ">
                           Discover More
                         </button>
@@ -293,7 +293,7 @@ function Page() {
                     <span className="text-[#F0851D]">AI - Powered </span>
                     platform Zeus to find your dream university in 3 minutes.
                   </p>
-                  <Link href="/chatmodel">
+                  <Link target="blank" href="/chatmodel">
                     <Button className="mt-4 bg-white  text-red-700 hover:bg-gray-300 w-4/5">
                       Start your Abroad Journey
                     </Button>
@@ -414,6 +414,7 @@ function Page() {
               <p>
                 Have Questions about University Fee?{" "}
                 <Link
+                  target="blank"
                   href="/contactus"
                   className="text-red-600 hover:underline font-semibold"
                 >
@@ -450,7 +451,10 @@ function Page() {
                     : "bg-transparent text-black"
                 }`}
               >
-                <Link href="https://mta.ca/costs-financial-aid/scholarships-and-awards-first-year-students">
+                <Link
+                  target="blank"
+                  href="https://mta.ca/costs-financial-aid/scholarships-and-awards-first-year-students"
+                >
                   Scholarship Details
                 </Link>
               </button>
@@ -462,13 +466,16 @@ function Page() {
                     : "bg-transparent text-black"
                 }`}
               >
-                <Link href="https://mta.ca/current-students/student-finances/financial-aid-current-students">
+                <Link
+                  target="blank"
+                  href="https://mta.ca/current-students/student-finances/financial-aid-current-students"
+                >
                   Funding Details
                 </Link>
               </button>
             </div>
 
-            <Link href="/contactus">
+            <Link target="blank" href="/contactus">
               <Button
                 variant="outline"
                 className="w-full mt-4 border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
@@ -514,7 +521,7 @@ function Page() {
                   Accommodation fee at University of Victoria.
                 </p>
               </div>
-              <Link href="#">
+              <Link target="blank" href="#">
                 <Button
                   variant="outline"
                   className="w-full border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
@@ -541,7 +548,7 @@ function Page() {
                 <p>
                   Calculate your Living Expense at <br /> Dublin City University
                 </p>
-                <Link href="/trackexpense">
+                <Link target="blank" href="/trackexpense">
                   <Button
                     variant="secondary"
                     className="w-full bg-white text-black py-2 px-6 rounded-lg hover:bg-gray-200 transition duration-300"
@@ -674,7 +681,7 @@ function Page() {
               <p className="text-gray-400 mb-4">
                 Book your IELTS/PTE Classes with us and Start preparing Today!
               </p>
-              <Link href="/form">
+              <Link target="blank" href="/form">
                 <Button
                   className="w-full bg-[#545454] hover:bg-zinc-700 text-white py-2 rounded"
                   onClick={() => {}}
@@ -790,6 +797,7 @@ function Page() {
                 <p className="text-gray-700 mt-2">
                   Click on{" "}
                   <Link
+                    target="blank"
                     href="/apply-now"
                     className="text-[#F0851D] hover:underline font-semibold"
                   >
@@ -799,6 +807,7 @@ function Page() {
                   account. You can monitor your applications and receive regular
                   updates.{" "}
                   <Link
+                    target="blank"
                     href="/register"
                     className="text-[#F0851D] hover:underline font-semibold"
                   >
@@ -830,6 +839,7 @@ function Page() {
               <div className="relative text-center text-white">
                 <h6 className="mb-2">Begin Your Academic Journey in Ireland</h6>
                 <Link
+                  target="blank"
                   href="/learn-more"
                   className="bg-red-500 text-white px-2 py-2 rounded-md hover:bg-red-600 text-sm"
                 >
@@ -861,6 +871,7 @@ function Page() {
           {/* Read More */}
           <div className="">
             <Link
+              target="blank"
               href="/read-more"
               className="text-red-500 hover:underline font-semibold"
             >

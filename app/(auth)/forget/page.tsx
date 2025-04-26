@@ -127,7 +127,7 @@ const Page = () => {
     <div className="flex items-center justify-center h-[80vh] md:h-screen">
       {/* Form Section */}
       <div className="flex-1 max-w-xl px-10 lg:px-20">
-        <Link href="/">
+        <Link  href="/">
           <Image src="/logowwah.svg" alt="WWAH Logo" width={150} height={60} />
         </Link>
         <h2 className="mb-2 text-center">Forget Password</h2>

@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { useCountry } from "@/store/useCountriesStore";
 import Link from "next/link";
 const Page = () => {
-
   const [search, setSearch] = useState("");
-  const { countries, fetchCountries } = useCountry() as { countries: { _id: string, short_name: string, alt: string }[], fetchCountries: () => void };
+  const { countries, fetchCountries } = useCountry() as {
+    countries: { _id: string; short_name: string; alt: string }[];
+    fetchCountries: () => void;
+  };
   const handelFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
@@ -47,7 +49,12 @@ const Page = () => {
         </div>
         <div className="grid grid-cols-4 gap-5 ">
           {countries?.map((country, index) => (
-            <Link target="_blank" href={`/countries/${country._id}`} key={index}>
+            <Link
+              target="blank"
+           
+              href={`/countries/${country._id}`}
+              key={index}
+            >
               <div className="flex-shrink-0 ">
                 <Image
                   src={`/countryarchive/${country.short_name}.svg`}

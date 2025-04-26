@@ -112,7 +112,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
 
                   {/* Button */}
                   <div className="w-full flex items-center justify-center">
-                    <Link href="/visaguide">
+                    <Link  href="/visaguide">
                       <Button className="bg-red-700  hover:bg-red-80">
                         Find out More
                       </Button>

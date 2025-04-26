@@ -47,7 +47,6 @@ export const routes: RouteProps[] = [
     label: "Student Preference",
     icon: PiStudent,
   },
- 
 ];
 export const SidebarProfile = () => {
   const pathname = usePathname();
@@ -75,6 +74,7 @@ export const SidebarProfile = () => {
           <div className="">
             {routes.map((route) => (
               <Link
+                target="blank"
                 href={route.href}
                 key={route.href}
                 className={cn(

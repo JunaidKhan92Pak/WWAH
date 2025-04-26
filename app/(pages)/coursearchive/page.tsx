@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button";
 import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
-import { Copy } from "lucide-react"
- 
+import { Copy } from "lucide-react";
+
 import {
   Dialog,
   DialogClose,
@@ -28,8 +28,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -75,25 +75,25 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-  
+
   // No need to load favorites from localStorage
-  
+
   const toggleFavorite = (id: string) => {
     setFavorites((prev) => {
       const updatedFavorites = { ...prev, [id]: !prev[id] };
-  
+
       // Update count
       const newCount = Object.values(updatedFavorites).filter(Boolean).length;
       setFavoritesCount(newCount);
-  
+
       // Animate heart
       setHeartAnimation(id);
       setTimeout(() => setHeartAnimation(null), 1000);
-  
+
       return updatedFavorites;
     });
   };
-  
+
   // Debounced search
   const handleSearch = useCallback(
     debounce((value: string) => {
@@ -101,18 +101,17 @@ const CourseArchive = () => {
     }, 500),
     []
   );
-  
+
   // Fetch courses on mount
   useEffect(() => {
     fetchCourses(); // assuming fetchCourses is defined
   }, []);
-  
+
   // Filtered courses based on favorites toggle
   const displayedCourses = showFavorites
     ? courses.filter((course) => favorites[course._id])
     : courses;
-  
-    
+
   return (
     <section className="w-[95%] mx-auto p-2 ">
       <div className="flex flex-col lg:flex-row lg:items-center">
@@ -159,22 +158,21 @@ const CourseArchive = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        <button
-  onClick={() => setShowFavorites((prev) => !prev)}
-  className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
-    showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-  }`}
->
-  <Image
-    src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
-    width={20}
-    height={18}
-    alt="favorites"
-  />
-  {showFavorites ? "Show All" : "Favorites"} 
-  <span>({favoritesCount})</span>
-</button>
-
+          <button
+            onClick={() => setShowFavorites((prev) => !prev)}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
+          >
+            <Image
+              src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
+              width={20}
+              height={18}
+              alt="favorites"
+            />
+            {showFavorites ? "Show All" : "Favorites"}
+            <span>({favoritesCount})</span>
+          </button>
 
           <FilterComponent />
         </div>
@@ -196,22 +194,23 @@ const CourseArchive = () => {
                 className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3 "
               >
                 <div className="relative h-52 p-2">
-                <Link
+                  <Link
+                    target="blank"
                     href={`/courses/${item._id}`}
-                    target="_blank"
+                    
                     rel="noopener noreferrer"
                     className="w-1/2"
                   >
-                  <ImageWithLoader
-                    src={
-                      item.universityData?.universityImages.banner ||
-                      `/course-${idx}.png`
-                    }
-                    alt="coursesImg"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
-                    className="object-cover  rounded-2xl"
-                  />
-                 </Link>
+                    <ImageWithLoader
+                      src={
+                        item.universityData?.universityImages.banner ||
+                        `/course-${idx}.png`
+                      }
+                      alt="coursesImg"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
+                      className="object-cover  rounded-2xl"
+                    />
+                  </Link>
                   <div className="absolute top-4 left-0">
                     <div className=" bg-gradient-to-r from-white to-transparent opacity-100 w-[70%] ">
                       <div className="flex items-center gap-2 ">
@@ -235,102 +234,116 @@ const CourseArchive = () => {
                   </div>
 
                   <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
-                   
-                  <Dialog>
-  <DialogTrigger asChild>
-    <button>
-      <Image src="/share.svg" width={20} height={20} alt="Share" />
-    </button>
-  </DialogTrigger>
-  <DialogContent className="sm:max-w-md">
-    <DialogHeader>
-      <DialogTitle>Share link</DialogTitle>
-      <DialogDescription>
-        Anyone who has this link will be able to view this.
-      </DialogDescription>
-    </DialogHeader>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button>
+                          <Image
+                            src="/share.svg"
+                            width={20}
+                            height={20}
+                            alt="Share"
+                          />
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Share link</DialogTitle>
+                          <DialogDescription>
+                            Anyone who has this link will be able to view this.
+                          </DialogDescription>
+                        </DialogHeader>
 
-    <div className="flex items-center space-x-2">
-      <div className="grid flex-1 gap-2">
-        <Label htmlFor={`link-${item._id}`} className="sr-only">
-          Link
-        </Label>
-        <Input
-          id={`link-${item._id}`}
-          value={`${typeof window !== "undefined" ? window.location.origin : ""}/courses/${item._id}`}
-          readOnly
-        />
-      </div>
-      <Button
-        type="button"
-        size="sm"
-        className="px-3"
-        onClick={() => {
-          const link = `${window.location.origin}/courses/${item._id}`;
-          navigator.clipboard.writeText(link).then(() => {
-            setCopiedLinkId(item._id);
-            setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
-          });
-        }}
-      >
-        <span className="sr-only">Copy</span>
-        <Copy />
-      </Button>
-    </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="grid flex-1 gap-2">
+                            <Label
+                              htmlFor={`link-${item._id}`}
+                              className="sr-only"
+                            >
+                              Link
+                            </Label>
+                            <Input
+                              id={`link-${item._id}`}
+                              value={`${
+                                typeof window !== "undefined"
+                                  ? window.location.origin
+                                  : ""
+                              }/courses/${item._id}`}
+                              readOnly
+                            />
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            className="px-3"
+                            onClick={() => {
+                              const link = `${window.location.origin}/courses/${item._id}`;
+                              navigator.clipboard.writeText(link).then(() => {
+                                setCopiedLinkId(item._id);
+                                setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
+                              });
+                            }}
+                          >
+                            <span className="sr-only">Copy</span>
+                            <Copy />
+                          </Button>
+                        </div>
 
-    {/* 👇 Show message conditionally */}
-    {copiedLinkId === item._id && (
-      <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
-    )}
+                        {/* 👇 Show message conditionally */}
+                        {copiedLinkId === item._id && (
+                          <p className="text-black text-sm mt-2">
+                            Link copied to clipboard!
+                          </p>
+                        )}
 
-    <DialogFooter className="sm:justify-start">
-      <DialogClose asChild>
-        <Button type="button" variant="secondary">
-          Close
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-
+                        <DialogFooter className="sm:justify-start">
+                          <DialogClose asChild>
+                            <Button type="button" variant="secondary">
+                              Close
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
 
                     <button
-  onClick={() => toggleFavorite(item._id)}
-  className={`relative ${heartAnimation === item._id ? 'animate-pop' : ''}`}
->
-  {favorites[item._id] ? (
-    <Image
-      src="/redheart.svg"
-      width={20}
-      height={20}
-      alt="Favorite"
-    />
-  ) : (
-    <Image
-      src="/whiteheart.svg"
-      width={20}
-      height={20}
-      alt="Favorite"
-    />
-  )}
-</button>
-
+                      onClick={() => toggleFavorite(item._id)}
+                      className={`relative ${
+                        heartAnimation === item._id ? "animate-pop" : ""
+                      }`}
+                    >
+                      {favorites[item._id] ? (
+                        <Image
+                          src="/redheart.svg"
+                          width={20}
+                          height={20}
+                          alt="Favorite"
+                        />
+                      ) : (
+                        <Image
+                          src="/whiteheart.svg"
+                          width={20}
+                          height={20}
+                          alt="Favorite"
+                        />
+                      )}
+                    </button>
                   </div>
                 </div>
                 <div className="p-4 flex-grow">
                   {/* University Name and Course Title */}
                   <Link
+                    target="blank"
                     href={`/courses/${item._id}`}
-                    target="_blank"
+
                     rel="noopener noreferrer"
                     className="w-1/2"
                   >
-                  <h3
-                    className="text-base md:text-lg font-bold text-gray-800 truncate hover:underline underline-offset-4 cursor-pointer "
-                    title={item?.course_title}
-                  >
-                    {item?.course_title}
-                  </h3>
+                    <h3
+                      className="text-base md:text-lg font-bold text-gray-800 truncate hover:underline underline-offset-4 cursor-pointer "
+                      title={item?.course_title}
+                    >
+                      {item?.course_title}
+                    </h3>
                   </Link>
                   <div className="grid grid-cols-2 gap-x-2 gap-y-4 mt-3">
                     <div className="flex items-center gap-2">
@@ -387,8 +400,8 @@ const CourseArchive = () => {
 
                 <div className="flex justify-between items-center mb-4 mt-auto gap-2">
                   <Link
+                    target="blank"
                     href={`/courses/${item._id}`}
-                    target="_blank"
                     rel="noopener noreferrer"
                     className="w-1/2"
                   >
@@ -397,7 +410,7 @@ const CourseArchive = () => {
                     </button>
                   </Link>
 
-                  <Link href="dashboard" className="w-1/2">
+                  <Link target="blank" href="dashboard" className="w-1/2">
                     <button className="w-full border border-red-500 text-red-500 text-sm p-2 rounded-lg">
                       Create Application
                     </button>
@@ -430,4 +443,3 @@ const CourseArchive = () => {
 };
 
 export default Page;
-

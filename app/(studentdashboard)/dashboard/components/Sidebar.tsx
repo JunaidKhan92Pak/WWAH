@@ -60,7 +60,7 @@ export function Sidebar() {
       fetchUserProfile(token);
     }
   }, []);
-    const router = useRouter(); // Initialize Next.js router
+  const router = useRouter(); // Initialize Next.js router
 
     const handleLogout = async () => {
       await logout(); // Ensure logout is completed
@@ -90,7 +90,7 @@ export function Sidebar() {
         </h2>
         <p className="text-xs text-gray-500">{user?.user?.email}</p>
         <div className="w-full">
-          <Link href="/dashboard/myprofile">
+          <Link  href="/dashboard/myprofile">
             <Button className="mt-1 bg-red-700 hover:bg-red-600 text-white w-full">
               My Profile
             </Button>
@@ -100,6 +100,7 @@ export function Sidebar() {
       <div className="flex flex-1 flex-col gap-2 p-4 ">
         {sidebarItems.map((item, index) => (
           <Link
+            target="blank"
             key={index}
             href={item.href}
             className={cn(

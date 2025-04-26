@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {users.map((user) => (
             <Link
-              target="_blank"
+              
               rel="noopener noreferrer"
               href={`/adminportal/dashboard/${user._id}`}
               key={user._id}

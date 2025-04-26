@@ -75,7 +75,7 @@ const Page = () => {
       <div className="md:w-1/2 flex items-center justify-center">
         <div className="w-6/7 pt-5 md:pt-0 px-8 flex flex-col items-end justify-center">
           <div className="w-full sm:w-full lg:w-4/5">
-            <Link href="/">
+            <Link  href="/">
               <Image
                 src={logo}
                 alt="Logo"
@@ -154,7 +154,7 @@ const Page = () => {
                 />
                 <span className="text-[12px] 2xl:text-[24px]">Remember me</span>
               </div>
-              <Link href="/forget" className="text-red-400">
+              <Link target="blank" href="/forget" className="text-red-400">
                 <span className="text-[12px] 2xl:text-[24px]">
                   Forget password?
                 </span>
@@ -181,6 +181,7 @@ const Page = () => {
             <span className="block text-[12px] lg:text-[14px] 2xl:text-[24px] text-center 2xl:w-full">
               Don&#39;t have an account?{" "}
               <Link
+                target="blank"
                 href="/signup"
                 className="text-[#F0851D] text-[12px] 2xl:text-[24px] lg:text-[14px]"
               >

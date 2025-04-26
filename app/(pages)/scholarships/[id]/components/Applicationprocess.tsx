@@ -23,7 +23,6 @@ const ReadMore: React.FC<ReadMoreProps> = ({ children }) => {
   );
 };
 const Applicationprocess = () => {
-  
   // const sliderData = [
   //   {
   //     src: "/scholarshipdetail/slideee.png",
@@ -52,6 +51,7 @@ const Applicationprocess = () => {
               <p className="text-gray-700 mt-1">
                 Click on{" "}
                 <Link
+                  target="blank"
                   href="/dashboard/overview"
                   className="text-red-500 hover:underline font-semibold"
                 >
@@ -61,6 +61,7 @@ const Applicationprocess = () => {
                 account. You can monitor your applications and receive regular
                 updates.{" "}
                 <Link
+                  target="blank"
                   href="/signin"
                   className="text-red-500 hover:underline font-semibold"
                 >
