@@ -1,24 +1,55 @@
 "use client";
-interface Course {
-  [key: string]: string | number | { currency: string; amount: number };
-}
-import FileButton from "@/components/FileButton";
+
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import FileButton from "@/components/FileButton";
+
+// Define proper TypeScript interfaces
+interface TuitionFee {
+  currency: string;
+  amount: number;
+}
+
+interface Course {
+  [key: string]: string | number | TuitionFee | string[] | null | undefined;
+  course_id?: string;
+  course_title: string;
+  course_link?: string;
+}
+
+interface ParsedData {
+  country: string;
+  university: string;
+  courses: Course[];
+}
+
+interface UploadResult {
+  message: string;
+  summary?: {
+    added: number;
+    updated: number;
+    skipped: number;
+    failed: number;
+    total: number;
+  };
+  details?: {
+    added: any[];
+    updated: any[];
+    skipped: any[];
+    failed: any[];
+  };
+}
+
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [parsedData, setParsedData] = useState<{
-    country: string;
-    university: string;
-    courses: Course[];
-  }>({
+  const [parsedData, setParsedData] = useState<ParsedData>({
     country: "",
     university: "",
     courses: [],
   });
-
-  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<UploadResult | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,59 +68,122 @@ export default function Home() {
       }
       setFile(selectedFile);
       setError(null);
+      setUploadStatus(null);
     } else {
       setError("No file selected. Please choose a file.");
     }
   };
 
+  // Process array fields correctly
+  const handleArrayFields = (key: string, value: any): any => {
+    // Fields that should be arrays
+    const arrayFields = ['intake', 'start_date'];
+
+    if (arrayFields.includes(key)) {
+      if (Array.isArray(value)) {
+        return value;
+      } else if (typeof value === 'string') {
+        // Split by commas or semicolons, trim each value, and filter out empty entries
+        return value.split(/[,;]/).map(item => item.trim()).filter(Boolean);
+      } else if (value) {
+        // If it's not an array or string but has a value, make it a single-item array
+        return [String(value)];
+      }
+      return [];
+    }
+
+    return value;
+  };
+
+  // Handle tuition fee parsing
+  const parseTuitionFee = (value: any): TuitionFee => {
+    // Default value
+    const defaultFee: TuitionFee = { currency: "$", amount: 0 };
+
+    if (typeof value === "string") {
+      // Try to match currency symbol and amount
+      const currencyMatch = value.match(/^([€£$¥]|USD|CAD|EUR|GBP|AUD|NZD)/i);
+      const numberMatch = value.match(/[\d,\.]+/);
+
+      if (numberMatch) {
+        const amount = parseFloat(numberMatch[0].replace(/,/g, ""));
+        let currency = "$";
+
+        if (currencyMatch) {
+          switch (currencyMatch[0].toUpperCase()) {
+            case "€":
+            case "EUR":
+              currency = "€";
+              break;
+            case "£":
+            case "GBP":
+              currency = "£";
+              break;
+            case "¥":
+              currency = "¥";
+              break;
+            case "AUD":
+            case "NZD":
+            case "CAD":
+            case "USD":
+            default:
+              currency = "$";
+          }
+        }
+
+        return { currency, amount };
+      }
+    } else if (typeof value === "number" && !isNaN(value)) {
+      return { currency: "$", amount: value };
+    }
+
+    return defaultFee;
+  };
+
   // Normalize JSON keys
-  const normalizeData = (data: Record<string, string | number>[]) => {
+  const normalizeData = (data: Record<string, any>[]): Course[] => {
     return data.map((row) => {
-      return Object.fromEntries(
-        Object.entries(row).map(([key, value]) => {
-          // ✅ Normalize keys (trim spaces, replace spaces/slashes with underscores, convert to lowercase)
-          const normalizedKey = key.trim().replace(/[\s/]+/g, "_").toLowerCase();
+      const normalizedRow: Course = { course_title: "" };
 
-          // ✅ Declare normalizedValue only once
-          let normalizedValue: string | number | { currency: string; amount: number } = value;
+      Object.entries(row).forEach(([key, value]) => {
+        // Normalize keys (trim spaces, replace spaces/slashes with underscores, convert to lowercase)
+        const normalizedKey = key.trim().replace(/[\s/]+/g, "_").toLowerCase();
 
-          // ✅ Handle Excel date conversion (if value is a number in Excel date range)
-          if (typeof value === "number" && value > 40000 && value < 60000) {
-            try {
-              const date = XLSX.SSF.parse_date_code(value);
-              normalizedValue = new Date(Date.UTC(date.y, date.m - 1, date.d))
-                .toISOString()
-                .split("T")[0]; // Format as YYYY-MM-DD
-            } catch (error) {
-              console.error("Excel date conversion failed for:", value, error);
-            }
+        // Skip empty values
+        if (value === null || value === undefined || value === "") {
+          return;
+        }
+
+        // Handle Excel date conversion
+        if (typeof value === "number" && value > 40000 && value < 60000) {
+          try {
+            const date = XLSX.SSF.parse_date_code(value);
+            normalizedRow[normalizedKey] = new Date(
+              Date.UTC(date.y, date.m - 1, date.d)
+            ).toISOString().split("T")[0]; // Format as YYYY-MM-DD
+            return;
+          } catch (error) {
+            console.error("Excel date conversion failed for:", value, error);
           }
+        }
 
-          // ✅ Handle annual tuition fee extraction and normalization
-          if (normalizedKey === "annual_tuition_fee") {
-            // If the value is a string with a currency symbol (e.g., "$9000" or "€9000")
-            if (typeof value === "string") {
-              const match = value.match(/([$€£])?([\d,]+)/); // Match optional currency and amount
-              if (match) {
-                normalizedValue = {
-                  currency: match[1] || "$", // Default currency to "$" if not provided
-                  amount: parseFloat(match[2].replace(/,/g, "")), // Convert number string to float
-                };
-              }
-            }
-            // If the value is a number, treat it as an amount and add the default currency
-            else if (typeof value === "number") {
-              normalizedValue = {
-                currency: "$", // Default to "$" for numbers
-                amount: value,
-              };
-            }
-          }
+        // Special handling for annual_tuition_fee
+        if (normalizedKey === "annual_tuition_fee") {
+          normalizedRow[normalizedKey] = parseTuitionFee(value);
+          return;
+        }
 
-          return [normalizedKey, normalizedValue];
-        })
-      );
-    });
+        // Handle array fields
+        normalizedRow[normalizedKey] = handleArrayFields(normalizedKey, value);
+      });
+
+      // Validate course has a title
+      if (!normalizedRow.course_title) {
+        console.warn("Course missing title:", normalizedRow);
+      }
+
+      return normalizedRow;
+    }).filter(course => course.course_title); // Filter out courses without titles
   };
 
   // Read and process the Excel file
@@ -99,6 +193,9 @@ export default function Home() {
       return;
     }
 
+    setIsLoading(true);
+    setError(null);
+
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
@@ -106,35 +203,49 @@ export default function Home() {
         const workbook = XLSX.read(data, { type: "array" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const json = XLSX.utils.sheet_to_json<Record<string, string | number>>(worksheet);
-        // Normalize and update parsed data
+        const json = XLSX.utils.sheet_to_json<Record<string, any>>(worksheet);
 
+        // Normalize and update parsed data
         const normalizedData = normalizeData(json);
+
+        if (normalizedData.length === 0) {
+          setError("The file does not contain any valid courses.");
+          setIsLoading(false);
+          return;
+        }
 
         setParsedData((prev) => ({
           ...prev,
           courses: normalizedData,
         }));
-        setError(null);
 
-        // Log parsed courses for debugging
-        if (normalizedData.length === 0) {
-          setError("The file does not contain any courses.");
+        // Try to extract university and country from first row if present
+        if (normalizedData.length > 0) {
+          const firstCourse = normalizedData[0];
+          if (firstCourse.universityname && !parsedData.university) {
+            setParsedData(prev => ({ ...prev, university: String(firstCourse.universityname) }));
+          }
+          if (firstCourse.countryname && !parsedData.country) {
+            setParsedData(prev => ({ ...prev, country: String(firstCourse.countryname) }));
+          }
         }
 
+        setIsLoading(false);
       } catch (err) {
         console.error("Error reading file:", err);
         setError("An error occurred while processing the file. Please try again.");
+        setIsLoading(false);
       }
     };
 
     reader.onerror = () => {
       console.error("File reading failed");
       setError("Failed to read the file. Please try a different file.");
+      setIsLoading(false);
     };
+
     reader.readAsArrayBuffer(file);
   };
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -148,17 +259,29 @@ export default function Home() {
   const uploadDataToServer = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!parsedData.university || !parsedData.country || parsedData.courses.length === 0) {
-      setError("Please fill all the fields and ensure the file has been parsed.");
+    if (!parsedData.university.trim()) {
+      setError("Please enter the university name.");
       return;
     }
 
+    if (!parsedData.country.trim()) {
+      setError("Please enter the country name.");
+      return;
+    }
+
+    if (parsedData.courses.length === 0) {
+      setError("No courses to upload. Please parse a valid Excel file first.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
     try {
-      // Send the correct data structure
       const payload = {
-        country: parsedData.country,
-        university: parsedData.university,
-        courses: parsedData.courses, // Pass courses as an array
+        country: parsedData.country.trim(),
+        university: parsedData.university.trim(),
+        courses: parsedData.courses,
       };
 
       const response = await fetch("/api/addCourse", {
@@ -168,82 +291,205 @@ export default function Home() {
         credentials: "include",
       });
 
+      const result = await response.json();
+
       if (response.ok) {
-        const result = await response.json();
-        setUploadStatus(result.message || "Data uploaded successfully.");
-        setParsedData({ country: "", university: "", courses: [] });
-        setFile(null);
+        setUploadStatus(result);
+
+        // Clear form if there were no errors
+        if (!result.details?.failed?.length) {
+          setParsedData({ country: "", university: "", courses: [] });
+          setFile(null);
+        }
       } else {
-        const errorData = await response.json();
-        setUploadStatus(`Error: ${errorData.message || "Unknown error occurred."}`);
+        setUploadStatus({
+          message: `Error: ${result.message || "Unknown error occurred."}`,
+          summary: { added: 0, updated: 0, skipped: 0, failed: parsedData.courses.length, total: parsedData.courses.length }
+        });
       }
     } catch (error) {
       console.error("Error uploading data:", error);
-      setUploadStatus("An error occurred while uploading data.");
+      setUploadStatus({
+        message: "An error occurred while uploading data.",
+        summary: { added: 0, updated: 0, skipped: 0, failed: parsedData.courses.length, total: parsedData.courses.length }
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // Render upload status with more details
+  const renderUploadStatus = () => {
+    if (!uploadStatus) return null;
 
-  return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">Excel File Reader</h1>
+    const isError = uploadStatus.message.startsWith("Error");
+    const statusClass = isError ? "text-red-600" : "text-green-600";
 
-      <form onSubmit={uploadDataToServer} className="space-y-4">
-        <input
-          type="text"
-          name="country"
-          placeholder="Enter Country"
-          value={parsedData.country}
-          onChange={handleInputChange}
-          className="block w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="text"
-          name="university"
-          placeholder="Enter University"
-          value={parsedData.university}
-          onChange={handleInputChange}
-          className="block w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="file"
-          accept=".xlsx, .xls"
-          onChange={handleFileChange}
-          className="block w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <div className="flex items-center justify-center">
-          <FileButton handleFile={handleFileRead} />
-        </div>
-        {/* <button
-          type="button"
-          onClick={handleFileRead}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          Read File
-        </button> */}
-        {error && <p className="text-red-500 text-center">{error}</p>}
+    return (
+      <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
+        <h3 className={`font-bold ${statusClass}`}>{uploadStatus.message}</h3>
 
-        {parsedData.courses.length > 0 && (
-          <div className="p-2 bg-green-50 border border-green-200 rounded-lg">
-            <h2 className="text-lg font-bold text-green-700 mb-2">Parsed Data</h2>
-            <p><strong>Country:</strong> {parsedData.country}</p>
-            <p><strong>University:</strong> {parsedData.university}</p>
-            <h3 className="mt-2 text-green-600 font-semibold">Courses:</h3>
-            <pre className="bg-gray-100 p-2 rounded-lg text-sm text-gray-800 h-[380px] overflow-auto">
-              {JSON.stringify(parsedData.courses, null, 2)}
-            </pre>
+        {uploadStatus.summary && (
+          <div className="mt-2">
+            <div className="flex justify-between text-sm">
+              <span>✅ Added: {uploadStatus.summary.added}</span>
+              <span>🔄 Updated: {uploadStatus.summary.updated}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span>⏭️ Skipped: {uploadStatus.summary.skipped}</span>
+              <span>❌ Failed: {uploadStatus.summary.failed}</span>
+            </div>
+            <div className="mt-1 text-sm text-center">
+              Total processed: {uploadStatus.summary.total}
+            </div>
           </div>
         )}
-        {parsedData.courses.length > 0 && (
+
+        {(uploadStatus?.details?.failed?.length ?? 0) > 0 && (
+          <div className="mt-2">
+            <details>
+              <summary className="cursor-pointer text-red-500 font-semibold">
+                Show Failed Items ({uploadStatus.details?.failed?.length || 0})
+              </summary>
+              <ul className="mt-1 text-xs text-red-600 list-disc pl-5">
+                {uploadStatus.details?.failed?.map((item, i) => (
+                  <li key={i}>{item.course}: {item.error}</li>
+                ))}
+              </ul>
+            </details>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg">
+      <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
+        Course Data Uploader
+      </h1>
+
+      <form onSubmit={uploadDataToServer} className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
+              Country
+            </label>
+            <input
+              id="country"
+              type="text"
+              name="country"
+              placeholder="Enter Country"
+              value={parsedData.country}
+              onChange={handleInputChange}
+              className="block w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="university" className="block text-sm font-medium text-gray-700 mb-1">
+              University
+            </label>
+            <input
+              id="university"
+              type="text"
+              name="university"
+              placeholder="Enter University"
+              value={parsedData.university}
+              onChange={handleInputChange}
+              className="block w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">
+            Excel File
+          </label>
+          <input
+            id="file"
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleFileChange}
+            className="block w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div className="flex items-center justify-center">
           <button
-            type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 mt-4"
+            type="button"
+            onClick={handleFileRead}
+            disabled={!file || isLoading}
+            className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center"
           >
-            Upload Data to Server
+            {isLoading ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+              </>
+            ) : (
+              "Parse Excel File"
+            )}
           </button>
+        </div>
+
+        {error && (
+          <div className="p-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            {error}
+          </div>
+        )}
+
+        {parsedData.courses.length > 0 && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-bold text-green-700">Parsed Data</h2>
+              <span className="text-sm bg-green-600 text-white px-2 py-0.5 rounded-full">
+                {parsedData.courses.length} courses
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-sm mb-2">
+              <div>
+                <span className="font-semibold">Country:</span> {parsedData.country || "-"}
+              </div>
+              <div>
+                <span className="font-semibold">University:</span> {parsedData.university || "-"}
+              </div>
+            </div>
+
+            <details>
+              <summary className="cursor-pointer text-green-600 font-semibold text-sm mb-1">
+                Show Course Data
+              </summary>
+              <pre className="bg-gray-100 p-2 rounded-lg text-xs text-gray-800 h-[300px] overflow-auto">
+                {JSON.stringify(parsedData.courses, null, 2)}
+              </pre>
+            </details>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full mt-3 bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 flex items-center justify-center"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Uploading...
+                </>
+              ) : (
+                "Upload Courses to Server"
+              )}
+            </button>
+          </div>
         )}
       </form>
-      {uploadStatus && <p className="text-center mt-4">{uploadStatus}</p>}
+
+      {renderUploadStatus()}
     </div>
   );
 }

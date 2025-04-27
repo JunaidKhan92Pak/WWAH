@@ -36,6 +36,9 @@ const Page = () => {
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
+    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
+    { name: "Ireland", value: "Ireland", img: "/countryarchive/ireland_logo.png" },
+    { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
     {
       name: "New Zealand",
       value: "New Zealand",
@@ -196,6 +199,7 @@ const Page = () => {
               height={16}
               alt="search"
               className="ml-2"
+              unoptimized
             />
             <Input
               placeholder="Search..."
@@ -272,9 +276,8 @@ const Page = () => {
             </DropdownMenu>
             <button
               onClick={() => setShowFavorites((prev) => !prev)}
-              className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
-                showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+              className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+                }`}
             >
               <Image
                 src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -361,11 +364,10 @@ const Page = () => {
                               </Label>
                               <Input
                                 id={`link-${item._id}`}
-                                value={`${
-                                  typeof window !== "undefined"
-                                    ? window.location.origin
-                                    : ""
-                                }/Universities/${item._id}`}
+                                value={`${typeof window !== "undefined"
+                                  ? window.location.origin
+                                  : ""
+                                  }/Universities/${item._id}`}
                                 readOnly
                               />
                             </div>
@@ -405,9 +407,8 @@ const Page = () => {
 
                       <button
                         onClick={() => toggleFavorite(item._id)}
-                        className={`relative ${
-                          heartAnimation === item._id ? "animate-pop" : ""
-                        }`}
+                        className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
+                          }`}
                       >
                         {favorites[item._id] ? (
                           <Image
@@ -436,6 +437,7 @@ const Page = () => {
 
                     <div className="absolute bottom-1 left-5">
                       <Image
+                        unoptimized
                         src={item.universityImages?.logo ?? "/banner.jpg"}
                         width={100}
                         height={90}

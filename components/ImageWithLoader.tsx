@@ -29,7 +29,7 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({ src, alt, sizes, clas
                     className="max-w-sm rounded shadow animate-pulse  dark:border-gray-400"
                 >
                     <div
-                        className="flex items-center justify-center h-60  bg-gray-300 rounded dark:bg-gray-400"
+                        className="flex items-center justify-center h-[200px]  bg-gray-300 rounded-lg dark:bg-gray-400"
                     >
                         <svg
                             viewBox="0 0 16 20"

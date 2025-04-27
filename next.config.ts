@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
         hostname: 'wwah-bucket.s3.us-east-1.amazonaws.com',
       },
     ],
+    minimumCacheTTL: 60,
     domains: [
       "res.cloudinary.com",
       "encrypted-tbn1.gstatic.com",
