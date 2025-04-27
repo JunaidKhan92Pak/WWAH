@@ -1,7 +1,7 @@
 "use client";
 // import useUser from "@/hooks/useUser";
 import { deleteAuthToken } from "@/utils/authHelper";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useUserStore } from "@/store/userStore";
 const AuthContext = createContext();
 
@@ -10,10 +10,10 @@ export const AuthProvider = ({ children }) => {
   const { setUser } = useUserStore(); // ✅ Zustand state management
   const [user, setUserState] = useState(null);
   const [token, setToken] = useState(null);
-  const { fetchUser } = useUserStore();
-  useEffect(() => {
-    fetchUser(); // Fetch once when app loads
-  }, []);
+  // const { fetchUser } = useUserStore();
+  // useEffect(() => {
+  //   fetchUser(); // Fetch once when app loads
+  // }, []);
 
   const loginAction = async (userData) => {
     try {
@@ -24,11 +24,11 @@ export const AuthProvider = ({ children }) => {
       });
 
       const loggedInUser = await res.json();
-      if (loggedInUser.success) {
-        document.cookie = `authToken=${loggedInUser.token}; path=/`;
-        setToken(loggedInUser.token);
-        await fetchUser();
+      if (!loggedInUser.success) {
+        return { success: false, message: loggedInUser.message || "Login failed." };
       }
+      document.cookie = `authToken=${loggedInUser.token}; path=/`;
+      setToken(loggedInUser.token);
       return loggedInUser;
     } catch (err) {
       console.error("Login error", err);
@@ -52,13 +52,12 @@ export const AuthProvider = ({ children }) => {
       if (!response.ok || !res.signup) {
         return { success: false, message: res.message || "Sign-up failed." };
       }
-
       document.cookie = `authToken=${res.token}; path=/`;
       setToken(res.token);
       return { success: true };
     } catch (err) {
       console.error("Signup error", err);
-      return { success: false, message: "An error occurred during sign-up." };
+      return { success: false, message: "Server error occurred during sign-up." };
     }
   };
   //create admin action

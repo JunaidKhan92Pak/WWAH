@@ -3,10 +3,11 @@ import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
 import { getUserData } from "@/utils/getUser";
 
 export interface UserData {
-    majorSubject: { majorSubject: string, highestQualification: string, previousGradingScore: number, previousGradingScale: string };
-    langPro: { proficiencyTest: string, proficiencyTestScore: number };
-    userPreference: { tutionfees: string };
-    personalInfo: { id: string, firstName: string, email: string };
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone: number;
+    email: string;
 }
 
 interface UserState {
