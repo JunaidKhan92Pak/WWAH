@@ -42,7 +42,7 @@ function Page() {
     { name: "Australia", value: "australia", img: "/countryarchive/australia_logo.png" },
     { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
     { name: "Ireland", value: "Ireland", img: "/countryarchive/ireland_logo.png" },
-    { name: "Malayshia", value: "malayshia", img: "/countryarchive/malayshia_logo.png" },
+    { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
   ];
   const router = useRouter();
   const { isAuthenticate, loading, logout, user } = useUserStore();
