@@ -53,7 +53,13 @@ const Page = () => {
     try {
       const loginRes = await loginAction(userData);
       if (loginRes.success && loginRes.user) {
-        setUser(loginRes.user);
+        setUser({
+          id: loginRes.user.id,
+          firstName: loginRes.user.firstName,
+          lastName: loginRes.user.lastName,
+          phone: loginRes.user.phone,
+          email: loginRes.user.email,
+        });
         if (loginRes.user) {
           router.push(callbackUrl);
 
@@ -75,7 +81,7 @@ const Page = () => {
       <div className="md:w-1/2 flex items-center justify-center">
         <div className="w-6/7 pt-5 md:pt-0 px-8 flex flex-col items-end justify-center">
           <div className="w-full sm:w-full lg:w-4/5">
-            <Link  href="/">
+            <Link href="/">
               <Image
                 src={logo}
                 alt="Logo"
@@ -104,11 +110,10 @@ const Page = () => {
                 <IoMailOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type="text"
-                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
-                    errors.email || generalError
-                      ? "border-red-600"
-                      : "border-gray-300"
-                  } rounded text-base 2xl:text-lg`}
+                  className={`w-full pl-10 2xl:pl-16 pr-2 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.email || generalError
+                    ? "border-red-600"
+                    : "border-gray-300"
+                    } rounded text-base 2xl:text-lg`}
                   placeholder="Enter your email address"
                   name="email"
                   value={userData.email}
@@ -122,11 +127,10 @@ const Page = () => {
                 <IoKeyOutline className="absolute left-3 2xl:left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg 2xl:text-3xl" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${
-                    errors.password || generalError
-                      ? "border-red-600"
-                      : "border-gray-300"
-                  } rounded`}
+                  className={`w-full pl-10 2xl:pl-16 pr-10 py-1 sm:py-2 2xl:py-6 border placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] ${errors.password || generalError
+                    ? "border-red-600"
+                    : "border-gray-300"
+                    } rounded`}
                   placeholder="Enter your password"
                   name="password"
                   value={userData.password}
@@ -168,11 +172,10 @@ const Page = () => {
             </div>
             <button
               type="submit"
-              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${
-                isDisabled
-                  ? "bg-red-600 opacity-30 cursor-not-allowed"
-                  : "bg-red-700"
-              }`}
+              className={`w-full text-white p-2 rounded 2xl:p-4 transition-opacity duration-200 ${isDisabled
+                ? "bg-red-600 opacity-30 cursor-not-allowed"
+                : "bg-red-700"
+                }`}
               disabled={isDisabled}
             >
               {loading ? "Processing..." : "Sign In"}
