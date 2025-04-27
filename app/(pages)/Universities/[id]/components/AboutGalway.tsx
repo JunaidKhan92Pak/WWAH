@@ -167,7 +167,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                       </div>
                     </div>
                     {/* Text Section */}
-                    <div className="w-[90%] xl:w-full">
+                    <div className="w-[90%] xl:w-full ">
                       <h4>{slide.title}</h4>
                       {slide.isList ? (
                         <ul className="text-gray-300 list-disc pl-0 lg:pl-5">
@@ -176,7 +176,13 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                           ))}
                         </ul>
                       ) : (
-                        <p className="text-gray-300 leading-relaxed text-justify md:text-start">
+                        <p
+                          className="text-gray-300 leading-relaxed text-justify md:text-start h-64 overflow-hidden overflow-y-auto scrollbar-hide"
+                          style={{
+                            scrollbarWidth: "none",
+                            msOverflowStyle: "none",
+                          }}
+                        >
                           {slide.description}
                         </p>
                       )}

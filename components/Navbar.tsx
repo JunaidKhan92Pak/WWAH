@@ -33,7 +33,7 @@ const Navbar = () => {
             {/* Logo */}
             <Link href="/">
               <Image
-                src="/logowwah.svg"
+                src="/wwah-textb.svg"
                 alt="logo"
                 width={150}
                 height={60}

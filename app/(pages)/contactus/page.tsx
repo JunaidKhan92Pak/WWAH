@@ -10,6 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import Link from "next/link";
 export default function ContactUs() {
   const countries = [
     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
@@ -313,7 +314,9 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Website</p>
-                <p className="text-gray-600">www.worldwideadmissionshub.com</p>
+                <Link href="https://wwah.ai" target="_blank">
+                  <p className="text-gray-600">wwah.ai </p>
+                </Link>
               </div>
             </div>
           </div>

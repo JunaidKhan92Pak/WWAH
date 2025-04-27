@@ -47,7 +47,7 @@ const Footer = () => {
             {/* Column 1: Logo + Socials */}
             <div className="flex flex-col items-center sm:items-start lg:items-center space-y-4">
               <Image
-                src="/logowwah.svg"
+                src="/wwah-textb.svg"
                 alt="WWAH Logo"
                 width={100}
                 height={100}
@@ -63,22 +63,17 @@ const Footer = () => {
                 >
                   <FaFacebook className="text-blue-600 text-xl" />
                 </Link>
-                <Link
-                  target="blank"
-                  href="https://www.instagram.com/wwah.ai/"
-                >
+                <Link target="blank" href="https://www.instagram.com/wwah.ai/">
                   <FaInstagram className="text-red-600 text-xl" />
                 </Link>
                 <Link
                   target="blank"
-
                   href="https://www.linkedin.com/company/wwah-ai"
                 >
                   <IoLogoLinkedin className="text-blue-600 text-xl" />
                 </Link>
                 <Link
                   target="blank"
-
                   href="https://youtube.com/@worldwideadmissionshub-l3r?si=PlJn6vHNsFzCGVPv"
                 >
                   <FaYoutube className="text-red-600 text-xl" />
@@ -115,8 +110,8 @@ const Footer = () => {
               <div
                 className="flex items-center space-x-3 cursor-pointer"
                 onClick={() =>
-                (window.location.href =
-                  "mailto:info@worldwideadmissionshub.com")
+                  (window.location.href =
+                    "mailto:info@worldwideadmissionshub.com")
                 }
               >
                 <IoMailUnreadOutline className="text-xl min-w-[20px]" />

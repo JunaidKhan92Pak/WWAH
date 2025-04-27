@@ -126,14 +126,14 @@ function Page() {
         className="landingPageBg relative w-full flex flex-col justify-center items-center"
         style={{
           // backgroundImage: 'url("/robotic.JPG")',
-          backgroundImage: 'url("/bgblue.jpg")',
+          backgroundImage: 'url("/techbg.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
         {/* <div className="absolute bg-black bg-opacity-80 w-full h-full rounded-2xl"></div>{" "}
          */}
-        <div className="absolute inset-0 bg-black bg-opacity-10 z-0"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-20 z-0"></div>
 
         {/* header section starts */}
         <header className="w-[90%] flex justify-between mt-5 z-20">
@@ -276,12 +276,12 @@ function Page() {
 
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/zeus-up.png"
+                    src="/Zeushi.png"
                     alt="Robot"
                     width={0}
                     height={0}
                     sizes="60vw"
-                    className="w-[180px] h-auto "
+                    className="w-[190px] h-auto "
                   />
                 </div>
 

@@ -62,10 +62,10 @@ export function Sidebar() {
   }, []);
   const router = useRouter(); // Initialize Next.js router
 
-    const handleLogout = async () => {
-      await logout(); // Ensure logout is completed
-      router.push("/"); // Redirect to home page
-    };
+  const handleLogout = async () => {
+    await logout(); // Ensure logout is completed
+    router.push("/"); // Redirect to home page
+  };
   // useEffect(() => {
   //   // Auto open modal when navigating to "Complete your application"
   //   if (pathname === "/dashboard/completeapplication") {
@@ -78,7 +78,7 @@ export function Sidebar() {
     <div className="flex flex-col ">
       {/* Profile Section */}
       <Card className="p-2 m-2 flex flex-col items-center text-center bg-white rounded-lg">
-      <Image
+        <Image
           src="/icons/userred.svg"
           alt="user"
           width={54}
@@ -90,7 +90,7 @@ export function Sidebar() {
         </h2>
         <p className="text-xs text-gray-500">{user?.user?.email}</p>
         <div className="w-full">
-          <Link  href="/dashboard/myprofile">
+          <Link href="/dashboard/myprofile">
             <Button className="mt-1 bg-red-700 hover:bg-red-600 text-white w-full">
               My Profile
             </Button>
@@ -127,6 +127,20 @@ export function Sidebar() {
             Logout
           </Button>
         </div>
+        <Link href="/chatmodel" className="w-full">
+          <div>
+            <Button className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center">
+              Chat with Zeaus{" "}
+              <Image
+                src="/3@3x.png"
+                alt="chat"
+                width={24}
+                height={24}
+                className="ml-2"
+              />
+            </Button>
+          </div>
+        </Link>
       </div>
 
       {/* Complete Application Modal */}
