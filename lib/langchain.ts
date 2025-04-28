@@ -1,396 +1,3 @@
-//v1 on test database with test data
-// import { OpenAIEmbeddings } from "@langchain/openai";
-// import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-// import { ChatOpenAI } from "@langchain/openai";
-// import { RetrievalQAChain } from "langchain/chains";
-// import { Document as LangchainDocument } from "langchain/document";
-// import clientPromise from "./mongodb";
-
-// export async function setupVectorStore() {
-//   const client = await clientPromise;
-//   const db = client.db("ragchatbot");
-//   const collection = db.collection("documents");
-
-//   const embeddings = new OpenAIEmbeddings({
-//     modelName: "text-embedding-3-small",
-//   });
-
-//    const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
-//      collection,
-//      indexName: "vector_index",
-//      textKey: "text", // Field containing the original text
-//      embeddingKey: "embedding", // Field containing the vector embeddings
-//    });
-
-//   return vectorStore;
-// }
-
-// export async function createDocumentEmbeddings(
-//   documents: { name: string; content: string }[]
-// ) {
-//   const vectorStore = await setupVectorStore();
-
-//   // Convert to LangChain document format
-//   const langchainDocs = documents.map(
-//     (doc) =>
-//       new LangchainDocument({
-//         pageContent: doc.content,
-//         metadata: { name: doc.name },
-//       })
-//   );
-
-//   // Add documents to vector store
-//   await vectorStore.addDocuments(langchainDocs);
-// }
-
-// export async function queryDocuments(query: string) {
-//   const vectorStore = await setupVectorStore();
-//     const retriever = vectorStore.asRetriever();
-//     const relevantDocs = await retriever.getRelevantDocuments(query);
-//     console.log("Retrieved documents:", relevantDocs.length);
-//     console.log(
-//       "First document sample:",
-//       relevantDocs[0]?.pageContent.substring(0, 100)
-//     );
-//   const model = new ChatOpenAI({
-//     modelName: "gpt-3.5-turbo",
-//     temperature: 0.2,
-//   });
-
-//   const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
-
-//   const response = await chain.invoke({
-//     query,
-//   });
-
-//   return response.text;
-// }
-
-// import { OpenAIEmbeddings } from "@langchain/openai";
-// import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-// import { ChatOpenAI } from "@langchain/openai";
-// import { RetrievalQAChain } from "langchain/chains";
-// import { Document as LangchainDocument } from "langchain/document";
-// import clientPromise from "./mongodb";
-
-// export async function setupVectorStore() {
-//   const client = await clientPromise;
-//   const db = client.db("test");
-//   const collection = db.collection("meta_embeddings");
-
-//   const embeddings = new OpenAIEmbeddings({
-//     modelName: "text-embedding-3-small",
-//   });
-
-//   const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
-//     collection,
-//     indexName: "vector_index",
-//     textKey: "text", // Field containing the original text
-//     embeddingKey: "meta_embeddings", // Field containing the vector embeddings
-//   });
-
-//   return vectorStore;
-// }
-
-// export async function createDocumentEmbeddings(
-//   documents: { name: string; content: string }[]
-// ) {
-//   const vectorStore = await setupVectorStore();
-
-//   // Convert to LangChain document format
-//   const langchainDocs = documents.map(
-//     (doc) =>
-//       new LangchainDocument({
-//         pageContent: doc.content,
-//         metadata: { name: doc.name },
-//       })
-//   );
-
-//   // Add documents to vector store
-//   await vectorStore.addDocuments(langchainDocs);
-// }
-
-// export async function queryDocuments(query: string) {
-//   const client = await clientPromise;
-//   const db = client.db("test"); // Use "test" database consistently
-//   const collection = db.collection("meta_embeddings");
-
-//   const embeddings = new OpenAIEmbeddings({
-//     modelName: "text-embedding-3-small",
-//   });
-
-//   const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
-//     collection,
-//     indexName: "vector_index",
-//     textKey: "text", // Make sure this matches the field name in your documents
-//     embeddingKey: "embedding", // This appears correct from your screenshot
-//   });
-
-//   const model = new ChatOpenAI({
-//     modelName: "gpt-3.5-turbo",
-//     temperature: 0.2,
-//   });
-
-//   const chain = RetrievalQAChain.fromLLM(
-//     model,
-//     vectorStore.asRetriever({
-//       k: 8,
-//     })
-//   );
-
-//   const response = await chain.invoke({
-//     query,
-//   });
-
-//   return response.text;
-// }
-
-//v2 with test database with single single combined search index
-// import { OpenAIEmbeddings } from "@langchain/openai";
-// import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-// import { ChatOpenAI } from "@langchain/openai";
-// import { RetrievalQAChain } from "langchain/chains";
-// import clientPromise from "./mongodb";
-// import { PromptTemplate } from "@langchain/core/prompts";
-
-// // Original setupVectorStore function remains the same
-// export async function setupVectorStore() {
-//   const client = await clientPromise;
-//   const db = client.db("test");
-//   const collection = db.collection("meta_embeddings");
-
-//   const embeddings = new OpenAIEmbeddings({
-//     modelName: "text-embedding-3-small",
-//   });
-
-//   const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
-//     collection,
-//     indexName: "vector_index",
-//     textKey: "text",
-//     embeddingKey: "embedding",
-//   });
-
-//   return vectorStore;
-// }
-
-// // New function that incorporates user preferences
-// // In lib/langchain.ts
-
-// export async function queryDocumentsWithUserContext(
-//   query: string,
-//   userPreferences: any,
-//   conversationHistory = []
-// ) {
-//   const vectorStore = await setupVectorStore();
-
-//   const model = new ChatOpenAI({
-//     modelName: "gpt-4o",
-//     temperature: 0.2,
-//   });
-//   const hasPreferences =
-//     userPreferences && Object.keys(userPreferences).length > 0;
-//   // Add conversation history to the prompt
-//   const formattedConversationHistory = conversationHistory
-//     .map(
-//       (msg) => `${msg.role === "user" ? "Human" : "Assistant"}: ${msg.content}`
-//     )
-//     .join("\n");
-//   // Create a prompt template that includes user preferences
-//   const promptTemplate = PromptTemplate.fromTemplate(`
-//     You are ZEUS, an AI assistant specialized in helping users with university and scholarship information.
-
-//     ${
-//       hasPreferences
-//         ? `User Preferences Information:
-//     ${JSON.stringify(userPreferences, null, 2)}
-//     Previous conversation:
-//     ${
-//       formattedConversationHistory
-//         ? formattedConversationHistory
-//         : "No previous conversation."
-//     }
-//     When responding to the query, consider the user's preferences above.
-//     Personalize your response based on their academic interests, country preferences,
-//     language proficiencies, and other relevant information in their profile.`
-//         : "The user is not logged in or has no saved preferences."
-//     }
-
-//     Be conversational and natural in your responses. For simple greetings like "hi" or "hello",
-//     respond casually without mentioning user data. Remember the context of the conversation.
-
-//     Question: \${question}
-
-//     Context: \${context}
-
-//     Answer:
-//   `);
-
-//   // Create a chain with the custom prompt
-//   const chain = RetrievalQAChain.fromLLM(
-//     model,
-//     vectorStore.asRetriever({
-//       k: 3,
-//     }),
-//     {
-//       returnSourceDocuments: false,
-//       prompt: promptTemplate,
-//     }
-//   );
-
-//   // Here's the fix - pass the userPreferences as a string directly
-//   const response = await chain.invoke({
-//     query, // This becomes 'question' in the prompt
-//     userPreferences: JSON.stringify(userPreferences, null, 2),
-//   });
-
-//   return response.text;
-// }
-//v3 actual database with 2 search indexes
-// import { OpenAIEmbeddings } from "@langchain/openai";
-// import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-// import { ChatOpenAI } from "@langchain/openai";
-// import { RetrievalQAChain } from "langchain/chains";
-// import clientPromise from "./mongodb";
-// import { PromptTemplate } from "@langchain/core/prompts";
-
-// // Original setupVectorStore function remains the same
-// export async function setupVectorStore() {
-//   const client = await clientPromise;
-//   const db = client.db("wwah");
-//   const collection = db.collection("meta_embeddings");
-
-//   const embeddings = new OpenAIEmbeddings({
-//     modelName: "text-embedding-3-small",
-//   });
-
-//   const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
-//     collection,
-//     indexName: "vector_index",
-//     textKey: "text",
-//     embeddingKey: "embedding",
-//   });
-
-//   return vectorStore;
-// }
-// // In lib/langchain.ts
-// // Add this new function
-// export async function setupUserVectorStore(userId) {
-//   if (!userId) return null;
-
-//   const client = await clientPromise;
-//   const db = client.db("wwah");
-//   const collection = db.collection("user_embeddings");
-
-//   const embeddings = new OpenAIEmbeddings({
-//     modelName: "text-embedding-3-small",
-//   });
-
-//   const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
-//     collection,
-//     indexName: "user_vector_index",
-//     textKey: "text",
-//     embeddingKey: "embedding",
-//     filter: { userId: userId }, // This filter ensures we only get this user's data
-//   });
-
-//   return vectorStore;
-// }
-// // New function that incorporates user preferences
-// // In lib/langchain.ts
-
-// export async function queryDocumentsWithUserContext(
-//   query: string,
-//   userData: any, // Change from userPreferences to userData
-//   userId: string = "",
-//   conversationHistory = []
-// ) {
-//   // Get general vector store
-//   const generalVectorStore = await setupVectorStore();
-//   console.log(userData, "userData from langchain.ts");
-//   // Get user-specific vector store if user is logged in
-//   let userVectorStore = null;
-//   if (userId) {
-//     userVectorStore = await setupUserVectorStore(userId);
-//   }
-
-//   const model = new ChatOpenAI({
-//     modelName: "gpt-4o",
-//     temperature: 0.2,
-//   });
-
-//   const hasUserData = userData && Object.keys(userData).length > 0;
-
-//   // Format conversation history
-//   const formattedConversationHistory = conversationHistory
-//     .map(
-//       (msg) => `${msg.role === "user" ? "Human" : "Assistant"}: ${msg.content}`
-//     )
-//     .join("\n");
-
-//   // Create prompt template with updated user data reference
-//   const promptTemplate = new PromptTemplate({
-//     inputVariables: [
-//       "question",
-//       "context",
-//       "userProfile",
-//       "conversationHistory",
-//     ],
-//     template: `
-// You are ZEUS, an AI assistant specialized in helping users with university and scholarship information.
-
-// {userProfile}
-
-// {conversationHistory}
-
-// Be conversational and natural in your responses. For simple greetings like "hi" or "hello", 
-// respond casually without mentioning user data. Remember the context of the conversation.
-
-// Question: {question}
-
-// Context: {context}
-
-// Answer:
-// `,
-//   });
-
-//   // The rest of the function remains the same
-//   let retriever;
-//   if (userVectorStore) {
-//     const generalRetriever = generalVectorStore.asRetriever({ k: 2 });
-//     const userRetriever = userVectorStore.asRetriever({ k: 2 });
-
-//     retriever = {
-//       getRelevantDocuments: async (query) => {
-//         const [generalDocs, userDocs] = await Promise.all([
-//           generalRetriever.getRelevantDocuments(query),
-//           userRetriever.getRelevantDocuments(query),
-//         ]);
-//         return [...userDocs, ...generalDocs].slice(0, 4);
-//       },
-//     };
-//   } else {
-//     retriever = generalVectorStore.asRetriever({ k: 3 });
-//   }
-
-//   const chain = RetrievalQAChain.fromLLM(model, retriever, {
-//     returnSourceDocuments: false,
-//     prompt: promptTemplate,
-//   });
-
-//   const response = await chain.invoke({
-//     query: query, // ✅ matches `question` in PromptTemplate
-//     context: "", // Replace with actual retrieved context if needed
-//     userProfile: hasUserData
-//       ? `User Information:\n${JSON.stringify(userData, null, 2)}`
-//       : "The user is not logged in or has no saved information.",
-//     conversationHistory: formattedConversationHistory
-//       ? `Previous conversation:\n${formattedConversationHistory}`
-//       : "No previous conversation.",
-//   });
-
-//   return response.text;
-// }
-
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
 import { ChatOpenAI } from "@langchain/openai";
@@ -398,23 +5,19 @@ import { RetrievalQAChain } from "langchain/chains";
 import clientPromise from "./mongodb";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { EnsembleRetriever } from "langchain/retrievers/ensemble";
-interface userDataProps {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  otpVerified?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  city?: string;
-  contactNo?: string;
-  dob?: string;
-  country?: string;
-  nationality?: string;
-  successChances?: string[];
-}
-// Original setupVectorStore function remains the same
-export async function setupVectorStore() {
+import {
+  getCachedVectorResults,
+  cacheVectorResults,
+  generateVectorKey,
+} from "./redis";
+import { UserStore } from "@/store/useUserData";
+
+// Setup and cache vector stores
+let generalVectorStoreInstance: MongoDBAtlasVectorSearch | null = null;
+
+export async function getGeneralVectorStore() {
+  if (generalVectorStoreInstance) return generalVectorStoreInstance;
+
   const client = await clientPromise;
   const db = client.db("wwah");
   const collection = db.collection("meta_embeddings");
@@ -423,19 +26,22 @@ export async function setupVectorStore() {
     modelName: "text-embedding-3-small",
   });
 
-  const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
+  generalVectorStoreInstance = new MongoDBAtlasVectorSearch(embeddings, {
     collection,
     indexName: "vector_index",
     textKey: "text",
     embeddingKey: "embedding",
   });
 
-  return vectorStore;
+  return generalVectorStoreInstance;
 }
-// In lib/langchain.ts
-// Add this new function
-export async function setupUserVectorStore(userId: string) {
+
+// User vector store cache - keyed by user ID
+const userVectorStoreCache = new Map();
+
+export async function getUserVectorStore(userId: string) {
   if (!userId) return null;
+  if (userVectorStoreCache.has(userId)) return userVectorStoreCache.get(userId);
 
   const client = await clientPromise;
   const db = client.db("wwah");
@@ -450,32 +56,33 @@ export async function setupUserVectorStore(userId: string) {
     indexName: "user_vector_index",
     textKey: "text",
     embeddingKey: "embedding",
-    // filterEntity: { userId: userId }, // This filter ensures we only get this user's data
   });
 
+  userVectorStoreCache.set(userId, vectorStore);
   return vectorStore;
 }
-// New function that incorporates user preferences
-// In lib/langchain.ts
 
 export async function queryDocumentsWithUserContext(
   query: string,
-  userData: userDataProps, // Change from userPreferences to userData
+  userData:UserStore | null = null,
   userId: string = "",
   conversationHistory: { role: string; content: string }[] = []
 ) {
-  // Get general vector store
-  const generalVectorStore = await setupVectorStore();
-  console.log(userData, "userData from langchain.ts");
-  // Get user-specific vector store if user is logged in
-  let userVectorStore = null;
-  if (userId) {
-    userVectorStore = await setupUserVectorStore(userId);
-  }
+  // Check for cached vector results first
+  const cacheKey = generateVectorKey(query, userId);
+  const cachedResults = await getCachedVectorResults(cacheKey);
+  if (cachedResults) return cachedResults;
+
+  // Get general vector store (singleton)
+  const generalVectorStore = await getGeneralVectorStore();
+
+  // Get user-specific vector store if user is logged in (cached)
+  const userVectorStore = userId ? await getUserVectorStore(userId) : null;
 
   const model = new ChatOpenAI({
     modelName: "gpt-4o",
-    temperature: 0.2,
+    temperature: 0.4, // Reduced temperature for more deterministic responses
+    topP: 0.9,
   });
 
   const hasUserData = userData && Object.keys(userData).length > 0;
@@ -487,7 +94,43 @@ export async function queryDocumentsWithUserContext(
     )
     .join("\n");
 
-  // Create prompt template with updated user data reference
+  // Enhanced prompt template that strictly uses only database content
+  //   const promptTemplate = new PromptTemplate({
+  //     inputVariables: [
+  //       "question",
+  //       "context",
+  //       "userProfile",
+  //       "conversationHistory",
+  //     ],
+  //     template: `
+  // You are ZEUS, an AI assistant specialized in helping users with university and scholarship information.
+
+  // CRITICAL INSTRUCTIONS:
+  // 1. ONLY provide information about universities, courses, scholarships, and countries that are EXPLICITLY mentioned in the context below.
+  // 2. DO NOT mention any university, course, scholarship, or country that IS NOT in the context.
+  // 3. If the user asks about something not in the context, suggest alternatives from what IS in the context.
+  // 4. ALWAYS include ALL links that appear in the context when mentioning related entities, using proper markdown format [Title](URL).
+  // 5. When discussing any university, course, or scholarship, include ALL relevant details from the context.
+  // 6.DO NOT provide links to any other websites or resources outside the context.
+  // User Information:
+  // {userProfile}
+
+  // Previous conversation:
+  // {conversationHistory}
+
+  // Be conversational and natural in your responses. For simple greetings like "hi" or "hello",
+  // respond casually without mentioning user data. Remember the context of the conversation.
+
+  // Always include appropriate emojis to make responses friendly and engaging.
+
+  // Question: {question}
+
+  // Context (ONLY use information from this context - do not reference anything not mentioned here):
+  // {context}
+
+  // Answer:
+  // `,
+  //   });
   const promptTemplate = new PromptTemplate({
     inputVariables: [
       "question",
@@ -496,15 +139,25 @@ export async function queryDocumentsWithUserContext(
       "conversationHistory",
     ],
     template: `
-You are ZEUS, an AI assistant specialized in helping users with university and scholarship information.
+You are ZEUS, an AI assistant specialized in helping users with university and scholarship information and any kind of information that they need as normal chat-gpt.
 
 {userProfile}
+
 
 {conversationHistory}
 
 Be conversational and natural in your responses. For simple greetings like "hi" or "hello",
 respond casually without mentioning user data. Remember the context of the conversation.
 
+IMPORTANT:
+guide the user about universities, courses, scholarships, or countries according to their preferecnces mentioned in the context.
+1. If asked about universities, courses, scholarships, or countries, ALWAYS provide information that matches the query directly.
+2. Don't limit responses to only the user's preferred country or profile. If they ask about a specific country, provide information about that country.
+3. When information is not available in the context, clearly state that and offer what IS available instead.
+4. Be comprehensive - include all relevant universities, courses, or scholarships from the context that match the query.
+5. Always tailor your response to directly answer what was asked, while providing helpful context.
+
+Always include appropriate emojis to make responses friendly and engaging.
 Question: {question}
 
 Context: {context}
@@ -512,28 +165,58 @@ Context: {context}
 Answer:
 `,
   });
-
-  // The rest of the function remains the same
+  // Setup retriever with increased k for more context
   let retriever;
   if (userVectorStore) {
-    const generalRetriever = generalVectorStore.asRetriever({ k: 2 });
-    const userRetriever = userVectorStore.asRetriever({ k: 2 });
+    const generalRetriever = generalVectorStore.asRetriever({ k: 8 }); // Increased from 4
+    const userRetriever = userVectorStore.asRetriever({ k: 8 }); // Increased from 3
 
     retriever = new EnsembleRetriever({
       retrievers: [userRetriever, generalRetriever],
-      weights: [0.5, 0.5], // Adjust weights as needed
+      weights: [0.4, 0.6], // Keep weights as they were
     });
   } else {
-    retriever = generalVectorStore.asRetriever({ k: 3 });
+    retriever = generalVectorStore.asRetriever({ k: 10 }); // Increased from 5 to ensure more context
   }
+
   const chain = RetrievalQAChain.fromLLM(model, retriever, {
     returnSourceDocuments: false,
     prompt: promptTemplate,
   });
 
+  // Get more relevant documents to ensure comprehensive coverage
+  const relevantDocs = await retriever.getRelevantDocuments(query);
+
+  // Process the context to highlight available entities
+  const availableEntities = {
+    universities: new Set(),
+    countries: new Set(),
+    courses: new Set(),
+    scholarships: new Set(),
+    links: [] as string[],
+  };
+
+  // Extract and preserve URLs/links from context
+  relevantDocs.forEach((doc) => {
+    const content = doc.pageContent;
+
+    // Extract URLs with common patterns (adjust as needed for your data format)
+    const urlMatches = content.match(/https?:\/\/[^\s\)]+/g) || [];
+    availableEntities.links.push(...urlMatches);
+
+    // Extract potential markdown-formatted links
+    const markdownLinks = content.match(/\[([^\]]+)\]\(([^)]+)\)/g) || [];
+    availableEntities.links.push(...markdownLinks);
+
+    // You can add more extraction logic based on your data structure
+  });
+
+  // Join the context with explicit formatting
+  const context = relevantDocs.map((doc) => doc.pageContent).join("\n\n");
+
   const response = await chain.invoke({
-    query: query, // ✅ matches `question` in PromptTemplate
-    context: "", // Replace with actual retrieved context if needed
+    query: query,
+    context: context,
     userProfile: hasUserData
       ? `User Information:\n${JSON.stringify(userData, null, 2)}`
       : "The user is not logged in or has no saved information.",
@@ -542,5 +225,19 @@ Answer:
       : "No previous conversation.",
   });
 
+  // Cache the results
+  await cacheVectorResults(cacheKey, response.text);
+
   return response.text;
 }
+// for vector search
+// {
+//   "fields": [
+//     {
+//       "type": "vector",
+//       "path": "embedding",
+//       "numDimensions": 1536,
+//       "similarity": "cosine"
+//     }
+//   ]
+// }

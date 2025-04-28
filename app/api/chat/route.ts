@@ -1,369 +1,310 @@
-// v1
-// import { NextRequest, NextResponse } from "next/server";
-// import clientPromise from "@/lib/mongodb";
-// import { queryDocuments } from "@/lib/langchain";
-// import { Message } from "@/lib/types";
-// import { ObjectId } from "mongodb";
+import { NextRequest } from "next/server";
+import { withCaching } from "@/middleware/api";
+import { ChatOpenAI } from "@langchain/openai";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+import { getGeneralVectorStore, getUserVectorStore } from "@/lib/langchain";
+import { EnsembleRetriever } from "langchain/retrievers/ensemble";
+import { UserStore } from "@/store/useUserData";
 
-// export async function POST(req: NextRequest) {
-//   try {
-//     const { message, sessionId } = await req.json();
+// Custom streaming handler function (without depending on LangChainAdapter)
+interface ChatRequestBody {
+  message: string;
+  userData?: UserStore;
+  userId?: string;
+  conversationHistory?: { role: string; content: string }[];
+}
 
-//     const client = await clientPromise;
-//     const db = client.db("test");
-//     const sessions = db.collection("sessions");
-
-//     // Create or find session
-//     let session;
-//     console.log("Received message:", message);
-
-//     if (sessionId) {
-//       session = await sessions.findOne({ _id: new ObjectId(sessionId) });
-//       if (!session) {
-//         return NextResponse.json(
-//           { error: "Session not found" },
-//           { status: 404 }
-//         );
-//       }
-//     } else {
-//       session = {
-//         messages: [],
-//         createdAt: new Date(),
-//         updatedAt: new Date(),
-//       };
-//       const result = await sessions.insertOne(session);
-//       console.log(result, "result");
-
-//       session._id = result.insertedId;
-//     }
-//     // Add user message
-//     const userMessage: Message = { role: "user", content: message };
-//     session.messages.push(userMessage);
-
-//     // Generate response with RAG
-//      const response = await queryDocuments(message);
-//      console.log("Got response:", response);
-//     // Add assistant message
-//     const assistantMessage: Message = { role: "assistant", content: response };
-//     session.messages.push(assistantMessage);
-
-//     // Update session
-//     session.updatedAt = new Date();
-//     await sessions.updateOne(
-//       { _id: session._id },
-//       { $set: { messages: session.messages, updatedAt: session.updatedAt } },
-//       { upsert: true }
-//     );
-
-//     return NextResponse.json({
-//       message: assistantMessage,
-//       sessionId: session._id.toString(),
-//     });
-//   } catch (error) {
-//     console.error("Error from queryDocuments:", error);
-//     console.error("Error in chat API:", error);
-//     return NextResponse.json(
-//       { error: "Failed to process message" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// v2
-// import { NextRequest, NextResponse } from "next/server";
-// import { queryDocumentsWithUserContext } from "@/lib/langchain";
-// import clientPromise from "@/lib/mongodb";
-// import { ObjectId } from "mongodb";
-
-// export async function POST(req: NextRequest) {
-//   try {
-//     const { message, userId, conversationHistory = [] } = await req.json();
-
-//     if (!message) {
-//       return NextResponse.json(
-//         { error: "Message is required" },
-//         { status: 400 }
-//       );
-//     }
-//       console.log(userId, "userId from chat route");
-
-//     // Get user preferences from database
-//     const client = await clientPromise;
-//     const db = client.db("test");
-
-//     // Fetch user data including preferences
-//     let userPreferences = {};
-//     if (userId) {
-//       const user = await db.collection("userdbs").findOne({
-//         _id: new ObjectId(userId),
-//       });
-    
-//       if (user) {
-//         // Also fetch related user preference document
-//         const userPref = await db.collection("userpreferences").findOne({
-//           userId: userId,
-//         });
-
-//         if (userPref) {
-//           userPreferences = userPref;
-//         }
-//       }
-//     }
-
-//     // Get response from LangChain with user context
-//     const response = await queryDocumentsWithUserContext(
-//       message,
-//       userPreferences,
-//       conversationHistory
-//     );
-
-//     return NextResponse.json({
-//       message: {
-//         role: "assistant",
-//         content: response,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Chat API error:", error);
-//     return NextResponse.json(
-//       { error: "Failed to process message" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// v3
-// import { NextRequest, NextResponse } from "next/server";
-// import { queryDocumentsWithUserContext } from "@/lib/langchain";
-// import clientPromise from "@/lib/mongodb";
-// import { ObjectId } from "mongodb";
-
-// export async function POST(req: NextRequest) {
-//   try {
-//     const { message, userId, conversationHistory = [] } = await req.json();
-
-//     if (!message) {
-//       return NextResponse.json(
-//         { error: "Message is required" },
-//         { status: 400 }
-//       );
-//     }
-//     console.log(userId, "userId from chat route");
-
-//     // Get user data from database
-//     const client = await clientPromise;
-//     const db = client.db("test");
-
-//     // Fetch user data from the two collections you mentioned
-//     let userData = {};
-//     if (userId) {
-//       // Get data from userdbs collection
-//       const user = await db.collection("userdbs").findOne({
-//         _id: new ObjectId(userId),
-//       });
-      
-//       // Get data from successchances collection
-//       const successChances = await db.collection("successchances").find({
-//         userId: userId,
-//       }).toArray();
-
-//       // Combine the data
-//       if (user) {
-//         userData = {
-//           user: user,
-//           successChances: successChances || []
-//         };
-//       }
-//     }
-
-//     // Get response from LangChain with user context
-//     const response = await queryDocumentsWithUserContext(
-//       message,
-//       userData,  // Pass the combined userData
-//       userId,
-//       conversationHistory
-//     );
-
-//     return NextResponse.json({
-//       message: {
-//         role: "assistant",
-//         content: response,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Chat API error:", error);
-//     return NextResponse.json(
-//       { error: "Failed to process message" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-
-// // import { NextRequest, NextResponse } from "next/server";
-// // import { queryDocumentsWithUserContext } from "@/lib/langchain";
-// // import clientPromise from "@/lib/mongodb";
-// // import { ObjectId, WithId, Document } from "mongodb";
-
-// // export async function POST(req: NextRequest) {
-// //   try {
-// //     const { message, userId, conversationHistory = [] } = await req.json();
-
-// //     if (!message) {
-// //       return NextResponse.json(
-// //         { error: "Message is required" },
-// //         { status: 400 }
-// //       );
-// //     }
-// //     console.log(userId, "userId from chat route");
-
-// //     // Get user data from database
-// //     const client = await clientPromise;
-// //     const db = client.db("wwah");
-
-// //     // Fetch user data from the two collections you mentioned
-// //     let userData = {
-// //       firstName: "",
-// //       lastName: "",
-// //       email: "",
-// //       password: "",
-// //       otpVerified: "",
-// //       createdAt: "",
-// //       updatedAt: "",
-// //       city: "",
-// //       contactNo: "",
-// //       dob: "",
-// //       country: "",
-// //       nationality: "",
-// //       successChances: [] as WithId<Document>[], // Ensure consistent usage of MongoDB's Document type
-// //     };
-// //     if (userId) {
-// //       // Get data from userdbs collection
-// //       const user = await db.collection("userdbs").findOne({
-// //         _id: new ObjectId(userId),
-// //       });
-
-// //       // Get data from successchances collection
-// //       const successChances = await db
-// //         .collection("successchances")
-// //         .find({
-// //           userId: userId,
-// //         })
-// //         .toArray();
-
-// //       // Combine the data
-// //       if (user) {
-// //         userData = {
-// //           ...userData,
-// //           firstName: user.firstName || "",
-// //           lastName: user.lastName || "",
-// //           email: user.email || "",
-// //           password: user.password || "",
-// //           otpVerified: user.otpVerified || "",
-// //           createdAt: user.createdAt || "",
-// //           updatedAt: user.updatedAt || "",
-// //           city: user.city || "",
-// //           contactNo: user.contactNo || "",
-// //           dob: user.dob || "",
-// //           country: user.country || "",
-// //           nationality: user.nationality || "",
-// //           successChances: successChances,
-// //         };
-// //       }
-// //     }
-
-// //     // Get response from LangChain with user context
-// //     const response = await queryDocumentsWithUserContext(
-// //       message,
-// //       {
-// //         ...userData,
-// //         successChances: userData.successChances.map((item) =>
-// //           item._id.toString()
-// //         ),
-// //       }, // Map successChances to string[]
-// //       userId,
-// //       conversationHistory
-// //     );
-
-// //     return NextResponse.json({
-// //       message: {
-// //         role: "assistant",
-// //         content: response,
-// //       },
-// //     });
-// //   } catch (error) {
-// //     console.error("Chat API error:", error);
-// //     return NextResponse.json(
-// //       { error: "Failed to process message" },
-// //       { status: 500 }
-// //     );
-// //   }
-// // }
-import { NextRequest, NextResponse } from "next/server";
-import { queryDocumentsWithUserContext } from "@/lib/langchain";
-import clientPromise from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
-
-export async function POST(req: NextRequest) {
+async function streamingChatHandler(req: NextRequest, body: ChatRequestBody) {
   try {
-    const { message, userId, conversationHistory = [] } = await req.json();
+    const { message, userData, userId, conversationHistory = [] } = body;
 
     if (!message) {
-      return NextResponse.json(
-        { error: "Message is required" },
-        { status: 400 }
-      );
-    }
-    console.log(userId, "userId from chat route");
-
-    // Get user data from database
-    const client = await clientPromise;
-    const db = client.db("wwah");
-
-    // Fetch user data from the two collections you mentioned
-    let userData = {};
-    if (userId) {
-      // Get data from userdbs collection
-      const user = await db.collection("userdbs").findOne({
-        _id: new ObjectId(userId),
+      return new Response(JSON.stringify({ error: "Message is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
       });
-
-      // Get data from successchances collection
-      const successChances = await db
-        .collection("successchances")
-        .find({
-          userId: userId,
-        })
-        .toArray();
-
-      // Combine the data
-      if (user) {
-        userData = {
-          user: user,
-          successChances: successChances || [],
-        };
-      }
     }
 
-    // Get response from LangChain with user context
-    const response = await queryDocumentsWithUserContext(
+    // For simple queries that don't need streaming, maintain the current approach
+    const { isSimpleQuery, retriever } = await prepareQueryComponents(
       message,
-      userData, // Pass the combined userData
-      userId,
-      conversationHistory
+      userId
     );
 
-    return NextResponse.json({
-      message: {
-        role: "assistant",
-        content: response,
+    if (isSimpleQuery) {
+      // Use your existing simple response mechanism
+      const simpleResponse = getSimpleResponse(
+        message,
+        userData?.user?.firstName || "there"
+      );
+      return new Response(
+        JSON.stringify({
+          message: {
+            role: "assistant",
+            content: simpleResponse,
+          },
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Format conversation history
+    const formattedConversationHistory = conversationHistory
+      .map(
+        (msg) =>
+          `${msg.role === "user" ? "Human" : "Assistant"}: ${msg.content}`
+      )
+      .join("\n");
+
+    const hasUserData = userData && Object.keys(userData).length > 0;
+
+    const promptTemplate = PromptTemplate.fromTemplate(`
+    You are ZEUS, an AI assistant specialized in helping users with university and scholarship information.
+    
+    {userProfile}
+    Previous conversation:
+    {conversationHistory}
+    IMPORTANT:
+    try to just give the countries, universities, courses, or scholarships according to the user preferences mentioned in the context.
+     try to just give the countries, universities, courses, or scholarships given in the context. 
+    Be conversational and natural in your responses. For simple greetings like "hi" or "hello",
+    1.When responding to the query, consider the user's preferences above.
+    2.Personalize your response based on their academic interests, country preferences,
+    3.language proficiencies, and other relevant information in their profile.
+    4. Be comprehensive - include all relevant universities, courses, or scholarships from the context that match the query.
+    5. Always tailor your response to directly answer what was asked, while providing helpful context.
+   6.Always include ALL links that appear in the context when mentioning related entities, using proper markdown format [Title](URL).
+    7. Always include ALL relevant details from the context when discussing any university, course, or scholarship.
+    8.DONOT provide links to external sources or websites unless explicitly mentioned in the context.
+    9.Always include appropriate emojis to make responses friendly and engaging.
+    
+    Be conversational and natural in your responses. For simple greetings like "hi" or "hello", 
+    respond casually without mentioning user data. Remember the context of the conversation.
+    
+    Question: \${question}
+    
+    Context: \${context}
+    
+    Answer:
+  `);
+    // Get context for the query - increase k for more comprehensive results
+    // In streamingChatHandler.js
+    const relevantDocs = await retriever.getRelevantDocuments(message);
+    console.log(
+      `Retrieved ${relevantDocs.length} documents for query: "${message}"`
+    );
+
+    // NEW: Better formatting of context content
+    let contextContent = "";
+    if (relevantDocs.length > 0) {
+      contextContent = relevantDocs
+        .map((doc, index) => {
+          // Extract metadata if available
+          const metadata = doc.metadata || {};
+          const docType = metadata.type || "Information";
+          const title = metadata.title || `Document ${index + 1}`;
+
+          // Format document with clear structure
+          return `--- ${docType}: ${title} ---\n${doc.pageContent}\n`;
+        })
+        .join("\n\n");
+
+      console.log("Context preview:", contextContent.substring(0, 200) + "...");
+    } else {
+      console.warn("No documents found in vector store for this query");
+      contextContent = "No specific information available in the database.";
+    }
+    // Create a custom ReadableStream for streaming
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        // Rest of your streaming code remains the same...
+        controller.enqueue(encoder.encode(`data:\n\n`));
+
+        // Create the LangChain model with custom callbacks for streaming
+        const model = new ChatOpenAI({
+          modelName: "gpt-4o",
+          temperature: 0.2, // Reduced temperature for more focused responses
+          topP: 0.9,
+          streaming: true,
+          callbacks: [
+            {
+              handleLLMNewToken(token) {
+                // Send each token to the stream
+                controller.enqueue(encoder.encode(`data: ${token}\n\n`));
+              },
+
+              handleLLMEnd() {
+                // Signal the end of the stream
+                controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                controller.close();
+              },
+              handleLLMError(error) {
+                console.error("LLM streaming error:", error);
+                controller.error(error);
+              },
+            },
+          ],
+        });
+
+        try {
+          // Create and call the chain
+          const chain = promptTemplate
+            .pipe(model)
+            .pipe(new StringOutputParser());
+
+          // Invoke the chain without awaiting (it will stream through callbacks)
+          chain
+            .invoke({
+              question: message,
+              context: contextContent,
+              userProfile: hasUserData
+                ? `User Information:\n${JSON.stringify(userData, null, 2)}`
+                : "The user is not logged in or has no saved information.",
+              conversationHistory: formattedConversationHistory
+                ? `Previous conversation:\n${formattedConversationHistory}`
+                : "No previous conversation.",
+            })
+            .catch((error) => {
+              console.error("Chain invocation error:", error);
+              controller.error(error);
+            });
+        } catch (error) {
+          console.error("Stream initialization error:", error);
+          controller.error(error);
+        }
+      },
+    });
+
+    // Return a streaming response
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
       },
     });
   } catch (error) {
-    console.error("Chat API error:", error);
-    return NextResponse.json(
-      { error: "Failed to process message" },
-      { status: 500 }
+    console.error("Streaming Chat API error:", error);
+    return new Response(
+      JSON.stringify({
+        message: {
+          role: "assistant",
+          content: "I'm sorry, something went wrong. Please try again later.",
+        },
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
+
+// Helper function to prepare query components
+interface QueryComponents {
+  isSimpleQuery: boolean;
+  retriever: EnsembleRetriever;
+}
+
+async function prepareQueryComponents(
+  message: string,
+  userId?: string
+): Promise<QueryComponents> {
+  // Keep simple query detection the same
+  const simpleQueryPatterns: RegExp[] = [
+    /^hi+\s*$/i,
+    /^hello+\s*$/i,
+    /^hey+\s*$/i,
+    /^how are you/i,
+    /^good morning/i,
+    /^good afternoon/i,
+    /^good evening/i,
+    /^thanks/i,
+    /^thank you/i,
+  ];
+
+  const isSimpleQuery: boolean = simpleQueryPatterns.some((pattern) =>
+    pattern.test(message.trim())
+  );
+
+  // Get vector stores and retrievers - increase k values
+  const generalVectorStore = await getGeneralVectorStore();
+  const userVectorStore = userId ? await getUserVectorStore(userId) : null;
+  console.log("General vector store initialized:", !!generalVectorStore);
+  console.log("User vector store initialized:", !!userVectorStore);
+
+  let retriever: EnsembleRetriever;
+  if (userVectorStore) {
+    const generalRetriever = generalVectorStore.asRetriever({ k: 8 }); // Increased
+    const userRetriever = userVectorStore.asRetriever({ k: 5 }); // Increased
+
+    retriever = new EnsembleRetriever({
+      retrievers: [userRetriever, generalRetriever],
+      weights: [0.4, 0.6],
+    });
+  } else {
+    retriever = new EnsembleRetriever({
+      retrievers: [generalVectorStore.asRetriever({ k: 10 })],
+      weights: [1],
+    }); // Wrapped in EnsembleRetriever
+  }
+
+  return { isSimpleQuery, retriever };
+}
+
+// Helper function to prepare query components
+
+// Simple response function for greetings
+function getSimpleResponse(message: string, userName: string): string {
+  if (/^(hi+|hello+|hey+)\s*$/i.test(message.trim())) {
+    return `Hello ${userName}! How can I help you with your university or scholarship search today? 😊`;
+  }
+
+  if (/^how are you/i.test(message.trim())) {
+    return "I'm doing well, thanks for asking! Ready to help you with university and scholarship information. What would you like to know? 🎓";
+  }
+
+  if (/^(thanks|thank you)/i.test(message.trim())) {
+    return "You're welcome! Let me know if you need any more help with universities or scholarships. 👍";
+  }
+
+  return `Hello ${userName}! How can I assist you with university or scholarship information today? 🌍`;
+}
+
+// Export the POST function with streaming support
+export async function POST(req: NextRequest) {
+  try {
+    // Set high priority headers if supported by your hosting
+       const handlerWithHeaders = async (
+         req: NextRequest,
+         body: ChatRequestBody
+       ) => {
+         const response = await streamingChatHandler(req, body);
+
+         // Add your headers to the response
+         const headers = {
+           "Content-Type": "text/event-stream",
+           "Cache-Control": "no-cache",
+           Connection: "keep-alive",
+           "X-Accel-Buffering": "no",
+         };
+
+         return new Response(response.body, {
+           status: response.status,
+           headers: { ...response.headers, ...headers },
+         });
+       };
+     return await withCaching(req, handlerWithHeaders);
+  } catch (error) {
+    console.error("Middleware error:", error);
+    return new Response(
+      JSON.stringify({
+        message: {
+          role: "assistant",
+          content:
+            "I'm sorry, our systems are experiencing issues. Please try again later.",
+        },
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
   }
 }

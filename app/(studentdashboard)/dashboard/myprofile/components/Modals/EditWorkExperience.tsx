@@ -49,6 +49,7 @@ interface WorkExperienceData {
   organizationName: string;
   startDate: Date;
   endDate: Date;
+  
   employmentType: string;
   updatedAt: Date;
   duration: number;
