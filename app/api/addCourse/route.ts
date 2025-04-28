@@ -2,6 +2,25 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { Courses } from "@/models/courses";
 import { University } from "@/models/universities";
+interface UniqueFilterBase {
+    countryname: string;
+    universityname: string;
+    university_id: string;
+}
+
+interface UniqueFilterByCourseId extends UniqueFilterBase {
+    course_id: string;
+}
+
+interface UniqueFilterByCourseLink extends UniqueFilterBase {
+    course_link: string;
+}
+
+interface UniqueFilterByCourseTitle extends UniqueFilterBase {
+    course_title: string;
+}
+
+type UniqueFilter = UniqueFilterByCourseId | UniqueFilterByCourseLink | UniqueFilterByCourseTitle;
 interface Course {
     course_title?: string;
     required_ielts_score?: number | null;
@@ -187,19 +206,24 @@ export async function POST(req: Request) {
                             identifier: courseIdentifier
                         });
                     }
-                } catch (dbError) {
-                    // Handle duplicate key errors specially
-                    if ((dbError as any).code === 11000) {
-                        console.warn(`Duplicate course detected: ${course.course_title}`, (dbError as any).keyValue);
-                        result.skipped.push({
-                            title: course.course_title,
-                            reason: "Duplicate course",
-                            details: (dbError as any).keyValue
-                        });
+                } catch (dbError: unknown) {
+                    if (dbError && typeof dbError === "object" && "code" in dbError) {
+                        const errorObj = dbError as { code?: number; keyValue?: string[] };
+                        if (errorObj.code === 11000) {
+                            console.warn(`Duplicate course detected: ${course.course_title}`, errorObj.keyValue);
+                            result.skipped.push({
+                                title: course.course_title,
+                                reason: "Duplicate course",
+                                details: Array.isArray(errorObj.keyValue) ? errorObj.keyValue.join(", ") : errorObj.keyValue
+                            });
+                        } else {
+                            throw dbError; // Re-throw for the outer catch block
+                        }
                     } else {
-                        throw dbError; // Re-throw for the outer catch block
+                        throw dbError;
                     }
                 }
+
             } catch (courseError) {
                 console.error(`Error processing course: ${course.course_title || 'Unknown'}`, courseError);
                 result.failed.push({
@@ -238,26 +262,6 @@ export async function POST(req: Request) {
 }
 
 // Helper function to create a unique filter based on available identifiers
-interface UniqueFilterBase {
-    countryname: string;
-    universityname: string;
-    university_id: string;
-}
-
-interface UniqueFilterByCourseId extends UniqueFilterBase {
-    course_id: string;
-}
-
-interface UniqueFilterByCourseLink extends UniqueFilterBase {
-    course_link: string;
-}
-
-interface UniqueFilterByCourseTitle extends UniqueFilterBase {
-    course_title: string;
-}
-
-type UniqueFilter = UniqueFilterByCourseId | UniqueFilterByCourseLink | UniqueFilterByCourseTitle;
-
 function createUniqueFilter(course: Course, country: string, university: string, universityId: string): UniqueFilter {
     const baseFilter: UniqueFilterBase = {
         countryname: country,
@@ -277,10 +281,7 @@ function createUniqueFilter(course: Course, country: string, university: string,
         return { ...baseFilter, course_title: course.course_title || "" };
     }
 }
-
 // Helper function to prepare course data
-
-
 function prepareCoursesData(
     course: Course,
     country: string,
