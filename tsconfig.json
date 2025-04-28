@@ -38,7 +38,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "utils/bucket.js"
+    "utils/bucket.js",
+    "app/api/addCourse/route.ts"
   ],
   "exclude": [
     "node_modules"
