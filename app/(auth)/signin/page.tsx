@@ -54,7 +54,7 @@ const Page = () => {
       const loginRes = await loginAction(userData);
       if (loginRes.success && loginRes.user) {
         setUser({
-          id: loginRes.user.id,
+          id: loginRes.user._id,
           firstName: loginRes.user.firstName,
           lastName: loginRes.user.lastName,
           phone: loginRes.user.phone,

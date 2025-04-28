@@ -27,6 +27,7 @@ const Page = () => {
     referralCode: "", // Added referral code field
   });
   const [errors, setErrors] = useState({
+    genralError: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -53,6 +54,7 @@ const Page = () => {
     setFormSubmitted(true); // Indicate form submission attempt
     // Validate input fields
     const newErrors = {
+      genralError: "",
       firstName: !formData.firstName ? "First name is required." : "",
       lastName: !formData.lastName ? "Last name is required." : "",
       phone: !formData.phone ? "Phone number is required." : "",
@@ -77,9 +79,11 @@ const Page = () => {
       setErrors(newErrors);
       return;
     }
+    const res = await signupAction(formData);
+
 
     try {
-      const res = await signupAction(formData);
+
       if (res.success) {
         setUser({
           id: res.data._id,
@@ -92,11 +96,16 @@ const Page = () => {
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          email: res.message,
+          genralError: res.message,
         }));
       }
     } catch (err) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        genralError: res.message || "Signup failed, please try again.",
+      }));
       console.error("Signup failed", err);
+
     } finally {
       setFormSubmitted(false); // Reset submission state
     }
@@ -123,6 +132,10 @@ const Page = () => {
           </p>
 
           <form className="w-full" onSubmit={handleSubmit}>
+            {errors.genralError && (
+              <p className="text-red-500 text-center mb-4">{errors.genralError}</p>
+            )}
+            {/* First Name and Last Name Row */}
             <div className="flex w-full gap-4 2xl:gap-6">
               <div className="w-1/2">
                 <label className="block text-gray-800 font-normal">

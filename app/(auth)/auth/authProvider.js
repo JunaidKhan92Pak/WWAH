@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       }
       document.cookie = `authToken=${res.token}; path=/`;
       setToken(res.token);
-      return { success: true };
+      return res;
     } catch (err) {
       console.error("Signup error", err);
       return { success: false, message: "Server error occurred during sign-up." };
