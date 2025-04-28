@@ -475,9 +475,9 @@ const Page = () => {
                         placeholder="£ 1140 - 1840"
                         className="w-full border border-gray-300 rounded-lg text-start font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-600 px-4 py-2"
                       />
-                      <p className="text-[#9D9D9D] text-[14px] pt-4">
+                      {/* <p className="text-[#9D9D9D] text-[14px] pt-4">
                         = (PKR 517,334 - PKR 661,038)
-                      </p>
+                      </p> */}
                     </div>
                     <div className="bg-[#F1F1F1] rounded-2xl md:px-2 lg:px-5">
                       <h3 className="font-bold text-center pt-4 sm:py-6">

@@ -193,7 +193,7 @@ const Herosection = ({
                   <p className="text-xs truncate max-w-[100px] overflow-hidden">
                     {item.Name}
                   </p>
-                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-xs p-2 rounded-md w-[200px] text-center shadow-lg">
+                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-xs p-2 cursor-pointer rounded-md w-[200px] text-center shadow-lg">
                     {item.Name}
                   </span>
                 </div>
