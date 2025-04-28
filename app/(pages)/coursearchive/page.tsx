@@ -50,24 +50,6 @@ const CourseArchive = () => {
     fetchCourses,
   } = useCourseStore();
 
-  // const copyToClipboard = (text: string) => {
-  //   navigator.clipboard.writeText(text).then(
-  //     () => {
-  //       console.log("Copied to clipboard successfully!");
-  //     },
-  //     (err) => {
-  //       console.error("Failed to copy to clipboard: ", err);
-  //     }
-  //   );
-  // };
-  // const copyToClipboard = (id: string) => {
-  //   const url = `${window.location.origin}/Universities/${id}`;
-
-  //   navigator.clipboard
-  //     .writeText(url)
-  //     .then(() => alert("Link copied to clipboard!"))
-  //     .catch((err) => console.error("Failed to copy: ", err));
-  // };
 
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
   const [favoritesCount, setFavoritesCount] = useState(0);
@@ -160,9 +142,8 @@ const CourseArchive = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
           >
             <Image
               src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -197,7 +178,7 @@ const CourseArchive = () => {
                   <Link
                     target="blank"
                     href={`/courses/${item._id}`}
-                    
+
                     rel="noopener noreferrer"
                     className="w-1/2"
                   >
@@ -263,11 +244,10 @@ const CourseArchive = () => {
                             </Label>
                             <Input
                               id={`link-${item._id}`}
-                              value={`${
-                                typeof window !== "undefined"
-                                  ? window.location.origin
-                                  : ""
-                              }/courses/${item._id}`}
+                              value={`${typeof window !== "undefined"
+                                ? window.location.origin
+                                : ""
+                                }/courses/${item._id}`}
                               readOnly
                             />
                           </div>
@@ -307,9 +287,8 @@ const CourseArchive = () => {
 
                     <button
                       onClick={() => toggleFavorite(item._id)}
-                      className={`relative ${
-                        heartAnimation === item._id ? "animate-pop" : ""
-                      }`}
+                      className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
+                        }`}
                     >
                       {favorites[item._id] ? (
                         <Image
