@@ -132,7 +132,7 @@ export function Sidebar() {
             <Button className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center">
               Chat with Zeaus{" "}
               <Image
-                src="/3@3x.png"
+                src="/littlezeus.png"
                 alt="chat"
                 width={24}
                 height={24}

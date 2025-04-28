@@ -38,10 +38,26 @@ function Page() {
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
-    { name: "New Zealand", value: "New Zealand", img: "/countryarchive/nz_logo.png" },
-    { name: "Australia", value: "australia", img: "/countryarchive/australia_logo.png" },
-    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
-    { name: "Ireland", value: "Ireland", img: "/countryarchive/ireland_logo.png" },
+    {
+      name: "New Zealand",
+      value: "New Zealand",
+      img: "/countryarchive/nz_logo.png",
+    },
+    {
+      name: "Australia",
+      value: "australia",
+      img: "/countryarchive/australia_logo.png",
+    },
+    {
+      name: "Germany",
+      value: "germany",
+      img: "/countryarchive/germany_logo.png",
+    },
+    {
+      name: "Ireland",
+      value: "Ireland",
+      img: "/countryarchive/ireland_logo.png",
+    },
     { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
   ];
   const router = useRouter();
@@ -244,7 +260,7 @@ function Page() {
           {/* hero Section Left Side starts */}
           <div className="HeroLeftSection w-[95%] md:w-[70%] lg:w-[50%] ">
             {/* Hero Content */}
-            <div className="hero-content space-y-8 ">
+            <div className="hero-content space-y-2 md:space-y-8 ">
               <div className="space-y-8">
                 <div className="text-center lg:text-left space-y-2">
                   <h1 className="text-white leading-snug">
@@ -276,7 +292,7 @@ function Page() {
 
                 <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/Zeushi.png"
+                    src="/Zeushicomp.png"
                     alt="Robot"
                     width={0}
                     height={0}
@@ -368,7 +384,12 @@ function Page() {
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Link href="/chatmodel" passHref>
               {" "}
-              <Image src="/Zeushi.png" alt="Robot" width={410} height={510} />
+              <Image
+                src="/Zeushicomp.png"
+                alt="Robot"
+                width={410}
+                height={510}
+              />
             </Link>
           </div>
         </section>

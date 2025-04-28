@@ -284,7 +284,7 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Email Address</p>
-                <p className="text-gray-600">info@worldwideadmissionshub.com</p>
+                <p className="text-gray-600">info@wwah.ai</p>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">

@@ -804,7 +804,6 @@ const Page = () => {
                           <Link
                             target="blank"
                             href={`/scholarships/${item._id}`}
-                            
                             rel="noopener noreferrer"
                             className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
                           >
@@ -828,7 +827,7 @@ const Page = () => {
                   <button
                     onClick={handlePrev}
                     disabled={page === 1}
-                    className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
+                    className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-red-300"
                   >
                     Previous
                   </button>
@@ -838,7 +837,7 @@ const Page = () => {
                   <button
                     onClick={handleNext}
                     disabled={page === totalPages}
-                    className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-blue-300"
+                    className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-red-300"
                   >
                     Next
                   </button>

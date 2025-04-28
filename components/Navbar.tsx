@@ -92,7 +92,7 @@ const Navbar = () => {
                   >
                     <span className="sr-only">Open user menu</span>
                     {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
-                    <Image
+                    <Image  
                       src="/icons/userred.svg"
                       alt="user"
                       width={40}

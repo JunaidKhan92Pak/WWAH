@@ -106,8 +106,8 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
                 >
                   <div className="relative w-10 h-10">
                     <Image
-                      src={icons[index]}
-                      alt={"achievement"}
+                      src={icons[index] ? icons[index] : "/Crown-Star.svg"} // fallback to default icon
+                      alt="achievement"
                       layout="fill"
                       objectFit="contain"
                       className="rounded-full"
