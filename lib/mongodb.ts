@@ -1,10 +1,10 @@
 import { MongoClient } from "mongodb";
 
-if (!process.env.MONGO_URI) {
-  throw new Error("Please define the MONGO_URI environment variable");
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please define the MONGODB_URI environment variable");
 }
 
-const uri = process.env.MONGO_URI;
+const uri = process.env.MONGODB_URI;
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 

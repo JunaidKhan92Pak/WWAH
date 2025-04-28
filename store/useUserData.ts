@@ -1,3 +1,4 @@
+
 import { deleteAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
 interface AcademmicInfo {
@@ -12,8 +13,6 @@ interface AcademmicInfo {
   endDate: Date;
   createdAt: Date;
   updatedAt: Date;
-  otherGradingScale: string,
-
 }
 interface LanguageProf {
   proficiencyLevel: string;
@@ -33,15 +32,26 @@ interface UserPref {
   currency: string;
   createdAt: Date;
   updatedAt: Date;
-  tuitionBudget: string;
 }
-interface user {
+interface workExp {
+  hasWorkExperience: boolean;
+  jobTitle: string;
+  organizationName: string;
+  employmentType: string;
+  duration: number;
+  endDate: Date;
+  startDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface user {
   _id: string;
   firstName: string;
   lastName: string;
+  phone: string;
+  phoneNo: string;
   email: string;
   contactNo: string;
-  phoneNo: string;
   dob: string;
   country: string;
   nationality: string;
@@ -51,16 +61,29 @@ interface user {
   updatedAt: string;
   countryCode: string;
 }
-interface workExp {
-  hasWorkExperience: boolean;
-  jobTitle: string;
-  organizationName: string;
-  employmentType: string;
-  endDate: Date;
-  startDate: Date;
-  createdAt: Date;
-  updatedAt: Date;
-  duration: number;
+type LanguageProficiency = {
+  score: string;
+  test: string;
+};
+
+type StudyPreferenced = {
+  country: string;
+  degree: string;
+  subject: string;
+};
+
+export interface SuccessData {
+  studyLevel: string;
+  gradetype: string;
+  grade: number;
+  dateOfBirth: string;
+  nationality: string;
+  majorSubject: string;
+  livingCosts: string;
+  tuitionFee: string;
+  languageProficiency: LanguageProficiency;
+  workExperience: string;
+  studyPreferenced: StudyPreferenced;
 }
 interface User {
   firstName: string;
@@ -71,10 +94,11 @@ interface User {
   UserPref: UserPref;
   workExp: workExp;
 }
-interface UserStore {
+export interface UserStore {
   user: User | null;
   loading: boolean;
   error: string | null;
+  successChances: SuccessData | null; // :white_tick: Add this property
   isAuthenticate: boolean; // Add this property
   fetchUserProfile: (token: string) => Promise<void>;
   setUser: (user: User) => void;
@@ -83,6 +107,8 @@ interface UserStore {
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
   loading: false,
+  userSuccessInfo: null,
+  successChances: null,
   isAuthenticate: false,
   error: null,
   fetchUserProfile: async (token) => {
@@ -119,6 +145,3 @@ export const useUserStore = create<UserStore>((set) => ({
     set(() => ({ user: null, isAuthenticate: false, loading: false })); // :white_tick: Reset store state
   },
 }));
-
-
-
