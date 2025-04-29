@@ -216,13 +216,16 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   );
 
   return (
-    <section className="md:my-4 flex flex-col items-center justify-center p-4 sm:p-6">
+    <section
+     
+      className="md:my-4 flex flex-col items-center justify-center p-4 sm:p-6"
+    >
       <h3 className="">Scholarship Success Chances!</h3>
       <p className="text-gray-600 mb-2">
         Your scholarship success chances are:
       </p>
 
-      <div className="relative w-full lg:w-[80%]">
+      <div className="relative w-full lg:w-[80%] ">
         {/* Success Metrics Content */}
         <div className="flex flex-col md:flex-row justify-center gap-5 w-full">
           {/* Academic Results Section */}
