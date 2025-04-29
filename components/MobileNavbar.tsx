@@ -16,10 +16,12 @@ import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { IoIosArrowForward } from "react-icons/io";
 import { useUserStore } from "@/store/userStore";
+import { usePathname, useRouter } from "next/navigation";
 
 const MobileNavbar = () => {
   const { isAuthenticate, logout, user } = useUserStore();
-
+  const router = useRouter();
+  const pathname = usePathname(); // current page path
   const [isMounted, setIsMounted] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +38,9 @@ const MobileNavbar = () => {
     setDropdownOpen((prev) => !prev);
   };
 
+  const handleLoginClick = () => {
+    router.push(`/signin?callbackUrl=${encodeURIComponent(pathname)}`);
+  };
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -127,11 +132,13 @@ const MobileNavbar = () => {
                 )}
               </div>
             ) : (
-              <Link href="/signin" onClick={() => setIsOpen(false)}>
-                <Button className="text-sm w-20 sm:w-24 h-8 sm:h-10 bg-red-700 text-white">
+              // <Link href="/signin" onClick={() => setIsOpen(false)}>
+                <Button className="text-sm w-20 sm:w-24 h-8 sm:h-10 bg-red-700 text-white"
+                                    onClick={handleLoginClick}
+>
                   Login
                 </Button>
-              </Link>
+              // </Link>
             )}
           </div>
 

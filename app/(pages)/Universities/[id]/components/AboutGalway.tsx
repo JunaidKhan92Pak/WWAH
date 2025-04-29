@@ -35,10 +35,15 @@ interface AboutGalwayProps {
     city_transportation_3: string;
   };
 }
+
 const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
-  // Memoize the slides to prevent unnecessary re-renders
   const slides = React.useMemo(
     () => [
+      {
+        background: "/Aboutbackground.jpg",
+        title: "ABOUT CITY",
+        isIntro: true,
+      },
       {
         images: [
           images?.city_historical_places_1,
@@ -94,8 +99,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
     [city, images]
   );
 
-  // Track the current slide and image index within that slide
-  const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [currentSlide, setCurrentSlide] = React.useState(1);
   const [currentImages, setCurrentImages] = React.useState(0);
 
   const handleSlideChange = (index: number) => {
@@ -103,15 +107,17 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
     setCurrentImages(0); // Reset image index when slide changes
   };
 
-  // Automatically change images within each slide every 3 seconds
   React.useEffect(() => {
+    const slideImages = slides[currentSlide]?.images || [];
+    if (slideImages.length === 0) return; // Avoid running the interval if there are no images
+
+    // Set interval to cycle through images of the current slide
     const interval = setInterval(() => {
-      setCurrentImages(
-        (prevIndex) => (prevIndex + 1) % slides[currentSlide].images.length
-      );
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [currentSlide, slides]);
+      setCurrentImages((prevIndex) => (prevIndex + 1) % slideImages.length);
+    }, 3000); // 3 seconds per image change
+
+    return () => clearInterval(interval); // Cleanup interval on slide change or unmount
+  }, [currentSlide, slides]); // Trigger effect whenever currentSlide changes
 
   return (
     <div className="relative text-white  md:px-12  mt-8 ">
@@ -125,11 +131,11 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
         />
         <div className="absolute inset-0 bg-black opacity-70"></div>
       </div>
+
       {/* Carousel Section */}
       <Carousel
         className="relative w-full"
         onChange={(e: React.FormEvent<HTMLDivElement>) => {
-          // Assuming the Carousel component sets a data attribute 'data-index'
           const indexStr = (e.target as HTMLElement).getAttribute("data-index");
           if (indexStr) {
             handleSlideChange(Number(indexStr));
@@ -139,45 +145,44 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={index}>
-              <div className="flex justify-center items-center h-full min-h-[350px] py-6 md:py-8">
-                {" "}
-                {/* ensures full height */}
-                {index === 0 ? (
-                  // First slide: TEXT ONLY
-                  <div className="flex flex-col items-center justify-center text-center w-[85%] md:w-[70%] lg:w-[60%] xl:w-[50%]">
-                    <h2 className="text-white text-4xl md:text-[86px] tracking-wider font-bold text-center">
-                      ABOUT CITY
+ <div className="flex justify-center items-center h-full min-h-[350px] py-6 md:py-8">
+ {" "}
+                {slide.isIntro ? (
+                  // Intro Slide: "ABOUT CITY"
+                  <div className="items-center justify-center text-center w-full">
+                    <h2 className="text-white text-4xl md:text-[86px] tracking-wider font-bold">
+                      {slide.title}
                     </h2>
                   </div>
                 ) : (
-                  // Other slides: IMAGE + TEXT
-                  <div className="flex flex-col gap-4 md:gap-6 lg:flex-row justify-between items-center w-[80%] md:w-[60%] lg:w-[85%] xl:w-[60%]">
+                  // Regular Slide
+                  <div className="flex flex-col md:flex-row  gap-4 md:gap-6 lg:flex-row justify-between items-center w-[70%] md:w-[60%] lg:w-[75%] xl:w-[60%]">
                     {/* Image Section */}
                     <div className="w-full">
                       <div className="rounded-3xl overflow-hidden shadow-lg w-full">
                         <Image
-                          src={
-                            slide.images[currentImages] ?? "/placeholder.jpg"
-                          }
+                          src={slide.images?.[currentImages] ?? "/placeholder.jpg"}
                           alt={slide.title}
                           width={400}
                           height={300}
-                          className="object-cover w-full h-[150px] md:h-[250px] lg:h-[290px]"
+                          className="object-cover w-full h-[150px] md:h-[250px] lg:h-[270px]"
                         />
                       </div>
                     </div>
                     {/* Text Section */}
-                    <div className="w-[90%] xl:w-full ">
+                    <div className="w-[90%] xl:w-full">
                       <h4>{slide.title}</h4>
                       {slide.isList ? (
                         <ul className="text-gray-300 list-disc pl-0 lg:pl-5">
-                          {slide.description.split(" • ").map((item, idx) => (
-                            <li key={idx}>{item}</li>
-                          ))}
+                          {slide.description
+                            .split(" • ")
+                            .map((item, idx) => (
+                              <li key={idx}>{item}</li>
+                            ))}
                         </ul>
                       ) : (
                         <p
-                          className="text-gray-300 leading-relaxed text-justify md:text-start h-64 overflow-hidden overflow-y-auto scrollbar-hide"
+                          className="text-gray-300 leading-relaxed text-justify md:text-start h-44 overflow-hidden overflow-y-auto scrollbar-hide"
                           style={{
                             scrollbarWidth: "none",
                             msOverflowStyle: "none",
@@ -200,5 +205,6 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
     </div>
   );
 });
+
 AboutGalway.displayName = "AboutGalway";
 export default AboutGalway;

@@ -13,6 +13,8 @@ interface AcademmicInfo {
   endDate: Date;
   createdAt: Date;
   updatedAt: Date;
+  otherGradingScale: string,
+
 }
 interface LanguageProf {
   proficiencyLevel: string;
@@ -49,9 +51,9 @@ export interface user {
   firstName: string;
   lastName: string;
   phone: string;
-  phoneNo: string;
   email: string;
   contactNo: string;
+  phoneNo: string;
   dob: string;
   country: string;
   nationality: string;
