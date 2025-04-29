@@ -113,11 +113,19 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
             <CarouselItem key={index}>
               <div className="flex justify-center items-center h-full min-h-[400px] md:py-6"> {/* ensures full height */}
                 {/* Left Side: Text */}
-                <div className="flex flex-col gap-4 md:gap-6 lg:flex-row w-[78%] md:w-[70%] lg:w-[90%] xl:w-[80%] mx-auto py-4 justify-between items-center">
+                <div className="flex flex-col gap-4 md:gap-6 lg:flex-row w-[70%] md:w-[70%] lg:w-[90%] xl:w-[80%] mx-auto py-4 justify-between items-center">
                   <div className="w-full">
-                    <h4 className="leading-tight">Campus Life at {uniname}</h4>
-                    <h5 className="text-[#F6B677]">{data.title}</h5>
-                    <p className="text-justify md:text-start lg:leading-tight xl:leading-6 text-[#9D9D9D]">{data.description}</p>
+                    <h5 className="leading-tight">Campus Life at {uniname}</h5>
+                    <h6 className="text-[#F6B677] my-1">{data.title}</h6>
+                    {/* <p className="text-justify md:text-start lg:leading-tight xl:leading-6 text-[#9D9D9D]"> */}
+                    <p
+                          className="text-gray-300 md:leading-relaxed text-justify md:text-start h-44 overflow-hidden overflow-y-auto scrollbar-hide"
+                          style={{
+                            scrollbarWidth: "none",
+                            msOverflowStyle: "none",
+                          }}
+                        >
+                      {data.description}</p>
                   </div>
 
                   {/* Right Side: Image */}
