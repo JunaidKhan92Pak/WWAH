@@ -44,7 +44,7 @@ type AnswerType = string | Date | boolean | number | null;
 
 interface Grade {
   gradeType: string;
-  score: number;
+  score: string;
 }
 
 interface StudentData {
@@ -244,7 +244,7 @@ const SuccessChances = () => {
   >({});
   const [gradeData, setGradeData] = useState<Grade>({
     gradeType: "",
-    score: 0,
+    score: "",
   });
 
   const [studentData, setStudentData] = useState<StudentData | null>(null);
@@ -294,7 +294,7 @@ const SuccessChances = () => {
   };
 
   const handleGradeScoreChange = (value: string) => {
-    setGradeData((prev) => ({ ...prev, score: Number(value) }));
+    setGradeData((prev) => ({ ...prev, score: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -361,7 +361,7 @@ const SuccessChances = () => {
       setCurrentQuestion(0);
       setAnswers({});
       setSelectedCurrency({});
-      setGradeData({ gradeType: "", score: 0 });
+      setGradeData({ gradeType: "", score: ""});
       setShowWelcome(true);
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -568,8 +568,8 @@ const SuccessChances = () => {
                           value={
                             answers[q.id]
                               ? new Date(answers[q.id] as string)
-                                .toISOString()
-                                .split("T")[0]
+                                  .toISOString()
+                                  .split("T")[0]
                               : ""
                           }
                           onChange={(e) => handleAnswer(e.target.value, q.id)}
