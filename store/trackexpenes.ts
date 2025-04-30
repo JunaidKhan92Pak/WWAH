@@ -29,7 +29,6 @@ export const useExpenseStore = create<ExpenseStore>((set, get) => ({
     // Fetch expenses based on query parameters stored in Zustand
     fetchExpenses: async () => {
         const { university } = get();
-
         // Ensure both filters are set before fetching
         if (!university) {
             set({ expenses: null, error: "Please select country and university." });

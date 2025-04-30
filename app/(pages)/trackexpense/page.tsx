@@ -2,15 +2,15 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
-  useRef,
+  // useMemo,
+  // useRef,
   useState,
 } from "react";
 import { GoShareAndroid } from "react-icons/go";
 import { PiPersonSimpleCircleLight } from "react-icons/pi";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useUniversityStore } from "@/store/useUniversitiesStore";
+// import { useUniversityStore } from "@/store/useUniversitiesStore";
 import {
   Carousel,
   CarouselContent,
@@ -25,22 +25,15 @@ import { IoDiamondOutline } from "react-icons/io5";
 
 // Static country images
 const images = [
-  { src: "/countryarchive/uk_logo.png", name: "UK", alt: "United Kingdom" },
-  { src: "/countryarchive/usa_logo.png", name: "USA", alt: "USA" },
+  { src: "/countryarchive/uk_logo.png", name: "United Kingdom", alt: "United Kingdom" },
+  { src: "/countryarchive/nz_logo.png", name: "New Zealand", alt: "New Zealand" },
   { src: "/countryarchive/aus_logo.png", name: "Australia", alt: "Australia" },
-  { src: "/countryarchive/china_logo.png", name: "China", alt: "China" },
   { src: "/countryarchive/canada_logo.png", name: "Canada", alt: "Canada" },
-  // { src: "/japan.png", name: "Japan", alt: "Japan" },
-  { src: "/countryarchive/ireland_logo.png", name: "Ireland", alt: "Ireland" },
-  {
-    src: "/countryarchive/nz_logo.png",
-    name: "New Zealand",
-    alt: "New Zealand",
-  },
-  { src: "/countryarchive/france_logo.png", name: "France", alt: "France" },
-  { src: "/countryarchive/italy_logo.png", name: "Italy", alt: "Italy" },
   { src: "/countryarchive/my_logo.png", name: "Malaysia", alt: "Malaysia" },
-  { src: "/countryarchive/france_logo.png", name: "France", alt: "France" },
+  { src: "/countryarchive/ireland_logo.png", name: "Ireland", alt: "Ireland" },
+  { src: "/countryarchive/usa_logo.png", name: "USA", alt: "USA" },
+  { src: "/countryarchive/china_logo.png", name: "China", alt: "China" },
+  { src: "/countryarchive/italy_logo.png", name: "Italy", alt: "Italy" },
 ];
 
 // Dynamic mapping for lifestyle icons
@@ -93,11 +86,11 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({
 const Page = () => {
   const { expenses, loading, error, setUniversity, fetchExpenses } =
     useExpenseStore();
-  const { universities, fetchUniversities } = useUniversityStore();
+  // const { universities, fetchUniversities } = useUniversityStore();
   // Fetch universities on mount
-  useEffect(() => {
-    fetchUniversities();
-  }, [fetchUniversities]);
+  // useEffect(() => {
+  //   fetchUniversities();
+  // }, [fetchUniversities]);
 
   // Lifestyle selection
   const [selectedLifestyle, setSelectedLifestyle] = useState("student_budget");
@@ -106,29 +99,32 @@ const Page = () => {
     expenses[0]?.lifestyles.find((life) => life.type === selectedLifestyle);
   // University search and dropdown state
   const [searchTermUni, setSearchTermUni] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  console.log(searchTermUni);
+
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   // Memoize filtered universities for performance
-  const filteredUniversities = useMemo(() => {
-    return universities.filter(
-      (uni) =>
-        (!selectedCountry ||
-          uni.country_name.toLowerCase() === selectedCountry.toLowerCase()) &&
-        uni.university_name.toLowerCase().includes(searchTermUni.toLowerCase())
-    );
-  }, [universities, selectedCountry, searchTermUni]);
+  // const filteredUniversities = useMemo(() => {
+  //   return universities.filter(
+  //     (uni) =>
+  //       (!selectedCountry ||
+  //         uni.country_name.toLowerCase() === selectedCountry.toLowerCase()) &&
+  //       uni.university_name.toLowerCase().includes(searchTermUni.toLowerCase())
+  //   );
+  // }, [universities, selectedCountry, searchTermUni]);
 
-  const handleSelectUniversity = useCallback((universityName: string) => {
-    setSearchTermUni(universityName);
-    setIsDropdownOpen(false);
-    setUniversity(universityName);
-    fetchExpenses();
-  }, []);
+  // const handleSelectUniversity = useCallback((universityName: string) => {
+  //   setSearchTermUni(universityName);
+  //   setIsDropdownOpen(false);
+
+  // }, []);
 
   const handleSelectCountry = useCallback((country: string) => {
     setSelectedCountry((prev) => (prev === country ? null : country));
     setSearchTermUni(""); // Reset search when country changes
+    setUniversity(country);
+    fetchExpenses();
   }, []);
 
   const [showData, setShowData] = useState(false);
@@ -255,11 +251,10 @@ const Page = () => {
                                     onClick={() =>
                                       handleSelectCountry(image.name)
                                     }
-                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${
-                                      selectedCountry === image.name
-                                        ? "border-[#F0851D] border-2"
-                                        : "border-0"
-                                    }`}
+                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${selectedCountry === image.name
+                                      ? "border-[#F0851D] border-2"
+                                      : "border-0"
+                                      }`}
                                   />
                                 </div>
                                 <p className="pt-2 tracking-wide text-center text-[8px] font-bold md:text-[13px]">
@@ -277,7 +272,7 @@ const Page = () => {
                 </section>
 
                 {/* Filter by University */}
-                <div
+                {/* <div
                   className="p-4 border rounded bg-[#FCE7D2]/50 shadow-md relative backdrop-blur-60"
                   ref={dropdownRef}
                 >
@@ -316,7 +311,7 @@ const Page = () => {
                       )}
                     </ul>
                   )}
-                </div>
+                </div> */}
 
                 {/* Accommodation Type */}
                 <div>
@@ -346,9 +341,8 @@ const Page = () => {
                   <div className="grid grid-cols-2 gap-6">
                     <button
                       onClick={() => toggleOption("shared")}
-                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${
-                        activeOption === "shared" ? "bg-gray-100" : ""
-                      }`}
+                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${activeOption === "shared" ? "bg-gray-100" : ""
+                        }`}
                     >
                       <GoShareAndroid className="w-8 h-8 mb-2" />
                       <div className="flex flex-col items-center">
@@ -361,9 +355,8 @@ const Page = () => {
 
                     <button
                       onClick={() => toggleOption("single")}
-                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${
-                        activeOption === "single" ? "bg-gray-100" : ""
-                      }`}
+                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${activeOption === "single" ? "bg-gray-100" : ""
+                        }`}
                     >
                       <PiPersonSimpleCircleLight className="w-8 h-8 mb-2" />
                       <div className="flex flex-col items-center">
@@ -414,10 +407,10 @@ const Page = () => {
                     {(expenses && expenses[0]?.lifestyles?.length > 0
                       ? expenses[0].lifestyles
                       : [
-                          { type: "basic_lifestyle" },
-                          { type: "moderate_lifestyle" },
-                          { type: "luxury_lifestyle" },
-                        ]
+                        { type: "basic_lifestyle" },
+                        { type: "moderate_lifestyle" },
+                        { type: "luxury_lifestyle" },
+                      ]
                     ).map(
                       (lifestyle: { type: keyof typeof lifestyleIcons }) => {
                         const LifestyleIcon =
@@ -425,15 +418,13 @@ const Page = () => {
                         return (
                           <button
                             key={lifestyle.type}
-                            className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${
-                              lifestyle.type === "luxury_lifestyle"
-                                ? "col-span-2"
-                                : "col-span-1"
-                            } ${
-                              selectedLifestyle === lifestyle.type
+                            className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${lifestyle.type === "luxury_lifestyle"
+                              ? "col-span-2"
+                              : "col-span-1"
+                              } ${selectedLifestyle === lifestyle.type
                                 ? "bg-gray-100"
                                 : "bg-none"
-                            }`}
+                              }`}
                             onClick={() => setSelectedLifestyle(lifestyle.type)}
                           >
                             <LifestyleIcon className="w-8 h-8 mb-2 text-gray-700" />
