@@ -196,11 +196,11 @@ export default function Home() {
           console.log(matchedDoc, "matched");
           return matchedDoc
             ? {
-                ...doc,
-                files: matchedDoc.files || [],
-                date: matchedDoc.date || "",
-                isChecked: matchedDoc.files.length > 0,
-              }
+              ...doc,
+              files: matchedDoc.files || [],
+              date: matchedDoc.date || "",
+              isChecked: matchedDoc.files.length > 0,
+            }
             : doc;
         })
       );
@@ -428,8 +428,7 @@ export default function Home() {
           console.log(data, "data");
           if (!response.ok || !data.secure_url || !data.public_id) {
             throw new Error(
-              `Cloudinary upload failed: ${
-                data.error?.message || "Unknown error"
+              `Cloudinary upload failed: ${data.error?.message || "Unknown error"
               }`
             );
           }
@@ -448,9 +447,9 @@ export default function Home() {
         alert("No files were successfully uploaded to Cloudinary.");
         return;
       }
-const documentName =
-  documents.find((doc) => doc.id === id)?.name || `Document_${id}`;
-
+      const documentName =
+        documents.find((doc) => doc.id === id)?.name || `Document_${id}`;
+      const token = getAuthToken(); // Assuming you have this function for authentication
       // 🚀 Send uploaded file metadata to backend
       try {
         const response = await fetch(
@@ -459,7 +458,7 @@ const documentName =
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust auth if needed
+              Authorization: `Bearer ${token}`, // Adjust auth if needed
             },
             credentials: "include",
             body: JSON.stringify({
@@ -483,11 +482,11 @@ const documentName =
           docs.map((doc) =>
             doc.id === id
               ? {
-                  ...doc,
-                  files: [...doc.files, ...uploadedFiles],
-                  date: new Date().toLocaleDateString(),
-                  isChecked: true,
-                }
+                ...doc,
+                files: [...doc.files, ...uploadedFiles],
+                date: new Date().toLocaleDateString(),
+                isChecked: true,
+              }
               : doc
           )
         );
@@ -796,7 +795,7 @@ const documentName =
                 <div className="flex items-center space-x-4">
                   <Checkbox
                     checked={doc.isChecked}
-                    onCheckedChange={() => {}}
+                    onCheckedChange={() => { }}
                     className="h-4 w-4"
                   />
                   <div className="space-y-1">
