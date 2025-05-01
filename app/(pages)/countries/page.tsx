@@ -62,7 +62,7 @@ const Page = () => {
             >
               <div className="overflow-hidden rounded-xl relative min-h-[255px] md:min-h-[250px]">
                 <ImageWithLoader
-                  src={`/countryarchive/${country.short_name}.svg`}
+                  src={`/countryarchive/${country.short_name}.png`}
                   alt={country.alt}
                   sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
                   className="object-cover"

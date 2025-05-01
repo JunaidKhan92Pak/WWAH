@@ -81,7 +81,7 @@ const Herosec = ({ data }: { data: UniversityData }) => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-100"></div>
             <div className="w-[90%] mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center   py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-2 items-center justify-evenly lg:justify-items-center py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto">
                 <div className="space-y-2 text-left">
                   <Image
                     src={data?.universityImages?.logo || "/default-logo.png"}
@@ -102,30 +102,32 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                     </div>
                   </div>
 
-                  <Link
-                    target="blank"
-                    href={data.virtual_tour || "#"}
-                    // target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <div className="px-4 py-1 mt-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
-                      <Image
-                        src="/university/camera.svg"
-                        alt="Battery Low Icon"
-                        width={20}
-                        height={20}
-                      />
-                      <p className="text-[#313131] text-left leading-5 md:leading-6">
-                        Get a virtual tour of {data.university_name}
-                      </p>
-                    </div>
-                  </Link>
+                  {data.virtual_tour && data.virtual_tour !== "NA" && data.virtual_tour.trim() !== "" && (
+  <Link
+    target="_blank"
+    href={data.virtual_tour}
+    rel="noopener noreferrer"
+  >
+    <div className="px-4 py-1 mt-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
+      <Image
+        src="/university/camera.svg"
+        alt="Virtual Tour Icon"
+        width={20}
+        height={20}
+      />
+      <p className="text-[#313131] text-left leading-5 md:leading-6">
+        Get a virtual tour of {data.university_name}
+      </p>
+    </div>
+  </Link>
+)}
+
                 </div>
 
                 {/* Right Section */}
                 <div
-                  className="w-full md:w-4/5 md:h-[70%] lg:w-[60%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
-py-4 md:py-1 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
+                  className="w-full md:w-4/5  lg:w-[60%]  2xl:w-[60%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl 
+py-4 md:py-8 2xl:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0"
                 >
                   <Link
                     target="blank"
