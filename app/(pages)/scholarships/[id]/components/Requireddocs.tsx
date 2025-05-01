@@ -44,14 +44,14 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
           </div>
 
           {/* Image Section */}
-          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 p-4">
+          <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 ">
             {selectedDoc ? (
-              <div>
-                <h3 className="text-lg font-semibold">
+              <div className="text-center px-4 sm:px-8 lg:px-16">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
                   {selectedDoc.document} Details
                 </h3>
                 <p
-                  className="text-gray-700 mt-2"
+                  className="text-gray-700 mt-2 text-sm sm:text-base lg:text-lg"
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(selectedDoc.details),
                   }}

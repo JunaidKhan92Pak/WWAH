@@ -275,10 +275,11 @@ function Page() {
                   <h3 className="text-white leading-snug">
                     <Typewriter
                       words={[
-                        "Need help choosing a country?",
-                        "Ready to find your dream university?",
-                        "Got a Budget? I'll find what fits",
-                        "Let's make your study abroad journey easy",
+                        "Let’s explore your study options",
+                        "I simplify your university search",
+                        "Find courses that truly fit",
+                        "Smart scholarship search starts here.",
+                        "Know your success chances before applying",
                       ]}
                       loop={true}
                       cursor

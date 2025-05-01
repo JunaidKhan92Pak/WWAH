@@ -8,6 +8,8 @@ import React, { useState } from "react";
 
 interface FeeAndScholarshipsProps {
   data: {
+    funding_link: string;
+    scholarship_link: string;
     _id: string;
     countryname: string;
     universityname: string;
@@ -47,6 +49,8 @@ interface FeeAndScholarshipsProps {
 
 export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
   const [activeTab, setActiveTab] = useState("scholarship");
+  console.log(data , "cor");
+  
   return (
     <section className=" w-[90%] mx-auto my-4">
       <h2 className="pb-2">Fee and Scholarships!</h2>
@@ -57,7 +61,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
           <div>
             <h5 className="mb-2">Total Fee:</h5>
             <ul className="space-y-4 leading-normal lg:leading-10">
-              <li className="flex items-center space-x-2 ">
+              <li className="flex items-center space-x-2">
                 <span className="vertical-line w-[1px] h-3 bg-black"></span>
                 <p className="font-semibold">
                   {data.annual_tuition_fee.currency}{" "}
@@ -74,7 +78,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
                 <span className="vertical-line w-[1px] h-3 bg-black"></span>
                 {/* <p className="font-semibold">{data.initial_deposit}</p> */}
                 <div className="relative group w-[100px]">
-                  <p className="text-sm truncate font-medium max-w-[100px] overflow-hidden">
+                  <p className="text-md truncate font-medium max-w-[100px] overflow-hidden">
                     {data.initial_deposit}
                   </p>
                   <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-sm font-medium p-2 rounded-md w-[200px] text-center shadow-lg">
@@ -91,7 +95,6 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             <p>
               Have Questions about University Fee?{" "}
               <Link
-                
                 href="#"
                 className="text-red-600 hover:underline font-semibold"
               >
@@ -123,25 +126,27 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
           <div className="flex w-full rounded-lg bg-[#FDF2E8]">
             <button
               onClick={() => setActiveTab("scholarship")}
-              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "scholarship"
-                ? "bg-[#F57C00] text-white"
-                : "bg-transparent text-black"
-                }`}
+              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
+                activeTab === "scholarship"
+                  ? "bg-[#F57C00] text-white"
+                  : "bg-transparent text-black"
+              }`}
             >
-              <Link target="blank" href="">
+              <Link target="blank" href={data.scholarship_link}>
                 Scholarship Details
               </Link>
             </button>
             <button
               onClick={() => setActiveTab("funding")}
-              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "funding"
-                ? "bg-[#F57C00] text-white"
-                : "bg-transparent text-black"
-                }`}
+              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
+                activeTab === "funding"
+                  ? "bg-[#F57C00] text-white"
+                  : "bg-transparent text-black"
+              }`}
             >
               <Link
-                target="blank"
-                href="https://mta.ca/current-students/student-finances/financial-aid-current-students"
+                // target="blank"
+                href={data.funding_link}
               >
                 Funding Details
               </Link>
@@ -152,7 +157,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             <Button
               variant="outline"
               className="w-full mt-4 border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
-       rounded-lg text-xs sm:text-sm hover:bg-[#F0851D] hover:text-white transition-colors duration-300 py-4"
+              rounded-lg text-xs sm:text-sm hover:bg-[#F0851D] hover:text-white transition-colors duration-300 py-4"
             >
               Contact with WWAH Advisor
             </Button>
