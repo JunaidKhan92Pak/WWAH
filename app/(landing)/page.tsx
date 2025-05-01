@@ -28,8 +28,7 @@ import Footer from "@/components/Footer";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
 import { useUserStore } from "@/store/userStore";
-import Loading from "../loading";
-// import Loading from "@/app/loading";
+// import Loading from "../loading";
 
 function Page() {
   const countries = [
@@ -59,10 +58,9 @@ function Page() {
       img: "/countryarchive/ireland_logo.png",
     },
     { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
-  ];
+  ];  
   const router = useRouter();
   const { isAuthenticate, loading, logout, user } = useUserStore();
-
   const [input, setInput] = useState("");
 
   const {
@@ -131,9 +129,9 @@ function Page() {
       router.push("/chatmodel"); // Navigate without message if input is empty
     }
   };
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
   return (
     // landing page container starts
@@ -196,10 +194,10 @@ function Page() {
                   >
                     <div className="px-4 py-3">
                       <span className="block text-sm text-gray-900 dark:text-white">
-                        {user?.firstName || "User12"}
+                        {user?.firstName}
                       </span>
                       <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                        {user?.email || "user@gmail.com"}
+                        {user?.email}
                       </span>
                     </div>
                     <ul className="py-2">

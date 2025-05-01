@@ -35,8 +35,8 @@ const Footer = () => {
     <>
       <div className="relative -mb-1 translate-y-3   mx-auto md:px-6 py-3 md:py-4 w-[85%] sm:w-fit bg-white rounded-3xl ">
         <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-3xl "></div>
-        <h5 className="z-10 text-center   font-extrabold text-gray-800">
-          Global Education, Powered by AI
+        <h5 className="z-10 text-center leading-5  font-extrabold text-gray-800">
+          Global Education, Powered by AI-Driven EduTech{" "}
         </h5>
       </div>
 
@@ -467,7 +467,250 @@ const Footer = () => {
                     <DialogHeader>
                       <DialogTitle>Privacy Policy</DialogTitle>
                     </DialogHeader>
-                    <p>We are committed to protecting your privacy...</p>
+                    <div className="h-56 overflow-y-auto">
+                      <p>
+                        Welcome to WWAH (“we,” “our,” or “us”). Your privacy is
+                        important to us. This Privacy Policy explains how we
+                        collect, use, disclose, and safeguard your information
+                        when you visit our AI-powered study abroad platform (the
+                        “Service”), which provides personalized recommendations
+                        for universities, courses, scholarships, and counseling
+                        services.
+                      </p>
+                      <p>
+                        By using our website, you consent to the privacy policy
+                        terms mentioned ahead.
+                      </p>
+                      <p className="font-bold">
+                        1. Why Do We Collect Information?
+                      </p>
+                      <p>
+                        We collect your personal information to identify your
+                        personal preferences and let our AI platform match you
+                        up with different universities that have the highest
+                        probability of accepting you into theirs program. It
+                        helps us deliver better service to you, in accordance
+                        with your needs and desires. Also, we may use it to keep
+                        you updated of the developments in the field of
+                        education or to inform of your latest news and events
+                        that may be in your interests.
+                      </p>
+                      <p className="font-bold">
+                        2. How Do We Use Your Information?
+                      </p>
+                      <p>We use your data to:</p>
+                      <p>
+                         Provide tailored university, course, and scholarship
+                        matches using AI-based algorithms  Offer personalized
+                        counseling recommendations  Facilitate virtual
+                        counseling sessions and webinars  Send email updates,
+                        alerts, and newsletters  Process applications or form
+                        submissions  Monitor and analyze usage trends for
+                        platform improvement  Send you marketing and
+                        promotional offers  Ensure compliance with legal
+                        obligations
+                      </p>
+                      <p>
+                        We also have the right to share your consented
+                        information (such as reviews, feedback) that may enhance
+                        our website’s image and credibility to our official
+                        pages for marketing and other purposes.
+                      </p>
+                      <p className="font-bold">a. Information Retention</p>
+                      <p>
+                        We believe in purpose-based retention. Your student data
+                        is only kept for as long as it is needed (4 years) to
+                        fulfill the purposes it was collected for, after which
+                        it will be securely deleted or anonymized, depending on
+                        the usage and necessity value. The data will only be
+                        accessible upon request to users if it is still in
+                        storage or archive. We may also keep the data secured
+                        after business has been concluded if retention is
+                        necessary for any ongoing legal proceedings or to
+                        protect your or our legal interests for any reason.
+                      </p>
+                      <p className="font-bold">
+                        We collect the following types of information to provide
+                        and improve our services:
+                      </p>
+                      <p className="font-bold">a. Personal Information</p>
+                      <p>
+                         Full name  Date of birth  Email address  Phone
+                        number  Mailing address  Country of origin and
+                        citizenship  Passport information (if and where
+                        applicable)  Educational background (grades,
+                        transcripts, standardized test scores)  Career
+                        interests and preferences  Financial information (e.g.,
+                        scholarship eligibility, bank details, card information,
+                        etc.)  Uploaded documents (e.g., resumes, SOPs,
+                        recommendation letters)
+                      </p>
+                      <p className="font-bold">
+                        b. Technical & Usage Information
+                      </p>
+                      <p>
+                         IP address  Browser type and version  Operating
+                        system  Referral source  Geographical location 
+                        Length of visit  Website navigation paths  Page views
+                         Frequency and pattern of service use  Cookies and
+                        similar tracking technologies (see Section 7) You may
+                        use our website or app, both will access these
+                        information bits that are necessary for profile
+                        completion and tailored assessment result.
+                      </p>
+                      <p className="font-bold">
+                        4. Data Sharing and Disclosure
+                      </p>
+                      <p>
+                        We do not rent or sell your personal data. Data sharing
+                        is only limited to the trusted partners and legal
+                        authorities (under special circumstances). We may share
+                        your data under the following circumstances:
+                      </p>
+                      <p>
+                         With partner universities or institutions for
+                        application processing or eligibility assessment. It
+                        includes giving us consent to move forward with
+                        applications and enrolment with higher studies
+                        institutions on your behalf.  With third-party service
+                        providers (e.g., payment processors, cloud hosting,
+                        analytics tools) under strict data protection
+                        agreements. It may include making travel arrangements,
+                        applying for visa(s), and arranging accommodations or
+                        opening new bank accounts.  With counselors assigned to
+                        guide you, as per your consent.  When legally required
+                        to comply with investigations, subpoenas, or court
+                        orders.  In case of a merger or acquisition where user
+                        data is part of the transferred assets.
+                      </p>
+                      <p>
+                        Nevertheless, you should stay vigilant of the cyber
+                        security threats that you may encounter for any reason.
+                        We do our best to keep our site secure, but it is
+                        possible for hackers or cybercriminals to get access to
+                        your data. Proceed at your own risk and choose safe
+                        connections to minimize potential threats.
+                      </p>
+                      <p className="font-bold">5. User Rights and Choices</p>
+                      <p>
+                        Your data and its presentation is based on your consent.
+                        Depending on your location, you may have the following
+                        rights regarding your shared information:
+                      </p>
+                      <p>
+                        {" "}
+                         Access – Request access to your personal information.
+                         Correction – Request correction of inaccurate or
+                        incomplete data.  Deletion – Request deletion of your
+                        data.  Objection/Restriction – Object to processing or
+                        request limitations placed on your personal data.
+                      </p>
+                      <p>
+                        To exercise any of these rights, please contact us at
+                        info@wwah.ai.
+                      </p>
+                      <p>
+                        We will do our best to facilitate you in any of your
+                        queries.
+                      </p>
+                      <p className="font-bild">6. Data Security</p>
+                      <p>
+                        We implement reasonable administrative, technical, and
+                        physical safeguards to protect your data from
+                        unauthorized access, loss, misuse, or alteration. These
+                        include:
+                      </p>
+                      <p> SSL Encryption  Regular vulnerability scanning</p>
+                      <p>
+                        Still, we cannot guarantee accidental or intentional
+                        misuse from unauthorized or harmful sources. We will
+                        always try to take appropriate measures and actions to
+                        keep your data secure from external threats.
+                      </p>
+                      <p className="font-bold">
+                        6. International Data Transfers
+                      </p>
+                      <p>
+                        If you are accessing the service from outside the
+                        country where our servers are located, your information
+                        may be transferred across borders. We ensure appropriate
+                        safeguards in line with GDPR and other applicable laws.
+                      </p>
+                      <p className="font-bold">
+                        7. Cookies and Tracking Technologies
+                      </p>
+                      <p>
+                        We use cookies and similar technologies to customize
+                        your overall website surfing experience. They are used
+                        to:
+                      </p>
+                      <p>
+                         Remember user preferences  Analyze usage patterns
+                        Improve platform performance
+                      </p>
+                      <p>
+                        They do not store or share your personal information.
+                        Instead, they help us in suggesting you content,
+                        courses, and universities based on your preferences,
+                        recent searches etc. Collecting cookies also helps save
+                        your log in details, allowing you to save time by not
+                        entering username and password again and again. We may
+                        use these cookies to advertise third-party products or
+                        services according to your preferences. It can include,
+                        but not be limited to, third party ad servers or network
+                        advertisers.
+                      </p>
+                      <p>
+                        You can modify the cookie settings through your browser
+                        or privacy settings if you do not agree with any or all
+                        information collection policies. It is to be noted here
+                        that the website may not work or react strangely, making
+                        it difficult for you to save or submit progress on
+                        applications due to erasing cookies.
+                      </p>
+                      <p className="font-bold">8. Third-Party Links</p>
+                      <p>
+                        We support and endorse protection of privacy on this
+                        website and internet in general. However, our platform
+                        may contain links to external websites or partners whose
+                        privacy policies may differ. We are not responsible for
+                        the privacy practices or content of those third parties.
+                        We are only responsible for using and distributing your
+                        information for the listed (and consented) uses, but if
+                        a third-party chooses to use your data, we will not be
+                        consider liable for it. If you have any concerns, we
+                        suggest and encourage you to go over their privacy
+                        policies as well as terms and conditions to understand
+                        the consequences before providing your personal or
+                        sensitive information online.
+                      </p>
+                      <p className="font-bold">
+                        9. Changes to This Privacy Policy
+                      </p>
+                      <p>
+                        We may update this Privacy Policy from time to time. Any
+                        changes will be posted with a revised “Last Updated”
+                        date. Significant changes will be communicated via email
+                        or in-platform notifications.
+                      </p>
+                      <p className="font-bold"> 10. Contact Us</p>
+                      <p>
+                        If you have any questions or concerns about this policy
+                        or your personal data, please contact us at:
+                      </p>
+                      <p className="font-bold">
+                        WWAH - World Wide Admissions Hub
+                      </p>
+                      <p>Email: info@wwah.ai</p>
+                      <p className="font-bold">Official Address:</p>
+                      <p>
+                        Zaheer Hussain Al Waheda 30 A street, 12, Ground,
+                        Villa12
+                      </p>
+                      <p className="font-bold">Phone Number</p>
+                      <p>+971 582514675</p>
+                      <p>Privacy Policy Posted on 28/04/2025</p>
+                    </div>
                   </DialogContent>
                 </Dialog>
               </div>
@@ -695,7 +938,7 @@ const Footer = () => {
                       href="/schedulesession"
                       className="hover:underline block"
                     >
-                      WWAH Online counselling session
+                      WWAH Online Counselling session
                     </Link>
                     <Link
                       target="blank"
