@@ -489,23 +489,23 @@ const Page = () => {
           {/* Pagination Controls - Only show if there are results */}
           {displayedUniversities.length > 0 && (
             <div className="flex justify-center items-center my-6 gap-4">
-              <button
+              <Button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+                className=" bg-red-700 hover:bg-red-700 text-white rounded disabled:opacity-50"
               >
                 Previous
-              </button>
+              </Button>
               <span className="text-gray-700">
                 Page {currentPage} of {totalPages || 1}
               </span>
-              <button
+              <Button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages || totalPages === 0}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+                className=" bg-red-700 hover:bg-red-700 text-white rounded disabled:opacity-50"
               >
                 Next
-              </button>
+              </Button>
             </div>
           )}
         </>

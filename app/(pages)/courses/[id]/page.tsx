@@ -53,6 +53,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       career_opportunity_3?: string;
       career_opportunity_4?: string;
       career_opportunity_5?: string;
+      funding_link: string;
+      scholarship_link: string;
     };
     universityData?: {
       universityImages?: {
@@ -160,7 +162,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               <Button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`font-medium transition text-sm md:text-lg px-10 py-2 md:rounded-t-xl flex-shrink-0 border-b border-gray-400 md:border-none
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black 
         ${
           activeTabPro === tab.id
             ? "bg-[#C7161E] text-white"
@@ -345,7 +347,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       {/* progress bar  */}
-      <ProgressSection  data={data.courseData} />
+      <ProgressSection data={data.courseData} />
 
       {/* English Requirnment Section      */}
       <EnglishRequirement data={data.courseData} />

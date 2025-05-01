@@ -268,8 +268,8 @@ useEffect(() => {
   if (answers[7] !== "Completed a test") {
     setAnswers((prev) => ({
       ...prev,
-      8: 0,
-      9: 0,
+      8: null,
+      9: null,
     }));
   }
 }, [answers[7]]);
