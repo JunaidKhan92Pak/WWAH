@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import CompleteApplicationModal from "../completeapplication/components/CompleteApplicationModal";
 import { useUserStore } from "@/store/useUserData";
 import { getAuthToken } from "@/utils/authHelper";
+
 const sidebarItems = [
   {
     href: "/dashboard/overview",
@@ -53,6 +54,7 @@ const sidebarItems = [
 export function Sidebar() {
   const { user, fetchUserProfile, logout } = useUserStore();
   const pathname = usePathname();
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   useEffect(() => {
     const token = getAuthToken();
@@ -60,12 +62,11 @@ export function Sidebar() {
       fetchUserProfile(token);
     }
   }, []);
-  const router = useRouter(); // Initialize Next.js router
+  const handlelogout = () => {
+    logout();
+    router.push("/"); // Redirect to the sign-in page after logout
+  }
 
-  const handleLogout = async () => {
-    await logout(); // Ensure logout is completed
-    router.push("/"); // Redirect to home page
-  };
   // useEffect(() => {
   //   // Auto open modal when navigating to "Complete your application"
   //   if (pathname === "/dashboard/completeapplication") {
@@ -74,6 +75,7 @@ export function Sidebar() {
   //     setIsModalOpen(false);
   //   }
   // }, [pathname]);
+
   return (
     <div className="flex flex-col ">
       {/* Profile Section */}
@@ -121,7 +123,7 @@ export function Sidebar() {
           </Button> */}
           <Button
             className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center"
-            onClick={handleLogout}
+            onClick={handlelogout}
           >
             <ArrowLeftToLine size={16} className="mr-2" />
             Logout
@@ -148,7 +150,7 @@ export function Sidebar() {
         <CompleteApplicationModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onCompleteApplication={() => {}}
+          onCompleteApplication={() => { }}
         />
       )}
     </div>

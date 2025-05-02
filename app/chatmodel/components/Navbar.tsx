@@ -3,9 +3,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaUser } from 'react-icons/fa';
 import { useUserStore } from "@/store/userStore";
+import { useEffect } from 'react';
+import Loading from '@/app/loading';
 
 export const Navbar = () => {
-      const {isAuthenticate, user } = useUserStore();
+  const { isAuthenticate, user, fetchUser, loading } = useUserStore();
+  useEffect(() => {
+    fetchUser(); // Fetch user data when the component mounts
+  }, []);
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <header className="fixed top-0 w-full bg-white border-b z-10">
       <div className="w-[90%] mx-auto sm:px-4 py-2 flex items-center">
