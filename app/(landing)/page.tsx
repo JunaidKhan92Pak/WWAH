@@ -61,7 +61,7 @@ function Page() {
     { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
   ];
   const router = useRouter();
-  const { isAuthenticate, loading, logout, user } = useUserStore();
+  const { isAuthenticate, loading, logout, user, fetchUser } = useUserStore();
 
   const [input, setInput] = useState("");
 
@@ -91,6 +91,9 @@ function Page() {
       setCountry(updatedSelected);
     }
   }
+  useEffect(() => {
+    fetchUser(); // Fetch user data when the component mounts
+  }, []);
   const features = [
     {
       icon: <Bot className="h-8 w-8" />,

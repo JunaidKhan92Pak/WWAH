@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { FaCircleUser } from "react-icons/fa6";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,10 @@ import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
 import { usePathname, useRouter } from "next/navigation";
 const Navbar = () => {
-  const { isAuthenticate, loading, logout, user } = useUserStore();
+  const { isAuthenticate, loading, logout, user, fetchUser } = useUserStore();
+  useEffect(() => {
+    fetchUser(); // Fetch user data when the component mounts
+  }, []);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -92,7 +95,7 @@ const Navbar = () => {
                   >
                     <span className="sr-only">Open user menu</span>
                     {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
-                    <Image  
+                    <Image
                       src="/icons/userred.svg"
                       alt="user"
                       width={40}
