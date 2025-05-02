@@ -168,6 +168,7 @@ export async function POST(req: Request) {
 
                 // Create unique identifier - prioritize course_link, then course_id, then title
                 const courseIdentifier = createUniqueFilter(course, normalizedCountry, normalizedUniversity, university._id);
+                // console.log(`Processing course`, courseIdentifier);
 
                 // Prepare data for database operation
                 const { updateFields, insertOnlyFields } = prepareCoursesData(course, normalizedCountry, normalizedUniversity, university._id);

@@ -31,11 +31,10 @@ const Page = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`transition md:w-1/4 px-4 font-semibold text-sm sm:text-base py-4  rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
-                        ${
-                          activeTab === tab.id
-                            ? "bg-[#C7161E] text-white"
-                            : "text-gray-600"
-                        }`}
+                        ${activeTab === tab.id
+                  ? "bg-[#C7161E] text-white"
+                  : "text-gray-600"
+                }`}
             >
               {tab.label}
             </Button>

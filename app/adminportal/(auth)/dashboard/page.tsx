@@ -18,6 +18,7 @@ interface User {
   contactNo?: number;
   nationality?: string;
   city?: string;
+  phone?: string;
 }
 export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
@@ -42,7 +43,7 @@ export default function AdminDashboard() {
         }
         const data = await res.json();
         console.log("Fetched data:", data);
-
+        console.log(users, "users.phoneNo");
         // Adjust based on your actual response structure
         setUsers(data.Users || data);
         setError(null);
@@ -79,7 +80,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {users.map((user) => (
             <Link
-              
+
               rel="noopener noreferrer"
               href={`/adminportal/dashboard/${user._id}`}
               key={user._id}
@@ -92,7 +93,7 @@ export default function AdminDashboard() {
                   <CardDescription>{user.email}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p>Contact: {user.contactNo || "N/A"}</p>
+                  <p>Contact: {user.phone || "N/A"}</p>
                   <p>Nationality: {user.nationality || "N/A"}</p>
                   <p>City: {user.city || "N/A"}</p>
                 </CardContent>

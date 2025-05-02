@@ -124,7 +124,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       } finally {
         setLoading(false);
       }
-    }; // const fetchData = async () => {
+    };
+    // const fetchData = async () => {
     //   try {
     //     const res = await fetch(`/api/course?id=${id}`);
     //     if (!res.ok) throw new Error("Failed to fetch course data");
@@ -163,11 +164,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
                 className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black 
-        ${
-          activeTabPro === tab.id
-            ? "bg-[#C7161E] text-white"
-            : "bg-transparent text-gray-800"
-        }
+        ${activeTabPro === tab.id
+                    ? "bg-[#C7161E] text-white"
+                    : "bg-transparent text-gray-800"
+                  }
         hover:bg-[#FCE7D2] hover:text-black`}
               >
                 {tab.name}
