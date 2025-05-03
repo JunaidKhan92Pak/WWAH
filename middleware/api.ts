@@ -7,7 +7,7 @@ import {
 } from "@/lib/redis";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { detailedInfo, user, UserStore } from "@/store/useUserData";
+import { DetailedInfo, User, UserStore } from "@/store/useUserData";
 
 // Simple query classifier
 const simpleQueryPatterns = [
@@ -47,7 +47,7 @@ export async function withCaching(
     if (userId) {
       const cachedUserData = await getCachedUserData(userId);
       if (cachedUserData) {
-        userName = cachedUserData.user?.firstName || "there";
+        userName = cachedUserData.user?.user?.firstName || "there";
       }
     }
 
@@ -113,35 +113,25 @@ async function fetchAndCacheUserData(userId: string) {
   const db = client.db("wwah");
 
   // Fetch user data from MongoDB
-  const [user, successChances] = await Promise.all([
+  const [user, detailedInfo] = await Promise.all([
     db.collection("userdbs").findOne({ _id: new ObjectId(userId) }),
     db.collection("successchances").findOne({ userId }),
   ]);
 
   // Create a UserStore compatible object
+  // ✅ RIGHT
   const userData: UserStore = {
-    user: user
-      ? {
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        user: user as unknown as user,
-        AcademmicInfo: user.AcademmicInfo || null,
-        LanguageProf: user.LanguageProf || null,
-        UserPref: user.UserPref || null,
-        workExp: user.workExp || null,
-      }
-      : null,
+    detailedInfo: detailedInfo as DetailedInfo | null,
+    user: user ? { user: user?.user as User } : null,
     loading: false,
     error: null,
-    successChances: successChances as unknown as SuccessData | null,
-    isAuthenticate: !!user,
-    fetchUserProfile: async () => { }, // Placeholder function
-    setUser: () => { }, // Placeholder function
-    logout: () => { }, // Placeholder function
+    isAuthenticated: !!user,
+    fetchUserProfile: async () => { },  // stub
+    setUser: () => { },       // stub
+    logout: () => { },       // stub
   };
 
   console.log("userData", userData);
-
   // Cache the data
   await cacheUserData(userId, userData);
 
