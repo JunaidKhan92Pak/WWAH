@@ -89,6 +89,7 @@ export interface detailedInfo {
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
   studyPreferenced: ApiStudyPreference;
+  updatedAt: string;
 }
 
 const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
@@ -162,7 +163,7 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
           />
           <p className="text-sm">
             Last updated on{" "}
-            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
+            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"

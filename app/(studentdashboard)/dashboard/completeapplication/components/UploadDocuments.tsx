@@ -175,11 +175,19 @@ export default function Home() {
       setDocuments((prevDocs) =>
         prevDocs.map((doc) => {
           const matchedDoc = fetchedDocs.find(
-            (fetchedDoc: { name: string; files: { name: string; url: string }[]; date: string }) => fetchedDoc.name === doc.name
+            (fetchedDoc: {
+              name: string;
+              files: { name: string; url: string }[];
+              date: string;
+            }) => fetchedDoc.name === doc.name
           );
           prevDocs.forEach((doc) => {
             const matchedDoc = fetchedDocs.find(
-              (fetchedDoc: { name: string; files: { name: string; url: string }[]; date: string }) =>
+              (fetchedDoc: {
+                name: string;
+                files: { name: string; url: string }[];
+                date: string;
+              }) =>
                 fetchedDoc.name.trim().toLowerCase() ===
                 doc.name.trim().toLowerCase()
             );
@@ -208,6 +216,7 @@ export default function Home() {
 
     getData();
   }, []);
+
 
   const handleFileUpload = useCallback(
     async (id: string, selectedFiles: FileList | null) => {
@@ -456,42 +465,6 @@ export default function Home() {
                   >
                     Upload
                   </Button>
-                  {/* <Button
-                    variant="outline"
-                    className="text-red-500 hover:text-red-600"
-                    onClick={() => handleDelete(doc.id)}
-                  >
-                    Delete
-                  </Button> */}
-                  {/* {doc.files.map((file) => (
-                    <div
-                      key={file.name}
-                      className="flex items-center space-x-2"
-                    >
-                      <span className="text-xs">{file.name}</span>
-                      <Button
-                        variant="outline"
-                        className="text-red-500 hover:text-red-600"
-                        onClick={() => handleDelete(doc.id, file)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  ))} */}
-
-                  {/* <Button
-                    variant="outline"
-                    className="text-red-500 hover:text-red-600"
-                    onClick={() => handleDelete(doc.id, doc.files)}
-                  >
-                    Delete
-                  </Button> */}
-                  {/* <button
-                    onClick={() => handleDelete(document?.id, document?.files)}
-                    className="bg-red-500 text-white px-4 py-2 rounded"
-                  >
-                    Delete
-                  </button> */}
                   <Button
                     variant="outline"
                     className="text-red-500 hover:text-red-600"

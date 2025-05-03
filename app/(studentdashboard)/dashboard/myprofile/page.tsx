@@ -51,7 +51,7 @@ const Page = () => {
           <h2 className="text-2xl font-bold mb-4">Welcome to Your Profile</h2>
           <p className="mb-4">Your profile information is incomplete.</p>
           <button
-            onClick={() => router.push('/profile/edit')}
+            onClick={() => router.push("/profile/edit")}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Complete Your Profile

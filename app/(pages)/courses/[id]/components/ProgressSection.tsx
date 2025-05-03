@@ -51,6 +51,8 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
 
   // Fetch user info when component mounts
   useEffect(() => {
+    console.log("Fetching user success info...");
+    
     fetchUserSuccessInfo();
   }, [fetchUserSuccessInfo]);
 

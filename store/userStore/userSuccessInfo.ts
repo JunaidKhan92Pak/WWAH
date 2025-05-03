@@ -14,7 +14,7 @@ type StudyPreferenced = {
 type SuccessData = {
     studyLevel: string;
     gradetype: string;
-    grade: number;
+    grade: number;  
     dateOfBirth: string;
     nationality: string;
     majorSubject: string;
@@ -43,8 +43,7 @@ export const useUserInfo = create<Store>((set, get) => ({
     fetchedOnce: false,
 
     fetchUserSuccessInfo: async () => {
-        const token = getAuthToken();
-
+        const token  = getAuthToken();
         if (!token) {
             set({
                 isLoggedIn: false,
@@ -56,12 +55,10 @@ export const useUserInfo = create<Store>((set, get) => ({
             });
             return;
         }
-
         // Don't refetch if already fetched
         if (get().fetchedOnce) return;
-
         set({ loading: true, error: null, isLoggedIn: true });
-
+     
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}success-chance`, {
                 headers: { Authorization: `Bearer ${token}` },
