@@ -20,16 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-// import { Calendar } from "@/components/ui/calendar";
-// import { CalendarIcon } from "lucide-react";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
 import { format } from "date-fns";
 
 // import {
@@ -41,40 +32,57 @@ import { format } from "date-fns";
 const formSchema = z.object({
   // fullName: z.string().min(2, "Full name is required"),
   // email: z.string().email("Invalid email"),
-  contactNo: z.string().min(10, "Invalid contact number"),
+  // contactNo: z.string().min(10, "Invalid contact number"),
   dob: z.string().min(1, "Date of Birth is required"),
-  country: z.string().min(1, "Country is required"),
+  // country: z.string().min(1, "Country is required"),
   nationality: z.string().min(1, "Nationality is required"),
-  city: z.string().min(1, "City is required"),
-  countryCode: z.string().min(1, "Country code is required"), // Added countryCode to the schema
+  // city: z.string().min(1, "City is required"),
+  // countryCode: z.string().min(1, "Country code is required"), // Added countryCode to the schema
 });
-
-interface PersonalInfoData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  contactNo: string;
-  dob: string;
-  country: string;
-  nationality: string;
-  city: string;
-  updatedAt: string;
-  countryCode: string;
+interface ApiLanguageProficiency {
+  test: string;
+  score: string;
 }
 
-export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
+interface ApiStudyPreference {
+  country: string;
+  degree: string;
+  subject: string;
+}
+interface DetailedInfo {
+  studyLevel: string;
+  gradeType: string;
+  grade: number;
+  dateOfBirth: string;
+  nationality: string;
+  majorSubject: string;
+  livingCosts: {
+    amount: number;
+    currency: string;
+  };
+  tuitionFee: {
+    amount: number;
+    currency: string;
+  };
+  languageProficiency: ApiLanguageProficiency;
+  workExperience: number;
+  studyPreferenced: ApiStudyPreference;
+}
+
+
+export default function EditPersonalInfo({ data }: { data: DetailedInfo }) {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   // console.log(data , "personal info")
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      contactNo: `${data?.contactNo}`,
-      dob: `${data?.dob}`,
-      country: `${data?.country}`,
+      // phone: `${data?.phone}`,
+      dob: `${data?.dateOfBirth}`,
+      // country: `${data?.}`,
       nationality: `${data?.nationality}`,
-      city: `${data?.city}`,
-      countryCode: `${data?.countryCode}`, // Default country code set
+      // city: `${data?.city}`,
+      // countryCode: `${data?.countryCode}`, 
     },
   });
 
@@ -190,7 +198,7 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
           />
           <p className="text-sm">
             last updated on{" "}
-            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
+            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
@@ -293,60 +301,60 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
                     </FormItem>
                   )}
                 /> */}
-  <FormField
-  name="nationality"
-  control={form.control}
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Nationality</FormLabel>
-      <Select
-        value={field.value}
-        onValueChange={field.onChange}
-      >
-        <FormControl>
-          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-            <SelectValue>
-              <div className="flex items-center gap-2">
-                <Image
-                  src={
-                    countries.find(
-                      (c) => getNationality(c.country) === field.value // Match nationality to country
-                    )?.flag || "/pakflag.png"
-                  }
-                  alt="Nationality Flag"
-                  width={20}
-                  height={20}
-                  className="object-contain"
-                  unoptimized
-                />
-                {field.value || "Select Nationality"}
-              </div>
-            </SelectValue>
-          </SelectTrigger>
-        </FormControl>
+                <FormField
+                  name="nationality"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nationality</FormLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+                            <SelectValue>
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  src={
+                                    countries.find(
+                                      (c) => getNationality(c.country) === field.value // Match nationality to country
+                                    )?.flag || "/pakflag.png"
+                                  }
+                                  alt="Nationality Flag"
+                                  width={20}
+                                  height={20}
+                                  className="object-contain"
+                                  unoptimized
+                                />
+                                {field.value || "Select Nationality"}
+                              </div>
+                            </SelectValue>
+                          </SelectTrigger>
+                        </FormControl>
 
-        <SelectContent>
-          {nationalities.map(({ name, flag }) => (
-            <SelectItem key={name} value={name}>
-              <div className="flex items-center gap-2">
-                <Image
-                  src={flag}
-                  alt={`${name} Flag`}
-                  width={20}
-                  height={20}
-                  className="object-contain"
-                  unoptimized
+                        <SelectContent>
+                          {nationalities.map(({ name, flag }) => (
+                            <SelectItem key={name} value={name}>
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  src={flag}
+                                  alt={`${name} Flag`}
+                                  width={20}
+                                  height={20}
+                                  className="object-contain"
+                                  unoptimized
+                                />
+                                {name}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {name}
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
 
                 <FormField
                   control={form.control}
@@ -472,7 +480,7 @@ export default function EditPersonalInfo({ data }: { data: PersonalInfoData }) {
                   )}
                 /> */}
 
-              
+
               </div>
               {/* <FormField
                 control={form.control}

@@ -23,15 +23,11 @@ const nameSchema = z.object({
 interface EditfirstandlastNameProps {
   firstName: string;
   lastName: string;
-  setFirstName: (name: string) => void;
-  setLastName: (name: string) => void;
 }
 
 const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
   firstName,
   lastName,
-  setFirstName,
-  setLastName,
 }) => {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -57,8 +53,8 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
       const data = await response.json();
 
       if (response.ok) {
-        setFirstName(values.firstName);
-        setLastName(values.lastName);
+        // setFirstName(values.firstName);
+        // setLastName(values.lastName);
         setOpen(false);
         setTimeout(() => setConfirmOpen(true), 300);
       } else {
@@ -115,17 +111,17 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <Input
-  {...form.register("firstName")}
-  placeholder="First Name"
-  className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-/>
+              <Input
+                {...form.register("firstName")}
+                placeholder="First Name"
+                className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+              />
 
-              <Input 
-              {...form.register("lastName")} 
-              placeholder="Last Name" 
-              className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-/>
+              <Input
+                {...form.register("lastName")}
+                placeholder="Last Name"
+                className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+              />
               <Button type="submit" className="w-full md:w-[30%] bg-[#C7161E]">
                 Update Name
               </Button>

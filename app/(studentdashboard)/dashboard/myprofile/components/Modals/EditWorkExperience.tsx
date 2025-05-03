@@ -26,36 +26,31 @@ const workExperienceSchema = z.object({
   experiences: z.array(
     z
       .object({
-        jobTitle: z.string().min(1, "Job title is required"),
-        organizationName: z.string().min(1, "Organization name is required"),
-        dateFrom: z.date() ,
-        dateTo: z.date(),
-        isFullTime: z.boolean().default(false),
-        isPartTime: z.boolean().default(false),
-        duration: z.union([z.string(), z.number()]),
+        // jobTitle: z.string().min(1, "Job title is required"),
+        // organizationName: z.string().min(1, "Organization name is required"),
+        // dateFrom: z.date() ,
+        // dateTo: z.date(),
+        // isFullTime: z.boolean().default(false),
+        // isPartTime: z.boolean().default(false),
+        workexperience: z.union([z.string(), z.number()]),
+        duration: z.number().min(0, "Duration must be a non-negative number"),
       })
-      .refine((data) => data.isFullTime || data.isPartTime, {
-        message: "Please select either Full Time or Part Time",
-        path: ["isFullTime"],
-      })
+    // .refine((data) => data.isFullTime || data.isPartTime, {
+    //   message: "Please select either Full Time or Part Time",
+    //   path: ["isFullTime"],
+    // })
   ),
 });
 
 type WorkExperienceForm = z.infer<typeof workExperienceSchema>;
 
 interface WorkExperienceData {
-  hasWorkExperience: boolean;
-  jobTitle: string;
-  organizationName: string;
-  startDate: Date;
-  endDate: Date;
-  
-  employmentType: string;
-  updatedAt: Date;
-  duration: number;
+  data: {
+    workexperience: number;
+  };
 }
 
-const EditWorkExperience = ({ data }: { data: WorkExperienceData }) => {
+const EditWorkExperience = ({ data }: WorkExperienceData) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
 
@@ -66,14 +61,14 @@ const EditWorkExperience = ({ data }: { data: WorkExperienceData }) => {
 
       experiences: [
         {
-          jobTitle: data?.jobTitle || "",
-          organizationName: data?.organizationName || "",
-          dateFrom: data?.startDate || undefined,
-          dateTo: data?.endDate || undefined,
-          isFullTime: data?.employmentType === "fullTime",
-          isPartTime: data?.employmentType === "partTime",
-          duration: data?.duration || "",
-          
+          // jobTitle: data?.jobTitle || "",
+          // organizationName: data?.organizationName || "",
+          // dateFrom: data?.startDate || undefined,
+          // dateTo: data?.endDate || undefined,
+          // isFullTime: data?.employmentType === "fullTime",
+          // isPartTime: data?.employmentType === "partTime",
+          workexperience: data?.workexperience || 0,
+
         },
       ],
     },
@@ -114,7 +109,7 @@ const EditWorkExperience = ({ data }: { data: WorkExperienceData }) => {
       <p className="text-gray-600 text-base">Work Experience:</p>
       <div className="flex flex-row items-center gap-x-2">
         <Image src="/DashboardPage/work.svg" alt="Icon" width={16} height={16} />
-        <p className="text-sm">last updated on {new Date(data.updatedAt).toLocaleDateString("en-GB")}</p>
+        {/* <p className="text-sm">last updated on {new Date(data.updatedAt).toLocaleDateString("en-GB")}</p> */}
         <Image
           src="/DashboardPage/pen.svg"
           alt="Edit"
@@ -166,16 +161,16 @@ const EditWorkExperience = ({ data }: { data: WorkExperienceData }) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel htmlFor={`years-experience-${index}`}>Years of Experience</FormLabel>
-                   
-                          <Input
-                            {...field}
-                            id={`years-experience-${index}`}
-                            type="number"
-                            min="0"
-                            placeholder="Enter number of years"
-                            className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm mt-2"
 
-                          />
+                        <Input
+                          {...field}
+                          id={`years-experience-${index}`}
+                          type="number"
+                          min="0"
+                          placeholder="Enter number of years"
+                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm mt-2"
+
+                        />
                       </FormItem>
                     )}
                   />

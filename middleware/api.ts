@@ -7,7 +7,7 @@ import {
 } from "@/lib/redis";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { SuccessData, user, UserStore } from "@/store/useUserData";
+import { detailedInfo, user, UserStore } from "@/store/useUserData";
 
 // Simple query classifier
 const simpleQueryPatterns = [
@@ -122,22 +122,22 @@ async function fetchAndCacheUserData(userId: string) {
   const userData: UserStore = {
     user: user
       ? {
-          firstName: user.firstName || "",
-          lastName: user.lastName || "",
-          user: user as unknown as user,
-          AcademmicInfo: user.AcademmicInfo || null,
-          LanguageProf: user.LanguageProf || null,
-          UserPref: user.UserPref || null,
-          workExp: user.workExp || null,
-        }
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        user: user as unknown as user,
+        AcademmicInfo: user.AcademmicInfo || null,
+        LanguageProf: user.LanguageProf || null,
+        UserPref: user.UserPref || null,
+        workExp: user.workExp || null,
+      }
       : null,
     loading: false,
     error: null,
     successChances: successChances as unknown as SuccessData | null,
     isAuthenticate: !!user,
-    fetchUserProfile: async () => {}, // Placeholder function
-    setUser: () => {}, // Placeholder function
-    logout: () => {}, // Placeholder function
+    fetchUserProfile: async () => { }, // Placeholder function
+    setUser: () => { }, // Placeholder function
+    logout: () => { }, // Placeholder function
   };
 
   console.log("userData", userData);

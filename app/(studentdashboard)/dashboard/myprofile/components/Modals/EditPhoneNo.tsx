@@ -49,32 +49,19 @@ const formSchema = z.object({
   // countryCode: z.string().min(1, "Country code is required"), // Added countryCode to the schema
 });
 
-interface PersonalInfoData {
-  // firstName: string;
-  // lastName: string;
-  // email: string;
-  phoneNo: string;
-  // dob: string;
-  // country: string;
-  // nationality: string;
-  // city: string;
-  updatedAt: string;
-  // countryCode: string;
+interface Phone {
+  phone: number;
 }
 
-export default function EditPhone({ data }: { data: PersonalInfoData }) {
+export default function EditPhone({ phone }: Phone) {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   // console.log(data , "personal info")
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      phoneNo: `${data?.phoneNo}`,
-      // dob: `${data?.dob}`,
-      // country: `${data?.country}`,
-      // nationality: `${data?.nationality}`,
-      // city: `${data?.city}`,
-      // countryCode: `${data?.countryCode}`, 
+      phoneNo: `${phone}`,
+
     },
   });
 
@@ -190,7 +177,7 @@ export default function EditPhone({ data }: { data: PersonalInfoData }) {
           />
           <p className="text-sm">
             last updated on{" "}
-            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
+            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
@@ -217,41 +204,41 @@ export default function EditPhone({ data }: { data: PersonalInfoData }) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2"> */}
               <FormField
-  control={form.control}
-  name="phoneNo"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Phone</FormLabel>
-      <div className="relative">
-        {/* Image inside input */}
-        <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-          <Image
-            src="/DashboardPage/User.svg"
+                control={form.control}
+                name="phoneNo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <div className="relative">
+                      {/* Image inside input */}
+                      <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                        <Image
+                          src="/DashboardPage/User.svg"
 
-alt="user"
-            width={20}
-            height={20}
-            className="object-contain"
-          />
-        </div>
-        {/* Input with fallback value */}
-        <Input
-  {...field}
-  value="" // ✅ this avoids "undefined" showing in the input
-  className="pl-10 rounded-lg bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm truncate"
-  placeholder="Enter your phone no"
-/>
+                          alt="user"
+                          width={20}
+                          height={20}
+                          className="object-contain"
+                        />
+                      </div>
+                      {/* Input with fallback value */}
+                      <Input
+                        {...field}
+                        value="" // ✅ this avoids "undefined" showing in the input
+                        className="pl-10 rounded-lg bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm truncate"
+                        placeholder="Enter your phone no"
+                      />
 
-      </div>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
-
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
 
-                 {/* <FormField
+
+
+              {/* <FormField
                   control={form.control}
                   name="dob"
                   render={({ field }) => (
@@ -428,8 +415,8 @@ alt="user"
               <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
                 Update Phone Number
               </Button>
-             </form>
-           </Form>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
 

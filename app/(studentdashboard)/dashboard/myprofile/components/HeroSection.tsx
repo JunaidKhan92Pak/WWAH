@@ -6,15 +6,12 @@ import { Button } from "@/components/ui/button";
 
 interface HeroSectionProps {
   user: {
+    _id: string;
     firstName: string;
     lastName: string;
     email: string;
-    contactNo: string;
-    dob: string;
-    country: string;
-    nationality: string;
+    phone: number;
     gender: string;
-    city: string;
     createdAt: string;
     updatedAt: string;
   };
