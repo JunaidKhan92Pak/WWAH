@@ -56,33 +56,51 @@ const formSchema = z.object({
   currency: z.string().min(1, "Currency is required"),
 });
 
-interface StudentPreferenceData {
-  perferredCountry: string;
-  perferredCity: string;
-  degreeLevel: string;
-  fieldOfStudy: string;
-  tutionfees: string;
-  livingcost: string;
-  studyMode: string;
-  currency: string;
-  updatedAt: Date;
+interface ApiLanguageProficiency {
+  test: string;
+  score: string;
 }
 
-const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
+interface ApiStudyPreference {
+  country: string;
+  degree: string;
+  subject: string;
+}
+export interface detailedInfo {
+  studyLevel: string;
+  gradeType: string;
+  grade: number;
+  dateOfBirth: string;
+  nationality: string;
+  majorSubject: string;
+  livingCosts: {
+    amount: number;
+    currency: string;
+  };
+  tuitionFee: {
+    amount: number;
+    currency: string;
+  };
+  languageProficiency: ApiLanguageProficiency;
+  workExperience: number;
+  studyPreferenced: ApiStudyPreference;
+}
+
+const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: `${data?.perferredCountry}`,
-      city: `${data?.perferredCity}`,
-      degreeLevel: `${data?.degreeLevel}`,
-      fieldOfStudy: `${data?.fieldOfStudy}`,
-      tuitionBudget: `${data?.tutionfees}`,
-      livingBudget: `${data?.livingcost}`,
-      studyMode: `${data?.studyMode}`,
-      currency: "USD",
+      country: `${data?.studyPreferenced?.country} `,
+      // city: `${data?.perferredCity}`,
+      degreeLevel: `${data?.studyPreferenced.degree}`,
+      fieldOfStudy: `${data?.studyPreferenced.subject}`,
+      tuitionBudget: `${data?.tuitionFee.amount}`,
+      livingBudget: `${data?.livingCosts.amount}`,
+      // studyMode: `${data?.studyMode}`,
+      currency: `${data?.tuitionFee.currency}`
     },
   });
 
@@ -131,15 +149,15 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
       <div className="flex flex-col items-start space-y-2">
         <p className="text-gray-600 text-base">Student Preference:</p>
         <div className="flex flex-row items-center gap-x-2">
-           <Image
-                      src="/DashboardPage/Backpack.svg"
-                      alt="Icon"
-                      width={18}
-                      height={18}
-                    />
+          <Image
+            src="/DashboardPage/Backpack.svg"
+            alt="Icon"
+            width={18}
+            height={18}
+          />
           <p className="text-sm">
             last updated on{" "}
-            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
+            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
@@ -154,10 +172,10 @@ const EditStudentPreference = ({ data }: { data: StudentPreferenceData }) => {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh] overflow-y-auto"
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}>
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}>
           <DialogHeader>
             <DialogTitle>Edit Student Preference</DialogTitle>
             <p className="text-sm text-gray-500">

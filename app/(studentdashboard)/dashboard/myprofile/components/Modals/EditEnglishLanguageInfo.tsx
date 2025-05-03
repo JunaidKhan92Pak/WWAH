@@ -50,26 +50,24 @@ const formSchema = z.object({
 });
 
 
-interface Data {
-  proficiencyLevel: string;
-  proficiencyTest: string;
-  proficiencyTestScore: string;
-  updatedAt: Date;
+interface LanguageProficiency {
+  test: string;
+  score: string;
 }
 
-const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
+const EditEnglishLanguageInfo = ({ data }: { data: LanguageProficiency }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: formSchema.parse({
-      proficiencyLevel: `${data?.proficiencyLevel}` || "",
-      testType: `${data?.proficiencyTest}` || "",
-      score: `${data?.proficiencyTestScore}` || "",
+      proficiencyLevel: "",
+      testType: `${data?.test}` || "",
+      score: `${data?.score}` || "",
     }),
   });
-  console.log(data?.proficiencyTestScore, "data.proficiencyTestScore");
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log("Submitting:", values); // Debugging
@@ -116,7 +114,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
           />
           <p className="text-sm">
             last updated on{" "}
-            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
+            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
@@ -174,7 +172,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                      Which of the following English Proficiency tests have you taken?
+                        Which of the following English Proficiency tests have you taken?
                       </FormLabel>
                       <Select
                         defaultValue={field.value}
@@ -187,7 +185,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: Data }) => {
                           <SelectItem value="IELTS">IELTS</SelectItem>
                           <SelectItem value="PTE">PTE</SelectItem>
                           <SelectItem value="TOEFL">TOEFL</SelectItem>
-                      
+
                           <SelectItem value="others">Any others (Specify)</SelectItem>
                         </SelectContent>
                       </Select>

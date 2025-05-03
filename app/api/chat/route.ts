@@ -36,7 +36,7 @@ async function streamingChatHandler(req: NextRequest, body: ChatRequestBody) {
       // Use your existing simple response mechanism
       const simpleResponse = getSimpleResponse(
         message,
-        userData?.user?.firstName || "there"
+        userData?.user?.user?.firstName || "there"
       );
       return new Response(
         JSON.stringify({
@@ -274,26 +274,26 @@ function getSimpleResponse(message: string, userName: string): string {
 export async function POST(req: NextRequest) {
   try {
     // Set high priority headers if supported by your hosting
-       const handlerWithHeaders = async (
-         req: NextRequest,
-         body: ChatRequestBody
-       ) => {
-         const response = await streamingChatHandler(req, body);
+    const handlerWithHeaders = async (
+      req: NextRequest,
+      body: ChatRequestBody
+    ) => {
+      const response = await streamingChatHandler(req, body);
 
-         // Add your headers to the response
-         const headers = {
-           "Content-Type": "text/event-stream",
-           "Cache-Control": "no-cache",
-           Connection: "keep-alive",
-           "X-Accel-Buffering": "no",
-         };
+      // Add your headers to the response
+      const headers = {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+        "X-Accel-Buffering": "no",
+      };
 
-         return new Response(response.body, {
-           status: response.status,
-           headers: { ...response.headers, ...headers },
-         });
-       };
-     return await withCaching(req, handlerWithHeaders);
+      return new Response(response.body, {
+        status: response.status,
+        headers: { ...response.headers, ...headers },
+      });
+    };
+    return await withCaching(req, handlerWithHeaders);
   } catch (error) {
     console.error("Middleware error:", error);
     return new Response(
