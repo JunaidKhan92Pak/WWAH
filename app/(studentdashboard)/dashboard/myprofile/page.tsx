@@ -19,7 +19,7 @@ const Page = () => {
         router.push("/signin"); // Redirect if not authenticated
         return;
       }
-      await fetchUserProfile(token);
+      await fetchUserProfile();
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -35,10 +35,10 @@ const Page = () => {
 
     // Check if user object exists but has empty essential fields
     const hasEmptyEssentialFields =
-      !user.user ||
-      Object.keys(user.user).length === 0 ||
-      !user.user.firstName ||
-      !user.user.lastName;
+      !user ||
+      Object.keys(user).length === 0 ||
+      !user.firstName ||
+      !user.lastName;
 
     return hasEmptyEssentialFields;
   };
@@ -59,8 +59,8 @@ const Page = () => {
         </div>
       ) : (
         <>
-          <HeroSection user={user?.user} />
-          <MyProfileInfo user={user?.user} detailInfo={detailedInfo} />
+          <HeroSection user={user} />
+          <MyProfileInfo user={user} detailInfo={detailedInfo} />
         </>
       )}
     </div>

@@ -894,7 +894,7 @@ const Footer = () => {
                   href="/schedulesession"
                   className="hover:underline block"
                 >
-                  WWAH Online counselling session
+                  WWAH Online Counselling Session
                 </Link>
                 <Link
                   target="blank"
@@ -938,7 +938,7 @@ const Footer = () => {
                       href="/schedulesession"
                       className="hover:underline block"
                     >
-                      WWAH Online Counselling session
+                      WWAH Online Counselling Session
                     </Link>
                     <Link
                       target="blank"

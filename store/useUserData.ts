@@ -1,6 +1,7 @@
-import { deleteAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
-// Core user profile data types
+import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
+
+// Basic user profile data
 export interface User {
   _id: string;
   firstName: string;
@@ -11,16 +12,8 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
-// API response structures
-interface ApiLanguageProficiency {
-  test: string;
-  score: string;
-}
-interface ApiStudyPreference {
-  country: string;
-  degree: string;
-  subject: string;
-}
+
+// Detailed profile information
 export interface DetailedInfo {
   studyLevel: string;
   gradeType: string;
@@ -36,40 +29,73 @@ export interface DetailedInfo {
     amount: number;
     currency: string;
   };
-  languageProficiency: ApiLanguageProficiency;
+  languageProficiency: {
+    test: string;
+    score: string;
+  };
   workExperience: number;
-  studyPreferenced: ApiStudyPreference;
+  studyPreference: {
+    country: string;
+    degree: string;
+    subject: string;
+  };
   updatedAt: string;
 }
-export interface UserData {
-  user: User;
-}
-// Store interface
+
+// Complete user store interface
 export interface UserStore {
-  user: UserData | null;
+  // State
+  user: User | null;
   detailedInfo: DetailedInfo | null;
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
-  fetchUserProfile: (token: string) => Promise<void>;
-  // updateUserProfile: (token: string, updateData: Partial<UserData>) => Promise<void>;
-  setUser: (userData: UserData) => void;
+  // Actions
+  fetchUserProfile: () => Promise<void>;
+  updateUserProfile: (updateData: Partial<User>) => Promise<void>;
+  updateDetailedInfo: (updateData: Partial<DetailedInfo>) => Promise<void>;
+  setUser: (userData: User) => void;
   logout: () => void;
 }
-// Create the store
-export const useUserStore = create<UserStore>((set) => ({
+
+// Default empty detailed info
+const defaultDetailedInfo: DetailedInfo = {
+  livingCosts: { amount: 0, currency: '' },
+  tuitionFee: { amount: 0, currency: '' },
+  languageProficiency: { test: '', score: '' },
+  studyPreference: { country: '', degree: '', subject: '' },
+  studyLevel: '',
+  gradeType: '',
+  grade: 0,
+  dateOfBirth: '',
+  nationality: '',
+  majorSubject: '',
+  workExperience: 0,
+  updatedAt: ''
+};
+
+// Create the unified store
+export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
+  detailedInfo: null,
   loading: false,
   error: null,
-  detailedInfo: null,
   isAuthenticated: false,
-  fetchUserProfile: async (token) => {
+
+  fetchUserProfile: async () => {
+    const token = getAuthToken();
     if (!token) {
-      set({ error: "No authentication token provided" });
+      set({
+        error: "No authentication token found",
+        loading: false,
+        isAuthenticated: false
+      });
       return;
     }
+
     try {
       set({ loading: true, error: null });
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}profile/data`,
         {
@@ -81,33 +107,21 @@ export const useUserStore = create<UserStore>((set) => ({
           credentials: "include",
         }
       );
+
       if (!response.ok) {
         throw new Error(`Failed to fetch user data: ${response.status} ${response.statusText}`);
       }
+
       const apiData = await response.json();
+
       if (!apiData.success) {
         throw new Error(apiData.message || "Failed to fetch user data");
       }
-      console.log(apiData, "api");
-      // Transform API response to match our UserData structure
-      const userData: UserData = { user: apiData.user }
-      // Store success chances data if available
-      const detailedInfo: DetailedInfo | null = apiData?.detailedInfo || {
-        livingCosts: { amount: 0, currency: '' },
-        tuitionFee: { amount: 0, currency: '' },
-        languageProficiency: { test: '', score: '' },
-        studyPreferenced: { country: '', degree: '', subject: '' },
-        studyLevel: '',
-        gradeType: '',
-        grade: 0,
-        dateOfBirth: '',
-        nationality: '',
-        majorSubject: '',
-        workExperience: 0,
-      }
+
+      // Set user data and detailed info
       set({
-        user: userData,
-        detailedInfo: detailedInfo,
+        user: apiData.user,
+        detailedInfo: apiData.detailedInfo || { ...defaultDetailedInfo },
         loading: false,
         isAuthenticated: true,
         error: null
@@ -121,118 +135,122 @@ export const useUserStore = create<UserStore>((set) => ({
       });
     }
   },
-  // updateUserProfile: async (token, updateData) => {
-  //   if (!token) {
-  //     set({ error: "No authentication token provided" });
-  //     return;
-  //   }
-  //   try {
-  //     set({ loading: true, error: null });
-  //     // Prepare data structure expected by backend
-  //     const apiUpdateData = {
-  //       basicInfo: {},
-  //       detailedInfo: {}
-  //     };
-  //     // Map user basic info if it exists
-  //     if (updateData.user) {
-  //       apiUpdateData.basicInfo = {
-  //         firstName: updateData.user.firstName,
-  //         lastName: updateData.user.lastName,
-  //         phone: updateData.user.phone,
-  //         email: updateData.user.email,
-  //         dob: updateData.user.dob,
-  //         country: updateData.user.country,
-  //         nationality: updateData.user.nationality,
-  //         gender: updateData.user.gender,
-  //         city: updateData.user.city,
-  //         countryCode: updateData.user.countryCode,
-  //       };
-  //     }
-  //     // Map academic info if it exists
-  //     if (updateData.academicInfo) {
-  //       apiUpdateData.detailedInfo.AcademicInfo = {
-  //         studyLevel: updateData.academicInfo.highestQualification,
-  //         gradeType: updateData.academicInfo.previousGradingScale,
-  //         grade: parseFloat(updateData.academicInfo.previousGradingScore) || 0,
-  //         majorSubject: updateData.academicInfo.majorSubject
-  //       };
-  //     }
-  //     // Map personal info if it exists
-  //     if (updateData.user || updateData.workExp) {
-  //       apiUpdateData.detailedInfo.PersonalInfo = {
-  //         dateOfBirth: updateData.user?.dob || "",
-  //         nationality: updateData.user?.nationality || "",
-  //         workExperience: updateData.workExp?.duration || 0
-  //       };
-  //     }
-  //     // Map financial info if it exists
-  //     if (updateData.userPref) {
-  //       apiUpdateData.detailedInfo.FinancialInfo = {
-  //         livingCosts: {
-  //           amount: parseFloat(updateData.userPref.livingCost) || 0,
-  //           currency: updateData.userPref.currency || "USD"
-  //         },
-  //         tuitionFee: {
-  //           amount: parseFloat(updateData.userPref.tuitionFees) || 0,
-  //           currency: updateData.userPref.currency || "USD"
-  //         }
-  //       };
-  //     }
-  //     // Map language proficiency if it exists
-  //     if (updateData.languageProf) {
-  //       apiUpdateData.detailedInfo.LanguageProf = {
-  //         test: updateData.languageProf.proficiencyTest || "",
-  //         score: updateData.languageProf.proficiencyTestScore || ""
-  //       };
-  //     }
-  //     // Map study preferences if it exists
-  //     if (updateData.userPref) {
-  //       apiUpdateData.detailedInfo.UserPref = {
-  //         country: updateData.userPref.preferredCountry || "",
-  //         degree: updateData.userPref.degreeLevel || "",
-  //         subject: updateData.userPref.fieldOfStudy || ""
-  //       };
-  //     }
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_API}profile/update`,
-  //       {
-  //         method: "PATCH",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //         credentials: "include",
-  //         body: JSON.stringify(apiUpdateData)
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error(`Failed to update user profile: ${response.status} ${response.statusText}`);
-  //     }
-  //     const result = await response.json();
-  //     if (!result.success) {
-  //       throw new Error(result.message || "Failed to update profile");
-  //     }
-  //     // Refresh user data after successful update
-  //     await get().fetchUserProfile(token);
-  //   } catch (error) {
-  //     console.error("Error updating profile:", error);
-  //     set({
-  //       error: error instanceof Error ? error.message : "Unknown error occurred",
-  //       loading: false
-  //     });
-  //   }
-  // },
+
+  updateUserProfile: async (updateData) => {
+    const token = getAuthToken();
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    try {
+      set({ loading: true, error: null });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}profile/update/basic`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(updateData)
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update profile: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || "Failed to update profile");
+      }
+
+      // Update the local store with new user data
+      set((state) => ({
+        user: state.user ? { ...state.user, ...updateData } : null,
+        loading: false
+      }));
+
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      set({
+        error: error instanceof Error ? error.message : "Unknown error occurred",
+        loading: false
+      });
+    }
+  },
+
+  updateDetailedInfo: async (updateData) => {
+    const token = getAuthToken();
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    try {
+      set({ loading: true, error: null });
+
+      // Format the data structure as expected by your API
+      const apiUpdateData = {
+        detailedInfo: updateData
+      };
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}profile/update/detailed`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(apiUpdateData)
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update detailed info: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || "Failed to update detailed info");
+      }
+
+      // Update the local store with new detailed info
+      set((state) => ({
+        detailedInfo: state.detailedInfo
+          ? { ...state.detailedInfo, ...updateData }
+          : { ...defaultDetailedInfo, ...updateData },
+        loading: false
+      }));
+
+    } catch (error) {
+      console.error("Error updating detailed info:", error);
+      set({
+        error: error instanceof Error ? error.message : "Unknown error occurred",
+        loading: false
+      });
+    }
+  },
+
   setUser: (userData) => set({
     user: userData,
-    isAuthenticated: !!userData
+    isAuthenticated: true
   }),
+
   logout: () => {
     deleteAuthToken();
     set({
       user: null,
+      detailedInfo: null,
       isAuthenticated: false,
       loading: false,
-      detailedInfo: null,
       error: null
     });
   }
