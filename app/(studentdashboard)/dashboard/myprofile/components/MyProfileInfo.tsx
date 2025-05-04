@@ -37,8 +37,8 @@ interface DetailedInfo {
     currency: string;
   };
   languageProficiency: LanguageProficiency;
+  studyPreference: StudyPreference;
   workExperience: number;
-  studyPreferenced: StudyPreference;
   updatedAt: string;
 }
 
@@ -61,8 +61,8 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
       <EditfirstandlastName
         firstName={user?.firstName}
         lastName={user?.lastName}
-        // setFirstName={setUser?.setFirstName}
-        // setLastName={setUser?.setLastName}
+      // setFirstName={setUser?.setFirstName}
+      // setLastName={setUser?.setLastName}
       />
       {/* Email Address */}
       <div className="flex flex-col items-start space-y-2">
@@ -80,7 +80,7 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
       <Password data={user} />
       {detailInfo && (
         <>
-      <EditPhoneNo phone={user?.phone} updatedAt={detailInfo.updatedAt} />
+          <EditPhoneNo phone={user?.phone} updatedAt={detailInfo.updatedAt} />
           <EditPersonalInfo data={detailInfo} />
           <EditAcademicInfo data={detailInfo} />
           <EditWorkExperience

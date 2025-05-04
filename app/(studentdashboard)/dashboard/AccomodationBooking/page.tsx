@@ -26,8 +26,7 @@ import { toast } from "sonner";
 import { countries } from "@/lib/countries";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserData";
-import { getAuthToken } from "@/utils/authHelper";
-// import { getAuthToken } from "@/authHelper";
+
 
 const formSchema = z.object({
   country: z.string({
@@ -42,9 +41,9 @@ const formSchema = z.object({
   accommodationType: z.string({
     required_error: "Please select accommodation type.",
   }),
-  startDate:z.string().refine((date) => !isNaN(Date.parse(date)), {
-        message: "Invalid start date",
-      }),
+  startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid start date",
+  }),
   // startDate: z.string({
   //   required_error: "Please select a date.",
   // }),
@@ -73,10 +72,7 @@ export default function Home() {
   const { user, fetchUserProfile } = useUserStore();
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      fetchUserProfile(token);
-    }
+    fetchUserProfile();
   }, []);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,7 +83,7 @@ export default function Home() {
       countryCode: "+92",
     },
   });
-  const userName = user?.user.firstName + " " + user?.user.lastName;
+  const userName = user?.firstName + " " + user?.lastName;
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (
     values,
     event

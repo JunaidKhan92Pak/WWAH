@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,20 +16,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-// import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Bot, Headphones, Trophy, Users, Send } from "lucide-react";
 import Footer from "@/components/Footer";
-// import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useUniversityStore } from "@/store/useUniversitiesStore";
 import { SkeletonCard } from "@/components/skeleton";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/useUserData"; // Import the new unified store
 import Loading from "../loading";
-// import Loading from "@/app/loading";
 
 function Page() {
   const countries = [
@@ -61,8 +57,9 @@ function Page() {
     { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
   ];
   const router = useRouter();
-  const { isAuthenticate, loading, logout, user, fetchUser } = useUserStore();
 
+  // Use the unified store
+  const { user, isAuthenticated, loading, logout, fetchUserProfile } = useUserStore();
   const [input, setInput] = useState("");
 
   const {
@@ -73,9 +70,15 @@ function Page() {
     loading: uniLoading,
   } = useUniversityStore();
 
+  // Fetch user profile on component mount
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
   useEffect(() => {
     if (universities.length === 0) fetchUniversities();
-  }, [fetchUniversities]);
+  }, [fetchUniversities, universities.length]);
+
   function handleCheckboxChange(destination: string): void {
     if (destination === "All") {
       if (country.length === countries.length) {
@@ -91,9 +94,7 @@ function Page() {
       setCountry(updatedSelected);
     }
   }
-  useEffect(() => {
-    fetchUser(); // Fetch user data when the component mounts
-  }, []);
+
   const features = [
     {
       icon: <Bot className="h-8 w-8" />,
@@ -134,6 +135,8 @@ function Page() {
       router.push("/chatmodel"); // Navigate without message if input is empty
     }
   };
+
+  // Show loading state
   if (loading) {
     return <Loading />;
   }
@@ -144,21 +147,17 @@ function Page() {
       <div
         className="landingPageBg relative w-full flex flex-col justify-center items-center"
         style={{
-          // backgroundImage: 'url("/robotic.JPG")',
           backgroundImage: 'url("/techbg.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        {/* <div className="absolute bg-black bg-opacity-80 w-full h-full rounded-2xl"></div>{" "}
-         */}
         <div className="absolute inset-0 bg-black bg-opacity-20 z-0"></div>
 
         {/* header section starts */}
         <header className="w-[90%] flex justify-between mt-5 z-20">
           <div className=" w-full  flex items-center justify-between">
             <Link
-              target="blank"
               href="/"
               className="flex items-center space-x-2"
             >
@@ -169,25 +168,23 @@ function Page() {
                 height={70}
               />
             </Link>
-            {isAuthenticate ? (
+            {isAuthenticated ? (
               // Profile Dropdown for Logged-in Users
               <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
                 <button
                   type="button"
-                  className="flex text-sm bg-white  rounded-full focus:ring-1 focus:ring-gray-100 dark:focus:ring-gray-600"
+                  className="flex text-sm bg-white rounded-full focus:ring-1 focus:ring-gray-100 dark:focus:ring-gray-600"
                   id="user-menu-button"
                   aria-expanded={isDropdownOpen}
                   onClick={toggleDropdown}
                 >
                   <span className="sr-only">Open user menu</span>
-                  {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
-                  {/* <FaUser className="text-gray-800  w-8 h-8 text-xl p-1" /> */}
                   <Image
                     src="/icons/userred.svg"
                     alt="user"
                     width={40}
                     height={40}
-                    className="rounded-full w-8 h-8 "
+                    className="rounded-full w-8 h-8"
                   />
                 </button>
 
@@ -199,16 +196,15 @@ function Page() {
                   >
                     <div className="px-4 py-3">
                       <span className="block text-sm text-gray-900 dark:text-white">
-                        {user?.firstName || "User12"}
+                        {user?.firstName || "User"}
                       </span>
                       <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                        {user?.email || "user@gmail.com"}
+                        {user?.email || "user@example.com"}
                       </span>
                     </div>
                     <ul className="py-2">
                       <li>
                         <Link
-                          target="blank"
                           href="/dashboard/overview"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                         >
@@ -217,25 +213,19 @@ function Page() {
                       </li>
                       <li>
                         <Link
-                          target="blank"
                           href="/chatmodel"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                         >
                           Chat with ZEUS
                         </Link>
                       </li>
-                      {/* <li>
-                        <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                          Settings
-                        </a>
-                      </li> */}
                       <li>
-                        <a
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        <button
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           onClick={logout}
                         >
                           Logout
-                        </a>
+                        </button>
                       </li>
                     </ul>
                   </div>
@@ -244,10 +234,9 @@ function Page() {
             ) : (
               // Login/Signup Buttons for Guests
               <>
-                <Link target="blank" href="/signin">
+                <Link href="/signin">
                   <Button
                     className="bg-[#C7161E] hover:bg-[#C7161E] text-white text-base"
-                    // variant="outline"
                     size="lg"
                   >
                     Login
@@ -278,7 +267,7 @@ function Page() {
                   <h3 className="text-white leading-snug">
                     <Typewriter
                       words={[
-                        "Let’s explore your study options",
+                        "Let's explore your study options",
                         "I simplify your university search",
                         "Find courses that truly fit",
                         "Smart scholarship search starts here.",
@@ -294,14 +283,14 @@ function Page() {
                   </h3>
                 </div>
 
-                <div className="HeroRightSide relative  lg:hidden flex items-center justify-center w-full h-[230px]">
+                <div className="HeroRightSide relative lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
                     src="/Zeushicomp.png"
                     alt="Robot"
                     width={0}
                     height={0}
                     sizes="60vw"
-                    className="w-[190px] h-auto "
+                    className="w-[190px] h-auto"
                   />
                 </div>
 
@@ -312,7 +301,7 @@ function Page() {
                     placeholder="Chat with Zeus..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="flex-1 bg-transparent border-none  focus:outline-none text-white placeholder:text-white/60 placeholder:text-sm "
+                    className="flex-1 bg-transparent border-none focus:outline-none text-white placeholder:text-white/60 placeholder:text-sm"
                   />
 
                   <Send
@@ -348,10 +337,8 @@ function Page() {
                   },
                 ].map((item, i) => (
                   <Link
-                    target="blank"
                     key={i}
                     href={item.href}
-                    passHref
                     className="bg-white bg-opacity-30 text-white flex items-center justify-center space-x-2 py-2 rounded border"
                   >
                     <Image
@@ -368,11 +355,11 @@ function Page() {
               {/* horizontal dotted line */}
               <div className="border-t border-dotted border-white mb-4"></div>
               <div className="StudentsUniScholarship flex flex-row text-white gap-4 md:gap-5 sm:justify-evenly px-5 sm:px-0">
-                <div className="student flex flex-col  md:border-r border-dotted border-white mb-4 md:mr-2 pb-6 md:pr-6">
+                <div className="student flex flex-col md:border-r border-dotted border-white mb-4 md:mr-2 pb-6 md:pr-6">
                   <h5>400k+</h5>
                   <p>Worldwide Students</p>
                 </div>
-                <div className="uni flex flex-col  md:border-r border-dotted border-white  mb-4 md:mr-4 pb-6 md:pr-10 font-medium">
+                <div className="uni flex flex-col md:border-r border-dotted border-white mb-4 md:mr-4 pb-6 md:pr-10 font-medium">
                   <h5>1000+</h5>
                   <p>Worldwide Universities</p>
                 </div>
@@ -387,7 +374,6 @@ function Page() {
           {/* hero Section Right Side starts */}
           <div className="HeroRightSide relative h-[500px] hidden lg:block">
             <Link href="/chatmodel" passHref>
-              {" "}
               <Image
                 src="/Zeushicomp.png"
                 alt="Robot"
@@ -399,9 +385,9 @@ function Page() {
         </section>
       </div>
       <section className="py-5 bg-gray-50 z-10">
-        <div className=" mx-auto px-0 sm:px-4 w-[90%]">
+        <div className="mx-auto px-0 sm:px-4 w-[90%]">
           {/* Section Header */}
-          <div className="flex justify-between items-center ">
+          <div className="flex justify-between items-center">
             <h3 className="font-bold">Top Universities!</h3>
             <DropdownMenu>
               <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[30%] md:w-[15%] xl:w-[10%] h-10">
@@ -479,7 +465,6 @@ function Page() {
                   >
                     {/* University Image */}
                     <Link
-                      target="blank"
                       rel="noopener noreferrer"
                       href={`/Universities/${uni._id}`}
                       key={uni._id}
@@ -531,22 +516,14 @@ function Page() {
       {/* Features Section */}
       <section className="md:py-5 bg-muted/50 z-10">
         <div className=" mx-auto w-[90%]">
-          {/* <h2 className="font-extrabold text-center mb-5 md:mb-5">
-            Why Choose{' '}
-            <span className="bg-gradient-to-r from-[#8e0000] via-[#d31900] to-[#ffcc33] bg-clip-text text-transparent">
-              WWAH
-            </span>
-            ?
-          </h2> */}
-
           <h2 className="font-extrabold text-center mb-5 md:mb-5">
             Why Choose{" "}
-            <Link target="blank" href="/aboutUs">
+            <Link href="/aboutUs">
               <Image
                 src="/logowwah.svg"
                 alt="WWAH"
-                width={100} // adjust as needed
-                height={40} // adjust as needed
+                width={100}
+                height={40}
                 className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[150px]"
               />
             </Link>
@@ -563,7 +540,7 @@ function Page() {
         </div>
       </section>
       {/* Mobile App Section */}
-      <section className="flex justify-between items-center  bg-black text-white mt-10">
+      <section className="flex justify-between items-center bg-black text-white mt-10">
         <div className=" mx-auto pt-8 sm:pt-0  w-[90%]">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>

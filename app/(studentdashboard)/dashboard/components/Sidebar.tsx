@@ -12,12 +12,12 @@ import {
   ArrowLeftToLine,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import CompleteApplicationModal from "../completeapplication/components/CompleteApplicationModal";
-import { useUserStore } from "@/store/useUserData";
 import { getAuthToken } from "@/utils/authHelper";
+import { useUserStore } from "@/store/useUserData";
 
 const sidebarItems = [
   {
@@ -54,27 +54,20 @@ const sidebarItems = [
 export function Sidebar() {
   const { user, fetchUserProfile, logout } = useUserStore();
   const pathname = usePathname();
-  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   useEffect(() => {
     const token = getAuthToken();
     if (token) {
-      fetchUserProfile(token);
+      fetchUserProfile();
     }
   }, []);
+
   const handlelogout = () => {
     logout();
-    router.push("/"); // Redirect to the sign-in page after logout
+    // Use window.location.href for a full page reload instead of client-side navigation
+    window.location.href = "/";
   }
-
-  // useEffect(() => {
-  //   // Auto open modal when navigating to "Complete your application"
-  //   if (pathname === "/dashboard/completeapplication") {
-  //     setIsModalOpen(true);
-  //   } else {
-  //     setIsModalOpen(false);
-  //   }
-  // }, [pathname]);
 
   return (
     <div className="flex flex-col ">
@@ -88,9 +81,9 @@ export function Sidebar() {
           className="w-12 h-12 rounded-full mb-2"
         />
         <h2 className="text-sm font-semibold">
-          {user?.user?.firstName} {user?.user?.lastName}
+          {user?.firstName} {user?.lastName}
         </h2>
-        <p className="text-xs text-gray-500">{user?.user?.email}</p>
+        <p className="text-xs text-gray-500">{user?.email}</p>
         <div className="w-full">
           <Link href="/dashboard/myprofile">
             <Button className="mt-1 bg-red-700 hover:bg-red-600 text-white w-full">
@@ -118,9 +111,6 @@ export function Sidebar() {
         ))}
         {/* Logout Button */}
         <div className="w-full pt-4">
-          {/* <Button className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center">
-            <ArrowLeftToLine size={16} className="mr-2" /> Logout
-          </Button> */}
           <Button
             className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center"
             onClick={handlelogout}

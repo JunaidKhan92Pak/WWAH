@@ -6,12 +6,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 // import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useUserStore } from "@/store/useUserData";
 import { Message as MessageType } from "@/lib/types";
 import Message from "./components/Message";
 import { Card } from "@/components/ui/card";
-import { getAuthToken } from "@/utils/authHelper";
 import { Navbar } from "./components/Navbar";
+import { useUserStore } from "@/store/useUserData";
 
 // Precompiled answers for common queries
 const INSTANT_RESPONSES = {
@@ -35,7 +34,7 @@ export default function Home() {
   // const initialMessage = searchParams.get("message");
   const { user, fetchUserProfile } = useUserStore();
   const abortController = useRef<AbortController | null>(null);
-  const [streamingComplete, setStreamingComplete] = useState(false); 
+  const [streamingComplete, setStreamingComplete] = useState(false);
   console.log(messages, "messages from chat component");
   console.log(streamingComplete)
   // Check if query matches a common pattern for instant response
@@ -61,9 +60,7 @@ export default function Home() {
 
   const fetchUser = useCallback(async () => {
     try {
-      const token = getAuthToken();
-      if (!token) return;
-      fetchUserProfile(token);
+      fetchUserProfile();
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -79,144 +76,144 @@ export default function Home() {
 
 
   // submit function
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading) return;
 
-  // Abort any ongoing request
-  if (abortController.current) {
-    abortController.current.abort();
-    abortController.current = null;
-  }
-
-  // Reset streaming state
-  setStreamingMessage("");
-  setStreamingComplete(false);
-
-  const userMessage: MessageType = { role: "user", content: input };
-  setMessages((prev) => [...prev, userMessage]);
-  setInput("");
-  setIsLoading(true);
-
-  // Check for instant response first
-  const instantResponse = checkForInstantResponse(input);
-  if (instantResponse) {
-    // Add a slight delay for a better UX
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: instantResponse },
-      ]);
-      setIsLoading(false);
-    }, 300);
-    return;
-  }
-
-  // Create new abort controller for this request
-  abortController.current = new AbortController();
-
-  try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      signal: abortController.current.signal,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: userMessage.content,
-        userId: user?.user._id || null,
-        conversationHistory: messages,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to send message");
+    // Abort any ongoing request
+    if (abortController.current) {
+      abortController.current.abort();
+      abortController.current = null;
     }
 
-    // Check if we got a streaming response
-    const contentType = response.headers.get("Content-Type");
+    // Reset streaming state
+    setStreamingMessage("");
+    setStreamingComplete(false);
 
-    if (contentType && contentType.includes("text/event-stream")) {
-      // Handle streaming response
-      const reader = response.body?.getReader();
+    const userMessage: MessageType = { role: "user", content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
 
-      if (!reader) {
-        throw new Error("Failed to get reader from response");
+    // Check for instant response first
+    const instantResponse = checkForInstantResponse(input);
+    if (instantResponse) {
+      // Add a slight delay for a better UX
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: instantResponse },
+        ]);
+        setIsLoading(false);
+      }, 300);
+      return;
+    }
+
+    // Create new abort controller for this request
+    abortController.current = new AbortController();
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        signal: abortController.current.signal,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userMessage.content,
+          userId: user?._id || null,
+          conversationHistory: messages,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
       }
 
-      // Accumulate the complete response
-      let completeResponse = "";
+      // Check if we got a streaming response
+      const contentType = response.headers.get("Content-Type");
 
-      // Process the stream
-      while (true) {
-        const { done, value } = await reader.read();
+      if (contentType && contentType.includes("text/event-stream")) {
+        // Handle streaming response
+        const reader = response.body?.getReader();
 
-        if (done) {
-          // Mark streaming as complete
-          setStreamingComplete(true);
-          break;
+        if (!reader) {
+          throw new Error("Failed to get reader from response");
         }
 
-        // Decode the stream chunk
-        const text = new TextDecoder().decode(value);
+        // Accumulate the complete response
+        let completeResponse = "";
 
-        // Process the SSE format
-        const lines = text.split("\n");
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            try {
-              const data = line.slice(6);
+        // Process the stream
+        while (true) {
+          const { done, value } = await reader.read();
 
-              // Check for the end of stream marker
-              if (data === "[DONE]") continue;
+          if (done) {
+            // Mark streaming as complete
+            setStreamingComplete(true);
+            break;
+          }
 
-              // Add to accumulated response and update state
-              completeResponse += data;
-              setStreamingMessage(completeResponse);
-            } catch (e) {
-              console.error("Error parsing streaming data:", e);
+          // Decode the stream chunk
+          const text = new TextDecoder().decode(value);
+
+          // Process the SSE format
+          const lines = text.split("\n");
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              try {
+                const data = line.slice(6);
+
+                // Check for the end of stream marker
+                if (data === "[DONE]") continue;
+
+                // Add to accumulated response and update state
+                completeResponse += data;
+                setStreamingMessage(completeResponse);
+              } catch (e) {
+                console.error("Error parsing streaming data:", e);
+              }
             }
           }
         }
-      }
 
-      // When streaming is done, add the message to the state ONLY if we have content
-      // This additional check prevents adding empty messages
-      if (completeResponse && completeResponse.trim() !== "") {
-        // Use function form of setState to ensure we have the latest state
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { role: "assistant", content: completeResponse },
+        // When streaming is done, add the message to the state ONLY if we have content
+        // This additional check prevents adding empty messages
+        if (completeResponse && completeResponse.trim() !== "") {
+          // Use function form of setState to ensure we have the latest state
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { role: "assistant", content: completeResponse },
+          ]);
+        }
+      } else {
+        // Handle regular JSON response
+        const data = await response.json();
+        if (data.message && data.message.content) {
+          setMessages((prev) => [...prev, data.message]);
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        console.log("Request was aborted");
+      } else {
+        console.error("Chat error:", error);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content:
+              "Sorry, there was an error processing your request. Please try again.",
+          },
         ]);
       }
-    } else {
-      // Handle regular JSON response
-      const data = await response.json();
-      if (data.message && data.message.content) {
-        setMessages((prev) => [...prev, data.message]);
-      }
+    } finally {
+      setIsLoading(false);
+      setStreamingMessage("");
+      abortController.current = null;
     }
-  } catch (error) {
-    if (error instanceof Error && error.name === "AbortError") {
-      console.log("Request was aborted");
-    } else {
-      console.error("Chat error:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "Sorry, there was an error processing your request. Please try again.",
-        },
-      ]);
-    }
-  } finally {
-    setIsLoading(false);
-    setStreamingMessage("");
-    abortController.current = null;
-  }
-};
+  };
   // Add this to your component:
   useEffect(() => {
     // Cleanup function to handle component unmount or query changes

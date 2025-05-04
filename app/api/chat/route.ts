@@ -36,7 +36,7 @@ async function streamingChatHandler(req: NextRequest, body: ChatRequestBody) {
       // Use your existing simple response mechanism
       const simpleResponse = getSimpleResponse(
         message,
-        userData?.user?.user?.firstName || "there"
+        userData?.user?.firstName || "there"
       );
       return new Response(
         JSON.stringify({

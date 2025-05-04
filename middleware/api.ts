@@ -47,7 +47,7 @@ export async function withCaching(
     if (userId) {
       const cachedUserData = await getCachedUserData(userId);
       if (cachedUserData) {
-        userName = cachedUserData.user?.user?.firstName || "there";
+        userName = cachedUserData.user?.firstName || "there";
       }
     }
 
@@ -122,13 +122,15 @@ async function fetchAndCacheUserData(userId: string) {
   // ✅ RIGHT
   const userData: UserStore = {
     detailedInfo: detailedInfo as DetailedInfo | null,
-    user: user ? { user: user?.user as User } : null,
+    user: user as User | null,
     loading: false,
     error: null,
     isAuthenticated: !!user,
     fetchUserProfile: async () => { },  // stub
     setUser: () => { },       // stub
     logout: () => { },       // stub
+    updateUserProfile: async () => { }, // stub
+    updateDetailedInfo: async () => { },     // stub
   };
 
   console.log("userData", userData);

@@ -83,7 +83,7 @@ export interface detailedInfo {
   };
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
-  studyPreferenced: ApiStudyPreference;
+  studyPreference: ApiStudyPreference;
   updatedAt: string;
 }
 
@@ -94,10 +94,10 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: `${data?.studyPreferenced?.country} `,
+      country: `${data?.studyPreference?.country} `,
       // city: `${data?.perferredCity}`,
-      degreeLevel: `${data?.studyPreferenced.degree}`,
-      fieldOfStudy: `${data?.studyPreferenced.subject}`,
+      degreeLevel: `${data?.studyPreference?.degree}`,
+      fieldOfStudy: `${data?.studyPreference?.subject}`,
       tuitionBudget: `${data?.tuitionFee.amount}`,
       livingBudget: `${data?.livingCosts.amount}`,
       // studyMode: `${data?.studyMode}`,
@@ -113,7 +113,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
   //     setSuccessOpen(true);
   //   }, 300);
   // }
-console.log(data?.studyPreferenced.degree, "from student preference modal");
+  console.log(data?.studyPreference?.degree, "from student preference modal");
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Submitting:", values); // Debugging
 
