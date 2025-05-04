@@ -13,13 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
+
 import {
   Form,
   // FormControl,
@@ -28,46 +22,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// import { Calendar } from "@/components/ui/calendar";
-// import { CalendarIcon } from "lucide-react";
-// import { format } from "date-fns";
-
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover";
-// import EditfirstandlastName from "./EditfirstandlastName";
 const formSchema = z.object({
-  // fullName: z.string().min(2, "Full name is required"),
-  // email: z.string().email("Invalid email"),
   phoneNo: z.string().min(10, "Invalid contact number"),
-  // dob: z.string().min(1, "Date of Birth is required"),
-  // country: z.string().min(1, "Country is required"),
-  // nationality: z.string().min(1, "Nationality is required"),
-  // city: z.string().min(1, "City is required"),
-  // countryCode: z.string().min(1, "Country code is required"), // Added countryCode to the schema
 });
 
-interface Phone {
-  phone: number;
-}
 
-export default function EditPhone({ phone }: Phone) {
+
+export default function EditPhone({ phone, updatedAt }: { phone: number; updatedAt : string }) {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   // console.log(data , "personal info")
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      phoneNo: `${phone}`,
-
+      phoneNo:` ${phone}`,
     },
   });
+  console.log(phone, "phone");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Submitting:", values); // Debugging
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updatePersonalInformation`,
@@ -176,8 +150,7 @@ export default function EditPhone({ phone }: Phone) {
             height={18}
           />
           <p className="text-sm">
-            last updated on{" "}
-            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
+            last updated on {new Date(updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
@@ -214,7 +187,6 @@ export default function EditPhone({ phone }: Phone) {
                       <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                         <Image
                           src="/DashboardPage/User.svg"
-
                           alt="user"
                           width={20}
                           height={20}
@@ -224,19 +196,14 @@ export default function EditPhone({ phone }: Phone) {
                       {/* Input with fallback value */}
                       <Input
                         {...field}
-                        value="" // ✅ this avoids "undefined" showing in the input
                         className="pl-10 rounded-lg bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm truncate"
                         placeholder="Enter your phone no"
                       />
-
                     </div>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-
-
 
               {/* <FormField
                   control={form.control}

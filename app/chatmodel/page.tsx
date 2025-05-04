@@ -42,10 +42,6 @@ export default function Home() {
   const checkForInstantResponse = (query: string): string | null => {
     const normalizedQuery = query.toLowerCase().trim();
 
-    // Check exact matches first
-    // if (INSTANT_RESPONSES[normalizedQuery]) {
-    //   return INSTANT_RESPONSES[normalizedQuery];
-    // }
     if (normalizedQuery in INSTANT_RESPONSES) {
       return INSTANT_RESPONSES[
         normalizedQuery as keyof typeof INSTANT_RESPONSES

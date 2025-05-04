@@ -55,7 +55,13 @@ interface LanguageProficiency {
   score: string;
 }
 
-const EditEnglishLanguageInfo = ({ data }: { data: LanguageProficiency }) => {
+const EditEnglishLanguageInfo = ({
+  data,
+  updatedAt,
+}: {
+  data: LanguageProficiency;
+  updatedAt: string;
+}) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
 
@@ -67,8 +73,6 @@ const EditEnglishLanguageInfo = ({ data }: { data: LanguageProficiency }) => {
       score: `${data?.score}` || "",
     }),
   });
-
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log("Submitting:", values); // Debugging
 
@@ -114,7 +118,7 @@ const EditEnglishLanguageInfo = ({ data }: { data: LanguageProficiency }) => {
           />
           <p className="text-sm">
             last updated on{" "}
-            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
+            {new Date(updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
@@ -172,7 +176,8 @@ const EditEnglishLanguageInfo = ({ data }: { data: LanguageProficiency }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Which of the following English Proficiency tests have you taken?
+                        Which of the following English Proficiency tests have
+                        you taken?
                       </FormLabel>
                       <Select
                         defaultValue={field.value}
@@ -186,7 +191,9 @@ const EditEnglishLanguageInfo = ({ data }: { data: LanguageProficiency }) => {
                           <SelectItem value="PTE">PTE</SelectItem>
                           <SelectItem value="TOEFL">TOEFL</SelectItem>
 
-                          <SelectItem value="others">Any others (Specify)</SelectItem>
+                          <SelectItem value="others">
+                            Any others (Specify)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
 

@@ -1,11 +1,10 @@
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaUser } from 'react-icons/fa';
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import { FaUser } from "react-icons/fa";
 import { useUserStore } from "@/store/userStore";
-import { useEffect } from 'react';
-import Loading from '@/app/loading';
-
+import { useEffect } from "react";
+import Loading from "@/app/loading";
 export const Navbar = () => {
   const { isAuthenticate, user, fetchUser, loading } = useUserStore();
   useEffect(() => {
@@ -14,7 +13,6 @@ export const Navbar = () => {
   if (loading) {
     return <Loading />;
   }
-
   return (
     <header className="fixed top-0 w-full bg-white border-b z-10">
       <div className="w-[90%] mx-auto sm:px-4 py-2 flex items-center">
@@ -33,7 +31,6 @@ export const Navbar = () => {
           {isAuthenticate ? (
             <>
               <h6>Hello, {user?.firstName || "Newbie"}!</h6>
-
               <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />
             </>
           ) : (
@@ -48,4 +45,4 @@ export const Navbar = () => {
       </div>
     </header>
   );
-}
+};

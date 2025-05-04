@@ -143,7 +143,6 @@ You are ZEUS, an AI assistant specialized in helping users with university and s
 
 {userProfile}
 
-
 {conversationHistory}
 
 Be conversational and natural in your responses. For simple greetings like "hi" or "hello",

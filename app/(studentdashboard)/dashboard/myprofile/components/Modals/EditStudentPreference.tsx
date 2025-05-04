@@ -84,6 +84,7 @@ export interface detailedInfo {
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
   studyPreferenced: ApiStudyPreference;
+  updatedAt: string;
 }
 
 const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
@@ -112,7 +113,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
   //     setSuccessOpen(true);
   //   }, 300);
   // }
-
+console.log(data?.studyPreferenced.degree, "from student preference modal");
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Submitting:", values); // Debugging
 
@@ -157,7 +158,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
           />
           <p className="text-sm">
             last updated on{" "}
-            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
+            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"
@@ -171,11 +172,13 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh] overflow-y-auto"
+        <DialogContent
+          className="!rounded-2xl  max-w-[300px] md:max-w-[600px] max-h-[85vh] overflow-y-auto"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
-          }}>
+          }}
+        >
           <DialogHeader>
             <DialogTitle>Edit Student Preference</DialogTitle>
             <p className="text-sm text-gray-500">
@@ -227,11 +230,11 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="bachelor">Bachelor</SelectItem>
-                          <SelectItem value="master">Master</SelectItem>
-                          <SelectItem value="phd">PhD</SelectItem>
-                          <SelectItem value="diploma">Diploma</SelectItem>
-                          <SelectItem value="certificate">
+                          <SelectItem value="Bachelor">Bachelor</SelectItem>
+                          <SelectItem value="Master">Master</SelectItem>
+                          <SelectItem value="PHD">PhD</SelectItem>
+                          <SelectItem value="Diploma">Diploma</SelectItem>
+                          <SelectItem value="Certificate">
                             Certificate
                           </SelectItem>
                         </SelectContent>

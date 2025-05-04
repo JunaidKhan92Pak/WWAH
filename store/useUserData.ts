@@ -1,6 +1,5 @@
 import { deleteAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
-
 // Core user profile data types
 export interface User {
   _id: string;
@@ -12,13 +11,11 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
-
 // API response structures
 interface ApiLanguageProficiency {
   test: string;
   score: string;
 }
-
 interface ApiStudyPreference {
   country: string;
   degree: string;
@@ -42,11 +39,11 @@ export interface DetailedInfo {
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
   studyPreferenced: ApiStudyPreference;
+  updatedAt: string;
 }
 export interface UserData {
   user: User;
 }
-
 // Store interface
 export interface UserStore {
   user: UserData | null;
@@ -59,24 +56,20 @@ export interface UserStore {
   setUser: (userData: UserData) => void;
   logout: () => void;
 }
-
 // Create the store
-export const useUserStore = create<UserStore>((set, get) => ({
+export const useUserStore = create<UserStore>((set) => ({
   user: null,
   loading: false,
   error: null,
   detailedInfo: null,
   isAuthenticated: false,
-
   fetchUserProfile: async (token) => {
     if (!token) {
       set({ error: "No authentication token provided" });
       return;
     }
-
     try {
       set({ loading: true, error: null });
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}profile/data`,
         {
@@ -88,17 +81,14 @@ export const useUserStore = create<UserStore>((set, get) => ({
           credentials: "include",
         }
       );
-
       if (!response.ok) {
         throw new Error(`Failed to fetch user data: ${response.status} ${response.statusText}`);
       }
-
       const apiData = await response.json();
       if (!apiData.success) {
         throw new Error(apiData.message || "Failed to fetch user data");
       }
       console.log(apiData, "api");
-
       // Transform API response to match our UserData structure
       const userData: UserData = { user: apiData.user }
       // Store success chances data if available
@@ -122,7 +112,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
         isAuthenticated: true,
         error: null
       });
-
     } catch (error) {
       console.error("Error fetching profile:", error);
       set({
@@ -132,22 +121,18 @@ export const useUserStore = create<UserStore>((set, get) => ({
       });
     }
   },
-
   // updateUserProfile: async (token, updateData) => {
   //   if (!token) {
   //     set({ error: "No authentication token provided" });
   //     return;
   //   }
-
   //   try {
   //     set({ loading: true, error: null });
-
   //     // Prepare data structure expected by backend
   //     const apiUpdateData = {
   //       basicInfo: {},
   //       detailedInfo: {}
   //     };
-
   //     // Map user basic info if it exists
   //     if (updateData.user) {
   //       apiUpdateData.basicInfo = {
@@ -163,7 +148,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //         countryCode: updateData.user.countryCode,
   //       };
   //     }
-
   //     // Map academic info if it exists
   //     if (updateData.academicInfo) {
   //       apiUpdateData.detailedInfo.AcademicInfo = {
@@ -173,7 +157,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //         majorSubject: updateData.academicInfo.majorSubject
   //       };
   //     }
-
   //     // Map personal info if it exists
   //     if (updateData.user || updateData.workExp) {
   //       apiUpdateData.detailedInfo.PersonalInfo = {
@@ -182,7 +165,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //         workExperience: updateData.workExp?.duration || 0
   //       };
   //     }
-
   //     // Map financial info if it exists
   //     if (updateData.userPref) {
   //       apiUpdateData.detailedInfo.FinancialInfo = {
@@ -196,7 +178,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //         }
   //       };
   //     }
-
   //     // Map language proficiency if it exists
   //     if (updateData.languageProf) {
   //       apiUpdateData.detailedInfo.LanguageProf = {
@@ -204,7 +185,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //         score: updateData.languageProf.proficiencyTestScore || ""
   //       };
   //     }
-
   //     // Map study preferences if it exists
   //     if (updateData.userPref) {
   //       apiUpdateData.detailedInfo.UserPref = {
@@ -213,7 +193,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //         subject: updateData.userPref.fieldOfStudy || ""
   //       };
   //     }
-
   //     const response = await fetch(
   //       `${process.env.NEXT_PUBLIC_BACKEND_API}profile/update`,
   //       {
@@ -226,20 +205,15 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //         body: JSON.stringify(apiUpdateData)
   //       }
   //     );
-
   //     if (!response.ok) {
   //       throw new Error(`Failed to update user profile: ${response.status} ${response.statusText}`);
   //     }
-
   //     const result = await response.json();
-
   //     if (!result.success) {
   //       throw new Error(result.message || "Failed to update profile");
   //     }
-
   //     // Refresh user data after successful update
   //     await get().fetchUserProfile(token);
-
   //   } catch (error) {
   //     console.error("Error updating profile:", error);
   //     set({
@@ -248,12 +222,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
   //     });
   //   }
   // },
-
   setUser: (userData) => set({
     user: userData,
     isAuthenticated: !!userData
   }),
-
   logout: () => {
     deleteAuthToken();
     set({

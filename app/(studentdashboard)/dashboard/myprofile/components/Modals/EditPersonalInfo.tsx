@@ -67,6 +67,7 @@ interface DetailedInfo {
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
   studyPreferenced: ApiStudyPreference;
+  updatedAt: string;
 }
 
 
@@ -198,7 +199,7 @@ export default function EditPersonalInfo({ data }: { data: DetailedInfo }) {
           />
           <p className="text-sm">
             last updated on{" "}
-            {/* {new Date(data?.updatedAt).toLocaleDateString("en-GB")} */}
+            {new Date(data?.updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"

@@ -61,7 +61,7 @@ const formSchema = z.object({
   budgetMax: z.string({
     required_error: "Please enter maximum budget.",
   }),
-  phone: z.string().min(10, {
+  phone: z.number().min(10, {
     message: "Phone number must be at least 10 digits.",
   }),
   countryCode: z.string().default("+92"),
@@ -134,7 +134,7 @@ export default function Home() {
         currency: "",
         budgetMin: "",
         budgetMax: "",
-        phone: "",
+        phone: 0,
         countryCode: "+92",
         email: "",
       });
