@@ -53,7 +53,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
             </div>
           </div>
           {/* Image with CTA */}
-          <div className="relative bg-gray-100 p-4 w-full lg:w-[70%] rounded-lg shadow-md h-40 md:h-60 flex items-center justify-center my-1">
+          <div className="relative bg-gray-100 p-4 w-full lg:w-[70%] rounded-2xl shadow-md h-40 md:h-60 flex items-center justify-center my-1">
             <div
               className="absolute inset-0 bg-cover bg-center rounded-lg"
               style={{
@@ -67,7 +67,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
               <Link
                 target="blank"
                 href="/visaguide"
-                className="bg-red-500 text-white px-2 py-2 rounded-md hover:bg-red-600 text-sm"
+                className="bg-red-500 text-white px-2 py-3 rounded-md hover:bg-red-600 text-sm"
               >
                 Learn About the Application Process
               </Link>
@@ -86,7 +86,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
           {!isExpanded ? (
             <button
               onClick={handleToggle}
-              className="text-red-500 hover:underline font-medium text-[16px] "
+              className="text-red-500 hover:underline font-medium text-[16px]"
             >
               Read More
             </button>

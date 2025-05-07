@@ -18,7 +18,6 @@ import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
 import { Copy } from "lucide-react";
-
 import {
   Dialog,
   DialogClose,
@@ -142,8 +141,9 @@ const CourseArchive = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
           >
             <Image
               src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -178,7 +178,6 @@ const CourseArchive = () => {
                   <Link
                     target="blank"
                     href={`/courses/${item._id}`}
-
                     rel="noopener noreferrer"
                     className="w-1/2"
                   >
@@ -244,10 +243,11 @@ const CourseArchive = () => {
                             </Label>
                             <Input
                               id={`link-${item._id}`}
-                              value={`${typeof window !== "undefined"
-                                ? window.location.origin
-                                : ""
-                                }/courses/${item._id}`}
+                              value={`${
+                                typeof window !== "undefined"
+                                  ? window.location.origin
+                                  : ""
+                              }/courses/${item._id}`}
                               readOnly
                             />
                           </div>
@@ -287,8 +287,9 @@ const CourseArchive = () => {
 
                     <button
                       onClick={() => toggleFavorite(item._id)}
-                      className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
-                        }`}
+                      className={`relative ${
+                        heartAnimation === item._id ? "animate-pop" : ""
+                      }`}
                     >
                       {favorites[item._id] ? (
                         <Image
@@ -313,7 +314,6 @@ const CourseArchive = () => {
                   <Link
                     target="blank"
                     href={`/courses/${item._id}`}
-
                     rel="noopener noreferrer"
                     className="w-1/2"
                   >
@@ -402,7 +402,7 @@ const CourseArchive = () => {
       )}
       <div className="flex justify-center items-center mt-6 gap-2">
         <Button
-          className="bg-red-600"
+          className="bg-red-600 hover:bg-red-600"
           disabled={currentPage === 1}
           onClick={() => setPage(currentPage - 1)}
         >
@@ -410,7 +410,7 @@ const CourseArchive = () => {
         </Button>
         <span>{`Page ${currentPage} of ${totalPages}`}</span>
         <Button
-          className="bg-red-600"
+          className="bg-red-600 hover:bg-red-600"
           disabled={currentPage === totalPages}
           onClick={() => setPage(currentPage + 1)}
         >

@@ -77,8 +77,8 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               <li className="flex items-center space-x-2 ">
                 <span className="vertical-line w-[1px] h-3 bg-black"></span>
                 {/* <p className="font-semibold">{data.initial_deposit}</p> */}
-                <div className="relative group w-[100px]">
-                  <p className="text-md truncate font-medium max-w-[100px] overflow-hidden">
+                <div className="relative group w-[50px]">
+                  <p className="text-md truncate font-semibold max-w-[100px] overflow-hidden">
                     {data.initial_deposit}
                   </p>
                   <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-sm font-medium p-2 rounded-md w-[200px] text-center shadow-lg">
