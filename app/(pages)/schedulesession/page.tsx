@@ -22,6 +22,9 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useState } from "react";
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
+
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -40,22 +43,26 @@ const formSchema = z.object({
   budget: z.string().min(1, "Please enter your budget"),
 });
 const countries = [
-  "United States",
   "United Kingdom",
-  "Canada",
+  "New Zealand",
   "Australia",
-  "Germany",
-  "France",
-  "Japan",
-  "Singapore",
+  "Canada",
+  "Malaysia",
+  "Ireland",
+  "USA",
+  "China",
+  "Italy",
 ];
 const destinations = [
-  "United States",
   "United Kingdom",
-  "Canada",
+  "New Zealand",
   "Australia",
-  "Germany",
-  "France",
+  "Canada",
+  "Malaysia",
+  "Ireland",
+  "USA",
+  "China",
+  "Italy",
 ];
 const degrees = ["Bachelor's", "Master's", "PhD", "Diploma", "Certificate"];
 export default function Home() {
@@ -165,23 +172,38 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="placeholder:text-gray-400 placeholder:text-sm w-full"
-                          placeholder="Enter your phone number"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+            <FormField
+  control={form.control}
+  name="phone"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Phone</FormLabel>
+      <FormControl>
+         <PhoneInput
+  defaultCountry="pk"
+  value={field.value}
+  onChange={field.onChange}
+  inputProps={{
+    name: 'phone',
+    required: true,
+  }}
+  inputStyle={{
+    width: '92%',
+    height: '36px',
+    padding: '8px', 
+  }}
+  className="flex-1"
+
+/>
+
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
+
                 <FormField
                   control={form.control}
                   name="date"
@@ -190,7 +212,7 @@ export default function Home() {
                       <FormLabel>Date</FormLabel>
                       <FormControl>
                         <Input
-                          className="placeholder:text-gray-400 placeholder:text-sm w-full"
+                          className="placeholder:text-gray-400 placeholder:text-sm w-full py-1"
                           type="date"
                           placeholder="Select date"
                           {...field}
