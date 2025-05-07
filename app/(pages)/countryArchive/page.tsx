@@ -28,7 +28,7 @@ const Page = () => {
             {/* <p>Most viewed & all - time countires</p> */}
           </div>
           {/* <div className="bg-gray-100 rounded-lg px-4"> */}
-          <div className="w-[90%] md:w-[60%]  flex justify-end  items-center gap-4 md:p-2 ">
+          <div className="w-[90%] md:w-[60%] flex justify-end items-center gap-4 md:p-2">
             <div className="flex  bg-[#F1F1F1]   rounded-lg ">
               <Image
                 src="/search.svg"
@@ -42,12 +42,12 @@ const Page = () => {
                 onChange={handelFilter}
                 value={search}
                 name="search"
-                className="border-none text-[14px] font-medium bg-[#F1F1F1]  outline-none focus:ring-0 "
+                className="border-none text-[14px] font-medium bg-[#F1F1F1]  outline-none focus:ring-0"
               />
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-5 ">
+        <div className="grid grid-cols-4 gap-5">
           {countries?.map((country, index) => (
             <Link
               target="blank"
