@@ -215,7 +215,7 @@ const Page = () => {
           </div>
           <div className="flex flex-row gap-3 w-full">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[50%] h-10">
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[60%] h-10">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
                 <div className="flex ">
                   Filter
