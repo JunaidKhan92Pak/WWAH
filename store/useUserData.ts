@@ -60,18 +60,18 @@ export interface UserStore {
 
 // Default empty detailed info
 const defaultDetailedInfo: DetailedInfo = {
-  livingCosts: { amount: 0, currency: '' },
-  tuitionFee: { amount: 0, currency: '' },
-  languageProficiency: { test: '', score: '' },
-  studyPreference: { country: '', degree: '', subject: '' },
-  studyLevel: '',
-  gradeType: '',
+  livingCosts: { amount: 0, currency: "" },
+  tuitionFee: { amount: 0, currency: "" },
+  languageProficiency: { test: "", score: "" },
+  studyPreference: { country: "", degree: "", subject: "" },
+  studyLevel: "",
+  gradeType: "",
   grade: 0,
-  dateOfBirth: '',
-  nationality: '',
-  majorSubject: '',
+  dateOfBirth: "",
+  nationality: "",
+  majorSubject: "",
   workExperience: 0,
-  updatedAt: ''
+  updatedAt: "",
 };
 
 // Create the unified store
@@ -88,7 +88,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set({
         error: "No authentication token found",
         loading: false,
-        isAuthenticated: false
+        isAuthenticated: false,
       });
       return;
     }
@@ -109,7 +109,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
       );
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch user data: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch user data: ${response.status} ${response.statusText}`
+        );
       }
 
       const apiData = await response.json();
@@ -124,14 +126,15 @@ export const useUserStore = create<UserStore>((set, get) => ({
         detailedInfo: apiData.detailedInfo || { ...defaultDetailedInfo },
         loading: false,
         isAuthenticated: true,
-        error: null
+        error: null,
       });
     } catch (error) {
       console.error("Error fetching profile:", error);
       set({
-        error: error instanceof Error ? error.message : "Unknown error occurred",
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
         loading: false,
-        isAuthenticated: false
+        isAuthenticated: false,
       });
     }
   },
@@ -145,9 +148,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
     try {
       set({ loading: true, error: null });
-
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}profile/update/basic`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/update-personal-infomation`,
         {
           method: "PATCH",
           headers: {
@@ -155,14 +157,18 @@ export const useUserStore = create<UserStore>((set, get) => ({
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify(updateData)
+          body: JSON.stringify(updateData),
         }
       );
 
+     console.log(response, "response from updateUserProfile");
+     
       if (!response.ok) {
-        throw new Error(`Failed to update profile: ${response.status} ${response.statusText}`);
+        alert("Error updating profile. Please try again.");
+        throw new Error(
+          `Failed to update profile: ${response.status} ${response.statusText}`
+        );
       }
-
       const result = await response.json();
 
       if (!result.success) {
@@ -172,14 +178,14 @@ export const useUserStore = create<UserStore>((set, get) => ({
       // Update the local store with new user data
       set((state) => ({
         user: state.user ? { ...state.user, ...updateData } : null,
-        loading: false
+        loading: false,
       }));
-
     } catch (error) {
       console.error("Error updating profile:", error);
       set({
-        error: error instanceof Error ? error.message : "Unknown error occurred",
-        loading: false
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loading: false,
       });
     }
   },
@@ -193,14 +199,13 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
     try {
       set({ loading: true, error: null });
-
       // Format the data structure as expected by your API
       const apiUpdateData = {
-        detailedInfo: updateData
+        detailedInfo: updateData,
       };
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}profile/update/detailed`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/update`,
         {
           method: "PATCH",
           headers: {
@@ -208,41 +213,48 @@ export const useUserStore = create<UserStore>((set, get) => ({
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify(apiUpdateData)
+          body: JSON.stringify(apiUpdateData.detailedInfo),
         }
       );
-
-      if (!response.ok) {
-        throw new Error(`Failed to update detailed info: ${response.status} ${response.statusText}`);
-      }
-
+      console.log(response, "response from updateDetailedInfo");
       const result = await response.json();
-
+      // Return the result for further processing if needed  
+      console.log(result, "result from updateDetailedInfo");
+      if (!response.ok) {
+        throw new Error(
+          `Failed to update detailed info: ${response.status} ${response.statusText}`
+        );
+        return result;
+      }
+      
       if (!result.success) {
         throw new Error(result.message || "Failed to update detailed info");
+         return result; 
       }
-
+     
       // Update the local store with new detailed info
       set((state) => ({
         detailedInfo: state.detailedInfo
           ? { ...state.detailedInfo, ...updateData }
           : { ...defaultDetailedInfo, ...updateData },
-        loading: false
+        loading: false,
       }));
-
+      return result; // Return the result for further processing if needed
     } catch (error) {
       console.error("Error updating detailed info:", error);
       set({
-        error: error instanceof Error ? error.message : "Unknown error occurred",
-        loading: false
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loading: false,
       });
     }
   },
 
-  setUser: (userData) => set({
-    user: userData,
-    isAuthenticated: true
-  }),
+  setUser: (userData) =>
+    set({
+      user: userData,
+      isAuthenticated: true,
+    }),
 
   logout: () => {
     deleteAuthToken();
@@ -251,7 +263,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       detailedInfo: null,
       isAuthenticated: false,
       loading: false,
-      error: null
+      error: null,
     });
-  }
+  },
 }));

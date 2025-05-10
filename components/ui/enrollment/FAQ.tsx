@@ -16,6 +16,7 @@ interface FAQProps {
 }
 
 export default function FAQ({ title, items }: FAQProps) {
+  console.log(items, "faq")
   return (
     <section className="flex justify-start mt-8">
       <div className="w-[95%] mx-auto px-4">

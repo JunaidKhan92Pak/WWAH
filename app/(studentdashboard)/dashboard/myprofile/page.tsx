@@ -3,30 +3,15 @@ import { useEffect } from "react";
 import HeroSection from "./components/HeroSection";
 import MyProfileInfo from "./components/MyProfileInfo";
 import { useRouter } from "next/navigation";
-import { getAuthToken } from "@/utils/authHelper";
 import { useUserStore } from "@/store/useUserData";
 import Loading from "@/app/loading";
 
 const Page = () => {
-  const { user, detailedInfo, fetchUserProfile } = useUserStore();
   const router = useRouter();
-
-  // Fetch user profile
-  const fetchUser = async () => {
-    try {
-      const token = getAuthToken();
-      if (!token) {
-        router.push("/signin"); // Redirect if not authenticated
-        return;
-      }
-      await fetchUserProfile();
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-    }
-  };
+  const { user, detailedInfo, fetchUserProfile } = useUserStore();
 
   useEffect(() => {
-    fetchUser();
+    fetchUserProfile();
   }, []);
 
   // Check if user data is loaded but empty or incomplete

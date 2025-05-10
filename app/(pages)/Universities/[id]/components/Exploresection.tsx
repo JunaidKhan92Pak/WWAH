@@ -16,16 +16,22 @@ interface UniversityType {
 
 interface ExploresectionProps {
   countryName: string;
+  uniname: string;
 }
 
-const Exploresection: React.FC<ExploresectionProps> = ({ countryName }) => {
+const Exploresection: React.FC<ExploresectionProps> = ({
+  countryName,
+  uniname,
+}) => {
   const [universities, setUniversities] = useState<UniversityType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        const res = await fetch(`/api/getUniversities?country=${countryName}&limit=4`);
+        const res = await fetch(
+          `/api/getUniversities?country=${countryName}&limit=4${uniname ? `&excludeUni=${encodeURIComponent(uniname)}` : ''}`
+        );
         const data = await res.json();
         if (Array.isArray(data.universities)) {
           setUniversities(data.universities);
@@ -109,7 +115,6 @@ const Exploresection: React.FC<ExploresectionProps> = ({ countryName }) => {
                       <p>Public</p>
                       <p>{item.acceptance_rate}</p>
                     </div>
-
                   </div>
                 </div>
               ))

@@ -9,7 +9,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -27,40 +26,18 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-// import { format } from "date-fns";
 import { Combobox } from "@/components/ui/combobox";
-import { majorsAndDisciplines } from './../../../../../../lib/constant';
+import { majorsAndDisciplines } from "./../../../../../../lib/constant";
 import { Input } from "@/components/ui/input";
+import { useUserStore } from "@/store/useUserData";
 
-const formSchema = z
-  .object({
-    qualification: z.string().min(1, { message: "Qualification is required" }),
-    subject: z.string().min(1, { message: "Major Subject is required" }),
-    gradingScale: z.string().min(1, { message: "Major Subject is required" }),
-    fieldofstudy: z.string().min(1, { message: "Field of study is required" }),
-    otherGradingScale: z.string().optional(), // <-- Ensure it's part of the schema
-
-    // obtainedScore: z
-    //   .string()
-    //   .regex(/^\d+%?$/, { message: "Enter a valid percentage (e.g., 65%)" }),
-    // startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    //   message: "Invalid start date",
-    // }),
-    // endDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    //   message: "Invalid end date",
-    // }),
-    // otherGradingScale: z.string().optional(),
-
-    // institution: z.string().min(1, { message: "Institution name is required" }),
-    // test: z.string().min(1, { message: "Test selection is required" }),
-    // testScore: z
-    //   .string()
-    //   .regex(/^\d+%?$/, { message: "Enter a valid percentage (e.g., 65%)" }),
-    // })
-    // .refine((data) => new Date(data.endDate) > new Date(data.startDate), {
-    //   message: "End date must be after start date",
-    //   path: ["endDate"], // Show error on End Date field
-  });
+const formSchema = z.object({
+  qualification: z.string().min(1, { message: "Qualification is required" }),
+  majorSubject: z.string().min(1, { message: "Major Subject is required" }),
+  // gradingScale: z.string().min(1, { message: "Major Subject is required" }),
+  gradeType: z.string().min(1, { message: "Field of study is required" }),
+  grade: z.string().optional(), // <-- Ensure it's part of the schema
+});
 interface ApiLanguageProficiency {
   test: string;
   score: string;
@@ -95,56 +72,42 @@ export interface detailedInfo {
 const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  // console.log(data.highestQualification);
+  const { updateDetailedInfo } = useUserStore();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       qualification: `${data?.studyLevel}`,
-      subject: `${data?.majorSubject}`,
-      gradingScale: `${data?.grade}`,
-      // obtainedScore: `${data?.previousGradingScore}`,
-      // startDate: `${data?.startDate}`,
-      // endDate: `${data?.endDate}`,
-      // institution: `${data?.institutionName}`,
-      // test: `${data?.standardizedTest}`,
-      // testScore: `${data?.standardizedTestScore}`,
-      // otherGradingScale: "",
-      fieldofstudy: "",
-
-
+      majorSubject: `${data?.majorSubject}`,
+      gradeType: `${data?.gradeType}`,
+      grade: data?.grade?.toString() || "",
+      // fieldofstudy: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Submitting:", values); // Debugging
+    const gradeScore = Number(values.grade);
+    const apiData = {
+      studyLevel: values.qualification,
+      majorSubject: values.majorSubject,
+      grade: gradeScore, // This should be the correct field name
+      gradeType: values.gradeType,
+    };
+        try {
+          const response = await updateDetailedInfo(apiData);
+          console.log(response, "response from updateUserProfile");
+          if (response.success) {
+            setOpen(false);
+            setSuccessOpen(true);
+            setTimeout(() => {
+              setSuccessOpen(false);
+            }, 2000); // Close after 2 seconds
+          }
+          // Handle success response here (e.g., show a success message)  
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updateAcademicInformation`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(values),
+        } catch (error) {
+          console.error("Network error:", error);
         }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Updated successfully:", data);
-        setOpen(false);
-        setTimeout(() => {
-          setSuccessOpen(true);
-        }, 300);
-      } else {
-        console.error("Error updating:", data.message);
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-    }
   }
 
   const [selectedScale, setSelectedScale] = useState("");
@@ -206,50 +169,33 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
                           <SelectValue placeholder="Select Qualification" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Matric">
-                            Matric
+                          <SelectItem value="Matric">Matric</SelectItem>
+                          <SelectItem value="O Levels">O Levels</SelectItem>
+                          <SelectItem value="Intermediate">
+                            Intermediate
                           </SelectItem>
-                          <SelectItem value="O Levels">
-                            O Levels
-                          </SelectItem>
-                          <SelectItem value="Intermediate">Intermediate</SelectItem>
                           <SelectItem value="A Levels">A Levels</SelectItem>
                           <SelectItem value="Bachelors">Bachelors</SelectItem>
                           <SelectItem value="Masters">Master</SelectItem>
                           <SelectItem value="MPhil">MPhil</SelectItem>
                           <SelectItem value="PhD">PhD</SelectItem>
-                          <SelectItem value="Any Other">Any Other (Specify)</SelectItem>
+                          <SelectItem value="Any Other">
+                            Any Other (Specify)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormItem>
                   )}
                 />
-
-                {/* Major Subject */}
-                {/* <FormField
-                  control={form.control}
-                  name="subject"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>What was your Major Subject/Field?</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter subject"
-                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                /> */}
-
                 {/* MAjor or Field of Study */}
                 <FormField
                   control={form.control}
-                  name="fieldofstudy"
+                  name="majorSubject"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>What is your Major or field of study?</FormLabel>
+                      <FormLabel>
+                        What is your Major or field of study?
+                      </FormLabel>
                       <FormControl>
                         <Combobox
                           options={majorsAndDisciplines}
@@ -263,156 +209,16 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
                     </FormItem>
                   )}
                 />
-
-                {/* Obtained Score */}
-                {/* <FormField
-                  control={form.control}
-                  name="obtainedScore"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Obtained Scores</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter obtained score"
-                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                /> */}
-
-                {/* Start Date */}
-                {/* <FormField
-                  control={form.control}
-                  name="startDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Degree Start Date</FormLabel>
-                      <FormControl> */}
-                {/* <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full text-left font-normal justify-start text-[#313131] bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                            >
-                              {field.value ? (
-                                format(new Date(field.value), "yyyy/MM/dd")
-                              ) : (
-                                <span>YYYY/MM/DD</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={
-                                field.value ? new Date(field.value) : undefined
-                              }
-                              onSelect={(date) =>
-                                field.onChange(
-                                  date ? format(date, "yyyy-MM-dd") : ""
-                                )
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover> */}
-                {/* <Input
-                          type="date"
-                          value={
-                            field.value ? format(field.value, "yyyy-MM-dd") : ""
-                          }
-                          onChange={field.onChange}
-                          onBlur={field.onBlur}
-                          name={field.name}
-                          ref={field.ref}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                /> */}
-
-                {/* End Date */}
-                {/* <FormField
-                  control={form.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Degree End Date</FormLabel>
-                      <FormControl> */}
-                {/* <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full text-left font-normal justify-start text-[#313131] bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                            >
-                              {field.value ? (
-                                format(new Date(field.value), "yyyy/MM/dd")
-                              ) : (
-                                <span>YYYY/MM/DD</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={
-                                field.value ? new Date(field.value) : undefined
-                              }
-                              onSelect={(date) =>
-                                field.onChange(
-                                  date ? format(date, "yyyy-MM-dd") : ""
-                                )
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover> */}
-                {/* <Input
-                          type="date"
-                          value={
-                            field.value ? format(field.value, "yyyy-MM-dd") : ""
-                          }
-                          onChange={field.onChange}
-                          onBlur={field.onBlur}
-                          name={field.name}
-                          ref={field.ref}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                /> */}
               </div>
-
-              {/* Institution */}
-              {/* <FormField
-                control={form.control}
-                name="institution"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Institution Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter institution name"
-                        className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              /> */}
-
-              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-end">
-                {/* Standardized Test */}
+              {/* Standardized Test */}
               <FormField
                 control={form.control}
-                name="gradingScale"
+                name="gradeType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Obtained Grades/CGPA in your previous study?</FormLabel>
+                    <FormLabel>
+                      Obtained Grades/CGPA in your previous study?
+                    </FormLabel>
 
                     <Select
                       onValueChange={(value) => {
@@ -422,32 +228,38 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
                       value={field.value || ""} // Ensure it defaults to empty string when no value is selected
                     >
                       <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm w-full flex justify-between items-center">
-
                         <SelectValue>
                           {/* Display default text when no value is selected */}
                           {field.value === "" || !field.value
                             ? "Select an option"
                             : field.value === "percentage"
-                              ? "Percentage Grade scale"
-                              : field.value === "cgpa"
-                                ? "Grade Point Average (GPA) Scale"
-                                : field.value === "letter"
-                                  ? "Letter Grade Scale (A-F)"
-                                  : field.value === "passfail"
-                                    ? "Pass/Fail"
-                                    : field.value === "other"
-                                      ? "Any other (Specify)"
-                                      : "Select an option"}
+                            ? "Percentage Grade scale"
+                            : field.value === "cgpa"
+                            ? "Grade Point Average (GPA) Scale"
+                            : field.value === "letter"
+                            ? "Letter Grade Scale (A-F)"
+                            : field.value === "passfail"
+                            ? "Pass/Fail"
+                            : field.value === "other"
+                            ? "Any other (Specify)"
+                            : "Select an option"}
                         </SelectValue>
-
                       </SelectTrigger>
 
                       <SelectContent>
-                        <SelectItem value="percentage">Percentage Grade scale</SelectItem>
-                        <SelectItem value="cgpa">Grade Point Average (GPA) Scale</SelectItem>
-                        <SelectItem value="letter">Letter Grade Scale (A-F)</SelectItem>
+                        <SelectItem value="percentage">
+                          Percentage Grade scale
+                        </SelectItem>
+                        <SelectItem value="cgpa">
+                          Grade Point Average (GPA) Scale
+                        </SelectItem>
+                        <SelectItem value="letter">
+                          Letter Grade Scale (A-F)
+                        </SelectItem>
                         <SelectItem value="passfail">Pass/Fail</SelectItem>
-                        <SelectItem value="other">Any other (Specify)</SelectItem>
+                        <SelectItem value="other">
+                          Any other (Specify)
+                        </SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -456,33 +268,12 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
                       <Input
                         className="mt-2"
                         placeholder="Enter your grades/CGPA"
-                        {...form.register("otherGradingScale")}
+                        {...form.register("grade")}
                       />
                     )}
                   </FormItem>
                 )}
               />
-
-
-              {/* Test Score */}
-              {/* <FormField
-                  control={form.control}
-                  name="testScore"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Obtained Score</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter test score"
-                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                /> 
-              </div>  */}
-
               {/* Submit Button */}
               <Button type="submit" className="w-full md:w-[45%] bg-[#C7161E]">
                 Update Academic Information

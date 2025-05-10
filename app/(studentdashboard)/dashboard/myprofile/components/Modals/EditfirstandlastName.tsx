@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FC } from "react";
+import { useState, FC} from "react";
 import Image from "next/image";
 import {
   Dialog,
@@ -14,6 +14,7 @@ import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useUserStore } from "@/store/useUserData";
 
 const nameSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -31,6 +32,7 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const { updateUserProfile } = useUserStore();
 
   const form = useForm({
     resolver: zodResolver(nameSchema),
@@ -40,26 +42,16 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
   async function onSubmit(values: z.infer<typeof nameSchema>) {
     console.log(values, "values");
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updatePersonalInformation`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(values),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // setFirstName(values.firstName);
-        // setLastName(values.lastName);
-        setOpen(false);
-        setTimeout(() => setConfirmOpen(true), 300);
+      const response = await updateUserProfile(values);
+      if (response.success) {
+        setConfirmOpen(true);
+        setTimeout(() => {
+          setConfirmOpen(false);
+          setOpen(false);
+        }, 2000);
       } else {
-        console.error("Error updating:", data.message);
-      }
+        console.error("Failed to update name");
+      }      
     } catch (error) {
       console.error("Network error:", error);
     }
