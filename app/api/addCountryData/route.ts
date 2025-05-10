@@ -5,9 +5,9 @@ import CountryData from "@/models/countryData";
 export async function POST(req: Request) {
     try {
         // Parse incoming request data
-        
+
         const data = await req.json();
-        console.log(data,"countrydata")
+        console.log(data, "countrydata")
         // Validate input
         if (!data || !data.countryname) {
             return NextResponse.json(
@@ -20,15 +20,15 @@ export async function POST(req: Request) {
 
         // Find if the country already exists
         const existingCountry = await CountryData.findOne({
-          countryname: data.countryname,
+            countryname: data.countryname,
         });
 
         if (existingCountry) {
             // Update the existing country data
             const updatedCountry = await CountryData.findOneAndUpdate(
-              { countryname: data.countryname }, // Find the document
-              { $set: data }, // Update with new data
-              { new: true } // Return updated document
+                { countryname: data.countryname }, // Find the document
+                { $set: data }, // Update with new data
+                { new: true } // Return updated document
             );
             return NextResponse.json(
                 { message: "Country data updated successfully.", updatedCountry },

@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { CiLocationOn } from "react-icons/ci";
+// import { CiLocationOn } from "react-icons/ci";
+import { IoLocationOutline } from "react-icons/io5";
 import {
   IoCallOutline,
   IoMailUnreadOutline,
@@ -10,7 +11,8 @@ import {
 
 import { FaFacebook, FaYoutube } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
-import { PiHouseLineBold } from "react-icons/pi";
+// import { PiHouseLineBold } from "react-icons/pi";
+import { AiOutlineHome } from "react-icons/ai";
 import Link from "next/link";
 
 import {
@@ -84,19 +86,19 @@ const Footer = () => {
             {/* Column 2: Contact Info */}
             <div className="space-y-3 text-center">
               <div className="flex items-start space-x-3 text-justify sm:text-start">
-                <PiHouseLineBold className="text-xl min-w-[23px]" />
+                <AiOutlineHome className="text-xl min-w-[23px] " />
                 <p className="text-sm font-normal">
                   Head Office: Al Waheeda , Dubai.
                 </p>
               </div>
               <div className="flex items-start space-x-3 text-justify sm:text-start">
-                <CiLocationOn className="text-xl min-w-[20px]" />
+                <IoLocationOutline className="text-xl min-w-[20px]" />
                 <p className="text-sm font-normal">
                   Coney Island Ave, Brooklyn, NY 11235, USA
                 </p>
               </div>
               <div className="flex items-start space-x-3 text-justify sm:text-start">
-                <CiLocationOn className="text-xl min-w-[20px]" />
+                <IoLocationOutline className="text-xl min-w-[20px]" />
                 <p className="text-sm font-normal">Stockport Manchester,UK</p>
               </div>
 
@@ -105,7 +107,7 @@ const Footer = () => {
                 onClick={() => (window.location.href = "tel:+923120762039")}
               >
                 <IoCallOutline className="text-xl min-w-[20px]" />
-                <p className="text-sm font-normal">+971582514675</p>
+                <p className="text-sm font-normal"> +971 50 578 4006</p>
               </div>
               <div
                 className="flex items-center space-x-3 cursor-pointer"
@@ -708,7 +710,7 @@ const Footer = () => {
                         Villa12
                       </p>
                       <p className="font-bold">Phone Number</p>
-                      <p>+971 582514675</p>
+                      <p>+971 58 251 4675</p>
                       <p>Privacy Policy Posted on 28/04/2025</p>
                     </div>
                   </DialogContent>
@@ -817,7 +819,7 @@ const Footer = () => {
                 </Link>
                 <Link
                   target="blank"
-                  href="/Scholarships"
+                  href="/scholarships"
                   className="hover:underline block"
                 >
                   Scholarships
