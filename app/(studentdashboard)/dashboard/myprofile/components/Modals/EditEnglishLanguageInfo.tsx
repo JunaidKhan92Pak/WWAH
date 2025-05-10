@@ -27,6 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useUserStore } from "@/store/useUserData";
 
 const formSchema = z.object({
   proficiencyLevel: z.enum(
@@ -64,6 +65,7 @@ const EditEnglishLanguageInfo = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const { updateDetailedInfo } = useUserStore();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -74,36 +76,29 @@ const EditEnglishLanguageInfo = ({
     }),
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log("Submitting:", values); // Debugging
-
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updateEnglishProficiency`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(values),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Updated successfully:", data);
-        setOpen(false);
+      const transformedValues = {
+        languageProficiency: {
+          // proficiencyLevel: values.proficiencyLevel,
+          test: values.testType,
+          score: values.score || "", // Ensure score remains a string
+        },
+      };      
+      const response = await updateDetailedInfo(transformedValues);
+      if (response.success) {
+        setSuccessOpen(true);
         setTimeout(() => {
-          setSuccessOpen(true);
-        }, 300);
+          setSuccessOpen(false);
+          setOpen(false);
+        }, 2000);
       } else {
-        console.error("Error updating:", data.message);
+        console.error("Failed to update English language info");
       }
     } catch (error) {
       console.error("Network error:", error);
     }
   }
+
 
   return (
     <>

@@ -24,13 +24,7 @@ const HeroSection = ({ user }: HeroSectionProps) => {
   const [profilePic, setProfilePic] = useState<string>(
     "/DashboardPage/image.jpg"
   );
-  // const [profile] = useState({
-  //   name: "Asma Kazmi",
-  //   email: "asmakazmi@gmail.com",
-  //   membershipDate: "1st Jul, 2024",
-  // });
   const [editing] = useState(false);
-  // const [newName,] = useState(profile.name);
   console.log(editing);
 
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -53,16 +47,6 @@ const HeroSection = ({ user }: HeroSectionProps) => {
       setProfilePic(imageUrl);
     }
   };
-
-  // const handleEdit = () => {
-  //   setEditing(true);
-  // };
-
-  // const handleSave = () => {
-  //   setProfile({ ...profile, name: newName });
-  //   setEditing(false);
-  // };
-
   return (
     <div className="relative w-full md:w-[97%] mx-auto h-44 md:h-72 lg:h-96">
       <Image

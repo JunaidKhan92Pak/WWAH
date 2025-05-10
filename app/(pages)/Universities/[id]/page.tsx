@@ -210,7 +210,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         items={data?.universityData?.faq || []}
       />
 
-      <Exploresection countryName={data?.universityData?.country_name} />
+      <Exploresection
+        countryName={data?.universityData?.country_name}
+        uniname={data.universityData.university_name}
+      />
     </div>
   );
 }

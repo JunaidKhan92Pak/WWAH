@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -33,6 +32,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { studyDestinations } from "@/lib/constant";
 import { majorsAndDisciplines } from "@/lib/constant";
 import currency from "currency-codes";
+import { useUserStore } from "@/store/useUserData";
 const currencyOptions = currency.data.map(
   (c: { code: string; currency: string }) => `${c.code} - ${c.currency}`
 );
@@ -40,27 +40,18 @@ const currencyOptions = currency.data.map(
 // Define validation schema
 const formSchema = z.object({
   country: z.string().min(1, "Country is required"),
-  city: z.string().min(1, "City is required"),
   degreeLevel: z.string().min(1, "Degree level is required"),
   fieldOfStudy: z.string().min(1, "Field of study is required"),
   tuitionBudget: z.string().min(1, "Tuition budget is required"),
-  // .regex(/^\d+$/, "Must be a valid number")
-  // .transform((val) => parseFloat(val))
-  // .refine((val) => val > 0, "Must be greater than 0"),
-
   livingBudget: z.string().min(1, "Living budget is required"),
-  // .regex(/^\d+$/, "Must be a valid number")
-  // .transform((val) => parseFloat(val))
-  // .refine((val) => val > 0, "Must be greater than 0")
-  studyMode: z.string().min(1, "Study mode is required"),
-  currency: z.string().min(1, "Currency is required"),
+  tutionCurrency: z.string().min(1, "Currency is required"),
+  livingCurrency: z.string().min(1, "Currency is required"),
 });
 
 interface ApiLanguageProficiency {
   test: string;
   score: string;
 }
-
 interface ApiStudyPreference {
   country: string;
   degree: string;
@@ -83,68 +74,62 @@ export interface detailedInfo {
   };
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
-  studyPreference: ApiStudyPreference;
+  studyPreferenced: ApiStudyPreference;
   updatedAt: string;
 }
 
 const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const { updateDetailedInfo } = useUserStore();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: `${data?.studyPreference?.country} `,
-      // city: `${data?.perferredCity}`,
-      degreeLevel: `${data?.studyPreference?.degree}`,
-      fieldOfStudy: `${data?.studyPreference?.subject}`,
+      country: `${data?.studyPreferenced?.country} `,
+      degreeLevel: `${data?.studyPreferenced?.degree}`,
+      fieldOfStudy: `${data?.studyPreferenced?.subject}`,
       tuitionBudget: `${data?.tuitionFee.amount}`,
+      tutionCurrency: `${data?.tuitionFee.currency}`,
       livingBudget: `${data?.livingCosts.amount}`,
-      // studyMode: `${data?.studyMode}`,
-      currency: `${data?.tuitionFee.currency}`
+      livingCurrency: `${data?.livingCosts.currency}`,
     },
   });
-
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   console.log(values);
-  //   setOpen(false);
-  //   // Show success modal
-  //   setTimeout(() => {
-  //     setSuccessOpen(true);
-  //   }, 300);
-  // }
-  console.log(data?.studyPreference?.degree, "from student preference modal");
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Submitting:", values); // Debugging
-
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updateUserPreferences`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(values),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Updated successfully:", data);
-        setOpen(false);
+      const transformedValues = {
+        studyPreferenced: {
+          country: values.country,
+          degree: values.degreeLevel,
+          subject: values.fieldOfStudy,
+        },
+        tuitionFee: {
+          amount: Number(values.tuitionBudget),
+          currency: values.tutionCurrency,
+        },
+        livingCosts: {
+          amount: Number(values.livingBudget),
+          currency: values.livingCurrency,
+        },
+      };
+      const response = await updateDetailedInfo(transformedValues);
+      if (response.success) {
+        setSuccessOpen(true);
         setTimeout(() => {
-          setSuccessOpen(true);
-        }, 300);
+          setSuccessOpen(false);
+          setOpen(false);
+        }, 2000);
       } else {
-        console.error("Error updating:", data.message);
+        console.error("Failed to update work experience");
       }
     } catch (error) {
       console.error("Network error:", error);
     }
   }
+  form.watch((value) => {
+    console.log("Form values:", value); // Debugging
+  });
+
   return (
     <>
       <div className="flex flex-col items-start space-y-2">
@@ -243,69 +228,6 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
                     </FormItem>
                   )}
                 />
-
-                {/* City Selection */}
-                {/* <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>What is your preferred city?</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                            <SelectValue placeholder="Select a city" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="London">London</SelectItem>
-                          <SelectItem value="New York">New York</SelectItem>
-                          <SelectItem value="Toronto">Toronto</SelectItem>
-                          <SelectItem value="Sydney">Sydney</SelectItem>
-                          <SelectItem value="Berlin">Berlin</SelectItem>
-                          <SelectItem value="Tokyo">Tokyo</SelectItem>
-                          <SelectItem value="Paris">Paris</SelectItem>
-                          <SelectItem value="Dubai">Dubai</SelectItem>
-                          <SelectItem value="Singapore">Singapore</SelectItem>
-                          <SelectItem value="Los Angeles">
-                            Los Angeles
-                          </SelectItem>
-                          
-                          <SelectItem value="Chicago">Chicago</SelectItem>
-                          <SelectItem value="california">California</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-
-                {/* Degree Level */}
-
-                {/* Tuition Fee Budget */}
-
-                {/* <div className="flex items-center space-x-2"> */}
-                {/* <Select
-                          // defaultValue="PKR"
-                          // name="currency"
-                          value={currency}
-                          onValueChange={setCurrency}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
-                              <SelectValue placeholder="PKR" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="pkr">PKR</SelectItem>
-                            <SelectItem value="usd">USD</SelectItem>
-                            <SelectItem value="euro">Euro</SelectItem>
-                            <SelectItem value="sar">SAR</SelectItem>
-                          </SelectContent>
-                        </Select> */}
               </div>
 
               <div className="grid grid-cols-1 gap-4">
@@ -329,7 +251,6 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
                           className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                         />
                       </FormControl>
-
                       <FormMessage />
                     </FormItem>
                   )}
@@ -338,7 +259,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
                 {/* Currency Field */}
                 <FormField
                   control={form.control}
-                  name="currency"
+                  name="tutionCurrency"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
@@ -366,7 +287,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
                     <FormItem>
                       <FormControl>
                         <Input
-                          type="number"
+                          type="text"
                           placeholder="Enter tuition fee"
                           {...field}
                           className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
@@ -380,7 +301,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
 
               <FormField
                 control={form.control}
-                name="currency"
+                name="livingCurrency"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -408,7 +329,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        type="number"
+                        type="text"
                         placeholder="Enter tuition fee"
                         {...field}
                         className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
@@ -418,33 +339,6 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
                   </FormItem>
                 )}
               />
-
-              {/* Study Mode */}
-              {/* <FormField
-                  control={form.control}
-                  name="studyMode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Which study mode would you prefer?</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                            <SelectValue placeholder="Select mode" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="onCampus">On Campus</SelectItem>
-                          <SelectItem value="Online">Online</SelectItem>
-                          <SelectItem value="Hybrid">Blended</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
               <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
                 Update My Preferences
               </Button>

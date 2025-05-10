@@ -102,26 +102,27 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                     </div>
                   </div>
 
-                  {data.virtual_tour && data.virtual_tour !== "NA" && data.virtual_tour.trim() !== "" && (
-  <Link
-    target="_blank"
-    href={data.virtual_tour}
-    rel="noopener noreferrer"
-  >
-    <div className="px-4 py-1 mt-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
-      <Image
-        src="/university/camera.svg"
-        alt="Virtual Tour Icon"
-        width={20}
-        height={20}
-      />
-      <p className="text-[#313131] text-left leading-5 md:leading-6">
-        Get a virtual tour of {data.university_name}
-      </p>
-    </div>
-  </Link>
-)}
-
+                  {data.virtual_tour &&
+                    data.virtual_tour !== "NA" &&
+                    data.virtual_tour.trim() !== "" && (
+                      <Link
+                        target="_blank"
+                        href={data.virtual_tour}
+                        rel="noopener noreferrer"
+                      >
+                        <div className="px-4 py-1 mt-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
+                          <Image
+                            src="/university/camera.svg"
+                            alt="Virtual Tour Icon"
+                            width={20}
+                            height={20}
+                          />
+                          <p className="text-[#313131] text-left leading-5 md:leading-6">
+                            Get a virtual tour of {data.university_name}
+                          </p>
+                        </div>
+                      </Link>
+                    )}
                 </div>
 
                 {/* Right Section */}
@@ -145,7 +146,7 @@ py-4 md:py-8 2xl:py-6 flex flex-col justify-center items-center text-center mt-2
                     <div className="flex-1 border-t border-gray-100"></div>
                   </div>
                   {/* <Link target="blank" href="/contactus"> */}
-                  <Link target="blank" href="/dashboard">
+                  <Link target="blank" href="/coursearchive">
                     <Button className="w-full px-[12vw] md:px-[5vw] md:py-3 2xl:py-5 bg-white bg-opacity-20 backdrop-blur-md  text-white rounded-lg hover:bg-gray-300 transition duration-300 ">
                       Apply Now
                     </Button>

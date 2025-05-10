@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-// import EditPersonalInfo from "./Modals/EditPhone.jsx";
 import EditAcademicInfo from "./Modals/EditAcademicInfo";
 import EditWorkExperience from "./Modals/EditWorkExperience";
 import EditEnglishLanguageInfo from "./Modals/EditEnglishLanguageInfo";
@@ -61,8 +60,6 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
       <EditfirstandlastName
         firstName={user?.firstName}
         lastName={user?.lastName}
-      // setFirstName={setUser?.setFirstName}
-      // setLastName={setUser?.setLastName}
       />
       {/* Email Address */}
       <div className="flex flex-col items-start space-y-2">
@@ -84,7 +81,7 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
           <EditPersonalInfo data={detailInfo} />
           <EditAcademicInfo data={detailInfo} />
           <EditWorkExperience
-            data={{ workexperience: detailInfo.workExperience }}
+            data={{ workExperience: detailInfo.workExperience }}
             updatedAt={detailInfo.updatedAt}
           />
           <EditEnglishLanguageInfo

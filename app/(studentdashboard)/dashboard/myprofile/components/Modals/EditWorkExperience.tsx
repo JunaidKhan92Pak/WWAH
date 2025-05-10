@@ -9,43 +9,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useUserStore } from "@/store/useUserData";
 
 const workExperienceSchema = z.object({
   hasWorkExperience: z.boolean(),
-  experiences: z.array(
-    z
-      .object({
-        // jobTitle: z.string().min(1, "Job title is required"),
-        // organizationName: z.string().min(1, "Organization name is required"),
-        // dateFrom: z.date() ,
-        // dateTo: z.date(),
-        // isFullTime: z.boolean().default(false),
-        // isPartTime: z.boolean().default(false),
-        workexperience: z.union([z.string(), z.number()]),
-        duration: z.number().min(0, "Duration must be a non-negative number"),
-      })
-    // .refine((data) => data.isFullTime || data.isPartTime, {
-    //   message: "Please select either Full Time or Part Time",
-    //   path: ["isFullTime"],
-    // })
-  ),
+  workExperience: z.string().optional(),
 });
 
 type WorkExperienceForm = z.infer<typeof workExperienceSchema>;
 
 interface WorkExperienceData {
-    workexperience: number;
+  workExperience: number;
 }
 
 const EditWorkExperience = ({
@@ -57,50 +37,34 @@ const EditWorkExperience = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-
+  const { updateDetailedInfo } = useUserStore();
+  console.log(`${data.workExperience} `, "workExperience");
   const form = useForm<WorkExperienceForm>({
     resolver: zodResolver(workExperienceSchema),
     defaultValues: {
-      hasWorkExperience: undefined,
-
-      experiences: [
-        {
-          // jobTitle: data?.jobTitle || "",
-          // organizationName: data?.organizationName || "",
-          // dateFrom: data?.startDate || undefined,
-          // dateTo: data?.endDate || undefined,
-          // isFullTime: data?.employmentType === "fullTime",
-          // isPartTime: data?.employmentType === "partTime",
-          workexperience: data?.workexperience || 0,
-        },
-      ],
+      hasWorkExperience: false,
+      workExperience: `${data.workExperience} `,
     },
-  });
-
-  const { fields } = useFieldArray({
-    control: form.control,
-    name: "experiences",
   });
 
   const hasWorkExperience = form.watch("hasWorkExperience");
 
   async function onSubmit(values: WorkExperienceForm) {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/updateWorkExperience`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(values),
-        }
-      );
-      const resData = await response.json();
-      if (response.ok) {
-        setOpen(false);
-        setTimeout(() => setSuccessOpen(true), 300);
+      const transformedValues = {
+        hasWorkExperience: values.hasWorkExperience,
+        workExperience: Number(values.workExperience),
+      };
+      console.log(Number(values.workExperience), "values");
+      const response = await updateDetailedInfo(transformedValues);
+      if (response.success) {
+        setSuccessOpen(true);
+        setTimeout(() => {
+          setSuccessOpen(false);
+          setOpen(false);
+        }, 2000);
       } else {
-        console.error("Error updating:", resData.message);
+        console.error("Failed to update work experience");
       }
     } catch (error) {
       console.error("Network error:", error);
@@ -117,7 +81,9 @@ const EditWorkExperience = ({
           width={16}
           height={16}
         />
-        <p className="text-sm">last updated on {new Date(updatedAt).toLocaleDateString("en-GB")}</p>
+        <p className="text-sm">
+          last updated on {new Date(updatedAt).toLocaleDateString("en-GB")}
+        </p>
         <Image
           src="/DashboardPage/pen.svg"
           alt="Edit"
@@ -163,31 +129,26 @@ const EditWorkExperience = ({
                 )}
               />
 
-              {hasWorkExperience &&
-                fields.map((field, index) => (
-                  <div key={field.id} className="grid gap-6">
-                    <FormField
-                      control={form.control}
-                      name={`experiences.${index}.duration`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor={`years-experience-${index}`}>
-                            Years of Experience
-                          </FormLabel>
-
-                          <Input
-                            {...field}
-                            id={`years-experience-${index}`}
-                            type="number"
-                            min="0"
-                            placeholder="Enter number of years"
-                            className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm mt-2"
-                          />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                ))}
+              {hasWorkExperience && (
+                <div className="grid gap-6">
+                  <FormField
+                    control={form.control}
+                    name="workExperience"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Years of Experience</FormLabel>
+                        <Input
+                          {...field}
+                          type="text"
+                          min="0"
+                          placeholder="Enter number of years"
+                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm mt-2"
+                        />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
 
               <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
                 Update Work Experience

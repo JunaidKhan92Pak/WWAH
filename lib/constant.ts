@@ -74,7 +74,7 @@ export const majorsAndDisciplines = [
     "Gender Studies",
     "Visual Arts",
     "Sports and Exercise Sciences",
-    "Media & Communication"
+    "Media & Communication",
 ];
 
 export const studyDestinations = [
