@@ -32,7 +32,7 @@ export const EnglishRequirement: React.FC<EnglishRequirementProps> = ({
   ];
   return (
     <section className="bg-black text-white p-8">
-      <div className="mx-auto flex flex-col lg:flex-row gap-8">
+      <div className="mx-auto grid grid-cols-1 lg:grid-cols-[60%,40%] gap-8">
         {/* Requirements Section */}
         <div className="flex flex-col flex-grow">
           <h3 className="mb-2 sm:mb-0">English Language Requirements</h3>
@@ -56,7 +56,7 @@ export const EnglishRequirement: React.FC<EnglishRequirementProps> = ({
           </div>
         </div>
         {/* Call to Action Section */}
-        <div className="bg-[#2A2A2A] bg-opacity-90 border border-zinc-800 text-white p-6 rounded-2xl w-full lg:w-[70%]">
+        <div className="bg-[#2A2A2A] bg-opacity-90 border border-zinc-800 text-white p-6 rounded-2xl w-full lg:w-[90%]">
           <div className="mb-4">
             <h5>Struggling with your English Proficiency Score?</h5>
           </div>

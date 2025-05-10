@@ -19,7 +19,6 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
     <div>
       <section className="flex flex-col items-center justify-center py-2 lg:py-5 px-4  lg:w-[90%] mx-auto">
         <h3 className="lg:mb-4">Required Documents!</h3>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-stretch">
           {/* Text Section */}
           <div className="bg-white p-2 md:p-6 rounded-2xl shadow-lg h-full">
@@ -42,7 +41,6 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
               ))}
             </ul>
           </div>
-
           {/* Image Section */}
           <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 ">
             {selectedDoc ? (

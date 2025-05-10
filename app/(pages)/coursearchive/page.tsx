@@ -18,7 +18,6 @@ import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
 import { Copy } from "lucide-react";
-
 import {
   Dialog,
   DialogClose,
@@ -285,8 +284,9 @@ const CourseArchive = () => {
 
                     <button
                       onClick={() => toggleFavorite(item._id)}
-                      className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
-                        }`}
+                      className={`relative ${
+                        heartAnimation === item._id ? "animate-pop" : ""
+                      }`}
                     >
                       {favorites[item._id] ? (
                         <Image
@@ -399,7 +399,7 @@ const CourseArchive = () => {
       )}
       <div className="flex justify-center items-center mt-6 gap-2">
         <Button
-          className="bg-red-600"
+          className="bg-red-600 hover:bg-red-600"
           disabled={currentPage === 1}
           onClick={() => setPage(currentPage - 1)}
         >
@@ -407,7 +407,7 @@ const CourseArchive = () => {
         </Button>
         <span>{`Page ${currentPage} of ${totalPages}`}</span>
         <Button
-          className="bg-red-600"
+          className="bg-red-600 hover:bg-red-600"
           disabled={currentPage === totalPages}
           onClick={() => setPage(currentPage + 1)}
         >

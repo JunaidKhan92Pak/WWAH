@@ -20,6 +20,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
   const [activeTabUni, setActiveTabUni] = useState(
     "University Application Docs"
   );
+
   // Memoize document lists to prevent recalculations on every render
   const universityDocs = useMemo(
     () =>
@@ -27,6 +28,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
     [data]
   );
   const embassyDocs = useMemo(() => data?.embassyDocuments || [], [data]);
+
   // Use useCallback to prevent function recreation on every render
   const handleMouseEnterUni = useCallback(
     (doc: Document) => setSelectedDocUni(doc),
@@ -36,6 +38,10 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
     (doc: Document) => setSelectedDoc(doc),
     []
   );
+
+  // Return null if data is null, which will hide this component
+  if (!data) return null;
+
   return (
     <section className="flex flex-col items-center justify-center md:my-14">
       <h1 className="md:mb-6 mb-2">Required Documents!</h1>
@@ -44,7 +50,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
       <div className="flex flex-col md:flex-row gap-2 md:mb-8">
         <Button
           variant="outline"
-          className={`px-4 py-2 rounded-lg border-2 h-12 hover:bg-red-700 hover:text-white ${
+          className={`px-4 py-2 rounded-lg text-base md:text-lg  border-2 h-12 hover:bg-red-700 hover:text-white ${
             activeTabUni === "University Application Docs"
               ? "border-red-700 text-red-700 font-semibold bg-transparent"
               : "border-gray-900 text-gray-900 bg-transparent"
@@ -55,7 +61,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
         </Button>
         <Button
           variant="outline"
-          className={`px-4 py-2 rounded-lg border-2 h-12 ${
+          className={`px-4 py-2 rounded-lg text-base md:text-lg border-2 h-12 ${
             activeTabUni === "Embassy Documents"
               ? "border-red-500 text-red-700 font-semibold bg-transparent"
               : "border-gray-900 text-gray-900 bg-transparent"
@@ -130,7 +136,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
               {embassyDocs.map((doc) => (
                 <li
                   key={doc.name}
-                  className="flex items-center space-x-2 cursor-pointer"
+                  className="flex items-start space-x-2 cursor-pointer"
                 >
                   <span className="text-red-500 text-4xl">•</span>
                   <p
