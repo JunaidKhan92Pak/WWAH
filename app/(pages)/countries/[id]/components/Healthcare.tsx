@@ -71,7 +71,7 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                   <>
                     {/* Always show health[1] */}
                     <div className="md:mt-4 mt-2">
-                      <h4 className="text-gray-900 mb-2 px-4 md:px-0">
+                      <h4 className="text-gray-900 mb-2">
                         {health[1].name}
                       </h4>
                       <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
@@ -101,9 +101,9 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                         {showMore &&
                           health.slice(2).map((item, index) => (
                             <div key={index + 2} className="mt-4">
-                              <h3 className="text-gray-900 mb-2">
+                              <h4 className="text-gray-900 mb-2">
                                 {item.name}
-                              </h3>
+                              </h4>
                               <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
                                 {item.description && (
                                   <ul className="list-disc pl-5">

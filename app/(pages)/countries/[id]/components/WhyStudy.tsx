@@ -82,7 +82,7 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
           <h2 className="py-2">Popular Universities in {countryName}</h2>
 
           <div
-            className="flex overflow-x-auto space-x-2 md:space-x-4 pl-28 pr-4 p-6 hide-scrollbar justify-start xl:justify-center"
+            className="flex overflow-x-auto space-x-2 md:space-x-4 p-6 hide-scrollbar justify-start xl:justify-center"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -94,15 +94,15 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
               universities.map((item) => (
                 <div
                   key={item._id}
-                  className="bg-white shadow-xl rounded-2xl overflow-hidden p-2 md:p-3 relative flex-shrink-0 max-w-[180px] md:max-w-[230px] lg:max-w-[300px] xl:max-w-[320px]"
+                  className="bg-white shadow-xl rounded-2xl overflow-hidden p-2 md:p-3 relative flex-shrink-0 max-w-[180px] md:max-w-[230px] lg:max-w-[300px] xl:max-w-[270px]"
                 >
                   <div className="relative h-[130px] md:h-[150px] lg:h-[210px]">
                     <div className="absolute top-3 left-0 bg-gradient-to-r from-[#fce7d2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">
                       <p className="md:text-sm text-[10px] font-medium">
-                        QS World: {item.qs_world_university_ranking}
+                        QS World
                       </p>
                       <p className="md:text-sm text-[10px] font-semibold">
-                        Ranking: {item.ranking[0]?.detail}
+                        Ranking: {item.ranking[0]?.detail?.toUpperCase()}
                       </p>
                     </div>
 

@@ -32,7 +32,11 @@ const PermanentResidency: React.FC<PermanentResidencyProps> = ({
           International Student?
         </h5>
 
-        <div className="text-[rgb(209,207,207)] space-y-3 max-h-60 overflow-y-scroll hide-scrollbar">
+        <div className="text-[rgb(209,207,207)] space-y-3 max-h-60 overflow-y-scroll"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#888 transparent', 
+          }}>
           {Array.isArray(residency) &&
             residency.map((item, index) => (
               <p

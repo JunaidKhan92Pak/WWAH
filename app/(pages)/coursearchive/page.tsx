@@ -29,6 +29,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -49,7 +50,6 @@ const CourseArchive = () => {
     fetchCourses,
   } = useCourseStore();
 
-
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [localSearch, setLocalSearch] = useState("");
@@ -57,42 +57,41 @@ const CourseArchive = () => {
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
 
-  // No need to load favorites from localStorage
-
+  // Toggle favorite and animate heart
   const toggleFavorite = (id: string) => {
     setFavorites((prev) => {
       const updatedFavorites = { ...prev, [id]: !prev[id] };
-
-      // Update count
-      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-      setFavoritesCount(newCount);
-
-      // Animate heart
+      setFavoritesCount(Object.values(updatedFavorites).filter(Boolean).length);
       setHeartAnimation(id);
       setTimeout(() => setHeartAnimation(null), 1000);
-
       return updatedFavorites;
     });
   };
 
-  // Debounced search
+  // Debounced search handler
   const handleSearch = useCallback(
     debounce((value: string) => {
-      setSearch(value); // assuming setSearch is defined
+      setSearch(value);
     }, 500),
-    []
+    [setSearch]
   );
 
   // Fetch courses on mount
   useEffect(() => {
-    fetchCourses(); // assuming fetchCourses is defined
-  }, []);
+    fetchCourses();
+  }, [fetchCourses]);
 
-  // Filtered courses based on favorites toggle
+  // Scroll to top whenever the currentPage changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentPage]);
+
+  // Determine which courses to display (all or favorites only)
   const displayedCourses = showFavorites
     ? courses.filter((course) => favorites[course._id])
     : courses;
-
   return (
     <section className="w-[95%] mx-auto p-2 ">
       <div className="flex flex-col lg:flex-row lg:items-center">
@@ -141,9 +140,8 @@ const CourseArchive = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
           >
             <Image
               src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -243,11 +241,10 @@ const CourseArchive = () => {
                             </Label>
                             <Input
                               id={`link-${item._id}`}
-                              value={`${
-                                typeof window !== "undefined"
+                              value={`${typeof window !== "undefined"
                                   ? window.location.origin
                                   : ""
-                              }/courses/${item._id}`}
+                                }/courses/${item._id}`}
                               readOnly
                             />
                           </div>
