@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
+import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import {
   Dialog,
   DialogContent,
@@ -59,7 +59,8 @@ function Page() {
   const router = useRouter();
 
   // Use the unified store
-  const { user, isAuthenticated, loading, logout, fetchUserProfile } = useUserStore();
+  const { user, isAuthenticated, loading, logout, fetchUserProfile } =
+    useUserStore();
   const [input, setInput] = useState("");
 
   const {
@@ -147,20 +148,17 @@ function Page() {
       <div
         className="landingPageBg relative w-full flex flex-col justify-center items-center"
         style={{
-          backgroundImage: 'url("/techbg.jpg")',
+          backgroundImage: 'url("/bg-blu.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-20 z-0"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-10 z-0"></div>
 
         {/* header section starts */}
         <header className="w-[90%] flex justify-between mt-5 z-20">
           <div className=" w-full  flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center space-x-2"
-            >
+            <Link href="/" className="flex items-center space-x-2">
               <Image
                 src="/logofooter.svg"
                 alt="WWAH Logo"
@@ -246,10 +244,8 @@ function Page() {
             )}
           </div>
         </header>
-        {/* header section ends */}
-        {/* Hero Section Start */}
+
         <section className="HeroSection relative overflow-hidden flex flex-row items-center justify-center gap-4 lg: lg:justify-evenly mt-6 w-[95%] sm:w-[100%] z-10">
-          {/* hero Section Left Side starts */}
           <div className="HeroLeftSection w-[95%] md:w-[70%] lg:w-[50%] ">
             {/* Hero Content */}
             <div className="hero-content space-y-2 md:space-y-8 ">
@@ -267,7 +263,7 @@ function Page() {
                   <h3 className="text-white leading-snug">
                     <Typewriter
                       words={[
-                        "Let's explore your study options",
+                        "Let’s explore your study options.",
                         "I simplify your university search",
                         "Find courses that truly fit",
                         "Smart scholarship search starts here.",
@@ -301,6 +297,11 @@ function Page() {
                     placeholder="Chat with Zeus..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleNavigate();
+                      }
+                    }}
                     className="flex-1 bg-transparent border-none focus:outline-none text-white placeholder:text-white/60 placeholder:text-sm"
                   />
 
@@ -452,62 +453,81 @@ function Page() {
           </div>
           {/* University Cards Grid */}
           {!uniLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-3 md:p-4">
-              {universities.length === 0 ? (
-                <p className="text-[20px] font-semibold text-center p-4 w-full col-span-full">
-                  No Universities Found
-                </p>
-              ) : (
-                universities.slice(0, 4).map((uni, index) => (
-                  <Card
-                    key={index}
-                    className="overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
-                  >
-                    {/* University Image */}
-                    <Link
-                      rel="noopener noreferrer"
-                      href={`/Universities/${uni._id}`}
+            <>
+              <div
+                className="flex items-center space-x-6 overflow-x-auto p-3"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                {universities.length === 0 ? (
+                  <p className="text-[20px] font-semibold text-center p-4 w-full">
+                    No Universities Found
+                  </p>
+                ) : (
+                  universities.slice(0, 7).map((uni) => (
+                    <Card
                       key={uni._id}
-                      className="relative h-48 block"
+                      className="flex-shrink-0 w-64 overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                     >
-                      <Image
-                        src={uni.universityImages.banner}
-                        alt={uni.name}
-                        layout="fill"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-
-                      {/* University Logo Overlay */}
-                      <div className="absolute bottom-1 left-5">
+                      {/* University Image */}
+                      <Link
+                        href={`/Universities/${uni._id}`}
+                        className="relative h-48 block"
+                      >
                         <Image
-                          src={uni.universityImages.logo}
-                          alt={`${uni.university_name} logo`}
-                          width={40}
-                          height={40}
-                          className="rounded-full bg-white border border-black w-[56px] h-[56px]"
+                          src={uni.universityImages.banner}
+                          alt={uni.name}
+                          layout="fill"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
                         />
-                      </div>
-                    </Link>
-
-                    {/* University Details */}
-                    <div className="p-4">
-                      <h6 className="font-semibold mb-2">
-                        {uni.university_name}
-                      </h6>
-                      <div className="flex flex-col justify-between items-start xl:items-center text-muted-foreground">
-                        <div className="w-full flex items-center justify-between gap-2">
-                          <p>{uni.country_name}</p>
-                          <p>Public</p>
+                        {/* Logo Overlay */}
+                        <div className="absolute bottom-1 left-5">
+                          <Image
+                            src={uni.universityImages.logo}
+                            alt={`${uni.university_name} logo`}
+                            width={56}
+                            height={56}
+                            className="rounded-full bg-white border border-black"
+                          />
                         </div>
-                        <p className="w-full text-xs md:text-sm">
-                          Acceptance Rate: {uni.acceptance_rate}
-                        </p>
+                      </Link>
+
+                      {/* University Details */}
+                      <div className="p-4">
+                        <h6 className="font-semibold mb-2">
+                          {uni.university_name}
+                        </h6>
+                        <div className="text-muted-foreground text-sm space-y-1">
+                          <div className="flex justify-between">
+                            <span>{uni.country_name}</span>
+                            <span>Public</span>
+                          </div>
+                          <div>Acceptance Rate: {uni.acceptance_rate}</div>
+                        </div>
                       </div>
+                    </Card>
+                  ))
+                )}
+
+                <div className="relative flex items-center border-2 border-gray-200 w-[20rem] h-[332px] group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg">
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-2xl pointer-events-none"></div>
+
+                  {/* Content */}
+                  <Link
+                    href="/universities"
+                    className="relative z-10 w-full flex justify-center"
+                  >
+                    <div className="rounded-lg text-black leading-tight py-2 flex flex-col items-center gap-2 px-3 font-extrabold text-[18px] w-[210px] mx-0 transition-transform duration-300 group-hover:scale-105">
+                      Explore all Universities
+                      <FaArrowUpRightFromSquare />
                     </div>
-                  </Card>
-                ))
-              )}
-            </div>
+                  </Link>
+                </div>
+              </div>
+            </>
           ) : (
             <SkeletonCard arr={4} />
           )}

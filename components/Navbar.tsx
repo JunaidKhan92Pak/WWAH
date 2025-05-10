@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-// import { FaCircleUser } from "react-icons/fa6";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -13,115 +12,120 @@ import {
 import { useUserStore } from "@/store/userStore";
 import Loading from "@/app/loading";
 import { usePathname, useRouter } from "next/navigation";
+
 const Navbar = () => {
   const { isAuthenticate, loading, logout, user, fetchUser } = useUserStore();
+
   useEffect(() => {
-    fetchUser(); // Fetch user data when the component mounts
-  }, []);
+    fetchUser();
+  }, [fetchUser]);
+
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+
   const router = useRouter();
-  const pathname = usePathname(); // current page path
-  const handleLoginClick = () => {
+  const pathname = usePathname();
+  const handleLoginClick = () =>
     router.push(`/signin?callbackUrl=${encodeURIComponent(pathname)}`);
-  };
+
   if (loading) return <Loading />;
+
+  // helper to apply active styles
+  const linkClasses = (path: string) => {
+    const base = "font-normal hover:underline";
+    const active = "font-bold underline decoration-black-500";
+    return pathname === path ? `${base} ${active}` : base;
+  };
+
   return (
     <header className="h-0 md:h-[50px] lg:mb-10">
-      <div className="fixed z-20 w-full mb-2 p-2 bg-white top-0 hidden md:block ">
-        <div className=" w-[95%]  mx-auto py-3 px-5 shadow-md rounded-xl bg-white text-black">
-          <div className="flex justify-between gap-3 items-center">
-            {/* Logo */}
+      <div className="fixed z-20 w-full p-2 bg-white top-0 hidden md:block">
+        <div className="w-[95%] mx-auto py-3 px-5 shadow-md rounded-xl bg-white text-black">
+          <div className="flex justify-between items-center">
             <Link href="/">
-              <Image
-                src="/wwah-textb.svg"
-                alt="logo"
-                width={150}
-                height={60}
-              // className="2xl:w-[150px] 2xl:h-[60px]"
-              />
+              <Image src="/wwah-textb.svg" alt="logo" width={150} height={60} />
             </Link>
-            {/* Navigation Menu */}
-            <div className="hidden md:block">
+
+            <nav className="hidden md:block">
               <NavigationMenu>
-                <NavigationMenuList className="flex gap-3 lg:gap-12 items-center">
-                  {/* Link to Study Destination Page */}
+                <NavigationMenuList className="flex gap-6">
                   <NavigationMenuItem>
-                    <Link href="/countries" passHref>
-                      <NavigationMenuLink className="hover:underline font-normal">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href="/countries"
+                        className={linkClasses("/countries")}
+                      >
                         Study Destinations
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
-                    <Link href="/Universities" passHref>
-                      <NavigationMenuLink className="hover:underline font-normal">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href="/Universities"
+                        className={linkClasses("/Universities")}
+                      >
                         Universities
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
-                  {/* Link to Programs Page */}
                   <NavigationMenuItem>
-                    <Link href="/coursearchive" passHref>
-                      <NavigationMenuLink className="hover:underline font-normal">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href="/coursearchive"
+                        className={linkClasses("/coursearchive")}
+                      >
                         Courses
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
-                  {/* Link to Scholarships Page */}
                   <NavigationMenuItem>
-                    <Link href="/scholarships" passHref>
-                      <NavigationMenuLink className="hover:underline font-normal">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href="/scholarships"
+                        className={linkClasses("/scholarships")}
+                      >
                         Scholarships
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
-            </div>
-            {/* Conditional Rendering */}
-            <div className="flex gap-3 lg:gap-5">
+            </nav>
+
+            <div className="flex items-center gap-3">
               {isAuthenticate ? (
-                // Profile Dropdown for Logged-in Users
-                <div className="relative flex items-center space-x-3 rtl:space-x-reverse">
+                <div className="relative">
                   <button
                     type="button"
-                    className="flex text-sm bg-white  rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                    id="user-menu-button"
-                    aria-expanded={isDropdownOpen}
+                    className="flex items-center text-sm rounded-full focus:ring-4 focus:ring-gray-300"
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
-                    {/* <FaCircleUser className="text-gray-800  w-8 h-8 text-xl " /> */}
                     <Image
                       src="/icons/userred.svg"
                       alt="user"
-                      width={40}
-                      height={40}
-                      className="rounded-full w-8 h-8 "
-                    />{" "}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
                   </button>
-                  {/* Dropdown Menu */}
+
                   {isDropdownOpen && (
-                    <div
-                      id="user-dropdown"
-                      className="absolute right-1 top-10 z-20 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                    >
-                      <div className="px-4 py-3">
-                        <span className="block text-sm text-gray-900 dark:text-white">
-                          {user?.firstName || "Loading"}
-                        </span>
-                        <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                          {user?.email || "user12gmail.com"}
-                        </span>
+                    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+                      <div className="px-4 py-2">
+                        <p className="text-sm font-semibold text-gray-900">
+                          {user?.firstName}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {user?.email}
+                        </p>
                       </div>
-                      <ul className="py-2">
+                      <ul>
                         <li>
                           <Link
                             href="/dashboard/overview"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            className="block px-4 py-2 text-sm hover:bg-gray-100"
                           >
                             Dashboard
                           </Link>
@@ -129,36 +133,32 @@ const Navbar = () => {
                         <li>
                           <Link
                             href="/chatmodel"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            className="block px-4 py-2 text-sm hover:bg-gray-100"
                           >
                             Chat with ZEUS
                           </Link>
                         </li>
                         <li>
-                          <a
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                          <button
                             onClick={logout}
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                           >
                             Logout
-                          </a>
+                          </button>
                         </li>
                       </ul>
                     </div>
                   )}
                 </div>
               ) : (
-                // Login/Signup Buttons for Guests
-                <>
-                  {/* <Link href="/signin"> */}
-                  <Button
-                    className="bg-[#C7161E] text-white text-base"
-                    variant="outline"
-                    size="lg"
-                    onClick={handleLoginClick}>
-                    Login
-                  </Button>
-                  {/* </Link> */}
-                </>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={handleLoginClick}
+                  className="bg-[#C7161E] text-white"
+                >
+                  Login
+                </Button>
               )}
             </div>
           </div>
@@ -167,4 +167,5 @@ const Navbar = () => {
     </header>
   );
 };
+
 export default Navbar;

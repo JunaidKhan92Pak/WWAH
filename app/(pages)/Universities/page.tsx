@@ -16,7 +16,9 @@ import ImageWithLoader from "@/components/ImageWithLoader";
 import { useSearchParams } from "next/navigation";
 import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { AiOutlineMail } from "react-icons/ai";
+// import { TbBrandWhatsappFilled } from "react-icons/tb";
+import { BsWhatsapp } from "react-icons/bs";
 import {
   Dialog,
   DialogClose,
@@ -28,6 +30,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { FaFacebook } from "react-icons/fa";
 
 const Page = () => {
   const countries = [
@@ -36,8 +39,16 @@ const Page = () => {
     { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
     { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
     { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
-    { name: "Germany", value: "germany", img: "/countryarchive/germany_logo.png" },
-    { name: "Ireland", value: "Ireland", img: "/countryarchive/ireland_logo.png" },
+    {
+      name: "Germany",
+      value: "germany",
+      img: "/countryarchive/germany_logo.png",
+    },
+    {
+      name: "Ireland",
+      value: "Ireland",
+      img: "/countryarchive/ireland_logo.png",
+    },
     { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
     {
       name: "New Zealand",
@@ -328,12 +339,83 @@ const Page = () => {
                     <div className="absolute z-10 top-5 left-0 bg-gradient-to-r from-[#FCE7D2] to-[#CEC8C3] px-2 rounded-tr-xl w-1/2">
                       <p className="text-sm font-medium">
                         QS World Ranking:{" "}
-                        {item.qs_world_university_ranking || "N/A"}
+                        {item.qs_world_university_ranking.toUpperCase() ||
+                          "N/A"}
                       </p>
                     </div>
 
                     {/* Share & Favorite Buttons */}
                     <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
+                      {/* <Dialog>
+                        <DialogTrigger asChild>
+                          <button>
+                            <Image
+                              src="/share.svg"
+                              width={20}
+                              height={20}
+                              alt="Share"
+                            />
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Share link</DialogTitle>
+                            <DialogDescription>
+                              Anyone who has this link will be able to view
+                              this.
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          <div className="flex items-center space-x-2">
+                            <div className="grid flex-1 gap-2">
+                              <Label
+                                htmlFor={`link-${item._id}`}
+                                className="sr-only"
+                              >
+                                Link
+                              </Label>
+                              <Input
+                                id={`link-${item._id}`}
+                                value={`${
+                                  typeof window !== "undefined"
+                                    ? window.location.origin
+                                    : ""
+                                }/Universities/${item._id}`}
+                                readOnly
+                              />
+                            </div>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="px-3"
+                              onClick={() => {
+                                const link = `${window.location.origin}/Universities/${item._id}`;
+                                navigator.clipboard.writeText(link).then(() => {
+                                  setCopiedLinkId(item._id);
+                                  setTimeout(() => setCopiedLinkId(null), 2000); 
+                                });
+                              }}
+                            >
+                              <span className="sr-only">Copy</span>
+                              <Copy />
+                            </Button>
+                          </div>
+
+                          {copiedLinkId === item._id && (
+                            <p className="text-black text-sm mt-2">
+                              Link copied to clipboard!
+                            </p>
+                          )}
+
+                          <DialogFooter className="sm:justify-start">
+                            <DialogClose asChild>
+                              <Button type="button" variant="secondary">
+                                Close
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog> */}
                       <Dialog>
                         <DialogTrigger asChild>
                           <button>
@@ -365,8 +447,8 @@ const Page = () => {
                               <Input
                                 id={`link-${item._id}`}
                                 value={`${typeof window !== "undefined"
-                                  ? window.location.origin
-                                  : ""
+                                    ? window.location.origin
+                                    : ""
                                   }/Universities/${item._id}`}
                                 readOnly
                               />
@@ -379,7 +461,7 @@ const Page = () => {
                                 const link = `${window.location.origin}/Universities/${item._id}`;
                                 navigator.clipboard.writeText(link).then(() => {
                                   setCopiedLinkId(item._id);
-                                  setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
+                                  setTimeout(() => setCopiedLinkId(null), 2000);
                                 });
                               }}
                             >
@@ -388,12 +470,43 @@ const Page = () => {
                             </Button>
                           </div>
 
-                          {/* 👇 Show message conditionally */}
                           {copiedLinkId === item._id && (
                             <p className="text-black text-sm mt-2">
                               Link copied to clipboard!
                             </p>
                           )}
+
+                          {/* Share buttons */}
+                          <div className="mt-4 flex gap-4 justify-center">
+                            <a
+                              href={`https://wa.me/?text=${encodeURIComponent(
+                                `${window.location.origin}/Universities/${item._id}`
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-600 hover:underline"
+                            >
+                              <BsWhatsapp className="text-2xl" />{" "}
+                            </a>
+                            <a
+                              href={`mailto:?subject=Check this out&body=${encodeURIComponent(
+                                `${window.location.origin}/Universities/${item._id}`
+                              )}`}
+                              className="text-blue-600 hover:underline"
+                            >
+                              <AiOutlineMail className="text-2xl text-red-600" />{" "}
+                            </a>
+                            <a
+                              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                                `${window.location.origin}/Universities/${item._id}`
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#1877F2] hover:underline"
+                            >
+                              <FaFacebook className="text-blue-600 text-2xl" />
+                            </a>
+                          </div>
 
                           <DialogFooter className="sm:justify-start">
                             <DialogClose asChild>
@@ -470,16 +583,67 @@ const Page = () => {
                   </div>
 
                   <hr className="mx-4 my-3" />
-                  <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
+                  {/* <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
                   <div className="relative bg-[#F1F1F1] rounded-md h-7">
                     <div
-                      className="bg-[#16C47F] text-white flex items-center justify-center h-7 rounded-lg"
+                      className="bg-[#16C47F] text-white flex items-center justify-center h-7 rounded-lg "
                       style={{ width: item.acceptance_rate }}
                     >
-                      <p className="text-sm font-normal">
+                      <p className="text-sm font-normal leading-3 px-2">
                         {item.acceptance_rate}
                       </p>
                     </div>
+                  </div> */}
+                  <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
+                  <div className="relative bg-[#F1F1F1] rounded-md h-7">
+                    {(() => {
+                      const rate = item.acceptance_rate?.toString().trim();
+                      let displayRate = rate;
+                      let numericWidth = 0;
+                      let isValidNumber = true;
+
+                      // Normalize known non-numeric labels like "n/a"
+                      if (rate?.toLowerCase() === "n/a") {
+                        displayRate = "N/A";
+                        isValidNumber = false;
+                        numericWidth = 100; // Fallback width
+                      } else if (rate.includes("to")) {
+                        const [start, end] = rate
+                          .split("to")
+                          .map((val: string) => parseFloat(val.trim()));
+
+                        if (isNaN(start) || isNaN(end)) {
+                          isValidNumber = false;
+                          numericWidth = 100;
+                        } else {
+                          const avg = ((start + end) / 2).toFixed(1);
+                          numericWidth = parseFloat(avg);
+                          displayRate = `${start}% - ${end}%`;
+                        }
+                      } else {
+                        numericWidth = parseFloat(rate);
+                        if (isNaN(numericWidth)) {
+                          isValidNumber = false;
+                          numericWidth = 100;
+                        }
+                      }
+
+                      const bgColor = isValidNumber ? "#16C47F" : "#FFE5B4"; // green or soft yellow
+
+                      return (
+                        <div
+                          className="text-white flex items-center justify-center h-7 rounded-lg transition-all duration-500"
+                          style={{
+                            width: `${numericWidth}%`,
+                            backgroundColor: bgColor,
+                          }}
+                        >
+                          <p className="text-sm font-normal leading-3 px-2 text-black">
+                            {displayRate}
+                          </p>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
               ))

@@ -43,7 +43,7 @@ const Standsection: React.FC<StandsectionProps> = ({ our_mission, values }) => {
               <h3 className="text-gray-800">Our Values!</h3>
               <ul className="grid grid-cols-1 lg:grid-cols-2 md:gap-y-3 sm:gap-x-6 text-gray-700">
                 {values.map((item, index) => (
-                  <li key={index} className="flex items-center justify-center">
+                  <li key={index} className="flex items-center justify-start">
                     <p className="text-red-500 mr-2 text-2xl">•</p>
                     {item}
                   </li>
