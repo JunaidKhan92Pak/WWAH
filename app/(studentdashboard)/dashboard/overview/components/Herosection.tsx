@@ -1,5 +1,5 @@
-"use client"
-import React, { useEffect, useState } from 'react'
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image"; // Import the Image component
 
 interface User {
@@ -29,7 +29,7 @@ const Herosection = ({ user }: { user: User }) => {
       />
 
       <Image
-        src="/DashboardPage/heroimg.jpg"
+        src="/DashboardPage/heroimg-min.jpg"
         alt="banner image"
         width={1000}
         height={700}
@@ -68,4 +68,4 @@ const Herosection = ({ user }: { user: User }) => {
   );
 };
 
-export default Herosection
+export default Herosection;
