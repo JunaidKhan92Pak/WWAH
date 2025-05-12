@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MdOutlineSortByAlpha } from "react-icons/md";
-import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
+import { FaFacebook, FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 import Link from "next/link";
 import { useCourseStore } from "@/store/useCoursesStore";
 import FilterComponent from "./components/Filtercomponent";
@@ -18,6 +18,9 @@ import { SkeletonCard } from "@/components/skeleton";
 import { debounce } from "lodash";
 import ImageWithLoader from "@/components/ImageWithLoader";
 import { Copy } from "lucide-react";
+import { BsWhatsapp } from "react-icons/bs";
+import { AiOutlineMail } from "react-icons/ai";
+
 import {
   Dialog,
   DialogClose,
@@ -271,6 +274,38 @@ const CourseArchive = () => {
                             Link copied to clipboard!
                           </p>
                         )}
+
+                           {/* Share buttons */}
+                                                  <div className="mt-2 flex gap-4 justify-left">
+                                                    <a
+                                                      href={`https://wa.me/?text=${encodeURIComponent(
+                                                        `${window.location.origin}/courses/${item._id}`
+                                                      )}`}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      className="text-green-600 hover:underline"
+                                                    >
+                                                      <BsWhatsapp className="text-2xl" />{" "}
+                                                    </a>
+                                                    <a
+                                                      href={`mailto:?subject=Check this out&body=${encodeURIComponent(
+                                                        `${window.location.origin}/courses/${item._id}`
+                                                      )}`}
+                                                      className="text-blue-600 hover:underline"
+                                                    >
+                                                      <AiOutlineMail className="text-2xl text-red-600" />{" "}
+                                                    </a>
+                                                    <a
+                                                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                                                        `${window.location.origin}/courses/${item._id}`
+                                                      )}`}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      className="text-[#1877F2] hover:underline"
+                                                    >
+                                                      <FaFacebook className="text-blue-600 text-2xl" />
+                                                    </a>
+                                                  </div>
 
                         <DialogFooter className="sm:justify-start">
                           <DialogClose asChild>

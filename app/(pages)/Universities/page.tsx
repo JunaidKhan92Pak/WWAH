@@ -477,7 +477,7 @@ const Page = () => {
                           )}
 
                           {/* Share buttons */}
-                          <div className="mt-4 flex gap-4 justify-center">
+                          <div className="mt-2 flex gap-4 justify-left">
                             <a
                               href={`https://wa.me/?text=${encodeURIComponent(
                                 `${window.location.origin}/Universities/${item._id}`
