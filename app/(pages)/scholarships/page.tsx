@@ -78,7 +78,7 @@ const Page = () => {
   // const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
   // const deadlines = ["Jan 2025", "Feb 2025", "March 2025"];
   const minimumRequirement = [
-    "Excellent Academic Achievement",
+    // "Excellent Academic Achievement",
     "2.5-3.0 CGPA",
     "3.0-3.5 CGPA",
     "3.5 & above CGPA",
@@ -339,7 +339,7 @@ const Page = () => {
                   <hr />
                   <p className="text-lg mt-4">Application Deadline:</p>
                   <ul className="py-2 space-y-3">
-                    {["Jan 2025", "Feb 2025", "March 2025"].map((deadline) => (
+                    {["Jan", "Feb", "March"].map((deadline) => (
                       <li
                         key={deadline}
                         className="flex items-center justify-between"
@@ -452,7 +452,7 @@ const Page = () => {
                   </ScrollArea>
                 </div>
                 <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2">
-                  <p className="text-base md:text-lg font-bold">Programs:</p>
+                  <p className="text-base md:text-lg font-bold">Study Level:</p>
                   <ul className="py-4 space-y-3 md:space-y-4">
                     {["Bachelors", "Master", "PhD"].map((program) => (
                       <li
@@ -502,18 +502,18 @@ const Page = () => {
                   <ScrollArea className="h-[300px] overflow-y-auto p-2 ">
                     <ul className="py-4 space-y-3 md:space-y-4 pr-2">
                       {[
-                        "January-2025",
-                        "February-2025",
-                        "March-2025",
-                        "April-2025",
-                        "May-2025",
-                        "June-2025",
-                        "July-2025",
-                        "August-2025",
-                        "September-2025",
-                        "October-2025",
-                        "November-2025",
-                        "December-2025",
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
                       ].map((deadline) => (
                         <li
                           key={deadline}
@@ -559,6 +559,37 @@ const Page = () => {
                       </li>
                     ))}
                   </ul>
+                </div>
+                <div className="border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2">
+                  <p className="text-base md:text-lg font-bold">
+                    Scholarship Provider
+                  </p>
+                  <ScrollArea className=" p-2 ">
+                    <ul className="py-4 space-y-3 md:space-y-4 pr-2">
+                      {[
+                        "Government-Funded",
+                        "University-Specific",
+                        "Private Organization",
+                      ].map((deadline) => (
+                        <li
+                          key={deadline}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="text-[16px] truncate">
+                            {deadline}
+                          </span>
+                          <input
+                            type="checkbox"
+                            name={deadline}
+                            value={deadline}
+                            onChange={handleDeadlineChange}
+                            checked={deadlineFilters.includes(deadline)}
+                            className="ml-2"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </ScrollArea>
                 </div>
               </ScrollArea>
             </div>
