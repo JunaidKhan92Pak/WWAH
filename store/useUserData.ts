@@ -34,7 +34,7 @@ export interface DetailedInfo {
     score: string;
   };
   workExperience: number;
-  studyPreference: {
+  studyPreferenced: {
     country: string;
     degree: string;
     subject: string;
@@ -63,7 +63,7 @@ const defaultDetailedInfo: DetailedInfo = {
   livingCosts: { amount: 0, currency: "" },
   tuitionFee: { amount: 0, currency: "" },
   languageProficiency: { test: "", score: "" },
-  studyPreference: { country: "", degree: "", subject: "" },
+  studyPreferenced: { country: "", degree: "", subject: "" },
   studyLevel: "",
   gradeType: "",
   grade: 0,
@@ -218,20 +218,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
       );
       console.log(response, "response from updateDetailedInfo");
       const result = await response.json();
+    const res = result.success
       // Return the result for further processing if needed  
       console.log(result, "result from updateDetailedInfo");
       if (!response.ok) {
-        throw new Error(
-          `Failed to update detailed info: ${response.status} ${response.statusText}`
-        );
-        return result;
+          return res
       }
       
       if (!result.success) {
-        throw new Error(result.message || "Failed to update detailed info");
-         return result; 
-      }
-     
+         return res; 
+      }   
       // Update the local store with new detailed info
       set((state) => ({
         detailedInfo: state.detailedInfo
@@ -239,7 +235,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
           : { ...defaultDetailedInfo, ...updateData },
         loading: false,
       }));
-      return result; // Return the result for further processing if needed
+      return res; // Return the result for further processing if needed
     } catch (error) {
       console.error("Error updating detailed info:", error);
       set({

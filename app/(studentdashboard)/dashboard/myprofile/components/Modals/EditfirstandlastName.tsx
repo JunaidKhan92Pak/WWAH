@@ -43,7 +43,7 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
     console.log(values, "values");
     try {
       const response = await updateUserProfile(values);
-      if (response.success) {
+      if (response !== undefined) {
         setConfirmOpen(true);
         setTimeout(() => {
           setConfirmOpen(false);

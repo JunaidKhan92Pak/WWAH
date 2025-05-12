@@ -65,7 +65,7 @@ export interface detailedInfo {
   };
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
-  studyPreference: ApiStudyPreference;
+  studyPreferenced: ApiStudyPreference;
   updatedAt: string;
 }
 
@@ -95,8 +95,9 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
     };
         try {
           const response = await updateDetailedInfo(apiData);
-          console.log(response, "response from updateUserProfile");
-          if (response.success) {
+          
+          console.log(response, "response from updateUserProfile in EditAcademicInfo");
+          if (response !== undefined) {
             setOpen(false);
             setSuccessOpen(true);
             setTimeout(() => {
