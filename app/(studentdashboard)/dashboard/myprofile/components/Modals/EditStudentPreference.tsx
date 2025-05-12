@@ -57,7 +57,27 @@ interface ApiStudyPreference {
   degree: string;
   subject: string;
 }
-export interface detailedInfo {
+// export interface DetailedInfo {
+//   studyLevel: string;
+//   gradeType: string;
+//   grade: number;
+//   dateOfBirth: string;
+//   nationality: string;
+//   majorSubject: string;
+//   livingCosts: {
+//     amount: number;
+//     currency: string;
+//   };
+//   tuitionFee: {
+//     amount: number;
+//     currency: string;
+//   };
+//   languageProficiency: ApiLanguageProficiency;
+//   workExperience: number;
+//   studyPreferenced: ApiStudyPreference;
+//   updatedAt: string;
+// }
+interface DetailedInfo {
   studyLevel: string;
   gradeType: string;
   grade: number;
@@ -73,16 +93,15 @@ export interface detailedInfo {
     currency: string;
   };
   languageProficiency: ApiLanguageProficiency;
-  workExperience: number;
   studyPreferenced: ApiStudyPreference;
+  workExperience: number;
   updatedAt: string;
 }
-
-const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
+const EditStudentPreference = ({ data }: { data: DetailedInfo }) => {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const { updateDetailedInfo } = useUserStore();
-
+  console.log(data?.studyPreferenced, "data?.studyPreference");
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -95,6 +114,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
       livingCurrency: `${data?.livingCosts.currency}`,
     },
   });
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const transformedValues = {
@@ -113,7 +133,7 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
         },
       };
       const response = await updateDetailedInfo(transformedValues);
-      if (response.success) {
+      if (response !== undefined) {
         setSuccessOpen(true);
         setTimeout(() => {
           setSuccessOpen(false);
@@ -126,9 +146,9 @@ const EditStudentPreference = ({ data }: { data: detailedInfo }) => {
       console.error("Network error:", error);
     }
   }
-  form.watch((value) => {
-    console.log("Form values:", value); // Debugging
-  });
+  // form.watch((value) => {
+  //   console.log("Form values:", value); // Debugging
+  // });
 
   return (
     <>

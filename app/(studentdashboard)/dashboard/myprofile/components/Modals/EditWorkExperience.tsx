@@ -57,7 +57,7 @@ const EditWorkExperience = ({
       };
       console.log(Number(values.workExperience), "values");
       const response = await updateDetailedInfo(transformedValues);
-      if (response.success) {
+      if (response !== undefined) {
         setSuccessOpen(true);
         setTimeout(() => {
           setSuccessOpen(false);

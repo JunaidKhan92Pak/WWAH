@@ -85,7 +85,7 @@ const EditEnglishLanguageInfo = ({
         },
       };      
       const response = await updateDetailedInfo(transformedValues);
-      if (response.success) {
+      if (response !== undefined) {
         setSuccessOpen(true);
         setTimeout(() => {
           setSuccessOpen(false);

@@ -63,7 +63,7 @@ interface DetailedInfo {
   };
   languageProficiency: ApiLanguageProficiency;
   workExperience: number;
-  studyPreference: ApiStudyPreference;
+  studyPreferenced: ApiStudyPreference;
   updatedAt: string;
 }
 

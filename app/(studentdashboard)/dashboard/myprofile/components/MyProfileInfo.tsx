@@ -36,7 +36,7 @@ interface DetailedInfo {
     currency: string;
   };
   languageProficiency: LanguageProficiency;
-  studyPreference: StudyPreference;
+  studyPreferenced: StudyPreference;
   workExperience: number;
   updatedAt: string;
 }
