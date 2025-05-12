@@ -391,9 +391,10 @@ function Page() {
           <div className="flex justify-between items-center">
             <h3 className="font-bold">Top Universities!</h3>
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[30%] md:w-[15%] xl:w-[10%] h-10">
+            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg  w-[30%] md:w-[14%] xxl:w-[9%] h-10 text-center">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
-                <div className="flex justify-between w-full">
+                <div className="flex items-center gap-1">
+
                   Filter
                   {/* Always reserve space for count by using opacity instead of conditional rendering */}
                   <div
@@ -455,7 +456,7 @@ function Page() {
           {!uniLoading ? (
             <>
               <div
-                className="flex items-center space-x-6 overflow-x-auto p-3"
+                className="flex items-center space-x-3 md:space-x-6 overflow-x-auto p-3"
                 style={{
                   scrollbarWidth: "none",
                   msOverflowStyle: "none",
@@ -469,7 +470,7 @@ function Page() {
                   universities.slice(0, 7).map((uni) => (
                     <Card
                       key={uni._id}
-                      className="flex-shrink-0 w-64 overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                      className="flex-shrink-0 w-[270px] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                     >
                       {/* University Image */}
                       <Link
@@ -511,16 +512,16 @@ function Page() {
                   ))
                 )}
 
-                <div className="relative flex items-center border-2 border-gray-200 w-[20rem] h-[332px] group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg">
+                <div className="relative flex items-center border-2 border-gray-200  h-[340px] group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg">
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-2xl pointer-events-none"></div>
 
                   {/* Content */}
                   <Link
-                    href="/universities"
+                    href="/Universities"
                     className="relative z-10 w-full flex justify-center"
                   >
-                    <div className="rounded-lg text-black leading-tight py-2 flex flex-col items-center gap-2 px-3 font-extrabold text-[18px] w-[210px] mx-0 transition-transform duration-300 group-hover:scale-105">
+                    <div className="rounded-lg text-black leading-tight flex flex-col items-center gap-2 px-3 font-extrabold text-[18px] w-[260px] mx-0 transition-transform duration-300 group-hover:scale-105">
                       Explore all Universities
                       <FaArrowUpRightFromSquare />
                     </div>

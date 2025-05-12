@@ -9,6 +9,10 @@ import { useScholarships } from "@/store/useScholarships";
 import { debounce } from "lodash";
 import Link from "next/link";
 import { SkeletonCard } from "@/components/skeleton";
+import { BsWhatsapp } from "react-icons/bs";
+import { AiOutlineMail } from "react-icons/ai";
+import { FaFacebook } from "react-icons/fa";
+
 import {
   Dialog,
   DialogClose,
@@ -699,6 +703,38 @@ const Page = () => {
                                     Link copied to clipboard!
                                   </p>
                                 )}
+
+                                {/* Share buttons */}
+                                <div className="mt-2 flex gap-4 justify-left">
+                                  <a
+                                    href={`https://wa.me/?text=${encodeURIComponent(
+                                      `${window.location.origin}/scholarships/${item._id}`
+                                    )}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-green-600 hover:underline"
+                                  >
+                                    <BsWhatsapp className="text-2xl" />{" "}
+                                  </a>
+                                  <a
+                                    href={`mailto:?subject=Check this out&body=${encodeURIComponent(
+                                      `${window.location.origin}/scholarships/${item._id}`
+                                    )}`}
+                                    className="text-blue-600 hover:underline"
+                                  >
+                                    <AiOutlineMail className="text-2xl text-red-600" />{" "}
+                                  </a>
+                                  <a
+                                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                                      `${window.location.origin}/scholarships/${item._id}`
+                                    )}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#1877F2] hover:underline"
+                                  >
+                                    <FaFacebook className="text-blue-600 text-2xl" />
+                                  </a>
+                                </div>
 
                                 <DialogFooter className="sm:justify-start">
                                   <DialogClose asChild>
