@@ -447,8 +447,8 @@ const Page = () => {
                               <Input
                                 id={`link-${item._id}`}
                                 value={`${typeof window !== "undefined"
-                                    ? window.location.origin
-                                    : ""
+                                  ? window.location.origin
+                                  : ""
                                   }/Universities/${item._id}`}
                                 readOnly
                               />
@@ -583,17 +583,6 @@ const Page = () => {
                   </div>
 
                   <hr className="mx-4 my-3" />
-                  {/* <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
-                  <div className="relative bg-[#F1F1F1] rounded-md h-7">
-                    <div
-                      className="bg-[#16C47F] text-white flex items-center justify-center h-7 rounded-lg "
-                      style={{ width: item.acceptance_rate }}
-                    >
-                      <p className="text-sm font-normal leading-3 px-2">
-                        {item.acceptance_rate}
-                      </p>
-                    </div>
-                  </div> */}
                   <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
                   <div className="relative bg-[#F1F1F1] rounded-md h-7">
                     {(() => {
@@ -650,32 +639,148 @@ const Page = () => {
             )}
           </div>
 
-          {/* Pagination Controls - Only show if there are results */}
-          {displayedUniversities.length > 0 && (
-            <div className="flex justify-center items-center my-6 gap-4">
-              <Button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className=" bg-red-700 hover:bg-red-700 text-white rounded disabled:opacity-50"
-              >
-                Previous
-              </Button>
-              <span className="text-gray-700">
-                Page {currentPage} of {totalPages || 1}
-              </span>
-              <Button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages || totalPages === 0}
-                className=" bg-red-700 hover:bg-red-700 text-white rounded disabled:opacity-50"
-              >
-                Next
-              </Button>
-            </div>
-          )}
         </>
+
+      )}
+      {/* Pagination Button  */}
+      {displayedUniversities.length >= 0 && totalPages > 0 && (
+        <div className="flex flex-wrap justify-center items-center my-8 gap-3">
+          {/* Pagination controls always visible container */}
+          <div className="flex items-center gap-3" >
+            {/* First page button */}
+            <button
+              onClick={() => setCurrentPage(1)}
+              className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              aria-label="First page"
+              disabled={currentPage <= 1}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M9.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+
+            {/* Previous button */}
+            <button
+              onClick={handlePrevPage}
+              className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              aria-label="Previous page"
+              disabled={currentPage <= 1}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </button>
+
+            {/* Page numbers */}
+            <div className="hidden sm:flex space-x-2 ">
+              {(() => {
+                // Calculate pagination range
+                let startPage = 1;
+                let endPage = totalPages;
+
+                if (totalPages > 5) {
+                  if (currentPage <= 3) {
+                    // Show first 5 pages
+                    endPage = 5;
+                  } else if (currentPage + 2 >= totalPages) {
+                    // Show last 5 pages
+                    startPage = Math.max(totalPages - 4, 1);
+                  } else {
+                    // Show current page with neighbors
+                    startPage = currentPage - 2;
+                    endPage = currentPage + 2;
+                  }
+                }
+
+                const pages = [];
+
+                // Add ellipsis at the beginning if needed
+                if (startPage > 1) {
+                  pages.push(
+                    <button
+                      key="start-ellipsis"
+                      className="rounded-lg px-4 py-2 text-gray-500"
+                      disabled
+                    >
+                      ...
+                    </button>
+                  );
+                }
+
+                // Add page buttons
+                for (let i = startPage; i <= endPage; i++) {
+                  pages.push(
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i)}
+                      className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${currentPage === i
+                        ? "bg-red-700 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-red-100"
+                        }`}
+                      aria-current={currentPage === i ? "page" : undefined}
+                    >
+                      {i}
+                    </button>
+                  );
+                }
+
+                // Add ellipsis at the end if needed
+                if (endPage < totalPages) {
+                  pages.push(
+                    <button
+                      key="end-ellipsis"
+                      className="rounded-lg px-4 py-2 text-gray-500"
+                      disabled
+                    >
+                      ...
+                    </button>
+                  );
+                }
+
+                return pages;
+              })()}
+            </div>
+
+            {/* Mobile-friendly current page indicator */}
+            <div className="flex sm:hidden items-center border-2 border-red-600">
+              <span className="text-gray-700 font-medium px-3">
+                Page {currentPage} of {totalPages}
+              </span>
+            </div>
+
+            {/* Next button */}
+            {currentPage < totalPages && (
+              <button
+                onClick={handleNextPage}
+                className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
+                aria-label="Next page"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
+
+            {/* Last page button */}
+            {currentPage < totalPages && (
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
+                aria-label="Last page"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
+                  <path fillRule="evenodd" d="M10.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L14.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
       )}
     </section>
   );
 };
-
 export default Page;
