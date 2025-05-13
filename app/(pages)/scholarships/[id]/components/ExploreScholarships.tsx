@@ -13,7 +13,7 @@ const ExploreScholarships = () => {
   }, [fetchScholarships]);
   return (
     <div>
-      <section className="relative flex flex-col lg:flex-row gap-2 items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
+      <section className="relative flex flex-col lg:flex-row gap-2 items-center text-white bg-black bg-cover bg-center mt-6 p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
         <div className="relative z-10 w-full lg:w-[50%] flex flex-col justify-center md:space-y-2 sm:px-4 text-left">

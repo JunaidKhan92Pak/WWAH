@@ -195,16 +195,12 @@ const CourseArchive = () => {
                   <div className="absolute top-4 left-0">
                     <div className=" bg-gradient-to-r from-white to-transparent opacity-100 w-[70%] ">
                       <div className="flex items-center gap-2 ">
-                        <div className=" sm:w-16 sm:h-12 w-10 h-10 ">
-                          <img
-                            src={
-                              item.universityData?.universityImages.logo ||
-                              "/logo.png"
-                            }
-                            alt="alumini"
-                            className="rounded-full border object-cover  object-center  sm:w-16 sm:h-10 w-10 h-10 "
-                          />
-                        </div>
+  <img
+    src={item.universityData?.universityImages.logo || "/logo.png"}
+    alt="alumni"
+    className="w-14 h-14 object-cover  object-center rounded-full aspect-square"
+  />
+
                         <div className="py-1">
                           <p className="leading-none text-sm font-medium cursor-pointer">
                             {item.universityData?.university_name}

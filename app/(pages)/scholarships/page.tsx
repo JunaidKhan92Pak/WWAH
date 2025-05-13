@@ -838,10 +838,10 @@ const Page = () => {
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
                               <Image
-                                src={"/Notebooksvg.svg"}
+                                src={"/scholarshipdetail/Money.svg"}
                                 alt="degree level"
-                                width={16}
-                                height={16}
+                                width={12}
+                                height={12}
                               />
                               <p className="text-sm text-gray-600 truncate">
                                 {item.programs
@@ -864,27 +864,27 @@ const Page = () => {
                         </div>
 
                         {/* Divider */}
-                        <hr className="mx-4 mb-4" />
+                        {/* <hr className="mx-4 mb-4" /> */}
 
                         {/* Buttons Section */}
-                        <div className="flex gap-2 w-full">
+                        {/* <div className="flex gap-2 w-full"> */}
                           <Link
                             target="blank"
                             href={`/scholarships/${item._id}`}
                             rel="noopener noreferrer"
                             className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
                           >
-                            View Details
+                            Explore Course
                           </Link>
-                          <Link
+                          {/* <Link
                             target="blank"
                             href="/dashboard"
                             className="flex-1 flex items-center justify-center border border-[#F0851D] text-[#F0851D] text-xs md:text-[13px] px-1 py-2 rounded-lg hover:bg-red-500 hover:text-white text-center"
                           >
                             Start Your Application
-                          </Link>
+                          </Link> */}
                         </div>
-                      </div>
+                      // </div>
                     ))
                   )}
                 </div>

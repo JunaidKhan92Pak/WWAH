@@ -167,7 +167,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         {/* <Requireddocs */}
         <Applicationprocess />
       </div>
-      <ExploreScholarships />
+      <ExploreScholarships  />
     </>
   );
 };
