@@ -281,8 +281,8 @@ function Page() {
 
                 <div className="HeroRightSide relative lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/Zeushicomp.jpeg"
-    png        alt="Robot"
+                    src="/Zeushicomp.png"
+                    alt="Robot"
                     width={0}
                     height={0}
                     sizes="60vw"
@@ -470,7 +470,7 @@ function Page() {
                   universities.slice(0, 7).map((uni) => (
                     <Card
                       key={uni._id}
-                      className="flex-shrink-0 w-[270px] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                      className="flex-shrink-0 w-[90%] sm:w-1/2 lg:w-[25%] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                     >
                       {/* University Image */}
                       <Link
@@ -497,7 +497,7 @@ function Page() {
 
                       {/* University Details */}
                       <div className="p-4">
-                        <h6 className="font-semibold mb-2">
+                        <h6 className="font-semibold leading-tight mb-2">
                           {uni.university_name}
                         </h6>
                         <div className="text-muted-foreground text-sm space-y-1">
@@ -505,7 +505,7 @@ function Page() {
                             <span>{uni.country_name}</span>
                             <span>Public</span>
                           </div>
-                          <div>Acceptance Rate: {uni.acceptance_rate}</div>
+                          <div className="leading-tight">Acceptance Rate: {uni.acceptance_rate}</div>
                         </div>
                       </div>
                     </Card>
