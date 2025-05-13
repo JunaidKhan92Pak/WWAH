@@ -55,10 +55,26 @@ const Hero: React.FC<HeroProps> = ({
             {/* Wrapper to center content and control layout */}
             <div className="flex flex-col md:flex-row w-full justify-between items-center gap-2 md:gap-6">
               {/* Left Section */}
-              <div className="w-full md:w-[50%] flex flex-col justify-center items-start md:items-start text-left">
-                <h2 className="text-white md:leading-10 lg:leading-12">
-                  {name}
-                </h2>
+              <div className="w-[100%] md:w-[50%] flex flex-col md:items-start md:text-left space-y-2 pl-0 lg:pl-12">
+                <div className="bg-white rounded-full w-[80px] h-[80px]">
+                  <Image
+                    src="/scholarshipdetail/schlogo.svg"
+                    alt="Uni Logo"
+                    width={130}
+                    height={130}
+                    className="object-cover object-center w-[80px] h-[80px] border-2 border-white rounded-full"
+                  />
+                </div>
+
+                <div className="w-full flex flex-col justify-center items-start md:items-start text-left">
+                  <h2 className="text-white md:leading-10 lg:leading-12">
+                    {name}
+                  </h2>
+                </div>
+
+                <Button className="mt-2 bg-[#C7161E] hover:bg-red-800 w-[70%] md:w-[60%] xl:w-[45%]">
+                  Go to Scholarship Website
+                </Button>
               </div>
 
               {/* Right Section */}

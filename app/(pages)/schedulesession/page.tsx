@@ -47,6 +47,7 @@ const countries = [
   "New Zealand",
   "Australia",
   "Canada",
+  "Germany",
   "Malaysia",
   "Ireland",
   "USA",
@@ -58,11 +59,13 @@ const destinations = [
   "New Zealand",
   "Australia",
   "Canada",
+  "Germany",
   "Malaysia",
   "Ireland",
   "USA",
   "China",
   "Italy",
+  
 ];
 const degrees = ["Bachelor's", "Master's", "PhD", "Diploma", "Certificate"];
 export default function Home() {
