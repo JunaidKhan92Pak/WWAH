@@ -281,8 +281,8 @@ function Page() {
 
                 <div className="HeroRightSide relative lg:hidden flex items-center justify-center w-full h-[230px]">
                   <Image
-                    src="/Zeushicomp.png"
-                    alt="Robot"
+                    src="/Zeushicomp.jpeg"
+    png        alt="Robot"
                     width={0}
                     height={0}
                     sizes="60vw"

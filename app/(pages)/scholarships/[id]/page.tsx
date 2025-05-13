@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Hero from "./components/Hero";
 import GKSscholarships from "./components/GKSscholarships";
 import Overview from "./components/Overview";
-import Applicationdepartment from "./components/Applicationdepartment";
+import ApplicableCourses from "./components/ApplicableCourses";
 import Requireddocs from "./components/Requireddocs";
 import Applicationprocess from "./components/Applicationprocess";
 import Eligibilitycriteria from "./components/Eligibilitycriteria";
@@ -119,10 +119,11 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
-                  ? "bg-[#C7161E] text-white"
-                  : "text-gray-800"
-                  }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
+                  activeTabPro === tab.label
+                    ? "bg-[#C7161E] text-white"
+                    : "text-gray-800"
+                }`}
               >
                 {tab.label}
               </button>
@@ -132,33 +133,34 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
       <Overview
         overview={data?.overview || ""}
-        duration={data?.duration || {
-          undergraduate: "",
-          bachelors: "",
-          masters: "",
-          phd: "",
-          Diploma: "",
-        }
+        duration={
+          data?.duration || {
+            undergraduate: "",
+            bachelors: "",
+            masters: "",
+            phd: "",
+            Diploma: "",
+          }
         }
       />
       <div id="Benefits">
         <GKSscholarships benefit={data?.benefits || []} />
       </div>
+      {/* <div id="Applicable-Departments">
+        <ApplicableCourses
+          applicableCourses={data?.applicableCourses || []} />
+      </div> */}
       <div id="Applicable-Departments">
-        <Applicationdepartment
-          applicableDepartments={data?.applicableDepartments || []}
-        />
+        <ApplicableCourses/>
       </div>
+     
       <div id="Eligibility Criteria">
         <Eligibilitycriteria
           eligibilityCriteria={data?.eligibilityCriteria || []}
         />
       </div>
-
       <div id="Success Chances">
-        <ScholarshipSuccessChances
-          successChances={data?.successChances}
-        />
+        <ScholarshipSuccessChances successChances={data?.successChances} />
       </div>
       <div id="Required Documents">
         <Requireddocs requiredDocs={data.requiredDocuments} />
