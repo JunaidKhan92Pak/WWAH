@@ -840,8 +840,8 @@ const Page = () => {
                               <Image
                                 src={"/scholarshipdetail/Money.svg"}
                                 alt="degree level"
-                                width={12}
-                                height={12}
+                                width={10}
+                                height={10}
                               />
                               <p className="text-sm text-gray-600 truncate">
                                 {item.programs

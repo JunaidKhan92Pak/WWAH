@@ -51,7 +51,7 @@ const Hero: React.FC<HeroProps> = ({
         >
           <div className="absolute bg-black bg-opacity-50 w-full h-full rounded-2xl"></div>
 
-          <div className="relative w-[95%] sm:w-[85%] mx-auto rounded-3xl overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center">
+          <div className="relative w-[95%] sm:w-[80%] mx-auto rounded-3xl overflow-hidden py-2 px-2 sm:px-0 min-h-[250px] sm:min-h-[400px] flex items-center justify-center">
             {/* Wrapper to center content and control layout */}
             <div className="flex flex-col md:flex-row w-full justify-between items-center gap-2 md:gap-6">
               {/* Left Section */}
@@ -72,19 +72,19 @@ const Hero: React.FC<HeroProps> = ({
                   </h2>
                 </div>
 
-                <Button className="mt-2 bg-[#C7161E] hover:bg-red-800 w-[70%] md:w-[60%] xl:w-[45%]">
+                <Button className="mt-2 bg-[#C7161E] hover:bg-red-800 w-[70%] md:w-[60%] xl:w-[43%]">
                   Go to Scholarship Website
                 </Button>
               </div>
 
               {/* Right Section */}
-              <div className="w-full md:w-[45%] lg:w-[33%]  bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl p-4 2xl:p-12 flex flex-col items-center text-center">
-                <Link
+              <div className="w-full md:w-[45%] lg:w-[35%] xl:w-[30%]  bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl p-4 flex flex-col items-center text-center">
+                <Link                                                                                                                                                                                                                                                                                                                                                                                                                                                           
                   target="blank"
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"
                 >
-                  <p className="text-white w-4/5 hover:underline">
+                  <p className="text-white md:w-4/5 hover:underline">
                     Book Your Online Video Counselling Session with WWAH
                     Advisor!
                   </p>
