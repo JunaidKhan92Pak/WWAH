@@ -88,7 +88,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3 text-justify sm:text-start">
                 <AiOutlineHome className="text-xl min-w-[23px] " />
                 <p className="text-sm font-normal">
-                  Head Office: Al Waheeda , Dubai.
+                  Head Office: Al Waheeda, Dubai.
                 </p>
               </div>
               <div className="flex items-start space-x-3 text-justify sm:text-start">
