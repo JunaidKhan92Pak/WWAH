@@ -23,6 +23,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       countryname: string;
       universityname: string;
       course_link: string;
+      payment_method:string;
       course_title: string;
       required_ielts_score: string;
       required_pte_score: string;

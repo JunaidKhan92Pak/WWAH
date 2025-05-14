@@ -9,6 +9,7 @@ import React, { useState } from "react";
 interface FeeAndScholarshipsProps {
   data: {
     funding_link: string;
+    payment_method:string;
     scholarship_link: string;
     _id: string;
     countryname: string;
@@ -49,8 +50,8 @@ interface FeeAndScholarshipsProps {
 
 export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
   const [activeTab, setActiveTab] = useState("scholarship");
-  console.log(data , "cor");
-  
+  console.log(data, "cor");
+
   return (
     <section className=" w-[90%] mx-auto my-4">
       <h2 className="pb-2">Fee and Scholarships!</h2>
@@ -77,8 +78,8 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               <li className="flex items-center space-x-2 ">
                 <span className="vertical-line w-[1px] h-3 bg-black"></span>
                 {/* <p className="font-semibold">{data.initial_deposit}</p> */}
-                <div className="relative group w-[50px]">
-                  <p className="text-md truncate font-semibold max-w-[100px] overflow-hidden">
+                <div className="relative group w-[100px]">
+                  <p className="text-md truncate font-semibold max-w-[150px] overflow-hidden">
                     {data.initial_deposit}
                   </p>
                   <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-sm font-medium p-2 rounded-md w-[200px] text-center shadow-lg">
@@ -195,7 +196,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
               fee at {data.universityname}.
             </p>
 
-            <Link target="blank" href="#">
+            <Link target="blank" href={data.payment_method}>
               <Button
                 variant="outline"
                 className="w-full border-2 border-red-500 text-red-500 bg-[#FCEAD8] 

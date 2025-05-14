@@ -177,7 +177,11 @@ const Page = () => {
       return updatedFavorites;
     });
   };
-
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentPage]);
   // Filter universities by favorites if showFavorites is true
   const displayedUniversities = showFavorites
     ? universities.filter((uni) => favorites[uni._id])
@@ -287,8 +291,9 @@ const Page = () => {
             </DropdownMenu>
             <button
               onClick={() => setShowFavorites((prev) => !prev)}
-              className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-                }`}
+              className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+                showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
             >
               <Image
                 src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -446,10 +451,11 @@ const Page = () => {
                               </Label>
                               <Input
                                 id={`link-${item._id}`}
-                                value={`${typeof window !== "undefined"
-                                  ? window.location.origin
-                                  : ""
-                                  }/Universities/${item._id}`}
+                                value={`${
+                                  typeof window !== "undefined"
+                                    ? window.location.origin
+                                    : ""
+                                }/Universities/${item._id}`}
                                 readOnly
                               />
                             </div>
@@ -520,8 +526,9 @@ const Page = () => {
 
                       <button
                         onClick={() => toggleFavorite(item._id)}
-                        className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
-                          }`}
+                        className={`relative ${
+                          heartAnimation === item._id ? "animate-pop" : ""
+                        }`}
                       >
                         {favorites[item._id] ? (
                           <Image

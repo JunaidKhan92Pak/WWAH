@@ -3,7 +3,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FaArrowUpRightFromSquare } from "react-icons/fa6";
+// import { FaArrowUpRightFromSquare } from "react-icons/fa6";
+import { useRef } from "react";
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaArrowUpRightFromSquare,
+} from "react-icons/fa6";
 import {
   Dialog,
   DialogContent,
@@ -136,7 +142,17 @@ function Page() {
       router.push("/chatmodel"); // Navigate without message if input is empty
     }
   };
+  const sliderRef = useRef<HTMLDivElement>(null);
 
+  const scroll = (direction: "left" | "right") => {
+    if (sliderRef.current) {
+      const scrollAmount = 300;
+      sliderRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   // Show loading state
   if (loading) {
     return <Loading />;
@@ -385,16 +401,15 @@ function Page() {
           </div>
         </section>
       </div>
-      <section className="py-5 bg-gray-50 z-10">
-        <div className="mx-auto px-0 sm:px-4 w-[90%]">
+      <section className="md:py-5 pt-5 bg-gray-50 z-10">
+        <div className="mx-auto px-0 sm:px-4 w-[93%]">
           {/* Section Header */}
           <div className="flex justify-between items-center">
             <h3 className="font-bold">Top Universities!</h3>
             <DropdownMenu>
-            <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg  w-[30%] md:w-[14%] xxl:w-[9%] h-10 text-center">
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg  w-[30%] md:w-[14%] xxl:w-[9%] h-10 text-center">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
                 <div className="flex items-center gap-1">
-
                   Filter
                   {/* Always reserve space for count by using opacity instead of conditional rendering */}
                   <div
@@ -453,7 +468,8 @@ function Page() {
             </DropdownMenu>
           </div>
           {/* University Cards Grid */}
-          {!uniLoading ? (
+
+          {/* {!uniLoading ? (
             <>
               <div
                 className="flex items-center space-x-3 md:space-x-6 overflow-x-auto p-3"
@@ -472,7 +488,6 @@ function Page() {
                       key={uni._id}
                       className="flex-shrink-0 w-[90%] sm:w-1/2 lg:w-[25%] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
                     >
-                      {/* University Image */}
                       <Link
                         href={`/Universities/${uni._id}`}
                         className="relative h-48 block"
@@ -483,7 +498,6 @@ function Page() {
                           layout="fill"
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
                         />
-                        {/* Logo Overlay */}
                         <div className="absolute bottom-1 left-5">
                           <Image
                             src={uni.universityImages.logo}
@@ -495,7 +509,6 @@ function Page() {
                         </div>
                       </Link>
 
-                      {/* University Details */}
                       <div className="p-4">
                         <h6 className="font-semibold leading-tight mb-2">
                           {uni.university_name}
@@ -513,10 +526,8 @@ function Page() {
                 )}
 
                 <div className="relative flex items-center border-2 border-gray-200  h-[340px] group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg">
-                  {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-2xl pointer-events-none"></div>
 
-                  {/* Content */}
                   <Link
                     href="/Universities"
                     className="relative z-10 w-full flex justify-center"
@@ -531,13 +542,109 @@ function Page() {
             </>
           ) : (
             <SkeletonCard arr={4} />
+          )} */}
+
+          {!uniLoading ? (
+            <div className="relative">
+              {/* Left Arrow */}
+              <button
+                onClick={() => scroll("left")}
+                className="absolute md:-left-5 z-10 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+              >
+                <FaArrowLeft />
+              </button>
+
+              {/* Right Arrow */}
+              <button
+                onClick={() => scroll("right")}
+                className="absolute -right-5 z-10 top-1/2 -translate-y-1/2 bg-white shadow-xl p-2 rounded-full hover:bg-gray-100 border border-gray-200"
+              >
+                <FaArrowRight />
+              </button>
+
+              <div
+                ref={sliderRef}
+                className="flex items-center space-x-3 md:space-x-6 overflow-x-auto p-3 scrollbar-hide"
+                style={{
+                  scrollBehavior: "smooth",
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                {universities.length === 0 ? (
+                  <p className="text-[20px] font-semibold text-center p-4 w-full">
+                    No Universities Found
+                  </p>
+                ) : (
+                  universities.slice(0, 7).map((uni) => (
+                    <Card
+                      key={uni._id}
+                      className="flex-shrink-0 w-[270px] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                    >
+                      {/* Image + Logo */}
+                      <Link
+                        href={`/Universities/${uni._id}`}
+                        className="relative h-48 block"
+                      >
+                        <Image
+                          src={uni.universityImages.banner}
+                          alt={uni.name}
+                          layout="fill"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute bottom-1 left-5">
+                          <Image
+                            src={uni.universityImages.logo}
+                            alt={`${uni.university_name} logo`}
+                            width={56}
+                            height={56}
+                            className="rounded-full bg-white border border-black"
+                          />
+                        </div>
+                      </Link>
+
+                      {/* Details */}
+                      <div className="p-4">
+                        <h6 className="font-semibold mb-2">
+                          {uni.university_name}
+                        </h6>
+                        <div className="text-muted-foreground text-sm space-y-1">
+                          <div className="flex justify-between">
+                            <span>{uni.country_name}</span>
+                            <span>Public</span>
+                          </div>
+                          <div>Acceptance Rate: {uni.acceptance_rate}</div>
+                        </div>
+                      </div>
+                    </Card>
+                  ))
+                )}
+
+                {/* Explore All */}
+                <div className="relative flex items-center border-2 border-gray-200  h-[340px] group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-2xl pointer-events-none"></div>
+
+                  <Link
+                    href="/Universities"
+                    className="relative z-10 w-full flex justify-center"
+                  >
+                    <div className="rounded-lg text-black leading-tight flex flex-col items-center gap-2 px-3 font-extrabold text-[18px] w-[260px] mx-0 transition-transform duration-300 group-hover:scale-105 hover:underline underline-offset-4">
+                      Explore all Universities
+                      <FaArrowUpRightFromSquare />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <SkeletonCard arr={4} />
           )}
         </div>
       </section>
       {/* Features Section */}
       <section className="md:py-5 bg-muted/50 z-10">
         <div className=" mx-auto w-[90%]">
-          <h2 className="font-extrabold text-center mb-5 md:mb-5">
+          <h2 className="font-extrabold text-center mb-1 md:mb-5">
             Why Choose{" "}
             <Link href="/aboutUs">
               <Image
@@ -545,7 +652,7 @@ function Page() {
                 alt="WWAH"
                 width={100}
                 height={40}
-                className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[45px] md:w-[90px] xl:w-[150px]"
+                className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[70px] md:w-[90px] xl:w-[150px]"
               />
             </Link>
           </h2>

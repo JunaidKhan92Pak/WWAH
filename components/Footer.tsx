@@ -99,7 +99,7 @@ const Footer = () => {
               </div>
               <div className="flex items-start space-x-3 text-justify sm:text-start">
                 <IoLocationOutline className="text-xl min-w-[20px]" />
-                <p className="text-sm font-normal">Stockport Manchester,UK</p>
+                <p className="text-sm font-normal">Stockport Manchester, UK</p>
               </div>
 
               <div
