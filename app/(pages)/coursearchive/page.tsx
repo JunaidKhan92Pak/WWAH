@@ -9,7 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MdOutlineSortByAlpha } from "react-icons/md";
-import { FaFacebook, FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaSortAlphaDown,
+  FaSortAlphaDownAlt,
+} from "react-icons/fa";
 import Link from "next/link";
 import { useCourseStore } from "@/store/useCoursesStore";
 import FilterComponent from "./components/Filtercomponent";
@@ -149,8 +153,9 @@ const CourseArchive = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
           >
             <Image
               src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -246,10 +251,11 @@ const CourseArchive = () => {
                             </Label>
                             <Input
                               id={`link-${item._id}`}
-                              value={`${typeof window !== "undefined"
-                                ? window.location.origin
-                                : ""
-                                }/courses/${item._id}`}
+                              value={`${
+                                typeof window !== "undefined"
+                                  ? window.location.origin
+                                  : ""
+                              }/courses/${item._id}`}
                               readOnly
                             />
                           </div>

@@ -95,7 +95,7 @@ const Herosection = ({
             className="relative min-h-[250px] sm:min-h-[400px] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
             // style={{ backgroundImage: `url("/dcu-hero-img.png")` }}
             style={{
-              backgroundImage: `url(${uniData.banner}  ) `,
+              backgroundImage: `url(${uniData.banner})`,
               backgroundSize: "cover",
             }}
           >
