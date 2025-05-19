@@ -15,7 +15,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
   };
   return (
     <section className="w-full flex flex-col items-center">
-      <div className="w-[90%] flex flex-col justify-center my-5 sm:mb-10">
+      <div className="w-[90%] flex flex-col justify-center mb-5 sm:mb-10">
         <h2 className="mb-2">Application Process!</h2>
         <div className="flex flex-col lg:flex-row gap-0 lg:gap-4">
           <div className="space-y-2">
@@ -53,7 +53,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
             </div>
           </div>
           {/* Image with CTA */}
-          <div className="relative bg-gray-100 p-4 w-full lg:w-[70%] rounded-2xl shadow-md h-40 md:h-60 flex items-center justify-center my-1">
+          <div className="relative bg-gray-100 p-4 w-full lg:w-[70%] rounded-2xl shadow-md h-40 md:h-56 flex items-center justify-center my-1">
             <div
               className="absolute inset-0 bg-cover bg-center rounded-lg"
               style={{
@@ -86,7 +86,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
           {!isExpanded ? (
             <button
               onClick={handleToggle}
-              className="text-red-500 hover:underline font-medium text-[16px]"
+              className="text-red-500 hover:underline font-semibold text-[16px]"
             >
               Read More
             </button>
