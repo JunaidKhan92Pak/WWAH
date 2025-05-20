@@ -95,7 +95,6 @@ export function Sidebar() {
       <div className="flex flex-1 flex-col gap-2 p-4 ">
         {sidebarItems.map((item, index) => (
           <Link
-            target="blank"
             key={index}
             href={item.href}
             className={cn(

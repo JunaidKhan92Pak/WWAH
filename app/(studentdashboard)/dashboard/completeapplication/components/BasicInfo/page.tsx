@@ -712,7 +712,7 @@ const BasicInfo = () => {
 
             {currentPage === totalPages && (
         <Button
-          type="button" // Changed to "button" to prevent form submission here
+          type="submit" // Changed to "button" to prevent form submission here
           className="bg-red-700 hover:bg-red-700"
           disabled={isSubmitting}
           onClick={handleSaveAndContinue}  // Trigger the modal when clicked
