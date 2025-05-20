@@ -407,7 +407,7 @@ function Page() {
           <div className="flex justify-between items-center">
             <h3 className="font-bold">Top Universities!</h3>
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg  w-[30%] md:w-[14%] xxl:w-[9%] h-10 text-center">
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg  w-[30%] md:w-[14%] xl:w-[9%] h-10 text-center">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
                 <div className="flex items-center gap-1">
                   Filter
@@ -557,14 +557,14 @@ function Page() {
               {/* Right Arrow */}
               <button
                 onClick={() => scroll("right")}
-                className="absolute -right-5 z-10 top-1/2 -translate-y-1/2 bg-white shadow-xl p-2 rounded-full hover:bg-gray-100 border border-gray-200"
+                className="absolute -right-0 md:-right-5 z-10 top-1/2 -translate-y-1/2 bg-white shadow-xl p-2 rounded-full hover:bg-gray-100 border border-gray-200"
               >
                 <FaArrowRight />
               </button>
 
               <div
                 ref={sliderRef}
-                className="flex items-center space-x-3 md:space-x-6 overflow-x-auto p-3 scrollbar-hide"
+                className="flex items-center space-x-3 md:space-x-6 overflow-x-auto py-3 scrollbar-hide"
                 style={{
                   scrollBehavior: "smooth",
                   scrollbarWidth: "none",

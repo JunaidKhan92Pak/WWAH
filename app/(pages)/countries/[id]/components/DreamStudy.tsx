@@ -1,5 +1,6 @@
 import Image from "next/image";
-import React from "react";
+import React, { useRef } from "react";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const DreamStudy = () => {
   // const arr3 = ["/turk.png", "/studycanada.png", "/edin.png", "/manch.png"];
@@ -15,6 +16,17 @@ const DreamStudy = () => {
     { src: "/country9.png", alt: "France" },
   ];
 
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <div>
       <section
@@ -24,13 +36,21 @@ const DreamStudy = () => {
         }}
       >
         <div className="absolute inset-0 bg-black opacity-90 z-0"></div>
-        <div className="my-10  z-10">
+        <div className="my-6 md:my-10 z-10">
           <h3 className="text-center text-white text-xl md:text-2xl">
             Choose your Dream Study Abroad Destination!
           </h3>
-          <section className="w-[90%] mx-auto">
+          <section className="w-[90%] mx-auto relative">
+            {/* Left Arrow */}
+            <button
+              onClick={() => scroll("left")}
+              className="absolute -left-2 md:-left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+            >
+              <FaArrowLeft />
+            </button>
             <div
-              className="flex overflow-x-auto space-x-4 p-4 hide-scrollbar"
+              ref={scrollRef}
+              className="flex overflow-x-auto space-x-4 pt-4 hide-scrollbar"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
@@ -46,12 +66,18 @@ const DreamStudy = () => {
                     alt={item.alt}
                     width={600} // Set a base width
                     height={400} // Set a base height
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 100vw, 200vw"
-                    className="rounded-xl shadow-lg w-full h-auto"
+                    className="rounded-3xl shadow-lg w-full h-[190px] md:h-[230px] xl:h-[250px]"
                   />
                 </div>
               ))}
             </div>
+            {/* Right Arrow */}
+            <button
+              onClick={() => scroll("right")}
+              className="absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+            >
+              <FaArrowRight />
+            </button>
           </section>
         </div>
       </section>

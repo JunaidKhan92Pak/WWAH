@@ -79,7 +79,7 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
       >
         <div className="absolute inset-0 bg-black opacity-90 z-0" />
         <div className="relative z-10 w-full  space-y-2">
-          <h2 className="py-2">Popular Universities in {countryName}</h2>
+          <h2>Popular Universities in {countryName}</h2>
 
           <div
             className="flex overflow-x-auto space-x-2 md:space-x-4 p-6 hide-scrollbar justify-start xl:justify-center"

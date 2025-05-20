@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Banner from "@/components/ui/enrollment/Banner";
+// import Banner from "@/components/ui/enrollment/Banner";
 
 interface EligibilityItem {
   _id?: string;
@@ -70,13 +70,13 @@ const Eligibilitycriteria: React.FC<EligibilityCriteriaProps> = ({
           ))}
         </div>
       </section>
-      <Banner
+      {/* <Banner
         title="Know that you&#39;re Eligible, Take Action! Apply Now and take a
 Step toward your educational goals."
         buttonText="Apply Now!"
         buttonLink="/dashboard"
         backgroundImage="/bg-usa.png"
-      />{" "}
+      />{" "} */}
     </div>
   );
 };

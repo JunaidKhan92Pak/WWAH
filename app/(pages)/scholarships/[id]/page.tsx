@@ -76,7 +76,8 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   }, [id]); // Add id as a dependency
   const tabs: Tab[] = [
     { label: "Overview", id: "Overview" },
-    { label: "Benefits", id: "Benefits" },
+    // { label: "Benefits", id: "Benefits" },
+    {label: "Applicable Course", id: "Applicable-Departments"},
     { label: "Eligibility Criteria", id: "Eligibility Criteria" },
     {
       label: "Success Chances",

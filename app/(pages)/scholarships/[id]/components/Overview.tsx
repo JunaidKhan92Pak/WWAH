@@ -21,7 +21,7 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration }) => {
             {/* content side */}
             <div className="w-full lg:w-1/2">
               <div className=" mx-auto leading-snug">
-                <h2 className="font-bold">Course Overview!</h2>
+                <h2 className="font-bold">Scholarship Overview!</h2>
                 <p className="text-gray-700 mb-2">{overview}</p>
 
                 <p className="font-bold  mb-2">Duration of the Scholarship:</p>

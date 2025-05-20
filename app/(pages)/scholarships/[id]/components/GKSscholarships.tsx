@@ -47,7 +47,7 @@ const GKSscholarships: React.FC<GKSscholarshipsProps> = () => {
 
       {/* Single-color cards */}
       <div
-  className="gap-4 xl:grid xl:grid-cols-6 flex overflow-x-auto xl:max-w-6xl pl-6 xl:pl-0 mx-auto"
+  className="gap-2 xl:grid xl:grid-cols-6 flex overflow-x-auto xl:max-w-6xl pl-6 xl:pl-0 mx-auto"
 style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
@@ -56,8 +56,9 @@ style={{
         {cardData.map((card, index) => (
           <div
             key={index}
-            className={`p-[6px] rounded-xl ${card.bg}  flex-shrink-0 w-[180px] lg:w-[170px] xl:w-auto`}
-          >
+  className={`p-[6px] rounded-xl ${card.bg} flex-shrink-0 w-[180px] lg:w-[170px] xl:w-auto transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl m-2`}
+
+>
             <div className="bg-white rounded-xl flex flex-col space-y-3 items-center justify-center h-40 text-center font-semibold text-black px-4 leading-1">
               <Image
                 src={card.image}
