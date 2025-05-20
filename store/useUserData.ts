@@ -58,7 +58,7 @@ export interface UserStore {
   logout: () => void;
 }
 
-// Default empty detailed info
+// Default empty detailed 
 const defaultDetailedInfo: DetailedInfo = {
   livingCosts: { amount: 0, currency: "" },
   tuitionFee: { amount: 0, currency: "" },

@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const formSchema = z.object({
   // Personal Information
   familyName: z
@@ -19,9 +18,6 @@ export const formSchema = z.object({
   }),
 
   DOB: z.date().optional(),
-
-    
-    
 
   nationality: z
     .string()
@@ -89,12 +85,7 @@ export const formSchema = z.object({
     .email("Please enter a valid email address.")
     .or(z.literal("")),
 
-  countryCode: z
-    .string()
-    .regex(/^\+?[0-9]{1,4}$/, {
-      message: "Please enter a valid country code (e.g., +92).",
-    })
-    .or(z.literal("")),
+  countryCode: z.string().optional(),
 
   phoneNo: z
     .string()
@@ -131,8 +122,7 @@ export const formSchema = z.object({
     .or(z.literal("")),
 
   passportExpiryDate: z.date().optional(),
-   
-    
+
   oldPassportNumber: z.string().optional(),
   oldPassportExpiryDate: z.date().optional(),
 
@@ -170,11 +160,7 @@ export const formSchema = z.object({
 
   sponsorsEmail: z.string().optional(),
 
-  sponsorsCountryCode: z
-    .string()
-    .refine((val) => val === "" || /^\+?[0-9]{1,4}$/.test(val), {
-      message: "Please fill in a valid country code.",
-    }),
+  sponsorsCountryCode: z.string().optional(),
 
   sponsorsPhoneNo: z
     .string()
