@@ -652,7 +652,7 @@ function Page() {
                 alt="WWAH"
                 width={100}
                 height={40}
-                className="inline-block align-middle h-[45px] md:h-[90px] xl:h-[100px] w-[70px] md:w-[90px] xl:w-[150px]"
+                className="inline-block align-middle h-[45px] md:h-[90px]  xl:h-[100px] w-[70px] md:w-[15%] lg:w-[13%] xl:w-[11%]"
               />
             </Link>
           </h2>

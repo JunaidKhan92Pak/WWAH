@@ -107,14 +107,14 @@ const CourseArchive = () => {
     : courses;
   return (
     <section className="w-[95%] mx-auto p-2 ">
-      <div className="flex flex-col lg:flex-row lg:items-center">
+      <div className="flex flex-col lg:flex-row items-start">
         <div className="w-full">
           <h3 className="font-bold mb-1 flex items-center md:mb-0">
             Explore Courses from Every Discipline!
           </h3>
           <p className="text-gray-600">Over 1000 courses available.</p>
         </div>
-        <div className="w-full md:w-[60%] lg:w-[90%] xl:w-[70%] my-4 lg:mt-10 grid grid-cols-2 md:grid-cols-4 md:flex gap-2 items-center">
+        <div className="w-full md:w-[60%] lg:w-[90%] xl:w-[80%] grid grid-cols-2 md:grid-cols-4 md:flex gap-2 items-center">
           <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 w-[100%] xl:w-[90%]">
             <Image
               src="/search.svg"

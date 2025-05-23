@@ -44,7 +44,7 @@ export function StatusProgressBar({ progress }: StatusProgressBarProps) {
         </div>
 
         {/* Status markers */}
-        <div className="absolute top-0 left-0 w-full flex justify-between -mt-1">
+        {/* <div className="absolute top-0 left-0 w-full flex justify-between -mt-1">
           <div className="relative">
             <div
               className={`w-3 h-3 rounded-full border-2 border-white ${
@@ -66,14 +66,14 @@ export function StatusProgressBar({ progress }: StatusProgressBarProps) {
               }`}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Labels */}
-        <div className="flex justify-between mt-2 text-xs sm:text-sm text-gray-600">
+        {/* <div className="flex justify-between mt-2 text-xs sm:text-sm text-gray-600">
           <span className="text-center">Incomplete</span>
           <span className="text-center">In Process</span>
           <span className="text-center">Complete</span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

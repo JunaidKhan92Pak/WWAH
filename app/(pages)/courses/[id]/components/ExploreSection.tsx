@@ -1,5 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+
 interface ExploreSectionProps {
   data: string;
   course: string; // Adjust the type according to the actual data type
@@ -36,7 +38,17 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({
 
     fetchUniversities();
   }, []);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <section className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
       {/* Black Overlay */}
@@ -55,8 +67,16 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({
 
       {/* Slider Section */}
       <div className="relative z-10 w-full lg:w-[50%] mt-6 lg:mt-0">
-        <div className="relative w-full flex justify-center overflow-hidden">
+        <div className="relative w-full flex justify-center">
+          {/* Left Arrow */}
+          <button
+            onClick={() => scroll("left")}
+            className="absolute -left-1 md:-left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+          >
+            <FaArrowLeft />
+          </button>
           <div
+            ref={scrollRef}
             className="flex overflow-x-auto space-x-4 hide-scrollbar"
             style={{
               scrollbarWidth: "none",
@@ -66,16 +86,18 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({
             {courses.slice(0, 4).map((item, index) => (
               <div
                 key={index}
-                className="relative w-[85%]  aspect-[16/9] flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
-              >
+                  className="relative flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
+
+>
                 <img
                   src={
                     item?.universityData?.universityImages?.banner ??
                     "/fallback-image.jpg"
                   }
                   alt="University Banner"
-                  className="w-full h-full object-cover rounded-xl"
-                />
+                    className="rounded-3xl w-[250px] md:w-[400px] xl:w-[430px] lg:h-[274px] h-[200px] "
+
+/>
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
                 {/* Overlay content */}
                 <div className="absolute bottom-0 left-0 w-full text-white px-4 py-3">
@@ -92,6 +114,13 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({
               </div>
             ))}
           </div>
+          {/* Right Arrow */}
+          <button
+            onClick={() => scroll("right")}
+            className="absolute -right-1 md:-right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+          >
+            <FaArrowRight />
+          </button>
         </div>
       </div>
     </section>

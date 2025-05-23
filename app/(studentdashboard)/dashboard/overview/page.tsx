@@ -24,7 +24,7 @@ const Page = () => {
       <div className="w-[94%] xl:w-[98%] mx-auto overflow-hidden">
         {user && <Herosection user={user} />}
         <div className="w-full mx-auto flex flex-col xl:flex-row gap-4  items-center md:items-stretch  my-6 justify-center">
-          <div className="w-full xl:w-[70%] rounded-xl border  p-4 flex flex-col space-y-4">
+          <div className="w-full xl:w-[72%] rounded-xl border p-3 flex flex-col space-y-4">
             <ApplyingSection />
             <div className="flex flex-col items-center justify-center">
               <div className="w-full">

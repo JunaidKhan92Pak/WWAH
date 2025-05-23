@@ -44,7 +44,7 @@ const DreamStudy = () => {
             {/* Left Arrow */}
             <button
               onClick={() => scroll("left")}
-              className="absolute -left-2 md:-left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+              className="absolute -left-2 md:-left-4 top-1/2 -translate-y-1/4 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
             >
               <FaArrowLeft />
             </button>
@@ -74,7 +74,7 @@ const DreamStudy = () => {
             {/* Right Arrow */}
             <button
               onClick={() => scroll("right")}
-              className="absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+              className="absolute -right-2 md:-right-4 top-1/2 -translate-y-1/4 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
             >
               <FaArrowRight />
             </button>

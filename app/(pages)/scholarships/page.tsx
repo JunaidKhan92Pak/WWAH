@@ -807,7 +807,7 @@ const Page = () => {
                           <p className="font-bold">{item.name}</p>
                           <p className="text-sm text-gray-600">
                             <span className="font-semibold">
-                              Min Requirements:
+                              Min Requirements: 75%
                             </span>{" "}
                             {item.minRequirements}
                           </p>
@@ -836,7 +836,7 @@ const Page = () => {
                             </div>
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
-                            <div className="flex items-center gap-2 mt-2 md:w-1/2">
+                            <div className="flex items-center gap-3 mt-2 md:w-1/2">
                               <Image
                                 src={"/scholarshipdetail/Money.svg"}
                                 alt="degree level"
@@ -874,7 +874,7 @@ const Page = () => {
                             rel="noopener noreferrer"
                             className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
                           >
-                            Explore Course
+                            Explore Courses
                           </Link>
                           {/* <Link
                             target="blank"
