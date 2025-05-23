@@ -642,7 +642,7 @@ function Page() {
         </div>
       </section>
       {/* Features Section */}
-      <section className="md:py-5 bg-muted/50 z-10">
+      <section className="md:pb-5 bg-muted/50 z-10">
         <div className=" mx-auto w-[90%]">
           <h2 className="font-extrabold text-center mb-1 md:mb-5">
             Why Choose{" "}

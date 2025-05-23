@@ -45,7 +45,7 @@ const Footer = () => {
       <footer className="bg-[#F1F1F1] text-gray-800 pt-10 pb-6 md:py-10 w-full flex justify-center rounded-t-[2rem] sm:rounded-t-[5rem]">
         <div className="footerChild w-[90%] lg:w-[95%] flex flex-col justify-center text-sm font-normal">
           {/* Grid-based Footer Content */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[27%,25%,12%,12%,15%] gap-4 sm:gap-8 lg:gap-6 xl:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[20%,25%,16%,12%,17%] xl:grid-cols-[22%,25%,12%,12%,15%] gap-4 sm:gap-8 lg:gap-6 xl:gap-8">
             {/* Column 1: Logo + Socials */}
             <div className="flex flex-col items-center sm:items-start lg:items-center space-y-4">
               <Image
@@ -896,7 +896,7 @@ const Footer = () => {
                   href="/schedulesession"
                   className="hover:underline block"
                 >
-                  WWAH Online Counselling Session
+                  WWAH Counselling Session
                 </Link>
                 <Link
                   target="blank"
@@ -970,7 +970,7 @@ const Footer = () => {
           </div>
 
           {/* Divider + Copyright */}
-          <div className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 mt-2 space-y-4 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 mt-3 md:mt-5 space-y-4 sm:space-y-0">
             <div className="flex-1 border-t border-gray-800"></div>
             <p className="text-center text-xs text-[#313131]">
               2025 Copyrights reserved by Worldwide Admissions Hub.
