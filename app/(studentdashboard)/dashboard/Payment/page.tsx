@@ -79,7 +79,7 @@ export default function Home() {
       </div>
  <div className="relative">
       {/* Blur Overlay */}
-      <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-xl flex items-center justify-center"> 
+      <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-lg flex items-center justify-center"> 
         <button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
           Complete Your Profile
         </button> 
