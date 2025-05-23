@@ -32,7 +32,9 @@ const Exploresection: React.FC<ExploresectionProps> = ({
     const fetchUniversities = async () => {
       try {
         const res = await fetch(
-          `/api/getUniversities?country=${countryName}&limit=4${uniname ? `&excludeUni=${encodeURIComponent(uniname)}` : ''}`
+          `/api/getUniversities?country=${countryName}&limit=4${
+            uniname ? `&excludeUni=${encodeURIComponent(uniname)}` : ""
+          }`
         );
         const data = await res.json();
         if (Array.isArray(data.universities)) {
@@ -51,17 +53,17 @@ const Exploresection: React.FC<ExploresectionProps> = ({
     fetchUniversities();
   }, [countryName]);
 
-    const scrollRef = useRef<HTMLDivElement | null>(null);
-  
-    const scroll = (direction: "left" | "right") => {
-      if (scrollRef.current) {
-        const scrollAmount = 300;
-        scrollRef.current.scrollBy({
-          left: direction === "left" ? -scrollAmount : scrollAmount,
-          behavior: "smooth",
-        });
-      }
-    };
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <section
       className="relative flex flex-col lg:flex-row items-center text-white bg-black bg-cover bg-center p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full mt-6"
@@ -84,13 +86,13 @@ const Exploresection: React.FC<ExploresectionProps> = ({
       {/* Slider Section */}
       <div className="relative z-10 w-full lg:w-[50%] mt-6 lg:mt-0">
         <div className="relative w-full flex justify-center ">
-           {/* Left Arrow */}
-                    <button
-                      onClick={() => scroll("left")}
-                      className="absolute -left-1 md:-left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
-                    >
-                      <FaArrowLeft />
-                    </button>
+          {/* Left Arrow */}
+          <button
+            onClick={() => scroll("left")}
+            className="absolute -left-1 md:-left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+          >
+            <FaArrowLeft />
+          </button>
           <div
             ref={scrollRef}
             className="flex overflow-x-auto space-x-2 md:space-x-5 hide-scrollbar"
@@ -113,8 +115,9 @@ const Exploresection: React.FC<ExploresectionProps> = ({
                     width={400}
                     height={350}
                     objectFit="cover"
-                    className="rounded-3xl w-[250px] md:w-[400px] xl:w-[430px] xl:h-[274px] h-[220px] "
-                  />
+                    className="rounded-3xl w-[250px] md:w-[400px] xl:w-[430px] lg:h-[274px] h-[200px] "
+
+/>
                   {/* Text Overlay */}
 
                   <div className="absolute bottom-0 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl md:rounded-3xl w-full text-white p-4 sm:p-6 md:p-8 ">
@@ -141,13 +144,13 @@ const Exploresection: React.FC<ExploresectionProps> = ({
               ))
             )}
           </div>
-             {/* Right Arrow */}
-                        <button
-                          onClick={() => scroll("right")}
-                          className="absolute -right-1 md:-right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
-                        >
-                        <FaArrowRight />
-                        </button>
+          {/* Right Arrow */}
+          <button
+            onClick={() => scroll("right")}
+            className="absolute -right-1 md:-right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+          >
+            <FaArrowRight />
+          </button>
         </div>
       </div>
     </section>

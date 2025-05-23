@@ -40,7 +40,7 @@ const Coursesuggestion = () => {
         <p className="font-semibold text-lg md:text-xl">Suggested Courses</p>
         <div className="relative w-full sm:w-full flex justify-center overflow-hidden">
           <div
-            className=" w-[250px] sm:w-full  flex  overflow-x-auto space-x-4 hide-scrollbar"
+            className="flex  overflow-x-auto space-x-4 hide-scrollbar"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -49,14 +49,14 @@ const Coursesuggestion = () => {
             {courses.map((course) => (
               <div
                 key={course.id}
-                className="relative w-[250px] md:w-[100%] lg:w-[85%] flex flex-col md:flex-row gap-4 flex-shrink-0 bg-white rounded-3xl  p-2 md:p-4 overflow-hidden"
+                className="relative w-[90%] md:w-[100%] lg:w-[85%] flex flex-col md:flex-row gap-4 flex-shrink-0 bg-white rounded-3xl  p-2 md:p-4 overflow-hidden"
               >
                 <Image
                   src="/course1.svg"
                   alt="courseImg"
                   width={400}
                   height={250}
-                  className=" h-auto md:h-48 w-[259px] md:w-[240px]  object-cover rounded-2xl"
+                  className=" h-auto md:h-48 w-full md:w-[240px]  object-cover rounded-2xl"
                 />
                 <div className="flex flex-col justify-between">
                   <h5 className="  text-sm md:text-lg leading-tight">
