@@ -193,7 +193,6 @@ export default function Home() {
       );
 
       const universityName = parsedData.university[0]?.university_name || "unnamed_university";
-
       const response = await fetch("/api/addUniversityImges", {
         method: "POST",
         body: JSON.stringify({ images: imagesData, universityName }),

@@ -14,6 +14,7 @@ export const formSchema = z.object({
     .max(50, { message: "Given name must be under 50 characters." }),
 
   gender: z.enum(["Male", "Female", "Other", "Prefer not to say"], {
+
     required_error: "Please select your gender.",
   }),
 

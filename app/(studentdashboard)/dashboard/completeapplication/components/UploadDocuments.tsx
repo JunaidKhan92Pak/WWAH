@@ -1,3 +1,4 @@
+
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,11 +8,12 @@ import { Input } from "@/components/ui/input";
 import { getAuthToken } from "@/utils/authHelper";
 interface Document {
   id: string;
+
   name: string;
-  files: { name: string; url: string }[];
+  files: { name: string; url: string; _id: string }[];
   date: string;
   isChecked: boolean;
-}
+  }
 export default function Home() {
   const [documents, setDocuments] = useState<Document[]>([
     { id: "1", name: "Valid Passport", files: [], date: "", isChecked: false },
@@ -204,11 +206,11 @@ export default function Home() {
           console.log(matchedDoc, "matched");
           return matchedDoc
             ? {
-              ...doc,
-              files: matchedDoc.files || [],
-              date: matchedDoc.date || "",
-              isChecked: matchedDoc.files.length > 0,
-            }
+                ...doc,
+                files: matchedDoc.files || [],
+                date: matchedDoc.date || "",
+                isChecked: matchedDoc.files.length > 0,
+              }
             : doc;
         })
       );
@@ -216,7 +218,6 @@ export default function Home() {
 
     getData();
   }, []);
-
 
   const handleFileUpload = useCallback(
     async (id: string, selectedFiles: FileList | null) => {
@@ -238,105 +239,64 @@ export default function Home() {
         alert("No valid files selected for upload.");
         return;
       }
-
-      const uploadedFiles: { name: string; url: string; public_id: string }[] =
-        [];
-      console.log("Files to send:", uploadedFiles);
-
-      for (const file of validFiles) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "world-wide-admissions");
-
-        try {
-          const response = await fetch(
-            `https://api.cloudinary.com/v1_1/djimwwkgl/image/upload`, // ✅ Fix: Correct endpoint
-            { method: "POST", body: formData }
-          );
-          const data = await response.json();
-          console.log(data, "data");
-          if (!response.ok || !data.secure_url || !data.public_id) {
-            throw new Error(
-              `Cloudinary upload failed: ${data.error?.message || "Unknown error"
-              }`
-            );
-          }
-
-          uploadedFiles.push({
-            name: file.name,
-            url: data.secure_url,
-            public_id: data.public_id,
-          });
-        } catch (error) {
-          console.error("Cloudinary Upload Error:", error);
-        }
-      }
-
-      if (uploadedFiles.length === 0) {
-        alert("No files were successfully uploaded to Cloudinary.");
-        return;
-      }
       const documentName =
         documents.find((doc) => doc.id === id)?.name || `Document_${id}`;
-      const token = getAuthToken(); // Assuming you have this function for authentication
-      // 🚀 Send uploaded file metadata to backend
+      const token = getAuthToken();
+
+      // Create FormData for S3 upload
+      const formData = new FormData();
+      validFiles.forEach((file) => {
+        formData.append("files", file);
+      });
+      formData.append("documentName", documentName);
+      formData.append("documentId", id);
+
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/uploadDocument`,
           {
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Adjust auth if needed
+              Authorization: `Bearer ${token}`,
             },
             credentials: "include",
-            body: JSON.stringify({
-              documents: [
-                {
-                  id,
-                  name: documentName,
-                  files: uploadedFiles, // ✅ Send Cloudinary metadata, not raw files
-                  date: new Date().toISOString(),
-                  isChecked: true,
-                },
-              ],
-            }),
+            body: formData, // Send FormData directly
           }
         );
+
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || "Upload failed");
+
+        // Update local state
         setDocuments((docs) =>
           docs.map((doc) =>
             doc.id === id
               ? {
-                ...doc,
-                files: [...doc.files, ...uploadedFiles],
-                date: new Date().toLocaleDateString(),
-                isChecked: true,
-              }
+                  ...doc,
+                  files: [...doc.files, ...result.uploadedFiles],
+                  date: new Date().toLocaleDateString(),
+                  isChecked: true,
+                }
               : doc
           )
         );
+
+        alert("Files uploaded successfully!");
       } catch (error) {
-        console.error("Error uploading to backend:", error);
-        alert("Failed to save document on server.");
+        console.error("Error uploading files:", error);
+        if (error instanceof Error) {
+          alert("Failed to upload files: " + error.message);
+        } else {
+          alert("Failed to upload files: " + String(error));
+        }
       }
     },
-    []
+    [documents]
   );
 
-  interface File {
-    name: string;
-    url: string;
-    _id?: string; // Assuming _id is optional and may exist in the file object
-  }
-
-  const handleDelete = async (files: File[]) => {
-    console.log(files, "document id and files");
-
+  const handleDelete = async (files: { name: string; url: string; _id: string }[]) => {
     if (!files || files.length === 0) {
-      console.error("Missing document or files.");
-      alert("Error: Missing file.");
+      alert("No files to delete.");
       return;
     }
 
@@ -356,60 +316,39 @@ export default function Home() {
       );
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message || "Failed to delete document");
       }
 
-      // Fix: Use files[0]._id instead of undefined documentId
-      setDocuments(
-        documents.map((doc) =>
-          doc.id === files[0]._id
-            ? { ...doc, files: [], date: "", isChecked: false }
-            : doc
-        )
+      // Update local state
+      setDocuments((docs) =>
+        docs.map((doc) => ({
+          ...doc,
+          files: doc.files.filter(
+            (file) => !files.some((delFile) => delFile._id === file._id)
+          ),
+          isChecked:
+            doc.files.filter(
+              (file) => !files.some((delFile) => delFile._id === file._id)
+            ).length > 0,
+        }))
       );
 
       alert("Document deleted successfully!");
     } catch (error) {
       console.error("Error deleting document:", error);
-      alert((error as Error).message);
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert(String(error));
+      }
     }
   };
 
+ 
+
   const handleSubmit = async () => {
-    // Ensure all documents have name and date
-    const validDocuments = documents.map((doc) => ({
-      name: doc.name || "Untitled", // Provide a default value if missing
-      date: doc.date || new Date().toISOString(), // Set current date if missing
-      isChecked: doc.isChecked,
-      files: doc.files.map((file) => ({
-        name: file.name,
-        url: "url" in file ? file.url : "",
-      })), // Ensure file objects have name and url
-    }));
-    console.log(
-      "🚀 Documents before sending:",
-      JSON.stringify({ documents }, null, 2)
-    );
-    console.log("Documents being sent:", validDocuments); // Debugging log
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/uploadDocument`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ documents: validDocuments }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to save file details to database.");
-      }
-      alert("Files uploaded and saved successfully!");
-    } catch (error) {
-      console.error("Error saving document:", error);
-    }
+    alert("file submitted");
   };
   return (
     <div className="min-h-screen bg-gray-50 ">
@@ -432,7 +371,7 @@ export default function Home() {
                 <div className="flex items-center space-x-4">
                   <Checkbox
                     checked={doc.isChecked}
-                    onCheckedChange={() => { }}
+                    onCheckedChange={() => {}}
                     className="h-4 w-4"
                   />
                   <div className="space-y-1">
