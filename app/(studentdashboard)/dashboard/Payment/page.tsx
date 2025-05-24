@@ -1,7 +1,4 @@
 "use client";
-
-
-
 import {
   Table,
   TableBody,
@@ -10,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {
   Pagination,
@@ -80,9 +77,9 @@ export default function Home() {
  <div className="relative">
       {/* Blur Overlay */}
       <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-lg flex items-center justify-center"> 
-        <button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
-          Complete Your Profile
-        </button> 
+        <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
+          No History
+        </Button> 
       </div>
       <div className="border rounded-lg">
         <Table>
