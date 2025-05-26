@@ -296,13 +296,21 @@ function Page() {
                 </div>
 
                 <div className="HeroRightSide relative lg:hidden flex items-center justify-center w-full h-[230px]">
-                  <Image
+                  {/* <Image
                     src="/Zeushicomp.png"
                     alt="Robot"
                     width={0}
                     height={0}
                     sizes="60vw"
                     className="w-[190px] h-auto"
+                  /> */}
+                  <Image
+                    src="/ZEUS-ANIMATION-LAPTOP.gif"
+                    alt="Animated Robot"
+                    width={0}
+                    height={0}
+                    sizes="60vw"
+                    className="w-[250px] h-auto"
                   />
                 </div>
 
@@ -389,13 +397,16 @@ function Page() {
           </div>
           {/* hero Section Left Side ends */}
           {/* hero Section Right Side starts */}
-          <div className="HeroRightSide relative h-[500px] hidden lg:block">
+
+          <div className="HeroRightSide relative hidden lg:block">
             <Link href="/chatmodel" passHref>
               <Image
-                src="/Zeushicomp.png"
-                alt="Robot"
-                width={410}
-                height={510}
+                src="/ZEUS-ANIMATION-LAPTOP.gif"
+                alt="Animated Robot"
+                width={0}
+                height={0}
+                // sizes="60vw"
+                className="w-[440px]"
               />
             </Link>
           </div>
@@ -518,7 +529,9 @@ function Page() {
                             <span>{uni.country_name}</span>
                             <span>Public</span>
                           </div>
-                          <div className="leading-tight">Acceptance Rate: {uni.acceptance_rate}</div>
+                          <div className="leading-tight">
+                            Acceptance Rate: {uni.acceptance_rate}
+                          </div>
                         </div>
                       </div>
                     </Card>

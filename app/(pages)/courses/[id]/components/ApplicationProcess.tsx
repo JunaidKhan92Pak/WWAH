@@ -139,7 +139,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
               <div>
                 <h6>Plan Your Arrival</h6>
                 <p className="text-gray-700 mt-2">
-                  After your visa is approved, begin planning your journey. WWAH
+                  After your visa is approved, begin planning         journey. WWAH
                   offers tips on accommodation, travel, and settling into your
                   new environment.
                 </p>
