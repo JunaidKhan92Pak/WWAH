@@ -589,7 +589,7 @@ function Page() {
                     No Universities Found
                   </p>
                 ) : (
-                  universities.slice(0, 7).map((uni) => (
+                  universities.slice(1, 7).map((uni) => (
                     <Card
                       key={uni._id}
                       className="flex-shrink-0 w-[270px] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
