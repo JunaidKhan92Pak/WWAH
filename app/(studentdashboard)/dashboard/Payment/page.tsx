@@ -66,10 +66,6 @@ export default function Home() {
           <h4 className="text-base sm:text-lg">Payment Tracker & History!</h4>
           <p className="text-sm hidden sm:block">Showing data history of current month.</p>
         </div>
-        {/* <Button variant="outline" className="text-black px-4 border-orange-200 bg-orange-50 hover:bg-orange-100">
-          <Image src="/paymentStudentDashboard/data-range.svg" alt="data" width={20} height={20} />
-          Date range
-        </Button> */}
         <div className=" bg-gray-100 flex items-center justify-center">
         <DataRangeDialog/>
         </div>
