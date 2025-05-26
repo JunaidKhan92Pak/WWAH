@@ -38,7 +38,7 @@ const Footer = () => {
       <div className="relative -mb-1 translate-y-3   mx-auto md:px-6 py-3 md:py-4 w-[85%] sm:w-fit bg-white rounded-3xl ">
         <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-3xl "></div>
         <h5 className="z-10 text-center leading-5  font-extrabold text-gray-800">
-          Global Education, Powered by AI-Driven EduTech{" "}
+          Your study abroad journey, simplified with AI{" "}
         </h5>
       </div>
 
