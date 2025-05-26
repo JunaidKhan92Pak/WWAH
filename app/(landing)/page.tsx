@@ -395,9 +395,6 @@ function Page() {
               </div>
             </div>
           </div>
-          {/* hero Section Left Side ends */}
-          {/* hero Section Right Side starts */}
-
           <div className="HeroRightSide relative hidden lg:block">
             <Link href="/chatmodel" passHref>
               <Image
