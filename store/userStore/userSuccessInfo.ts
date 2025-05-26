@@ -79,7 +79,7 @@ export const useUserInfo = create<Store>((set, get) => ({
                     error: "No data found for this user",
                 });
             }
-        } catch (err: any) {
+        } catch (err) {
             console.error("Fetch error:", err);
             set({ error: "Failed to fetch data", userSuccessInfo: null, hasData: false });
         } finally {

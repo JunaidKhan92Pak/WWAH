@@ -12,10 +12,19 @@ import {
   GraduationCap,
   Briefcase,
   Users,
+  ChevronDown,
   CheckCircle,
   Clock,
   X,
+  MapPin,
+  Calendar,
+  DollarSign,
+  Share2,
+  Heart,
+  AlertCircle,
+  Save,
 } from "lucide-react";
+import { getAuthToken } from "@/utils/authHelper";
 
 interface UserData {
   Users: Array<{
@@ -26,7 +35,6 @@ interface UserData {
     email: string;
     countryCode: string;
     contactNo: string;
-
     city: string;
     phone: string;
   }>;
@@ -34,6 +42,11 @@ interface UserData {
     _id: string;
     user: string;
     countryOfStudy?: string;
+    courseName: string;
+    courseFee: string;
+    courseDuration: string;
+    applicationDeadline: string;
+    applicationStatus: number;
     createdAt?: string;
     proficiencyLevel: string;
     proficiencyTest: string;
@@ -132,6 +145,16 @@ interface UserData {
   }>;
 }
 
+const APPLICATION_STEPS = [
+  { id: 1, label: "Complete Application", status: "complete" },
+  { id: 2, label: "Applied", status: "applied" },
+  { id: 3, label: "Offer Letter Received", status: "offer" },
+  { id: 4, label: "Confirm Enrollment", status: "enrollment" },
+  { id: 5, label: "Visa Granted", status: "visa" },
+  { id: 6, label: "Accommodation Booked", status: "accommodation" },
+  { id: 7, label: "Airport Pickup Booked", status: "pickup" },
+];
+
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [data, setData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -145,6 +168,63 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     name: string;
     type: string;
   } | null>(null);
+  // Application status management
+  const [currentStatus, setCurrentStatus] = useState<number>(1);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
+
+  // ALL useEffect hooks must be called before any conditional returns
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/studentData`
+        );
+
+        if (!res.ok) {
+          throw new Error(`Failed to fetch student data: ${res.status}`);
+        }
+
+        const jsonData = (await res.json()) as UserData;
+        setData(jsonData);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    params.then((resolvedParams) => setStudentId(resolvedParams.id));
+  }, [params]);
+
+  // Move the status fetch useEffect here as well
+  useEffect(() => {
+    const fetchStatusData = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/getStatusUpdate`
+        );
+
+        if (!res.ok) {
+          throw new Error(`Failed to fetch status data: ${res.status}`);
+        }
+
+        const jsonData = await res.json();
+        console.log(jsonData, "res from status update api");
+        setCurrentStatus(1);
+      } catch (err) {
+        console.error("Failed to fetch status:", err);
+        // Don't set error state here as it's not critical
+      }
+    };
+    fetchStatusData();
+  }, []);
 
   // Function to get file type from URL or file name
   const getFileType = (url: string, fileName: string) => {
@@ -208,61 +288,60 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     setPreviewFile(null);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/studentData`
-        );
-
-        if (!res.ok) {
-          throw new Error(`Failed to fetch student data: ${res.status}`);
+  const handleStatusUpdate = async () => {
+    if (!studentId) return;
+    const token = getAuthToken();
+    setIsUpdatingStatus(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/createStatusUpdate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            userId: studentId,
+            applicationStatus: currentStatus,
+          }),
         }
+      );
 
-        const jsonData = (await res.json()) as UserData;
-        setData(jsonData);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error(`Failed to update status: ${response.status}`);
       }
-    };
-    fetchData();
-  }, []);
 
-  useEffect(() => {
-    params.then((resolvedParams) => setStudentId(resolvedParams.id));
-  }, [params]);
+      // Update local data
+      if (data) {
+        const updatedData = { ...data };
+        const applicationIndex = updatedData.applications.findIndex(
+          (app) => app.user === studentId
+        );
+        if (applicationIndex !== -1) {
+          updatedData.applications[applicationIndex].applicationStatus =
+            currentStatus;
+          setData(updatedData);
+        }
+      }
 
-  const user = data?.Users.find((u) => u._id === studentId);
-  const userApplication = data?.applications.find(
-    (app) => app.user === studentId
-  );
-  const userBasics = data?.basics.find((basic) => basic.user === studentId);
+      setStatusUpdateSuccess(true);
+      setTimeout(() => setStatusUpdateSuccess(false), 3000);
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      alert("Failed to update application status. Please try again.");
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
 
-  // Get documents for the specific user
-  const userDocuments = data?.documents.find((doc) => doc.user === studentId);
-
-  // Extract file data for the specific user
-  const fileData =
-    userDocuments?.documents.flatMap((document) =>
-      document.files.map((file) => ({
-        url: file.url,
-        name: file.name,
-        documentName: document.name,
-        date: document.date,
-        isChecked: document.isChecked,
-      }))
-    ) || [];
-
+  // NOW the conditional returns can happen after all hooks are called
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-red-500 border-t-transparent mx-auto mb-4"></div>
           <p className="text-lg font-medium text-gray-600">
             Loading student profile...
           </p>
@@ -287,12 +366,33 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     );
   }
 
+  const user = data?.Users.find((u) => u._id === studentId);
+  const userApplication = data?.applications.find(
+    (app) => app.user === studentId
+  );
+  const userBasics = data?.basics.find((basic) => basic.user === studentId);
+
+  // Get documents for the specific user
+  const userDocuments = data?.documents.find((doc) => doc.user === studentId);
+
+  // Extract file data for the specific user
+  const fileData =
+    userDocuments?.documents.flatMap((document) =>
+      document.files.map((file) => ({
+        url: file.url,
+        name: file.name,
+        documentName: document.name,
+        date: document.date,
+        isChecked: document.isChecked,
+      }))
+    ) || [];
+
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 flex items-center justify-center">
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <User className="w-8 h-8 text-yellow-500" />
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <User className="w-8 h-8 text-red-500" />
           </div>
           <h2 className="text-xl font-semibold text-gray-800 mb-2">
             Student Not Found
@@ -308,12 +408,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const educationalBackground = userApplication?.educationalBackground;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
               <User className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -330,26 +430,208 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Application Status Tracker */}
+        <div className="mb-8">
+          <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                Application Status Tracker
+              </h2>
+              {statusUpdateSuccess && (
+                <div className="flex items-center gap-2 text-green-600 text-sm font-medium">
+                  <CheckCircle className="w-4 h-4" />
+                  Status updated successfully!
+                </div>
+              )}
+            </div>
+
+            {/* Course Information Card */}
+            {userApplication && (
+              <div className="bg-gradient-to-r from-red-50 to-red-50 rounded-xl p-6 mb-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-24 h-24 bg-white rounded-lg shadow-sm p-2 flex-shrink-0">
+                    <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                      <GraduationCap className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          {userApplication.courseName ||
+                            "Bachelor of Engineering (Honors) - BE(Hons)"}
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-gray-500" />
+                            <span className="text-gray-700">
+                              {userApplication.countryOfStudy || "New Zealand"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-gray-500" />
+                            <span className="text-gray-700">
+                              {userApplication.courseDuration || "4 Years"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <DollarSign className="w-4 h-4 text-gray-500" />
+                            <span className="text-gray-700">
+                              {userApplication.courseFee || "$53,122"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-gray-500" />
+                            <span className="text-gray-700">
+                              Deadline:{" "}
+                              {userApplication.applicationDeadline ||
+                                "February 2025"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                          <Share2 className="w-5 h-5" />
+                        </button>
+                        <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                          <Heart className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Status Tabs */}
+            <div className="flex gap-4 mb-8">
+              <button className="px-6 py-3 bg-red-600 text-white rounded-lg font-medium">
+                Active Application
+              </button>
+              <button className="px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition-colors">
+                Completed Application
+              </button>
+            </div>
+
+            {/* Status Progress */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between">
+                {APPLICATION_STEPS.map((step, index) => (
+                  <div
+                    key={step.id}
+                    className="flex flex-col items-center relative"
+                  >
+                    {/* Connector Line */}
+                    {index < APPLICATION_STEPS.length - 1 && (
+                      <div className="absolute top-6 left-8 w-full h-0.5 bg-gray-200">
+                        <div
+                          className="h-full bg-red-500 transition-all duration-300"
+                          style={{
+                            width: currentStatus > step.id ? "100%" : "0%",
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Step Circle */}
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm z-10 transition-all duration-300 ${
+                        currentStatus >= step.id
+                          ? "bg-red-500 text-white"
+                          : currentStatus === step.id - 1
+                          ? "bg-gray-400 text-white"
+                          : "bg-gray-200 text-gray-500"
+                      }`}
+                    >
+                      {step.id}
+                    </div>
+
+                    {/* Step Label */}
+                    <div className="mt-2 text-center">
+                      <p
+                        className={`text-xs font-medium max-w-20 ${
+                          currentStatus >= step.id
+                            ? "text-gray-900"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {step.label}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Admin Status Update Controls */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-orange-500" />
+                Admin Controls - Update Application Status
+              </h3>
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Current Status: Step {currentStatus}
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={currentStatus}
+                      onChange={(e) => setCurrentStatus(Number(e.target.value))}
+                      className="w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none bg-white"
+                    >
+                      {APPLICATION_STEPS.map((step) => (
+                        <option key={step.id} value={step.id}>
+                          Step {step.id}: {step.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+                <button
+                  onClick={handleStatusUpdate}
+                  disabled={isUpdatingStatus}
+                  className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed flex items-center gap-2 font-medium transition-colors"
+                >
+                  {isUpdatingStatus ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                      Updating...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      Update Status
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Personal Info */}
           <div className="lg:col-span-1 space-y-6">
             {/* Quick Info Card */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
+              {" "}
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-500" />
-                Quick Info
-              </h2>
+                <User className="w-5 h-5 text-red-500" />
+                Quick Info{" "}
+              </h2>{" "}
               <div className="space-y-3">
+                {" "}
                 <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-gray-400" />
+                  <Phone className="w-4 h-4 text-gray-400" />{" "}
                   <span className="text-sm text-gray-600">
                     {/* {user.countryCode} {user.contactNo} */}
-                    {user.phone}
-                  </span>
-                </div>
+                    {user.phone}{" "}
+                  </span>{" "}
+                </div>{" "}
               </div>
             </div>
-
             {/* Documents Summary */}
             {fileData.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border p-6">
@@ -359,7 +641,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">
+                    <div className="text-2xl font-bold text-red-600">
                       {fileData.length}
                     </div>
                     <div className="text-sm text-gray-600">Total Files</div>
@@ -375,7 +657,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             {userBasics && (
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                  <User className="w-5 h-5 text-blue-500" />
+                  <User className="w-5 h-5 text-red-500" />
                   Personal Details
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -524,7 +806,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 {familyMembers && familyMembers.length > 0 && (
                   <div className="mt-6 pt-6 border-t">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <Users className="w-5 h-5 text-purple-500" />
+                      <Users className="w-5 h-5 text-red-500" />
                       Family Members
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -564,8 +846,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     Language Proficiency
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-blue-50 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-blue-600">
+                    <div className="bg-red-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-red-600">
                         {userApplication.overAllScore}
                       </div>
                       <div className="text-sm text-gray-600">Overall</div>
@@ -576,8 +858,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                       </div>
                       <div className="text-sm text-gray-600">Listening</div>
                     </div>
-                    <div className="bg-purple-50 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-purple-600">
+                    <div className="bg-red-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-red-600">
                         {userApplication.writingScore}
                       </div>
                       <div className="text-sm text-gray-600">Writing</div>
@@ -626,7 +908,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 {workExperience && workExperience.length > 0 && (
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <Briefcase className="w-5 h-5 text-blue-500" />
+                      <Briefcase className="w-5 h-5 text-red-500" />
                       Work Experience
                     </h3>
                     <div className="space-y-4">
@@ -680,7 +962,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                             {file.isChecked ? (
                               <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
                             ) : (
-                              <Clock className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                              <Clock className="w-5 h-5 text-red-500 flex-shrink-0" />
                             )}
                           </div>
                           <p className="text-xs text-gray-600 truncate">
@@ -694,7 +976,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                             <>
                               {isLoading && (
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-red-500 border-t-transparent"></div>
                                 </div>
                               )}
                               <Image
@@ -714,7 +996,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                               {fileType === "pdf" ? (
                                 <FileText className="w-12 h-12 text-red-500 mb-2" />
                               ) : (
-                                <File className="w-12 h-12 text-blue-500 mb-2" />
+                                <File className="w-12 h-12 text-red-500 mb-2" />
                               )}
                               <p className="text-xs text-gray-600 text-center px-2 font-medium">
                                 {fileType === "pdf"
@@ -728,7 +1010,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handlePreview(file.url, file.name)}
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors"
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors"
                           >
                             <Eye className="w-4 h-4" />
                             Preview
@@ -798,7 +1080,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     onClick={() =>
                       handleDownload(previewFile.url, previewFile.name)
                     }
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                   >
                     <Download className="w-4 h-4" />
                     Download to view
