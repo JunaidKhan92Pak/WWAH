@@ -23,7 +23,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       countryname: string;
       universityname: string;
       course_link: string;
-      payment_method:string;
+      payment_method: string;
       course_title: string;
       required_ielts_score: string;
       required_pte_score: string;
@@ -302,9 +302,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               {/* Second Column: Card 3 */}
               <div className="relative text-white rounded-lg w-full flex items-center h-[200px] lg:h-[550px] lg:min-h-full">
                 <Image
-                  src="/Hero_Robot.png"
+                  src="/Zeushicomp.png"
                   alt="AI Assistant"
                   layout="fill"
+                  width={0}
+                  height={0}
+                  sizes="25vw"
                   objectFit="none"
                   className="rounded-3xl"
                 />

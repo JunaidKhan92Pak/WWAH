@@ -74,11 +74,13 @@ function AItool() {
           {/* Central Image */}
           <div className="hidden md:flex justify-center mb-10 w-[44%]">
             <Image
-              src="/partnerUs/robot.svg"
+              src="/Zeushicomp.png"
               alt="Zeus Robot and Arrows"
-              className="w-full"
-              width={500}
-              height={500}
+
+              width={0}
+              height={0}
+              sizes="60vw"
+              className="w-[330px] h-auto"
             />
           </div>
           {/* Right Side Features */}
