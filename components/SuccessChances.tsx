@@ -489,7 +489,7 @@ const SuccessChances = () => {
       setGradeData({ gradeType: "", score: "" });
       setShowWelcome(true);
 
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error submitting data:", error);
       setValidationErrors([{
         field: 'general',
