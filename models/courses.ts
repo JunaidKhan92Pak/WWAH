@@ -96,15 +96,63 @@ const CourseSchema = new Schema<ICourse>(
   }
 );
 
-// Create separate compound indexes for each uniqueness scenario
-// Index for course_link uniqueness
-CourseSchema.index({ universityname: 1, countryname: 1, course_link: 1 }, { unique: true, sparse: true });
+// OPTION 1: Single comprehensive unique index (RECOMMENDED)
+// This creates one index that handles all uniqueness scenarios
+CourseSchema.index(
+  {
+    universityname: 1,
+    countryname: 1,
+    university_id: 1,
+    course_id: 1,
+    course_link: 1,
+    course_title: 1
+  },
+  {
+    unique: true,
+    sparse: true,
+    partialFilterExpression: {
+      $or: [
+        { course_id: { $exists: true, $ne: null } },
+        { course_link: { $exists: true, $ne: null } },
+        { course_title: { $exists: true, $ne: null } }
+      ]
+    }
+  }
+);
 
-// Index for course_id uniqueness
-CourseSchema.index({ universityname: 1, countryname: 1, course_id: 1 }, { unique: true, sparse: true });
+// OPTION 2: Alternative - Remove conflicting indexes and use conditional unique indexes
+// Uncomment this section and comment out OPTION 1 if you prefer this approach
 
-// Index for course_title uniqueness (fallback)
-CourseSchema.index({ universityname: 1, countryname: 1, course_title: 1 }, { unique: true });
+
+// Only create unique constraint when course_id exists
+CourseSchema.index(
+  { universityname: 1, countryname: 1, university_id: 1, course_id: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { course_id: { $exists: true, $type: "string", $ne: "" } }
+  }
+);
+
+// Only create unique constraint when course_link exists  
+// CourseSchema.index(
+//   { universityname: 1, countryname: 1, university_id: 1, course_link: 1 },
+//   {
+//     unique: true,
+//     partialFilterExpression: { course_link: { $exists: true, $type: "string", $ne: "" } }
+//   }
+// );
+
+// Fallback uniqueness on course_title
+CourseSchema.index(
+  { universityname: 1, countryname: 1, university_id: 1, course_title: 1 },
+  { unique: true }
+);
+
+
+// Additional performance indexes (non-unique)
+CourseSchema.index({ university_id: 1 });
+CourseSchema.index({ course_level: 1 });
+CourseSchema.index({ education_level: 1 });
 
 // Prevent model redefinition error
 export const Courses = mongoose.models.Courses || mongoose.model<ICourse>("Courses", CourseSchema);

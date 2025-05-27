@@ -200,7 +200,7 @@ export async function POST(req: Request) {
                             identifier: courseIdentifier
                         });
                     } else {
-                        console.log(`Updated existing course: ${course.course_title}`);
+                        console.log(`Updated existing course: ${course.annual_tuition_fee}`);
                         result.updated.push({
                             _id: updatedCourse._id,
                             title: course.course_title,
@@ -263,6 +263,7 @@ export async function POST(req: Request) {
 }
 
 // Helper function to create a unique filter based on available identifiers
+// Quick fix: Modified helper function to avoid null course_link conflicts
 function createUniqueFilter(course: Course, country: string, university: string, universityId: string): UniqueFilter {
     const baseFilter: UniqueFilterBase = {
         countryname: country,
@@ -270,18 +271,25 @@ function createUniqueFilter(course: Course, country: string, university: string,
         university_id: universityId
     };
 
-    // Modified priority: course_id first, then course_link, then title
-    if (course.course_id) {
+    // PRIORITY 1: Use course_id if available (most reliable)
+    if (course.course_id && course.course_id.trim() !== '') {
         console.log(`Using course_id for uniqueness: ${course.course_id}`);
         return { ...baseFilter, course_id: course.course_id };
-    } else if (course.course_link) {
+    }
+
+    // PRIORITY 2: Use course_link only if it's not null/empty
+    else if (course.course_link && course.course_link.trim() !== '') {
+        console.log(`Using course_link for uniqueness: ${course.course_link}`);
         return { ...baseFilter, course_link: course.course_link };
-    } else {
-        // Fallback to course title as last resort
+    }
+
+    // PRIORITY 3: Fallback to course_title
+    else {
         console.log(`Using course_title for uniqueness: ${course.course_title}`);
         return { ...baseFilter, course_title: course.course_title || "" };
     }
 }
+
 // Helper function to prepare course data
 function prepareCoursesData(
     course: Course,

@@ -7,7 +7,7 @@ import { Progress } from "./ui/progress";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { ArrowRight, GraduationCap } from "lucide-react";
+import { ArrowRight, GraduationCap, AlertCircle } from "lucide-react";
 import { Combobox } from "./ui/combobox";
 import { majorsAndDisciplines, studyDestinations } from "../lib/constant";
 import { getNames } from "country-list";
@@ -18,8 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import Image from "next/image";
-import { useRouter } from "next/navigation"; // for Next.js 13+ App Router
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getAuthToken } from "@/utils/authHelper";
 
 const nationalities = getNames();
@@ -47,17 +46,19 @@ interface Grade {
   score: string;
 }
 
+interface ValidationError {
+  field: string;
+  message: string;
+}
+
 interface StudentData {
   nationality: string;
   dateOfBirth: string;
-
   studyLevel: string;
   majorSubject: string;
   grade: Grade;
-
   hasExperience: boolean;
   years?: number;
-
   LanguageProficiency: {
     level: string;
     test?: string;
@@ -68,7 +69,6 @@ interface StudentData {
     degree: string;
     subject: string;
   };
-
   tuitionfee: {
     amount: number;
     currency: string;
@@ -77,9 +77,9 @@ interface StudentData {
     amount: number;
     currency: string;
   };
-
   submissionDate: string;
 }
+
 const questions: Question[] = [
   {
     id: 1,
@@ -178,6 +178,7 @@ const questionGroups: number[][] = [
   [12],
   [13, 14],
 ];
+
 const gradingScaleMap: Record<string, string> = {
   percentage: "Percentage Grade scale",
   cgpa: "Grade Point Average (GPA) Scale",
@@ -222,41 +223,15 @@ const isValidGradeInput = (type: string, score: string) => {
 
 const SuccessChances = () => {
   const [successOpen, setSuccessOpen] = useState(false);
-  const router = useRouter();
-
-  // Open the dialog when the form is successfully submitted
-useEffect(() => {
-  if (successOpen) {
-    const timer = setTimeout(() => {
-      setSuccessOpen(false); // Close the modal
-      router.back(); // Go back to the previous page
-
-      // Wait briefly, then reload the previous page
-      setTimeout(() => {
-        window.location.reload();
-      }, 300); // Small delay to allow router.back() to complete
-    }, 2000); // Close after 2 seconds
-
-    return () => clearTimeout(timer);
-  }
-}, [successOpen]);
-
-
-
-  
-
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, AnswerType>>({});
-  const [selectedCurrency, setSelectedCurrency] = useState<
-    Record<number, string>
-  >({});
-  const [gradeData, setGradeData] = useState<Grade>({
-    gradeType: "",
-    score: "",
-  });
-
+  const [selectedCurrency, setSelectedCurrency] = useState<Record<number, string>>({});
+  const [gradeData, setGradeData] = useState<Grade>({ gradeType: "", score: "" });
   const [studentData, setStudentData] = useState<StudentData | null>(null);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const progress = ((currentQuestion + 1) / questionGroups.length) * 100;
 
   useEffect(() => {
@@ -264,99 +239,222 @@ useEffect(() => {
     return () => clearTimeout(timer);
   }, []);
 
-useEffect(() => {
-  if (answers[7] !== "Completed a test") {
-    setAnswers((prev) => ({
-      ...prev,
-      8: null,
-      9: null,
-    }));
-  }
-}, [answers[7]]);
+  useEffect(() => {
+    if (answers[7] !== "Completed a test") {
+      setAnswers((prev) => ({
+        ...prev,
+        8: null,
+        9: null,
+      }));
+    }
+  }, [answers[7]]);
 
+  useEffect(() => {
+    if (successOpen) {
+      const timer = setTimeout(() => {
+        setSuccessOpen(false);
+        // Simulate router.back() and reload
+        console.log("Form submitted successfully - would navigate back");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [successOpen]);
 
+  const validateDateOfBirth = (dateString: string): boolean => {
+    const dobRegex = /^\d{4}-\d{2}-\d{2}$/;
+    return dobRegex.test(dateString);
+  };
+
+  const validateFormData = (): ValidationError[] => {
+    const errors: ValidationError[] = [];
+
+    // Required field validations based on backend requirements
+    const requiredFields = [
+      { field: answers[3], name: "Study Level", key: "studyLevel" },
+      { field: gradeData, name: "Grade", key: "grade" },
+      { field: answers[2], name: "Date of Birth", key: "dateOfBirth" },
+      { field: answers[1], name: "Nationality", key: "nationality" },
+      { field: gradeData.gradeType, name: "Grade Type", key: "gradeType" },
+      { field: answers[4], name: "Major Subject", key: "majorSubject" },
+    ];
+
+    // Check required fields
+    for (const { field, name, key } of requiredFields) {
+      if (!field || (typeof field === 'string' && field.trim() === '')) {
+        errors.push({
+          field: key,
+          message: `${name} is required`,
+        });
+      }
+    }
+
+    // Validate grade object
+    if (!gradeData.gradeType || !gradeData.score) {
+      errors.push({
+        field: "grade",
+        message: "Grade type and score are required",
+      });
+    } else if (!isValidGradeInput(gradeData.gradeType, gradeData.score)) {
+      errors.push({
+        field: "grade.score",
+        message: "Please enter a valid grade score for the selected grade type",
+      });
+    }
+
+    // Validate living costs
+    const livingCostsAmount = answers[14] as number;
+    const livingCostsCurrency = selectedCurrency[14];
+    if (!livingCostsAmount || !livingCostsCurrency) {
+      errors.push({
+        field: "livingCosts",
+        message: "Living costs amount and currency are required",
+      });
+    }
+
+    // Validate tuition fee
+    const tuitionAmount = answers[13] as number;
+    const tuitionCurrency = selectedCurrency[13];
+    if (!tuitionAmount || !tuitionCurrency) {
+      errors.push({
+        field: "tuitionFee",
+        message: "Tuition fee amount and currency are required",
+      });
+    }
+
+    // Validate Study Preferences
+    const studyCountry = answers[10] as string;
+    const studyDegree = answers[11] as string;
+    const studySubject = answers[12] as string;
+
+    if (!studyCountry || !studyDegree || !studySubject) {
+      errors.push({
+        field: "StudyPreferenced",
+        message: "Study preferences (country, degree, and subject) are required",
+      });
+    }
+
+    // Date of birth validation
+    const dateOfBirth = answers[2] as string;
+    if (dateOfBirth && !validateDateOfBirth(dateOfBirth)) {
+      errors.push({
+        field: "dateOfBirth",
+        message: "Date of birth must be in YYYY-MM-DD format",
+      });
+    }
+
+    // Grade score validation
+    if (gradeData.score && isNaN(parseFloat(gradeData.score))) {
+      errors.push({
+        field: "grade.score",
+        message: "Grade score must be a number",
+      });
+    }
+
+    return errors;
+  };
 
   const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent any form submission when clicking Next
     e.preventDefault();
-
     if (currentQuestion < questionGroups.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
+      setValidationErrors([]); // Clear errors when moving to next question
     }
   };
 
   const handlePrevious = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent any form submission when clicking Previous
     e.preventDefault();
-
     if (currentQuestion > 0) {
       setCurrentQuestion((prev) => prev - 1);
+      setValidationErrors([]); // Clear errors when moving to previous question
     }
   };
 
   const handleAnswer = (value: AnswerType, id: number) => {
     setAnswers((prev) => ({ ...prev, [id]: value }));
+    // Clear validation errors related to this field
+    setValidationErrors(prev => prev.filter(error =>
+      !error.field.includes(id.toString()) &&
+      error.field !== getFieldNameById(id)
+    ));
   };
 
   const handleCurrency = (value: string, id: number) => {
     setSelectedCurrency((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Handle grade type change
-  // const handleGradeTypeChange = (value: string) => {
-  //   setGradesInput((prev) => ({ ...prev, gradeType: value }));
-  // };
-
-  // const handleGradeScoreChange = (value: string) => {
-  //   handleAnswer((prev) => ({ ...prev, score: value })); // Stores the actual grade/CGPA
-  // };
   const handleGradeTypeChange = (value: string) => {
     setGradeData((prev) => ({ ...prev, gradeType: value }));
+    setValidationErrors(prev => prev.filter(error => !error.field.includes('grade')));
   };
 
   const handleGradeScoreChange = (value: string) => {
     setGradeData((prev) => ({ ...prev, score: value }));
+    setValidationErrors(prev => prev.filter(error => !error.field.includes('grade')));
+  };
+
+  const getFieldNameById = (id: number): string => {
+    const fieldMap: Record<number, string> = {
+      1: 'nationality',
+      2: 'dateOfBirth',
+      3: 'studyLevel',
+      4: 'majorSubject',
+      5: 'grade',
+      10: 'StudyPreferenced',
+      11: 'StudyPreferenced',
+      12: 'StudyPreferenced',
+      13: 'tuitionFee',
+      14: 'livingCosts',
+    };
+    return fieldMap[id] || '';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("Form submission triggered!", new Date().toISOString());
     e.preventDefault();
+    setIsSubmitting(true);
 
+    // 1. Run validation
+    const errors = validateFormData();
+    if (errors.length > 0) {
+      setValidationErrors(errors);
+      setIsSubmitting(false);
+      return;
+    }
+    setValidationErrors([]); // clear old errors
+
+    // 2. Build payload
     const compiledStudentData: StudentData = {
-      nationality: (answers[1] as string) || "",
-      dateOfBirth: (answers[2] as string) || "",
-      studyLevel: (answers[3] as string) || "",
-      majorSubject: (answers[4] as string) || "",
+      nationality: answers[1] as string,
+      dateOfBirth: answers[2] as string,
+      studyLevel: answers[3] as string,
+      majorSubject: answers[4] as string,
       grade: gradeData,
-      hasExperience: (answers[6] as boolean) || false,
-      years: (answers[106] as number) || 0,
+      hasExperience: answers[6] as boolean,
+      years: answers[106] as number,
       LanguageProficiency: {
-        level: (answers[7] as string) || "",
-        test: (answers[8] as string) || "",
-        score: (answers[9] as number) || 0,
+        level: answers[7] as string,
+        test: answers[8] as string,
+        score: answers[9] as number,
       },
       StudyPreferenced: {
-        country: (answers[10] as string) || "",
-        degree: (answers[11] as string) || "",
-        subject: (answers[12] as string) || "",
+        country: answers[10] as string,
+        degree: answers[11] as string,
+        subject: answers[12] as string,
       },
       tuitionfee: {
-        amount: Number(answers[13]) || 0,
-        currency: selectedCurrency[13] || "",
+        amount: Number(answers[13]),
+        currency: selectedCurrency[13],
       },
       livingCosts: {
-        amount: Number(answers[14]) || 0,
-        currency: selectedCurrency[14] || "",
+        amount: Number(answers[14]),
+        currency: selectedCurrency[14],
       },
       submissionDate: new Date().toISOString(),
     };
-
-    console.log("Student data compiled:", compiledStudentData);
     setStudentData(compiledStudentData);
 
     try {
       console.log("Attempting to submit data to backend...");
-      const token = getAuthToken();
+      const token = getAuthToken(); // your existing helper
       const resp = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/add`,
         {
@@ -369,25 +467,39 @@ useEffect(() => {
           body: JSON.stringify(compiledStudentData),
         }
       );
-      console.log(resp)
+      console.log("Response:", resp);
+
       if (!resp.ok) {
-        console.error("Error submitting data:", resp.statusText);
+        // read error message if any
+        const errorText = await resp.text();
+        console.error("Error submitting data:", resp.status, errorText);
+        setValidationErrors([{
+          field: 'general',
+          message: `Submission failed: ${resp.status} ${resp.statusText}`
+        }]);
         return;
       }
 
-      const data = await resp.json();
-      console.log("Response from server:", data);
-
-      // Reset form after successful submission
+      // success!
+      setSuccessOpen(true);
+      // reset form state
       setCurrentQuestion(0);
       setAnswers({});
       setSelectedCurrency({});
-      setGradeData({ gradeType: "", score: ""});
+      setGradeData({ gradeType: "", score: "" });
       setShowWelcome(true);
-    } catch (error) {
+
+    } catch (error: any) {
       console.error("Error submitting data:", error);
+      setValidationErrors([{
+        field: 'general',
+        message: 'Network error. Please try again.'
+      }]);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
 
   const renderWorkExperience = (q: Question) => {
     const hasWorkExperience = answers[q.id] === true;
@@ -438,6 +550,10 @@ useEffect(() => {
 
   const renderCurrencyInput = (q: Question) => {
     const currency = selectedCurrency[q.id] ?? currencyOptions[0];
+    const hasError = validationErrors.some(error =>
+      error.field === (q.id === 13 ? 'tuitionFee' : 'livingCosts')
+    );
+
     return (
       <div className="space-y-4">
         <Combobox
@@ -452,7 +568,8 @@ useEffect(() => {
           placeholder={q.placeholder}
           value={(answers[q.id] as number) || 0}
           onChange={(e) => handleAnswer(Number(e.target.value), q.id)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+          className={`w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 ${hasError ? 'border-red-500' : 'border-gray-300'
+            }`}
         />
       </div>
     );
@@ -469,15 +586,14 @@ useEffect(() => {
   );
 
   const renderGradesInput = () => {
-    const isValid = isValidGradeInput(
-      gradeData.gradeType,
-      gradeData.score.toString()
-    );
+    const isValid = isValidGradeInput(gradeData.gradeType, gradeData.score.toString());
+    const hasError = validationErrors.some(error => error.field.includes('grade'));
 
     return (
       <div className="space-y-4">
         <select
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+          className={`w-full px-4 py-2 border rounded-lg shadow-sm text-base font-medium text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 ${hasError ? 'border-red-500' : 'border-gray-300'
+            }`}
           value={gradeData.gradeType}
           onChange={(e) => handleGradeTypeChange(e.target.value)}
         >
@@ -494,12 +610,12 @@ useEffect(() => {
             <Input
               type="text"
               placeholder="Enter your grade/CGPA"
-              className={` w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500w-full mt-2 ${isValid ? "" : "border-red-500"
+              className={`w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 ${!isValid || hasError ? 'border-red-500' : 'border-gray-300'
                 }`}
               value={gradeData.score}
               onChange={(e) => handleGradeScoreChange(e.target.value)}
             />
-            {!isValid && (
+            {!isValid && gradeData.score && (
               <p className="text-sm text-red-600">
                 Please enter a valid value for {gradeData.gradeType}.
               </p>
@@ -510,21 +626,33 @@ useEffect(() => {
     );
   };
 
-  // Helper function to determine if a question should be rendered
   const shouldRenderQuestion = (questionId: number) => {
-    // Always render questions that are not 8 or 9
     if (questionId !== 8 && questionId !== 9) {
       return true;
     }
-
-    // Only render questions 8 and 9 if user selected "Completed a test" for question 7
     return answers[7] === "Completed a test";
   };
-  
+
+  const renderValidationErrors = () => {
+    if (validationErrors.length === 0) return null;
+
+    return (
+      <div className="mb-6">
+        {validationErrors.map((error, index) => (
+          <Alert key={index} className="mb-2 border-red-200 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-700">
+              {error.message}
+            </AlertDescription>
+          </Alert>
+        ))}
+      </div>
+    );
+  };
 
   const renderFormContent = () => (
-    <div className="min-h-screen flex items-center justify-center ">
-      <form onSubmit={handleSubmit} className="w-full ">
+    <div className="min-h-screen flex items-center justify-center">
+      <form onSubmit={handleSubmit} className="w-full">
         <Card className="p-8 shadow-2xl bg-white rounded-2xl border border-gray-200 max-w-3xl w-full">
           <div className="mb-6 flex flex-col items-center">
             <Progress value={progress} className="h-3 w-[90%]" />
@@ -532,6 +660,9 @@ useEffect(() => {
               {currentQuestion + 1} / {questionGroups.length}
             </p>
           </div>
+
+          {renderValidationErrors()}
+
           <AnimatePresence mode="wait">
             <motion.div
               key={currentQuestion}
@@ -546,94 +677,113 @@ useEffect(() => {
                     questionGroups[currentQuestion].includes(q.id) &&
                     shouldRenderQuestion(q.id)
                 )
-                .map((q) => (
-                  <div key={q.id} className="space-y-4">
-                    <div className="flex items-center gap-2 text-black">
-                      <GraduationCap className="h-6 w-6" />
-                      <h2 className="text-xl font-semibold">{q.title}</h2>
-                    </div>
-                    {q.type === "nationality" && (
-                      <Combobox
-                        options={nationalities}
-                        value={(answers[q.id] as string) || ""}
-                        onChange={(val) => handleAnswer(val, q.id)}
-                        placeholder="Select your nationality"
-                        emptyMessage="No countries found"
-                      />
-                    )}
-                    {q.type === "major" && (
-                      <Combobox
-                        options={majorsAndDisciplines}
-                        value={(answers[q.id] as string) || ""}
-                        onChange={(val) => handleAnswer(val, q.id)}
-                        placeholder={q.placeholder}
-                        emptyMessage="No majors found"
-                      />
-                    )}
-                    {q.type === "study_destination" && (
-                      <Combobox
-                        options={studyDestinations}
-                        value={(answers[q.id] as string) || ""}
-                        onChange={(val) => handleAnswer(val, q.id)}
-                        placeholder="Select country"
-                        emptyMessage="No countries found"
-                      />
-                    )}
-                    {q.type === "work_experience" && renderWorkExperience(q)}
-                    {q.type === "currency" && renderCurrencyInput(q)}
-                    {q.type === "input" && renderInput(q)}
-                    {q.type === "date" && (
-                      <div className="relative w-full">
-                        <input
-                          type="date"
-                          className="w-full px-4 py-2  border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 appearance-none"
-                          value={
-                            answers[q.id]
-                              ? new Date(answers[q.id] as string)
+                .map((q) => {
+                  const fieldName = getFieldNameById(q.id);
+                  const hasFieldError = validationErrors.some(error =>
+                    error.field === fieldName || error.field.includes(q.id.toString())
+                  );
+
+                  return (
+                    <div key={q.id} className="space-y-4">
+                      <div className="flex items-center gap-2 text-black">
+                        <GraduationCap className="h-6 w-6" />
+                        <h2 className="text-xl font-semibold">{q.title}</h2>
+                        {hasFieldError && <AlertCircle className="h-5 w-5 text-red-500" />}
+                      </div>
+
+                      {q.type === "nationality" && (
+                        <div className={hasFieldError ? 'ring-2 ring-red-200 rounded-lg' : ''}>
+                          <Combobox
+                            options={nationalities}
+                            value={(answers[q.id] as string) || ""}
+                            onChange={(val) => handleAnswer(val, q.id)}
+                            placeholder="Select your nationality"
+                            emptyMessage="No countries found"
+                          />
+                        </div>
+                      )}
+
+                      {q.type === "major" && (
+                        <div className={hasFieldError ? 'ring-2 ring-red-200 rounded-lg' : ''}>
+                          <Combobox
+                            options={majorsAndDisciplines}
+                            value={(answers[q.id] as string) || ""}
+                            onChange={(val) => handleAnswer(val, q.id)}
+                            placeholder={q.placeholder}
+                            emptyMessage="No majors found"
+                          />
+                        </div>
+                      )}
+
+                      {q.type === "study_destination" && (
+                        <div className={hasFieldError ? 'ring-2 ring-red-200 rounded-lg' : ''}>
+                          <Combobox
+                            options={studyDestinations}
+                            value={(answers[q.id] as string) || ""}
+                            onChange={(val) => handleAnswer(val, q.id)}
+                            placeholder="Select country"
+                            emptyMessage="No countries found"
+                          />
+                        </div>
+                      )}
+
+                      {q.type === "work_experience" && renderWorkExperience(q)}
+                      {q.type === "currency" && renderCurrencyInput(q)}
+                      {q.type === "input" && renderInput(q)}
+
+                      {q.type === "date" && (
+                        <div className="relative w-full">
+                          <input
+                            type="date"
+                            className={`w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 appearance-none ${hasFieldError ? 'border-red-500' : 'border-gray-300'
+                              }`}
+                            value={
+                              answers[q.id]
+                                ? new Date(answers[q.id] as string)
                                   .toISOString()
                                   .split("T")[0]
-                              : ""
-                          }
-                          onChange={(e) => handleAnswer(e.target.value, q.id)}
-                        />
-                      </div>
-                    )}
-                    {q.type === "select" && (
-                      <>
-                        <select
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
-                          value={(answers[q.id] as string) || ""}
-                          onChange={(e) => handleAnswer(e.target.value, q.id)}
-                        >
-                          <option value="">Select an option</option>
-                          {q.options?.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                        {(answers[q.id] as string)?.startsWith(
-                          "Any Other (Specify)"
-                        ) && (
+                                : ""
+                            }
+                            onChange={(e) => handleAnswer(e.target.value, q.id)}
+                          />
+                        </div>
+                      )}
+
+                      {q.type === "select" && (
+                        <>
+                          <select
+                            className={`w-full px-4 py-2 border rounded-lg shadow-sm text-base font-medium text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 ${hasFieldError ? 'border-red-500' : 'border-gray-300'
+                              }`}
+                            value={(answers[q.id] as string) || ""}
+                            onChange={(e) => handleAnswer(e.target.value, q.id)}
+                          >
+                            <option value="">Select an option</option>
+                            {q.options?.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                          {(answers[q.id] as string)?.startsWith("Any Other (Specify)") && (
                             <Input
                               type="text"
                               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
                               placeholder="Please specify"
                               onChange={(e) =>
-                                handleAnswer(
-                                  `Any Other (Specify) - ${e.target.value}`,
-                                  q.id
-                                )
+                                handleAnswer(`Any Other (Specify) - ${e.target.value}`, q.id)
                               }
                             />
                           )}
-                      </>
-                    )}
-                    {q.type === "grades" && renderGradesInput()}
-                  </div>
-                ))}
+                        </>
+                      )}
+
+                      {q.type === "grades" && renderGradesInput()}
+                    </div>
+                  );
+                })}
             </motion.div>
           </AnimatePresence>
+
           <div className="mt-8 flex justify-between">
             <Button
               type="button"
@@ -647,9 +797,9 @@ useEffect(() => {
               <Button
                 type="submit"
                 className="bg-red-700 hover:bg-red-700 text-white"
-                onClick={() => setSuccessOpen(true)}
+                disabled={isSubmitting}
               >
-                Submit
+                {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             ) : (
               <Button
@@ -670,26 +820,18 @@ useEffect(() => {
   const renderSubmittedData = () => {
     return (
       <div>
-        {/* ShadCN Dialog for Success Message */}
         <Dialog
           open={successOpen}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
               setSuccessOpen(false);
-              router.back();
-              setTimeout(() => {
-                window.location.reload();
-              }, 100); // Small delay ensures previous page has loaded
             }
           }}
         >
           <DialogContent className="flex flex-col justify-center items-center max-w-72 md:max-w-96 !rounded-3xl">
-            <Image
-              src="/DashboardPage/success.svg"
-              alt="Success"
-              width={150}
-              height={150}
-            />
+            <div className="w-32 h-32 bg-green-100 rounded-full flex items-center justify-center mb-4">
+              <div className="text-green-600 text-4xl">✓</div>
+            </div>
             <DialogHeader>
               <DialogTitle className="text-lg font-semibold text-gray-900">
                 Form Submitted Successfully!
@@ -700,7 +842,6 @@ useEffect(() => {
       </div>
     );
   };
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">

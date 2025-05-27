@@ -329,11 +329,14 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
           {/* Right Side: Image */}
           <div className="relative rounded-3xl overflow-hidden shadow-lg w-[100%] h-[250px] md:h-[200px] lg:h-[300px]  2xl:h-[400px]">
             <Image
-              src="/Hero_Robot.png" // Replace with actual image path
-              alt="Zeus Guide"
+              src="/Zeushicomp.png"
+              alt="AI Assistant"
               layout="fill"
-              // objectFit="cover"
-              className="object-contain"
+              width={0}
+              height={0}
+              sizes="20vw"
+              objectFit="none"
+              className="rounded-3xl"
             />
             <div className="absolute inset-0 flex justify-center items-end text-center bg-black/50 p-4 md:p-6">
               <div className="w-[90%] sm:w-[80%] md:w-[75%] lg:w-[85%]">
