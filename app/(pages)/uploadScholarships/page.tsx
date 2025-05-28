@@ -7,146 +7,358 @@ interface ExcelRow {
   [key: string]: string | number | undefined;
 }
 
-const ExcelUploader = () => {
+// Define the final scholarship structure for MongoDB
+interface ScholarshipData {
+  name: string;
+  hostCountry: string;
+  type: string;
+  provider: string;
+  deadline: string;
+  numberOfScholarships: number | string;
+  overview: string;
+  programs: string[];
+  minimumRequirements: string;
+  officialLink: string;
+
+  duration: {
+    general?: string;
+    bachelors?: string;
+    masters?: string;
+    phd?: string;
+  };
+
+  benefits: string[];
+
+  eligibilityCriteria: Array<{
+    criterion: string;
+    details: string;
+  }>;
+
+  requiredDocuments: Array<{
+    document: string;
+    details: string;
+  }>;
+
+  applicationProcess: Array<{
+    step: string;
+    details: string;
+  }>;
+
+  successChances: {
+    academicBackground: string;
+    age: string;
+    englishProficiency: string;
+    gradesAndCGPA: string;
+    nationality: string;
+    workExperience: string;
+  };
+
+  applicableDepartments: Array<{
+    name: string;
+    details: string;
+  }>;
+}
+
+const ImprovedExcelUploader = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
+  const [processedData, setProcessedData] = useState<ScholarshipData[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
       setError("");
       setResult("");
+      setProcessedData([]);
     }
   };
 
   // Convert Excel serial date to formatted string
-  function formatExcelDate(serial: number): string {
+  const formatExcelDate = (serial: number): string => {
     try {
       const jsDate = new Date((serial - 25569) * 86400 * 1000);
       const month = jsDate.toLocaleString("en-US", { month: "long" });
       const year = jsDate.getFullYear();
-      return `${month}-${year}`;
+      return `${month} ${year}`;
     } catch (error) {
       console.error("Error formatting date:", error);
-      return "Unknown Date";
+      return serial.toString();
     }
-  }
+  };
 
-  // Process Excel data to match your schema
-  const processExcelData = (rawData: ExcelRow[]) => {
-    return rawData.map((item) => {
+  // Helper function to safely get string value
+  const getString = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    return String(value).trim();
+  };
+
+  // Helper function to get number value
+  const getNumber = (value: any): number => {
+    if (value === null || value === undefined || value === "") return 0;
+    const num = Number(value);
+    return isNaN(num) ? 0 : num;
+  };
+
+  // Helper function to format grades/CGPA (convert decimals like 0.75 to percentages like 75)
+  const formatGradesAndCGPA = (value: any): string => {
+    if (value === null || value === undefined || value === "") return "";
+
+    const num = Number(value);
+    if (isNaN(num)) return getString(value);
+
+    // If it's a decimal between 0 and 1, convert to percentage
+    if (num > 0 && num < 1) {
+      return Math.round(num * 100).toString();
+    }
+
+    // If it's already a percentage or other format, return as string
+    return num.toString();
+  };
+
+  // Helper function to extract grouped data (like benefits, eligibility criteria, etc.)
+  const extractGroupedData = (
+    item: ExcelRow,
+    prefix: string,
+    detailPrefix?: string
+  ): Array<{ key: string; value: string; details?: string }> => {
+    const groupedData: Array<{ key: string; value: string; details?: string }> = [];
+
+    Object.keys(item).forEach(key => {
+      if (key.toLowerCase().startsWith(prefix.toLowerCase())) {
+        const value = getString(item[key]);
+        if (value) {
+          // Extract number from key for matching details
+          const match = key.match(/\d+/);
+          const number = match ? match[0] : "";
+
+          let details = "";
+          if (detailPrefix && number) {
+            // Try multiple possible detail key formats
+            const possibleDetailKeys = [
+              `${detailPrefix} ${number} Detail`,
+              `${detailPrefix} ${number} details`,
+              `${detailPrefix}${number} Detail`,
+              `${detailPrefix}${number} details`
+            ];
+
+            for (const detailKey of possibleDetailKeys) {
+              if (item[detailKey]) {
+                details = getString(item[detailKey]);
+                break;
+              }
+            }
+          }
+
+          groupedData.push({
+            key,
+            value,
+            details
+          });
+        }
+      }
+    });
+
+    return groupedData.sort((a, b) => {
+      const aNum = a.key.match(/\d+/)?.[0] || "0";
+      const bNum = b.key.match(/\d+/)?.[0] || "0";
+      return parseInt(aNum) - parseInt(bNum);
+    });
+  };
+
+  // Process Excel data to match MongoDB schema
+  const processExcelData = (rawData: ExcelRow[]): ScholarshipData[] => {
+    return rawData.map((item, index) => {
+      console.log(`Processing row ${index + 1}:`, item);
+
+      // Handle deadline formatting
+      let deadline = getString(item["Deadline"]);
       if (item["Deadline"] && typeof item["Deadline"] === "number") {
-        item["Deadline"] = formatExcelDate(item["Deadline"]);
+        deadline = formatExcelDate(item["Deadline"]);
       }
 
-      return {
-        name:
-          item["Name of Scholarship"]?.toString().trim() ||
-          "Unnamed Scholarship",
-        hostCountry: item["Host Country"]?.toString().trim() || "Unknown",
-        type: item["Scholarship Type"]?.toString().trim() || "Not Specified",
-        deadline: item["Deadline"] ? String(item["Deadline"]).trim() : "",
-        numberOfScholarships: Number(item["Number of Scholarships"]) || 1,
-        overview:
-          item["Scholarship Overview"]?.toString().trim() ||
-          "No overview available",
-        programs:
-          item["Programs"]
-            ?.toString()
-            .split(",")
-            .map((p) => p.trim()) || [],
+      // Extract benefits
+      const benefitsData = extractGroupedData(item, "Benefits of Scholarship");
+      const benefits = benefitsData.map(b => b.value);
 
-        duration: {
-          bachelors:
-            item["Duration of the Scholarship 1"]?.toString().trim() || "",
-          masters:
-            item["Duration of the Scholarship 2"]?.toString().trim() || "",
-          phd: item["Duration of the Scholarship 3"]?.toString().trim() || "",
-        },
+      // Extract eligibility criteria with details - handle naming inconsistencies
+      const eligibilityCriteria: Array<{ criterion: string; details: string }> = [];
 
-        benefits: Object.keys(item)
-          .filter((key) =>
-            key.toLowerCase().startsWith("benefits of scholarship")
-          )
-          .map((key) => item[key]?.toString().trim())
-          .filter(Boolean),
+      // First, collect all eligibility criteria entries (not details)
+      const eligibilityEntries = Object.keys(item)
+        .filter(key =>
+          key.toLowerCase().startsWith("eligibility criteria") &&
+          !key.toLowerCase().includes("detail")
+        )
+        .sort((a, b) => {
+          const aNum = a.match(/\d+/)?.[0] || "0";
+          const bNum = b.match(/\d+/)?.[0] || "0";
+          return parseInt(aNum) - parseInt(bNum);
+        });
 
-        applicableDepartments: Object.keys(item)
-          .filter((key) =>
-            key.toLowerCase().startsWith("applicable department")
-          )
-          .map((key) => {
-            const deptNumber = key.match(/\d+/)?.[0];
-            return {
-              name: item[key]?.toString().trim() || "",
-              details: item[`Detail ${deptNumber}`]?.toString().trim() || "",
-            };
-          })
-          .filter((dept) => dept.name),
+      // Then match each criterion with its corresponding detail
+      eligibilityEntries.forEach(key => {
+        const criterionValue = getString(item[key]);
+        if (criterionValue) {
+          const criterionNumber = key.match(/\d+/)?.[0];
+          let details = "";
 
-        eligibilityCriteria: Object.keys(item)
-          .filter(
-            (key) =>
-              key.toLowerCase().startsWith("eligibility criteria") &&
-              !key.toLowerCase().includes("detail")
-          )
-          .map((key) => {
-            const criterionNumber = key.match(/\d+/)?.[0];
-            return {
-              criterion: item[key]?.toString().trim() || "",
-              details:
-                item[`Eligibility Criteria ${criterionNumber} Detail`]
-                  ?.toString()
-                  .trim() ||
-                item[`Eligibility Criteria ${criterionNumber} details`]
-                  ?.toString()
-                  .trim() ||
-                "",
-            };
-          })
-          .filter((criteria) => criteria.criterion),
+          if (criterionNumber) {
+            // Try multiple possible detail key formats
+            const possibleDetailKeys = [
+              `Eligibility Criteria ${criterionNumber} Detail`,
+              `Eligibility Criteria ${criterionNumber} details`,
+              `Eligiblity Criteria ${criterionNumber} Detail`, // Handle typo in original data
+              `Eligiblity Criteria ${criterionNumber} details`
+            ];
 
-        requiredDocuments: Object.keys(item)
-          .filter(
-            (key) =>
-              key.toLowerCase().startsWith("required document") &&
-              !key.toLowerCase().includes("detail")
-          )
-          .map((key) => {
-            const docNumber = key.match(/\d+/)?.[0];
-            return {
-              document: item[key]?.toString().trim() || "",
-              details:
-                item[`Required Document ${docNumber} Detail`]
-                  ?.toString()
-                  .trim() || "",
-            };
-          })
-          .filter((doc) => doc.document),
+            for (const detailKey of possibleDetailKeys) {
+              if (item[detailKey]) {
+                details = getString(item[detailKey]);
+                break;
+              }
+            }
+          }
+
+          eligibilityCriteria.push({
+            criterion: criterionValue,
+            details: details
+          });
+        }
+      });
+
+      // Extract required documents with details - special handling needed
+      const requiredDocuments: Array<{ document: string; details: string }> = [];
+
+      // First, collect all document entries (not details)
+      const documentEntries = Object.keys(item)
+        .filter(key =>
+          key.toLowerCase().startsWith("required document") &&
+          !key.toLowerCase().includes("detail")
+        )
+        .sort((a, b) => {
+          const aNum = a.match(/\d+/)?.[0] || "0";
+          const bNum = b.match(/\d+/)?.[0] || "0";
+          return parseInt(aNum) - parseInt(bNum);
+        });
+
+      // Then match each document with its corresponding detail
+      documentEntries.forEach(key => {
+        const docValue = getString(item[key]);
+        if (docValue) {
+          const docNumber = key.match(/\d+/)?.[0];
+          let details = "";
+
+          if (docNumber) {
+            // Try to find the corresponding detail
+            const detailKey = `Required Document Detail ${docNumber}`;
+            details = getString(item[detailKey]);
+          }
+
+          requiredDocuments.push({
+            document: docValue,
+            details: details
+          });
+        }
+      });
+
+      // Extract application process with details
+      const processData = extractGroupedData(
+        item,
+        "Application Process",
+        "Application Process"
+      );
+      const applicationProcess = processData.map(p => ({
+        step: p.value,
+        details: p.details || ""
+      }));
+
+      // Extract applicable departments
+      const deptData = extractGroupedData(
+        item,
+        "Applicable Department",
+        "Detail"
+      );
+      const applicableDepartments = deptData.map(d => ({
+        name: d.value,
+        details: d.details || ""
+      }));
+
+      // Handle duration - check for multiple duration fields
+      const duration: ScholarshipData['duration'] = {};
+
+      // Check for general duration
+      const generalDuration = getString(item["Duration of the Scholarship"]);
+      if (generalDuration) {
+        duration.general = generalDuration;
+      }
+
+      // Check for specific program durations
+      const mastersDuration = getString(item["Duration of the Scholarship 1"]) ||
+        getString(item["Duration of the Scholarship Master"]);
+      if (mastersDuration) {
+        duration.masters = mastersDuration;
+      }
+
+      const bachelorsDuration = getString(item["Duration of the Scholarship 2"]) ||
+        getString(item["Duration of the Scholarship Bachelor"]);
+      if (bachelorsDuration) {
+        duration.bachelors = bachelorsDuration;
+      }
+
+      const phdDuration = getString(item["Duration of the Scholarship 3"]) ||
+        getString(item["Duration of the Scholarship PhD"]);
+      if (phdDuration) {
+        duration.phd = phdDuration;
+      }
+
+      // Process programs
+      const programsString = getString(item["Programs"]);
+      const programs = programsString ?
+        programsString.split(",").map(p => p.trim()).filter(Boolean) : [];
+
+      // Handle number of scholarships
+      let numberOfScholarships: number | string = getString(item["Number of Scholarships"]);
+      if (numberOfScholarships === "N/A" || numberOfScholarships === "") {
+        numberOfScholarships = "N/A";
+      } else {
+        const num = getNumber(numberOfScholarships);
+        numberOfScholarships = num > 0 ? num : "N/A";
+      }
+
+      const scholarshipData: ScholarshipData = {
+        name: getString(item["Name of Scholarship"]) || "Unnamed Scholarship",
+        hostCountry: getString(item["Host Country"]) || "Unknown",
+        type: getString(item["Scholarship Type"]) || "Not Specified",
+        provider: getString(item["Scholarship Provider"]) || "Unknown",
+        deadline,
+        numberOfScholarships,
+        overview: getString(item["Scholarship Overview"]) || "No overview available",
+        programs,
+        minimumRequirements: getString(item["Minimum Requirements"]) ||
+          getString(item["Min Requirement"]) || "",
+        officialLink: getString(item["Official Link"]) || "",
+
+        duration,
+        benefits,
+        eligibilityCriteria,
+        requiredDocuments,
+        applicationProcess,
+        applicableDepartments,
 
         successChances: {
-          academicBackground:
-            item["Success Chances Academic Background"]?.toString().trim() ||
-            "",
-          age: item["Success Chances Age"]?.toString().trim() || "",
-          englishProficiency:
-            item["Success Chances English Proficiency"]?.toString().trim() ||
-            "",
-          gradesAndCGPA:
-            item["Success Chances Grades and CGPA"]?.toString().trim() || "",
-          nationality:
-            item["Success Chances Nationality"]?.toString().trim() || "",
-          workExperience:
-            item["Success Chances Work Experience"]?.toString().trim() || "",
-        },
-
-        minimumRequirements:
-          item["Minimum Requirements"]?.toString().trim() ||
-          item["Min Requirement"]?.toString().trim() ||
-          "",
+          academicBackground: getString(item["Success Chances Academic Background"]),
+          age: getString(item["Success Chances Age"]),
+          englishProficiency: getString(item["Success Chances English Proficiency"]),
+          gradesAndCGPA: formatGradesAndCGPA(item["Success Chances Grades and CGPA"]),
+          nationality: getString(item["Success Chances Nationality"]),
+          workExperience: getString(item["Success Chances Work Experience"])
+        }
       };
+
+      console.log(`Processed scholarship data for row ${index + 1}:`, scholarshipData);
+      return scholarshipData;
     });
   };
 
@@ -162,16 +374,19 @@ const ExcelUploader = () => {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
 
-      const jsonData: ExcelRow[] =
-        XLSX.utils.sheet_to_json<ExcelRow>(worksheet);
+      const jsonData: ExcelRow[] = XLSX.utils.sheet_to_json<ExcelRow>(worksheet);
 
       if (jsonData.length === 0) {
         throw new Error("No data found in the Excel file");
       }
 
+      console.log("Raw JSON data:", jsonData);
       const processedData = processExcelData(jsonData);
       console.log("Processed data:", processedData);
 
+      setProcessedData(processedData);
+
+      // Uncomment when ready to upload to MongoDB
       const res = await fetch("/api/addScholarship", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -184,7 +399,10 @@ const ExcelUploader = () => {
       }
 
       const json = await res.json();
-      setResult(JSON.stringify(json, null, 2));
+      console.log(`API response:`, json);
+
+      setResult(`Successfully processed ${processedData.length} scholarship(s)`);
+
     } catch (error) {
       console.error("Error uploading file:", error);
       setError(
@@ -196,47 +414,105 @@ const ExcelUploader = () => {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">
-        Upload Excel Data for Scholarships
+    <div className="p-8 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">
+        Excel to MongoDB Scholarship Uploader
       </h1>
-      <div className="mb-4">
-        <input
-          type="file"
-          accept=".xlsx, .xls"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-        />
-        <p className="mt-1 text-sm text-gray-500">
-          Upload Excel file with scholarship data
-        </p>
+
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Excel File
+          </label>
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleFileChange}
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-2"
+          />
+          <p className="mt-1 text-sm text-gray-500">
+            Upload Excel file (.xlsx or .xls) with scholarship data
+          </p>
+        </div>
+
+        <button
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${!file || uploading
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          onClick={handleUpload}
+          disabled={!file || uploading}
+        >
+          {uploading ? "Processing..." : "Process & Upload"}
+        </button>
       </div>
 
-      <button
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-        onClick={handleUpload}
-        disabled={!file || uploading}
-      >
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
-
       {error && (
-        <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">
-          <h3 className="font-bold">Error</h3>
-          <p>{error}</p>
+        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          <h3 className="font-bold text-lg">Error</h3>
+          <p className="mt-1">{error}</p>
         </div>
       )}
 
       {result && (
-        <div className="mt-4">
-          <h3 className="font-bold text-green-700">Upload Successful</h3>
-          <pre className="mt-2 p-4 bg-gray-100 rounded text-sm whitespace-pre-wrap overflow-auto max-h-96">
-            {result}
-          </pre>
+        <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+          <h3 className="font-bold text-lg">Success</h3>
+          <p className="mt-1">{result}</p>
+        </div>
+      )}
+
+      {processedData.length > 0 && (
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">
+            Processed Data Preview
+          </h2>
+          <div className="space-y-6">
+            {processedData.map((scholarship, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-4">
+                <h3 className="text-xl font-semibold text-blue-600 mb-2">
+                  {scholarship.name}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <strong>Host Country:</strong> {scholarship.hostCountry}
+                  </div>
+                  <div>
+                    <strong>Type:</strong> {scholarship.type}
+                  </div>
+                  <div>
+                    <strong>Deadline:</strong> {scholarship.deadline}
+                  </div>
+                  <div>
+                    <strong>Programs:</strong> {scholarship.programs.join(", ")}
+                  </div>
+                  <div>
+                    <strong>Benefits:</strong> {scholarship.benefits.length} items
+                  </div>
+                  <div>
+                    <strong>Eligibility Criteria:</strong> {scholarship.eligibilityCriteria.length} items
+                  </div>
+                  <div>
+                    <strong>Required Documents:</strong> {scholarship.requiredDocuments.length} items
+                  </div>
+                  <div>
+                    <strong>Application Steps:</strong> {scholarship.applicationProcess.length} steps
+                  </div>
+                </div>
+                <details className="mt-3">
+                  <summary className="cursor-pointer font-medium text-blue-600 hover:text-blue-800">
+                    View Full Data
+                  </summary>
+                  <pre className="mt-2 p-3 bg-gray-100 rounded text-xs overflow-auto max-h-64">
+                    {JSON.stringify(scholarship, null, 2)}
+                  </pre>
+                </details>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default ExcelUploader;
+export default ImprovedExcelUploader;
