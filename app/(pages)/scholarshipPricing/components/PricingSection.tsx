@@ -71,19 +71,21 @@ export default function PricingSection() {
       </div>
 
       {/* Pricing Cards */}
-      <div className="flex overflow-x-auto gap-6 justify-start items-stretch mb-16 px-4 sm:justify-center">
-        {plans.map((plan) => (
-          <div
-            key={plan.id}
-            className="min-w-[300px] sm:w-96 max-w-sm flex-shrink-0"
-          >
-            <PricingCard
-              plan={plan}
-              onSelect={() => handleSelectPlan(plan.id)}
-              isSelected={selectedPlan === plan.id}
-            />
-          </div>
-        ))}
+      <div className=" overflow-scroll  w-full">
+        <div className="flex gap-6 px-4 sm:px-0 mb-16 w-max sm:w-full">
+          {plans.map((plan) => (
+            <div
+              key={plan.id}
+              className="min-w-[300px] sm:w-96 max-w-sm flex-shrink-0"
+            >
+              <PricingCard
+                plan={plan}
+                onSelect={() => handleSelectPlan(plan.id)}
+                isSelected={selectedPlan === plan.id}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Feature Comparison */}

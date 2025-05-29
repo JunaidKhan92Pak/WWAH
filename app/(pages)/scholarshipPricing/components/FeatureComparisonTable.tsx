@@ -3,6 +3,139 @@ import { Check, X } from "lucide-react";
 
 const features = [
   {
+    id: "sop",
+    name: "SOP/CV/Creative Portfolio",
+    essential: true,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "checklist",
+    name: "Checklist of University Application Docs",
+    essential: true,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "docsPrep",
+    name: "University Application Docs Prep",
+    essential: false,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "uniInterview",
+    name: "University Interview Prep",
+    essential: false,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "uniMock",
+    name: "University Mock Interviews",
+    essential: false,
+    pro: "1 Mock Interview",
+    premium: "3 Mock Interviews",
+  },
+  {
+    id: "embChecklist",
+    name: "Embassy Documents Checklist",
+    essential: true,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "embDocs",
+    name: "Embassy Documents Prep Guidance",
+    essential: false,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "embBook",
+    name: "Embassy Appointment Booking Support (if slots available)",
+    essential: false,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "embInterview",
+    name: "Embassy Interview Prep",
+    essential: false,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "embMock",
+    name: "Embassy Mock Interviews",
+    essential: false,
+    pro: false,
+    premium: true,
+  },
+  {
+    id: "counselling",
+    name: "One-on-One Counselling Sessions",
+    essential: false,
+    pro: "2 Sessions",
+    premium: "Unlimited Sessions",
+  },
+  {
+    id: "whatsapp",
+    name: "WhatsApp Chat Support",
+    essential: true,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "call",
+    name: "Call Support",
+    essential: false,
+    pro: "1 Scheduled Call",
+    premium: "Priority Call Support",
+  },
+  {
+    id: "englishGuidance",
+    name: "English Language Test Guidance",
+    essential: true,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "mockTest",
+    name: "English Language Test Prep with Mock Test",
+    essential: false,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "scholarships",
+    name: "No. of Scholarships to Apply",
+    essential: "Up to 5",
+    pro: "Up to 8",
+    premium: "Up to 12",
+  },
+  {
+    id: "profile",
+    name: "Profile Check & Assessment",
+    essential: false,
+    pro: true,
+    premium: "In-depth assessment with clear roadmap",
+  },
+  {
+    id: "zoom",
+    name: "Live Zoom Sessions",
+    essential: true,
+    pro: true,
+    premium: true,
+  },
+  {
+    id: "reviewTime",
+    name: "Fast Review Time",
+    essential: false,
+    pro: "3 Business Days",
+    premium: "24 Hours Review Time",
+  },
+  {
     id: "thousands",
     name: "Thousands of University Scholarship Alerts",
     essential: true,
@@ -24,7 +157,7 @@ const features = [
     premium: "Unlimited Assistance",
   },
   {
-    id: "interview",
+    id: "interviewGuide",
     name: "Interview Guidance/Checklist",
     essential: false,
     pro: true,
@@ -45,7 +178,7 @@ const features = [
     premium: "30 hours",
   },
   {
-    id: "review",
+    id: "scholarshipReview",
     name: "Scholarship Review & Assistance",
     essential: false,
     pro: false,
@@ -67,14 +200,14 @@ const features = [
   },
   {
     id: "writing",
-    name: "English Language Writing and Essay help",
+    name: "English Language Writing and Essay Help",
     essential: false,
     pro: true,
     premium: "5 Limited Assistance",
   },
   {
     id: "free",
-    name: "Free of scholarships to apply",
+    name: "Free of Scholarships to Apply",
     essential: "Up to 5",
     pro: "Up to 8",
     premium: "Up to 10",
@@ -94,6 +227,7 @@ const features = [
     premium: true,
   },
 ];
+
 
 export default function FeatureComparisonTable() {
   const renderCell = (value: boolean | string) => {
