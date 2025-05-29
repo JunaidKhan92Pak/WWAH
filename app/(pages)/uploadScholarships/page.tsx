@@ -89,20 +89,24 @@ const ImprovedExcelUploader = () => {
   };
 
   // Helper function to safely get string value
-  const getString = (value: any): string => {
+  interface GetString {
+    (value: string | number | undefined | null): string;
+  }
+
+  const getString: GetString = (value) => {
     if (value === null || value === undefined) return "";
     return String(value).trim();
   };
 
   // Helper function to get number value
-  const getNumber = (value: any): number => {
+  const getNumber = (value: number | string): number => {
     if (value === null || value === undefined || value === "") return 0;
     const num = Number(value);
     return isNaN(num) ? 0 : num;
   };
 
   // Helper function to format grades/CGPA (convert decimals like 0.75 to percentages like 75)
-  const formatGradesAndCGPA = (value: any): string => {
+  const formatGradesAndCGPA = (value: string): string => {
     if (value === null || value === undefined || value === "") return "";
 
     const num = Number(value);
@@ -351,7 +355,7 @@ const ImprovedExcelUploader = () => {
           academicBackground: getString(item["Success Chances Academic Background"]),
           age: getString(item["Success Chances Age"]),
           englishProficiency: getString(item["Success Chances English Proficiency"]),
-          gradesAndCGPA: formatGradesAndCGPA(item["Success Chances Grades and CGPA"]),
+          gradesAndCGPA: formatGradesAndCGPA(getString(item["Success Chances Grades and CGPA"])),
           nationality: getString(item["Success Chances Nationality"]),
           workExperience: getString(item["Success Chances Work Experience"])
         }

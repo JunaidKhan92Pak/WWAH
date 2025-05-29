@@ -4,342 +4,244 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IScholarship extends Document {
     name: string;
     hostCountry: string;
-    type: string;
-    provider: string;
-    deadline: string;
-    numberOfScholarships: number;
-    overview: string;
-    programs: string[];
-    minimumRequirements: string;
-    officialLink: string;
-    duration: {
-        general: string;
-        bachelors: string;
-        masters: string;
-        phd: string;
+    type?: string;
+    provider?: string;
+    deadline?: string;
+    numberOfScholarships?: number;
+    overview?: string;
+    programs?: string[];
+    minimumRequirements?: string;
+    officialLink?: string;
+    duration?: {
+        general?: string;
+        bachelors?: string;
+        masters?: string;
+        phd?: string;
     };
-    benefits: string[];
-    applicableDepartments: {
+    benefits?: string[];
+    applicableDepartments?: {
         name: string;
-        details: string;
+        details?: string;
     }[];
-    eligibilityCriteria: {
+    eligibilityCriteria?: {
         criterion: string;
-        details: string;
+        details?: string;
     }[];
-    requiredDocuments: {
+    requiredDocuments?: {
         document: string;
-        details: string;
+        details?: string;
     }[];
-    applicationProcess: {
+    applicationProcess?: {
         step: string;
-        details: string;
+        details?: string;
     }[];
-    successChances: {
-        academicBackground: string;
-        age: string;
-        englishProficiency: string;
-        gradesAndCGPA: string;
-        nationality: string;
-        workExperience: string;
+    successChances?: {
+        academicBackground?: string;
+        age?: string;
+        englishProficiency?: string;
+        gradesAndCGPA?: string;
+        nationality?: string;
+        workExperience?: string;
     };
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
-// Define schema
+// Define schema with minimal validation
 const scholarshipSchema = new Schema({
-    // Basic information
+    // Only essential fields are required
     name: {
         type: String,
+        required: [true, 'Scholarship name is required'],
         trim: true,
-        index: true,
-
+        index: true
     },
     hostCountry: {
         type: String,
+        required: [true, 'Host country is required'],
         trim: true,
-        index: true,
+        index: true
     },
+
+    // All other fields are optional with minimal constraints
     type: {
         type: String,
         trim: true,
-        default: 'Not Specified',
-        enum: {
-            values: ['Fully Funded', 'Partially Funded', 'Merit-Based', 'Need-Based', 'Government-Funded', 'University-Funded', 'Private', 'Not Specified'],
-            message: 'Type must be one of the specified values'
-        }
+        default: 'Not Specified'
     },
     provider: {
         type: String,
         trim: true,
-        default: 'Not Specified',
+        default: 'Not Specified'
     },
     deadline: {
         type: String,
         trim: true,
-
+        default: ''
     },
     numberOfScholarships: {
         type: Number,
         default: 1,
+        min: [0, 'Number of scholarships cannot be negative']
     },
     overview: {
         type: String,
         trim: true,
+        default: ''
     },
     minimumRequirements: {
         type: String,
         trim: true,
-
+        default: ''
     },
     officialLink: {
         type: String,
         trim: true,
-        validate: {
-            validator: function (v: string) {
-                if (!v) return true; // Allow empty
-                return /^https?:\/\/.+\..+/.test(v);
-            },
-            message: 'Official link must be a valid URL starting with http:// or https://'
-        },
-
+        default: ''
+        // Removed URL validation to allow flexible formats
     },
 
-    // Programs and duration
-    programs: [{
-        type: String,
-        trim: true,
-
-    }],
+    // Programs and duration - completely flexible
+    programs: {
+        type: [String],
+        default: []
+    },
     duration: {
-        general: {
-            type: String,
-            trim: true,
-
-        },
-        bachelors: {
-            type: String,
-            trim: true,
-
-        },
-        masters: {
-            type: String,
-            trim: true,
-        },
-        phd: {
-            type: String,
-            trim: true,
-
-        }
+        general: { type: String, trim: true, default: '' },
+        bachelors: { type: String, trim: true, default: '' },
+        masters: { type: String, trim: true, default: '' },
+        phd: { type: String, trim: true, default: '' }
     },
 
-    // Benefits
-    benefits: [{
-        type: String,
-        trim: true,
-    }],
+    // Benefits - flexible array
+    benefits: {
+        type: [String],
+        default: []
+    },
 
-    // Applicable departments
+    // Applicable departments - flexible structure
     applicableDepartments: [{
-        name: {
-            type: String,
-            trim: true,
-        },
-        details: {
-            type: String,
-            trim: true,
-
-        }
+        name: { type: String, trim: true },
+        details: { type: String, trim: true, default: '' }
     }],
 
-    // Eligibility criteria
+    // Eligibility criteria - flexible structure
     eligibilityCriteria: [{
-        criterion: {
-            type: String,
-            trim: true,
-        },
-        details: {
-            type: String,
-            trim: true,
-
-        }
+        criterion: { type: String, trim: true },
+        details: { type: String, trim: true, default: '' }
     }],
 
-    // Required documents
+    // Required documents - flexible structure
     requiredDocuments: [{
-        document: {
-            type: String,
-            trim: true,
-
-        },
-        details: {
-            type: String,
-            trim: true,
-        }
+        document: { type: String, trim: true },
+        details: { type: String, trim: true, default: '' }
     }],
 
-    // Application process
+    // Application process - flexible structure
     applicationProcess: [{
-        step: {
-            type: String,
-            trim: true,
-
-        },
-        details: {
-            type: String,
-            trim: true,
-        }
+        step: { type: String, trim: true },
+        details: { type: String, trim: true, default: '' }
     }],
 
-    // Success chances
+    // Success chances - all optional with no length limits
     successChances: {
-        academicBackground: {
-            type: String,
-            trim: true,
-            maxlength: [200, 'Academic background cannot exceed 200 characters']
-        },
-        age: {
-            type: String,
-            trim: true,
-            maxlength: [50, 'Age requirement cannot exceed 50 characters']
-        },
-        englishProficiency: {
-            type: String,
-            trim: true,
-            maxlength: [100, 'English proficiency requirement cannot exceed 100 characters']
-        },
-        gradesAndCGPA: {
-            type: String,
-            trim: true,
-            maxlength: [100, 'Grades/CGPA requirement cannot exceed 100 characters']
-        },
-        nationality: {
-            type: String,
-            trim: true,
-            maxlength: [200, 'Nationality requirement cannot exceed 200 characters']
-        },
-        workExperience: {
-            type: String,
-            trim: true,
-            maxlength: [200, 'Work experience requirement cannot exceed 200 characters']
-        }
+        academicBackground: { type: String, trim: true, default: '' },
+        age: { type: String, trim: true, default: '' },
+        englishProficiency: { type: String, trim: true, default: '' },
+        gradesAndCGPA: { type: String, trim: true, default: '' },
+        nationality: { type: String, trim: true, default: '' },
+        workExperience: { type: String, trim: true, default: '' }
     }
 }, {
     timestamps: true,
-    // Enable schema modifications for future flexibility
+    // Allow additional fields that aren't in schema
     strict: false,
-    // Add version key for optimistic concurrency
+    // Keep version key for optimistic concurrency
     versionKey: '__v'
 });
 
-// Indexes for better query performance
+// Essential indexes only
 scholarshipSchema.index({ name: 1, hostCountry: 1 }, { unique: true });
 scholarshipSchema.index({ type: 1 });
-scholarshipSchema.index({ provider: 1 });
 scholarshipSchema.index({ hostCountry: 1 });
-scholarshipSchema.index({ programs: 1 });
-scholarshipSchema.index({ deadline: 1 });
 scholarshipSchema.index({ createdAt: -1 });
 
-// Text index for search functionality
-scholarshipSchema.index({
-    name: 'text',
-    overview: 'text',
-    'eligibilityCriteria.details': 'text',
-    'benefits': 'text'
-}, {
-    name: 'scholarship_text_index',
-    weights: {
-        name: 10,
-        overview: 5,
-        'eligibilityCriteria.details': 3,
-        'benefits': 2
-    }
-});
+// Simple text index for basic search (optional - won't break if it fails)
+try {
+    scholarshipSchema.index({
+        name: 'text',
+        overview: 'text',
+        provider: 'text'
+    }, {
+        name: 'scholarship_text_index',
+        background: true // Create in background to avoid blocking
+    });
+} catch (error) {
+    console.log('Text index creation skipped - will use regex search fallback');
+}
 
-// Virtual for formatted deadline
-scholarshipSchema.virtual('formattedDeadline').get(function () {
-    if (!this.deadline) return 'Not specified';
-    return this.deadline;
-});
-
-// Virtual for total benefits count
-scholarshipSchema.virtual('benefitsCount').get(function () {
-    return this.benefits ? this.benefits.length : 0;
-});
-
-// Virtual for total eligibility criteria count
-scholarshipSchema.virtual('eligibilityCriteriaCount').get(function () {
-    return this.eligibilityCriteria ? this.eligibilityCriteria.length : 0;
-});
-
-// Pre-save middleware for data cleaning
+// Minimal pre-save middleware - only clean up critical issues
 scholarshipSchema.pre('save', function (next) {
-    // Clean up empty strings in arrays
-    if (this.programs) {
-        this.programs = this.programs.filter(program => program && program.trim().length > 0);
-    }
-    if (this.benefits) {
-        this.benefits = this.benefits.filter(benefit => benefit && benefit.trim().length > 0);
+    // Ensure numberOfScholarships is valid
+    if (this.numberOfScholarships === null || this.numberOfScholarships === undefined || this.numberOfScholarships < 0) {
+        this.numberOfScholarships = 1;
     }
 
-    // Ensure numberOfScholarships is valid
-    if (this.numberOfScholarships <= 0) {
-        this.numberOfScholarships = 1;
+    // Clean up empty arrays (optional)
+    if (this.programs && Array.isArray(this.programs)) {
+        this.programs = this.programs.filter(program => program && program.toString().trim().length > 0);
+    }
+    if (this.benefits && Array.isArray(this.benefits)) {
+        this.benefits = this.benefits.filter(benefit => benefit && benefit.toString().trim().length > 0);
     }
 
     next();
 });
 
-// Pre-update middleware
+// Simplified pre-update middleware
 scholarshipSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], function (next) {
     this.set({ updatedAt: new Date() });
     next();
 });
 
-// Instance methods
-scholarshipSchema.methods.isFullyFunded = function () {
-    return this.type === 'Fully Funded';
-};
-
-scholarshipSchema.methods.hasDeadlinePassed = function () {
-    if (!this.deadline || this.deadline === 'N/A') return false;
-    // This is a simple check - you might want to implement more sophisticated date parsing
-    const now = new Date();
-    // You would need to implement proper date parsing based on your deadline format
-    return false; // Placeholder
-};
-
-scholarshipSchema.methods.getEligiblePrograms = function () {
-    return (this.programs as string[]).filter((program: string) => program && program.trim().length > 0);
-};
-
-// Static methods
+// Simple static methods without complex validation
 scholarshipSchema.statics.findByCountry = function (country: string) {
-    return this.find({ hostCountry: new RegExp(country, 'i') });
+    const regex = new RegExp(country.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    return this.find({ hostCountry: regex });
 };
 
 scholarshipSchema.statics.findByType = function (type: string) {
     return this.find({ type: type });
 };
 
-scholarshipSchema.statics.findFullyFunded = function () {
-    return this.find({ type: 'Fully Funded' });
-};
-
 scholarshipSchema.statics.searchScholarships = function (searchTerm: string) {
-    return this.find(
-        { $text: { $search: searchTerm } },
-        { score: { $meta: 'textScore' } }
-    ).sort({ score: { $meta: 'textScore' } });
+    const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escapedTerm, 'i');
+
+    // Try text search first, fallback to regex
+    return this.find({
+        $or: [
+            { name: regex },
+            { overview: regex },
+            { provider: regex },
+            { hostCountry: regex }
+        ]
+    });
 };
 
 // Ensure virtual fields are serialized
 scholarshipSchema.set('toJSON', { virtuals: true });
 scholarshipSchema.set('toObject', { virtuals: true });
 
-// Create or get the model
-const Scholarship = mongoose.models.Scholarship || mongoose.model<IScholarship>('Scholarship', scholarshipSchema);
+// Handle mongoose model compilation issues
+let Scholarship: mongoose.Model<IScholarship>;
+
+try {
+    // Try to get existing model
+    Scholarship = mongoose.model<IScholarship>('Scholarship');
+} catch (error) {
+    // Create new model if it doesn't exist
+    Scholarship = mongoose.model<IScholarship>('Scholarship', scholarshipSchema);
+}
 
 export default Scholarship;
