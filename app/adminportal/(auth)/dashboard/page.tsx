@@ -1,7 +1,5 @@
-
 "use client";
 import { useEffect, useState } from "react";
-// Using custom card components instead of shadcn/ui
 import Link from "next/link";
 import {
   Users,
@@ -20,8 +18,15 @@ import {
   Plane,
   Home,
   TrendingUp,
+  Menu,
 } from "lucide-react";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useUserStore } from "@/store/useUserData";
 interface User {
   _id: string;
   firstName?: string;
@@ -75,7 +80,6 @@ interface ApplicationData {
   basics: Basic[];
   documents: Document[];
 }
-
 // Application stages configuration
 const APPLICATION_STAGES = [
   { id: 1, label: "Complete Application", icon: FileText },
@@ -86,8 +90,8 @@ const APPLICATION_STAGES = [
   { id: 6, label: "Accommodation Booked", icon: Home },
   { id: 7, label: "Airport Pickup Booked", icon: Plane },
 ];
-
 export default function AdminDashboard() {
+  const { logout } = useUserStore();
   const [data, setData] = useState<ApplicationData | null>(null);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,7 +100,11 @@ export default function AdminDashboard() {
   const [nationalityFilter, setNationalityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [showTracker, setShowTracker] = useState(false);
-
+  const handlelogout = () => {
+    logout();
+    // Use window.location.href for a full page reload instead of client-side navigation
+    window.location.href = "/";
+  };
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -149,7 +157,6 @@ export default function AdminDashboard() {
 
   // Get application status summary
 
-
   const getApplicationSummary = (): ApplicationSummary => {
     if (!data) return { total: 0, stages: {} };
 
@@ -168,7 +175,6 @@ export default function AdminDashboard() {
     const total = data.Users.length;
     return { total, stages };
   };
-  
 
   // Filter users based on search term, nationality, and status
   useEffect(() => {
@@ -244,7 +250,7 @@ export default function AdminDashboard() {
   const summary = getApplicationSummary();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-8">
@@ -282,6 +288,28 @@ export default function AdminDashboard() {
                   </span>
                 </div>
               </div>
+              {/* <div className="rounded-md border-red-500 border-2 flex p-2 items-center" >
+                <Menu className="text-red-600" />
+                
+              </div> */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="rounded-md border-red-500 border-2 flex p-2 items-center cursor-pointer">
+                    <Menu className="text-red-600" />
+                  </div>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-30 mx-2">
+                  <DropdownMenuItem
+                    onClick={() => console.log("Inbox clicked")}
+                  >
+                    Inbox
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handlelogout}>
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>

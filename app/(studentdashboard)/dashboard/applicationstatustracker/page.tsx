@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ActiveApplication from "./components/ActiveApplication";
 // import CompletedApplication from "./components/CompletedApplication";
 import { Button } from "@/components/ui/button";
+import CompletedApplication from "./components/CompletedApplication";
 
 
 type Tab = {
@@ -38,7 +39,7 @@ const Page = () => {
           ))}
         </div>
         {activeTab === "activeapplication" && <ActiveApplication />}
-        {/* {activeTab === "completedapplication" && <CompletedApplication />} */}
+        {activeTab === "completedapplication" && <CompletedApplication />}
 
       </div>
     </>
