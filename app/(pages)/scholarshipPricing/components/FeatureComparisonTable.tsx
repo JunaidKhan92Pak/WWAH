@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
 
@@ -243,46 +244,62 @@ export default function FeatureComparisonTable() {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto ">
       <table className="min-w-full divide-y divide-gray-300 border-collapse">
         <thead>
           <tr>
             <th
               scope="col"
-              className="py-3.5 pl-4 pr-3 text-left  text-gray-900 sm:pl-0 w-1/3"
+              className=" pl-4 pr-3 text-left  text-gray-900 sm:pl-0 w-1/3"
             >
-              <h3 className="  text-gray-900 mb-8">
-                Scholarship Services
-              </h3>
+              <h3 className="  text-gray-900 mb-8">Scholarship Services</h3>
             </th>
             <th
               scope="col"
-              className="px-3 py-3.5 text-center  text-sm font-semibold text-gray-900 w-1/5"
+              className="px-3  text-center  text-sm font-semibold text-gray-900 w-1/5"
             >
-              <div className="flex flex-col items-center">
-                <span>Essential Plan</span>
-                <span className="font-bold text-lg">$16</span>
-                <span className="text-xs text-gray-500">per month</span>
+              <div className="flex flex-col items-center border-x-2 border-t-2 p-2 border-gray-300 rounded-t-lg bg-white max-w-sm">
+                <span className="text-xl mb-4 leading-tight whitespace-nowrap">Essential Plan</span>
+                <div className="flex items-start mb-4">
+                  <span className="text-base md:text-lg">$</span>
+                  <span className="text-3xl md:text-5xl font-bold ">16</span>
+                  <span className="text-base md:text-lg text-gray-500">/year</span>
+                </div>
+                <Button className="border-red-700 bg-white hover:bg-transparent text-red-700 px-6 py-2 rounded border ">
+                  Buy Now
+                </Button>
               </div>
             </th>
             <th
               scope="col"
-              className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 w-1/5"
+              className="px-3  text-center text-sm font-semibold text-gray-900 w-1/5"
             >
-              <div className="flex flex-col items-center relative">
-                <span>Pro Plan</span>
-                <span className="font-bold text-lg">$26</span>
-                <span className="text-xs text-gray-500">per month</span>
+              <div className="flex flex-col items-center border-x-2 border-t-2 p-2 border-gray-300 rounded-t-lg bg-white max-w-sm">
+                <span className="text-xl mb-4 leading-tight whitespace-nowrap">Pro Plan</span>
+                <div className="flex items-start mb-4">
+                  <span className="text-base md:text-lg">$</span>
+                  <span className="text-3xl md:text-5xl font-bold ">26</span>
+                  <span className="text-base md:text-lg text-gray-500">/year</span>
+                </div>
+                <Button className="bg-red-700   text-white px-6 py-2 rounded border ">
+                  Buy Now
+                </Button>
               </div>
             </th>
             <th
               scope="col"
-              className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 w-1/5"
+              className="px-3  text-center text-sm font-semibold text-gray-900 w-1/5"
             >
-              <div className="flex flex-col items-center">
-                <span>Premium Plan</span>
-                <span className="font-bold text-lg">$34</span>
-                <span className="text-xs text-gray-500">per month</span>
+              <div className="flex flex-col items-center border-x-2 border-t-2 p-2 border-gray-300 rounded-t-lg bg-white max-w-sm">
+                <span className="text-xl mb-4 leading-tight whitespace-nowrap">Premium Plan</span>
+                <div className="flex items-start mb-4">
+                  <span className="text-base md:text-lg">$</span>
+                  <span className="text-3xl md:text-5xl font-bold ">34</span>
+                  <span className="text-base md:text-lg text-gray-500">/year</span>
+                </div>
+                <Button className="border-red-700 bg-white hover:bg-transparent text-red-700 px-6 py-2 rounded border ">
+                  Buy Now
+                </Button>
               </div>
             </th>
           </tr>
