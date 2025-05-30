@@ -42,7 +42,7 @@ const Coursesuggestion = () => {
           <div
             className="flex  overflow-x-auto space-x-4 hide-scrollbar"
             style={{
-              scrollbarWidth: "none",
+              scrollbarWidth: "thin",
               msOverflowStyle: "none",
             }}
           >

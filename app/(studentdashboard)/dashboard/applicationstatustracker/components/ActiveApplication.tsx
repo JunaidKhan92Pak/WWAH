@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 const ActiveApplication = () => {
   const applicationDetails = [
     { src: "/location.svg", alt: "Location", text: "New Zealand" },
@@ -28,11 +29,13 @@ const ActiveApplication = () => {
   return (
     <div className="relative">
       {/* Blur Overlay */}
-      {/* <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-xl flex items-center justify-center">
-        <button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
-          Complete Your Profile
-        </button>
-      </div> */}
+       <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-xl flex items-center justify-center">
+        <Link href="/Universities">
+        <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
+          Apply Now
+        </Button>
+      </Link>
+      </div>
       <div className="bg-[#FCE7D280] w-full mx-auto rounded-xl border mt-4 p-0 sm:p-6">
         <div className="flex flex-col sm:flex-row gap-6 w-[95%] mx-auto items-center md:items-start">
           {/* Course Image */}

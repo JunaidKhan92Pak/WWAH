@@ -35,40 +35,42 @@ import * as z from "zod";
 import { useEffect } from "react";
 import Image from "next/image";
 import { FaPlaneDeparture } from "react-icons/fa6";
+import { countries } from "@/lib/countries";
 
 // Comprehensive country data with flag image URLs
-const countries = [
-  {
-    code: "US",
-    name: "United States",
-    phoneCode: "+1",
-    flagUrl: "https://flagcdn.com/w40/us.png",
-  },
-  {
-    code: "GB",
-    name: "United Kingdom",
-    phoneCode: "+44",
-    flagUrl: "https://flagcdn.com/w40/gb.png",
-  },
-  {
-    code: "AU",
-    name: "Australia",
-    phoneCode: "+61",
-    flagUrl: "https://flagcdn.com/w40/au.png",
-  },
-  {
-    code: "CA",
-    name: "Canada",
-    phoneCode: "+1",
-    flagUrl: "https://flagcdn.com/w40/ca.png",
-  },
-];
+// const countries = [
+//   {
+//     code: "US",
+//     name: "United States",
+//     phoneCode: "+1",
+//     flagUrl: "https://flagcdn.com/w40/us.png",
+//   },
+//   {
+//     code: "GB",
+//     name: "United Kingdom",
+//     phoneCode: "+44",
+//     flagUrl: "https://flagcdn.com/w40/gb.png",
+//   },
+//   {
+//     code: "AU",
+//     name: "Australia",
+//     phoneCode: "+61",
+//     flagUrl: "https://flagcdn.com/w40/au.png",
+//   },
+//   {
+//     code: "CA",
+//     name: "Canada",
+//     phoneCode: "+1",
+//     flagUrl: "https://flagcdn.com/w40/ca.png",
+//   },
+// ];
 
 const formSchema = z.object({
   // Personal Information
   email: z.string().email("Invalid email address"),
-  phoneCountry: z.string().min(1, "Country code is required"),
+  phoneCountry: z.string().min(1, "Country code is required"), // e.g. "+92"
   phoneNo: z.string().min(1, "Phone number is required"),
+
   // Location Details
   country: z.string().min(1, "Country is required"),
   university: z.string().min(1, "University is required"),
@@ -89,7 +91,7 @@ export default function Home() {
     defaultValues: {
       // Personal Information
       email: "",
-      phoneCountry: "+1",
+    phoneCountry: 'Pakistan|+92',
       phoneNo: "",
       // Location Details
       country: "",
@@ -104,17 +106,17 @@ export default function Home() {
   });
 
   // Synchronize country selection with phone country code
-  useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name === "country") {
-        const selectedCountry = countries.find((c) => c.code === value.country);
-        if (selectedCountry) {
-          form.setValue("phoneCountry", selectedCountry.phoneCode);
-        }
+ useEffect(() => {
+  const subscription = form.watch((value, { name }) => {
+    if (name === "country") {
+      const selectedCountry = countries.find((c) => c.name === value.country);
+      if (selectedCountry) {
+        form.setValue("phoneCountry", selectedCountry.code);
       }
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
+    }
+  });
+  return () => subscription.unsubscribe();
+}, [form]);
 
   // Flight details modal state
   const [open, setOpen] = useState(false);
@@ -208,7 +210,7 @@ export default function Home() {
     }
   }
   const CountryFlag = ({ url }: { url: string }) => (
-    <div className="relative w-4 h-4 rounded-full overflow-hidden">
+    <div className="relative w-5 h-5 rounded-full overflow-hidden">
       <Image
         src={url}
         alt="Country flag"
@@ -251,120 +253,80 @@ export default function Home() {
 
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <FormField
-                  control={form.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Country</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1]">
-                            <SelectValue placeholder="Select country">
-                              {field.value && (
-                                <span className="flex items-center gap-2">
-                                  <CountryFlag
-                                    url={
-                                      countries.find(
-                                        (c) => c.code === field.value
-                                      )?.flagUrl || ""
-                                    }
-                                  />
-                                  <span>
-                                    {
-                                      countries.find(
-                                        (c) => c.code === field.value
-                                      )?.name
-                                    }
-                                  </span>
-                                </span>
-                              )}
-                            </SelectValue>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {countries.map((country, index) => (
-                            <SelectItem key={index} value={country.code}>
-                              <span className="flex items-center gap-2">
-                                <CountryFlag url={country.flagUrl} />
-                                <span>{country.name}</span>
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage>
-                        {form.formState.errors.country?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                />
+  control={form.control}
+  name="country"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Country</FormLabel>
+      <Select onValueChange={field.onChange} value={field.value}>
+        <FormControl>
+          <SelectTrigger className="bg-[#f1f1f1]">
+            <SelectValue placeholder="Select country">
+              {field.value && (
+                <span className="flex items-center gap-2">
+                  {/* <CountryFlag
+                    url={
+                      countries.find((c) => c.name === field.value)?.flag || ""
+                    }
+                  /> */}
+                  <span>{field.value}</span>
+                </span>
+              )}
+            </SelectValue>
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          {countries.map((country) => (
+            <SelectItem key={country.name} value={country.name}>
+              <span className="flex items-center gap-2">
+                {/* <CountryFlag url={country.flag} /> */}
+                <span>{country.name}</span>
+              </span>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormMessage>{form.formState.errors.country?.message}</FormMessage>
+    </FormItem>
+  )}
+/>
 
-                <FormField
-                  control={form.control}
-                  name="university"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>University</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1]">
-                            <SelectValue placeholder="Select university" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="harvard">
-                            Harvard University
-                          </SelectItem>
-                          <SelectItem value="mit">MIT</SelectItem>
-                          <SelectItem value="stanford">
-                            Stanford University
-                          </SelectItem>
-                          <SelectItem value="oxford">
-                            Oxford University
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage>
-                        {form.formState.errors.university?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                />
+               <FormField
+  control={form.control}
+  name="university"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>University</FormLabel>
+      <FormControl>
+        <Input
+          placeholder="Enter university"
+          {...field}
+          className="bg-[#f1f1f1] placeholder:text-sm"
+        />
+      </FormControl>
+      <FormMessage>{form.formState.errors.university?.message}</FormMessage>
+    </FormItem>
+  )}
+/>
 
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>City</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-[#f1f1f1]">
-                            <SelectValue placeholder="Select city" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="newyork">New York</SelectItem>
-                          <SelectItem value="london">London</SelectItem>
-                          <SelectItem value="toronto">Toronto</SelectItem>
-                          <SelectItem value="sydney">Sydney</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage>
-                        {form.formState.errors.city?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                />
+<FormField
+  control={form.control}
+  name="city"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>City</FormLabel>
+      <FormControl>
+        <Input
+          placeholder="Enter city"
+          {...field}
+          className="bg-[#f1f1f1] placeholder:text-sm"
+        />
+      </FormControl>
+      <FormMessage>{form.formState.errors.city?.message}</FormMessage>
+    </FormItem>
+  )}
+/>
+
                 {/* Document Upload Section */}
                 <FormField
                   control={form.control}
@@ -429,7 +391,7 @@ export default function Home() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Drop Off Location</FormLabel>
-                      <FormControl className="bg-[#f1f1f1]">
+                      <FormControl className="bg-[#f1f1f1] placeholder:text-sm">
                         <Input
                           placeholder="Enter drop off location"
                           {...field}
@@ -467,67 +429,75 @@ export default function Home() {
               {/* Contact Information Section */}
 
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="phoneNo"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone No.</FormLabel>
-                      <div className="flex gap-2">
-                        <FormField
-                          control={form.control}
-                          name="phoneCountry"
-                          render={({ field: countryField }) => (
-                            <Select
-                              onValueChange={countryField.onChange}
-                              value={countryField.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="w-[120px] bg-[#f1f1f1] ">
-                                  <SelectValue>
-                                    {countryField.value && (
-                                      <span className="flex items-center gap-2">
-                                        <CountryFlag
-                                          url={
-                                            countries.find(
-                                              (c) =>
-                                                c.phoneCode ===
-                                                countryField.value
-                                            )?.flagUrl || ""
-                                          }
-                                        />
-                                        <span>{countryField.value}</span>
-                                      </span>
-                                    )}
-                                  </SelectValue>
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {countries.map((country) => (
-                                  <SelectItem
-                                    key={country.code}
-                                    value={country.phoneCode}
-                                  >
-                                    <span className="flex items-center gap-2 ">
-                                      <CountryFlag url={country.flagUrl} />
-                                      <span>{country.phoneCode}</span>
-                                    </span>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          )}
+<FormField
+  control={form.control}
+  name="phoneNo"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Phone No.</FormLabel>
+      <div className="flex gap-2">
+        <FormField
+          control={form.control}
+          name="phoneCountry"
+          render={({ field: countryField }) => (
+            <Select
+              onValueChange={countryField.onChange}
+              value={countryField.value}
+            >
+              <FormControl>
+                <SelectTrigger className="w-[150px] bg-[#f1f1f1]">
+                  <SelectValue>
+                    {countryField.value && (
+                      <span className="flex items-center gap-2">
+                        <CountryFlag
+                          url={
+                            countries.find(
+                              (c) =>
+                                `${c.name}|${c.code}` === countryField.value
+                            )?.flag || ""
+                          }
                         />
-                        <FormControl className="bg-[#f1f1f1] placeholder:text-sm">
-                          <Input placeholder="Enter phone number" {...field} />
-                        </FormControl>
-                      </div>
-                      <FormMessage>
-                        {form.formState.errors.phoneNo?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                />
+                        <span>
+                          {
+                            countries.find(
+                              (c) =>
+                                `${c.name}|${c.code}` === countryField.value
+                            )?.code
+                          }
+                        </span>
+                      </span>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {countries.map((country) => (
+                  <SelectItem
+                    key={`${country.name}|${country.code}`}
+                    value={`${country.name}|${country.code}`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <CountryFlag url={country.flag}  />
+                      <span>{country.name} ({country.code})</span>
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        <Input
+          {...field}
+          type="tel"
+          placeholder="Enter phone number"
+          className="flex-1 bg-[#f1f1f1] placeholder:text-sm"
+        />
+      </div>
+      <FormMessage>{form.formState.errors.phoneNo?.message}</FormMessage>
+    </FormItem>
+  )}
+/>
+
 
                 <FormField
                   control={form.control}
