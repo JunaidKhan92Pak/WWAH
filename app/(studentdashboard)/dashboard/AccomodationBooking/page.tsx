@@ -178,10 +178,17 @@ export default function Home() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="uk">United Kingdom</SelectItem>
-                        <SelectItem value="us">United States</SelectItem>
-                        <SelectItem value="ca">Canada</SelectItem>
-                        <SelectItem value="au">Australia</SelectItem>
+                       <SelectItem value="uk">United Kingdom</SelectItem>
+<SelectItem value="nz">New Zealand</SelectItem>
+<SelectItem value="au">Australia</SelectItem>
+<SelectItem value="ca">Canada</SelectItem>
+<SelectItem value="de">Germany</SelectItem>
+<SelectItem value="my">Malaysia</SelectItem>
+<SelectItem value="ie">Ireland</SelectItem>
+<SelectItem value="us">United States</SelectItem>
+<SelectItem value="cn">China</SelectItem>
+<SelectItem value="it">Italy</SelectItem>
+
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -189,65 +196,43 @@ export default function Home() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="university"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>University</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] text-sm">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="oxford">
-                          Oxford University
-                        </SelectItem>
-                        <SelectItem value="cambridge">
-                          Cambridge University
-                        </SelectItem>
-                        <SelectItem value="harvard">
-                          Harvard University
-                        </SelectItem>
-                        <SelectItem value="mit">MIT</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+<FormField
+  control={form.control}
+  name="university"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>University</FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          placeholder="Enter university name"
+          className="bg-[#f1f1f1] placeholder:text-sm placeholder:text-black"
 
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>City</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] text-sm">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="london">London</SelectItem>
-                        <SelectItem value="manchester">Manchester</SelectItem>
-                        <SelectItem value="birmingham">Birmingham</SelectItem>
-                        <SelectItem value="leeds">Leeds</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+/>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+<FormField
+  control={form.control}
+  name="city"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>City</FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          placeholder="Enter city name"
+          className="bg-[#f1f1f1] placeholder:text-sm placeholder:text-black"
+
+/>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
               <FormField
                 control={form.control}

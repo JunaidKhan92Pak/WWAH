@@ -106,33 +106,25 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             )}
           />
           {/* city */}
-          <FormField
-            control={form.control}
-            name="city"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>City</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value || ""}
-                >
-                  <FormControl>
-                    <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131]">
-                      <SelectValue placeholder="Select City" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {/* Replace with dynamic city options based on selected country */}
-                    <SelectItem value="london">London</SelectItem>
-                    <SelectItem value="manchester">Manchester</SelectItem>
-                    <SelectItem value="birmingham">Birmingham</SelectItem>
-                    <SelectItem value="leeds">Leeds</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+<FormField
+  control={form.control}
+  name="city"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>City</FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          placeholder="Enter City"
+          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+          value={field.value || ""}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
           {/* zipCode */}
           <FormField
             control={form.control}

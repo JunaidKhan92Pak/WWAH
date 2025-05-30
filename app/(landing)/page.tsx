@@ -587,20 +587,20 @@ function Page() {
                   </p>
                 ) : (
                   universities.slice(1, 7).map((uni) => (
-                    <Card
+                    <div
                       key={uni._id}
-                      className="flex-shrink-0 w-[270px] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
+                      className="flex-shrink-0 w-[260px] md:w-[300px] h-[328px] md:h-[364px] bg-white shadow-md rounded-2xl overflow-hidden p-3"
                     >
                       {/* Image + Logo */}
                       <Link
                         href={`/Universities/${uni._id}`}
-                        className="relative h-48 block"
+                        className="relative h-44 md:h-52 block"
                       >
                         <Image
                           src={uni.universityImages.banner}
                           alt={uni.name}
                           layout="fill"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="object-cover rounded-xl"
                         />
                         <div className="absolute bottom-1 left-5">
                           <Image
@@ -614,24 +614,93 @@ function Page() {
                       </Link>
 
                       {/* Details */}
-                      <div className="p-4">
-                        <h6 className="font-semibold mb-2">
-                          {uni.university_name}
-                        </h6>
-                        <div className="text-muted-foreground text-sm space-y-1">
-                          <div className="flex justify-between">
-                            <span>{uni.country_name}</span>
-                            <span>Public</span>
-                          </div>
-                          <div>Acceptance Rate: {uni.acceptance_rate}</div>
+                      <div className="flex flex-col justify-between">
+                        <div className="mt-1 mb-2 md:mb-3">
+                          <Link href={`/Universities/${uni._id}`}>
+                            {/* <p className="hover:underline underline-offset-2 pt-1 text-md truncate font-semibold max-w-[300px] overflow-hidden"> */}
+
+                            <div className="relative group w-fit">
+                              <p className="cursor-pointer text-md truncate font-semibold max-w-[250px] overflow-hidden">
+                                {uni.university_name}
+                              </p>
+                              <span className="absolute md:left-8 mt-1 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[200px] text-center shadow-lg z-10">
+                                {uni.university_name}
+                              </span>
+                            </div>
+                          </Link>
                         </div>
+                        {/* <div className="text-muted-foreground text-sm space-y-1"> */}
+                        <div className="mt-1 flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            {uni.country_name}
+                          </span>
+                          <span className="text-sm text-gray-600">Public</span>
+                        </div>
+                        {/* <div>Acceptance Rate: {uni.acceptance_rate}</div> */}
+                        <hr className="my-1" />
+                        <p className="text-sm font-bold pb-2 text-black">
+                          Acceptance Rate:
+                        </p>
+                        <div className="relative bg-[#F1F1F1] rounded-md h-7">
+                          {(() => {
+                            const rate = uni.acceptance_rate?.toString().trim();
+                            let displayRate = rate;
+                            let numericWidth = 0;
+                            let isValidNumber = true;
+
+                            // Normalize known non-numeric labels like "n/a"
+                            if (rate?.toLowerCase() === "n/a") {
+                              displayRate = "N/A";
+                              isValidNumber = false;
+                              numericWidth = 100; // Fallback width
+                            } else if (rate.includes("to")) {
+                              const [start, end] = rate
+                                .split("to")
+                                .map((val: string) => parseFloat(val.trim()));
+
+                              if (isNaN(start) || isNaN(end)) {
+                                isValidNumber = false;
+                                numericWidth = 100;
+                              } else {
+                                const avg = ((start + end) / 2).toFixed(1);
+                                numericWidth = parseFloat(avg);
+                                displayRate = `${start}% - ${end}%`;
+                              }
+                            } else {
+                              numericWidth = parseFloat(rate);
+                              if (isNaN(numericWidth)) {
+                                isValidNumber = false;
+                                numericWidth = 100;
+                              }
+                            }
+
+                            const bgColor = isValidNumber
+                              ? "#16C47F"
+                              : "#FFE5B4"; // green or soft yellow
+
+                            return (
+                              <div
+                                className="text-white flex items-center justify-center h-7 rounded-lg transition-all duration-500"
+                                style={{
+                                  width: `${numericWidth}%`,
+                                  backgroundColor: bgColor,
+                                }}
+                              >
+                                <p className="text-sm font-normal leading-3 px-2 text-black">
+                                  {displayRate}
+                                </p>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                        {/* </div> */}
                       </div>
-                    </Card>
+                    </div>
                   ))
                 )}
 
                 {/* Explore All */}
-                <div className="relative flex items-center border-2 border-gray-200  h-[340px] group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg">
+                <div className="relative flex items-center border-2 border-gray-200 h-[328px] md:h-[364px] p-2 group cursor-pointer rounded-2xl ">
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-2xl pointer-events-none"></div>
 
                   <Link
