@@ -27,7 +27,6 @@ import { countries } from "@/lib/countries";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserData";
 
-
 const formSchema = z.object({
   country: z.string({
     required_error: "Please select a country.",
@@ -60,8 +59,8 @@ const formSchema = z.object({
   budgetMax: z.string({
     required_error: "Please enter maximum budget.",
   }),
-  phone: z.number().min(10, {
-    message: "Phone number must be at least 10 digits.",
+  phone: z.string({
+    required_error: "Phone number must be at least 10 digits.",
   }),
   countryCode: z.string().default("+92"),
   email: z.string().email({
@@ -130,7 +129,7 @@ export default function Home() {
         currency: "",
         budgetMin: "",
         budgetMax: "",
-        phone: 0,
+        phone: "",
         countryCode: "+92",
         email: "",
       });
@@ -178,17 +177,16 @@ export default function Home() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                       <SelectItem value="uk">United Kingdom</SelectItem>
-<SelectItem value="nz">New Zealand</SelectItem>
-<SelectItem value="au">Australia</SelectItem>
-<SelectItem value="ca">Canada</SelectItem>
-<SelectItem value="de">Germany</SelectItem>
-<SelectItem value="my">Malaysia</SelectItem>
-<SelectItem value="ie">Ireland</SelectItem>
-<SelectItem value="us">United States</SelectItem>
-<SelectItem value="cn">China</SelectItem>
-<SelectItem value="it">Italy</SelectItem>
-
+                        <SelectItem value="uk">United Kingdom</SelectItem>
+                        <SelectItem value="nz">New Zealand</SelectItem>
+                        <SelectItem value="au">Australia</SelectItem>
+                        <SelectItem value="ca">Canada</SelectItem>
+                        <SelectItem value="de">Germany</SelectItem>
+                        <SelectItem value="my">Malaysia</SelectItem>
+                        <SelectItem value="ie">Ireland</SelectItem>
+                        <SelectItem value="us">United States</SelectItem>
+                        <SelectItem value="cn">China</SelectItem>
+                        <SelectItem value="it">Italy</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -196,43 +194,41 @@ export default function Home() {
                 )}
               />
 
-<FormField
-  control={form.control}
-  name="university"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>University</FormLabel>
-      <FormControl>
-        <Input
-          {...field}
-          placeholder="Enter university name"
-          className="bg-[#f1f1f1] placeholder:text-sm placeholder:text-black"
+              <FormField
+                control={form.control}
+                name="university"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>University</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Enter university name"
+                        className="bg-[#f1f1f1] placeholder:text-sm placeholder:text-black"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-/>
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
-<FormField
-  control={form.control}
-  name="city"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>City</FormLabel>
-      <FormControl>
-        <Input
-          {...field}
-          placeholder="Enter city name"
-          className="bg-[#f1f1f1] placeholder:text-sm placeholder:text-black"
-
-/>
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Enter city name"
+                        className="bg-[#f1f1f1] placeholder:text-sm placeholder:text-black"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
@@ -414,7 +410,9 @@ export default function Home() {
                                     <Image
                                       src={
                                         countries.find(
-                                          (c) => c.code + c.name === countryField.value
+                                          (c) =>
+                                            c.code + c.name ===
+                                            countryField.value
                                         )?.flag || countries[0].flag
                                       }
                                       alt="Country Flag"

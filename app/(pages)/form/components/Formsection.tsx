@@ -64,17 +64,55 @@ const Formsection = () => {
     });
   };
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   if (!form.country || !form.countryCode || !form.email || !form.firstName || !form.format || !form.lastName || !form.phoneNumber || !form.test || !form.timing) {
+  //     console.log("Hello");
+  //   }
+  //   else {
+  //     const data = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}sendMail`,
+  //       {
+  //         method: "POST",
+  //         body: JSON.stringify(form),
+  //         credentials: "include",
+  //         headers: {
+  //           "Content-type": "application/json; charset=UTF-8",
+  //         },
+  //       }
+  //     );
+  //     if (data.ok) {
+  //       const response = await data.json();
+  //       console.log(response);
+  //     }
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.country || !form.countryCode || !form.email || !form.firstName || !form.format || !form.lastName || !form.phoneNumber || !form.test || !form.timing) {
+    if (
+      !form.country ||
+      !form.countryCode ||
+      !form.email ||
+      !form.firstName ||
+      !form.format ||
+      !form.lastName ||
+      !form.phoneNumber ||
+      !form.test ||
+      !form.timing
+    ) {
       console.log("Hello");
-    }
-    else {
+    } else {
+      // Add formType to the data being sent
+      const formData = {
+        ...form,
+        formType: formType, // Add this line
+      };
+
       const data = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}sendMail`,
         {
           method: "POST",
-          body: JSON.stringify(form),
+          body: JSON.stringify(formData), // Send formData instead of form
           credentials: "include",
           headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -87,7 +125,6 @@ const Formsection = () => {
       }
     }
   };
-
   return (
     <div
       id="book-demo"
