@@ -181,11 +181,11 @@ export default function Home() {
         }
       );
       const data = await response.json();
+      console.log("Response from server:", data);
       if (data.success) {
         setSubmitMessage({
           type: "success",
-          message:
-            "Your airport pickup request has been submitted successfully.",
+          message:"Your airport pickup request has been submitted successfully.",
         });
         // Reset form
         form.reset();
@@ -232,7 +232,6 @@ export default function Home() {
             we can arrange a hassle-free pickup for you.
           </p>
         </div>
-        
 
         {submitMessage.message && (
           <div
