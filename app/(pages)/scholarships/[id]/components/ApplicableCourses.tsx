@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   ChevronLeft,
@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
 
 interface Course {
   id: string;
@@ -25,124 +24,27 @@ interface Course {
   teachingLanguage: string;
 }
 
-const courses: Course[] = [
-  {
-    id: "1",
-    department: "Social Sciences",
-    course: "MSc Creative Writing",
-    university: "Jilin University",
-    duration: "4 Years",
-    deadline: "March 2025",
-    entryRequirements: "Being a high school graduate with minimum GPA of 3.0",
-    scholarshipType: "Fully Funded",
-    teachingLanguage: "Chinese",
-  },
-  {
-    id: "2",
-    department: "Social Sciences",
-    course: "PhD Civil Engineering",
-    university: "Wellington University",
-    duration: "3 Years",
-    deadline: "October 2025",
-    entryRequirements:
-      "Being a high school graduate with relevant bachelor's degree",
-    scholarshipType: "Partial Funded",
-    teachingLanguage: "English",
-  },
-  {
-    id: "3",
-    department: "Social Sciences",
-    course: "MSc Creative Writing",
-    university: "Jilin University",
-    duration: "4 Years",
-    deadline: "March 2025",
-    entryRequirements: "Being a high school graduate with minimum GPA of 3.0",
-    scholarshipType: "Fully Funded",
-    teachingLanguage: "Chinese",
-  },
-  {
-    id: "4",
-    department: "Social Sciences",
-    course: "PhD Civil Engineering",
-    university: "Wellington University",
-    duration: "3 Years",
-    deadline: "October 2025",
-    entryRequirements:
-      "Being a high school graduate with relevant bachelor's degree",
-    scholarshipType: "Partial Funded",
-    teachingLanguage: "English",
-  },
-  {
-    id: "5",
-    department: "Social Sciences",
-    course: "MSc Creative Writing",
-    university: "Jilin University",
-    duration: "4 Years",
-    deadline: "March 2025",
-    entryRequirements: "Being a high school graduate with minimum GPA of 3.0",
-    scholarshipType: "Fully Funded",
-    teachingLanguage: "Chinese",
-  },
-  {
-    id: "6",
-    department: "Computer Science",
-    course: "BSc Computer Science",
-    university: "Stanford University",
-    duration: "4 Years",
-    deadline: "April 2025",
-    entryRequirements:
-      "Being a high school graduate with strong math background",
-    scholarshipType: "Partial Funded",
-    teachingLanguage: "English",
-  },
-  {
-    id: "7",
-    department: "Business",
-    course: "MBA Business Administration",
-    university: "Harvard University",
-    duration: "2 Years",
-    deadline: "May 2025",
-    entryRequirements: "Bachelor's degree with 2+ years work experience",
-    scholarshipType: "Fully Funded",
-    teachingLanguage: "English",
-  },
-  {
-    id: "8",
-    department: "Medicine",
-    course: "MD Medicine",
-    university: "Oxford University",
-    duration: "5 Years",
-    deadline: "June 2025",
-    entryRequirements: "Bachelor's degree in related field with 3.5+ GPA",
-    scholarshipType: "Fully Funded",
-    teachingLanguage: "English",
-  },
-  {
-    id: "9",
-    department: "Engineering",
-    course: "MSc Electrical Engineering",
-    university: "MIT",
-    duration: "2 Years",
-    deadline: "July 2025",
-    entryRequirements: "Bachelor's in Electrical Engineering or related field",
-    scholarshipType: "Partial Funded",
-    teachingLanguage: "English",
-  },
-  {
-    id: "10",
-    department: "Arts",
-    course: "BFA Fine Arts",
-    university: "Paris Arts Academy",
-    duration: "3 Years",
-    deadline: "August 2025",
-    entryRequirements: "Portfolio submission and interview",
-    scholarshipType: "Fully Funded",
-    teachingLanguage: "French",
-  },
-];
+interface DynamicTableData {
+  course: string[];
+  create_application: string[];
+  deadline: string[];
+  duration: string[];
+  entry_requirements: string[];
+  faculty_department: string[];
+  scholarship_type: string[];
+  teaching_language: string[];
+  university: string[];
+}
 
-export default function Home() {
-  const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
+interface ApplicableCoursesProps {
+  tableData?: DynamicTableData;
+}
+
+export default function ApplicableCourses({
+  tableData,
+}: ApplicableCoursesProps) {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortField, setSortField] = useState<keyof Course | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
@@ -150,9 +52,36 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
 
+  // Transform dynamic data to Course objects
+  useEffect(() => {
+    if (tableData && tableData.course) {
+      const transformedCourses: Course[] = tableData.course.map((_, index) => ({
+        id: (index + 1).toString(),
+        department: tableData.faculty_department[index] || "",
+        course: tableData.course[index] || "",
+        university: tableData.university[index] || "",
+        duration: tableData.duration[index] || "",
+        deadline: tableData.deadline[index] || "",
+        entryRequirements: tableData.entry_requirements[index] || "",
+        scholarshipType: tableData.scholarship_type[index] || "",
+        teachingLanguage: tableData.teaching_language[index] || "",
+      }));
+      setCourses(transformedCourses);
+      setFilteredCourses(transformedCourses);
+      setCurrentPage(1); // Reset to first page when new data loads
+      setSearchTerm(""); // Clear search when new data loads
+    } else {
+      // Fallback to empty array if no data
+      setCourses([]);
+      setFilteredCourses([]);
+      setCurrentPage(1);
+    }
+  }, [tableData]);
+
   const handleSearch = (value: string) => {
     setIsLoading(true);
     setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
 
     setTimeout(() => {
       if (!value.trim()) {
@@ -181,6 +110,7 @@ export default function Home() {
   };
 
   const handleSort = (field: keyof Course) => {
+    setCurrentPage(1); // Reset to first page when sorting
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -216,6 +146,51 @@ export default function Home() {
     }
   };
 
+  // Calculate pagination display values
+  const actualFirst = sortedCourses.length === 0 ? 0 : indexOfFirstCourse + 1;
+  const actualLast = Math.min(indexOfLastCourse, sortedCourses.length);
+
+  // Generate pagination buttons with ellipsis for large page counts
+  const getPaginationItems = () => {
+    const maxVisible = 7; // Maximum number of page buttons to show
+    const items = [];
+
+    if (totalPages <= maxVisible) {
+      // Show all pages if total pages is small
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(i);
+      }
+    } else {
+      // Show first page, current page neighborhood, and last page with ellipsis
+      if (currentPage <= 4) {
+        // Show 1, 2, 3, 4, 5, ..., last
+        for (let i = 1; i <= 5; i++) {
+          items.push(i);
+        }
+        items.push("ellipsis");
+        items.push(totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        // Show 1, ..., last-4, last-3, last-2, last-1, last
+        items.push(1);
+        items.push("ellipsis");
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          items.push(i);
+        }
+      } else {
+        // Show 1, ..., current-1, current, current+1, ..., last
+        items.push(1);
+        items.push("ellipsis");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          items.push(i);
+        }
+        items.push("ellipsis");
+        items.push(totalPages);
+      }
+    }
+
+    return items;
+  };
+
   const SortIcon = ({ field }: { field: keyof Course }) => {
     if (sortField !== field)
       return (
@@ -247,7 +222,6 @@ export default function Home() {
           <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
             Applicable Courses
           </h1>
-         
         </div>
 
         <div className="space-y-6 w-full max-w-6xl mx-auto px-4 sm:px-6">
@@ -410,17 +384,8 @@ export default function Home() {
               <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">
-                    Showing{" "}
-                    <span className="font-medium">
-                      {indexOfFirstCourse + 1}
-                    </span>{" "}
-                    to{" "}
-                    <span className="font-medium">
-                      {indexOfLastCourse > sortedCourses.length
-                        ? sortedCourses.length
-                        : indexOfLastCourse}
-                    </span>{" "}
-                    of{" "}
+                    Showing <span className="font-medium">{actualFirst}</span>{" "}
+                    to <span className="font-medium">{actualLast}</span> of{" "}
                     <span className="font-medium">{sortedCourses.length}</span>{" "}
                     results
                   </p>
@@ -440,22 +405,25 @@ export default function Home() {
                       <span className="sr-only">Previous</span>
                       <ChevronLeft className="h-5 w-5" />
                     </Button>
-                    {Array.from({ length: totalPages }).map((_, index) => (
+                    {getPaginationItems().map((item, index) => (
                       <Button
                         key={index}
-                        variant={
-                          currentPage === index + 1 ? "default" : "ghost"
-                        }
+                        variant={currentPage === item ? "default" : "ghost"}
                         size="sm"
-                        onClick={() => paginate(index + 1)}
+                        onClick={() =>
+                          typeof item === "number" ? paginate(item) : undefined
+                        }
+                        disabled={typeof item !== "number"}
                         className={cn(
                           "relative inline-flex items-center px-4 py-2 border border-border",
-                          currentPage === index + 1
+                          currentPage === item
                             ? "bg-primary text-primary-foreground"
-                            : "bg-card hover:bg-muted text-foreground"
+                            : typeof item === "number"
+                            ? "bg-card hover:bg-muted text-foreground"
+                            : "bg-card text-muted-foreground cursor-default"
                         )}
                       >
-                        {index + 1}
+                        {typeof item === "number" ? item : "..."}
                       </Button>
                     ))}
                     <Button
