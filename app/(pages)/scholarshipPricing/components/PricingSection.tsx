@@ -11,6 +11,7 @@ export default function PricingSection() {
     {
       id: "essential",
       name: "Essential Plan",
+      subHeading: "Self-driven students who just need the essentials.",
       price: 16,
       isPopular: false,
       features: [
@@ -24,6 +25,7 @@ export default function PricingSection() {
     {
       id: "pro",
       name: "Pro Plan",
+      subHeading: "Students who want guided support with key services.",
       price: 26,
       isPopular: true,
       features: [
@@ -39,6 +41,7 @@ export default function PricingSection() {
     {
       id: "premium",
       name: "Premium Plan",
+      subHeading: "Students who want personalized support.",
       price: 34,
       isPopular: false,
       features: [
@@ -71,8 +74,8 @@ export default function PricingSection() {
       </div>
 
       {/* Pricing Cards */}
-      <div className=" overflow-scroll  w-full">
-        <div className="flex gap-6 px-4 sm:px-0 mb-16 w-max sm:w-full">
+      <div className="  w-full overflow-x-auto overflow-y-hidden">
+        <div className="flex gap-6 px-4 sm:px-0 mb-16 w-max sm:w-full ">
           {plans.map((plan) => (
             <div
               key={plan.id}

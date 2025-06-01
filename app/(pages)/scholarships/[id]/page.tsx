@@ -29,8 +29,7 @@ type ScholarshipData = {
     masters: string;
     phd: string;
     bachelors: string;
-    Diploma: string
-
+    Diploma: string;
   };
   benefits: string[];
   applicableDepartments: [];
@@ -38,6 +37,17 @@ type ScholarshipData = {
   programs: string[];
   Document: string[];
   requiredDocuments: [];
+  table?: {
+    course: string[];
+    create_application: string[];
+    deadline: string[];
+    duration: string[];
+    entry_requirements: string[];
+    faculty_department: string[];
+    scholarship_type: string[];
+    teaching_language: string[];
+    university: string[];
+  };
   successChances?: {
     academicBackground?: string;
     age?: string;
@@ -45,7 +55,7 @@ type ScholarshipData = {
     gradesAndCGPA?: string;
     nationality?: string;
     workExperience?: string;
-  }
+  };
 };
 const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = React.use(params);
@@ -77,7 +87,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const tabs: Tab[] = [
     { label: "Overview", id: "Overview" },
     // { label: "Benefits", id: "Benefits" },
-    {label: "Applicable Course", id: "Applicable-Departments"},
+    { label: "Applicable Course", id: "Applicable-Departments" },
     { label: "Eligibility Criteria", id: "Eligibility Criteria" },
     {
       label: "Success Chances",
@@ -152,9 +162,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           applicableCourses={data?.applicableCourses || []} />
       </div> */}
       <div id="Applicable-Departments">
-        <ApplicableCourses/>
+        <ApplicableCourses tableData={data?.table} />
       </div>
-     
+
       <div id="Eligibility Criteria">
         <Eligibilitycriteria
           eligibilityCriteria={data?.eligibilityCriteria || []}
@@ -170,7 +180,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         {/* <Requireddocs */}
         <Applicationprocess />
       </div>
-      <ExploreScholarships  />
+      <ExploreScholarships />
     </>
   );
 };
