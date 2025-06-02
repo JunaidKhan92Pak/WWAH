@@ -61,7 +61,7 @@ interface ScholarshipData {
 
 // Structure for the second file's column-based data
 interface ColumnData {
-  [key: string]: any[];
+  [key: string]: string[];
 }
 
 const ImprovedExcelUploader = () => {
@@ -100,11 +100,11 @@ const ImprovedExcelUploader = () => {
     const jsonArray = XLSX.utils.sheet_to_json(worksheet);
 
     // Transform row-based to column-based
-    const columnData: Record<string, any[]> = {};
-    jsonArray.forEach((row: any) => {
-      Object.entries(row).forEach(([key, value]) => {
+    const columnData: Record<string, string[]> = {};
+    jsonArray.forEach((row) => {
+      Object.entries(row as Record<string, unknown>).forEach(([key, value]) => {
         if (!columnData[key]) columnData[key] = [];
-        columnData[key].push(value);
+        columnData[key].push(String(value));
       });
     });
 
@@ -209,7 +209,7 @@ const ImprovedExcelUploader = () => {
 
   // Merge data from both files
   const mergeDataSources = (scholarshipData: ScholarshipData[], columnData: ColumnData) => {
-    return scholarshipData.map((scholarship, index) => {
+    return scholarshipData.map((scholarship) => {
       const enhancedScholarship = {
         ...scholarship,
         table: {

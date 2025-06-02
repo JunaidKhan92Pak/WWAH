@@ -38,6 +38,17 @@ interface SuccessChances {
     nationality: string;
     workExperience: string;
 }
+interface Table {
+    course: string[];
+    create_application: string[];
+    deadline: string[];
+    duration: string[];
+    entry_requirements: string[];
+    faculty_department: string[];
+    scholarship_type: string[];
+    teaching_language: string[];
+    university: string[];
+}
 
 interface TransformedScholarship {
     name: string;
@@ -58,13 +69,13 @@ interface TransformedScholarship {
     applicableDepartments: ApplicableDepartment[];
     successChances: SuccessChances;
     // Include table data as-is
-    table?: any;
+    table?: Table;
 }
 
 interface ScholarshipInput {
     name?: unknown;
     hostCountry?: unknown;
-    table?: unknown;
+    table?: Table;
     [key: string]: unknown;
 }
 
@@ -247,12 +258,23 @@ const transformScholarshipData = (scholarship: unknown): TransformedScholarship 
 
         // If there's table data, include it as-is and merge course data into programs if needed
         if (data.table && typeof data.table === 'object') {
-            transformed.table = data.table;
+            // Ensure table matches the Table interface
+            const tableData = data.table as Partial<Table> || {};
+            transformed.table = {
+                course: Array.isArray(tableData.course) ? tableData.course : [],
+                create_application: Array.isArray(tableData.create_application) ? tableData.create_application : [],
+                deadline: Array.isArray(tableData.deadline) ? tableData.deadline : [],
+                duration: Array.isArray(tableData.duration) ? tableData.duration : [],
+                entry_requirements: Array.isArray(tableData.entry_requirements) ? tableData.entry_requirements : [],
+                faculty_department: Array.isArray(tableData.faculty_department) ? tableData.faculty_department : [],
+                scholarship_type: Array.isArray(tableData.scholarship_type) ? tableData.scholarship_type : [],
+                teaching_language: Array.isArray(tableData.teaching_language) ? tableData.teaching_language : [],
+                university: Array.isArray(tableData.university) ? tableData.university : [],
+            };
 
             // If table has courses and programs array is empty, use table courses
-            const tableData = data.table as any;
             if (tableData.course && Array.isArray(tableData.course) && transformed.programs.length === 0) {
-                transformed.programs = tableData.course.filter((course: any) => course && String(course).trim() !== '');
+                transformed.programs = tableData.course.filter((course: string) => course && String(course).trim() !== '');
             }
         }
 
