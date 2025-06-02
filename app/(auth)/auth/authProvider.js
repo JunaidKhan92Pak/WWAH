@@ -25,10 +25,15 @@ export const AuthProvider = ({ children }) => {
 
       const loggedInUser = await res.json();
       if (!loggedInUser.success) {
-        return { success: false, message: loggedInUser.message || "Login failed." };
+        return {
+          success: false,
+          message: loggedInUser.message || "Login failed.",
+        };
       }
       // Compute an expiration date 24 hours from now:
-      const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+      const expireDate = new Date(
+        Date.now() + 24 * 60 * 60 * 1000
+      ).toUTCString();
       // Set the authToken cookie to expire in one day:
       document.cookie = `authToken=${loggedInUser.token}; expires=${expireDate}; path=/`;
 
@@ -57,41 +62,22 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: res.message || "Sign-up failed." };
       }
       // Compute an expiration date 24 hours from now:
-      const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+      const expireDate = new Date(
+        Date.now() + 24 * 60 * 60 * 1000
+      ).toUTCString();
       // Set the authToken cookie to expire in one day:
       document.cookie = `authToken=${res.token}; expires=${expireDate}; path=/`;
       setToken(res.token);
       return res;
     } catch (err) {
       console.error("Signup error", err);
-      return { success: false, message: "Server error occurred during sign-up." };
+      return {
+        success: false,
+        message: "Server error occurred during sign-up.",
+      };
     }
   };
-  //create admin action
-  // const createAdminAction = async (userData) => {
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_API}createAdmin`,
-  //       {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify(userData),
-  //       }
-  //     );
 
-  //     const res = await response.json();
-  //   if (!response.ok || !res.adminId) {
-  //     return { success: false, message: res.message || "Admin not created." };
-  //   }
-
-  //     document.cookie = `authToken=${res.token}; path=/`;
-  //     setToken(res.token);
-  //     return { success: true };
-  //   } catch (err) {
-  //     console.error("create admin error", err);
-  //     return { success: false, message: "An error occurred while creating error." };
-  //   }
-  // };
   const createAdminAction = async (userData) => {
     console.log("Sending request to backend with data:", userData);
 
@@ -126,7 +112,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Forget Password function
-
   const forgetAction = async (email) => {
     try {
       const response = await fetch(
@@ -153,8 +138,8 @@ export const AuthProvider = ({ children }) => {
       // Ensure the structure of the response is consistent
       const forgotRes = await response.json();
       return {
-        success: forgotRes.success || false,
-        message: forgotRes.message || "Unexpected response structure.",
+        success: true, // Since response.ok is true, mark as successful
+        message: forgotRes.message || "OTP sent successfully.",
       };
     } catch (error) {
       console.error("Network or server error in forgetAction:", error);
@@ -173,7 +158,7 @@ export const AuthProvider = ({ children }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ enteredOtp }),
+          body: JSON.stringify({ otp: enteredOtp }),
           credentials: "include",
         }
       );
