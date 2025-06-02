@@ -142,7 +142,6 @@ const scholarshipSchema = new Schema({
         step: { type: String, trim: true },
         details: { type: String, trim: true, default: '' }
     }],
-
     // Success chances - all optional with no length limits
     successChances: {
         academicBackground: { type: String, trim: true, default: '' },
@@ -151,6 +150,17 @@ const scholarshipSchema = new Schema({
         gradesAndCGPA: { type: String, trim: true, default: '' },
         nationality: { type: String, trim: true, default: '' },
         workExperience: { type: String, trim: true, default: '' }
+    },
+    table: {
+        course: [String],
+        create_application: [String],
+        deadline: [String],
+        duration: [String],
+        entry_requirements: [String],
+        faculty_department: [String],
+        scholarship_type: [String],
+        teaching_language: [String],
+        university: [String],
     }
 }, {
     timestamps: true,

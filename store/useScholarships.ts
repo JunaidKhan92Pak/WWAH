@@ -7,6 +7,7 @@ interface ScholarshipState {
     country: string[];
     programs: string[];
     scholarshipType: string[];
+    scholarshipProviders: string[];
     deadlineFilters: string[];
     page: number;
     limit: number;
@@ -17,6 +18,7 @@ interface ScholarshipState {
     setSearch: (search: string) => void;
     setPrograms: (programs: string[]) => void;
     setScholarshipType: (types: string[]) => void;
+    setScholarshipProviders: (types: string[]) => void;
     setDeadlineFilters: (deadlines: string[]) => void;
     setPage: (page: number) => void;
     setLimit: (limit: number) => void;
@@ -32,6 +34,7 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
     country: [],
     programs: [],
     scholarshipType: [],
+    scholarshipProviders: [],
     deadlineFilters: [],
     page: 1,
     limit: 10,
@@ -57,6 +60,10 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
         set({ scholarshipType: Array.isArray(types) ? types : [] });
         get().fetchScholarships();
     },
+    setScholarshipProviders: (types) => {
+        set({ scholarshipProviders: Array.isArray(types) ? types : [] });
+        get().fetchScholarships();
+    },
     setDeadlineFilters: (deadlines) => {
         set({ deadlineFilters: Array.isArray(deadlines) ? deadlines : [] });
         get().fetchScholarships();
@@ -78,7 +85,7 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
     fetchScholarships: async () => {
         set({ loading: true });
         try {
-            const { search, country, programs, scholarshipType, minimumRequirements, deadlineFilters, page, limit } = get();
+            const { search, country, programs, scholarshipType, scholarshipProviders, minimumRequirements, deadlineFilters, page, limit } = get();
             const queryParams = new URLSearchParams();
             if (country.length > 0) {
                 queryParams.append("countryFilter", country.join(","));
@@ -88,6 +95,9 @@ export const useScholarships = create<ScholarshipState>((set, get) => ({
             }
             if (scholarshipType.length > 0) {
                 queryParams.append("scholarshipTypeFilter", scholarshipType.join(","));
+            }
+            if (scholarshipProviders.length > 0) {
+                queryParams.append("scholarshipProviders", scholarshipProviders.join(","));
             }
             if (deadlineFilters.length > 0) {
                 queryParams.append("deadlineFilter", deadlineFilters.join(","));

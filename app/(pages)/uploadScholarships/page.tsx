@@ -59,20 +59,56 @@ interface ScholarshipData {
   }>;
 }
 
+// Structure for the second file's column-based data
+interface ColumnData {
+  [key: string]: any[];
+}
+
 const ImprovedExcelUploader = () => {
-  const [file, setFile] = useState<File | null>(null);
+  const [file1, setFile1] = useState<File | null>(null);
+  const [file2, setFile2] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
   const [processedData, setProcessedData] = useState<ScholarshipData[]>([]);
+  const [file2Data, setFile2Data] = useState<ColumnData>({});
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      setFile1(e.target.files[0]);
       setError("");
       setResult("");
       setProcessedData([]);
     }
+  };
+
+  const handleFile2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile2(e.target.files[0]);
+      setError("");
+      setResult("");
+      setFile2Data({});
+    }
+  };
+
+  // Read and process the second file (column-based format)
+  const processFile2 = async (file: File): Promise<ColumnData> => {
+    const data = await file.arrayBuffer();
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const jsonArray = XLSX.utils.sheet_to_json(worksheet);
+
+    // Transform row-based to column-based
+    const columnData: Record<string, any[]> = {};
+    jsonArray.forEach((row: any) => {
+      Object.entries(row).forEach(([key, value]) => {
+        if (!columnData[key]) columnData[key] = [];
+        columnData[key].push(value);
+      });
+    });
+
+    return columnData;
   };
 
   // Convert Excel serial date to formatted string
@@ -171,11 +207,30 @@ const ImprovedExcelUploader = () => {
     });
   };
 
+  // Merge data from both files
+  const mergeDataSources = (scholarshipData: ScholarshipData[], columnData: ColumnData) => {
+    return scholarshipData.map((scholarship, index) => {
+      const enhancedScholarship = {
+        ...scholarship,
+        table: {
+          course: columnData["Course"] || [],
+          create_application: columnData["Create Your Application"] || [],
+          deadline: columnData["Deadline"] || [],
+          duration: columnData["Duration"] || [],
+          entry_requirements: columnData["Entry Requirements"] || [],
+          faculty_department: columnData["Faculty/Department"] || [],
+          scholarship_type: columnData["Scholarship Type"] || [],
+          teaching_language: columnData["Teaching Language"] || [],
+          university: columnData["University"] || [],
+        } // Full table for each (memory intensive!)
+      };
+      return enhancedScholarship;
+    });
+  };
   // Process Excel data to match MongoDB schema
   const processExcelData = (rawData: ExcelRow[]): ScholarshipData[] => {
     return rawData.map((item, index) => {
       console.log(`Processing row ${index + 1}:`, item);
-
       // Handle deadline formatting
       let deadline = getString(item["Deadline"]);
       if (item["Deadline"] && typeof item["Deadline"] === "number") {
@@ -367,30 +422,45 @@ const ImprovedExcelUploader = () => {
   };
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (!file1) {
+      setError("Please select the first Excel file (scholarship data)");
+      return;
+    }
+
     setUploading(true);
     setResult("");
     setError("");
 
     try {
-      const data = await file.arrayBuffer();
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
+      // Process first file (scholarship data)
+      const data1 = await file1.arrayBuffer();
+      const workbook1 = XLSX.read(data1, { type: "array" });
+      const sheetName1 = workbook1.SheetNames[0];
+      const worksheet1 = workbook1.Sheets[sheetName1];
+      const jsonData1: ExcelRow[] = XLSX.utils.sheet_to_json<ExcelRow>(worksheet1);
 
-      const jsonData: ExcelRow[] = XLSX.utils.sheet_to_json<ExcelRow>(worksheet);
-
-      if (jsonData.length === 0) {
-        throw new Error("No data found in the Excel file");
+      if (jsonData1.length === 0) {
+        throw new Error("No data found in the first Excel file");
       }
 
-      console.log("Raw JSON data:", jsonData);
-      const processedData = processExcelData(jsonData);
-      console.log("Processed data:", processedData);
+      console.log("Raw JSON data from file 1:", jsonData1);
+      let processedData = processExcelData(jsonData1);
 
+      // Process second file if provided
+      let columnData: ColumnData = {};
+      if (file2) {
+        columnData = await processFile2(file2);
+        console.log("Column data from file 2:", columnData);
+        setFile2Data(columnData);
+
+        // Merge data from both files
+        processedData = mergeDataSources(processedData, columnData);
+      }
+
+      console.log("Final processed data:", processedData);
       setProcessedData(processedData);
 
-      // Uncomment when ready to upload to MongoDB
+      // Send to API
       const res = await fetch("/api/addScholarship", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -405,10 +475,10 @@ const ImprovedExcelUploader = () => {
       const json = await res.json();
       console.log(`API response:`, json);
 
-      setResult(`Successfully processed ${processedData.length} scholarship(s)`);
+      setResult(`Successfully processed ${processedData.length} scholarship(s)${file2 ? ' with merged data from both files' : ''}`);
 
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error uploading files:", error);
       setError(
         error instanceof Error ? error.message : "Unknown error occurred"
       );
@@ -420,32 +490,47 @@ const ImprovedExcelUploader = () => {
   return (
     <div className="p-8 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Excel to MongoDB Scholarship Uploader
+        Dual Excel to MongoDB Scholarship Uploader
       </h1>
 
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Excel File
+            Select First Excel File (Scholarship Data) *
           </label>
           <input
             type="file"
             accept=".xlsx, .xls"
-            onChange={handleFileChange}
+            onChange={handleFile1Change}
             className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-2"
           />
           <p className="mt-1 text-sm text-gray-500">
-            Upload Excel file (.xlsx or .xls) with scholarship data
+            Upload primary Excel file (.xlsx or .xls) with scholarship data
+          </p>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Second Excel File (Additional Data) - Optional
+          </label>
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleFile2Change}
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 p-2"
+          />
+          <p className="mt-1 text-sm text-gray-500">
+            Upload secondary Excel file (.xlsx or .xls) with additional course/university data
           </p>
         </div>
 
         <button
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${!file || uploading
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${!file1 || uploading
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
             : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
           onClick={handleUpload}
-          disabled={!file || uploading}
+          disabled={!file1 || uploading}
         >
           {uploading ? "Processing..." : "Process & Upload"}
         </button>
@@ -462,6 +547,29 @@ const ImprovedExcelUploader = () => {
         <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
           <h3 className="font-bold text-lg">Success</h3>
           <p className="mt-1">{result}</p>
+        </div>
+      )}
+
+      {Object.keys(file2Data).length > 0 && (
+        <div className="bg-blue-50 p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-bold mb-4 text-blue-800">
+            Second File Data Preview
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+            {Object.entries(file2Data).map(([key, values]) => (
+              <div key={key} className="bg-white p-3 rounded border">
+                <strong className="text-blue-600">{key}:</strong>
+                <div className="mt-1 text-gray-600">
+                  {values.length} entries
+                  <br />
+                  <span className="text-xs">
+                    Sample: {String(values[0]).substring(0, 30)}
+                    {String(values[0]).length > 30 ? "..." : ""}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

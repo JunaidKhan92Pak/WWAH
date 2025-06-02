@@ -39,26 +39,6 @@ interface SuccessChances {
     workExperience: string;
 }
 
-// interface ScholarshipData {
-//     name: string;
-//     hostCountry: string;
-//     type: string;
-//     provider?: string;
-//     deadline: string;
-//     numberOfScholarships: string | number;
-//     overview: string;
-//     programs: string[];
-//     minimumRequirements: string;
-//     officialLink?: string;
-//     duration: Duration;
-//     benefits: string[];
-//     eligibilityCriteria: EligibilityCriterion[];
-//     requiredDocuments: RequiredDocument[];
-//     applicationProcess?: ApplicationProcessStep[];
-//     applicableDepartments: ApplicableDepartment[];
-//     successChances: SuccessChances;
-// }
-
 interface TransformedScholarship {
     name: string;
     hostCountry: string;
@@ -77,11 +57,14 @@ interface TransformedScholarship {
     applicationProcess?: ApplicationProcessStep[];
     applicableDepartments: ApplicableDepartment[];
     successChances: SuccessChances;
+    // Include table data as-is
+    table?: any;
 }
 
 interface ScholarshipInput {
     name?: unknown;
     hostCountry?: unknown;
+    table?: unknown;
     [key: string]: unknown;
 }
 
@@ -94,22 +77,6 @@ interface MongooseDocument {
     createdAt: Date;
     updatedAt: Date;
 }
-
-// interface QueryFilter {
-//     name?: RegExp;
-//     hostCountry?: RegExp;
-//     type?: string;
-//     provider?: RegExp;
-//     programs?: RegExp;
-// }
-
-// interface TextSearchQuery {
-//     $and: [QueryFilter, { $text: { $search: string } }];
-// }
-
-// interface RegexSearchQuery {
-//     $and: [QueryFilter, { $or: Array<Record<string, RegExp>> }];
-// }
 
 // Helper functions with proper typing
 const safeString = (value: unknown, defaultValue = ''): string => {
@@ -253,6 +220,7 @@ const validateScholarship = (scholarship: ScholarshipInput, index: number): stri
     return errors;
 };
 
+// FIXED: This function now always returns a single scholarship
 const transformScholarshipData = (scholarship: unknown): TransformedScholarship => {
     try {
         const data = scholarship as Record<string, unknown>;
@@ -276,6 +244,17 @@ const transformScholarshipData = (scholarship: unknown): TransformedScholarship 
             applicationProcess: safeApplicationProcess(data.applicationProcess),
             successChances: safeSuccessChances(data.successChances)
         };
+
+        // If there's table data, include it as-is and merge course data into programs if needed
+        if (data.table && typeof data.table === 'object') {
+            transformed.table = data.table;
+
+            // If table has courses and programs array is empty, use table courses
+            const tableData = data.table as any;
+            if (tableData.course && Array.isArray(tableData.course) && transformed.programs.length === 0) {
+                transformed.programs = tableData.course.filter((course: any) => course && String(course).trim() !== '');
+            }
+        }
 
         return transformed;
     } catch (transformError) {
@@ -321,6 +300,8 @@ export async function POST(req: Request) {
         let body: unknown;
         try {
             body = await req.json();
+            console.log("Request body received:", body);
+
         } catch (parseError) {
             console.error("JSON Parse Error:", parseError);
             return NextResponse.json(
@@ -361,14 +342,22 @@ export async function POST(req: Request) {
             let updatedCount = 0;
             const warnings: string[] = [];
 
+            // Transform scholarships (now each input = 1 output)
+            const transformedScholarships: TransformedScholarship[] = [];
+            for (const scholarship of scholarshipsArray) {
+                const transformed = transformScholarshipData(scholarship);
+                transformedScholarships.push(transformed);
+            }
+
+            console.log(`Processing ${scholarshipsArray.length} scholarships`);
+
             const batchSize = 20;
-            for (let batchStart = 0; batchStart < scholarshipsArray.length; batchStart += batchSize) {
-                const batch = scholarshipsArray.slice(batchStart, batchStart + batchSize);
+            for (let batchStart = 0; batchStart < transformedScholarships.length; batchStart += batchSize) {
+                const batch = transformedScholarships.slice(batchStart, batchStart + batchSize);
 
                 for (let i = 0; i < batch.length; i++) {
                     try {
-                        const scholarship = batch[i];
-                        const transformedScholarship = transformScholarshipData(scholarship);
+                        const transformedScholarship = batch[i];
 
                         if (!transformedScholarship.name || !transformedScholarship.hostCountry) {
                             warnings.push(`Skipped scholarship ${batchStart + i + 1}: Missing required fields`);
@@ -416,15 +405,15 @@ export async function POST(req: Request) {
             const statusCode = results.length === 0 ? 400 : 200;
 
             return NextResponse.json({
-                message: results.length === scholarshipsArray.length
+                message: results.length === transformedScholarships.length
                     ? "All scholarships processed successfully"
-                    : `${results.length} out of ${scholarshipsArray.length} scholarships processed successfully`,
+                    : `${results.length} out of ${transformedScholarships.length} scholarships processed successfully`,
                 summary: {
-                    total: scholarshipsArray.length,
-                    successful: results.length,
+                    input: scholarshipsArray.length,
+                    processed: results.length,
                     inserted: insertedCount,
                     updated: updatedCount,
-                    skipped: scholarshipsArray.length - results.length
+                    skipped: transformedScholarships.length - results.length
                 },
                 ...(warnings.length > 0 && { warnings: warnings.slice(0, 10) }),
                 scholarships: results.map(s => ({
@@ -480,207 +469,3 @@ export async function POST(req: Request) {
         }
     }
 }
-
-// export async function GET(req: Request) {
-//     try {
-//         const dbConnection = connectToDatabase();
-//         const timeoutPromise = new Promise<never>((_, reject) =>
-//             setTimeout(() => reject(new Error('Database connection timeout')), 10000)
-//         );
-
-//         await Promise.race([dbConnection, timeoutPromise]);
-
-//         const { searchParams } = new URL(req.url);
-//         const name = searchParams.get('name');
-//         const hostCountry = searchParams.get('hostCountry');
-//         const type = searchParams.get('type');
-//         const provider = searchParams.get('provider');
-//         const program = searchParams.get('program');
-//         const search = searchParams.get('search');
-
-//         const limitParam = searchParams.get('limit');
-//         const skipParam = searchParams.get('skip');
-//         const limit = Math.min(Math.max(parseInt(limitParam || '10'), 1), 100);
-//         const skip = Math.max(parseInt(skipParam || '0'), 0);
-
-//         const sortBy = searchParams.get('sortBy') || 'createdAt';
-//         const sortOrder = searchParams.get('sortOrder') === 'asc' ? 1 : -1;
-
-//         const allowedSortFields = ['name', 'hostCountry', 'type', 'provider', 'createdAt', 'updatedAt', 'deadline'];
-//         const safeSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
-
-//         const query: QueryFilter = {};
-
-//         if (name) {
-//             const sanitizedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//             query.name = new RegExp(sanitizedName, 'i');
-//         }
-//         if (hostCountry) {
-//             const sanitizedCountry = hostCountry.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//             query.hostCountry = new RegExp(sanitizedCountry, 'i');
-//         }
-//         if (type) query.type = type;
-//         if (provider) {
-//             const sanitizedProvider = provider.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//             query.provider = new RegExp(sanitizedProvider, 'i');
-//         }
-//         if (program) {
-//             const sanitizedProgram = program.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//             query.programs = new RegExp(sanitizedProgram, 'i');
-//         }
-
-//         let scholarships: MongooseDocument[];
-//         let total: number;
-
-//         if (search && search.trim() !== '') {
-//             const sanitizedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-//             try {
-//                 const textSearchQuery: TextSearchQuery = {
-//                     $and: [
-//                         query,
-//                         { $text: { $search: sanitizedSearch } }
-//                     ]
-//                 };
-
-//                 scholarships = await Scholarship
-//                     .find(textSearchQuery, { score: { $meta: 'textScore' } })
-//                     .sort({ score: { $meta: 'textScore' } })
-//                     .limit(limit)
-//                     .skip(skip) as MongooseDocument[];
-
-//                 total = await Scholarship.countDocuments(textSearchQuery);
-//             } catch (textSearchError) {
-//                 console.warn("Text search failed, falling back to regex:", textSearchError);
-//                 const searchRegex = new RegExp(sanitizedSearch, 'i');
-//                 const regexSearchQuery: RegexSearchQuery = {
-//                     $and: [
-//                         query,
-//                         {
-//                             $or: [
-//                                 { name: searchRegex },
-//                                 { overview: searchRegex },
-//                                 { provider: searchRegex },
-//                                 { hostCountry: searchRegex }
-//                             ]
-//                         }
-//                     ]
-//                 };
-
-//                 scholarships = await Scholarship
-//                     .find(regexSearchQuery)
-//                     .sort({ [safeSortBy]: sortOrder })
-//                     .limit(limit)
-//                     .skip(skip) as MongooseDocument[];
-
-//                 total = await Scholarship.countDocuments(regexSearchQuery);
-//             }
-//         } else {
-//             const sortObject: Record<string, 1 | -1> = { [safeSortBy]: sortOrder };
-
-//             scholarships = await Scholarship
-//                 .find(query)
-//                 .sort(sortObject)
-//                 .limit(limit)
-//                 .skip(skip) as MongooseDocument[];
-
-//             total = await Scholarship.countDocuments(query);
-//         }
-
-//         return NextResponse.json({
-//             scholarships: scholarships || [],
-//             pagination: {
-//                 total: total || 0,
-//                 limit,
-//                 skip,
-//                 hasMore: skip + limit < (total || 0),
-//                 currentPage: Math.floor(skip / limit) + 1,
-//                 totalPages: Math.ceil((total || 0) / limit)
-//             },
-//             filters: {
-//                 name,
-//                 hostCountry,
-//                 type,
-//                 provider,
-//                 program,
-//                 search
-//             }
-//         }, { status: 200 });
-
-//     } catch (error) {
-//         console.error("GET API Error:", error);
-
-//         if (error instanceof Error && error.message.includes('timeout')) {
-//             return NextResponse.json(
-//                 { error: "Request timeout" },
-//                 { status: 408 }
-//             );
-//         }
-
-//         return NextResponse.json(
-//             { error: "Failed to fetch scholarships" },
-//             { status: 500 }
-//         );
-//     }
-// }
-
-// export async function DELETE(req: Request) {
-//     try {
-//         const dbConnection = connectToDatabase();
-//         const timeoutPromise = new Promise<never>((_, reject) =>
-//             setTimeout(() => reject(new Error('Database connection timeout')), 10000)
-//         );
-
-//         await Promise.race([dbConnection, timeoutPromise]);
-
-//         const { searchParams } = new URL(req.url);
-//         const id = searchParams.get('id');
-
-//         if (!id || id.trim() === '') {
-//             return NextResponse.json(
-//                 { error: "Scholarship ID is required" },
-//                 { status: 400 }
-//             );
-//         }
-
-//         if (!/^[0-9a-fA-F]{24}$/.test(id)) {
-//             return NextResponse.json(
-//                 { error: "Invalid scholarship ID format" },
-//                 { status: 400 }
-//             );
-//         }
-
-//         const deletedScholarship = await Scholarship.findByIdAndDelete(id) as MongooseDocument | null;
-
-//         if (!deletedScholarship) {
-//             return NextResponse.json(
-//                 { error: "Scholarship not found" },
-//                 { status: 404 }
-//             );
-//         }
-
-//         return NextResponse.json({
-//             message: "Scholarship deleted successfully",
-//             scholarship: {
-//                 id: deletedScholarship._id,
-//                 name: deletedScholarship.name,
-//                 hostCountry: deletedScholarship.hostCountry
-//             }
-//         }, { status: 200 });
-
-//     } catch (error) {
-//         console.error("DELETE API Error:", error);
-
-//         if (error instanceof Error && error.message.includes('timeout')) {
-//             return NextResponse.json(
-//                 { error: "Request timeout" },
-//                 { status: 408 }
-//             );
-//         }
-
-//         return NextResponse.json(
-//             { error: "Failed to delete scholarship" },
-//             { status: 500 }
-//         );
-//     }
-// }
