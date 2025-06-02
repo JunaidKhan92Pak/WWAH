@@ -8,6 +8,5 @@ export const getAuthToken = () => {
   return null;
 };
 export const deleteAuthToken = () => {
-
   document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 };

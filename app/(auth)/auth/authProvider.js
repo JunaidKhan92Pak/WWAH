@@ -27,7 +27,11 @@ export const AuthProvider = ({ children }) => {
       if (!loggedInUser.success) {
         return { success: false, message: loggedInUser.message || "Login failed." };
       }
-      document.cookie = `authToken=${loggedInUser.token}; path=/`;
+      // Compute an expiration date 24 hours from now:
+      const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+      // Set the authToken cookie to expire in one day:
+      document.cookie = `authToken=${loggedInUser.token}; expires=${expireDate}; path=/`;
+
       setToken(loggedInUser.token);
       return loggedInUser;
     } catch (err) {
@@ -52,7 +56,10 @@ export const AuthProvider = ({ children }) => {
       if (!response.ok || !res.signup) {
         return { success: false, message: res.message || "Sign-up failed." };
       }
-      document.cookie = `authToken=${res.token}; path=/`;
+      // Compute an expiration date 24 hours from now:
+      const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+      // Set the authToken cookie to expire in one day:
+      document.cookie = `authToken=${res.token}; expires=${expireDate}; path=/`;
       setToken(res.token);
       return res;
     } catch (err) {
