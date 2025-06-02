@@ -37,30 +37,61 @@ const VerifyOtp = () => {
       nextInput?.focus();
     }
   };
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setErrorMessage("");
+  //   setSuccessMessage("");
+  //   const enteredOtp = otp.join("");
+  //   if (enteredOtp.length !== 6) {
+  //     setErrorMessage("Please enter a 6-digit OTP.");
+  //     return;
+  //   }
+  //   try {
+  //     const verifyRes = await verifyOtpAction(enteredOtp);
+  //     if (verifyRes?.success) {
+  //       setSuccessMessage("OTP verified successfully!");
+  //       console.log("OTP verified successfully! Redirecting...");
+  //     } else {
+  //       setErrorMessage(verifyRes?.message || "Invalid OTP. Please try again.");
+  //     }
+  //     router.push("/resetpassword");
+  //   } catch (error) {
+  //     setErrorMessage(`Something went wrong. Please try again `);
+  //     console.log(`Something went wrong. Please try again ${error} `);
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
+
     const enteredOtp = otp.join("");
     if (enteredOtp.length !== 6) {
       setErrorMessage("Please enter a 6-digit OTP.");
       return;
     }
+
     try {
       const verifyRes = await verifyOtpAction(enteredOtp);
+
       if (verifyRes?.success) {
         setSuccessMessage("OTP verified successfully!");
         console.log("OTP verified successfully! Redirecting...");
+
+        // Only redirect on successful verification
+        setTimeout(() => {
+          router.push("/resetpassword");
+        }, 1000);
       } else {
         setErrorMessage(verifyRes?.message || "Invalid OTP. Please try again.");
+        // Don't redirect on failure
       }
-      router.push("/resetpassword");
     } catch (error) {
-      setErrorMessage(`Something went wrong. Please try again `);
-      console.log(`Something went wrong. Please try again ${error} `);
+      setErrorMessage("Something went wrong. Please try again.");
+      console.log(`Something went wrong. Please try again ${error}`);
     }
   };
-
   const handleResendOtp = () => {
     setOtp(["", "", "", "", "", ""]);
     setTimer(120); // Reset timer to 2 minutes
