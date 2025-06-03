@@ -72,6 +72,104 @@ const ImprovedExcelUploader = () => {
   const [error, setError] = useState("");
   const [processedData, setProcessedData] = useState<ScholarshipData[]>([]);
   const [file2Data, setFile2Data] = useState<ColumnData>({});
+  const [imageFiles, setImageFiles] = useState<{ [key: string]: File | null }>(
+    {}
+  );
+  const [uploadStatus] = useState<string | null>(null);
+  const [missingImages, setMissingImages] = useState<string[]>([]);
+  const [universityImages, setUniversityImages] = useState<{
+    [key: string]: string | null;
+  }>({});
+
+  const allImages = ["banner", "logo"];
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    imageType: string
+  ) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+
+      // Check if file is an allowed image format (only JPG and PNG)
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        setError(`Unsupported file type: ${file.type} for ${imageType}. Please use JPG or PNG formats only.`);
+        e.target.value = ""; // Reset input
+        return;
+      }
+
+      setImageFiles((prev) => ({ ...prev, [imageType]: file }));
+      // Remove from missing images list if it was there
+      setMissingImages(prev => prev.filter(img => img !== imageType));
+    }
+  };
+  const handleAllImagesUpload = async () => {
+    // Check for missing images
+    const missing: string[] = [];
+    allImages.forEach(imageType => {
+      if (!imageFiles[imageType]) {
+        missing.push(imageType);
+      }
+    });
+
+    // If there are missing images, update state and return
+    if (missing.length > 0) {
+      setError(`Missing images: ${missing.join(", ")}. Please upload all required images.`);
+      return;
+    }
+
+    // Set uploading state to true
+    setUploading(true);
+    try {
+      // Continue with upload if all images are present
+      const selectedImages = Object.entries(imageFiles).filter(
+        ([, file]) => file
+      );
+
+
+      const imagesData: { [key: string]: string } = {};
+      await Promise.all(
+        selectedImages.map(async ([imageType, file]) => {
+          if (!file) return;
+
+          const reader = new FileReader();
+          const imageReadPromise = new Promise<void>((resolve, reject) => {
+            reader.onloadend = async () => {
+              imagesData[imageType] = reader.result as string;
+              resolve();
+            };
+            reader.onerror = reject;
+          });
+
+          reader.readAsDataURL(file);
+          await imageReadPromise;
+        })
+      );
+
+      const response = await fetch("/api/addUniversityImges", {
+        method: "POST",
+        body: JSON.stringify({ images: imagesData, universityName: "Scholarship" }),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setUniversityImages(result.imageUrls);
+      } else {
+        setError(result.error || "Image upload failed.");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(`An error occurred while uploading images: ${error.message}`);
+      } else {
+        setError(`An error occurred while uploading images: ${String(error)}`);
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleFile1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -461,19 +559,19 @@ const ImprovedExcelUploader = () => {
       setProcessedData(processedData);
 
       // Send to API
-      const res = await fetch("/api/addScholarship", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(processedData),
-        credentials: "include",
-      });
+      // const res = await fetch("/api/addScholarship", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(processedData),
+      //   credentials: "include",
+      // });
 
-      if (!res.ok) {
-        throw new Error(`API returned status: ${res.status}`);
-      }
+      // if (!res.ok) {
+      //   throw new Error(`API returned status: ${res.status}`);
+      // }
 
-      const json = await res.json();
-      console.log(`API response:`, json);
+      // const json = await res.json();
+      // console.log(`API response:`, json);
 
       setResult(`Successfully processed ${processedData.length} scholarship(s)${file2 ? ' with merged data from both files' : ''}`);
 
@@ -489,6 +587,122 @@ const ImprovedExcelUploader = () => {
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
+
+      <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
+        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
+        {/* Alert box for file format */}
+        <div className="bg-blue-50 border border-blue-300 text-blue-800 px-4 py-3 rounded mb-4">
+          <p className="text-sm">
+            <strong>Important:</strong> Only JPG and PNG image formats are supported. WebP and other formats will be rejected.
+          </p>
+        </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded mb-4">
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
+
+        {uploadStatus && (
+          <div className="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded mb-4">
+            <p className="text-sm">{uploadStatus}</p>
+          </div>
+        )}
+
+        <form className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {allImages.map((imageType) => (
+              <div key={imageType} className="relative flex flex-col">
+                <label className={`block text-sm font-medium ${missingImages.includes(imageType) ? 'text-red-600' : 'text-gray-700'}`}>
+                  {imageType.replace(/_/g, " ")}
+                  {missingImages.includes(imageType) && " (Missing)"}
+                </label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  onChange={(e) => handleImageChange(e, imageType)}
+                  className={`block w-full border p-3 rounded-lg shadow-sm my-1 ${missingImages.includes(imageType) ? 'border-red-500' : ''}`}
+                  required
+                />
+                {imageFiles[imageType] && (
+                  <div className="flex items-center mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-xs text-green-600">
+                      {Math.round((imageFiles[imageType]?.size || 0) / 1024)} KB
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAllImagesUpload}
+            disabled={uploading}
+            className={`w-full py-3 rounded-lg transition mt-6 flex items-center justify-center ${uploading
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-indigo-600 text-white hover:bg-indigo-700'
+              }`}
+          >
+            {uploading ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Uploading...
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                Upload Images
+              </>
+            )}
+          </button>
+
+          {Object.keys(universityImages).length === allImages.length ? (
+            <button
+              type="submit"
+              disabled={uploading}
+              className={`w-full py-3 rounded-lg transition mt-6 flex items-center justify-center ${uploading
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
+            >
+              {uploading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Uploading to MongoDB...
+                </>
+              ) : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Save to MongoDB
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="text-amber-600 text-sm mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
+              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Upload all university images and add Excel data to enable the save button</span>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
       <h1 className="text-3xl font-bold mb-6 text-gray-800">
         Dual Excel to MongoDB Scholarship Uploader
       </h1>
@@ -574,7 +788,7 @@ const ImprovedExcelUploader = () => {
       )}
 
       {processedData.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-6 rounded-lg shadow-md">09
           <h2 className="text-2xl font-bold mb-4 text-gray-800">
             Processed Data Preview
           </h2>

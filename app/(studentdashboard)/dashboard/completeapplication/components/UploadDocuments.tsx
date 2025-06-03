@@ -13,7 +13,7 @@ interface Document {
   files: { name: string; url: string; _id: string }[];
   date: string;
   isChecked: boolean;
-  }
+}
 export default function Home() {
   const [documents, setDocuments] = useState<Document[]>([
     { id: "1", name: "Valid Passport", files: [], date: "", isChecked: false },
@@ -159,6 +159,7 @@ export default function Home() {
         }
       );
       console.log(response, "response");
+      console.log(response, "response");
 
       if (!response.ok) throw new Error("Failed to fetch data1");
       else {
@@ -206,11 +207,11 @@ export default function Home() {
           console.log(matchedDoc, "matched");
           return matchedDoc
             ? {
-                ...doc,
-                files: matchedDoc.files || [],
-                date: matchedDoc.date || "",
-                isChecked: matchedDoc.files.length > 0,
-              }
+              ...doc,
+              files: matchedDoc.files || [],
+              date: matchedDoc.date || "",
+              isChecked: matchedDoc.files.length > 0,
+            }
             : doc;
         })
       );
@@ -218,6 +219,7 @@ export default function Home() {
 
     getData();
   }, []);
+
 
   const handleFileUpload = useCallback(
     async (id: string, selectedFiles: FileList | null) => {
@@ -263,7 +265,6 @@ export default function Home() {
             body: formData, // Send FormData directly
           }
         );
-
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || "Upload failed");
 
@@ -272,11 +273,11 @@ export default function Home() {
           docs.map((doc) =>
             doc.id === id
               ? {
-                  ...doc,
-                  files: [...doc.files, ...result.uploadedFiles],
-                  date: new Date().toLocaleDateString(),
-                  isChecked: true,
-                }
+                ...doc,
+                files: [...doc.files, ...result.uploadedFiles],
+                date: new Date().toLocaleDateString(),
+                isChecked: true,
+              }
               : doc
           )
         );
@@ -345,7 +346,7 @@ export default function Home() {
     }
   };
 
- 
+
 
   const handleSubmit = async () => {
     alert("file submitted");
@@ -371,7 +372,7 @@ export default function Home() {
                 <div className="flex items-center space-x-4">
                   <Checkbox
                     checked={doc.isChecked}
-                    onCheckedChange={() => {}}
+                    onCheckedChange={() => { }}
                     className="h-4 w-4"
                   />
                   <div className="space-y-1">

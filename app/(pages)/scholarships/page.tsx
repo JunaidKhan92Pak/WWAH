@@ -416,6 +416,7 @@ const Page = () => {
     </div>
   );
 
+
   return (
     <>
       <div className="w-[95%] mx-auto">
@@ -527,7 +528,7 @@ const Page = () => {
                         <div className="relative w-full">
                           {/* Background Image */}
                           <Image
-                            src={"/uniar.svg"}
+                            src={item.banner || "/default-university.jpg"}
                             alt="University Image"
                             width={400}
                             height={250}
@@ -537,7 +538,7 @@ const Page = () => {
                           {/* Logo Overlay */}
                           <div className="absolute top-8">
                             <Image
-                              src="/unilogo.svg"
+                              src={item.logo || "/default-logo.png"}
                               alt="University Logo"
                               width={180}
                               height={130}
