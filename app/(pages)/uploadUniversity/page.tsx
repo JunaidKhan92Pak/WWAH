@@ -288,9 +288,7 @@ export default function Home() {
   return (
     <div className="bg-gradient-to-br from-indigo-100 to-purple-50 min-h-screen flex justify-center py-10">
       <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
-
         <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
-
         {/* Alert box for file format */}
         <div className="bg-blue-50 border border-blue-300 text-blue-800 px-4 py-3 rounded mb-4">
           <p className="text-sm">
