@@ -2,12 +2,16 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+// import { logo } from '@/public/logo.svg';
+
 interface HeroProps {
   name: string;
   country: string;
   type: string;
   deadline: string;
   NumberOfScholarships: number;
+  logo: string;
+  banner: string;
 }
 
 const Hero: React.FC<HeroProps> = ({
@@ -16,6 +20,8 @@ const Hero: React.FC<HeroProps> = ({
   type,
   deadline,
   NumberOfScholarships,
+  logo,
+  banner
 }) => {
   const scholarshipArr = [
     {
@@ -46,7 +52,7 @@ const Hero: React.FC<HeroProps> = ({
         <div
           className="relative min-h-[250px] sm:min-h-[400px] flex justify-center items-center text-center rounded-3xl text-white bg-cover bg-center"
           style={{
-            backgroundImage: "url('/scholarshipdetail/scholarshipdetail.png')",
+            backgroundImage: `url(${banner})`,
           }}
         >
           <div className="absolute bg-black bg-opacity-50 w-full h-full rounded-2xl"></div>
@@ -58,7 +64,7 @@ const Hero: React.FC<HeroProps> = ({
               <div className="w-[100%] md:w-[50%] flex flex-col md:items-start md:text-left space-y-2 pl-0 lg:pl-12">
                 <div className="bg-white rounded-full w-[80px] h-[80px]">
                   <Image
-                    src="/scholarshipdetail/schlogo.svg"
+                    src={logo}
                     alt="Uni Logo"
                     width={130}
                     height={130}
@@ -79,7 +85,7 @@ const Hero: React.FC<HeroProps> = ({
 
               {/* Right Section */}
               <div className="w-full md:w-[45%] lg:w-[35%] xl:w-[30%]  bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl p-4 flex flex-col items-center text-center">
-                <Link                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+                <Link
                   target="blank"
                   href="/schedulesession"
                   className="[text-align:-webkit-center]"

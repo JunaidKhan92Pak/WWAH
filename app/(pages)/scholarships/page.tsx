@@ -493,8 +493,9 @@ const Page = () => {
               <div className="mt-4 md:mt-0">
                 <button
                   onClick={() => setShowFavorites((prev) => !prev)}
-                  className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4 whitespace-nowrap h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-                    }`}
+                  className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4 whitespace-nowrap h-10 ${
+                    showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+                  }`}
                 >
                   <Image
                     src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -537,14 +538,22 @@ const Page = () => {
 
                           {/* Logo Overlay */}
                           <div className="absolute top-8">
-                            <Image
+                            {/* <Image
                               src={item.logo || "/default-logo.png"}
                               alt="University Logo"
                               width={180}
                               height={130}
                               className="object-contain"
-                            />
+                            /> */}
                           </div>
+                          <Image
+                            unoptimized
+                            src={item.logo || "/default-logo.png"}
+                            width={100}
+                            height={90}
+                            className="rounded-full bg-white border border-black w-[56px] h-[56px]"
+                            alt="University Logo"
+                          />
 
                           {/* Share & Favorite Buttons */}
                           <div className="absolute top-4 right-2 md:right-4 flex items-center space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
@@ -578,10 +587,11 @@ const Page = () => {
                                     </Label>
                                     <Input
                                       id={`link-${item._id}`}
-                                      value={`${typeof window !== "undefined"
-                                        ? window.location.origin
-                                        : ""
-                                        }/scholarships/${item._id}`}
+                                      value={`${
+                                        typeof window !== "undefined"
+                                          ? window.location.origin
+                                          : ""
+                                      }/scholarships/${item._id}`}
                                       readOnly
                                     />
                                   </div>
@@ -657,8 +667,9 @@ const Page = () => {
 
                             <button
                               onClick={() => toggleFavorite(item._id)}
-                              className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
-                                }`}
+                              className={`relative ${
+                                heartAnimation === item._id ? "animate-pop" : ""
+                              }`}
                             >
                               {favorites[item._id] ? (
                                 <Image
