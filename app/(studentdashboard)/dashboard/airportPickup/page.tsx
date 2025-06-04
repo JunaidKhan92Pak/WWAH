@@ -747,7 +747,7 @@ export default function Home() {
 
       // Log form data for debugging
       console.log("Submitting form with data:");
-      for (let [key, value] of formData.entries()) {
+      for (const [key, value] of formData.entries()) {
         if (key === "ticket") {
           console.log(key, "File:", value);
         } else {
@@ -845,11 +845,10 @@ export default function Home() {
 
         {submitMessage.message && (
           <div
-            className={`p-4 my-4 rounded ${
-              submitMessage.type === "success"
+            className={`p-4 my-4 rounded ${submitMessage.type === "success"
                 ? "bg-green-100 text-green-800"
                 : "bg-red-100 text-red-800"
-            }`}
+              }`}
           >
             {submitMessage.message}
           </div>
@@ -936,7 +935,7 @@ export default function Home() {
                 <FormField
                   control={form.control}
                   name="ticket"
-                  render={({ field: { onChange, value, ...fieldProps } }) => (
+                  render={({ field: { onChange, ...fieldProps } }) => (
                     <FormItem>
                       <FormLabel>Upload Ticket *</FormLabel>
                       <FormControl>
