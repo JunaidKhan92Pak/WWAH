@@ -19,6 +19,8 @@ type Tab = {
 type ScholarshipData = {
   name: string;
   hostCountry: string;
+  logo: string;
+  banner: string;
   scholarshipType: string;
   deadline: string;
   overview: string;
@@ -114,6 +116,8 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
     <>
       <Hero
         name={data?.name || "Not Available"}
+        logo={data?.logo || "Not Available"}
+        banner={data?.banner || "Not Available"}
         country={data?.hostCountry || "Unknown"}
         type={data?.scholarshipType || "Unknown"}
         deadline={data?.deadline || "Unknown"}
