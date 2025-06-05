@@ -8,7 +8,11 @@ import Coursesuggestion from "./components/Coursesuggestion";
 import { StatusProgressBar } from "../components/StatusProgressBar";
 import { useUserStore } from "@/store/useUserData";
 import { getAuthToken } from "@/utils/authHelper";
-
+interface CounsellorSectionProps {
+  userEmail: {
+    email: string;
+  };
+}
 const Page = () => {
   const { user, fetchUserProfile } = useUserStore();
 
@@ -35,7 +39,7 @@ const Page = () => {
           </div>
 
           <div className="w-full xl:w-[30%] rounded-xl border p-4">
-            <CounsellorSection />
+            <CounsellorSection userEmail={{ email: user?.email ?? "" }} />
           </div>
         </div>
       </div>
