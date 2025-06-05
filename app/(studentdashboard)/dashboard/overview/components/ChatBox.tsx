@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 import { X } from 'lucide-react';
-const socket = io('http://54.90.177.123:8080', { autoConnect: false });
+const socket = io(`${process.env.NEXT_PUBLIC_BACKEND_API}`, { autoConnect: false });
 
 type Message = {
     text: string;
@@ -26,7 +26,7 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
         console.log(userEmail, 'User email for chat');
         const mail = userEmail.email
         // fetch history
-        fetch(`http://54.90.177.123:8080/chat/messages/${mail}`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}chat/messages/${mail}`)
             .then((res) => res.json())
             .then((data: Message[]) => {
                 setMessages(data);

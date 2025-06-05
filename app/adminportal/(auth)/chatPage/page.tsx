@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('http://54.90.177.123:8080', { autoConnect: false });
+const socket = io(`${process.env.NEXT_PUBLIC_BACKEND_API}`, { autoConnect: false });
 
 type Message = {
     text: string;
@@ -19,7 +19,7 @@ export default function AdminChatPanel() {
 
     // 1️⃣ Load user list (replace with real API)
     useEffect(() => {
-        fetch('http://54.90.177.123:8080/admin/chats')
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}admin/chats`)
             .then((res) => res.json())
             .then((chats: { userEmail: string }[]) => {
                 setUsers(chats.map((c) => c.userEmail));
@@ -31,7 +31,7 @@ export default function AdminChatPanel() {
         if (!selectedUser) return;
 
         // load chat history
-        fetch(`http://54.90.177.123:8080/chat/messages/${selectedUser}`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}chat/messages/${selectedUser}`)
             .then((res) => res.json())
             .then((data: Message[]) => {
                 setMessages(data);
