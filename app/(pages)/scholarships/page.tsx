@@ -537,23 +537,16 @@ const Page = () => {
                           />
 
                           {/* Logo Overlay */}
-                          <div className="absolute top-8">
-                            {/* <Image
+                          <div className="absolute bottom-3 left-4 z-10 w-14 h-14 rounded-full bg-white border border-gray-300 p-1 shadow-md">
+                            <Image
+                              unoptimized
                               src={item.logo || "/default-logo.png"}
                               alt="University Logo"
-                              width={180}
-                              height={130}
-                              className="object-contain"
-                            /> */}
+                              width={52}
+                              height={52}
+                              className="rounded-full object-contain w-full h-full"
+                            />
                           </div>
-                          <Image
-                            unoptimized
-                            src={item.logo || "/default-logo.png"}
-                            width={100}
-                            height={90}
-                            className="rounded-full bg-white border border-black w-[56px] h-[56px]"
-                            alt="University Logo"
-                          />
 
                           {/* Share & Favorite Buttons */}
                           <div className="absolute top-4 right-2 md:right-4 flex items-center space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
@@ -692,7 +685,7 @@ const Page = () => {
 
                         {/* Content Section */}
                         <div className="p-2 flex-grow">
-                          <p className="font-bold">{item.name}</p>
+                          <p className="font-bold leading-tight">{item.name}</p>
                           <p className="text-sm text-gray-600">
                             <span className="font-semibold">
                               Min Requirements: 75%
