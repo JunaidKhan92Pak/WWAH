@@ -8,11 +8,11 @@ import Coursesuggestion from "./components/Coursesuggestion";
 import { StatusProgressBar } from "../components/StatusProgressBar";
 import { useUserStore } from "@/store/useUserData";
 import { getAuthToken } from "@/utils/authHelper";
-interface CounsellorSectionProps {
-  userEmail: {
-    email: string;
-  };
-}
+// interface CounsellorSectionProps {
+//   userEmail: {
+//     email: string;
+//   };
+// }
 const Page = () => {
   const { user, fetchUserProfile } = useUserStore();
 
