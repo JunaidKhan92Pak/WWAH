@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import ChatModal from './ChatBox';
 
-const CounsellorSection = () => {
+
+const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const closeChat = () => setIsChatOpen(false);
+
   return (
     <>
       <div className='justify-center items-center flex flex-col text-center pt-8'>
@@ -24,15 +29,16 @@ const CounsellorSection = () => {
           alizes in personalized support, from application
           processes to visa assistance.</p>
 
-        <Button className='text-white px-11 bg-[#C7161E] hover:bg-[#C7161E] '>
+        <Button onClick={() => setIsChatOpen(true)} className='text-white px-11 bg-[#C7161E] hover:bg-[#C7161E] '>
           <Image
             src="/DashboardPage/chat.svg"
             alt="chat"
             width={18}
             height={18}
           />
-          Chat with Fatima</Button>
-
+          Chat with Fatima
+        </Button>
+        {isChatOpen && <ChatModal userEmail={userEmail} onClose={closeChat} />}
         <p className='my-4'>OR</p>
 
         <Button className='text-white bg-[#C7161E] hover:bg-[#C7161E]'>
