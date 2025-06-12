@@ -335,9 +335,21 @@ export default function ApplicableCourses({
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             {course.deadline}
                           </td>
-                          <td className="px-6 py-4 text-sm">
+                          {/* <td className="px-6 py-4 text-sm">
                             {course.entryRequirements}
-                          </td>
+                          </td> */}
+                          <div className="relative group w-fit py-4">
+  <td className="cursor-pointer text-md max-w-[300px] overflow-hidden line-clamp-2">
+    {course.entryRequirements}
+  </td>
+
+  {/* Hover Tooltip to the right */}
+  <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
+    {course.entryRequirements}
+  </div>
+</div>
+
+
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             {course.scholarshipType}
                           </td>

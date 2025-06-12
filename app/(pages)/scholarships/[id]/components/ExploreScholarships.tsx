@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useScholarships } from "@/store/useScholarships";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const ExploreScholarships = () => {
   const {
@@ -11,9 +12,21 @@ const ExploreScholarships = () => {
   useEffect(() => {
     fetchScholarships();
   }, [fetchScholarships]);
+
+    const scrollRef = useRef<HTMLDivElement | null>(null);
+  
+    const scroll = (direction: "left" | "right") => {
+      if (scrollRef.current) {
+        const scrollAmount = 300;
+        scrollRef.current.scrollBy({
+          left: direction === "left" ? -scrollAmount : scrollAmount,
+          behavior: "smooth",
+        });
+      }
+    };
   return (
     <div>
-      <section className="relative flex flex-col lg:flex-row gap-2 items-center text-white bg-black bg-cover bg-center mt-6 p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
+      <section className="relative flex flex-col lg:flex-row gap-4 items-center text-white bg-black bg-cover bg-center mt-6 p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
         <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
         <div className="relative z-10 w-full lg:w-[50%] flex flex-col justify-center md:space-y-2 sm:px-4 text-left">
@@ -27,9 +40,17 @@ const ExploreScholarships = () => {
           </p>
         </div>
         <div className="relative z-10 w-full lg:w-[50%] mt-6 lg:mt-0">
-          <div className="relative w-full flex justify-center overflow-hidden">
+          <div className="relative w-full flex justify-center">
+             {/* Left Arrow */}
+                      <button
+                        onClick={() => scroll("left")}
+                        className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+                      >
+                        <FaArrowLeft />
+                      </button>
             <div
-              className="flex overflow-x-auto space-x-2 md:space-x-5 hide-scrollbar"
+              ref={scrollRef}
+              className="flex overflow-x-auto space-x-2 md:space-x-4 hide-scrollbar"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
@@ -47,11 +68,11 @@ const ExploreScholarships = () => {
                     height={350}
                     objectFit="cover"
                     // className="rounded-xl w-full h-full"
-                    className="rounded-3xl w-[235px] md:w-[400px] xl:w-[430px] xl:h-[274px] h-[220px] "
+                    className="rounded-3xl w-[240px] md:w-[300px] lg:w-[330px] xl:w-[360px] h-[200px] md:h-[220px] xl:h-[260px] object-cover "
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60 "></div>
-                  <div className="absolute bottom-0 left-8 w-[235px] md:w-[400px] xl:w-[390px]  text-white px-4 py-3">
-                    <p className="font-semibold mb-2"> {item.name}</p>
+                  <div className="absolute bottom-0 w-[235px] md:ml-2 md:w-[300px] xl:w-[350px]  text-white px-4 py-3">
+                    <p className="font-semibold md:mb-2"> {item.name}</p>
                     <p className=" flex items-center gap-1">
                       <Image
                         src="/location-white.svg"
@@ -67,6 +88,13 @@ const ExploreScholarships = () => {
                 </div>
               ))}
             </div>
+               {/* Right Arrow */}
+                      <button
+                        onClick={() => scroll("right")}
+                        className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+                      >
+                        <FaArrowRight />
+                      </button>
           </div>
         </div>
       </section>

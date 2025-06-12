@@ -533,7 +533,7 @@ const Page = () => {
                             alt="University Image"
                             width={400}
                             height={250}
-                            className="w-full object-cover rounded-lg"
+                            className="w-full object-cover h-[170px] md:h-[180px] rounded-lg"
                           />
 
                           {/* Logo Overlay */}
@@ -692,7 +692,7 @@ const Page = () => {
                             </span>{" "}
                             {item.minRequirements}
                           </p>
-                          <div className="flex flex-col md:flex-row justify-between flex-wrap">
+                          <div className="flex flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
                               <Image
                                 src={"/location.svg"}
