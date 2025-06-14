@@ -180,7 +180,9 @@ const Page = () => {
   };
 
   // Fixed Minimum Requirement handler
-  const handleRequirementChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRequirementChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value, checked } = event.target;
     setMinimumRequirements(
       checked
@@ -264,14 +266,35 @@ const Page = () => {
             <hr className="mx-4" />
           </>
         )}
-        <ScrollArea className={`p-2 ${isMobile ? "h-[400px]" : "px-4 pb-4 h-[500px] md:h-[800px]"} overflow-y-auto`}>
+        <ScrollArea
+          className={`p-2 ${
+            isMobile ? "h-[400px]" : "px-4 pb-4 h-[500px] md:h-[800px]"
+          } overflow-y-auto`}
+        >
           {/* Country Filter */}
-          <div className={isMobile ? "" : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"}>
-            <h6 className={`${isMobile ? "text-lg" : "text-base md:text-lg font-bold"}`}>Country:</h6>
-            <ScrollArea className={isMobile ? "" : "h-[200px] overflow-y-auto p-2"}>
+          <div
+            className={
+              isMobile
+                ? ""
+                : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"
+            }
+          >
+            <h6
+              className={`${
+                isMobile ? "text-lg" : "text-base md:text-lg font-bold"
+              }`}
+            >
+              Country:
+            </h6>
+            <ScrollArea
+              className={isMobile ? "" : "h-[200px] overflow-y-auto p-2"}
+            >
               <ul className={`py-2 space-y-3 mb-2 ${!isMobile ? "pr-2" : ""}`}>
                 {countries.map((country) => (
-                  <li key={country.value} className="flex items-center justify-between">
+                  <li
+                    key={country.value}
+                    className="flex items-center justify-between"
+                  >
                     <div className="flex items-center gap-2">
                       <Image
                         src={country.img}
@@ -280,7 +303,9 @@ const Page = () => {
                         alt={country.name}
                         className="w-[26px]"
                       />
-                      <span className="text-[16px] truncate">{country.name}</span>
+                      <span className="text-[16px] truncate">
+                        {country.name}
+                      </span>
                     </div>
                     <input
                       type="checkbox"
@@ -298,11 +323,25 @@ const Page = () => {
           {!isMobile && <hr />}
 
           {/* Programs Filter */}
-          <div className={isMobile ? "" : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"}>
-            <p className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"}`}>
+          <div
+            className={
+              isMobile
+                ? ""
+                : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"
+            }
+          >
+            <p
+              className={`${
+                isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+              }`}
+            >
               {isMobile ? "Programs:" : "Study Level:"}
             </p>
-            <ul className={`py-2 space-y-3 mb-2 ${!isMobile ? "py-4 space-y-3 md:space-y-4" : ""}`}>
+            <ul
+              className={`py-2 space-y-3 mb-2 ${
+                !isMobile ? "py-4 space-y-3 md:space-y-4" : ""
+              }`}
+            >
               {["Bachelors", "Master", "PhD"].map((program) => (
                 <li key={program} className="flex items-center justify-between">
                   <span className="text-[16px] truncate">{program}</span>
@@ -322,9 +361,25 @@ const Page = () => {
           {!isMobile && <hr />}
 
           {/* Scholarship Type Filter */}
-          <div className={isMobile ? "" : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"}>
-            <p className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"}`}>Scholarship Type:</p>
-            <ul className={`py-3 space-y-3 mb-2 ${!isMobile ? "py-4 space-y-3 md:space-y-4" : ""}`}>
+          <div
+            className={
+              isMobile
+                ? ""
+                : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
+            }
+          >
+            <p
+              className={`${
+                isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+              }`}
+            >
+              Scholarship Type:
+            </p>
+            <ul
+              className={`py-3 space-y-3 mb-2 ${
+                !isMobile ? "py-4 space-y-3 md:space-y-4" : ""
+              }`}
+            >
               {["Fully Funded", "Partial Funded"].map((type) => (
                 <li key={type} className="flex items-center justify-between">
                   <span className="text-[16px] truncate">{type}</span>
@@ -344,15 +399,49 @@ const Page = () => {
           {!isMobile && <hr />}
 
           {/* Application Deadline Filter */}
-          <div className={isMobile ? "" : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"}>
-            <p className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"}`}>Application Deadline:</p>
-            <ScrollArea className={isMobile ? "" : "h-[300px] overflow-y-auto p-2"}>
-              <ul className={`py-2 space-y-3 ${!isMobile ? "py-4 space-y-3 md:space-y-4 pr-2" : ""}`}>
+          <div
+            className={
+              isMobile
+                ? ""
+                : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
+            }
+          >
+            <p
+              className={`${
+                isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+              }`}
+            >
+              Application Deadline:
+            </p>
+            <ScrollArea
+              className={isMobile ? "" : "h-[300px] overflow-y-auto p-2"}
+            >
+              <ul
+                className={`py-2 space-y-3 ${
+                  !isMobile ? "py-4 space-y-3 md:space-y-4 pr-2" : ""
+                }`}
+              >
                 {(isMobile
                   ? ["Jan", "Feb", "March"]
-                  : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+                  : [
+                      "January",
+                      "February",
+                      "March",
+                      "April",
+                      "May",
+                      "June",
+                      "July",
+                      "August",
+                      "September",
+                      "October",
+                      "November",
+                      "December",
+                    ]
                 ).map((deadline) => (
-                  <li key={deadline} className="flex items-center justify-between">
+                  <li
+                    key={deadline}
+                    className="flex items-center justify-between"
+                  >
                     <span className="text-[16px] truncate">{deadline}</span>
                     <input
                       type="checkbox"
@@ -371,11 +460,26 @@ const Page = () => {
           {!isMobile && <hr />}
 
           {/* Minimum Requirement Filter */}
-          <div className={isMobile ? "" : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"}>
-            <p className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"}`}>Minimum Requirement:</p>
+          <div
+            className={
+              isMobile
+                ? ""
+                : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
+            }
+          >
+            <p
+              className={`${
+                isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+              }`}
+            >
+              Minimum Requirement:
+            </p>
             <ul className="py-2 space-y-3">
               {minimumRequirementsList.map((requirement) => (
-                <li key={requirement} className="flex items-center justify-between">
+                <li
+                  key={requirement}
+                  className="flex items-center justify-between"
+                >
                   <span className="text-[16px] truncate">{requirement}</span>
                   <input
                     type="checkbox"
@@ -391,12 +495,31 @@ const Page = () => {
           </div>
 
           {/* Scholarship Provider Filter */}
-          <div className={isMobile ? "" : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"}>
-            <p className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"}`}>Scholarship Provider:</p>
+          <div
+            className={
+              isMobile
+                ? ""
+                : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
+            }
+          >
+            <p
+              className={`${
+                isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+              }`}
+            >
+              Scholarship Provider:
+            </p>
             <ScrollArea className={isMobile ? "" : "p-2"}>
-              <ul className={`py-4 space-y-3 md:space-y-4 ${!isMobile ? "pr-2" : ""}`}>
+              <ul
+                className={`py-4 space-y-3 md:space-y-4 ${
+                  !isMobile ? "pr-2" : ""
+                }`}
+              >
                 {scholarshipProviders.map((provider) => (
-                  <li key={provider} className="flex items-center justify-between">
+                  <li
+                    key={provider}
+                    className="flex items-center justify-between"
+                  >
                     <span className="text-[16px] truncate">{provider}</span>
                     <input
                       type="checkbox"
@@ -415,7 +538,6 @@ const Page = () => {
       </section>
     </div>
   );
-
 
   return (
     <>
