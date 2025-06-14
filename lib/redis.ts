@@ -20,7 +20,9 @@ const redis = createRedisClient();
 const CACHE_TTL = 3600;
 
 // Wrap Redis operations with error handling
-async function safeRedisOperation<T>(operation: () => Promise<T>): Promise<T | null> {
+async function safeRedisOperation<T>(
+  operation: () => Promise<T>
+): Promise<T | null> {
   if (!redis) {
     console.log("Redis client not available, skipping cache operation");
     return null;
@@ -49,7 +51,9 @@ export async function cacheUserData(
   );
 }
 
-export async function getCachedUserData(userId: string): Promise<UserStore | null> {
+export async function getCachedUserData(
+  userId: string
+): Promise<UserStore | null> {
   if (!redis) return null;
 
   try {
@@ -95,7 +99,9 @@ export async function cacheVectorResults(
   );
 }
 
-export async function getCachedVectorResults(key: string): Promise<Record<string, unknown> | string | null> {
+export async function getCachedVectorResults(
+  key: string
+): Promise<Record<string, unknown> | string | null> {
   if (!redis) return null;
 
   try {
@@ -139,3 +145,4 @@ export async function clearUserCache(userId: string): Promise<void> {
   if (!redis) return;
   await safeRedisOperation(() => redis.del(`user:${userId}`));
 }
+

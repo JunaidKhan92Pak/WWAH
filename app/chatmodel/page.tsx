@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
-// import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Message as MessageType } from "@/lib/types";
 import Message from "./components/Message";

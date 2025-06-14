@@ -40,6 +40,7 @@ export async function withCaching(
   const isSimpleQuery = simpleQueryPatterns.some((pattern) =>
     pattern.test(message.trim())
   );
+  
   if (isSimpleQuery) {
     let userName = "there";
 

@@ -47,7 +47,6 @@ const Step1 = () => {
     const { name, value } = e.target;
     setPersonalInfo({ ...personalInfo, [name]: value });
     console.log(value);
-
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

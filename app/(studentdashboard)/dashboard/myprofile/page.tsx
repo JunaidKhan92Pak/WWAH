@@ -9,7 +9,8 @@ import Loading from "@/app/loading";
 const Page = () => {
   const router = useRouter();
   const { user, detailedInfo, fetchUserProfile } = useUserStore();
-
+  console.log(user, "user from useUserStore");
+  console.log(detailedInfo, "detailedInfo from useUserStore");
   useEffect(() => {
     fetchUserProfile();
   }, []);

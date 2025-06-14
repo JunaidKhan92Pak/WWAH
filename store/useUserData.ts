@@ -58,7 +58,7 @@ export interface UserStore {
   logout: () => void;
 }
 
-// Default empty detailed 
+// Default empty detailed
 const defaultDetailedInfo: DetailedInfo = {
   livingCosts: { amount: 0, currency: "" },
   tuitionFee: { amount: 0, currency: "" },
@@ -107,7 +107,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
           credentials: "include",
         }
       );
-
+      console.log(response, "response from fetchUserProfile");
       if (!response.ok) {
         throw new Error(
           `Failed to fetch user data: ${response.status} ${response.statusText}`
@@ -115,7 +115,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       }
 
       const apiData = await response.json();
-
+      console.log(apiData, "apiData from fetchUserProfile");
       if (!apiData.success) {
         throw new Error(apiData.message || "Failed to fetch user data");
       }
@@ -161,8 +161,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
         }
       );
 
-     console.log(response, "response from updateUserProfile");
-     
+      console.log(response, "response from updateUserProfile");
+
       if (!response.ok) {
         alert("Error updating profile. Please try again.");
         throw new Error(
@@ -218,16 +218,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
       );
       console.log(response, "response from updateDetailedInfo");
       const result = await response.json();
-    const res = result.success
-      // Return the result for further processing if needed  
+      const res = result.success;
+      // Return the result for further processing if needed
       console.log(result, "result from updateDetailedInfo");
       if (!response.ok) {
-          return res
+        return res;
       }
-      
+
       if (!result.success) {
-         return res; 
-      }   
+        return res;
+      }
       // Update the local store with new detailed info
       set((state) => ({
         detailedInfo: state.detailedInfo

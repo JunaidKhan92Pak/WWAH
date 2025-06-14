@@ -151,6 +151,7 @@
 //   };
 // }
 // v3
+
 import { OpenAIEmbeddings } from "@langchain/openai";
 import clientPromise from "../mongodb";
 
