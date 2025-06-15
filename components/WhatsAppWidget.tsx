@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { IoLogoWhatsapp } from "react-icons/io";
-import { GraduationCap, FileText, DollarSign } from "lucide-react";
+// import { GraduationCap, FileText, DollarSign } from "lucide-react";
 
 const WhatsAppWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
