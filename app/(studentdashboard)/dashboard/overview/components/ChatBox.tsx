@@ -16,6 +16,7 @@ interface ChatModalProps {
     };
     onClose: () => void;
 }
+
 export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
@@ -59,7 +60,6 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
     return (
         <div className="fixed bottom-0 right-0 h-[500px] w-full max-w-md p-4 z-50">
             <div className="relative bg-white rounded-2xl shadow-xl h-full flex flex-col overflow-hidden">
-
                 {/* Close Icons */}
                 <button
                     onClick={onClose}

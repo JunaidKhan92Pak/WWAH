@@ -1,14 +1,46 @@
 "use client";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "../auth/authProvider";
 import { CiUser } from "react-icons/ci";
 import { IoMailOutline, IoKeyOutline } from "react-icons/io5";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { MdOutlineRepeat } from "react-icons/md"; // Updated to correct icon
+import { MdOutlineRepeat } from "react-icons/md";
 import { useUserStore } from "@/store/userStore";
+
+// Declare Google API types
+interface GoogleConfig {
+  client_id: string;
+  callback: (response: GoogleResponse) => void;
+  auto_select: boolean;
+}
+
+interface GoogleButtonConfig {
+  theme: string;
+  size: string;
+  width: string;
+  text: string;
+}
+
+interface GoogleResponse {
+  credential: string;
+}
+
+declare global {
+  interface Window {
+    google: {
+      accounts: {
+        id: {
+          initialize: (config: GoogleConfig) => void;
+          renderButton: (element: HTMLElement, config: GoogleButtonConfig) => void;
+          disableAutoSelect: () => void;
+        };
+      };
+    };
+  }
+}
 
 const Page = () => {
   const router = useRouter();
@@ -16,6 +48,7 @@ const Page = () => {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const { signupAction } = useAuth();
   const { setUser, loading } = useUserStore();
+
   // Form state and validation errors
   const [formData, setFormData] = useState({
     firstName: "",
@@ -24,8 +57,9 @@ const Page = () => {
     password: "",
     confirmPassword: "",
     phone: "",
-    referralCode: "", // Added referral code field
+    referralCode: "",
   });
+
   const [errors, setErrors] = useState({
     genralError: "",
     firstName: "",
@@ -34,24 +68,117 @@ const Page = () => {
     password: "",
     confirmPassword: "",
     phone: "",
-    referralCode: "", // Added for validation errors
+    referralCode: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false); // Track form submission
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  // Handle Google Sign-In response
+  const handleGoogleSignIn = useCallback(async (response: GoogleResponse) => {
+    setGoogleLoading(true);
+    setErrors(prev => ({ ...prev, genralError: "" }));
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ credential: response.credential }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // Set token in the same way as regular signup
+        const expireDate = new Date(
+          Date.now() + 24 * 60 * 60 * 1000
+        ).toUTCString();
+        document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
+
+        // Set token in your auth context (same as regular signup)
+        // setToken(data.token);
+
+        // Set user data in store
+        setUser({
+          id: data.data._id,
+          firstName: data.data.firstName,
+          lastName: data.data.lastName,
+          email: data.data.email,
+          phone: data.data.phone,
+        });
+
+        // Redirect to callback URL
+        router.push(callbackUrl);
+      } else {
+        setErrors(prev => ({
+          ...prev,
+          genralError: data.message || "Google sign-in failed. Please try again.",
+        }));
+      }
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      setErrors(prev => ({
+        ...prev,
+        genralError: "Network error. Please check your connection and try again.",
+      }));
+    } finally {
+      setGoogleLoading(false);
+    }
+  }, [router, callbackUrl, setUser]);
+
+  // Initialize Google Sign-In
+  useEffect(() => {
+    const initializeGoogleSignIn = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+          callback: handleGoogleSignIn,
+          auto_select: false,
+        });
+
+        // Render Google button
+        const googleButton = document.getElementById('google-signin-button');
+        if (googleButton) {
+          window.google.accounts.id.renderButton(googleButton, {
+            theme: 'outline',
+            size: 'large',
+            width: '100%',
+            text: 'signup_with',
+          });
+        }
+      }
+    };
+
+    // Load Google Sign-In script
+    if (!window.google) {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = initializeGoogleSignIn;
+      document.head.appendChild(script);
+    } else {
+      initializeGoogleSignIn();
+    }
+  }, [handleGoogleSignIn]);
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" })); // Clear specific error
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSubmitted(true); // Indicate form submission attempt
+    setFormSubmitted(true);
+
     // Validate input fields
     const newErrors = {
       genralError: "",
@@ -72,17 +199,17 @@ const Page = () => {
         formData.password !== formData.confirmPassword
           ? "Passwords do not match."
           : "",
-      referralCode: "" // Referral code is optional
+      referralCode: ""
     };
 
     if (Object.values(newErrors).some((err) => err)) {
       setErrors(newErrors);
+      setFormSubmitted(false);
       return;
     }
-    const res = await signupAction(formData);
-
 
     try {
+      const res = await signupAction(formData);
 
       if (res.success) {
         setUser({
@@ -102,12 +229,11 @@ const Page = () => {
     } catch (err) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        genralError: res.message || "Signup failed, please try again.",
+        genralError: "Signup failed, please try again.",
       }));
       console.error("Signup failed", err);
-
     } finally {
-      setFormSubmitted(false); // Reset submission state
+      setFormSubmitted(false);
     }
   };
 
@@ -131,10 +257,30 @@ const Page = () => {
             Please provide your information below to begin your learning journey
           </p>
 
+          {/* Google Sign-In Button */}
+          <div className="w-full mb-4">
+            <div
+              id="google-signin-button"
+              className={`w-full ${googleLoading ? 'opacity-50 pointer-events-none' : ''}`}
+            ></div>
+            {googleLoading && (
+              <p className="text-center text-gray-600 mt-2">Signing in with Google...</p>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <span className="px-4 text-gray-500 text-sm">or</span>
+            <div className="flex-1 border-t border-gray-300"></div>
+          </div>
+
           <form className="w-full" onSubmit={handleSubmit}>
             {errors.genralError && (
               <p className="text-red-500 text-center mb-4">{errors.genralError}</p>
             )}
+
+            {/* Rest of your existing form fields... */}
             {/* First Name and Last Name Row */}
             <div className="flex w-full gap-4 2xl:gap-6">
               <div className="w-1/2">
@@ -313,7 +459,7 @@ const Page = () => {
               className={`w-full text-white p-2 rounded 2xl:p-4 mt-4 transition-opacity ${loading || formSubmitted ? "bg-red-400" : "bg-red-700 hover:bg-red-800"
                 } duration-200`}
             >
-              {loading ? "Processing..." : "Sign Up"}
+              {loading || formSubmitted ? "Processing..." : "Sign Up"}
             </button>
 
             <p className="text-center mt-4 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
@@ -330,7 +476,7 @@ const Page = () => {
       <div className="hidden md:flex justify-center md:w-[50%] lg:w-[38%] p-4">
         <div className="relative xl:w-[100%] xl:h-[100%] h-[95%] w-[100%]">
           <Image
-            src="/Group.png" // Replace with your decorative image
+            src="/Group.png"
             alt="Decorative"
             layout="fill"
             className="object-cover rounded-3xl p-1"

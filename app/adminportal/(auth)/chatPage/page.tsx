@@ -73,6 +73,7 @@ export default function AdminChatPanel() {
             </header>
 
             <div className="flex flex-1 overflow-hidden">
+
                 {/* Sidebar - Users */}
                 <aside className="w-1/4 bg-orange-50 p-4 space-y-2 border-r border-red-200 overflow-y-auto">
                     <h2 className="text-lg font-semibold text-red-700 mb-4">Students</h2>
@@ -145,6 +146,7 @@ export default function AdminChatPanel() {
                         </div>
                     )}
                 </section>
+
             </div>
         </div>
     );
