@@ -49,6 +49,7 @@
     "dompurify": "^3.2.4",
     "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.5.1",
+    "emoji-picker-react": "^4.12.2",
     "file-type": "^20.4.1",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
