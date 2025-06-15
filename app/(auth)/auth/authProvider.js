@@ -3,6 +3,7 @@
 import { deleteAuthToken } from "@/utils/authHelper";
 import React, { createContext, useContext, useState } from "react";
 import { useUserStore } from "@/store/userStore";
+
 const AuthContext = createContext();
 
 // AuthProvider Component
@@ -10,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const { setUser } = useUserStore(); // ✅ Zustand state management
   const [user, setUserState] = useState(null);
   const [token, setToken] = useState(null);
+
   // const { fetchUser } = useUserStore();
   // useEffect(() => {
   //   fetchUser(); // Fetch once when app loads
@@ -36,7 +38,6 @@ export const AuthProvider = ({ children }) => {
       ).toUTCString();
       // Set the authToken cookie to expire in one day:
       document.cookie = `authToken=${loggedInUser.token}; expires=${expireDate}; path=/`;
-
       setToken(loggedInUser.token);
       return loggedInUser;
     } catch (err) {
@@ -149,6 +150,7 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
+
   const verifyOtpAction = async (enteredOtp) => {
     try {
       const response = await fetch(
