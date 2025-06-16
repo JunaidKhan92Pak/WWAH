@@ -6,7 +6,6 @@ import Link from "next/link";
 import { MdOutlineRepeat } from "react-icons/md";
 import {
   Mail,
-  Phone,
   User,
   Lock,
   Eye,
@@ -39,7 +38,10 @@ declare global {
       accounts: {
         id: {
           initialize: (config: GoogleConfig) => void;
-          renderButton: (element: HTMLElement, config: GoogleButtonConfig) => void;
+          renderButton: (
+            element: HTMLElement,
+            config: GoogleButtonConfig
+          ) => void;
           disableAutoSelect: () => void;
         };
       };
@@ -80,51 +82,60 @@ const Page = () => {
     phone: "",
     referralCode: "",
   });
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  // const [formSubmitted, setFormSubmitted] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  console.log(errors);
 
   // Handle Google Sign-In response
-  const handleGoogleSignIn = useCallback(async (response: GoogleResponse) => {
-    setGoogleLoading(true);
-    setErrors(prev => ({ ...prev, genralError: "" }));
+  const handleGoogleSignIn = useCallback(
+    async (response: GoogleResponse) => {
+      setGoogleLoading(true);
+      setErrors((prev) => ({ ...prev, genralError: "" }));
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ credential: response.credential }),
-      });
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ credential: response.credential }),
+          }
+        );
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (data.success) {
-        // Set token in the same way as regular signup
-        const expireDate = new Date(
-          Date.now() + 24 * 60 * 60 * 1000
-        ).toUTCString();
-        document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
+        if (data.success) {
+          // Set token in the same way as regular signup
+          const expireDate = new Date(
+            Date.now() + 24 * 60 * 60 * 1000
+          ).toUTCString();
+          document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
 
-        // Redirect to callback URL
-        router.push(callbackUrl);
-      } else {
-        setErrors(prev => ({
+          // Redirect to callback URL
+          router.push(callbackUrl);
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            genralError:
+              data.message || "Google sign-in failed. Please try again.",
+          }));
+        }
+      } catch (error) {
+        console.error("Google sign-in error:", error);
+        setErrors((prev) => ({
           ...prev,
-          genralError: data.message || "Google sign-in failed. Please try again.",
+          genralError:
+            "Network error. Please check your connection and try again.",
         }));
+      } finally {
+        setGoogleLoading(false);
       }
-    } catch (error) {
-      console.error("Google sign-in error:", error);
-      setErrors(prev => ({
-        ...prev,
-        genralError: "Network error. Please check your connection and try again.",
-      }));
-    } finally {
-      setGoogleLoading(false);
-    }
-  }, [router, callbackUrl]);
+    },
+    [router, callbackUrl]
+  );
 
   // Initialize Google Sign-In
   useEffect(() => {
@@ -137,13 +148,13 @@ const Page = () => {
         });
 
         // Render Google button
-        const googleButton = document.getElementById('google-signin-button');
+        const googleButton = document.getElementById("google-signin-button");
         if (googleButton) {
           window.google.accounts.id.renderButton(googleButton, {
-            theme: 'outline',
-            size: 'large',
-            width: '100%',
-            text: 'signup_with',
+            theme: "outline",
+            size: "large",
+            width: "100%",
+            text: "signup_with",
           });
         }
       }
@@ -151,8 +162,8 @@ const Page = () => {
 
     // Load Google Sign-In script
     if (!window.google) {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
       script.async = true;
       script.defer = true;
       script.onload = initializeGoogleSignIn;
@@ -163,11 +174,11 @@ const Page = () => {
   }, [handleGoogleSignIn]);
 
   // Handle input change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevData) => ({ ...prevData, [name]: value }));
+  //   setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  // };
 
   // Handle form submission
   const [otpData, setOtpData] = useState({
@@ -184,7 +195,9 @@ const Page = () => {
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+  const handleInputChange = (e: {
+    target: { name: string; value: string };
+  }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -193,7 +206,7 @@ const Page = () => {
     setError(""); // Clear error when user types
   };
 
-  const handleOtpChange = (e: { target: { name: any; value: any } }) => {
+  const handleOtpChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     // Allow only numbers and limit to 6 digits
     if (/^\d{0,6}$/.test(value)) {
@@ -278,6 +291,8 @@ const Page = () => {
         setError(data.message || "Failed to send OTP");
       }
     } catch (err) {
+      console.error("Network error", err);
+
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -326,6 +341,8 @@ const Page = () => {
         setError(data.message || "Invalid OTP");
       }
     } catch (err) {
+      console.error("Network error", err);
+
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -357,6 +374,8 @@ const Page = () => {
         setError(data.message || "Failed to create account");
       }
     } catch (err) {
+      console.error("Network error", err);
+
       setError("Network error. Please try again.");
     }
   };
@@ -387,6 +406,8 @@ const Page = () => {
         setError(data.message || "Failed to resend OTP");
       }
     } catch (err) {
+      console.error("Network error", err);
+
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -426,7 +447,9 @@ const Page = () => {
               />
             </Link>
           </div>
-          <h6 className="text-center font-semibold text-xl mb-1 mt-4">Create an Account!</h6>
+          <h6 className="text-center font-semibold text-xl mb-1 mt-4">
+            Create an Account!
+          </h6>
           <p className="text-gray-600 mb-4 text-center sm:px-8 md:mb-4 md:w-full lg:text-[14px] lg:mb-4 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
             Please provide your information below to begin your learning journey
           </p>
@@ -435,10 +458,14 @@ const Page = () => {
           <div className="w-full mb-4">
             <div
               id="google-signin-button"
-              className={`w-full ${googleLoading ? 'opacity-50 pointer-events-none' : ''}`}
+              className={`w-full ${
+                googleLoading ? "opacity-50 pointer-events-none" : ""
+              }`}
             ></div>
             {googleLoading && (
-              <p className="text-center text-gray-600 mt-2">Signing in with Google...</p>
+              <p className="text-center text-gray-600 mt-2">
+                Signing in with Google...
+              </p>
             )}
           </div>
 
@@ -672,7 +699,7 @@ const Page = () => {
             <div className="space-y-6">
               <div className="text-center mb-6">
                 <p className="text-sm text-gray-600">
-                  We've sent verification codes to:
+                  We&apos;ve sent verification codes to:
                 </p>
                 <p className="text-sm font-medium text-gray-800">
                   {formData.email}

@@ -135,13 +135,17 @@ function Page() {
   };
   const [successOpen, setSuccessOpen] = useState(false);
 
+  // Updated handleNavigate function to properly pass the message
   const handleNavigate = () => {
     if (input.trim()) {
-      router.push(`/chatmodel?message=${encodeURIComponent(input)}`);
+      // Store the message in sessionStorage for the chat model to pick up
+      sessionStorage.setItem("initialMessage", input.trim());
+      router.push("/chatmodel");
     } else {
       router.push("/chatmodel"); // Navigate without message if input is empty
     }
   };
+
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -279,7 +283,7 @@ function Page() {
                   <h3 className="text-white leading-snug">
                     <Typewriter
                       words={[
-                        "Let’s explore your study options.",
+                        "Let's explore your study options.",
                         "I simplify your university search",
                         "Find courses that truly fit",
                         "Smart scholarship search starts here.",

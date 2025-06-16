@@ -42,7 +42,7 @@ const Page = () => {
     {
       name: "Germany",
       value: "germany",
-      img: "/countryarchive/germany_logo.png",
+      img: "/countryarchive/ge_logo.png",
     },
     {
       name: "Ireland",
@@ -106,13 +106,6 @@ const Page = () => {
     fetchUniversities(currentPage);
   }, [currentPage, fetchUniversities]);
 
-  // Load favorites from localStorage on component mount
-  // useEffect(() => {
-  //   const storedFavorites = localStorage.getItem("favorites");
-  //   if (storedFavorites) {
-  //     setFavorites(JSON.parse(storedFavorites));
-  //   }
-  // }, []);
 
   // Handle Search with debounce
   const handleSearch = useCallback(
@@ -139,15 +132,6 @@ const Page = () => {
     }
   }
 
-  // Copy university URL to clipboard
-  // const copyToClipboard = (id: string) => {
-  //   const url = `${window.location.origin}/Universities/${id}`;
-
-  //   navigator.clipboard
-  //     .writeText(url)
-  //     .then(() => alert("Link copied to clipboard!"))
-  //     .catch((err) => console.error("Failed to copy: ", err));
-  // };
 
   // Pagination handlers
   const handlePrevPage = () => {

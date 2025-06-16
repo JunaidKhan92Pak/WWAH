@@ -28,14 +28,19 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [streamingMessage, setStreamingMessage] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  // const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  // const initialMessage = searchParams.get("message");
   const { user, fetchUserProfile } = useUserStore();
   const abortController = useRef<AbortController | null>(null);
   const [streamingComplete, setStreamingComplete] = useState(false);
+  const [hasProcessedInitialMessage, setHasProcessedInitialMessage] =
+    useState(false);
+
+  // Add a ref to prevent multiple submissions
+  const isProcessingRef = useRef(false);
+
   console.log(messages, "messages from chat component");
-  console.log(streamingComplete)
+  console.log(streamingComplete);
+
   // Check if query matches a common pattern for instant response
   const checkForInstantResponse = (query: string): string | null => {
     const normalizedQuery = query.toLowerCase().trim();
@@ -73,12 +78,12 @@ export default function Home() {
     scrollToBottom();
   }, [messages, streamingMessage, scrollToBottom]);
 
+  // Function to send a message (extracted for reuse)
+  const sendMessage = async (messageContent: string) => {
+    if (!messageContent.trim() || isLoading || isProcessingRef.current) return;
 
-  // submit function
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!input.trim() || isLoading) return;
+    // Set processing flag to prevent duplicate calls
+    isProcessingRef.current = true;
 
     // Abort any ongoing request
     if (abortController.current) {
@@ -90,13 +95,12 @@ export default function Home() {
     setStreamingMessage("");
     setStreamingComplete(false);
 
-    const userMessage: MessageType = { role: "user", content: input };
+    const userMessage: MessageType = { role: "user", content: messageContent };
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
     setIsLoading(true);
 
     // Check for instant response first
-    const instantResponse = checkForInstantResponse(input);
+    const instantResponse = checkForInstantResponse(messageContent);
     if (instantResponse) {
       // Add a slight delay for a better UX
       setTimeout(() => {
@@ -105,6 +109,7 @@ export default function Home() {
           { role: "assistant", content: instantResponse },
         ]);
         setIsLoading(false);
+        isProcessingRef.current = false; // Reset processing flag
       }, 300);
       return;
     }
@@ -178,9 +183,7 @@ export default function Home() {
         }
 
         // When streaming is done, add the message to the state ONLY if we have content
-        // This additional check prevents adding empty messages
         if (completeResponse && completeResponse.trim() !== "") {
-          // Use function form of setState to ensure we have the latest state
           setMessages((prevMessages) => [
             ...prevMessages,
             { role: "assistant", content: completeResponse },
@@ -211,21 +214,59 @@ export default function Home() {
       setIsLoading(false);
       setStreamingMessage("");
       abortController.current = null;
+      isProcessingRef.current = false; // Reset processing flag
     }
   };
-  // Add this to your component:
+
+  // Fixed useEffect for initial message processing
   useEffect(() => {
-    // Cleanup function to handle component unmount or query changes
+    const processInitialMessage = async () => {
+      if (hasProcessedInitialMessage) return;
+
+      const initialMessage = sessionStorage.getItem("initialMessage");
+      if (initialMessage) {
+        console.log("Processing initial message:", initialMessage);
+
+        // Mark as processed immediately
+        setHasProcessedInitialMessage(true);
+        sessionStorage.removeItem("initialMessage");
+
+        // Set input and send message
+        setInput(initialMessage);
+
+        // Small delay to ensure state is updated
+        setTimeout(async () => {
+          await sendMessage(initialMessage);
+          setInput(""); // Clear input after sending
+        }, 100);
+      } else {
+        setHasProcessedInitialMessage(true);
+      }
+    };
+
+    processInitialMessage();
+  }, []); // Empty dependency array - only run once
+
+  // submit function
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading || isProcessingRef.current) return;
+
+    const messageToSend = input;
+    setInput(""); // Clear input immediately
+    await sendMessage(messageToSend);
+  };
+
+  // Cleanup effect
+  useEffect(() => {
     return () => {
       if (abortController.current) {
         abortController.current.abort();
         abortController.current = null;
       }
+      isProcessingRef.current = false;
     };
   }, []);
-
-  // Then in your handleSubmit function:
-
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -237,9 +278,13 @@ export default function Home() {
         <main className="relative flex-1 w-[90%] mx-auto sm:px-4 pt-16 pb-18">
           <ScrollArea className="h-[calc(100vh-8rem)] overflow-hidden p-6 scrollbar-hide">
             <div className="space-y-4 py-0 pb-16">
-              {messages.length === 0 ? (
+              {messages.length === 0 && !streamingMessage ? (
                 <div className="flex items-center justify-center h-full">
-                  <p>Send a message to start chatting</p>
+                  <p>
+                    {hasProcessedInitialMessage
+                      ? "Send a message to start chatting"
+                      : "Loading..."}
+                  </p>
                 </div>
               ) : (
                 messages.map((message, index) =>
@@ -318,7 +363,7 @@ export default function Home() {
                 <Button
                   type="submit"
                   size="icon"
-                  disabled={isLoading}
+                  disabled={isLoading || isProcessingRef.current}
                   className="p-0 bg-transparent hover:bg-transparent rounded-full"
                 >
                   <Image
