@@ -3,9 +3,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useAuth } from "../auth/authProvider";
 import { MdOutlineRepeat } from "react-icons/md";
-import { useUserStore } from "@/store/userStore";
 import {
   Mail,
   Phone,
