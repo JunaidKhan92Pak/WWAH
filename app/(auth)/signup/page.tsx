@@ -4,12 +4,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "../auth/authProvider";
-import { CiUser } from "react-icons/ci";
-import { IoMailOutline, IoKeyOutline } from "react-icons/io5";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdOutlineRepeat } from "react-icons/md";
 import { useUserStore } from "@/store/userStore";
-
+import {
+  Mail,
+  Phone,
+  User,
+  Lock,
+  Eye,
+  EyeOff,
+  CheckCircle,
+  AlertCircle,
+  Loader,
+} from "lucide-react";
 // Declare Google API types
 interface GoogleConfig {
   client_id: string;
@@ -46,9 +53,14 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const { signupAction } = useAuth();
-  const { setUser, loading } = useUserStore();
-
+  const [currentStep, setCurrentStep] = useState("register"); // register, otp-verification, success
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [sessionId, setSessionId] = useState("");
+  const [countdown, setCountdown] = useState(0);
   // Form state and validation errors
   const [formData, setFormData] = useState({
     firstName: "",
@@ -70,9 +82,6 @@ const Page = () => {
     phone: "",
     referralCode: "",
   });
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
@@ -100,18 +109,6 @@ const Page = () => {
         ).toUTCString();
         document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
 
-        // Set token in your auth context (same as regular signup)
-        // setToken(data.token);
-
-        // Set user data in store
-        setUser({
-          id: data.data._id,
-          firstName: data.data.firstName,
-          lastName: data.data.lastName,
-          email: data.data.email,
-          phone: data.data.phone,
-        });
-
         // Redirect to callback URL
         router.push(callbackUrl);
       } else {
@@ -129,7 +126,7 @@ const Page = () => {
     } finally {
       setGoogleLoading(false);
     }
-  }, [router, callbackUrl, setUser]);
+  }, [router, callbackUrl]);
 
   // Initialize Google Sign-In
   useEffect(() => {
@@ -175,66 +172,245 @@ const Page = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [otpData, setOtpData] = useState({
+    emailOtp: "",
+    phoneOtp: "",
+  });
+
+  // Countdown timer for resend OTP
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setError(""); // Clear error when user types
+  };
+
+  const handleOtpChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    // Allow only numbers and limit to 6 digits
+    if (/^\d{0,6}$/.test(value)) {
+      setOtpData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^\+?[\d\s-()]{10,}$/;
+    return phoneRegex.test(phone);
+  };
+
+  const handleSendOtp = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setError("");
+    setLoading(true);
 
-    // Validate input fields
-    const newErrors = {
-      genralError: "",
-      firstName: !formData.firstName ? "First name is required." : "",
-      lastName: !formData.lastName ? "Last name is required." : "",
-      phone: !formData.phone ? "Phone number is required." : "",
-      email: !formData.email
-        ? "Email is required."
-        : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-          ? ""
-          : "Enter a valid email address.",
-      password: !formData.password
-        ? "Password is required."
-        : formData.password.length < 8
-          ? "Password must be at least 8 characters."
-          : "",
-      confirmPassword:
-        formData.password !== formData.confirmPassword
-          ? "Passwords do not match."
-          : "",
-      referralCode: ""
-    };
+    // Validation
+    if (!formData.firstName.trim()) {
+      setError("first name is required");
+      setLoading(false);
+      return;
+    }
+    if (!formData.lastName.trim()) {
+      setError("last name is required");
+      setLoading(false);
+      return;
+    }
 
-    if (Object.values(newErrors).some((err) => err)) {
-      setErrors(newErrors);
-      setFormSubmitted(false);
+    if (!validateEmail(formData.email)) {
+      setError("Please enter a valid email address");
+      setLoading(false);
+      return;
+    }
+
+    if (!validatePhone(formData.phone)) {
+      setError("Please enter a valid phone number");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
       return;
     }
 
     try {
-      const res = await signupAction(formData);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}signup/send-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      if (res.success) {
-        setUser({
-          id: res.data._id,
-          firstName: res.data.firstName,
-          email: res.data.email,
-          phone: res.data.phone,
-          lastName: res.data.lastName,
-        });
-        router.push(callbackUrl);
+      const data = await response.json();
+
+      if (response.ok) {
+        setSessionId(data.sessionId);
+        setCurrentStep("otp-verification");
+        setSuccess("OTP sent to your email and phone number");
+        setCountdown(60); // 60 seconds countdown for resend
       } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          genralError: res.message,
-        }));
+        setError(data.message || "Failed to send OTP");
       }
     } catch (err) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        genralError: "Signup failed, please try again.",
-      }));
-      console.error("Signup failed", err);
+      setError("Network error. Please try again.");
     } finally {
-      setFormSubmitted(false);
+      setLoading(false);
     }
+  };
+
+  const handleVerifyOtp = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (!otpData.emailOtp) {
+      setError("Please enter both email and phone OTP");
+      setLoading(false);
+      return;
+    }
+
+    if (otpData.emailOtp.length !== 6) {
+      setError("OTP must be 6 digits long");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}signup/verify-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sessionId,
+            emailOtp: otpData.emailOtp,
+            phoneOtp: otpData.phoneOtp,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Complete registration
+        await completeRegistration();
+      } else {
+        setError(data.message || "Invalid OTP");
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const completeRegistration = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}signup/complete-signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sessionId,
+            password: formData.password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCurrentStep("success");
+        setSuccess("Account created successfully!");
+      } else {
+        setError(data.message || "Failed to create account");
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}signup/resend-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sessionId }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess("New OTP sent successfully");
+        setCountdown(60);
+        setOtpData({ emailOtp: "", phoneOtp: "" }); // Clear previous OTP inputs
+      } else {
+        setError(data.message || "Failed to resend OTP");
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setCurrentStep("register");
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      referralCode: "",
+    });
+    setOtpData({ emailOtp: "", phoneOtp: "" });
+    setError("");
+    setSuccess("");
+    setSessionId("");
+    setCountdown(0);
   };
 
   return (
@@ -275,200 +451,338 @@ const Page = () => {
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
-          <form className="w-full" onSubmit={handleSubmit}>
-            {errors.genralError && (
-              <p className="text-red-500 text-center mb-4">{errors.genralError}</p>
-            )}
-
-            {/* Rest of your existing form fields... */}
-            {/* First Name and Last Name Row */}
-            <div className="flex w-full gap-4 2xl:gap-6">
-              <div className="w-1/2">
-                <label className="block text-gray-800 font-normal">
-                  First Name<span className="text-red-600">*</span>
-                </label>
-                <div className="relative">
-                  <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
-                  <input
-                    type="text"
-                    name="firstName"
-                    className={`w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border ${errors.firstName ? "border-red-500" : "border-gray-300"
-                      } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
-                    placeholder="Enter First Name"
-                    onChange={handleChange}
-                    value={formData.firstName}
-                  />
-                </div>
-                {errors.firstName && (
-                  <p className="text-red-600 text-sm mt-1">{errors.firstName}</p>
-                )}
-              </div>
-              <div className="w-1/2">
-                <label className="block text-gray-800 font-normal">
-                  Last Name<span className="text-red-600">*</span>
-                </label>
-                <div className="relative">
-                  <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
-                  <input
-                    type="text"
-                    name="lastName"
-                    className={`w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border ${errors.lastName ? "border-red-500" : "border-gray-300"
-                      } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
-                    placeholder="Enter Last Name"
-                    onChange={handleChange}
-                    value={formData.lastName}
-                  />
-                </div>
-                {errors.lastName && (
-                  <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="mt-3">
-              <label className="block text-gray-800 font-normal">
-                Email<span className="text-red-600">*</span>
-              </label>
-              <div className="relative">
-                <IoMailOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
-                <input
-                  type="email"
-                  name="email"
-                  className={`w-full p-1 lg:p-2 2xl:pl-16 pl-8 lg:pl-10 border ${errors.email ? "border-red-500" : "border-gray-300"
-                    } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
-                  placeholder="Enter your Email"
-                  onChange={handleChange}
-                  value={formData.email}
-                />
-              </div>
-              {errors.email && (
-                <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Phone Number and Referral Code Row */}
-            <div className="flex w-full gap-4 2xl:gap-6 mt-3">
-              <div className="w-1/2">
-                <label className="block text-gray-800 font-normal">
-                  Phone<span className="text-red-600">*</span>
-                </label>
-                <div className="relative">
-                  <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
-                  <input
-                    type="text"
-                    name="phone"
-                    className={`w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border ${errors.phone ? "border-red-500" : "border-gray-300"
-                      } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
-                    placeholder="Enter Phone Number"
-                    onChange={handleChange}
-                    value={formData.phone}
-                  />
-                </div>
-                {errors.phone && (
-                  <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
-                )}
-              </div>
-
-              {/* Referral Code Field */}
-              <div className="w-1/2">
-                <label className="block text-gray-800 font-normal">
-                  Referral Code
-                </label>
-                <div className="relative">
-                  <MdOutlineRepeat className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
-                  <input
-                    type="text"
-                    name="referralCode"
-                    className="w-full p-1 lg:p-2 pl-8 lg:pl-10 2xl:pl-16 border border-gray-300 rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
-                    placeholder="Enter Referral Code (optional)"
-                    onChange={handleChange}
-                    value={formData.referralCode}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Password */}
-            <div className="mt-3">
-              <label className="block text-gray-800 font-normal">
-                Password<span className="text-red-600">*</span>
-              </label>
-              <div className="relative">
-                <IoKeyOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  className={`w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border ${errors.password ? "border-red-500" : "border-gray-300"
-                    } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
-                  placeholder="Enter your Password (min 8 characters)"
-                  onChange={handleChange}
-                  value={formData.password}
-                  minLength={8}
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-red-600 text-sm mt-1">{errors.password}</p>
-              )}
-            </div>
-
-            {/* Confirm Password */}
-            <div className="mt-3">
-              <label className="block text-gray-800 font-normal">
-                Confirm Password<span className="text-red-600">*</span>
-              </label>
-              <div className="relative mb-3">
-                <IoKeyOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  className={`w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border ${errors.confirmPassword ? "border-red-500" : "border-gray-300"
-                    } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
-                  placeholder="Confirm your Password"
-                  onChange={handleChange}
-                  value={formData.confirmPassword}
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <AiOutlineEyeInvisible />
-                  ) : (
-                    <AiOutlineEye />
-                  )}
-                </button>
-              </div>
-              {errors.confirmPassword && (
-                <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading || formSubmitted}
-              className={`w-full text-white p-2 rounded 2xl:p-4 mt-4 transition-opacity ${loading || formSubmitted ? "bg-red-400" : "bg-red-700 hover:bg-red-800"
-                } duration-200`}
-            >
-              {loading || formSubmitted ? "Processing..." : "Sign Up"}
-            </button>
-
-            <p className="text-center mt-4 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
-              Already have an account?{" "}
-              <Link href="/signin" className="text-[#F0851D] hover:underline">
-                Sign In
-              </Link>
+          {/* Header */}
+          <div className="text-center mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">
+              {currentStep === "register" && "Create an Account!"}
+              {currentStep === "otp-verification" && "Verify OTP"}
+              {currentStep === "success" && "Welcome!"}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              {currentStep === "register" &&
+                "Please provide your information below to begin your learning journey"}
+              {currentStep === "otp-verification" &&
+                "Check your email and phone"}
+              {currentStep === "success" && "Account created successfully"}
             </p>
-          </form>
+          </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center">
+              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span className="text-sm">{error}</span>
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center">
+              <CheckCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span className="text-sm">{success}</span>
+            </div>
+          )}
+
+          {/* Registration Form */}
+          {currentStep === "register" && (
+            <div className="space-y-2">
+              {/* First Name and Last Name */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name<span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="text"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      name="firstName"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                      placeholder="Enter First Name"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name<span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="text"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      name="lastName"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                      placeholder="Enter Last Name"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email<span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                    placeholder="Enter your Email"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Phone and Referral Code */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Phone<span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                      placeholder="Enter Phone Number"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Referral Code
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 flex items-center justify-center">
+                      <MdOutlineRepeat className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />{" "}
+                    </div>
+                    <input
+                      type="text"
+                      name="referralCode"
+                      value={formData.referralCode}
+                      onChange={handleInputChange}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                      placeholder="Enter Referral Code (optional)"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password<span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                    placeholder="Enter your Password (min 8 characters)"
+                    minLength={6}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password<span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                    placeholder="Confirm your Password"
+                    minLength={6}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                disabled={loading}
+                className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm font-medium placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+              >
+                {loading ? (
+                  <>
+                    <Loader className="animate-spin w-4 h-4 mr-2" />
+                    Sending OTP...
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
+              </button>
+
+              <div className="text-center mt-2">
+                <p className="text-sm text-gray-600">
+                  Already have an account?{" "}
+                  <a
+                    href="/signin"
+                    className="text-red-600 hover:text-red-800 font-medium"
+                  >
+                    Sign In
+                  </a>
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* OTP Verification */}
+          {currentStep === "otp-verification" && (
+            <div className="space-y-6">
+              <div className="text-center mb-6">
+                <p className="text-sm text-gray-600">
+                  We've sent verification codes to:
+                </p>
+                <p className="text-sm font-medium text-gray-800">
+                  {formData.email}
+                </p>
+                {/* <p className="text-sm font-medium text-gray-800">
+                  {formData.phone}
+                </p> */}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email OTP
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="emailOtp"
+                    value={otpData.emailOtp}
+                    onChange={handleOtpChange}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-lg tracking-widest placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                    placeholder="000000"
+                    maxLength={6}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone OTP
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="phoneOtp"
+                    value={otpData.phoneOtp}
+                    onChange={handleOtpChange}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-lg tracking-widest placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+                    placeholder="000000"
+                    maxLength={6}
+                    required
+                  />
+                </div>
+              </div> */}
+
+              <button
+                type="button"
+                onClick={handleVerifyOtp}
+                disabled={loading}
+                className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]"
+              >
+                {loading ? (
+                  <>
+                    <Loader className="animate-spin w-5 h-5 mr-2" />
+                    Verifying...
+                  </>
+                ) : (
+                  "Verify & Create Account"
+                )}
+              </button>
+
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={countdown > 0 || loading}
+                  className="text-red-600 hover:text-red-800 text-sm disabled:text-gray-400 disabled:cursor-not-allowed"
+                >
+                  {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={resetForm}
+                className="w-full text-gray-600 hover:text-gray-800 text-sm"
+              >
+                ← Back to Registration
+              </button>
+            </div>
+          )}
+
+          {/* Success */}
+          {currentStep === "success" && (
+            <div className="text-center space-y-6">
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Welcome, {formData.firstName}!
+                </h3>
+                <p className="text-gray-600">
+                  Your account has been created and verified successfully.
+                </p>
+              </div>
+
+              <button
+                onClick={() => (window.location.href = "/signin")}
+                className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              >
+                Continue to Login
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
