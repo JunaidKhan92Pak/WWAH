@@ -158,9 +158,9 @@ py-4 md:py-8 2xl:py-6 flex flex-col justify-center items-center text-center mt-2
         </div>
 
         {/* Details Section */}
-        <div className="relative  mt-0 lg:-mt-10 md:mt-4 flex  justify-center">
+        <div className="relative mt-2 lg:-mt-10 flex justify-center">
           <div
-            className="lg:grid flex overflow-x-scroll lg:grid-cols-7 gap-2 sm:gap-2 md:gap-4 bg-white text-black py-4 px-4 rounded-2xl shadow-lg mx-auto w-full lg:w-[80%]"
+            className="lg:grid flex overflow-x-scroll lg:grid-cols-7 gap-2 sm:gap-2 md:gap-4 bg-white  px-4 rounded-2xl shadow-lg mx-auto w-full lg:w-[80%]  lg:overflow-visible whitespace-nowrap lg:whitespace-normal  text-black py-3 md:py-8 md:px-4  "
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -182,13 +182,21 @@ py-4 md:py-8 2xl:py-6 flex flex-col justify-center items-center text-center mt-2
                     />
                   </div>
                 </div>
-                <div className="flex flex-col h-full justify-around">
-                  <p className="text-[12px] font-semibold leading-4">
+                {/* Heading with Tooltip */}
+                <div className="relative group w-[100px]">
+                  <p className="font-semibold text-sm truncate max-w-[100px]">
                     {item.Heading}
                   </p>
-                  <p className="text-[12px] text-black  lg:text-center ">
+                </div>
+
+                {/* Name with Tooltip */}
+                <div className="relative group w-[100px]">
+                  <p className="text-xs truncate max-w-[100px] overflow-hidden">
                     {item.Name}
                   </p>
+                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-xs p-2 cursor-pointer rounded-md w-[200px] text-center shadow-lg">
+                    {item.Name}
+                  </span>
                 </div>
               </div>
             ))}
