@@ -3,7 +3,6 @@
 import { Navbar } from "./Navbar";
 import { Sidebar } from "./Sidebar";
 
-
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen flex-col">
