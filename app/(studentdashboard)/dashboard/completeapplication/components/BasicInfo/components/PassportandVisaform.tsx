@@ -98,6 +98,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       placeholder="Write..."
                       className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -147,6 +148,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       placeholder="Write..."
                       className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
