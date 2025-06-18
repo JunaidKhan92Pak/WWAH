@@ -9,7 +9,7 @@ export const Navbar = () => {
   const { isAuthenticate, user, loading } = useUserStore();
 
   // useEffect(() => {
-  //   console.log("Wellcome to Chat Moadal:"); // Log user data for debugging 
+  //   console.log("Wellcome to Chat Moadal:"); // Log user data for debugging
   //   fetchUser(); // Fetch user data when the component mounts
   // }, []);
   if (loading) {
@@ -20,12 +20,7 @@ export const Navbar = () => {
       <div className="w-[90%] mx-auto sm:px-4 py-2 flex items-center">
         <Link href="/">
           <div className="flex items-center gap-4">
-            <Image
-              src="/icons/zeusrobo.svg"
-              alt="zeus"
-              width={40}
-              height={20}
-            />
+            <Image src="/hellozeus.PNG" alt="zeus" width={40} height={20} />
             <h4>Zeus by WWAH</h4>
           </div>
         </Link>

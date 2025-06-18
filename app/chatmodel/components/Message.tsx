@@ -31,23 +31,33 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       {isUser ? (
-        <Card className="px-4 py-3 bg-[#D9D9D966] text-black max-w-[80%] sm:max-w-[55%]">
+        <Card className="md:px-3 px-3 py-2 md:py-1 bg-[#D9D9D966] text-black max-w-[80%] sm:max-w-[55%]">
           <p className="whitespace-pre-line md:text-[18px]">
             {message.content}
           </p>
         </Card>
       ) : (
-        <div className="flex gap-5 justify-center items-start max-w-[80%] sm:max-w-[55%]">
-          <div className="flex flex-col items-start justify-center pt-3">
-            <Image
-              src="/icons/zeusrobo.svg"
-              width={32}
-              height={32}
+        <div className="flex  justify-center items-start max-w-[95%] sm:max-w-[80%] md:w-[65%] lg:w-[55%]">
+          <div className=" w-[15%] hidden sm:flex sm:justify-end ">
+            {/* <Image
+              src="/zeus_face.png"
+              width={800}
+              height={800}
               alt="Zeus Avatar"
+              className="sm:w-[44px] sm:h-[36px] w-[36px] h-[30px]"
+            /> */}
+            <Image
+              src="/zeus_face.png"
+              width={800}
+              height={800}
+              alt="Zeus Avatar"
+              className="lg:w-[44px] lg:h-[36px] md:w-[44px] md:h-[34px] w-[32px] h-[28px]"
+              priority={true}
+              quality={95}
             />
-            <p className="font-bold text-gray-800 italic">ZEUS</p>
           </div>
-          <Card className="px-4 py-3 bg-white text-black">
+
+          <Card className="w-[100%]  md:px-3 px-2 py-1 md:py-1 bg-white text-black">
             <div className="markdown-content">
               <ReactMarkdown
                 components={{
