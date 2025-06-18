@@ -276,7 +276,7 @@ export default function Home() {
         <Navbar />
         {/* Chat Area */}
         <main className="relative flex-1 w-[90%] mx-auto sm:px-4 pt-16 pb-18">
-          <ScrollArea className="h-[calc(100vh-8rem)] overflow-hidden p-6 scrollbar-hide">
+          <ScrollArea className="h-[calc(100vh-8rem)] overflow-hidden py-6 md:p-6 scrollbar-hide">
             <div className="space-y-4 py-0 pb-16">
               {messages.length === 0 && !streamingMessage ? (
                 <div className="flex items-center justify-center h-full">
@@ -299,14 +299,14 @@ export default function Home() {
                 <div className="flex gap-10 md:max-w-[80%] lg:max-w-[75%] xl:max-w-[70%] max-w-[80%]">
                   <div className="flex items-start pt-3 gap-2 mb-3">
                     <Image
-                      src="/icons/zeusrobo.svg"
+                      src="/zeus_face.png"
                       width={32}
                       height={32}
                       alt="Zeus Avatar"
                     />
                     <h6 className="font-bold text-gray-800">ZEUS</h6>
                   </div>
-                  <Card className="px-4 py-3 bg-white text-black">
+                  <Card className="px-4 py-2 bg-white text-black">
                     <p className="whitespace-pre-line md:text-[18px]">
                       {streamingMessage}
                     </p>
@@ -316,19 +316,20 @@ export default function Home() {
 
               {/* Show "Thinking..." when loading but not streaming */}
               {isLoading && !streamingMessage && (
-                <div className="flex gap-10 md:max-w-[100%] lg:max-w-[100%] xl:max-w-[100%] max-w-[100%]">
-                  <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center justify-start gap-2 md:max-w-[100%] lg:max-w-[100%] xl:max-w-[100%] max-w-[100%]">
+                  <div className="flex gap-0 ">
                     <Image
-                      src="/icons/zeusrobo.svg"
+                      src="/zeus_face.png"
                       width={32}
                       height={32}
                       alt="Zeus Avatar"
+                      className="rounded-full m-auto"
                     />
-                    <h6 className="font-bold text-gray-800">ZEUS</h6>
+                    {/* <h6 className="font-bold text-gray-800">ZEUS</h6> */}
                   </div>
-                  <Card className="px-4 py-3 bg-white text-black">
+                  <Card className="px-4 py-2 bg-white text-black flex items-center">
                     <p className="whitespace-pre-line italic text-center text-gray-500">
-                      Zeus is Thinking...
+                      Thinking...
                     </p>
                   </Card>
                 </div>
