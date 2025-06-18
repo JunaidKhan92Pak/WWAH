@@ -1080,6 +1080,7 @@ export default function Home() {
                     <FormLabel>Phone No.</FormLabel>
                     <div className="flex">
                       <FormField
+<<<<<<< Updated upstream
                         control={form.control}
                         name="countryCode"
                         render={({ field: countryField }) => (
@@ -1134,6 +1135,67 @@ export default function Home() {
                           </Select>
                         )}
                       />
+=======
+  control={form.control}
+  name="countryCode"
+  render={({ field: countryField }) => (
+    <Select
+      onValueChange={(val) => {
+        const code = val.split("-")[0]; 
+        countryField.onChange(code);
+      }}
+      defaultValue={countryField.value}
+    >
+      <FormControl>
+        <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-r-none border-r-0">
+          <SelectValue>
+            <div className="flex items-center gap-2">
+              <Image
+                src={
+                  countries.find((c) => c.code === countryField.value)?.flag ||
+                  countries[0].flag
+                }
+                alt="Country Flag"
+                width={20}
+                height={20}
+                className="object-contain"
+                unoptimized
+              />
+              <span className="text-sm">
+                {countryField.value}
+              </span>
+            </div>
+          </SelectValue>
+        </SelectTrigger>
+      </FormControl>
+
+      <SelectContent>
+        {countries.map((country) => (
+          <SelectItem
+            key={`${country.code}-${country.name}`}
+            value={`${country.code}-${country.name}`}
+          >
+            <div className="flex items-center gap-2">
+              <Image
+                src={country.flag}
+                alt={`${country.name} Flag`}
+                width={20}
+                height={20}
+                className="object-contain"
+                unoptimized
+              />
+              <span className="text-sm">
+                {`${country.code} (${country.name})`}
+              </span>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )}
+/>
+
+>>>>>>> Stashed changes
                       <Input
                         {...field}
                         className="rounded-l-none bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm"
