@@ -190,9 +190,10 @@ const ImprovedExcelUploader = () => {
   };
 
   // Read and process the second file (column-based format)
+  // Alternative simpler approach if the above is too complex
   const processFile2 = async (file: File): Promise<ColumnData> => {
     const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data, { type: "array" });
+    const workbook = XLSX.read(data, { type: "array", cellDates: true });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const jsonArray = XLSX.utils.sheet_to_json(worksheet);
@@ -202,13 +203,25 @@ const ImprovedExcelUploader = () => {
     jsonArray.forEach((row) => {
       Object.entries(row as Record<string, unknown>).forEach(([key, value]) => {
         if (!columnData[key]) columnData[key] = [];
-        columnData[key].push(String(value));
+
+        // Handle different value types
+        let stringValue: string;
+        if (value instanceof Date) {
+          // Format date as readable string
+          stringValue = value.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long'
+          });
+        } else {
+          stringValue = String(value);
+        }
+
+        columnData[key].push(stringValue);
       });
     });
 
     return columnData;
   };
-
   // Convert Excel serial date to formatted string
   const formatExcelDate = (serial: number): string => {
     try {
@@ -311,7 +324,7 @@ const ImprovedExcelUploader = () => {
       const enhancedScholarship = {
         ...scholarship,
         table: {
-          course: columnData["Course"] || [],
+          course: columnData["Courses"] || ["Course"] || [],
           create_application: columnData["Create Your Application"] || [],
           deadline: columnData["Deadline"] || [],
           duration: columnData["Duration"] || [],
@@ -319,7 +332,7 @@ const ImprovedExcelUploader = () => {
           faculty_department: columnData["Faculty/Department"] || [],
           scholarship_type: columnData["Scholarship Type"] || [],
           teaching_language: columnData["Teaching Language"] || [],
-          university: columnData["University"] || [],
+          university: columnData["Host University"] || ["University"] || [],
         } // Full table for each (memory intensive!)
       };
       return enhancedScholarship;
@@ -587,7 +600,6 @@ const ImprovedExcelUploader = () => {
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
-
       <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
         <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
         {/* Alert box for file format */}

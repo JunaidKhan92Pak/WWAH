@@ -9,9 +9,10 @@ interface OverviewProps {
     phd: string;
     Diploma: string,
   };
+  info_link: string;
 }
 
-const Overview: React.FC<OverviewProps> = ({ overview, duration }) => {
+const Overview: React.FC<OverviewProps> = ({ overview, duration, info_link }) => {
   return (
     <div>
       <section className="mt-2">
@@ -23,7 +24,6 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration }) => {
               <div className=" mx-auto leading-snug">
                 <h2 className="font-bold">Scholarship Overview!</h2>
                 <p className="text-gray-700 mb-2">{overview}</p>
-
                 <p className="font-bold  mb-2">Duration of the Scholarship:</p>
                 <p>
                   <strong>Degree:</strong> {duration?.bachelors},
@@ -31,6 +31,9 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration }) => {
                 </p>
                 <p>
                   <strong>Research:</strong> 6 months or 1 year
+                </p>
+                <p>
+                  <strong>Info Link:</strong> {info_link}
                 </p>
               </div>
             </div>

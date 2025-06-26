@@ -21,7 +21,7 @@ type ScholarshipData = {
   hostCountry: string;
   logo: string;
   banner: string;
-  scholarshipType: string;
+  type: string;
   deadline: string;
   overview: string;
   university: string;
@@ -39,6 +39,7 @@ type ScholarshipData = {
   programs: string[];
   Document: string[];
   requiredDocuments: [];
+  info_link: string;
   table?: {
     course: string[];
     create_application: string[];
@@ -119,13 +120,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         logo={data?.logo || "Not Available"}
         banner={data?.banner || "Not Available"}
         country={data?.hostCountry || "Unknown"}
-        type={data?.scholarshipType || "Unknown"}
+        type={data?.type || "Unknown"}
         deadline={data?.deadline || "Unknown"}
-        NumberOfScholarships={
-          typeof data?.numberOfScholarships === "number"
-            ? data.numberOfScholarships
-            : 0
-        }
+        NumberOfScholarships={data?.numberOfScholarships}
       />
       <div className="bg-white my-4 lg:mt-40 2xl:mt-[12%] lg:my-6">
         <div className=" mx-auto sm:w-[88%] w-[90%]">
@@ -134,11 +131,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
-                  activeTabPro === tab.label
-                    ? "bg-[#C7161E] text-white"
-                    : "text-gray-800"
-                }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
+                  ? "bg-[#C7161E] text-white"
+                  : "text-gray-800"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -147,6 +143,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </div>
       <Overview
+        info_link={data?.info_link || ""}
         overview={data?.overview || ""}
         duration={
           data?.duration || {
