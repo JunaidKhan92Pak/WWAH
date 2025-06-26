@@ -367,26 +367,28 @@ const Herosec = ({ data }: { data: UniversityData }) => {
                   </div>
 
                   {data.virtual_tour &&
-                    data.virtual_tour !== "NA" &&
-                    data.virtual_tour.trim() !== "" && (
-                      <Link
-                        target="_blank"
-                        href={data.virtual_tour}
-                        rel="noopener noreferrer"
-                      >
-                        <div className="px-4 py-1 mt-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
-                          <Image
-                            src="/university/camera.svg"
-                            alt="Virtual Tour Icon"
-                            width={20}
-                            height={20}
-                          />
-                          <p className="text-[#313131] text-left leading-5 md:leading-6">
-                            Get a virtual tour of {data.university_name}
-                          </p>
-                        </div>
-                      </Link>
-                    )}
+  data.virtual_tour !== "NA" &&
+  data.virtual_tour.trim() !== "" &&
+  /^https?:\/\/.+\..+/.test(data.virtual_tour) && ( // <-- URL check
+    <Link
+      target="_blank"
+      href={data.virtual_tour}
+      rel="noopener noreferrer"
+    >
+      <div className="px-4 py-1 mt-1 md:my-4 w-4/5 bg-[#F9CEA5] rounded-lg flex items-center gap-3">
+        <Image
+          src="/university/camera.svg"
+          alt="Virtual Tour Icon"
+          width={20}
+          height={20}
+        />
+        <p className="text-[#313131] text-left leading-5 md:leading-6">
+          Get a virtual tour of {data.university_name}
+        </p>
+      </div>
+    </Link>
+)}
+
                 </div>
 
                 {/* Right Section */}
@@ -438,9 +440,9 @@ py-4 md:py-8 2xl:py-6 flex-col justify-center items-center text-center mt-2 sm:m
           </div>
         </div>
         {/* Details Section */}
-        <div className="relative mt-2 lg:-mt-10 flex justify-center">
+        <div className="relative lg:-mt-10 flex justify-center">
           <div
-            className="lg:grid flex overflow-x-scroll lg:grid-cols-7 gap-2 sm:gap-2 md:gap-4 bg-white  px-4 rounded-2xl shadow-lg mx-auto w-full lg:w-[80%]  lg:overflow-visible whitespace-nowrap lg:whitespace-normal  text-black py-3 md:py-8 md:px-4  "
+            className="lg:grid flex overflow-x-scroll lg:grid-cols-7 gap-2 sm:gap-2 md:gap-4 bg-white  px-4 rounded-2xl shadow-lg mx-auto w-full lg:w-[85%]  lg:overflow-visible whitespace-nowrap lg:whitespace-normal  text-black py-3 md:py-6 md:px-4  "
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -463,14 +465,15 @@ py-4 md:py-8 2xl:py-6 flex-col justify-center items-center text-center mt-2 sm:m
                   </div>
                 </div>
                 {/* Heading with Tooltip */}
-                <div className="relative group w-[100px]">
-                  <p className="font-semibold text-sm truncate max-w-[100px]">
-                    {item.Heading}
-                  </p>
-                </div>
+            <div className="relative w-[100px]">
+  <p className="font-semibold text-sm break-words whitespace-normal">
+    {item.Heading}
+  </p>
+</div>
+
 
                 {/* Name with Tooltip */}
-                <div className="relative group w-[100px]">
+                {/* <div className="relative group w-[100px]">
                   <p className="text-xs truncate max-w-[100px] overflow-hidden">
                     {item.Name}
                   </p>
@@ -479,6 +482,13 @@ py-4 md:py-8 2xl:py-6 flex-col justify-center items-center text-center mt-2 sm:m
                   </span>
 
                 </div>
+                </div> */}
+                <div className="w-[100px]">
+  <p className="text-xs break-words whitespace-normal">
+    {item.Name}
+  </p>
+</div>
+
               </div>
             ))}
           </div>

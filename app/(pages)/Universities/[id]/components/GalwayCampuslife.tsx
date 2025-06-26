@@ -113,7 +113,7 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
             <CarouselItem key={index}>
               <div className="flex justify-center items-center h-full min-h-[400px] md:py-6"> {/* ensures full height */}
                 {/* Left Side: Text */}
-                <div className="flex flex-col gap-4 md:gap-6 lg:flex-row w-[70%] md:w-[70%] lg:w-[90%] xl:w-[80%] mx-auto py-4 justify-between items-center">
+                <div className="flex flex-col gap-4 md:gap-6 lg:flex-row w-[70%] md:w-[70%] lg:w-[90%] xl:w-[80%] mx-auto py-6 lg:py-0 justify-between items-center">
                   <div className="w-full">
                     <h5 className="leading-tight">Campus Life at {uniname}</h5>
                     <h6 className="text-[#F6B677] my-1">{data.title}</h6>
@@ -121,8 +121,10 @@ const GalwayCampuslife = ({ data, uniname, images }: GalwayCampuslifeProps) => {
                     <p
                           className="text-gray-300 md:leading-relaxed text-justify md:text-start h-44 overflow-hidden overflow-y-auto scrollbar-hide"
                           style={{
-                            scrollbarWidth: "none",
+                            scrollbarWidth: "thin",
                             msOverflowStyle: "none",
+                                        scrollbarColor: '#888 transparent', 
+
                           }}
                         >
                       {data.description}</p>

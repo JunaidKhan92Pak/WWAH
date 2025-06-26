@@ -34,6 +34,8 @@ const Page = () => {
   const [favoritesCount, setFavoritesCount] = useState<number>(0);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
   const [localSearch, setLocalSearch] = useState("");
+const [favoriteScholarships, setFavoriteScholarships] = useState<Record<string, typeof scholarships[0]>>({});
+
 
   const { scholarships, loading, page, totalPages, setPage, setSearch } =
     useScholarships();
@@ -51,9 +53,10 @@ const Page = () => {
   );
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
 
-  const displayedScholarships = showFavorites
-    ? scholarships.filter((item) => favorites[item._id])
-    : scholarships;
+
+const displayedScholarships = showFavorites
+  ? Object.values(favoriteScholarships)
+  : scholarships;
 
   const handleNext = () => {
     if (page < totalPages) {
@@ -69,17 +72,32 @@ const Page = () => {
     setFavorites((prev) => {
       const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-      // Update favorites count
-      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-      setFavoritesCount(newCount);
+    // Update favorites count
+    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+    setFavoritesCount(newCount);
 
-      // Trigger heart animation
-      setHeartAnimation(id);
-      setTimeout(() => setHeartAnimation(null), 1000);
+    // Trigger heart animation
+    setHeartAnimation(id);
+    setTimeout(() => setHeartAnimation(null), 1000);
 
-      return updatedFavorites;
+    // Update full favoriteScholarships map
+    setFavoriteScholarships((prevFavs) => {
+      const updatedFavs = { ...prevFavs };
+      const scholarship = scholarships.find((s) => s._id === id);
+
+      if (updatedFavorites[id] && scholarship) {
+        updatedFavs[id] = scholarship;
+      } else {
+        delete updatedFavs[id];
+      }
+
+      return updatedFavs;
     });
-  };
+
+    return updatedFavorites;
+  });
+};
+
 
   // Filter component for mobile
   // const FilterSection = ({ isMobile = false }) => (
@@ -398,7 +416,7 @@ const Page = () => {
                     height={12}
                     alt="filter"
                   />
-                  <p className="font-bold">Filters</p>
+                  <p className="font-bold">Filter</p>
                 </div>
                 <Image
                   src="/right-arrow.png"
@@ -418,12 +436,12 @@ const Page = () => {
         <div className="flex gap-2 pt-1">
           <section className="hidden lg:block lg:w-[30%] xl:w-[25%]">
             <div className="border-2 rounded-3xl p-4 md:p-0 bg-gray-100">
-              <div className="hidden md:flex items-center gap-2 p-4">
+              <div className="hidden md:flex items-center gap-2 px-6 py-3">
                 <Image src="/filterr.svg" width={20} height={20} alt="filter" />
                 <h6 className="font-bold">Filters</h6>
               </div>
               <div className="flex justify-center">
-                <div className="flex justify-evenly bg-white rounded-lg px-3 w-[80%]">
+                <div className="flex justify-evenly bg-white rounded-lg px-3 w-[85%]">
                   <Image
                     src="/search.svg"
                     width={16}
@@ -439,7 +457,7 @@ const Page = () => {
                   />
                 </div>
               </div>
-              <hr className="mx-4 md:mx-4 mt-3" />
+              <hr className="mx-6 my-4" />
               <FilterSection isMobile={false} />
             </div>
           </section>
@@ -448,7 +466,7 @@ const Page = () => {
           <section className="lg:w-[80%] w-[100%]">
             <div className="flex flex-col md:flex-row justify-between px-2">
               <div className="lg:px-3 flex flex-col">
-                <h3 className="font-bold w-[70%] text-start">
+                <h3 className="font-bold md:w-[70%] text-start">
                   Find the Right Scholarship for Your Academic Journey!
                 </h3>
               </div>
@@ -511,14 +529,14 @@ const Page = () => {
                           </div>
 
                           {/* Share & Favorite Buttons */}
-                          <div className="absolute top-4 right-2 md:right-4 flex items-center space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
+                          <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
                             <Dialog>
                               <DialogTrigger asChild>
                                 <button>
                                   <Image
-                                    src="/share.svg"
-                                    width={20}
-                                    height={20}
+                                    src="/university/Share.svg"
+                                    width={21}
+                                    height={21}
                                     alt="Share"
                                   />
                                 </button>
@@ -635,7 +653,7 @@ const Page = () => {
                                 />
                               ) : (
                                 <Image
-                                  src="/whiteheart.svg"
+                                  src="/hearti.svg"
                                   width={20}
                                   height={20}
                                   alt="Favorite"
@@ -647,7 +665,13 @@ const Page = () => {
 
                         {/* Content Section */}
                         <div className="p-2 flex-grow">
-                          <p className="font-bold leading-tight">{item.name}</p>
+                          <Link
+                          target="blank"
+                          href={`/scholarships/${item._id}`}
+                          rel="noopener noreferrer"
+                        >
+                          <p className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1">{item.name}</p>
+                          </Link>
                           <p className="text-sm text-gray-600">
                             <span className="font-semibold">
                               Min Requirements: 75%
@@ -659,8 +683,8 @@ const Page = () => {
                               <Image
                                 src={"/location.svg"}
                                 alt="location"
-                                width={16}
-                                height={16}
+                                width={17}
+                                height={17}
                               />
                               <p className="text-sm text-gray-600 truncate">
                                 {item.hostCountry}
@@ -668,10 +692,11 @@ const Page = () => {
                             </div>
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
                               <Image
-                                src={"/money.svg"}
+                                // src={"/money.svg"}
+                                src={"/scholarshipdetail/Money.svg"}
                                 alt="scholarship type"
-                                width={16}
-                                height={16}
+                                width={10}
+                                height={10}
                               />
                               <p className="text-sm text-gray-600 truncate">
                                 {item.type}
@@ -679,29 +704,59 @@ const Page = () => {
                             </div>
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
-                            <div className="flex items-center gap-3 mt-2 md:w-1/2">
+                            <div className="flex items-center gap-2 mt-2 md:w-1/2 group relative">
                               <Image
-                                src={"/scholarshipdetail/Money.svg"}
+                                src={"/degree-icon.svg"}
                                 alt="degree level"
-                                width={10}
-                                height={10}
+                                width={16}
+                                height={16}
                               />
-                              <p className="text-sm text-gray-600 truncate">
+
+                              {/* Text with responsive truncate on large screens */}
+                              <p className="text-sm text-gray-600 lg:truncate lg:max-w-[180px]">
                                 {item.programs
                                   ? item.programs
                                   : "Not Specified"}
                               </p>
+
+                              {/* Tooltip (only appears on large screens and above) */}
+                              {item.programs && (
+                                <span className="hidden lg:group-hover:block absolute top-full left-0 mt-1 z-10 bg-gray-200 text-black text-xs p-2 rounded-md shadow-lg w-max max-w-xs whitespace-normal">
+                                  {item.programs}
+                                </span>
+                              )}
                             </div>
-                            <div className="flex items-center gap-2 mt-2 md:w-1/2">
+
+                            <div className="flex items-center gap-2 mt-2 md:w-1/2 group relative">
                               <Image
-                                src={"/clock.svg"}
+                                src="/clock.svg"
                                 alt="deadline"
                                 width={16}
                                 height={16}
+                                className="flex-shrink-0"
                               />
-                              <p className="text-sm text-gray-600 truncate">
+                              <p
+                                className="
+      text-sm text-gray-600 
+      lg:truncate
+      max-w-full
+    "
+                              >
                                 {item.deadline}
                               </p>
+
+                              {/* Tooltip only for lg and above */}
+                              <span
+                                className="
+      hidden lg:group-hover:block
+      absolute top-full mt-1 left-1/2 -translate-x-1/2 
+      bg-gray-200 text-black text-xs p-2 rounded-md shadow-md 
+      w-max max-w-[300px] z-10
+      text-center
+    "
+                              >
+                                {item.deadline}
+                              </span>
                             </div>
                           </div>
                         </div>

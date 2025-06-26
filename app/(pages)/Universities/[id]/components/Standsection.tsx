@@ -12,7 +12,7 @@ const Standsection: React.FC<StandsectionProps> = ({ our_mission, values }) => {
       {/* section: What We Stand For */}
       <div className="md:py-12 py-6 w-full bg-white">
         <div className="md:w-[90%] mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-gray-800 pb-3">What we stand for?</h2>
+          <h2 className="text-center text-gray-800 pb-3">What Do We Stand For?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Mission */}
             <div className="bg-[#F1F1F1] md:p-6 p-3  rounded-3xl  border border-gray-200 shadow-sm">
@@ -41,9 +41,9 @@ const Standsection: React.FC<StandsectionProps> = ({ our_mission, values }) => {
                 />
               </div>
               <h3 className="text-gray-800">Our Values!</h3>
-              <ul className="grid grid-cols-1 lg:grid-cols-2 md:gap-y-3 sm:gap-x-6 text-gray-700">
+              <ul className="grid grid-cols-2 gap-6 text-gray-700">
                 {values.map((item, index) => (
-                  <li key={index} className="flex items-center justify-start">
+                  <li key={index} className="flex items-center justify-center">
                     <p className="text-red-500 mr-2 text-2xl">•</p>
                     {item}
                   </li>

@@ -107,7 +107,7 @@ function Page() {
       icon: <Bot className="h-8 w-8" />,
       title: "AI powered platform",
       description:
-        "Our state-of-the-art, AI platform simplifies the admission process. For assessing your eligibility to matching you with suitable programs, our technology ensures a smooth and efficient application experience.",
+        "Our state-of-the-art, AI platform simplifies the admission process. By assessing your eligibility, it matches you with suitable programs ensuring a smooth and efficient application experience."
     },
     {
       icon: <Headphones className="h-8 w-8" />,
@@ -757,8 +757,8 @@ function Page() {
             <div>
               <h2 className="font-bold my-4">WWAH Mobile App:</h2>
               <p className="mb-8">
-                Study Abroad dreams made simple: Just Download WWAH app, Upload
-                & Travel.
+                Study Abroad dreams made simple!
+Just Download the WWAH app, Upload & Travel.
               </p>
               <div>
                 <div className="text-sm flex flex-col sm:flex-row gap-4">
