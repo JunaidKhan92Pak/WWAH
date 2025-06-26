@@ -85,7 +85,6 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
       <div
         className="relative min-h-[250px] sm:min-h-[400px] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center md:mt-4"
         style={{
-          // backgroundImage: "url('/countrypage/bg-image.png')",
           backgroundImage: `url('/countryarchive/${country.short_name}_banner.png')`,
         }}
       >

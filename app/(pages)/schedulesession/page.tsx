@@ -25,7 +25,6 @@ import { useState } from "react";
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
-
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -42,6 +41,7 @@ const formSchema = z.object({
   major: z.string().min(2, "Major must be at least 2 characters"),
   budget: z.string().min(1, "Please enter your budget"),
 });
+
 const countries = [
   "United Kingdom",
   "New Zealand",
@@ -54,6 +54,7 @@ const countries = [
   "China",
   "Italy",
 ];
+
 const destinations = [
   "United Kingdom",
   "New Zealand",
@@ -65,15 +66,14 @@ const destinations = [
   "USA",
   "China",
   "Italy",
-  
 ];
+
 const degrees = ["Bachelor's", "Master's", "PhD", "Diploma", "Certificate"];
+
 export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  console.log(isSubmitting);
-
   const [responseMessage, setResponseMessage] = useState("");
-  console.log(responseMessage);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -92,50 +92,78 @@ export default function Home() {
       budget: "",
     },
   });
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   console.log(values);
-  //   toast.success("Form submitted successfully!");
-  // }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     setResponseMessage("");
-    console.log(values, "these will be send ")
+    setIsSuccess(false);
+
+    console.log(values, "these will be sent");
+
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/scheduleSession`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}scheduleSession`,
         {
           method: "POST",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(values), // Corrected form submission
+          body: JSON.stringify(values),
         }
       );
 
       const data = await response.json();
-      console.log(data);
+      console.log("API Response:", data);
 
       if (response.ok) {
-        toast.success("Form submitted successfully!");
-        form.reset(); // Reset form after successful submission
+        // Handle successful response
+        if (data.success) {
+          setIsSuccess(true);
+          setResponseMessage(data.message || "Email sent successfully!");
+          toast.success(data.message || "Email sent successfully!");
+          form.reset(); // Reset form after successful submission
+        } else {
+          // API returned 200 but success is false
+          setIsSuccess(false);
+          setResponseMessage(data.message || "Something went wrong. Please try again.");
+          toast.error(data.message || "Something went wrong. Please try again.");
+        }
       } else {
-        setResponseMessage(data.error || "Failed to send message.");
+        // Handle HTTP error responses (4xx, 5xx)
+        setIsSuccess(false);
+        setResponseMessage(data.message || data.error || "Failed to send message.");
+        toast.error(data.message || data.error || "Failed to send message.");
       }
     } catch (error) {
-      setResponseMessage("An error occurred. Please try again." + error);
+      // Handle network errors or other exceptions
+      console.error("Error submitting form:", error);
+      setIsSuccess(false);
+      setResponseMessage("An error occurred. Please check your connection and try again.");
+      toast.error("An error occurred. Please check your connection and try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
-    <div className="min-h-screen bg-[#FCE7D2] py-12 px-4 ">
+    <div className="min-h-screen bg-[#FCE7D2] py-12 px-4">
       <div className="max-w-3xl mx-auto">
         <h5 className="text-center font-bold py-2">
           Schedule a session with WWAH Advisors
         </h5>
         <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h6 className=" text-center mb-8">Enter Details:</h6>
+          <h6 className="text-center mb-8">Enter Details:</h6>
+
+          {/* Display response message */}
+          {responseMessage && (
+            <div className={`mb-6 p-4 rounded-lg ${isSuccess
+                ? 'bg-green-100 border border-green-400 text-green-700'
+                : 'bg-red-100 border border-red-400 text-red-700'
+              }`}>
+              <p className="text-sm font-medium">{responseMessage}</p>
+            </div>
+          )}
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -175,38 +203,33 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-            <FormField
-  control={form.control}
-  name="phone"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Phone</FormLabel>
-      <FormControl>
-         <PhoneInput
-  defaultCountry="pk"
-  value={field.value}
-  onChange={field.onChange}
-  inputProps={{
-    name: 'phone',
-    required: true,
-  }}
-  inputStyle={{
-    width: '92%',
-    height: '36px',
-    padding: '8px', 
-  }}
-  className="flex-1"
-
-/>
-
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
-
-
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <PhoneInput
+                          defaultCountry="pk"
+                          value={field.value}
+                          onChange={field.onChange}
+                          inputProps={{
+                            name: 'phone',
+                            required: true,
+                          }}
+                          inputStyle={{
+                            width: '92%',
+                            height: '36px',
+                            padding: '8px',
+                          }}
+                          className="flex-1"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="date"
@@ -261,7 +284,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="country"
@@ -289,7 +311,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="meetingType"
@@ -332,7 +353,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="studyDestination"
@@ -360,7 +380,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="degree"
@@ -388,7 +407,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="major"
@@ -406,7 +424,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="budget"
@@ -430,9 +447,10 @@ export default function Home() {
               <div className="flex justify-end mt-8">
                 <Button
                   type="submit"
-                  className="w-full md:w-auto bg-red-700 hover:bg-red-700"
+                  disabled={isSubmitting}
+                  className="w-full md:w-auto bg-red-700 hover:bg-red-600 disabled:opacity-50"
                 >
-                  Submit
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>
             </form>

@@ -3,7 +3,6 @@ import React, { useRef } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const DreamStudy = () => {
-  // const arr3 = ["/turk.png", "/studycanada.png", "/edin.png", "/manch.png"];
   const arr3 = [
     { src: "/country1.png", alt: "United States(US) " },
     { src: "/country2.png", alt: "China " },

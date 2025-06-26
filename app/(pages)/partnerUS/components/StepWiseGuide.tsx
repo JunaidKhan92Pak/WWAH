@@ -3,7 +3,7 @@ import Image from "next/image";
 
 function StepWiseGuide() {
   return (
-    <div className="bg-white w-[90%] xl:w-[80%] mx-auto my-5 sm:my-12">
+    <div className="bg-white w-[90%] xl:w-[90%] mx-auto my-5 sm:my-12">
       {/* Heading Section */}
       <div className="w-full flex flex-col md:flex-row justify-between md:gap-4">
         <div className="w-full">
@@ -14,24 +14,24 @@ function StepWiseGuide() {
           <div className="flex items-center gap-4">
             <span className="w-[1px] hidden md:block md:h-20 xl:h-16 bg-gray-500"></span>
             <p className="w-full mb-2 md:mb-0">
-              We believe that collaboration is key to expanding opportunities for
-              students and partners alike. Sign up to our Partner Portal to explore
-              collaboration opportunities and access resources tailored for partners. Join
-              our network of partners by following these simple steps:
+              We believe that collaboration is key to expanding opportunities
+              for students and partners alike. Sign up to our Partner Portal to
+              explore collaboration opportunities and access resources tailored
+              for partners. Join our network of partners by following these
+              simple steps:
             </p>
           </div>
-
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 relative">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 relative md:mt-8">
         {/* Left Column */}
-        <div className="leftCol flex flex-row gap-4 relative">
+        <div className="leftCol flex flex-row items-center gap-4 relative">
           {/* Left Divider Image */}
           <div
             className="dividerImg hidden md:flex items-center"
             style={{
-              height: "100%", 
+              height: "86%",
             }}
           >
             <Image
@@ -40,10 +40,9 @@ function StepWiseGuide() {
               width={50}
               height={100}
               className="h-full "
-
             />
           </div>
-          <div className="space-y-4 md:space-y-20">
+          <div className="space-y-4 md:space-y-[76px]">
             <div className="flex items-start space-x-4">
               <span className="block md:hidden">-</span>
               <p className="text-gray-700 leading-tight">
@@ -73,29 +72,30 @@ function StepWiseGuide() {
         </div>
 
         {/* Right Column */}
-        <div className="rightCol flex flex-row gap-4">
+        <div className="rightCol flex flex-row items-start gap-4 mt-4">
           {/* Right Divider Image */}
           <div
             className="dividerImg hidden md:flex items-center"
             style={{
-              height: "68%",
+              height: "54%",
             }}
           >
             <Image
               src="/partnershipRightDivider.png"
               alt="divider"
-              width={100}
-              height={100}
+              width={80}
+              height={98}
               className="h-full "
             />
           </div>
-          <div className="space-y-4 md:space-y-16 ">
+          <div className=" flex flex-col gap-20 justify-between ">
             <div className="flex items-start space-x-4">
               <span className="block md:hidden">-</span>
               <p className="text-gray-700 leading-tight">
                 Upon agreement, our team will provide training and resources to
                 help you effectively use our platform and tools, ensuring a
-                smooth integration into the WWAH network.If your application is successful, we will schedule a meeting to discuss partnership
+                smooth integration into the WWAH network.If your application is
+                successful, we will schedule a meeting to discuss partnership
                 details, expectations, and potential collaboration strategies.
               </p>
             </div>

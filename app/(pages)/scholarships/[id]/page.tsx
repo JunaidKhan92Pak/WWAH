@@ -17,11 +17,18 @@ type Tab = {
   id: string;
 };
 type ScholarshipData = {
+  applicationProcess: {
+    details: string;
+    step: string[];
+    title: string;
+    description: string;
+  }[];
+
   name: string;
   hostCountry: string;
   logo: string;
   banner: string;
-  scholarshipType: string;
+  type: string;
   deadline: string;
   overview: string;
   university: string;
@@ -39,6 +46,7 @@ type ScholarshipData = {
   programs: string[];
   Document: string[];
   requiredDocuments: [];
+  info_link: string;
   table?: {
     course: string[];
     create_application: string[];
@@ -112,6 +120,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   if (loading) return <HeroSkeleton />;
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p> Not Aviable</p>;
+
+  console.log("Scholarship Data:", data);
+  console.log(data.applicationProcess, "applicationProcess");
   return (
     <>
       <Hero
@@ -119,22 +130,18 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         logo={data?.logo || "Not Available"}
         banner={data?.banner || "Not Available"}
         country={data?.hostCountry || "Unknown"}
-        type={data?.scholarshipType || "Unknown"}
+        type={data?.type || "Unknown"}
         deadline={data?.deadline || "Unknown"}
-        NumberOfScholarships={
-          typeof data?.numberOfScholarships === "number"
-            ? data.numberOfScholarships
-            : 0
-        }
+        NumberOfScholarships={data?.numberOfScholarships}
       />
       <div className="bg-white my-4 lg:mt-40 2xl:mt-[12%] lg:my-6">
         <div className=" mx-auto sm:w-[88%] w-[90%]">
-          <div className="w-full flex whitespace-nowrap overflow-x-auto hide-scrollbar justify-center lg:justify-evenly items-center border-b gap-2 border-gray-200">
+          <div className="w-full flex whitespace-nowrap overflow-x-auto hide-scrollbar  lg:justify-evenly items-center border-b gap-2 border-gray-200">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 rounded-t-xl  md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
                   activeTabPro === tab.label
                     ? "bg-[#C7161E] text-white"
                     : "text-gray-800"
@@ -147,6 +154,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </div>
       <Overview
+        info_link={data?.info_link || ""}
         overview={data?.overview || ""}
         duration={
           data?.duration || {
@@ -171,6 +179,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
       <div id="Eligibility Criteria">
         <Eligibilitycriteria
+          name={data?.name || "Not Available"}
           eligibilityCriteria={data?.eligibilityCriteria || []}
         />
       </div>
@@ -182,7 +191,16 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
       <div id="Application Process">
         {/* <Requireddocs */}
-        <Applicationprocess />
+        <Applicationprocess
+          applicationProcess={
+            data?.applicationProcess
+              ? data.applicationProcess.map((step, idx) => ({
+                  ...step,
+                  _id: idx
+                }))
+              : []
+          }
+        />
       </div>
       <ExploreScholarships />
     </>

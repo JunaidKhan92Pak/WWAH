@@ -287,7 +287,7 @@ function Page() {
                         "I simplify your university search",
                         "Find courses that truly fit",
                         "Smart scholarship search starts here.",
-                        "Know your success chances before applying",
+                        "Know your success chances first",
                       ]}
                       loop={true}
                       cursor

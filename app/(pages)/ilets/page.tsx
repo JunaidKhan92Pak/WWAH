@@ -134,46 +134,7 @@ export default function Home() {
       />
       <OnlineOffline title={data.title} description={data.description} />
 
-      {/* <div className="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-8 justify-center mt-8 items-center text-center">
-        <div className="text-white p-4 sm:p-6 w-[50%] sm:w-[32%]  xl:w-[18%] rounded-lg shadow-lg border-2 border-[#C7161E]">
-          <h3 className=" text-[#C7161E]">IELTS Online </h3>
-        </div>
-        <div className="text-white p-4 sm:p-6 w-[50%] sm:w-[32%]  xl:w-[18%] rounded-lg shadow-lg border-2">
-          <h3 className=" text-[#313131]"> IELTS Offline </h3>
-        </div>
-      </div> */}
-
-      {/* IlETS ONLINE OFFLINE SECTION */}
-      {/* <section className="parentdiv w-full mx-auto flex justify-center my-6">
-        <div className="ChildDiv w-[90%] flex flex-col lg:flex-row items-center justify-center gap-8">
-          {/* Text Div */}
-      {/* <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] p-6 shadow-2xl rounded-3xl flex flex-col">
-            <div className="w-full flex flex-col">
-              <h3 className="text-[#313131] w-full">
-                IELTS Online (Computer-Delivered):
-              </h3>
-              <p className="mt-2 lg:mt-6">
-                Online IELTS is conducted on a computer at an official IELTS
-                test center. It typically offers more frequent test dates and
-                greater flexibility in choosing test times. Results are usually
-                available faster, within 3-5 days. It is ideal for candidates
-                who prefer typing over handwriting.
-              </p>
-            </div>
-          </div> */}
-
-      {/* Image Div */}
-      {/* <div className="w-full xl:w-1/2 h-full sm:h-[40vw] lg:h-[30vw] xl:h-[22vw] relative shadow-2xl rounded-3xl overflow-hidden">
-            <Image
-              src="/girl.png"
-              alt="Image representing IELTS"
-              width={500}
-              height={20}
-              className="rounded-3xl w-full h-full object-cover"
-            />
-          </div>
-        </div> */}
-      {/* </section>  */}
+     
 
       <div className="flex justify-center mt-10">
         <Tabs defaultValue="online" className="flex flex-col items-center ">

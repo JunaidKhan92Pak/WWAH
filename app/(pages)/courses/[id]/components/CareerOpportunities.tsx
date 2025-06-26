@@ -1,6 +1,5 @@
-
-import Image from 'next/image';
-import React from 'react'
+import Image from "next/image";
+import React from "react";
 
 interface CareerOpportunitiesProps {
   data: {
@@ -41,11 +40,13 @@ interface CareerOpportunitiesProps {
   };
 }
 
-export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({ data }) => {
+export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({
+  data,
+}) => {
   return (
     <>
       <section className="hidden md:flex flex-col items-center bg-black text-white py-8 mt-5">
-        <h4>Career Opportunities!</h4>
+        <h4>Career Opportunities in {data.course_title}!</h4>
         {/* Timeline Image */}
         <div className="relative w-full flex justify-center mt-4">
           <Image
@@ -66,15 +67,12 @@ export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({ data }
           </p>
           <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
             {data.career_opportunity_3}
-
           </p>
           <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
             {data.career_opportunity_4}
-
           </p>
           <p className="text-xs sm:text-sm lg:text-base text-center w-2/5">
             {data.career_opportunity_5}
-
           </p>
         </div>
       </section>
@@ -135,4 +133,4 @@ export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({ data }
       </div>
     </>
   );
-}
+};
