@@ -240,7 +240,8 @@ function Page() {
                       <li>
                         <button
                           className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                          onClick={logout} >
+                          onClick={logout}
+                        >
                           Logout
                         </button>
                       </li>
@@ -286,7 +287,7 @@ function Page() {
                         "I simplify your university search",
                         "Find courses that truly fit",
                         "Smart scholarship search starts here.",
-                        "Know your success chances before applying",
+                        "Know your success chances first",
                       ]}
                       loop={true}
                       cursor

@@ -377,7 +377,7 @@ export default function Home() {
               </div>
             </form>
             {/* Buttons */}
-            <div className="flex flex-row justify-center overflow-x-auto hide-scrollbar gap-3 mt-2">
+            <div className="flex flex-row sm:justify-center overflow-x-auto hide-scrollbar gap-1 sm:gap-3 mt-2">
               <Link target="blank" href="/Universities">
                 <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
                   Explore Top Universities

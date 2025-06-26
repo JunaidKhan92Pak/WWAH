@@ -74,7 +74,7 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
                   className="flex flex-col md:flex-row md:justify-start items-center justify-center md:items-start gap-4 md:mb-3"
                 >
                   <img
-                    src={alumni.image || "/user-dp.png"}
+                    src={alumni.image || "/NotableAlumniIcon.png"}
                     alt="alumni"
                     className="rounded-full object-cover sm:w-12 sm:h-12 w-10 h-10"
                   />

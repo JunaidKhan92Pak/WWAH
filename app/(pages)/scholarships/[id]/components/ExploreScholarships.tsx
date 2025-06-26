@@ -13,17 +13,17 @@ const ExploreScholarships = () => {
     fetchScholarships();
   }, [fetchScholarships]);
 
-    const scrollRef = useRef<HTMLDivElement | null>(null);
-  
-    const scroll = (direction: "left" | "right") => {
-      if (scrollRef.current) {
-        const scrollAmount = 300;
-        scrollRef.current.scrollBy({
-          left: direction === "left" ? -scrollAmount : scrollAmount,
-          behavior: "smooth",
-        });
-      }
-    };
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <div>
       <section className="relative flex flex-col lg:flex-row gap-4 items-center text-white bg-black bg-cover bg-center mt-6 p-6 md:p-8 lg:px-12 lg:py-12 overflow-hidden justify-between w-full">
@@ -41,13 +41,13 @@ const ExploreScholarships = () => {
         </div>
         <div className="relative z-10 w-full lg:w-[50%] mt-6 lg:mt-0">
           <div className="relative w-full flex justify-center">
-             {/* Left Arrow */}
-                      <button
-                        onClick={() => scroll("left")}
-                        className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
-                      >
-                        <FaArrowLeft />
-                      </button>
+            {/* Left Arrow */}
+            <button
+              onClick={() => scroll("left")}
+              className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+            >
+              <FaArrowLeft />
+            </button>
             <div
               ref={scrollRef}
               className="flex overflow-x-auto space-x-2 md:space-x-4 hide-scrollbar"
@@ -62,7 +62,7 @@ const ExploreScholarships = () => {
                   className="relative flex-shrink-0 rounded-3xl shadow-lg overflow-hidden"
                 >
                   <Image
-                    src={"/uniar.svg"}
+                    src={item.banner || "/default-university-banner.jpg"}
                     alt="University Image"
                     width={380}
                     height={350}
@@ -88,13 +88,13 @@ const ExploreScholarships = () => {
                 </div>
               ))}
             </div>
-               {/* Right Arrow */}
-                      <button
-                        onClick={() => scroll("right")}
-                        className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
-                      >
-                        <FaArrowRight />
-                      </button>
+            {/* Right Arrow */}
+            <button
+              onClick={() => scroll("right")}
+              className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 bg-white text-black border border-gray-200 shadow-xl p-2 rounded-full hover:bg-gray-100"
+            >
+              <FaArrowRight />
+            </button>
           </div>
         </div>
       </section>

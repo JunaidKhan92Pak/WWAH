@@ -96,7 +96,7 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
             <p>
               Have Questions about University Fee?{" "}
               <Link
-                href="#"
+                href="/contactus"
                 className="text-red-600 hover:underline font-semibold"
               >
                 WWAH

@@ -18,7 +18,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
       <div className="w-[90%] flex flex-col justify-center mb-5 sm:mb-10">
         <h2 className="mb-2">Application Process!</h2>
         <div className="flex flex-col lg:flex-row gap-0 lg:gap-4">
-          <div className="space-y-2">
+          <div className="space-y-4">
             {/* Step 1 */}
             <div>
               <h6>Create an Account</h6>

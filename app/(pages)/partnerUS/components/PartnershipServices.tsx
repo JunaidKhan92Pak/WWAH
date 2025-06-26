@@ -32,14 +32,14 @@ export default function PartnershipServices() {
                     />
                     <p>Referral Commission for Successful Student Placements</p>
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-600">
+                  <AccordionContent className="text-gray-600 ">
                     Partners can earn a commission for each student successfully
                     placed at a university or institution through the WWAH
                     platform.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
-                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex items-center gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/icon-placeholder-2.svg"
                       alt="Icon 2"

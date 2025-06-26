@@ -102,7 +102,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/scheduleSession`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}scheduleSession`,
         {
           method: "POST",
           credentials: "include",
