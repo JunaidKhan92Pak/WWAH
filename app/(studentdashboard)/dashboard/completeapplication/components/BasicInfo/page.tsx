@@ -779,12 +779,25 @@ import ContactDetailForm from "./components/ContactDetailform";
 import { formSchema } from "./components/Schema";
 import CompleteApplicationModal from "../CompleteApplicationModal";
 
+
+
+
 const BasicInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const totalPages = 7;
   const router = useRouter();
+// Get unique nationalities and country names
+const countryOptions = countries.map((c) => ({
+  label: c.name.common,
+  value: c.cca2,
+}));
+
+const nationalityOptions = countries.map((c) => ({
+  label: c.demonyms?.eng?.m || c.name.common, // fallback to country name
+  value: c.demonyms?.eng?.m || c.name.common,
+}));
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -999,8 +1012,8 @@ const BasicInfo = () => {
           "nationality",
           "countryOfResidence",
           "maritalStatus",
-          "religion",
-          "nativeLanguage",
+          // "religion",
+          // "nativeLanguage",
         ]);
       case 2:
         return await form.trigger([
@@ -1321,30 +1334,20 @@ const BasicInfo = () => {
                   <FormItem>
                     <FormLabel>Nationality</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                          <SelectValue placeholder="Select Nationality" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="American">American</SelectItem>
-                        <SelectItem value="Indian">Indian</SelectItem>
-                        <SelectItem value="Australian">Australian</SelectItem>
-                        <SelectItem value="Italian">Italian</SelectItem>
-                        <SelectItem value="Pakistani">Pakistani</SelectItem>
-                        <SelectItem value="Canadian">Canadian</SelectItem>
-                        <SelectItem value="British">British</SelectItem>
-                        <SelectItem value="Chinese">Chinese</SelectItem>
-                        <SelectItem value="Irish">Irish</SelectItem>
-                        <SelectItem value="New Zealander">
-                          New Zealander
-                        </SelectItem>
-                        <SelectItem value="German">German</SelectItem>
-                        <SelectItem value="Malaysian">Malaysian</SelectItem>
-                        <SelectItem value="French">French</SelectItem>
-                        <SelectItem value="Danish">Danish</SelectItem>
-                      </SelectContent>
-                    </Select>
+  <FormControl>
+    <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+      <SelectValue placeholder="Select Nationality" />
+    </SelectTrigger>
+  </FormControl>
+  <SelectContent className="max-h-[300px] overflow-y-auto">
+    {nationalityOptions.map((option) => (
+      <SelectItem key={option.value} value={option.value}>
+        {option.label}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -1358,28 +1361,20 @@ const BasicInfo = () => {
                   <FormItem>
                     <FormLabel>Country of Residence:</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="USA">United States</SelectItem>
-                        <SelectItem value="India">India</SelectItem>
-                        <SelectItem value="Australia">Australia</SelectItem>
-                        <SelectItem value="Italy">Italy</SelectItem>
-                        <SelectItem value="Pakistan">Pakistan</SelectItem>
-                        <SelectItem value="Canada">Canada</SelectItem>
-                        <SelectItem value="UK">United Kingdom</SelectItem>
-                        <SelectItem value="China">China</SelectItem>
-                        <SelectItem value="Ireland">Ireland</SelectItem>
-                        <SelectItem value="New Zealand">New Zealand</SelectItem>
-                        <SelectItem value="Germany">Germany</SelectItem>
-                        <SelectItem value="Malaysia">Malaysia</SelectItem>
-                        <SelectItem value="France">France</SelectItem>
-                        <SelectItem value="Denmark">Denmark</SelectItem>
-                      </SelectContent>
-                    </Select>
+  <FormControl>
+    <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+      <SelectValue placeholder="Select Country" />
+    </SelectTrigger>
+  </FormControl>
+  <SelectContent className="max-h-[300px] overflow-y-auto">
+    {countryOptions.map((option) => (
+      <SelectItem key={option.value} value={option.label}>
+        {option.label}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
