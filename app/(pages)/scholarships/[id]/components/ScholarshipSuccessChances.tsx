@@ -107,6 +107,9 @@ export const ScholarshipSuccessChances = ({ successChances }: ScholarshipSuccess
   const financialOverall = Math.round(
     (successMetrics.nationalitySuccess + successMetrics.ageSuccess) / 2
   );
+  const overallSuccess = Math.round(
+    (academicOverall + financialOverall) / 2
+  );
   // Helper function for progress bar colors
   const getProgressBarColor = (value: number): string => {
     return value >= 75 ? "#90EE90" : value >= 50 ? "#E5EDDE" : "#F4D0D2";
@@ -141,6 +144,22 @@ export const ScholarshipSuccessChances = ({ successChances }: ScholarshipSuccess
       </p>
 
       <div className="relative w-full lg:w-[80%]">
+        {/* Overall Success Percentage */}
+        <div className="flex justify-center items-center mb-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/success-icon.svg"
+              alt="Success Icon"
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
+            <p className="text-lg font-semibold">
+              {successGenerated ? overallSuccess : 0}%
+            </p>
+          </div>
+          <span className="ml-2 text-gray-500">Overall Success</span>
+        </div>
         {/* Success Metrics Content */}
         <div className="flex flex-col md:flex-row justify-center gap-5 w-full">
           {/* Academic Results Section */}

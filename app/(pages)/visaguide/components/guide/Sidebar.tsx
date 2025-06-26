@@ -90,6 +90,7 @@ export const steps = [
     title: "Post Arrival process",
   },
 ];
+
 // const handleScroll = (id: number) => {
 //   const target = document.getElementById(id.toString());
 //   if (target) {
@@ -117,7 +118,6 @@ const handleScroll = (id: number) => {
 
   if (rightSection && target) {
     const offset = 20; // Adjust this value based on your design
-
     rightSection.scrollTo({
       top: target.offsetTop - rightSection.offsetTop - offset,
       behavior: "smooth",
@@ -132,9 +132,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeStep, onStepClick }) => {
         {steps.map((step, index) => (
           <li key={step.id} className="cursor-pointer rounded">
             <div
-              className={`cursor-pointer flex items-center gap-4 p-3 ${
-                step.id === activeStep ? "bg-[#C7161E] text-white" : "bg-white"
-              }`}
+              className={`cursor-pointer flex items-center gap-4 p-3 ${step.id === activeStep ? "bg-[#C7161E] text-white" : "bg-white"
+                }`}
               onClick={() => {
                 onStepClick(step.id);
                 handleScroll(step.id);
