@@ -22,9 +22,9 @@ function AItool() {
       {/* Content Section */}
       <div className="w-[85%] md:w-[90%]">
         {/* Features Section */}
-        <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between">
+        <div className="flex flex-col md:flex-row gap-5 lg:gap-0 justify-between items-center">
           {/* Left Side Features */}
-          <div className="w-full md:w-[26%] gap-5 md:gap-10 flex flex-col justify-between">
+          <div className="w-full lg:w-[26%] gap-5 md:gap-0 lg:gap-10 flex flex-col justify-between">
             {/* Feature 1 */}
             <div>
               <div className="headingAndIcon flex gap-1 items-center">
@@ -37,9 +37,9 @@ function AItool() {
                     className="object-contain"
                   />
                 </div>
-                <p className="font-semibold text-base lg:text-[1.5rem]  text-gray-800 mb-2">
+                <h6 className="font-semibold   text-gray-800 mb-2">
                   Centralized Application Management
-                </p>
+                </h6>
               </div>
               <p className="text-gray-600 leading-tight">
                 Zeus allows students to submit a single application that can be
@@ -60,9 +60,9 @@ function AItool() {
                     className="object-contain"
                   />
                 </div>
-                <p className="font-semibold leading-none text-base lg:text-[1.5rem]  text-gray-800 mb-2">
+                <h6 className="font-semibold   text-gray-800 mb-2">
                   Comprehensive Support
-                </p>
+                </h6>
               </div>
               <p className="text-gray-600 leading-tight">
                 Zeus provides round-the-clock assistance, answering student
@@ -72,19 +72,36 @@ function AItool() {
             </div>
           </div>
           {/* Central Image */}
-          <div className="hidden md:flex justify-center mb-10 w-[44%]">
+          <div className="hidden lg:flex justify-center items-center lg:w-[40%] ">
             <Image
-              src="/Zeushicomp.png"
+              src="/arrowleftp.png"
               alt="Zeus Robot and Arrows"
-
               width={0}
               height={0}
-              sizes="60vw"
-              className="w-[330px] h-auto"
+              sizes="45vw"
+              className="w-[200px] h-auto"
+            />
+            <div className="flex justify-center mb-10">
+              <Image
+                src="/3@3x.png"
+                alt="Zeus Robot and Arrows"
+                width={0}
+                height={0}
+                sizes="45vw"
+                className="w-[220px] h-auto"
+              />
+            </div>
+            <Image
+              src="/arrowrightp.png"
+              alt="Zeus Robot and Arrows"
+              width={0}
+              height={0}
+              sizes="45vw"
+              className="w-[190px] h-auto"
             />
           </div>
           {/* Right Side Features */}
-          <div className=" w-full md:w-[25%] gap-5 md:gap-0 flex flex-col justify-between">
+          <div className=" w-full lg:w-[25%] gap-5 md:gap-0 lg:gap-10 flex flex-col justify-between">
             {/* Feature 3 */}
             <div>
               <div className="headingAndIcon flex gap-1 items-center">
@@ -97,9 +114,9 @@ function AItool() {
                     className="object-contain"
                   />
                 </div>
-                <p className="font-semibold text-base lg:text-[1.5rem]  text-gray-800 mb-2">
+                <h6 className="font-semibold   text-gray-800 mb-2">
                   Personalized Student Matching
-                </p>
+                </h6>
               </div>
               <p className="text-gray-600 leading-tight">
                 Zeus analyzes individual student profiles to recommend the most
@@ -119,9 +136,9 @@ function AItool() {
                     className="object-contain"
                   />
                 </div>
-                <p className="font-semibold text-base lg:text-[1.5rem]  text-gray-800 mb-2">
+                <h6 className="font-semibold   text-gray-800 mb-2">
                   Document Management
-                </p>
+                </h6>
               </div>
 
               <p className="text-gray-600 leading-tight">

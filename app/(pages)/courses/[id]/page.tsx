@@ -66,6 +66,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     };
     countryData: {
       countryname: string;
+      _id: string;
       embassyDocuments: [];
       universityDocuments: [];
     };
@@ -140,21 +141,26 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           banner: data?.universityData?.universityImages?.banner || "",
           logo: data?.universityData?.universityImages?.logo || "",
         }}
+        countryData={{
+          _id: data?.countryData?._id || "",
+          name: data?.countryData?.countryname || "",
+        }}
       />
       {/* Course Overview & Navigation Tabs */}
       <section className="bg-white md:mt-6 lg:mt-12 mb-6">
         <div className=" mx-auto w-[92%]">
           {/* Navigation Tabs */}
-          <div className="w-full lg:w-[95%] flex overflow-x-auto hide-scrollbar border-b border-gray-200 mt-4">
+          <div className="w-full lg:w-[95%] flex overflow-x-auto gap-1 sm:gap-0 hide-scrollbar border-b border-gray-200 mt-4">
             {tabs.map((tab) => (
               <Button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
                 className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black 
-        ${activeTabPro === tab.id
-                    ? "bg-[#C7161E] text-white"
-                    : "bg-transparent text-gray-800"
-                  }
+        ${
+          activeTabPro === tab.id
+            ? "bg-[#C7161E] text-white"
+            : "bg-transparent text-gray-800"
+        }
         hover:bg-[#FCE7D2] hover:text-black`}
               >
                 {tab.name}
@@ -182,7 +188,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <div className="w-full">
                     {data?.courseData?.year_1 && (
                       <div>
-                        <h4>Year 1</h4>
+                        <h5>Year 1</h5>
                         <p className="text-gray-700 leading-snug text-justify">
                           {data.courseData.year_1}
                         </p>
@@ -190,7 +196,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     )}
                     {data?.courseData?.year_2 && (
                       <div>
-                        <h4>Year 2</h4>
+                        <h5>Year 2</h5>
                         <p className="text-gray-700 leading-snug text-justify">
                           {data.courseData.year_2}
                         </p>
@@ -198,7 +204,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     )}
                     {data?.courseData?.year_3 && (
                       <div>
-                        <h4>Year 3</h4>
+                        <h5>Year 3</h5>
                         <p className="text-gray-700 leading-snug text-justify">
                           {data.courseData.year_3}
                         </p>
@@ -206,7 +212,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     )}
                     {data.courseData.year_4 && (
                       <div>
-                        <h4>Year 4</h4>
+                        <h5>Year 4</h5>
                         <p className="text-gray-700 leading-snug text-justify">
                           {data.courseData.year_4}
                         </p>
@@ -214,7 +220,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     )}
                     {data.courseData.year_5 && (
                       <div>
-                        <h4>Year 5</h4>
+                        <h5>Year 5</h5>
                         <p className="text-gray-700 leading-snug text-justify">
                           {data.courseData.year_5}
                         </p>
@@ -222,7 +228,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     )}
                     {data.courseData.year_6 && (
                       <div>
-                        <h4>Year 6</h4>
+                        <h5>Year 6</h5>
                         <p className="text-gray-700 leading-snug text-justify">
                           {data.courseData.year_6}
                         </p>
@@ -264,8 +270,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                       <p className="text-white xl:px-4 mb-3">
                         NEED MORE INFO ABOUT {data.courseData.universityname}?
                       </p>
-                      <Link target="blank" href={`/Universities/${data?.courseData?.university_id}`}>
-                        <Button className="bg-white text-[#C7161E] px-2 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
+                      <Link
+                        target="blank"
+                        href={`/Universities/${data?.courseData?.university_id}`}
+                      >
+                        <Button className="bg-white text-[#C7161E] px-0 py-0 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
                           Explore Here
                         </Button>
                       </Link>
@@ -291,7 +300,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         {data?.courseData?.universityname}!
                       </p>
                       <Link target="blank" href="/universityarchievepage">
-                        <Button className="bg-white text-[#C7161E] font-normal px-1 md:px-8 py-2 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
+                        <Button className="bg-white text-[#C7161E] font-normal px-0 md:px-8 py-0 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
                           Discover More
                         </Button>
                       </Link>

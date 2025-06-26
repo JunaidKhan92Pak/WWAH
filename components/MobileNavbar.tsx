@@ -58,7 +58,7 @@ const MobileNavbar = () => {
         side="left"
         className="p-4 w-[80%] sm:w-[80%] md:w-[60%] lg:w-[40%] bg-gray-100 overflow-y-auto hide-scrollbar h-full"
       >
-        <div className="mt-8 border border-gray-200 mx-auto py-3 px-4 shadow-lg rounded-xl bg-white text-black">
+        <div className="mt-8 py-8 border border-gray-200 mx-auto  px-4 shadow-lg rounded-xl bg-white text-black">
           {/* Header */}
           <div className="flex items-center justify-between border-b pb-3">
             <div className="w-[35%] md:w-[40%] flex justify-center items-center">
@@ -133,11 +133,12 @@ const MobileNavbar = () => {
               </div>
             ) : (
               // <Link href="/signin" onClick={() => setIsOpen(false)}>
-                <Button className="text-sm w-20 sm:w-24 h-8 sm:h-10 bg-red-700 text-white"
-                                    onClick={handleLoginClick}
->
-                  Login
-                </Button>
+              <Button
+                className="text-sm w-20 sm:w-24 h-8 sm:h-10 bg-red-700 text-white "
+                onClick={handleLoginClick}
+              >
+                Login
+              </Button>
               // </Link>
             )}
           </div>
@@ -146,8 +147,7 @@ const MobileNavbar = () => {
           <nav className="mt-6">
             <div className="flex-1 overflow-y-auto space-y-6">
               <div>
-                <h3 className="text-sm font-semibold mb-2">Account</h3>
-                <div className="space-y-2">
+                <div className="space-y-6">
                   {[
                     { href: "/", label: "Home", icon: Home },
                     {
@@ -180,7 +180,7 @@ const MobileNavbar = () => {
                       key={href}
                       href={href}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100"
+                      className="flex items-center gap-2 px-3 py-2 text-md hover:bg-gray-100  border-b border-gray-200 "
                     >
                       <Icon className="w-4 h-4" />
                       {label}

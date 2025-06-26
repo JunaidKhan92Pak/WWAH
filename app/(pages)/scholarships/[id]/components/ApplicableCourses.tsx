@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface Course {
   id: string;
@@ -339,16 +340,15 @@ export default function ApplicableCourses({
                             {course.entryRequirements}
                           </td> */}
                           <div className="relative group w-fit py-4">
-  <td className="cursor-pointer text-md max-w-[300px] overflow-hidden line-clamp-2">
-    {course.entryRequirements}
-  </td>
+                            <td className="cursor-pointer text-md max-w-[300px] overflow-hidden line-clamp-2">
+                              {course.entryRequirements}
+                            </td>
 
-  {/* Hover Tooltip to the right */}
-  <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
-    {course.entryRequirements}
-  </div>
-</div>
-
+                            {/* Hover Tooltip to the right */}
+                            <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
+                              {course.entryRequirements}
+                            </div>
+                          </div>
 
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             {course.scholarshipType}
@@ -357,14 +357,17 @@ export default function ApplicableCourses({
                             {course.teachingLanguage}
                           </td>
                           <td className="px-2 py-2 whitespace-nowrap text-sm">
-                            <Button
-                              variant="default"
-                              size="sm"
-                              className="w-full bg-red-700 hover:bg-red-700 "
-                              onClick={() => {}}
-                            >
-                              Apply
-                            </Button>
+                            <Link href="/dashboard/overview">
+                              {" "}
+                              <Button
+                                variant="default"
+                                size="sm"
+                                className="w-full bg-red-700 hover:bg-red-700 "
+                                onClick={() => {}}
+                              >
+                                Apply
+                              </Button>
+                            </Link>
                           </td>
                         </tr>
                       ))
