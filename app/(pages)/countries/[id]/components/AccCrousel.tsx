@@ -104,7 +104,7 @@ const AccCrousel = ({
                         </div>
 
                         {/* Right Side - Static Text (Bullet Points) */}
-                        <div className="flex flex-col md:w-[50%] xl:w-[72%]">
+                        <div className="flex flex-col md:w-[50%] xl:w-[30%]">
                          <ul className="md:text-start text-center text-white list-disc list-inside">
   {slide.list?.map((item, index) =>
     item.text ? (
@@ -130,7 +130,7 @@ const AccCrousel = ({
           </div>
 
           {/* Slider Indicators */}
-          <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
+          <div className="absolute z-60 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
             {slides.map((_, slideIndex) => (
               <button
                 key={slideIndex}

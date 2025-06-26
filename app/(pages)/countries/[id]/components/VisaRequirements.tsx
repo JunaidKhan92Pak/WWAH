@@ -72,17 +72,18 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
             <ol className="  grid grid-cols-1  md:grid-cols-2 gap-2 md:gap-6">
               {requirements?.map((requirement, indx) => (
                 <li key={indx} className=" flex items-center  ">
-                  <div className="flex items-center space-x-3 ">
-                    <Image
-                      src={requirement.src}
-                      // src={`/countryarchive/${country.short_name}_visa.png`}
-                      alt={requirement.content}
-                      className="rounded-lg  w-10 h-10"
-                      width={10}
-                      height={10}
-                    />
-                    <p>{visarequirement ? visarequirement[indx] : <></>}</p>
-                  </div>
+                  {visarequirement && visarequirement[indx] && (
+                    <div className="flex items-center space-x-3">
+                      <Image
+                        src={requirement.src}
+                        alt={requirement.content}
+                        className="rounded-lg w-10 h-10"
+                        width={40}
+                        height={40}
+                      />
+                      <p>{visarequirement[indx]}</p>
+                    </div>
+                  )}
                 </li>
               ))}
             </ol>
@@ -112,7 +113,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
 
                   {/* Button */}
                   <div className="w-full flex items-center justify-center">
-                    <Link  href="/visaguide">
+                    <Link href="/visaguide">
                       <Button className="bg-red-700  hover:bg-red-80">
                         Find out More
                       </Button>

@@ -6,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { FileIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { getAuthToken } from "@/utils/authHelper";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import Image from "next/image";
+
 interface Document {
   id: string;
 
@@ -15,6 +23,8 @@ interface Document {
   isChecked: boolean;
 }
 export default function Home() {
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
   const [documents, setDocuments] = useState<Document[]>([
     { id: "1", name: "Valid Passport", files: [], date: "", isChecked: false },
     {
@@ -270,19 +280,22 @@ export default function Home() {
 
         // Update local state
         setDocuments((docs) =>
-          docs.map((doc) =>
-            doc.id === id
-              ? {
-                ...doc,
-                files: [...doc.files, ...result.uploadedFiles],
-                date: new Date().toLocaleDateString(),
-                isChecked: true,
-              }
-              : doc
-          )
-        );
+  docs.map((doc) =>
+    doc.id === id
+      ? {
+          ...doc,
+          files: result.uploadedFiles, // ✅ overwrite previous files
+          date: new Date().toLocaleDateString(),
+          isChecked: true,
+        }
+      : doc
+  )
+);
 
-        alert("Files uploaded successfully!");
+
+        setShowUploadModal(true);
+
+
       } catch (error) {
         console.error("Error uploading files:", error);
         if (error instanceof Error) {
@@ -416,6 +429,21 @@ export default function Home() {
               </div>
             ))}
           </div>
+          <Dialog open={showUploadModal} onOpenChange={setShowUploadModal}>
+        <DialogContent className="flex flex-col justify-center items-center  max-w-72 md:max-w-96 !rounded-3xl">
+ <Image
+            src="/DashboardPage/success.svg"
+            alt="Success"
+            width={150}
+            height={150}
+          />
+    <DialogHeader>
+      <DialogTitle className="text-lg font-semibold text-gray-900">Upload Document Successful</DialogTitle>
+     
+    </DialogHeader>
+  </DialogContent>
+</Dialog>
+
           <div className="text-right my-4">
             <Button
               onClick={handleSubmit}

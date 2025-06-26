@@ -63,17 +63,40 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+// ✅ Step 1: Add this new state to store full course data
+const [favoriteCourses, setFavoriteCourses] = useState<Record<string, typeof courses[0]>>({});
 
   // Toggle favorite and animate heart
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const updatedFavorites = { ...prev, [id]: !prev[id] };
-      setFavoritesCount(Object.values(updatedFavorites).filter(Boolean).length);
-      setHeartAnimation(id);
-      setTimeout(() => setHeartAnimation(null), 1000);
-      return updatedFavorites;
+const toggleFavorite = (id: string) => {
+  setFavorites((prev) => {
+    const updatedFavorites = { ...prev, [id]: !prev[id] };
+
+    // ✅ Update count
+    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+    setFavoritesCount(newCount);
+
+    // ✅ Animate heart
+    setHeartAnimation(id);
+    setTimeout(() => setHeartAnimation(null), 1000);
+
+    // ✅ Store full course data if favorited
+    setFavoriteCourses((prevCourses) => {
+      const updated = { ...prevCourses };
+      const courseObj = courses.find((c) => c._id === id);
+
+      if (updatedFavorites[id] && courseObj) {
+        updated[id] = courseObj;
+      } else {
+        delete updated[id];
+      }
+
+      return updated;
     });
-  };
+
+    return updatedFavorites;
+  });
+};
+
 
   // Debounced search handler
   const handleSearch = useCallback(
@@ -102,9 +125,10 @@ const CourseArchive = () => {
     if (currentPage < totalPages) setPage(currentPage + 1);
   };
   // Determine which courses to display (all or favorites only)
-  const displayedCourses = showFavorites
-    ? courses.filter((course) => favorites[course._id])
-    : courses;
+const displayedCourses = showFavorites
+  ? Object.values(favoriteCourses)
+  : courses;
+
   return (
     <section className="w-[95%] mx-auto p-2 ">
       <div className="flex flex-col lg:flex-row items-start">
@@ -175,10 +199,11 @@ const CourseArchive = () => {
         <SkeletonCard arr={12} />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-4  md:p-0">
-          {courses.length === 0 ? (
+          {displayedCourses.length === 0 ? (
             <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
-              {" "}
-              No courses Found{" "}
+                {showFavorites
+                        ? "No Favorite Courses Found"
+                        : "No Courses Found"}
             </p>
           ) : (
             displayedCourses.map((item, idx) => (
@@ -224,14 +249,14 @@ const CourseArchive = () => {
                     </div>
                   </div>
 
-                  <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
+                  <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
                     <Dialog>
                       <DialogTrigger asChild>
                         <button>
                           <Image
-                            src="/share.svg"
-                            width={20}
-                            height={20}
+                            src="/university/Share.svg"
+                            width={21}
+                            height={21}
                             alt="Share"
                           />
                         </button>
@@ -343,7 +368,7 @@ const CourseArchive = () => {
                         />
                       ) : (
                         <Image
-                          src="/whiteheart.svg"
+                          src="/hearti.svg"
                           width={20}
                           height={20}
                           alt="Favorite"

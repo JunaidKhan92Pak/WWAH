@@ -80,6 +80,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const initialCountrySet = React.useRef(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
+const [favoriteUniversities, setFavoriteUniversities] = useState<Record<string, typeof universities[0]>>({});
 
   // Handle country param from URL - consolidated logic from previous duplicate useEffects
   useEffect(() => {
@@ -147,29 +148,41 @@ const Page = () => {
   // No need to load favorites from localStorage
 
   const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const updatedFavorites = { ...prev, [id]: !prev[id] };
+  setFavorites((prev) => {
+    const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-      // Update count
-      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-      setFavoritesCount(newCount);
+    // Add to or remove from full favoriteUniversities list
+    setFavoriteUniversities((prevFavs) => {
+      const updatedFavs = { ...prevFavs };
 
-      // Animate heart
-      setHeartAnimation(id);
-      setTimeout(() => setHeartAnimation(null), 1000);
-
-      return updatedFavorites;
+      const university = universities.find((u) => u._id === id);
+      if (updatedFavorites[id] && university) {
+        updatedFavs[id] = university;
+      } else {
+        delete updatedFavs[id];
+      }
+      return updatedFavs;
     });
-  };
+
+    // Update count and animate
+    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+    setFavoritesCount(newCount);
+    setHeartAnimation(id);
+    setTimeout(() => setHeartAnimation(null), 1000);
+
+    return updatedFavorites;
+  });
+};
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [currentPage]);
   // Filter universities by favorites if showFavorites is true
-  const displayedUniversities = showFavorites
-    ? universities.filter((uni) => favorites[uni._id])
-    : universities;
+const displayedUniversities = showFavorites
+  ? Object.values(favoriteUniversities)
+  : universities;
 
   // Generate empty state message based on selected countries
   const getEmptyStateMessage = () => {
@@ -188,7 +201,7 @@ const Page = () => {
 
   return (
     <section className="w-[90%] mx-auto">
-      <div className="md:flex md:justify-between py-5 md:pt-10 gap-4">
+      <div className="md:flex md:justify-between py-5 md:pt-10">
         <h3 className="font-bold">Discover Universities Worldwide</h3>
         <div className="flex flex-col md:flex-row md:items-start gap-3">
           <div className="w-full md:w-[70%] flex bg-[#F1F1F1] rounded-lg h-10">
@@ -201,7 +214,7 @@ const Page = () => {
               unoptimized
             />
             <Input
-              placeholder="Search..."
+              placeholder="Search Universities..."
               onChange={(e) => {
                 const value = e.target.value;
                 setLocalSearch(value);
@@ -214,9 +227,9 @@ const Page = () => {
           </div>
           <div className="flex flex-row gap-3 w-full">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[60%] h-10">
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[80%] lg:w-[60%] h-10">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
-                <div className="flex ">
+                <div className="flex gap-2">
                   Filter
                   {/* Always reserve space for count by using opacity instead of conditional rendering */}
                   <div
@@ -254,8 +267,8 @@ const Page = () => {
                         <div className="flex gap-2">
                           <Image
                             src={c.img}
-                            width={30}
-                            height={30}
+                            width={25}
+                            height={25}
                             alt={c.name}
                           />
                           <label htmlFor={c.value}>{c.name}</label>
@@ -275,7 +288,7 @@ const Page = () => {
             </DropdownMenu>
             <button
               onClick={() => setShowFavorites((prev) => !prev)}
-              className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[82%] md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full lg:w-[90%] xl:w-[70%] h-10 ${
                 showFavorites ? "text-red-500 font-bold" : "text-gray-600"
               }`}
             >
@@ -334,7 +347,7 @@ const Page = () => {
                     </div>
 
                     {/* Share & Favorite Buttons */}
-                    <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-50 backdrop-blur-sm rounded-md">
+                    <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
                       {/* <Dialog>
                         <DialogTrigger asChild>
                           <button>
@@ -409,9 +422,9 @@ const Page = () => {
                         <DialogTrigger asChild>
                           <button>
                             <Image
-                              src="/share.svg"
-                              width={20}
-                              height={20}
+                              src="/university/Share.svg"
+                              width={21}
+                              height={21}
                               alt="Share"
                             />
                           </button>
@@ -523,7 +536,7 @@ const Page = () => {
                           />
                         ) : (
                           <Image
-                            src="/whiteheart.svg"
+                            src="/hearti.svg"
                             width={20}
                             height={20}
                             alt="Favorite"
@@ -551,7 +564,7 @@ const Page = () => {
                     </div>
                   </div>
 
-                  <div className="px-4 h-[80px] flex flex-col justify-between">
+                  <div className="p-2 h-[80px] flex flex-col justify-between">
                     <Link
                       target="blank"
                       rel="noopener noreferrer"
@@ -573,7 +586,7 @@ const Page = () => {
                     </div>
                   </div>
 
-                  <hr className="mx-4 my-3" />
+                  <hr className="mx-2 my-3" />
                   <p className="text-sm font-bold pb-2">Acceptance Rate:</p>
                   <div className="relative bg-[#F1F1F1] rounded-md h-7">
                     {(() => {

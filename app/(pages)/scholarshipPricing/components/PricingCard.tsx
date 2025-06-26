@@ -34,43 +34,51 @@ export default function PricingCard({
   const isHighlighted = isSelected || plan.isPopular;
 
   return (
-    <Card
-      className=
-        "relative flex flex-col justify-between h-full transition-all duration-200 cursor-pointer"
-    >
+    <Card className="relative flex flex-col justify-between h-full transition-all duration-200 cursor-pointer">
+      <div className="flex flex-col justify-between min-h-[260px]">
+        {" "}
+        {/* Make sure all cards have same height */}
+        <CardHeader
+          className={cn("pt-4 lg:pt-6 pb-6 flex flex-col justify-between flex-1")}
+        >
+          {/* Top content */}
+          <div className="text-left flex flex-col gap-2">
+            <span className="text-3xl font-bold text-gray-900">
+              {plan.name}
+            </span>
+            <p className="text-lg text-gray-700">{plan.subHeading}</p>
+          </div>
 
-      <CardHeader className={cn("pt-8", isHighlighted && "pt-10")}>
-        <div className="text-left">
-          <span className=" text-3xl font-bold text-gray-900">{plan.name}</span>
-          <p className="text-base">{plan.subHeading}</p>
-          <div className="mt-4 flex items-start justify-left">
+          {/* Price section - fixed height for alignment */}
+          <div className="mt-4 min-h-[50px] flex items-center">
             <span className="text-3xl pr-1 font-bold tracking-tight text-gray-900">
               $
             </span>
             <span className="text-5xl font-bold tracking-tight text-red-700">
               {plan.price}
             </span>
-
             <span className="ml-1 text-2xl font-medium text-gray-500">
               /year
             </span>
           </div>
-        </div>
-        <Button
-          className={cn(
-            "w-full font-medium",
-            isHighlighted
-              ? "bg-red-700 text-white hover:bg-red-700"
-              : "bg-white text-red-700 hover:bg-transparent border-2 border-red-700 "
-          )}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect();
-          }}
-        >
-          Buy now
-        </Button>
-      </CardHeader>
+
+          {/* Button - always at bottom */}
+          <Button
+            className={cn(
+              "w-full font-semibold mt-6 transition-colors duration-300",
+              isHighlighted
+                ? "bg-white text-red-700 hover:bg-red-700 hover:text-white border-2 border-red-700"
+                : "bg-white text-red-700 hover:bg-red-700 hover:text-white border-2 border-red-700"
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect();
+            }}
+          >
+            Buy now
+          </Button>
+        </CardHeader>
+      </div>
 
       <CardContent className="flex-grow">
         <h4>Main Services:</h4>
