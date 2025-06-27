@@ -309,7 +309,7 @@ function Page() {
                     className="w-[190px] h-auto"
                   /> */}
                   <Image
-                    src="/ZEUS-ANIMATION-LAPTOP.gif"
+                    src="/zeus-animation.gif"
                     alt="Animated Robot"
                     width={0}
                     height={0}
@@ -402,7 +402,7 @@ function Page() {
           <div className="HeroRightSide relative hidden lg:block">
             <Link href="/chatmodel" passHref>
               <Image
-                src="/ZEUS-ANIMATION-LAPTOP.gif"
+                src="/zeus-animation.gif"
                 alt="Animated Robot"
                 width={0}
                 height={0}

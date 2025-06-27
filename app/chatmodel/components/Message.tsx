@@ -39,13 +39,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       ) : (
         <div className="flex  justify-center items-start max-w-[95%] sm:max-w-[80%] md:w-[65%] lg:w-[55%]">
           <div className=" w-[15%] hidden sm:flex sm:justify-end ">
-            {/* <Image
-              src="/zeus_face.png"
-              width={800}
-              height={800}
-              alt="Zeus Avatar"
-              className="sm:w-[44px] sm:h-[36px] w-[36px] h-[30px]"
-            /> */}
+           
             <Image
               src="/zeus_face.png"
               width={800}
