@@ -25,8 +25,16 @@ import { IoDiamondOutline } from "react-icons/io5";
 
 // Static country images
 const images = [
-  { src: "/countryarchive/uk_logo.png", name: "United Kingdom", alt: "United Kingdom" },
-  { src: "/countryarchive/nz_logo.png", name: "New Zealand", alt: "New Zealand" },
+  {
+    src: "/countryarchive/uk_logo.png",
+    name: "United Kingdom",
+    alt: "United Kingdom",
+  },
+  {
+    src: "/countryarchive/nz_logo.png",
+    name: "New Zealand",
+    alt: "New Zealand",
+  },
   { src: "/countryarchive/aus_logo.png", name: "Australia", alt: "Australia" },
   { src: "/countryarchive/canada_logo.png", name: "Canada", alt: "Canada" },
   { src: "/countryarchive/my_logo.png", name: "Malaysia", alt: "Malaysia" },
@@ -76,7 +84,7 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({
         className="h-6 w-6 md:w-6 md:h-6"
       />
     </div>
-    <p className="font-bold mt-2">{label}</p>
+    <p className="font-bold mt-2 text-center">{label}</p>
     <p className="text-justify lg:text-center leading-4 md:leading-5 text-sm lg:text-md">
       {currency} {cost.min} - {cost.max}
     </p>
@@ -251,10 +259,11 @@ const Page = () => {
                                     onClick={() =>
                                       handleSelectCountry(image.name)
                                     }
-                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${selectedCountry === image.name
-                                      ? "border-[#F0851D] border-2"
-                                      : "border-0"
-                                      }`}
+                                    className={`md:w-10 w-8 rounded-full cursor-pointer ${
+                                      selectedCountry === image.name
+                                        ? "border-[#F0851D] border-2"
+                                        : "border-0"
+                                    }`}
                                   />
                                 </div>
                                 <p className="pt-2 tracking-wide text-center text-[8px] font-bold md:text-[13px]">
@@ -341,8 +350,9 @@ const Page = () => {
                   <div className="grid grid-cols-2 gap-6">
                     <button
                       onClick={() => toggleOption("shared")}
-                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${activeOption === "shared" ? "bg-gray-100" : ""
-                        }`}
+                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${
+                        activeOption === "shared" ? "bg-gray-100" : ""
+                      }`}
                     >
                       <GoShareAndroid className="w-8 h-8 mb-2" />
                       <div className="flex flex-col items-center">
@@ -355,8 +365,9 @@ const Page = () => {
 
                     <button
                       onClick={() => toggleOption("single")}
-                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${activeOption === "single" ? "bg-gray-100" : ""
-                        }`}
+                      className={`flex flex-col items-center px-6 py-4 border border-gray-300 rounded-lg ${
+                        activeOption === "single" ? "bg-gray-100" : ""
+                      }`}
                     >
                       <PiPersonSimpleCircleLight className="w-8 h-8 mb-2" />
                       <div className="flex flex-col items-center">
@@ -407,10 +418,10 @@ const Page = () => {
                     {(expenses && expenses[0]?.lifestyles?.length > 0
                       ? expenses[0].lifestyles
                       : [
-                        { type: "basic_lifestyle" },
-                        { type: "moderate_lifestyle" },
-                        { type: "luxury_lifestyle" },
-                      ]
+                          { type: "basic_lifestyle" },
+                          { type: "moderate_lifestyle" },
+                          { type: "luxury_lifestyle" },
+                        ]
                     ).map(
                       (lifestyle: { type: keyof typeof lifestyleIcons }) => {
                         const LifestyleIcon =
@@ -418,13 +429,15 @@ const Page = () => {
                         return (
                           <button
                             key={lifestyle.type}
-                            className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${lifestyle.type === "luxury_lifestyle"
-                              ? "col-span-2"
-                              : "col-span-1"
-                              } ${selectedLifestyle === lifestyle.type
+                            className={`flex flex-col items-center px-2 py-4 border border-gray-300 rounded-lg hover:bg-gray-100 w-full ${
+                              lifestyle.type === "luxury_lifestyle"
+                                ? "col-span-2"
+                                : "col-span-1"
+                            } ${
+                              selectedLifestyle === lifestyle.type
                                 ? "bg-gray-100"
                                 : "bg-none"
-                              }`}
+                            }`}
                             onClick={() => setSelectedLifestyle(lifestyle.type)}
                           >
                             <LifestyleIcon className="w-8 h-8 mb-2 text-gray-700" />
@@ -470,12 +483,12 @@ const Page = () => {
                         = (PKR 517,334 - PKR 661,038)
                       </p> */}
                     </div>
-                    <div className="bg-[#F1F1F1] rounded-2xl md:px-2 lg:px-5">
-                      <h3 className="font-bold text-center pt-4 sm:py-6">
+                    <div className="bg-[#F1F1F1] rounded-2xl md:px-2 lg:px-5 my-2 sm:my-0">
+                      <h3 className="font-bold text-center pt-2 sm:py-2">
                         Breakdown
                       </h3>
                       <div
-                        className="flex overflow-x-auto md:grid md:grid-cols-3 gap-3 lg:gap-y-8 gap-y-3 lg:px-4 sm:py-6 py-4 rounded-lg"
+                        className="flex overflow-x-auto md:grid md:grid-cols-3 gap-3 lg:gap-y-8 gap-y-3 lg:px-4 sm:py-6 py-4 rounded-lg leading-4 md:leading-normal"
                         style={{
                           scrollbarWidth: "none",
                           msOverflowStyle: "none",

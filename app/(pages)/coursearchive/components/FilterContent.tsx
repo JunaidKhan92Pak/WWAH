@@ -67,7 +67,7 @@ const subjectAreas = [
   "Mathematics",
   "Statistics",
   "Actuarial Science",
-  "Medicine MBBS, MD",
+  "Medicine MBBS and MD",
   "Dentistry",
   "Nursing",
   "Pharmacy",
@@ -80,7 +80,8 @@ const subjectAreas = [
   "Genetics",
   "Microbiology",
   "Immunology",
-  "Radiology and  Medical Imaging",
+  "Radiology",
+  "Medical Imaging",
   "Nutrition and Dietetics",
   "Occupational Therapy",
   "Speech and Language Therapy",
@@ -90,8 +91,9 @@ const subjectAreas = [
   "Operations Management",
   "Supply Chain Management",
   "Financial Management",
-  "Investment & Asset Management",
-  "Banking and Risk Management",
+  "Investment and Asset Management",
+  "Banking",
+  " Risk Management",
   "Accounting and  Auditing",
   "Economics",
   "Law",
@@ -105,27 +107,27 @@ const subjectAreas = [
   "Fashion Design",
   "Interior Design",
   "Architecture",
-  "Theatre & Drama",
-  "Film & Television",
-  "Music Performance & Production",
+  "Theatre and Drama",
+  "Film and Television",
+  "Music Performance and Production",
   "Dance",
   "Journalism",
   "Public Relations (PR)",
   "Digital Media",
   "Advertising",
-  "Education & Pedagogy",
+  "Education and Pedagogy",
   "Agricultural Sciences",
-  "Food Science & Technology",
-  "Tourism & Travel Management",
+  "Food Science and Technology",
+  "Tourism and Travel Management",
   "Event Management",
   "Culinary Arts",
   "Gender Studies",
   "Visual Arts",
   "Sports and Exercise Sciences",
-  "Media & Communication",
+  "Media and Communication",
 ];
 const MIN = 0;
-const MAX = 50000;
+const MAX = 1000000;
 export default function FilterContent() {
   const { universities, setSearch, setCountry, fetchUniversities, loading } =
     useUniversityStore();
@@ -238,11 +240,14 @@ export default function FilterContent() {
     },
     [countryFilter, setCountryFilter, studyDestinations]
   );
-  const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const val = event.target.value;
-    setSearchTerm(val);
-    debouncedSetSearch(val);
-  }, [debouncedSetSearch]);
+  const handleSearch = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const val = event.target.value;
+      setSearchTerm(val);
+      debouncedSetSearch(val);
+    },
+    [debouncedSetSearch]
+  );
   useEffect(() => {
     if (universities.length === 0) {
       fetchUniversities().catch((error) => {
@@ -523,7 +528,6 @@ export default function FilterContent() {
                   className="w-full text-center text-xl font-medium focus:outline-none"
                   min={values[0] + 1}
                   max={MAX}
-
                 />
               </div>
             </div>

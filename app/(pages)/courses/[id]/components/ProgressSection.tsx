@@ -52,7 +52,7 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   // Fetch user info when component mounts
   useEffect(() => {
     console.log("Fetching user success info...");
-    
+
     fetchUserSuccessInfo();
   }, [fetchUserSuccessInfo]);
 
@@ -69,7 +69,10 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
           tofel: data.required_toefl_score,
         },
         requiredGrade: data?.entry_requirement || data?.entry_requirements,
-        tutionfee: { amount: data?.annual_tuition_fee.amount, currency: data.annual_tuition_fee.currency },
+        tutionfee: {
+          amount: data?.annual_tuition_fee.amount,
+          currency: data.annual_tuition_fee.currency,
+        },
         costofliving: 2,
       };
       // Reset states when course data changes
@@ -177,12 +180,12 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   // Calculate overall scores
   const academicOverall = Math.round(
     academicFactors.reduce((sum, factor) => sum + factor.value, 0) /
-    academicFactors.length
+      academicFactors.length
   );
 
   const financialOverall = Math.round(
     financialFactors.reduce((sum, factor) => sum + factor.value, 0) /
-    financialFactors.length
+      financialFactors.length
   );
 
   // Helper function for progress bar color
@@ -218,13 +221,11 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   );
 
   return (
-    
     <section className="md:my-4 flex flex-col items-center justify-center p-4 sm:p-6">
       <h3 className="">Application Success Chances!</h3>
       <p className="text-gray-600 mb-2">
         Your application success chances are:
       </p>
-
       <div className="relative w-full lg:w-[80%] ">
         {/* Success Metrics Content */}
         <div className="flex flex-col md:flex-row justify-center gap-5 w-full">
@@ -237,6 +238,10 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
           </div>
 
           {/* Academic Progress Bars */}
+          <div className="text-center underline underline-offset-4">
+            {" "}
+            <h4>Academic Chances</h4>
+          </div>
           <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-6">
             {academicFactors.map((item, index) => (
               <div key={index} className="flex flex-col">
@@ -271,6 +276,10 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
           </div>
 
           {/* Financial Progress Bars */}
+          <div className="text-center underline underline-offset-4">
+            {" "}
+            <h4>Financial Chances</h4>
+          </div>
           <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-2 md:px-6">
             {financialFactors.map((item, index) => (
               <div key={index} className="mb-2">

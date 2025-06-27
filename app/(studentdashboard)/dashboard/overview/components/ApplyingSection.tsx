@@ -9,11 +9,11 @@ const ApplyingSection = () => {
     <div className="relative">
       {/* Blur Overlay */}
       <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-xl flex items-center justify-center">
-        <Link href="/Universities">
-        <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
-          Apply Now
-        </Button>
-      </Link>
+        <Link href="/coursearchive">
+          <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
+            Apply Now
+          </Button>
+        </Link>
       </div>
 
       <p className="font-semibold text-lg md:text-xl">You are applying for:</p>

@@ -156,7 +156,7 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                   </div>
                 ) : (
                   // Regular Slide
-                  <div className="flex flex-col md:flex-row  gap-4 md:gap-6 lg:flex-row justify-between items-center w-[70%] md:w-[60%] lg:w-[75%] xl:w-[60%]">
+                  <div className="flex flex-col gap-4 md:gap-6 lg:flex-row justify-between items-center w-[70%] md:w-[60%] lg:w-[75%] xl:w-[60%]">
                     {/* Image Section */}
                     <div className="w-full">
                       <div className="rounded-3xl overflow-hidden shadow-lg w-full">
@@ -184,8 +184,10 @@ const AboutGalway = React.memo(({ city, images }: AboutGalwayProps) => {
                         <p
                           className="text-gray-300 leading-relaxed text-justify md:text-start h-44 overflow-hidden overflow-y-auto scrollbar-hide"
                           style={{
-                            scrollbarWidth: "none",
+                            scrollbarWidth: "thin",
                             msOverflowStyle: "none",
+                                        scrollbarColor: '#888 transparent', 
+
                           }}
                         >
                           {slide.description}

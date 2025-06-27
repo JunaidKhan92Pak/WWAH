@@ -63,17 +63,40 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+// ✅ Step 1: Add this new state to store full course data
+const [favoriteCourses, setFavoriteCourses] = useState<Record<string, typeof courses[0]>>({});
 
   // Toggle favorite and animate heart
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const updatedFavorites = { ...prev, [id]: !prev[id] };
-      setFavoritesCount(Object.values(updatedFavorites).filter(Boolean).length);
-      setHeartAnimation(id);
-      setTimeout(() => setHeartAnimation(null), 1000);
-      return updatedFavorites;
+const toggleFavorite = (id: string) => {
+  setFavorites((prev) => {
+    const updatedFavorites = { ...prev, [id]: !prev[id] };
+
+    // ✅ Update count
+    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+    setFavoritesCount(newCount);
+
+    // ✅ Animate heart
+    setHeartAnimation(id);
+    setTimeout(() => setHeartAnimation(null), 1000);
+
+    // ✅ Store full course data if favorited
+    setFavoriteCourses((prevCourses) => {
+      const updated = { ...prevCourses };
+      const courseObj = courses.find((c) => c._id === id);
+
+      if (updatedFavorites[id] && courseObj) {
+        updated[id] = courseObj;
+      } else {
+        delete updated[id];
+      }
+
+      return updated;
     });
-  };
+
+    return updatedFavorites;
+  });
+};
+
 
   // Debounced search handler
   const handleSearch = useCallback(
@@ -102,9 +125,10 @@ const CourseArchive = () => {
     if (currentPage < totalPages) setPage(currentPage + 1);
   };
   // Determine which courses to display (all or favorites only)
-  const displayedCourses = showFavorites
-    ? courses.filter((course) => favorites[course._id])
-    : courses;
+const displayedCourses = showFavorites
+  ? Object.values(favoriteCourses)
+  : courses;
+
   return (
     <section className="w-[95%] mx-auto p-2 ">
       <div className="flex flex-col lg:flex-row items-start">
@@ -175,10 +199,11 @@ const CourseArchive = () => {
         <SkeletonCard arr={12} />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-4  md:p-0">
-          {courses.length === 0 ? (
+          {displayedCourses.length === 0 ? (
             <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
-              {" "}
-              No courses Found{" "}
+                {showFavorites
+                        ? "No Favorite Courses Found"
+                        : "No Courses Found"}
             </p>
           ) : (
             displayedCourses.map((item, idx) => (
@@ -206,11 +231,14 @@ const CourseArchive = () => {
                   <div className="absolute top-4 left-0">
                     <div className=" bg-gradient-to-r from-white to-transparent opacity-100 w-[70%] ">
                       <div className="flex items-center gap-2 ">
-  <img
-    src={item.universityData?.universityImages.logo || "/logo.png"}
-    alt="alumni"
-    className="w-14 h-14 object-cover  object-center rounded-full aspect-square"
-  />
+                        <img
+                          src={
+                            item.universityData?.universityImages.logo ||
+                            "/logo.png"
+                          }
+                          alt="alumni"
+                          className="w-14 h-14 object-cover  object-center rounded-full aspect-square"
+                        />
 
                         <div className="py-1">
                           <p className="leading-none text-sm font-medium cursor-pointer">
@@ -221,14 +249,14 @@ const CourseArchive = () => {
                     </div>
                   </div>
 
-                  <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-md">
+                  <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
                     <Dialog>
                       <DialogTrigger asChild>
                         <button>
                           <Image
-                            src="/share.svg"
-                            width={20}
-                            height={20}
+                            src="/university/Share.svg"
+                            width={21}
+                            height={21}
                             alt="Share"
                           />
                         </button>
@@ -327,8 +355,9 @@ const CourseArchive = () => {
 
                     <button
                       onClick={() => toggleFavorite(item._id)}
-                      className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
-                        }`}
+                      className={`relative ${
+                        heartAnimation === item._id ? "animate-pop" : ""
+                      }`}
                     >
                       {favorites[item._id] ? (
                         <Image
@@ -339,7 +368,7 @@ const CourseArchive = () => {
                         />
                       ) : (
                         <Image
-                          src="/whiteheart.svg"
+                          src="/hearti.svg"
                           width={20}
                           height={20}
                           alt="Favorite"
@@ -384,7 +413,10 @@ const CourseArchive = () => {
                         height={16}
                         className="w-4 h-4"
                       />
-                      <p className="text-sm text-gray-600 truncate">
+                      <p
+                        className="text-sm text-gray-600 truncate"
+                        title={item.intake}
+                      >
                         {item.intake}
                       </p>
                     </div>
@@ -442,31 +474,55 @@ const CourseArchive = () => {
 
       <div className="flex flex-wrap justify-center items-center mt-10  gap-3">
         {/* Pagination controls always visible container */}
-        <div className="flex items-center gap-3" >
+        <div className="flex items-center gap-3">
           {/* First page button */}
           <button
             onClick={() => setPage(1)}
-            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
+              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             aria-label="First page"
             disabled={currentPage <= 1}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-              <path fillRule="evenodd" d="M9.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z"
+                clipRule="evenodd"
+              />
+              <path
+                fillRule="evenodd"
+                d="M9.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
 
           {/* Previous button */}
           <button
             onClick={handlePrevPage}
-            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
+              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             aria-label="Previous page"
             disabled={currentPage <= 1}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
 
@@ -512,10 +568,11 @@ const CourseArchive = () => {
                   <button
                     key={i}
                     onClick={() => setPage(i)}
-                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${currentPage === i
-                      ? "bg-red-700 text-white shadow-md"
-                      : "bg-gray-100 text-gray-700 hover:bg-red-100"
-                      }`}
+                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${
+                      currentPage === i
+                        ? "bg-red-700 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-red-100"
+                    }`}
                     aria-current={currentPage === i ? "page" : undefined}
                   >
                     {i}
@@ -554,8 +611,17 @@ const CourseArchive = () => {
               className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
               aria-label="Next page"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
           )}
@@ -567,15 +633,27 @@ const CourseArchive = () => {
               className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
               aria-label="Last page"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
-                <path fillRule="evenodd" d="M10.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L14.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z"
+                  clipRule="evenodd"
+                />
+                <path
+                  fillRule="evenodd"
+                  d="M10.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L14.586 10l-4.293 4.293a1 1 0 000 1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
           )}
         </div>
       </div>
-
     </section>
   );
 };

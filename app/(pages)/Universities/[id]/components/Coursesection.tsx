@@ -115,7 +115,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       value={courseInfo.level}
                       onChange={handleChange}
                       id="study-level"
-                      className="w-full p-1 md:p-1 border rounded-lg bg-gray-100"
+                      className="w-full p-2 border rounded-lg bg-gray-100"
                     >
                       <option value="" disabled>
                         Select
@@ -144,7 +144,7 @@ const Coursesection: React.FC<CoursesectionProps> = ({ name }) => {
                       value={courseInfo.subject}
                       onChange={handleChange}
                       id="subjectAreaFilter"
-                      className="w-full p-1 md:p-1 border rounded-lg bg-gray-100"
+                      className="w-full p-2 border rounded-lg bg-gray-100"
                     >
                       <option value="" disabled selected>
                         Select

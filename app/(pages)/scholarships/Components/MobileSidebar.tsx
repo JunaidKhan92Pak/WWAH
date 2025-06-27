@@ -34,7 +34,7 @@ const MobileSidebar = () => {
                   alt="favourite"
                   className="2xl:w-[42px] 2xl:h-[42px]"
                 />
-                <p className=" font-bold">Filters </p>
+                <p className=" font-bold">Filters</p>
               </div>
               <Image
                 src="/right-arrow.png"

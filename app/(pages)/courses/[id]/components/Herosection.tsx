@@ -43,9 +43,11 @@ interface CourseData {
 const Herosection = ({
   data,
   uniData,
+  countryData,
 }: {
   data: CourseData;
   uniData: { banner: string; logo: string };
+  countryData: { _id: string; name: string };
 }) => {
   const arr1 = [
     {
@@ -85,6 +87,7 @@ const Herosection = ({
     },
   ];
   console.log(uniData.banner, "uniData.banner");
+  console.log(countryData, "countryData");
   return (
     <div>
       {/* Hero section */}
@@ -93,7 +96,6 @@ const Herosection = ({
           {/* Hero Section */}
           <div
             className="relative min-h-[250px] sm:min-h-[400px] w-full overflow-hidden flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center"
-            // style={{ backgroundImage: `url("/dcu-hero-img.png")` }}
             style={{
               backgroundImage: `url(${uniData.banner})`,
               backgroundSize: "cover",
@@ -104,13 +106,13 @@ const Herosection = ({
             <div className="flex flex-wrap md:gap-6 gap-2 items-center justify-around py-4 sm:py-12  relative z-10 w-[90%] xl:w-full mx-auto ">
               {/* Left Section */}
               <div className=" w-[100%]  md:w-[50%]  flex flex-col  md:items-start md:text-left space-y-2 pl-0 lg:pl-12">
-                <div className="bg-white rounded-full w-[80px] h-[80px]">
+                <div className="bg-white rounded-full sm:w-[80px] sm:h-[80px] w-[50px] h-[50px]">
                   <Image
                     src={uniData.logo}
                     alt="Uni Logo"
                     width={130}
                     height={130}
-                    className="object-cover object-center w-[80px] h-[80px] border-2 border-white rounded-full"
+                    className="object-cover object-center sm:w-[80px] sm:h-[80px] w-[50px] h-[50px] border-2 border-white rounded-full"
                   />
                 </div>
                 <div className="pl-2">
@@ -125,15 +127,24 @@ const Herosection = ({
                 </div>
 
                 <div className="w-[120px] bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
-                  <div className="  flex items-center  ">
-                    <CiLocationOn className="h-4 w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
-                    <p className="text-base">
-                      {data.countryname ? data.countryname : "Not Avialable"}
-                    </p>
-                  </div>
+                  {" "}
+                  <Link
+                    target="blank"
+                    key={countryData._id}
+                    href={`/countries/${countryData._id}`}
+                    className="cursor-pointer"
+                  >
+                    <div className="  flex items-center gap-1  ">
+                      <CiLocationOn className="h-4 w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
+                      <p className="text-base">
+                        {data.countryname ? data.countryname : "Not Avialable"}
+                      </p>
+                    </div>
+                  </Link>
                 </div>
               </div>
-              <div className=" w-[80%]  md:w-[30%]  lg-w-[25%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl py-4 md:py-6 flex flex-col justify-center items-center text-center mt-2 sm:mt-0">
+
+              <div className="hidden sm:flex  w-[80%]  md:w-[30%]  lg-w-[25%] bg-white bg-opacity-30 backdrop-blur-sm rounded-3xl py-4 md:py-6 flex-col justify-center items-center text-center mt-2 sm:mt-0">
                 <Link
                   target="blank"
                   href="/schedulesession"
@@ -159,7 +170,20 @@ const Herosection = ({
             </div>
           </div>
         </div>
-
+        <div className="w-[90%] md:w-[95%] mx-auto mt-4">
+          <div className="flex sm:hidden  justify-evenly gap-2">
+            <Link target="blank" href="/dashboard">
+              <Button className="text-[13px]  bg-gray-600 bg-opacity-20 backdrop-blur-md shadow-md text-black w-[142px]">
+                Apply Now
+              </Button>
+            </Link>
+            <Link target="blank" href="/dashboard">
+              <Button className="bg-gray-600 text-[13px] bg-opacity-20 backdrop-blur-md shadow-md text-black w-[142px]">
+                Book free Counselling{" "}
+              </Button>
+            </Link>
+          </div>
+        </div>
         <div className="relative mt-2 lg:-mt-10 flex justify-center">
           <div
             className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4  rounded-2xl shadow-lg mx-auto w-[95%] lg:w-[70%] lg:grid lg:grid-cols-7"
@@ -171,23 +195,24 @@ const Herosection = ({
             {arr1.map((item, index) => (
               <div
                 key={index}
-                className="relative flex flex-col items-center text-center md:space-y-2 min-w-[100px] lg:min-w-0"
+                className="relative flex flex-col items-center py-3 text-center md:space-y-2 min-w-[120px] lg:min-w-0"
               >
                 <Image
                   src={item.Image}
                   alt={item.Heading}
                   width={40}
                   height={40}
-                  className="w-16 h-16"
+                  className="sm:w-16 sm:h-16 w-14 h-14"
                 />
 
                 {/* Heading with Tooltip */}
-                <div className="relative group w-[100px]">
-                  <p className="font-semibold text-sm truncate max-w-[100px]">
+                <div className="relative group w-[100px] mt-2 sm:mt-0">
+                  <p className="font-semibold sm:text-sm truncate max-w-[120px]">
                     {item.Heading}
                   </p>
                 </div>
 
+                {/* Name with Tooltip */}
                 {/* Name with Tooltip */}
                 <div className="relative group w-[100px]">
                   <p className="text-xs truncate max-w-[100px] overflow-hidden">
@@ -196,6 +221,7 @@ const Herosection = ({
                   <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-xs p-2 cursor-pointer rounded-md w-[200px] text-center shadow-lg">
                     {item.Name}
                   </span>
+
                 </div>
               </div>
             ))}

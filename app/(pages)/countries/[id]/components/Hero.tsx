@@ -85,7 +85,6 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
       <div
         className="relative min-h-[250px] sm:min-h-[400px] flex justify-center items-center text-center rounded-2xl text-white bg-cover bg-center md:mt-4"
         style={{
-          // backgroundImage: "url('/countrypage/bg-image.png')",
           backgroundImage: `url('/countryarchive/${country.short_name}_banner.png')`,
         }}
       >
@@ -110,11 +109,11 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
       </div>
 
       {/* Grid Section */}
-      <section className="relative mt-6 md:my-6">
+      <section className="relative mt-2 md:my-6">
         <div
           className="
-      flex lg:grid lg:grid-cols-4 md:gap-6  overflow-x-auto bg-white shadow-lg rounded-2xl mx-auto 
-      w-[95%] md:w-[80%] md:py-6 md:px-4 p-2 whitespace-nowrap lg:whitespace-normal lg:overflow-visible sm:relative md:absolute md:-top-20 md:left-1/2 md:transform md:-translate-x-1/2 "
+      flex lg:grid lg:grid-cols-4 md:gap-6 gap-3 overflow-x-auto bg-white shadow-lg rounded-2xl mx-auto 
+      w-[95%] md:w-[80%] md:py-6 md:px-4 p-2 whitespace-nowrap lg:whitespace-normal lg:overflow-visible sm:relative md:absolute md:-top-20 md:left-1/2 md:transform md:-translate-x-1/2"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
@@ -124,7 +123,7 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
             <div
               key={index}
               className="
-          inline-block lg:flex lg:flex-row lg:gap-2 flex-col min-w-[80px]"
+          inline-block lg:flex lg:flex-row lg:gap-2 flex-col min-w-[90px]"
             >
               {/* Image Wrapper */}
               <div
@@ -141,11 +140,11 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
                 />
               </div>
               {/* Text Content */}
-              <div className="flex flex-col pt-2">
-                <p className="font-bold md:text-sm text-[12px] text-wrap">
+              <div className="flex flex-col pt-2 md:pt-0">
+                <p className="font-bold md:text-sm text-[12px] text-wrap w-[60%]">
                   {item.Heading}
                 </p>
-                <p className="md:text-sm text-[12px] text-wrap">{item.Name}</p>
+                <p className="text-xs md:text-sm text-pretty">{item.Name}</p>
               </div>
             </div>
           ))}

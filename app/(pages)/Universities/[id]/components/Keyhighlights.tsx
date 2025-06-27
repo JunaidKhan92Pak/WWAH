@@ -46,8 +46,8 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
           Rankings & Achievements!
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-[0.8fr_0.9fr_0.9fr] gap-5 sm:gap-16 md:gap-0 bg-[#FCE7D2] p-2 sm:p-8 rounded-3xl relative max-w-8xl mx-auto">
-          <div className="w-[65%] md:w-[275px] flex flex-col lg:border-r border-gray-400 md:pr-9 items-stretch mx-auto ">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-[0.8fr_0.9fr_0.9fr] gap-5  bg-[#FCE7D2] p-2 md:p-4 lg:p-8 rounded-3xl relative max-w-8xl mx-auto">
+          <div className="w-[65%] md:w-[250px] lg:w-[300px] flex flex-col lg:border-r border-gray-400 md:pr-9 items-stretch mx-auto ">
             <h5 className="mb-2 md:mb-4 text-center sm:text-left">Rankings:</h5>
             {ranking?.length > 0 &&
               ranking.map((item, index) => (
@@ -65,7 +65,7 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
               ))}
           </div>
 
-          <div className="flex flex-col lg:border-r border-gray-400 md:px-5 items-stretch">
+          <div className="flex flex-col lg:border-r border-gray-400 xl:px-5 md:pl-4 lg:pl-0 items-stretch">
             <h5 className="mb-4 md:text-left text-center">Notable Alumni:</h5>
             <div className="grid md:grid-cols-1 grid-cols-2 gap-4 sm:gap-4">
               {alumniData.map((alumni, index) => (
@@ -74,7 +74,7 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
                   className="flex flex-col md:flex-row md:justify-start items-center justify-center md:items-start gap-4 md:mb-3"
                 >
                   <img
-                    src={alumni.image || "/user-dp.png"}
+                    src={alumni.image || "/NotableAlumniIcon.png"}
                     alt="alumni"
                     className="rounded-full object-cover sm:w-12 sm:h-12 w-10 h-10"
                   />
@@ -91,7 +91,7 @@ const Keyhighlights: React.FC<KeyhighlightsProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-col md:pl-9 items-stretch">
+          <div className="flex flex-col xl:pl-8 items-stretch">
             <h5 className="mb-4 text-center sm:text-left">Key Achievements</h5>
             <div className="grid grid-cols-2 md:grid-cols-1 items-center sm:items-start gap-2 md:gap-4">
               {achievement.map((item, index) => (
