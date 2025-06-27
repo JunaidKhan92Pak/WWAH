@@ -19,6 +19,8 @@ import {
   Home,
   TrendingUp,
   Menu,
+  ChartAreaIcon,
+  MessageCircle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -27,6 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/store/useUserData";
+import { Button } from "@/components/ui/button";
 interface User {
   _id: string;
   firstName?: string;
@@ -269,12 +272,26 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="flex gap-3">
+              <div>
+                <button
+                  className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${
+                    showTracker
+                      ? "bg-yellow-600 text-white hover:bg-red-700"
+                      : "bg-white text-red-600   hover:bg-red-50"
+                  }`}
+                >
+                  <Link href={"/adminportal/chatPage"}>
+                    <MessageCircle />
+                  </Link>
+                </button>
+              </div>
               <button
                 onClick={() => setShowTracker(!showTracker)}
-                className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${showTracker
+                className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${
+                  showTracker
                     ? "bg-yellow-600 text-white hover:bg-red-700"
                     : "bg-white text-red-600 border-2 border-red-600 hover:bg-red-50"
-                  }`}
+                }`}
               >
                 <TrendingUp className="w-5 h-5" />
                 {showTracker ? "Hide Tracker" : "Show Tracker"}
@@ -349,10 +366,11 @@ export default function AdminDashboard() {
                   >
                     <div className="flex flex-col items-center text-center">
                       <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${count > 0
+                        className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${
+                          count > 0
                             ? "bg-yellow-100 text-yellow-600"
                             : "bg-gray-100 text-gray-400"
-                          }`}
+                        }`}
                       >
                         <Icon className="w-6 h-6" />
                       </div>
@@ -534,10 +552,11 @@ export default function AdminDashboard() {
                             <div
                               className="bg-gradient-to-r from-yellow-500 to-red-500 h-2 rounded-full transition-all"
                               style={{
-                                width: `${(applicationStage /
+                                width: `${
+                                  (applicationStage /
                                     APPLICATION_STAGES.length) *
                                   100
-                                  }%`,
+                                }%`,
                               }}
                             ></div>
                           </div>

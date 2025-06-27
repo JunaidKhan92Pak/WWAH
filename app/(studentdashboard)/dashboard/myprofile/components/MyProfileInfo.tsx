@@ -56,13 +56,13 @@ interface UserProps {
 }
 const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12 w-[80%] md:w-[60%] ml-4 md:ml-8 xl:ml-72 mt-24 sm:mt-56 xl:mt-10 mb-6 xl:mb-10 ">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12 w-[80%] md:w-[60%] ml-4 md:ml-8 xl:ml-72 mt-24 sm:mt-56 xl:mt-10 mb-6 xl:mb-10 justify-between">
       <EditfirstandlastName
         firstName={user?.firstName}
         lastName={user?.lastName}
       />
       {/* Email Address */}
-      <div className="flex flex-col items-start space-y-2">
+      <div className="flex flex-col items-start  space-y-2">
         <p className="text-gray-600 text-base">Email Address:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
