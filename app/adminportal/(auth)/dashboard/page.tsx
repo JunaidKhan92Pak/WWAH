@@ -19,7 +19,7 @@ import {
   Home,
   TrendingUp,
   Menu,
-  ChartAreaIcon,
+//  ChartAreaIcon,
   MessageCircle,
 } from "lucide-react";
 import {
@@ -29,7 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/store/useUserData";
-import { Button } from "@/components/ui/button";
+//import { Button } from "@/components/ui/button";
 interface User {
   _id: string;
   firstName?: string;
