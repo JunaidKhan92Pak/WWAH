@@ -32,7 +32,10 @@ declare global {
       accounts: {
         id: {
           initialize: (config: GoogleConfig) => void;
-          renderButton: (element: HTMLElement, config: GoogleButtonConfig) => void;
+          renderButton: (
+            element: HTMLElement,
+            config: GoogleButtonConfig
+          ) => void;
           disableAutoSelect: () => void;
         };
       };
@@ -63,42 +66,50 @@ const Page = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   // Handle Google Sign-In response
-  const handleGoogleSignIn = useCallback(async (response: GoogleResponse) => {
-    setGoogleLoading(true);
-    setErrors(prev => ({ ...prev, genralError: "" }));
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ credential: response.credential }),
-      });
+  const handleGoogleSignIn = useCallback(
+    async (response: GoogleResponse) => {
+      setGoogleLoading(true);
+      setErrors((prev) => ({ ...prev, genralError: "" }));
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ credential: response.credential }),
+          }
+        );
 
-      const data = await res.json();
-      if (data.success) {
-        // Set token in the same way as regular signin
-        const expireDate = new Date(
-          Date.now() + 24 * 60 * 60 * 1000
-        ).toUTCString();
-        document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
-        router.push(callbackUrl);
-      } else {
-        setErrors(prev => ({
+        const data = await res.json();
+        if (data.success) {
+          // Set token in the same way as regular signin
+          const expireDate = new Date(
+            Date.now() + 24 * 60 * 60 * 1000
+          ).toUTCString();
+          document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
+          router.push(callbackUrl);
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            genralError:
+              data.message || "Google sign-in failed. Please try again.",
+          }));
+        }
+      } catch (error) {
+        console.error("Google sign-in error:", error);
+        setErrors((prev) => ({
           ...prev,
-          genralError: data.message || "Google sign-in failed. Please try again.",
+          genralError:
+            "Network error. Please check your connection and try again.",
         }));
+      } finally {
+        setGoogleLoading(false);
       }
-    } catch (error) {
-      console.error("Google sign-in error:", error);
-      setErrors(prev => ({
-        ...prev,
-        genralError: "Network error. Please check your connection and try again.",
-      }));
-    } finally {
-      setGoogleLoading(false);
-    }
-  }, [router, callbackUrl]);
+    },
+    [router, callbackUrl]
+  );
 
   // Initialize Google Sign-In
   useEffect(() => {
@@ -110,21 +121,21 @@ const Page = () => {
           auto_select: false,
         });
 
-        const googleButton = document.getElementById('google-signin-button');
+        const googleButton = document.getElementById("google-signin-button");
         if (googleButton) {
           window.google.accounts.id.renderButton(googleButton, {
-            theme: 'outline',
-            size: 'large',
-            width: '100%',
-            text: 'signin_with',
+            theme: "outline",
+            size: "large",
+            width: "100%",
+            text: "signin_with",
           });
         }
       }
     };
 
     if (!window.google) {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
       script.async = true;
       script.defer = true;
       script.onload = initializeGoogleSignIn;
@@ -149,8 +160,8 @@ const Page = () => {
       email: !formData.email
         ? "Email is required."
         : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-          ? ""
-          : "Enter a valid email address.",
+        ? ""
+        : "Enter a valid email address.",
       password: !formData.password ? "Password is required." : "",
     };
 
@@ -195,19 +206,28 @@ const Page = () => {
               />
             </Link>
           </div>
-          <h6 className="text-center font-semibold text-xl mb-1 mt-4">Welcome Back!</h6>
+          <h6 className="text-center font-semibold text-xl mb-1 mt-4">
+            Welcome Back!
+          </h6>
           <p className="text-gray-600 mb-4 text-center sm:px-8 md:mb-4 md:w-full lg:text-[14px] lg:mb-4 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
             Please sign in to your account to continue your learning journey
           </p>
 
           {/* Google Sign-In Button */}
-          <div className="w-full mb-4">
+          <div
+            className="w-full mb-4 mx-auto
+          "
+          >
             <div
               id="google-signin-button"
-              className={`w-full ${googleLoading ? 'opacity-50 pointer-events-none' : ''}`}
+              className={`w-full ${
+                googleLoading ? "opacity-50 pointer-events-none" : ""
+              }`}
             ></div>
             {googleLoading && (
-              <p className="text-center text-gray-600 mt-2">Signing in with Google...</p>
+              <p className="text-center text-gray-600 mt-2">
+                Signing in with Google...
+              </p>
             )}
           </div>
 
@@ -220,7 +240,9 @@ const Page = () => {
 
           <form className="w-full" onSubmit={handleSubmit}>
             {errors.genralError && (
-              <p className="text-red-500 text-center mb-4">{errors.genralError}</p>
+              <p className="text-red-500 text-center mb-4">
+                {errors.genralError}
+              </p>
             )}
 
             {/* Email */}
@@ -233,8 +255,9 @@ const Page = () => {
                 <input
                   type="email"
                   name="email"
-                  className={`w-full p-1 lg:p-2 2xl:pl-16 pl-8 lg:pl-10 border ${errors.email ? "border-red-500" : "border-gray-300"
-                    } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
+                  className={`w-full p-1 lg:p-2 2xl:pl-16 pl-8 lg:pl-10 border ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
                   placeholder="Enter your Email"
                   onChange={handleChange}
                   value={formData.email}
@@ -255,8 +278,9 @@ const Page = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  className={`w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border ${errors.password ? "border-red-500" : "border-gray-300"
-                    } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
+                  className={`w-full p-1 lg:pl-10 2xl:pl-16 pl-10 border ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  } rounded-lg 2xl:p-6 placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px]`}
                   placeholder="Enter your Password"
                   onChange={handleChange}
                   value={formData.password}
@@ -278,8 +302,11 @@ const Page = () => {
             <button
               type="submit"
               disabled={loading || formSubmitted}
-              className={`w-full text-white p-2 rounded 2xl:p-4 mt-4 transition-opacity ${loading || formSubmitted ? "bg-red-400" : "bg-red-700 hover:bg-red-800"
-                } duration-200`}
+              className={`w-full text-white p-2 rounded 2xl:p-4 mt-4 transition-opacity ${
+                loading || formSubmitted
+                  ? "bg-red-400"
+                  : "bg-red-700 hover:bg-red-800"
+              } duration-200`}
             >
               {loading || formSubmitted ? "Signing In..." : "Sign In"}
             </button>
