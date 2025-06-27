@@ -54,6 +54,7 @@
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.4.1",
+    "i18n-iso-countries": "^7.14.0",
     "intl-tel-input": "^25.3.1",
     "ioredis": "^5.6.1",
     "keen-slider": "^6.8.6",
@@ -89,6 +90,7 @@
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
+    "world-countries": "^5.1.0",
     "xlsx": "^0.18.5",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"

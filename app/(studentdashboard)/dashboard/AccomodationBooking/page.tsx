@@ -26,6 +26,13 @@ import { toast } from "sonner";
 import { countries } from "@/lib/countries";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserData";
+import currency from "currency-codes";
+
+const currencyOptions = currency.data.map((c) => ({
+  value: c.code,
+  label: `${c.code} - ${c.currency}`,
+}));
+
 
 const formSchema = z.object({
   country: z.string({
@@ -343,9 +350,11 @@ export default function Home() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="usd">USD ($)</SelectItem>
-                          <SelectItem value="gbp">GBP (£)</SelectItem>
-                          <SelectItem value="eur">EUR (€)</SelectItem>
+                          {currencyOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />

@@ -7,41 +7,32 @@ const CompletedApplication = () => {
     { src: "/DashboardPage/intake.svg", alt: "Intake", text: "2024" },
     { src: "/clock.svg", alt: "Duration", text: "4 Years" },
     { src: "/money.svg", alt: "Tuition Fee", text: "$ 53,122" },
-    // { src: "/DashboardPage/deadline.svg", alt: "Deadline", text: "February 2025", isDeadline: true },
   ];
 
   return (
-    <div className="rounded-xl mt-2">
-      <div className="mx-auto flex  flex-col  gap-4 w-full">
+    <div className="rounded-xl mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2  gap-6 w-full">
         {["/course1.svg", "/course1.svg"].map((courseImg, index) => (
           <div
             key={index}
-            className="flex flex-col sm:flex-row w-full md:w-[70%]  gap-4 bg-[#FCE7D280] p-2 rounded-xl "
+            className="flex flex-col xl:flex-row bg-[#FCE7D280] p-4 sm:p-5 rounded-xl gap-4 border border-orange-200"
           >
             {/* Course Image */}
-            {/* <Image
-              src={courseImg}
-              alt="courseImg"
-              width={600}
-              height={500}
-              className="w-full h-auto lg:h-40 md:w-[290px] xl:w-[178px] object-cover rounded-2xl"
-            /> */}
             <Image
               src="/course1.svg"
               alt="courseImg"
               width={600}
               height={500}
-              className="w-full h-auto lg:h-48 md:w-[290px] xl:w-[252px] object-cover rounded-2xl"
+              className="w-full h-auto lg:h-48 lg:w-[290px] xl:w-[252px] object-cover rounded-2xl"
             />
 
             {/* Course Details */}
-            <div className="flex flex-col gap-2 items-start ">
-              <p className="font-semibold text-lg leading-tight">
+            <div className="flex flex-col justify-start gap-3 w-full">
+              <p className="font-semibold text-base sm:text-lg md:text-xl leading-snug text-gray-800">
                 Bachelor of Engineering (Honors) - BE(Hons)
               </p>
 
-              {/* Information Grid */}
-              <div className="grid grid-cols-2 gap-x-10 gap-3 text-nowrap w-full">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-nowrap">
                 {applicationDetails.map((item, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <Image
@@ -49,8 +40,11 @@ const CompletedApplication = () => {
                       width={18}
                       height={18}
                       alt={item.alt}
+                      className="min-w-[18px]"
                     />
-                    <p className="text-sm">{item.text}</p>
+                    <p className="text-sm sm:text-[15px] text-gray-700">
+                      {item.text}
+                    </p>
                   </div>
                 ))}
               </div>

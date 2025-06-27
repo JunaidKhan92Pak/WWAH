@@ -49,7 +49,7 @@ export function Navbar() {
           <span className="hidden lg:inline">Favourites</span>
         </Button>
 
-        {/* <Button className="relative flex items-center bg-[#F1F1F1] text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">
+        <Button className="relative flex items-center bg-[#F1F1F1] text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">
           <Image
             src="/DashboardPage/bell.svg"
             alt="Notifications"
@@ -61,7 +61,7 @@ export function Navbar() {
           <span className="px-2 py-0.5 text-xs bg-[#FCE7D2] rounded-sm hidden lg:inline">
             2
           </span>
-        </Button> */}
+        </Button>
       </div>
     </nav>
   );
