@@ -103,6 +103,7 @@
     "@types/node": "^20",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/recharts": "^2.0.1",
     "@types/xlsx": "^0.0.36",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
