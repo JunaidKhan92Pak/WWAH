@@ -89,7 +89,7 @@ interface AddStudentModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function AddNewStudentModal({
+export default function AddNewStudentModal({
   open,
   onOpenChange,
 }: AddStudentModalProps) {

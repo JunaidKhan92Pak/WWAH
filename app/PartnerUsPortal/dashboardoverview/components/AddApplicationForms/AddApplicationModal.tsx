@@ -26,7 +26,7 @@ type Tab = {
   label: string;
   id: string;
 };
-export function AddApplicationModal({ open, setOpen }: AddApplicationModalProps) {
+export default function AddApplicationModal({ open, setOpen }: AddApplicationModalProps) {
     const tabs: Tab[] = [
     { label: "Basic Information", id: "basicinfo" },
     { label: "Application Information", id: "appinfo" },
@@ -48,10 +48,10 @@ export function AddApplicationModal({ open, setOpen }: AddApplicationModalProps)
 
     const isLastTab = activeTab === "review";
 
-  const handleSubmit = () => {
-    console.log("Submitting final application...");
-    setOpen(false); // Optionally show a success message or modal
-  };
+  // const handleSubmit = () => {
+  //   console.log("Submitting final application...");
+  //   setOpen(false); // Optionally show a success message or modal
+  // };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[300px] md:max-w-2xl">
@@ -77,7 +77,7 @@ export function AddApplicationModal({ open, setOpen }: AddApplicationModalProps)
         {activeTab === "basicinfo" && <BasicInformation /> }
         {activeTab === "appinfo" && <ApplicationInformation />}
       {activeTab === "documents" && <Uploaddocuments /> }
-      {activeTab === "review" && <ReviewandSubmit onSubmit={handleSubmit} />}
+      {activeTab === "review" && <ReviewandSubmit  />}
 
         <DialogFooter>
           {/* <DialogClose> */}
