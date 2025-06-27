@@ -309,7 +309,7 @@ function Page() {
                     className="w-[190px] h-auto"
                   /> */}
                   <Image
-                    src="/zeus-animation.gif"
+                    src="/zeus.gif"
                     alt="Animated Robot"
                     width={0}
                     height={0}
@@ -402,7 +402,7 @@ function Page() {
           <div className="HeroRightSide relative hidden lg:block">
             <Link href="/chatmodel" passHref>
               <Image
-                src="/zeus-animation.gif"
+                src="/zeus.gif"
                 alt="Animated Robot"
                 width={0}
                 height={0}
@@ -758,7 +758,7 @@ function Page() {
               <h2 className="font-bold my-4">WWAH Mobile App:</h2>
               <p className="mb-8">
                 Study Abroad dreams made simple!
-Just Download the WWAH app, Upload & Travel.
+                Just Download the WWAH app, Upload & Travel.
               </p>
               <div>
                 <div className="text-sm flex flex-col sm:flex-row gap-4">
