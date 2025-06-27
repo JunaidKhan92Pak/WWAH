@@ -433,49 +433,20 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen ">
       {/* Sign-up Form Section */}
-      <div className="w-full md:w-1/2 pt-5 md:pt-0 px-8 flex flex-col items-center justify-center lg:w-[60%] 2xl:px-20 2xl:w-[60%]">
+      <div className="w-full md:w-1/2 pt-5 md:pt-0 px-8 flex flex-col items-center justify-center lg:w-[60%] 2xl:px-20 2xl:w-[60%] my-2">
         <div>
           <div className="flex justify-center items-center">
             <Link href="/">
               <Image
                 src="/logowwah.svg"
                 alt="WWAH Logo"
-                width={150}
-                height={60}
+                width={130}
+                height={40}
               />
             </Link>
           </div>
-          <h6 className="text-center font-semibold text-xl mb-1 mt-4">
-            Create an Account!
-          </h6>
-          <p className="text-gray-600 mb-4 text-center sm:px-8 md:mb-4 md:w-full lg:text-[14px] lg:mb-4 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
-            Please provide your information below to begin your learning journey
-          </p>
-
-          {/* Google Sign-In Button */}
-          <div className="w-full mb-4">
-            <div
-              id="google-signin-button"
-              className={`w-full ${
-                googleLoading ? "opacity-50 pointer-events-none" : ""
-              }`}
-            ></div>
-            {googleLoading && (
-              <p className="text-center text-gray-600 mt-2">
-                Signing in with Google...
-              </p>
-            )}
-          </div>
-
-          {/* Divider */}
-          <div className="flex items-center my-4">
-            <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-gray-500 text-sm">or</span>
-            <div className="flex-1 border-t border-gray-300"></div>
-          </div>
-
           {/* Header */}
           <div className="text-center mb-2">
             <h1 className="text-2xl font-bold text-gray-900 mb-1">
@@ -492,6 +463,26 @@ const Page = () => {
             </p>
           </div>
 
+          {/* Google Sign-In Button */}
+          <div className="w-full mb-4">
+            <div
+              id="google-signin-button"
+              className={`w-full ${
+                googleLoading ? "opacity-50 pointer-events-none" : ""
+              }`}
+            ></div>
+            {googleLoading && (
+              <p className="text-center text-gray-600 mt-2">
+                Signing in with Google...
+              </p>
+            )}
+          </div>
+          {/* Divider */}
+          <div className="flex items-center my-2">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <span className="px-4 text-gray-500 text-sm">or</span>
+            <div className="flex-1 border-t border-gray-300"></div>
+          </div>
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center">
               <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
