@@ -8,8 +8,8 @@ import RevenueChart from "./components/RevenueChart";
 import UpcomingWebinars from "./components/UpcomingWebinars";
 import ZeusChatBox from "./components/ZeusChatBox";
 import AccountManager from "./components/AccountManager";
-import { AddNewStudentModal } from "./components/AddNewStudentForms/page";
-import { AddApplicationModal } from "./components/AddApplicationForms/page";
+import AddNewStudentModal from "./components/AddNewStudentForms/AddNewStudentModal";
+import AddApplicationModal from "./components/AddApplicationForms/AddApplicationModal";
 
 
 const page = () => {

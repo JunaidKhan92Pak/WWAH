@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { MdModeEditOutline } from "react-icons/md";
-type ReviewandSubmitProps = {
-  onSubmit: () => void;
-};
+// type ReviewandSubmitProps = {
+//   onSubmit: () => void;
+// };
 const Section = ({
   title,
   children,
@@ -20,7 +20,7 @@ const Section = ({
   </div>
 );
 
-export default function ReviewandSubmit({ onSubmit }: ReviewandSubmitProps) {
+export default function ReviewandSubmit() {
 
 return (
     <div>
@@ -185,7 +185,7 @@ return (
 
 {/*Submit Button */}
       <div className="flex justify-end mt-6">
-        <Button onClick={onSubmit} className="bg-red-600 hover:bg-red-500 text-white px-12">
+        <Button  className="bg-red-600 hover:bg-red-500 text-white px-12">
           Submit
         </Button>
       </div>
