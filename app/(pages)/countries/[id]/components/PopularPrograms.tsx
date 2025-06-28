@@ -6,50 +6,25 @@ import Banner from "@/components/ui/enrollment/Banner";
 interface PopularProgramsProps {
   country: string[];
   countryName: string;
+  costOfLiving: CostOfLiving;
+}
+interface CostOfLiving {
+  rent: string; 
+  groceries: string;
+  transportation: string;
+  eating_out: string;
+  household_bills: string;
+  miscellaneous: string;
+  healthcare: string; 
+  health: { name: string; description: string[] }[];
 }
 
-const data = [
-  {
-    icon: "/countrypage/health.svg",
-    title: "Health & Wellbeing",
-    cost: "£26",
-    color: "bg-teal-500",
-  },
-  {
-    icon: "/countrypage/groceries.svg",
-    title: "Groceries",
-    cost: "£100-£200",
-    color: "bg-green-500",
-  },
-  {
-    icon: "/countrypage/rent.svg",
-    title: "Rent",
-    cost: "£439-£700",
-    color: "bg-yellow-500",
-  },
-  {
-    icon: "/countrypage/eatingOut.svg",
-    title: "Eating Out",
-    cost: "£66-£80",
-    color: "bg-blue-500",
-  },
-  {
-    icon: "/countrypage/transport.svg",
-    title: "Transport",
-    cost: "£30-£69",
-    color: "bg-purple-500",
-  },
-  {
-    icon: "/countrypage/householdbills.svg",
-    title: "Household Bills",
-    cost: "£40-£79",
-    color: "bg-red-500",
-  },
-];
+
 
 const PopularPrograms: React.FC<PopularProgramsProps> = ({
   country,
   countryName,
+  costOfLiving,
 }) => {
   const arr1 = [
     {
@@ -77,10 +52,48 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
       caption: `${country?.[4]}`,
     },
   ];
-
+  const data = [
+    {
+      icon: "/countrypage/health.svg",
+      title: "Health & Wellbeing",
+      cost: `${costOfLiving.healthcare}`,
+      color: "bg-teal-500",
+    },
+    {
+      icon: "/countrypage/groceries.svg",
+      title: "Groceries",
+      cost: `${costOfLiving.groceries}`,
+      color: "bg-green-500",
+    },
+    {
+      icon: "/countrypage/rent.svg",
+      title: "Rent",
+      cost: `${costOfLiving.rent}`,
+      color: "bg-yellow-500",
+    },
+    {
+      icon: "/countrypage/eatingOut.svg",
+      title: "Eating Out",
+      cost: `${costOfLiving.eating_out}`,
+      color: "bg-blue-500",
+    },
+    {
+      icon: "/countrypage/transport.svg",
+      title: "Transport",
+      cost: `${costOfLiving.transportation}`,
+      color: "bg-purple-500",
+    },
+    {
+      icon: "/countrypage/householdbills.svg",
+      title: "Household Bills",
+      cost: `${costOfLiving.household_bills}`,
+      color: "bg-red-500",
+    },
+  ];
   // Inside your component:
   const scrollRef = useRef<HTMLDivElement>(null);
-
+  console.log("PopularPrograms rendered with countryName:", costOfLiving);
+  
   // const scroll = (direction: "left" | "right") => {
   //   if (scrollRef.current) {
   //     const scrollAmount = direction === "left" ? -200 : 200;
@@ -107,17 +120,9 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
             </h5>
           </div>
 
-          {/* Icon Section with Horizontal Scrollbar */}
-          {/* Icon Section with Horizontal Scrollbar and Buttons */}
+         
           <div className="relative lg:w-3/5">
-            {/* Left Scroll Button */}
-            {/* <button
-    onClick={() => scroll("left")}
-    className="absolute left-4 z-10 top-11 transform -translate-y-1/2 p-1 bg-gray-300 shadow rounded-full md:hidden">
-    <FaArrowLeft className="text-black" />
-  </button> */}
-
-            {/* Scrollable Icon Container */}
+           
             <div
               ref={scrollRef}
               className="flex overflow-x-auto scrollbar-hide space-x-2 md:space-x-3 py-2 md:mx-0 scroll-smooth"
@@ -183,7 +188,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
                   <p className="text-center w-24 sm:w-28 text-[12px] sm:text-[14px] md:text-[15px] font-semibold mt-2">
                     {item.title}
                   </p>
-                  <p className="text-gray-600">{item.cost}</p>
+                  <p className="text-sm text-gray-600">{item.cost}</p>
                 </div>
               ))}
             </div>

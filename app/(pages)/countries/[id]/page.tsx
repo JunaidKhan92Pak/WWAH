@@ -105,6 +105,16 @@ export default function Countrypage({
       <PopularPrograms
         country={country.popular_programs}
         countryName={country.country_name}
+    costOfLiving={{
+      rent: country.rent,   
+      groceries: country.groceries,
+      transportation: country.transportation,
+      eating_out: country.eating_out,
+      household_bills: country.household_bills,
+      miscellaneous: country.miscellaneous,
+      healthcare: country.healthcare,
+      health: country.health,
+    }}
       />
       <ScholarshipsInUK
         scholarships={country.scholarships}
