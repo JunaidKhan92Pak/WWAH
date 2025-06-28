@@ -2,14 +2,15 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import Link from "next/link";
 import { Message as MessageType } from "@/lib/types";
-import Message from "./components/Message";
-import { Card } from "@/components/ui/card";
-import { Navbar } from "./components/Navbar";
+// import Message from "./components/Message";
+// import { Card } from "@/components/ui/card";
+// import { Navbar } from "./components/Navbar";
 import { useUserStore } from "@/store/useUserData";
+import ZeusMaintenance from "./components/Zeusmain";
 
 // Precompiled answers for common queries
 const INSTANT_RESPONSES = {
@@ -32,14 +33,13 @@ export default function Home() {
   const { user, fetchUserProfile } = useUserStore();
   const abortController = useRef<AbortController | null>(null);
   const [streamingComplete, setStreamingComplete] = useState(false);
+  console.log(streamingComplete, "streamingComplete");
+
   const [hasProcessedInitialMessage, setHasProcessedInitialMessage] =
     useState(false);
 
   // Add a ref to prevent multiple submissions
   const isProcessingRef = useRef(false);
-
-  console.log(messages, "messages from chat component");
-  console.log(streamingComplete);
 
   // Check if query matches a common pattern for instant response
   const checkForInstantResponse = (query: string): string | null => {
@@ -267,138 +267,75 @@ export default function Home() {
       isProcessingRef.current = false;
     };
   }, []);
-
+  const [condition] = useState(true);
   return (
     <div className="flex min-h-screen flex-col">
       {/* Background */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
         {/* Header */}
-        <Navbar />
+        {/* <Navbar /> */}
         {/* Chat Area */}
-        <main className="relative flex-1 w-[90%] mx-auto sm:px-4 pt-16 pb-18">
-          <ScrollArea className="h-[calc(100vh-8rem)] overflow-hidden py-6 md:p-6 scrollbar-hide">
-            <div className="space-y-4 py-0 pb-16">
-              {messages.length === 0 && !streamingMessage ? (
-                <div className="flex items-center justify-center h-full">
-                  <p>
-                    {hasProcessedInitialMessage
-                      ? "Send a message to start chatting"
-                      : "Loading..."}
-                  </p>
-                </div>
-              ) : (
-                messages.map((message, index) =>
-                  message && message.role ? (
-                    <Message key={index} message={message} />
-                  ) : null
-                )
-              )}
+        {condition ? (<ZeusMaintenance />) : (
 
-              {/* Show streaming message if available */}
-              {streamingMessage && (
-                <div className="flex gap-10 md:max-w-[80%] lg:max-w-[75%] xl:max-w-[70%] max-w-[80%]">
-                  <div className="flex items-start pt-3 gap-2 mb-3">
-                    <Image
-                      src="/zeus_face.png"
-                      width={32}
-                      height={32}
-                      alt="Zeus Avatar"
-                    />
-                    <h6 className="font-bold text-gray-800">ZEUS</h6>
-                  </div>
-                  <Card className="px-4 py-2 bg-white text-black">
-                    <p className="whitespace-pre-line md:text-[18px]">
-                      {streamingMessage}
-                    </p>
-                  </Card>
-                </div>
-              )}
-
-              {/* Show "Thinking..." when loading but not streaming */}
-              {isLoading && !streamingMessage && (
-                <div className="flex items-center justify-start gap-2 md:max-w-[100%] lg:max-w-[100%] xl:max-w-[100%] max-w-[100%]">
-                  <div className="flex gap-0 ">
-                    <Image
-                      src="/zeus_face.png"
-                      width={32}
-                      height={32}
-                      alt="Zeus Avatar"
-                      className="rounded-full m-auto"
-                    />
-                    {/* <h6 className="font-bold text-gray-800">ZEUS</h6> */}
-                  </div>
-                  <Card className="px-4 py-2 bg-white text-black flex items-center">
-                    <p className="whitespace-pre-line italic text-center text-gray-500">
-                      Thinking...
-                    </p>
-                  </Card>
-                </div>
-              )}
-
-              {/* keep your scroll anchor */}
-              <div ref={scrollRef} />
-            </div>
-          </ScrollArea>
-        </main>
-
-        {/* Chat Input */}
-        <div className="fixed bottom-0 w-full">
-          <div className="absolute inset-0 bg-[#D9D9D966] opacity-80 z-0 blur-2xl "></div>
-          <div className="relative w-[90%] sm:w-[70%] lg:w-[58%] mx-auto pb-1 ">
-            <form onSubmit={handleSubmit}>
-              <div className="flex items-center rounded-xl shadow-sm bg-white gap-2 px-3 py-1">
-                <Image
-                  src="/chatbot.svg"
-                  alt="chatrobot"
-                  width={20}
-                  height={20}
-                />
-                <Input
-                  placeholder="Chat with ZEUS"
-                  className="flex-1 border-none focus:ring-0 xl:placeholder:text-[16px]"
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={isLoading}
-                />
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={isLoading || isProcessingRef.current}
-                  className="p-0 bg-transparent hover:bg-transparent rounded-full"
-                >
+          <div className="fixed bottom-0 w-full">
+            <div className="absolute inset-0 bg-[#D9D9D966] opacity-80 z-0 blur-2xl "></div>
+            <div className="relative w-[90%] sm:w-[70%] lg:w-[58%] mx-auto pb-1 ">
+              <form onSubmit={handleSubmit}>
+                <div className="flex items-center rounded-xl shadow-sm bg-white gap-2 px-3 py-1">
                   <Image
-                    src="/icons/sendicon.svg"
-                    alt="Send"
-                    width={24}
-                    height={24}
+                    src="/chatbot.svg"
+                    alt="chatrobot"
+                    width={20}
+                    height={20}
                   />
-                </Button>
+                  <Input
+                    placeholder="Chat with ZEUS"
+                    className="flex-1 border-none focus:ring-0 xl:placeholder:text-[16px]"
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="submit"
+                    size="icon"
+                    disabled={isLoading || isProcessingRef.current}
+                    className="p-0 bg-transparent hover:bg-transparent rounded-full"
+                  >
+                    <Image
+                      src="/icons/sendicon.svg"
+                      alt="Send"
+                      width={24}
+                      height={24}
+                    />
+                  </Button>
+                </div>
+              </form>
+              {/* Buttons */}
+              <div className="flex flex-row sm:justify-center overflow-x-auto hide-scrollbar gap-1 sm:gap-3 mt-2">
+                <Link target="blank" href="/Universities">
+                  <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                    Explore Top Universities
+                  </Button>
+                </Link>
+                <Link target="blank" href="/countries">
+                  <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                    Explore Study Destinations
+                  </Button>
+                </Link>
+                <Link target="blank" href="/scholarships">
+                  <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
+                    Explore Latest Scholarships
+                  </Button>
+                </Link>
               </div>
-            </form>
-            {/* Buttons */}
-            <div className="flex flex-row sm:justify-center overflow-x-auto hide-scrollbar gap-1 sm:gap-3 mt-2">
-              <Link target="blank" href="/Universities">
-                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                  Explore Top Universities
-                </Button>
-              </Link>
-              <Link target="blank" href="/countries">
-                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                  Explore Study Destinations
-                </Button>
-              </Link>
-              <Link target="blank" href="/scholarships">
-                <Button className="bg-red-700 text-sm md:text-md text-white hover:text-[#FED7B1] border-[#F0851D] rounded-xl hover:bg-red-700">
-                  Explore Latest Scholarships
-                </Button>
-              </Link>
+              <p className="text-gray-500 mt-1 text-[13px] text-center">
+                ZEUS adapts to your preferences — change them anytime!
+              </p>
             </div>
-            <p className="text-gray-500 mt-1 text-[13px] text-center">
-              ZEUS adapts to your preferences — change them anytime!
-            </p>
           </div>
-        </div>
+        )
+        }
       </div>
     </div>
   );
