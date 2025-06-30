@@ -5,6 +5,7 @@ import { Calculator } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { Info } from "lucide-react";
 
 interface FeeAndScholarshipsProps {
   data: {
@@ -51,6 +52,10 @@ interface FeeAndScholarshipsProps {
 export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
   const [activeTab, setActiveTab] = useState("scholarship");
   console.log(data, "cor");
+  const isNumeric = (value: string | number): boolean =>
+    !isNaN(parseFloat(value.toString())) && isFinite(Number(value));
+  
+
 
   return (
     <section className=" w-[90%] mx-auto my-4">
@@ -75,19 +80,29 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
                 <p className="font-semibold">$0</p>
                 <p className="text-gray-600">Server Fee (N/A)</p>
               </li>
-              <li className="flex items-center space-x-2 ">
+              <li className="flex items-center space-x-2">
                 <span className="vertical-line w-[1px] h-3 bg-black"></span>
-                {/* <p className="font-semibold">{data.initial_deposit}</p> */}
+
                 <div className="relative group w-[100px]">
                   <p className="text-md truncate font-semibold max-w-[150px] overflow-hidden">
                     {data.initial_deposit}
                   </p>
-                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-sm font-medium p-2 rounded-md w-[200px] text-center shadow-lg">
+
+                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-sm font-medium p-2 rounded-md w-[200px] text-center shadow-lg z-10">
                     {data.initial_deposit}
                   </span>
                 </div>
+
+                {!isNumeric(data.initial_deposit) && (
+                  <div className="relative group flex items-center">
+                    <Info className="w-4 h-4 text-blue-500 cursor-pointer" />
+                    <span className="absolute left-1/2 -translate-x-1/2 mt-6 hidden group-hover:block bg-gray-100 text-black text-xs font-medium p-2 rounded-md w-[220px] text-center shadow-lg z-10">
+                      {data.initial_deposit}
+                    </span>
+                  </div>
+                )}
+
                 <p className="text-gray-600">Initial Deposit</p>
-                {/* Name with Tooltip */}
               </li>
             </ul>
           </div>
