@@ -29,16 +29,16 @@ const Page = () => {
 
   }
 
-  const [visa, setVisa] = useState<VisaGuide | null>(null);
+  const [visa] = useState<VisaGuide | null>(null);
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/getVisaguide");
+      const response = await fetch("/api/visaguide");
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const posts = await response.json();
-      setVisa(posts.visaguide);
-      // console.log(posts, "posts");
+      // setVisa(posts.visaguide);
+      console.log(posts, "posts");
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error fetching visa guide:", error.message);
