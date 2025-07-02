@@ -263,7 +263,7 @@ export default function Home() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {/* Location Information Section */}
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="country"
                   render={({ field }) => (
@@ -297,8 +297,25 @@ export default function Home() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter country"
+                          className="bg-[#f1f1f1] placeholder-[#313131]  placeholder:text-sm text-sm"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="university"
@@ -316,7 +333,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="city"
@@ -334,7 +350,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 {/* Document Upload Section - Fixed */}
                 <FormField
                   control={form.control}
@@ -388,7 +403,6 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="dropOffLocation"
