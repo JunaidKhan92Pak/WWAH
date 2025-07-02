@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import AccommodationBooking from "./components/AccommodationBooking";
-import AirportPickup from "./components/AirportPickup";
+import AccommodationPage from "./components/AccommodationBooking/AccommodationPage";
+import AirportPickupPage from './components/AirportPickup/AirportPickupPage';
 
 type Tab = {
   label: string;
@@ -26,7 +26,7 @@ const Page = () => {
             <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`transition  px-6 font-semibold text-sm sm:text-base py-4 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
+              className={`transition px-6 font-semibold text-sm sm:text-base py-4 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
                         ${activeTab === tab.id
                   ? "bg-[#C7161E] text-white"
                   : "text-gray-600"
@@ -36,8 +36,8 @@ const Page = () => {
             </Button>
           ))}
         </div>
-       {activeTab === "accommodation" && <AccommodationBooking /> } 
-       {activeTab === "airport" && <AirportPickup /> }
+       {activeTab === "accommodation" && <AccommodationPage /> } 
+       {activeTab === "airport" && <AirportPickupPage /> }
       </div>
     </>
   );

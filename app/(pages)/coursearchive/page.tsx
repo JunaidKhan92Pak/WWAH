@@ -63,7 +63,7 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-// ✅ Step 1: Add this new state to store full course data
+//  Step 1: Add this new state to store full course data
 const [favoriteCourses, setFavoriteCourses] = useState<Record<string, typeof courses[0]>>({});
 
   // Toggle favorite and animate heart
