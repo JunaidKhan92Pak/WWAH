@@ -54,12 +54,12 @@ export default function AddApplicationModal({ open, setOpen }: AddApplicationMod
   // };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[300px] md:max-w-2xl">
+      <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[300px] md:max-w-[680px] xl:max-w-[700px]">
         <DialogHeader>
           <DialogTitle></DialogTitle>
         </DialogHeader>
         {/* <h5 className="text-center font-bold lg:mb-10">Complete your Application</h5> */}
-        <div className="w-full  flex overflow-x-auto hide-scrollbar  ">
+        <div className="w-full  flex overflow-x-auto ">
           {tabs.map((tab) => (
             <Button
               key={tab.id}

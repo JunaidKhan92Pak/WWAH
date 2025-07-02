@@ -270,7 +270,7 @@ export default function AddNewStudentModal({
                                       <Image
                                         src={
                                           selectedCountry?.flag ||
-                                          "/default-flag.png"
+                                          "/pakflag.png"
                                         }
                                         alt="Flag"
                                         width={20}

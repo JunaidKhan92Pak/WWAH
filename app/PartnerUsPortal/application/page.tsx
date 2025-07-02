@@ -82,7 +82,7 @@ export default function ApplicationsPage() {
     <div className="min-h-screen  p-2">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Applications</h1>
+          <h1 className="text-3xl font-bold text-gray-900 md:mb-4">Applications</h1>
           
           <div className="flex items-center justify-between gap-4 mb-6">
             <div className="relative flex-1 max-w-md">
@@ -92,8 +92,9 @@ export default function ApplicationsPage() {
                 placeholder="Search by Application or Student Id, Name or email"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-              />
+className="pl-8 md:pl-10 py-2 w-full border border-gray-300 focus:border-black focus:ring-black placeholder-gray-500 placeholder:text-sm"
+
+/>
             </div>
             
             <div className="flex items-center gap-3">

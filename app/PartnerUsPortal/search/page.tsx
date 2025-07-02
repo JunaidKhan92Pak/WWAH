@@ -63,14 +63,38 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+  //  Step 1: Add this new state to store full course data
+  const [favoriteCourses, setFavoriteCourses] = useState<
+    Record<string, (typeof courses)[0]>
+  >({});
 
   // Toggle favorite and animate heart
   const toggleFavorite = (id: string) => {
     setFavorites((prev) => {
       const updatedFavorites = { ...prev, [id]: !prev[id] };
-      setFavoritesCount(Object.values(updatedFavorites).filter(Boolean).length);
+
+      // ✅ Update count
+      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+      setFavoritesCount(newCount);
+
+      // ✅ Animate heart
       setHeartAnimation(id);
       setTimeout(() => setHeartAnimation(null), 1000);
+
+      // ✅ Store full course data if favorited
+      setFavoriteCourses((prevCourses) => {
+        const updated = { ...prevCourses };
+        const courseObj = courses.find((c) => c._id === id);
+
+        if (updatedFavorites[id] && courseObj) {
+          updated[id] = courseObj;
+        } else {
+          delete updated[id];
+        }
+
+        return updated;
+      });
+
       return updatedFavorites;
     });
   };
@@ -103,14 +127,14 @@ const CourseArchive = () => {
   };
   // Determine which courses to display (all or favorites only)
   const displayedCourses = showFavorites
-    ? courses.filter((course) => favorites[course._id])
+    ? Object.values(favoriteCourses)
     : courses;
   return (
-    <section className="w-full mx-auto p-2">
+    <section className="w-full mx-auto md:p-2">
       <h3>Search Courses</h3>
       {/* search and filters */}
-      <div className="flex gap-2 ">
-        <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4 ">
+      <div className="flex gap-2 mt-2">
+        <div className="flex items-center bg-[#F1F1F1] rounded-lg px-4">
           <Image
             src="/search.svg"
             width={20}
@@ -133,12 +157,12 @@ const CourseArchive = () => {
         <FilterComponent />
       </div>
 
-      <div className="flex flex-col lg:flex-row items-start p-2 mt-6">
+      <div className="flex flex-col lg:flex-row items-start pb-3  mt-2 md:mt-4">
         <div className="w-full leading-tight">
-          <p className="font-bold text-xl mb-1 flex items-center md:mb-0">
+          <h4 className="mb-1 flex items-center md:mb-0">
             Explore Courses from Every Discipline!
-          </p>
-          <p className="text-gray-600 text-sm">Over 1000 Courses Available.</p>
+          </h4>
+          <p className="text-gray-600 text-sm mb-3">Over 1000 Courses Available.</p>
         </div>
         <div className="w-full md:w-[60%] lg:w-[90%] xl:w-[80%] grid grid-cols-2 md:grid-cols-4 md:flex gap-2 items-center">
           <DropdownMenu>
@@ -178,11 +202,10 @@ const CourseArchive = () => {
       {loading ? (
         <SkeletonCard arr={12} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-3 gap-4  md:p-0">
-          {courses.length === 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6  md:p-0">
+          {displayedCourses.length === 0 ? (
             <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
-              {" "}
-              No courses Found{" "}
+              {showFavorites ? "No Favorite Courses Found" : "No Courses Found"}
             </p>
           ) : (
             displayedCourses.map((item, idx) => (
@@ -233,7 +256,7 @@ const CourseArchive = () => {
                       <DialogTrigger asChild>
                         <button>
                           <Image
-                            src="/share.svg"
+                            src="/university/Share.svg"
                             width={20}
                             height={20}
                             alt="Share"
@@ -347,7 +370,7 @@ const CourseArchive = () => {
                         />
                       ) : (
                         <Image
-                          src="/whiteheart.svg"
+                          src="/hearti.svg"
                           width={20}
                           height={20}
                           alt="Favorite"

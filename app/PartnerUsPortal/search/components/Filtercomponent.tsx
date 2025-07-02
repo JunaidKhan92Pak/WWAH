@@ -25,7 +25,7 @@ const FilterComponent = () => {
     <div>
       <Sheet>
         <SheetTrigger>
-          <Button className="bg-[#F1F1F1] w-full px-3" variant="ghost" size="icon">
+          <Button className="bg-[#F1F1F1] w-full px-8" variant="ghost" size="icon">
           <IoFunnelOutline/> Filter
           </Button>
         </SheetTrigger>

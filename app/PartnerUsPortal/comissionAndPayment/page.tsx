@@ -309,13 +309,13 @@ export default function CommissionsPayments() {
           <TabsList>
             <TabsTrigger
               value="commission-overview"
-              className="px-6 py-2 text-sm font-semibold sm:text-base rounded-l-xl rounded-b-none bg-transparent text-black hover:bg-transparent data-[state=active]:bg-red-600 data-[state=active]:text-white"
+              className="px-6 py-2 text-sm font-semibold sm:text-base rounded-t-xl rounded-b-none bg-transparent text-black hover:bg-transparent data-[state=active]:bg-red-600 data-[state=active]:text-white"
             >
               Commission Overview
             </TabsTrigger>
             <TabsTrigger
               value="payments-mode"
-              className="px-6 py-2 text-sm font-semibold sm:text-base rounded-r-xl rounded-b-none bg-transparent text-black hover:bg-transparent data-[state=active]:bg-red-600 data-[state=active]:text-white"
+              className="px-6 py-2 text-sm font-semibold sm:text-base rounded-t-xl rounded-b-none bg-transparent text-black hover:bg-transparent data-[state=active]:bg-red-600 data-[state=active]:text-white"
             >
               Payments Made
             </TabsTrigger>
@@ -331,8 +331,9 @@ export default function CommissionsPayments() {
                       placeholder="Search by Student Name or ID"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-10"
-                    />
+className="pl-8 md:pl-10 py-2 w-full border border-gray-300 focus:border-black focus:ring-black placeholder-gray-500 placeholder:text-sm"
+
+/>
                   </div>
 
                   <div className="flex gap-3">
@@ -663,8 +664,9 @@ export default function CommissionsPayments() {
                       placeholder="Search by Student Name or ID"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-10"
-                    />
+className="pl-8 md:pl-10 py-2 w-full border border-gray-300 focus:border-black focus:ring-black placeholder-gray-500 placeholder:text-sm"
+
+/>
                   </div>
 
                   <div className="flex gap-3">
