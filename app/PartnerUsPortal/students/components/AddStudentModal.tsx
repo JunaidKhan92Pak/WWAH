@@ -39,7 +39,9 @@ export function AddStudentModal({ onAddStudent }: AddStudentModalProps) {
     degreeLevel: '',
     fieldOfStudy: '',
     referralSource: '',
-    status: 'Active'
+    status: 'Active',
+    intake: '',
+    nationality: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,7 +56,9 @@ export function AddStudentModal({ onAddStudent }: AddStudentModalProps) {
       degreeLevel: '',
       fieldOfStudy: '',
       referralSource: '',
-      status: 'Active'
+      status: 'Active',
+      intake: '',
+      nationality: ''
     });
     setIsOpen(false);
   };
@@ -173,6 +177,25 @@ export function AddStudentModal({ onAddStudent }: AddStudentModalProps) {
                 value={formData.referralSource}
                 onChange={(e) => handleInputChange('referralSource', e.target.value)}
                 placeholder="e.g., Instagram, Agent, etc."
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="intake">Intake</Label>
+              <Input
+                id="intake"
+                value={formData.intake}
+                onChange={(e) => handleInputChange('intake', e.target.value)}
+                placeholder="e.g., Fall 2025"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nationality">Nationality</Label>
+              <Input
+                id="nationality"
+                value={formData.nationality}
+                onChange={(e) => handleInputChange('nationality', e.target.value)}
+                placeholder="e.g., Pakistani"
               />
             </div>
           </div>
