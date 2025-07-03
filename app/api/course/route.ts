@@ -26,6 +26,7 @@ export async function GET(req: Request) {
             {
                 _id: 1,
                 countryname: 1,
+                country_id: 1, // Ensure this field is included
                 embassyDocuments: 1,
                 universityDocuments: {
                     $elemMatch: { course_level: { $regex: `${courseData?.course_level?.trim()}`, $options: "i" } },

@@ -66,6 +66,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     };
     countryData: {
       countryname: string;
+      country_id: string;
       _id: string;
       embassyDocuments: [];
       universityDocuments: [];
@@ -142,6 +143,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           logo: data?.universityData?.universityImages?.logo || "",
         }}
         countryData={{
+          country_id : data?.countryData?.country_id || "",
           _id: data?.countryData?._id || "",
           name: data?.countryData?.countryname || "",
         }}

@@ -12,28 +12,28 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 // import { Menu } from "lucide-react";
 import { IoIosArrowDropright } from "react-icons/io";
 
-// Define the FAQ type
-interface FAQ {
+interface Faq {
   question: string;
   answer: string;
 }
 
-// Define the VisaGuide type
-interface VisaGuide {
-  country_name: string;
-  faqs: FAQ[];
-  accept_offer: string;
-  online_interview: string;
-  visa_application_process: { title: string; description: string[] }[];
-  submit_application: string;
-  await_decision: string;
-  Receive_your_visa: string;
-  accommodation: string;
-  prepare_for_arrival: string;
-  collect_your_biometric_residence_permit: string;
-  university_enrollment: string;
+// Update your interfaces in both files
+interface StepSection {
+  heading: string;
+  points: string[];
+  icon?: string; // Optional for custom icons
 }
 
+interface VisaGuide {
+  _id: string;
+  country_id: string;
+  country_name: string;
+  faqs: Faq[];
+  steps: StepSection[]; // Replace all hardcoded fields with this
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 // Use the VisaGuide type for your data prop
 interface GuideProps {
   data: VisaGuide;

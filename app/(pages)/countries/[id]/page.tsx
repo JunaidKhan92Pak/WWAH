@@ -56,7 +56,7 @@ export default function Countrypage({
   }
   // Initialize as null to avoid rendering before data is fetched.
   const [country, setCountry] = useState<Country | null>(null);
-
+const [visaId, setVisaId] = useState<string | null>(null);
   const fetchData = async () => {
     try {
       const response = await fetch(`/api/getCountry?id=${id}`);
@@ -64,6 +64,8 @@ export default function Countrypage({
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const posts = await response.json();
+    setVisaId(posts.visaId); // Set the visa ID from the response
+  
       setCountry(posts.country);
     } catch (error) {
       if (error instanceof Error) {
@@ -120,11 +122,14 @@ export default function Countrypage({
         scholarships={country.scholarships}
         countryName={country.country_name || ""}
       />
-      <VisaRequirements
-        visaRequirements={country.visa_requirements || []}
-        countryName={country.country_name}
-        country={{ short_name: country.short_name }}
-      />
+      {visaId && (
+        <VisaRequirements
+          visaRequirements={country.visa_requirements || []}
+          countryName={country.country_name}
+          country={{ short_name: country.short_name }}
+          visa={{ _id: visaId }}
+        />
+      )}
       <AccomodationOptions accomodation={country.accomodation_options} />
       <AccCrousel
         countryName={country.country_name}

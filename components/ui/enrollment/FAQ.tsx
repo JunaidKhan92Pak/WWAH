@@ -16,7 +16,7 @@ interface FAQProps {
 }
 
 export default function FAQ({ title, items }: FAQProps) {
-  console.log(items, "faq")
+  console.log(items, "faq");
   return (
     <section className="flex justify-start mt-8">
       <div className="w-[95%] mx-auto px-4">
@@ -37,7 +37,7 @@ export default function FAQ({ title, items }: FAQProps) {
               <AccordionTrigger className="text-[#313131] md:py-4 md:px-8 px-2 bg-gray-200 rounded-lg hover:bg-gray-200 transition-colors text-left">
                 <p>{item.question}</p>
               </AccordionTrigger>
-              <AccordionContent className="md:p-6 p-2 text-[#313131] bg-gray-50 border-t border-gray-200 rounded-b-md">
+              <AccordionContent className="md:p-6 p-2 text-left text-[#313131] bg-gray-50 border-t border-gray-200 rounded-b-md">
                 {Array.isArray(item.answer) ? (
                   <div className="list-disc pl-5 space-y-2">
                     {item.answer.map((point, i) => (
