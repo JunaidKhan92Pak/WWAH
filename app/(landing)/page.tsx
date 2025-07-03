@@ -43,7 +43,7 @@ function Page() {
     {
       name: "New Zealand",
       value: "New Zealand",
-      img: "/countryarchive/nz_logo.png",
+      img: "/New Zealand.png",
     },
     {
       name: "Australia",
@@ -53,12 +53,12 @@ function Page() {
     {
       name: "Germany",
       value: "germany",
-      img: "/countryarchive/germany_logo.png",
+      img: "/countryarchive/ge_logo.png",
     },
     {
       name: "Ireland",
       value: "Ireland",
-      img: "/countryarchive/ireland_logo.png",
+      img: "/countryarchive/IR_logo.png",
     },
     { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
   ];
@@ -455,12 +455,12 @@ function Page() {
                   </div>
                   <ul className="py-2 space-y-4">
                     {countries.map((c, indx) => (
-                      <li key={indx} className="flex justify-between">
+                      <li key={indx} className="flex justify-between gap-2">
                         <div className="flex gap-2">
                           <Image
                             src={c.img}
-                            width={30}
-                            height={30}
+                            width={24}
+                            height={24}
                             alt={c.name}
                           />
                           <label htmlFor={c.value}>{c.name}</label>

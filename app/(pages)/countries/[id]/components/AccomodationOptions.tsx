@@ -16,14 +16,14 @@ interface Accomodation {
 const AccomodationOptions = ({ accomodation }: Accomodation) => {
   const arr2 = [
     {
-      src: "/countrypage/uniAccomodation.jpg",
+      src: "/countrypage/uniAccomodation.png",
       alt: "Private Accommodation",
       heading: "University/College-Managed Accommodation",
       p: "Private student accommodation providers offer purpose-built housing with modern amenities, specifically for students. These can be a bit more expensive than university-managed accommodation but often come with additional features like gyms, social spaces, and organized events.",
     },
 
     {
-      src: "/countrypage/privateAcc.jpg",
+      src: "/countrypage/privateAcc.png",
       alt: "Private Accommodation",
       heading: "Private Student Accommodation",
       p: "For students who prefer independent living, renting a private flat or house is a popular option, especially for those in their second or third year. You can rent alone or share with friends or other students.",
