@@ -7,12 +7,14 @@ interface VisaRequirementsProps {
   visaRequirements: string[];
   countryName: string;
   country: { short_name: string };
+  visa: { _id: string }; // Add the visa property with at least _id field
 }
 
 export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
   visaRequirements,
   countryName,
   country,
+   visa, // Assuming you want to use this for some purpose
 }) => {
   interface requiremtProps {
     id: number;
@@ -59,6 +61,8 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
       content: " Biometric Information",
     },
   ];
+  console.log("Visa Requirements:", visa._id);
+  
   return (
     <>
       <section className="w-[90%] mx-auto my-5 ">
@@ -113,8 +117,8 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
 
                   {/* Button */}
                   <div className="w-full flex items-center justify-center">
-                    <Link href="/visaguide">
-                      <Button className="bg-red-700  hover:bg-red-80">
+                    <Link href={`/visaguide/${visa._id}`}>
+                      <Button className="bg-red-700 hover:bg-red-80">
                         Find out More
                       </Button>
                     </Link>

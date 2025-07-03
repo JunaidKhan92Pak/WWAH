@@ -47,7 +47,7 @@ const Herosection = ({
 }: {
   data: CourseData;
   uniData: { banner: string; logo: string };
-  countryData: { _id: string; name: string };
+  countryData: { _id: string; name: string , country_id: string };
 }) => {
   const arr1 = [
     {
@@ -131,7 +131,7 @@ const Herosection = ({
                   <Link
                     target="blank"
                     key={countryData._id}
-                    href={`/countries/${countryData._id}`}
+                    href={`/countries/${countryData.country_id}`}
                     className="cursor-pointer"
                   >
                     <div className="  flex items-center gap-1  ">
