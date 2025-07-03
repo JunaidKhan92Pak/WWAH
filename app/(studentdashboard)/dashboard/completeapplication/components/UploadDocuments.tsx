@@ -280,17 +280,17 @@ export default function Home() {
 
         // Update local state
         setDocuments((docs) =>
-  docs.map((doc) =>
-    doc.id === id
-      ? {
-          ...doc,
-          files: result.uploadedFiles, // ✅ overwrite previous files
-          date: new Date().toLocaleDateString(),
-          isChecked: true,
-        }
-      : doc
-  )
-);
+          docs.map((doc) =>
+            doc.id === id
+              ? {
+                ...doc,
+                files: result.uploadedFiles, // ✅ overwrite previous files
+                date: new Date().toLocaleDateString(),
+                isChecked: true,
+              }
+              : doc
+          )
+        );
 
 
         setShowUploadModal(true);
@@ -430,19 +430,19 @@ export default function Home() {
             ))}
           </div>
           <Dialog open={showUploadModal} onOpenChange={setShowUploadModal}>
-        <DialogContent className="flex flex-col justify-center items-center  max-w-72 md:max-w-96 !rounded-3xl">
- <Image
-            src="/DashboardPage/success.svg"
-            alt="Success"
-            width={150}
-            height={150}
-          />
-    <DialogHeader>
-      <DialogTitle className="text-lg font-semibold text-gray-900">Upload Document Successful</DialogTitle>
-     
-    </DialogHeader>
-  </DialogContent>
-</Dialog>
+            <DialogContent className="flex flex-col justify-center items-center  max-w-72 md:max-w-96 !rounded-3xl">
+              <Image
+                src="/DashboardPage/success.svg"
+                alt="Success"
+                width={150}
+                height={150}
+              />
+              <DialogHeader>
+                <DialogTitle className="text-lg font-semibold text-gray-900">Upload Document Successful</DialogTitle>
+
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
 
           <div className="text-right my-4">
             <Button
