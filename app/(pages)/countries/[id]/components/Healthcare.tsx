@@ -8,6 +8,8 @@ interface HealthcareProps {
 
 const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
   const [showMore, setShowMore] = useState(false);
+
+  console.log("Healthcare Data:", health);
   return (
     <>
       <section className="bg-gray-50 py-4 lg:pt-6 w-full">
@@ -57,23 +59,19 @@ const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
                   height={297}
                 />
               </div>
-            
+
               <div className="text-left w-full md:w-[50%]">
                 <div>
                   {/* <h3 className="text-gray-900 mb-2">{health[1].name}</h3> */}
-                  <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
-                  
-                  </p>
+                  <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]"></p>
                 </div>
 
                 {/* Read More Section */}
-                {health?.length > 2 && (
+                {health?.length > 1 && (
                   <>
                     {/* Always show health[1] */}
                     <div className="md:mt-4 mt-2">
-                      <h4 className="text-gray-900 mb-2">
-                        {health[1].name}
-                      </h4>
+                      <h4 className="text-gray-900 mb-2">{health[1].name}</h4>
                       <p className="text-gray-700 leading-relaxed w-full lg:w-[85%]">
                         {health[1].description && (
                           <ul className="list-disc pl-5">

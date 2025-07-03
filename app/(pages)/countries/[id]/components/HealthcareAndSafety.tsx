@@ -64,7 +64,6 @@ export default function HealthAndSafety({
                   <div className=" bg-[#FCE7D2] p-2 rounded-2xl shadow-md">
                     <img src={testType.icon} alt={testType.title} />
                   </div>
-
                   <div>
                     <p className="font-semibold">{testType.title}</p>
                   </div>

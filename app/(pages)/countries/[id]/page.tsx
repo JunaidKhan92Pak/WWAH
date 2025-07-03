@@ -51,12 +51,13 @@ export default function Countrypage({
     teaching_and_learning_approach?: [];
     multicultural_environment?: [];
     faqs: [];
-    
+
     accomodation_options: [];
   }
+
   // Initialize as null to avoid rendering before data is fetched.
   const [country, setCountry] = useState<Country | null>(null);
-const [visaId, setVisaId] = useState<string | null>(null);
+  const [visaId, setVisaId] = useState<string | null>(null);
   const fetchData = async () => {
     try {
       const response = await fetch(`/api/getCountry?id=${id}`);
@@ -64,8 +65,8 @@ const [visaId, setVisaId] = useState<string | null>(null);
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const posts = await response.json();
-    setVisaId(posts.visaId); // Set the visa ID from the response
-  
+      setVisaId(posts.visaId._id); // Set the visa ID from the response
+
       setCountry(posts.country);
     } catch (error) {
       if (error instanceof Error) {
@@ -107,16 +108,16 @@ const [visaId, setVisaId] = useState<string | null>(null);
       <PopularPrograms
         country={country.popular_programs}
         countryName={country.country_name}
-    costOfLiving={{
-      rent: country.rent,   
-      groceries: country.groceries,
-      transportation: country.transportation,
-      eating_out: country.eating_out,
-      household_bills: country.household_bills,
-      miscellaneous: country.miscellaneous,
-      healthcare: country.healthcare,
-      health: country.health,
-    }}
+        costOfLiving={{
+          rent: country.rent,
+          groceries: country.groceries,
+          transportation: country.transportation,
+          eating_out: country.eating_out,
+          household_bills: country.household_bills,
+          miscellaneous: country.miscellaneous,
+          healthcare: country.healthcare,
+          health: country.health,
+        }}
       />
       <ScholarshipsInUK
         scholarships={country.scholarships}
@@ -136,9 +137,7 @@ const [visaId, setVisaId] = useState<string | null>(null);
         teaching_and_learning_approach={
           country.teaching_and_learning_approach || [""]
         }
-        multicultural_environment={
-          country.multicultural_environment || [""]
-        }
+        multicultural_environment={country.multicultural_environment || [""]}
       />
       <Healthcare health={country.health} countryName={country.country_name} />
       <FAQ title="Frequently Asked Questions:" items={country.faqs} />

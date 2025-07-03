@@ -61,7 +61,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
       content: " Biometric Information",
     },
   ];
-  console.log("Visa Requirements:", visa._id);
+  console.log("Visa Requirements: hab", visa);
   
   return (
     <>
@@ -117,7 +117,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
 
                   {/* Button */}
                   <div className="w-full flex items-center justify-center">
-                    <Link href={`/visaguide/${visa._id}`}>
+                    <Link href={`/visaguide/${visa._id}`} >
                       <Button className="bg-red-700 hover:bg-red-80">
                         Find out More
                       </Button>
