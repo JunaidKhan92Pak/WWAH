@@ -63,40 +63,41 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-//  Step 1: Add this new state to store full course data
-const [favoriteCourses, setFavoriteCourses] = useState<Record<string, typeof courses[0]>>({});
+  //  Step 1: Add this new state to store full course data
+  const [favoriteCourses, setFavoriteCourses] = useState<
+    Record<string, (typeof courses)[0]>
+  >({});
 
   // Toggle favorite and animate heart
-const toggleFavorite = (id: string) => {
-  setFavorites((prev) => {
-    const updatedFavorites = { ...prev, [id]: !prev[id] };
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => {
+      const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-    // ✅ Update count
-    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-    setFavoritesCount(newCount);
+      // ✅ Update count
+      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+      setFavoritesCount(newCount);
 
-    // ✅ Animate heart
-    setHeartAnimation(id);
-    setTimeout(() => setHeartAnimation(null), 1000);
+      // ✅ Animate heart
+      setHeartAnimation(id);
+      setTimeout(() => setHeartAnimation(null), 1000);
 
-    // ✅ Store full course data if favorited
-    setFavoriteCourses((prevCourses) => {
-      const updated = { ...prevCourses };
-      const courseObj = courses.find((c) => c._id === id);
+      // ✅ Store full course data if favorited
+      setFavoriteCourses((prevCourses) => {
+        const updated = { ...prevCourses };
+        const courseObj = courses.find((c) => c._id === id);
 
-      if (updatedFavorites[id] && courseObj) {
-        updated[id] = courseObj;
-      } else {
-        delete updated[id];
-      }
+        if (updatedFavorites[id] && courseObj) {
+          updated[id] = courseObj;
+        } else {
+          delete updated[id];
+        }
 
-      return updated;
+        return updated;
+      });
+
+      return updatedFavorites;
     });
-
-    return updatedFavorites;
-  });
-};
-
+  };
 
   // Debounced search handler
   const handleSearch = useCallback(
@@ -125,9 +126,9 @@ const toggleFavorite = (id: string) => {
     if (currentPage < totalPages) setPage(currentPage + 1);
   };
   // Determine which courses to display (all or favorites only)
-const displayedCourses = showFavorites
-  ? Object.values(favoriteCourses)
-  : courses;
+  const displayedCourses = showFavorites
+    ? Object.values(favoriteCourses)
+    : courses;
 
   return (
     <section className="w-[95%] mx-auto p-2 ">
@@ -201,9 +202,7 @@ const displayedCourses = showFavorites
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-4  md:p-0">
           {displayedCourses.length === 0 ? (
             <p className="text-[20px] font-semibold col-span-4 text-center p-4 ">
-                {showFavorites
-                        ? "No Favorite Courses Found"
-                        : "No Courses Found"}
+              {showFavorites ? "No Favorite Courses Found" : "No Courses Found"}
             </p>
           ) : (
             displayedCourses.map((item, idx) => (
@@ -392,7 +391,8 @@ const displayedCourses = showFavorites
                       {item?.course_title}
                     </h3>
                   </Link>
-                  <div className="grid grid-cols-2 gap-x-2 gap-y-4 mt-3">
+                  <div className="mt-3 grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-4">
+                    {/* Country */}
                     <div className="flex items-center gap-2">
                       <Image
                         src="/location.svg"
@@ -401,25 +401,29 @@ const displayedCourses = showFavorites
                         height={16}
                         className="w-4 h-4"
                       />
-                      <p className="text-sm text-gray-600 truncate">
+                      <p className="text-sm text-gray-600 whitespace-normal overflow-hidden md:truncate">
                         {item.countryname}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+
+                    {/* Intake with Tooltip */}
+                    <div className="relative group flex items-center gap-2">
                       <Image
                         src="/shop.svg"
-                        alt="year"
+                        alt="intake"
                         width={16}
                         height={16}
                         className="w-4 h-4"
                       />
-                      <p
-                        className="text-sm text-gray-600 truncate"
-                        title={item.intake}
-                      >
+                      <p className="text-sm text-gray-600 truncate">
                         {item.intake}
                       </p>
+                      <div className="hidden group-hover:block absolute top-full left-0 mt-1 z-10 bg-gray-600 text-white text-xs p-2 rounded shadow max-w-xs">
+                        {item.intake}
+                      </div>
                     </div>
+
+                    {/* Duration */}
                     <div className="flex items-center gap-2">
                       <Image
                         src="/clock.svg"
@@ -432,6 +436,8 @@ const displayedCourses = showFavorites
                         {item.duration}
                       </p>
                     </div>
+
+                    {/* Fees */}
                     <div className="flex items-center gap-2">
                       <Image
                         src="/money.svg"

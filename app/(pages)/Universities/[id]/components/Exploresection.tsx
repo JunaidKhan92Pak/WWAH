@@ -135,7 +135,7 @@ const Exploresection: React.FC<ExploresectionProps> = ({
                     <div className="p-4 sm:py-6 md:pt-8 md:px-6">
                     <h6>{item.university_name}</h6>
                     {/* Additional Info */}
-                    <div className="flex w-full justify-between  text-white text-sm sm:text-base flex-wrap">
+                    <div className="flex w-full justify-between text-white text-xs flex-wrap">
                       <p>{item.country_name}</p>
                       <p>Type: Public</p>
                       <p>Accceptance Rate: {item.acceptance_rate}</p>

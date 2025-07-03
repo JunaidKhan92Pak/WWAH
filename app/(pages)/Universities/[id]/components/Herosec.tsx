@@ -442,7 +442,7 @@ py-4 md:py-8 2xl:py-6 flex-col justify-center items-center text-center mt-2 sm:m
         {/* Details Section */}
         <div className="relative lg:-mt-10 flex justify-center">
           <div
-            className="lg:grid flex overflow-x-scroll lg:grid-cols-7 gap-2 sm:gap-2 md:gap-4 bg-white  px-4 rounded-2xl shadow-lg mx-auto w-full lg:w-[85%]  lg:overflow-visible whitespace-nowrap lg:whitespace-normal  text-black py-3 md:py-6 md:px-4  "
+            className="lg:grid flex overflow-x-scroll lg:grid-cols-7 gap-4 bg-white  px-4 rounded-2xl shadow-lg mx-auto w-full lg:w-[85%]  lg:overflow-visible whitespace-nowrap lg:whitespace-normal  text-black py-3 md:py-6 md:px-4  "
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",

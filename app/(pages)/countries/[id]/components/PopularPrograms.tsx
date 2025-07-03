@@ -125,7 +125,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
            
             <div
               ref={scrollRef}
-              className="flex overflow-x-auto scrollbar-hide space-x-2 md:space-x-3 py-2 md:mx-0 scroll-smooth"
+              className="flex overflow-x-auto scrollbar-hide space-x-2 md:space-x-3 py-2 pl-8 md:pl-10 md:mx-0 scroll-smooth"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
