@@ -297,6 +297,20 @@ const Page = () => {
                 <p className="text-red-600 text-sm mt-1">{errors.password}</p>
               )}
             </div>
+            <div className="flex justify-between items-center text-gray-600">
+              <div className="flex">
+                <input
+                  type="checkbox"
+                  className="mr-2 w-4 h-4 2xl:w-6 2xl:h-6"
+                />
+                <span className="text-[12px] 2xl:text-[24px]">Remember me</span>
+              </div>
+              <Link href="/forget" className="text-red-400">
+                <span className="text-[12px] 2xl:text-[24px]">
+                  Forget password?
+                </span>
+              </Link>
+            </div>
 
             {/* Submit Button */}
             <button
