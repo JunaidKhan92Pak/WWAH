@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   const skip = (page - 1) * limit;
 
   // --- build match query ---
-  const match: Record<string, any> = {};
+  const match: Record<string, unknown> = {};
 
   if (searchParams.get("search")?.trim()) {
     const term = searchParams.get("search")!;
