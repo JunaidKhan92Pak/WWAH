@@ -21,9 +21,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
+import countriesData from 'world-countries';
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -41,19 +42,6 @@ const formSchema = z.object({
   major: z.string().min(2, "Major must be at least 2 characters"),
   budget: z.string().min(1, "Please enter your budget"),
 });
-
-const countries = [
-  "United Kingdom",
-  "New Zealand",
-  "Australia",
-  "Canada",
-  "Germany",
-  "Malaysia",
-  "Ireland",
-  "USA",
-  "China",
-  "Italy",
-];
 
 const destinations = [
   "United Kingdom",
@@ -74,6 +62,16 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Dynamically generated countries list
+  const countries = useMemo(
+    () =>
+      countriesData
+        .map((country) => country.name.common)
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b)),
+    []
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,8 +96,6 @@ export default function Home() {
     setResponseMessage("");
     setIsSuccess(false);
 
-    console.log(values, "these will be sent");
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}scheduleSession`,
@@ -114,29 +110,24 @@ export default function Home() {
       );
 
       const data = await response.json();
-      console.log("API Response:", data);
 
       if (response.ok) {
-        // Handle successful response
         if (data.success) {
           setIsSuccess(true);
           setResponseMessage(data.message || "Email sent successfully!");
           toast.success(data.message || "Email sent successfully!");
-          form.reset(); // Reset form after successful submission
+          form.reset();
         } else {
-          // API returned 200 but success is false
           setIsSuccess(false);
           setResponseMessage(data.message || "Something went wrong. Please try again.");
           toast.error(data.message || "Something went wrong. Please try again.");
         }
       } else {
-        // Handle HTTP error responses (4xx, 5xx)
         setIsSuccess(false);
         setResponseMessage(data.message || data.error || "Failed to send message.");
         toast.error(data.message || data.error || "Failed to send message.");
       }
     } catch (error) {
-      // Handle network errors or other exceptions
       console.error("Error submitting form:", error);
       setIsSuccess(false);
       setResponseMessage("An error occurred. Please check your connection and try again.");
@@ -155,7 +146,6 @@ export default function Home() {
         <div className="bg-white p-8 rounded-lg shadow-lg">
           <h6 className="text-center mb-8">Enter Details:</h6>
 
-          {/* Display response message */}
           {responseMessage && (
             <div className={`mb-6 p-4 rounded-lg ${isSuccess
                 ? 'bg-green-100 border border-green-400 text-green-700'
@@ -240,7 +230,6 @@ export default function Home() {
                         <Input
                           className="placeholder:text-gray-400 placeholder:text-sm w-full py-1"
                           type="date"
-                          placeholder="Select date"
                           {...field}
                         />
                       </FormControl>
@@ -258,7 +247,6 @@ export default function Home() {
                         <Input
                           className="placeholder:text-gray-400 placeholder:text-sm w-full"
                           type="time"
-                          placeholder="Select time"
                           {...field}
                         />
                       </FormControl>
@@ -276,7 +264,6 @@ export default function Home() {
                         <Input
                           className="placeholder:text-gray-400 placeholder:text-sm w-full"
                           type="time"
-                          placeholder="Select time"
                           {...field}
                         />
                       </FormControl>
@@ -324,26 +311,14 @@ export default function Home() {
                           className="flex flex-row justify-evenly items-center space-y-1"
                         >
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="Google Meet"
-                              id="google-meet"
-                            />
-                            <label
-                              htmlFor="google-meet"
-                              className="text-gray-600"
-                            >
+                            <RadioGroupItem value="Google Meet" id="google-meet" />
+                            <label htmlFor="google-meet" className="text-gray-600">
                               Google Meet
                             </label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="WhatsApp Call"
-                              id="whatsapp-call"
-                            />
-                            <label
-                              htmlFor="whatsapp-call"
-                              className="text-gray-600"
-                            >
+                            <RadioGroupItem value="WhatsApp Call" id="whatsapp-call" />
+                            <label htmlFor="whatsapp-call" className="text-gray-600">
                               WhatsApp Call
                             </label>
                           </div>

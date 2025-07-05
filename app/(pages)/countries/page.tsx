@@ -22,8 +22,9 @@ const Page = () => {
 
   const filteredCountries = search
     ? countries.filter((country) =>
-        country.country_name.toLowerCase().includes(search.toLowerCase())
-      )
+      country.country_name.toLowerCase().includes(search.toLowerCase()) ||
+      country.short_name.toLowerCase().includes(search.toLowerCase())
+    )
     : countries;
 
   return (
