@@ -46,7 +46,7 @@ export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({
   return (
     <>
       <section className="hidden md:flex flex-col items-center bg-black text-white py-8 mt-5">
-        <h4>Career Opportunities in {data.course_title}!</h4>
+        <h4>Career Opportunities in {data?.course_title}!</h4>
         {/* Timeline Image */}
         <div className="relative w-full flex justify-center mt-4">
           <Image
@@ -78,7 +78,7 @@ export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({
       </section>
       {/* Mobile View */}
       <div className="md:hidden flex flex-col items-start bg-black text-white py-8 px-6">
-        <h4>Scholarships in {data?.course_title}!</h4>
+        <h4>Career Opportunities in {data?.course_title}!</h4>
         <div className="flex flex-col space-y-3 mt-4">
           <div className="flex items-center space-x-2">
             <Image

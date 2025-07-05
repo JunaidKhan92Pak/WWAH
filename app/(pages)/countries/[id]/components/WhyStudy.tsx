@@ -254,6 +254,7 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
                       alt={item.university_name}
                       width={400}
                       height={250}
+                      unoptimized
                       className="lg:h-[180px] lg:w-[350px] md:w-[320px] md:h-[135px] h-[120px] w-[300px] object-cover rounded-xl shadow-2xl border border-black"
                     />
                     <div className="absolute lg:bottom-1 -bottom-8 md:-bottom-6 left-3 lg:left-5 w-14 h-14">

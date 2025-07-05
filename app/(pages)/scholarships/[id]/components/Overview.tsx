@@ -18,10 +18,10 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration, info_link }) =>
       <section className="mt-2">
         <div className=" mx-auto w-[90%]">
           {/* Course Overview */}
-          <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 md:py-10">
+          <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 md:py-10 ">
             {/* content side */}
             <div className="w-full lg:w-1/2">
-              <div className=" mx-auto leading-snug">
+              <div className=" mx-auto leading-snug p-2">
                 <h2 className="font-bold">Scholarship Overview!</h2>
                 <p className="text-gray-700 mb-2">{overview}</p>
                 <p className="font-bold  mb-2">Duration of the Scholarship:</p>
@@ -32,9 +32,19 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration, info_link }) =>
                 <p>
                   <strong>Research:</strong> 6 months or 1 year
                 </p>
-                <p>
-                  <strong>Info Link:</strong> {info_link}
+                <p className="">
+                  <strong>Info Link:</strong>{" "}
+                  <a
+
+                    href={info_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline hover:text-blue-800 transition"
+                  >
+                    {info_link}
+                  </a>
                 </p>
+
               </div>
             </div>
             <div className="w-full lg:w-1/2  md:block hidden">
@@ -47,8 +57,6 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration, info_link }) =>
                 className="w-full h-full object-cover rounded-3xl"
               />
             </div>
-
-            <div></div>
           </div>
         </div>
       </section>

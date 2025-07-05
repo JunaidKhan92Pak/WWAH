@@ -5,15 +5,18 @@
 // export default nextConfig;
 //  @type {import('next').NextConfig}
 import { NextConfig } from "next";
-const nextConfig: NextConfig = {
+// next.config.js
+const nextConfig = {
   experimental: {
-    scrollRestoration: false, // Disable scroll restoration
+    scrollRestoration: false,
   },
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'wwah-bucket.s3.us-east-1.amazonaws.com',
+        protocol: "https",
+        hostname: "wwah-bucket.s3.us-east-1.amazonaws.com",
+        port: "",          // keep empty unless you need a specific port
+        pathname: "/**",   // <— this is the key line
       },
     ],
     minimumCacheTTL: 60,
@@ -22,18 +25,17 @@ const nextConfig: NextConfig = {
       "encrypted-tbn1.gstatic.com",
       "ichef.bbci.co.uk",
       "flagcdn.com",
-      'wwah-bucket.s3.us-east-1.amazonaws.com'
+      "wwah-bucket.s3.us-east-1.amazonaws.com",
     ],
-
-    // Allow images from Cloudinary
   },
   async rewrites() {
     return [
       {
-        source: "/api/:path*", // Proxy all requests starting with /api/
-        destination: "https://your-backend.vercel.app/api/:path*", // Your backend URL
+        source: "/api/:path*",
+        destination: "https://your-backend.vercel.app/api/:path*",
       },
     ];
   },
 };
+
 module.exports = nextConfig;
