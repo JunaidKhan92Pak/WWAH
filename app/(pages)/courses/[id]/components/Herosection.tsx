@@ -47,7 +47,7 @@ const Herosection = ({
 }: {
   data: CourseData;
   uniData: { banner: string; logo: string };
-  countryData: { _id: string; name: string , country_id: string };
+  countryData: { _id: string; name: string, country_id: string };
 }) => {
   const arr1 = [
     {
@@ -173,12 +173,12 @@ const Herosection = ({
         <div className="w-[90%] md:w-[95%] mx-auto mt-4">
           <div className="flex sm:hidden  justify-evenly gap-2">
             <Link target="blank" href="/dashboard">
-              <Button className="text-[13px]  bg-gray-600 bg-opacity-20 backdrop-blur-md shadow-md text-black w-[142px]">
+              <Button className="text-[13px]  bg-red-700  shadow-md text-white w-[142px]">
                 Apply Now
               </Button>
             </Link>
             <Link target="blank" href="/dashboard">
-              <Button className="bg-gray-600 text-[13px] bg-opacity-20 backdrop-blur-md shadow-md text-black w-[142px]">
+              <Button className="bg-red-700 text-[13px]  shadow-md text-white w-[142px]">
                 Book free Counselling{" "}
               </Button>
             </Link>

@@ -462,6 +462,7 @@ function Page() {
                             width={24}
                             height={24}
                             alt={c.name}
+                            unoptimized
                           />
                           <label htmlFor={c.value}>{c.name}</label>
                         </div>
@@ -605,6 +606,7 @@ function Page() {
                           alt={uni.name}
                           layout="fill"
                           className="object-cover rounded-xl"
+                          unoptimized
                         />
                         <div className="absolute bottom-1 left-5">
                           <Image
@@ -613,6 +615,7 @@ function Page() {
                             width={56}
                             height={56}
                             className="rounded-full bg-white border border-black"
+                            unoptimized
                           />
                         </div>
                       </Link>

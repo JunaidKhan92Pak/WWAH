@@ -178,9 +178,8 @@ const CourseArchive = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
           >
             <Image
               src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -225,6 +224,7 @@ const CourseArchive = () => {
                       alt="coursesImg"
                       sizes="(max-width: 768px) 50vw, (max-width: 1280px) 70vw, (max-width: 2560px) 50vw, 40vw"
                       className="object-cover  rounded-2xl"
+
                     />
                   </Link>
                   <div className="absolute top-4 left-0">
@@ -278,11 +278,10 @@ const CourseArchive = () => {
                             </Label>
                             <Input
                               id={`link-${item._id}`}
-                              value={`${
-                                typeof window !== "undefined"
-                                  ? window.location.origin
-                                  : ""
-                              }/courses/${item._id}`}
+                              value={`${typeof window !== "undefined"
+                                ? window.location.origin
+                                : ""
+                                }/courses/${item._id}`}
                               readOnly
                             />
                           </div>
@@ -354,9 +353,8 @@ const CourseArchive = () => {
 
                     <button
                       onClick={() => toggleFavorite(item._id)}
-                      className={`relative ${
-                        heartAnimation === item._id ? "animate-pop" : ""
-                      }`}
+                      className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
+                        }`}
                     >
                       {favorites[item._id] ? (
                         <Image
@@ -484,9 +482,8 @@ const CourseArchive = () => {
           {/* First page button */}
           <button
             onClick={() => setPage(1)}
-            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
-              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             aria-label="First page"
             disabled={currentPage <= 1}
           >
@@ -512,9 +509,8 @@ const CourseArchive = () => {
           {/* Previous button */}
           <button
             onClick={handlePrevPage}
-            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
-              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             aria-label="Previous page"
             disabled={currentPage <= 1}
           >
@@ -574,11 +570,10 @@ const CourseArchive = () => {
                   <button
                     key={i}
                     onClick={() => setPage(i)}
-                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${
-                      currentPage === i
-                        ? "bg-red-700 text-white shadow-md"
-                        : "bg-gray-100 text-gray-700 hover:bg-red-100"
-                    }`}
+                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${currentPage === i
+                      ? "bg-red-700 text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-red-100"
+                      }`}
                     aria-current={currentPage === i ? "page" : undefined}
                   >
                     {i}

@@ -47,6 +47,7 @@ type ScholarshipData = {
   Document: string[];
   requiredDocuments: [];
   info_link: string;
+  officialLink: string;
   table?: {
     course: string[];
     create_application: string[];
@@ -133,6 +134,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
         type={data?.type || "Unknown"}
         deadline={data?.deadline || "Unknown"}
         NumberOfScholarships={data?.numberOfScholarships}
+        officialLink={data?.officialLink || "#"}
       />
       <div className="bg-white my-4 lg:mt-40 2xl:mt-[12%] lg:my-6">
         <div className=" mx-auto sm:w-[88%] w-[90%]">
@@ -141,11 +143,10 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 rounded-t-xl  md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
-                  activeTabPro === tab.label
-                    ? "bg-[#C7161E] text-white"
-                    : "text-gray-800"
-                }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 rounded-t-xl  md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
+                  ? "bg-[#C7161E] text-white"
+                  : "text-gray-800"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -195,9 +196,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           applicationProcess={
             data?.applicationProcess
               ? data.applicationProcess.map((step, idx) => ({
-                  ...step,
-                  _id: idx
-                }))
+                ...step,
+                _id: idx
+              }))
               : []
           }
         />

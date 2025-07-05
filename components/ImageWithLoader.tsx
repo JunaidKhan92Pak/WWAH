@@ -20,6 +20,7 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({ src, alt, sizes, clas
                 alt={alt}
                 fill
                 sizes={sizes}
+                unoptimized
                 className={`${className} transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
                 onLoadingComplete={() => setLoaded(true)}
             />
