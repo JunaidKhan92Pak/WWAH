@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.max(1, parseInt(searchParams.get("limit") || "12"));
     const search = searchParams.get("search")?.trim() || "";
-    const sortOrder = searchParams.get("sortOrder")?.toLowerCase() === "desc" ? -1 : 1;
+    // const sortOrder = searchParams.get("sortOrder")?.toLowerCase() === "desc" ? -1 : 1;
     const skip = (page - 1) * limit;
     const studyLevel = searchParams.get("studyLevel") || "";
     const intakeYear = searchParams.get("intakeYear") || "";
