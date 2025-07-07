@@ -5,81 +5,81 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { useScholarships } from "@/store/useScholarships";
 
-  const countries = [
-    {
-      name: "United States of America",
-      value: "United States of America",
-      img: "/countryarchive/usa_logo.png",
-    },
-    { name: "China", value: "china", img: "/countryarchive/china_logo.png" },
-    { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
-    { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
-    { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
-    {
-      name: "Ireland",
-      value: "ireland",
-      img: "/countryarchive/ireland_logo.png",
-    },
-    {
-      name: "New Zealand",
-      value: "New Zealand",
-      img: "/countryarchive/nz_logo.png",
-    },
-    {
-      name: "Denmark",
-      value: "denmark",
-      img: "/countryarchive/denmark_logo.png",
-    },
-    { name: "France", value: "france", img: "/countryarchive/france_logo.png" },
-    {
-      name: "Australia",
-      value: "australia",
-      img: "/countryarchive/australia_logo.png",
-    },
-    { name: "Austria", value: "austria", img: "/austria.svg" },
-    {
-      name: "Germany",
-      value: "germany",
-      img: "/countryarchive/ge_logo.png",
-    },
-    { name: "Portugal", value: "portugal", img: "/portugal.svg" },
-    { name: "Poland", value: "poland", img: "/poland.svg" },
-    { name: "Norway", value: "norway", img: "/norway.svg" },
-    { name: "Europe", value: "europe", img: "/europe.svg" },
-    { name: "Hungary", value: "hungary", img: "/hungary.svg" },
-    { name: "South Korea", value: "South korea", img: "/south-korea.svg" },
-    { name: "Japan", value: "japan", img: "/japan.svg" },
-    { name: "Romania", value: "romania", img: "/romania.svg" },
-    { name: "Turkiye", value: "Turkiye", img: "/turkiye.svg" },
-  ];
+const countries = [
+  // {
+  //   name: "United States of America",
+  //   value: "United States of America",
+  //   img: "/countryarchive/usa_logo.png",
+  // },
+  // { name: "China", value: "china", img: "/countryarchive/china_logo.png" },
+  // { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
+  // { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
+  { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
+  // {
+  //   name: "Ireland",
+  //   value: "ireland",
+  //   img: "/countryarchive/ireland_logo.png",
+  // },
+  // {
+  //   name: "New Zealand",
+  //   value: "New Zealand",
+  //   img: "/countryarchive/nz_logo.png",
+  // },
+  // {
+  //   name: "Denmark",
+  //   value: "denmark",
+  //   img: "/countryarchive/denmark_logo.png",
+  // },
+  // { name: "France", value: "france", img: "/countryarchive/france_logo.png" },
+  // {
+  //   name: "Australia",
+  //   value: "australia",
+  //   img: "/countryarchive/australia_logo.png",
+  // },
+  // { name: "Austria", value: "austria", img: "/austria.svg" },
+  // {
+  //   name: "Germany",
+  //   value: "germany",
+  //   img: "/countryarchive/ge_logo.png",
+  // },
+  // { name: "Portugal", value: "portugal", img: "/portugal.svg" },
+  // { name: "Poland", value: "poland", img: "/poland.svg" },
+  // { name: "Norway", value: "norway", img: "/norway.svg" },
+  // { name: "Europe", value: "europe", img: "/europe.svg" },
+  // { name: "Hungary", value: "hungary", img: "/hungary.svg" },
+  // { name: "South Korea", value: "South korea", img: "/south-korea.svg" },
+  { name: "Japan", value: "japan", img: "/japan.svg" },
+  // { name: "Romania", value: "romania", img: "/romania.svg" },
+  { name: "Turkiye", value: "Turkiye", img: "/turkiye.svg" },
+];
 const FilterSection = ({ isMobile = false }) => {
-      const {
-        minimumRequirements,
-        setMinimumRequirements,
-        scholarshipProviders: selectedProviders, // Add this to your store
-        setScholarshipProviders, // Add this to your store
-      
-        fetchScholarships,
-        setSearch,
-        setCountry,
-        programs,
-        setPrograms,
-        scholarshipType,
-        setScholarshipType,
-        deadlineFilters,
-        setDeadlineFilters,
-       
-      } = useScholarships();
+  const {
+    minimumRequirements,
+    setMinimumRequirements,
+    scholarshipProviders: selectedProviders, // Add this to your store
+    setScholarshipProviders, // Add this to your store
+
+    fetchScholarships,
+    setSearch,
+    setCountry,
+    programs,
+    setPrograms,
+    scholarshipType,
+    setScholarshipType,
+    deadlineFilters,
+    setDeadlineFilters,
+
+  } = useScholarships();
   const [localSearch, setLocalSearch] = useState("");
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
 
-    const debouncedSetSearch = useCallback(
-      debounce((value: string) => {
-        setSearch(value);
-      }, 500),
-      [setSearch]
-    );
+  const debouncedSetSearch = useCallback(
+    debounce((value: string) => {
+      setSearch(value);
+    }, 500),
+    [setSearch]
+  );
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalSearch(value);
@@ -126,34 +126,34 @@ const FilterSection = ({ isMobile = false }) => {
         : [...scholarshipType, value]
     );
   };
-    const handleDeadlineChange = (e: ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setDeadlineFilters(
-        deadlineFilters.includes(value)
-          ? deadlineFilters.filter((item) => item !== value)
-          : [...deadlineFilters, value]
-      );
-    };
-     const handleRequirementChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-      ) => {
-        const { value, checked } = event.target;
-        setMinimumRequirements(
-          checked
-            ? [...minimumRequirements, value]
-            : minimumRequirements.filter((r) => r !== value)
-        );
-      };
-      const handleProviderChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-      ) => {
-        const { value, checked } = event.target;
-        setScholarshipProviders(
-          checked
-            ? [...selectedProviders, value]
-            : selectedProviders.filter((p) => p !== value)
-        );
-      };
+  const handleDeadlineChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDeadlineFilters(
+      deadlineFilters.includes(value)
+        ? deadlineFilters.filter((item) => item !== value)
+        : [...deadlineFilters, value]
+    );
+  };
+  const handleRequirementChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = event.target;
+    setMinimumRequirements(
+      checked
+        ? [...minimumRequirements, value]
+        : minimumRequirements.filter((r) => r !== value)
+    );
+  };
+  const handleProviderChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = event.target;
+    setScholarshipProviders(
+      checked
+        ? [...selectedProviders, value]
+        : selectedProviders.filter((p) => p !== value)
+    );
+  };
 
   useEffect(() => {
     fetchScholarships();
@@ -189,9 +189,8 @@ const FilterSection = ({ isMobile = false }) => {
             </>
           )}
           <ScrollArea
-            className={`p-2 ${
-              isMobile ? "h-[400px]" : "px-4 pb-4 h-[500px] md:h-[800px]"
-            } overflow-y-auto`}
+            className={`p-2 ${isMobile ? "h-[400px]" : "px-4 pb-4 h-[500px] md:h-[800px]"
+              } overflow-y-auto`}
           >
             {/* Country Filter */}
             <div
@@ -202,9 +201,8 @@ const FilterSection = ({ isMobile = false }) => {
               }
             >
               <h6
-                className={`${
-                  isMobile ? "text-lg" : "text-base md:text-lg font-bold"
-                }`}
+                className={`${isMobile ? "text-lg" : "text-base md:text-lg font-bold"
+                  }`}
               >
                 Country:
               </h6>
@@ -255,16 +253,14 @@ const FilterSection = ({ isMobile = false }) => {
               }
             >
               <p
-                className={`${
-                  isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                }`}
+                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+                  }`}
               >
                 {isMobile ? "Programs:" : "Study Level:"}
               </p>
               <ul
-                className={`py-2 space-y-3 mb-2 ${
-                  !isMobile ? "py-4 space-y-3 md:space-y-4" : ""
-                }`}
+                className={`py-2 space-y-3 mb-2 ${!isMobile ? "py-4 space-y-3 md:space-y-4" : ""
+                  }`}
               >
                 {["Bachelors", "Master", "PhD"].map((program) => (
                   <li
@@ -296,16 +292,14 @@ const FilterSection = ({ isMobile = false }) => {
               }
             >
               <p
-                className={`${
-                  isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                }`}
+                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+                  }`}
               >
                 Scholarship Type:
               </p>
               <ul
-                className={`py-3 space-y-3 mb-2 ${
-                  !isMobile ? "py-4 space-y-3 md:space-y-4" : ""
-                }`}
+                className={`py-3 space-y-3 mb-2 ${!isMobile ? "py-4 space-y-3 md:space-y-4" : ""
+                  }`}
               >
                 {["Fully Funded", "Partial Funded"].map((type) => (
                   <li key={type} className="flex items-center justify-between">
@@ -334,9 +328,8 @@ const FilterSection = ({ isMobile = false }) => {
               }
             >
               <p
-                className={`${
-                  isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                }`}
+                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+                  }`}
               >
                 Application Deadline:
               </p>
@@ -344,26 +337,25 @@ const FilterSection = ({ isMobile = false }) => {
                 className={isMobile ? "" : "h-[300px] overflow-y-auto p-2"}
               >
                 <ul
-                  className={`py-2 space-y-3 ${
-                    !isMobile ? "py-4 space-y-3 md:space-y-4 pr-2" : ""
-                  }`}
+                  className={`py-2 space-y-3 ${!isMobile ? "py-4 space-y-3 md:space-y-4 pr-2" : ""
+                    }`}
                 >
                   {(isMobile
                     ? ["Jan", "Feb", "March"]
                     : [
-                        "January",
-                        "February",
-                        "March",
-                        "April",
-                        "May",
-                        "June",
-                        "July",
-                        "August",
-                        "September",
-                        "October",
-                        "November",
-                        "December",
-                      ]
+                      "January",
+                      "February",
+                      "March",
+                      "April",
+                      "May",
+                      "June",
+                      "July",
+                      "August",
+                      "September",
+                      "October",
+                      "November",
+                      "December",
+                    ]
                   ).map((deadline) => (
                     <li
                       key={deadline}
@@ -395,9 +387,8 @@ const FilterSection = ({ isMobile = false }) => {
               }
             >
               <p
-                className={`${
-                  isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                }`}
+                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+                  }`}
               >
                 Minimum Requirement:
               </p>
@@ -430,17 +421,15 @@ const FilterSection = ({ isMobile = false }) => {
               }
             >
               <p
-                className={`${
-                  isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                }`}
+                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
+                  }`}
               >
                 Scholarship Provider:
               </p>
               <ScrollArea className={isMobile ? "" : "p-2"}>
                 <ul
-                  className={`py-4 space-y-3 md:space-y-4 ${
-                    !isMobile ? "pr-2" : ""
-                  }`}
+                  className={`py-4 space-y-3 md:space-y-4 ${!isMobile ? "pr-2" : ""
+                    }`}
                 >
                   {scholarshipProviders.map((provider) => (
                     <li

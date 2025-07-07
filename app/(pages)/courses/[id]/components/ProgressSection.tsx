@@ -176,16 +176,21 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
       icon: "/Tea-Cup.svg",
     },
   ];
+  const overallChance = Math.round(
+    (academicFactors.reduce((sum, factor) => sum + factor.value, 0) +
+      financialFactors.reduce((sum, factor) => sum + factor.value, 0)) /
+    (academicFactors.length + financialFactors.length)
+  );
 
   // Calculate overall scores
   const academicOverall = Math.round(
     academicFactors.reduce((sum, factor) => sum + factor.value, 0) /
-      academicFactors.length
+    academicFactors.length
   );
 
   const financialOverall = Math.round(
     financialFactors.reduce((sum, factor) => sum + factor.value, 0) /
-      financialFactors.length
+    financialFactors.length
   );
 
   // Helper function for progress bar color
@@ -226,7 +231,13 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
       <p className="text-gray-600 mb-2">
         Your application success chances are:
       </p>
+
       <div className="relative w-full lg:w-[80%] ">
+        <div className="flex items-center justify-center mb-4">
+          <div className="w-full h-12 flex items-center justify-center  text-black font-bold text-xl">
+            <p> Overall Chance </p> : {successGenerated ? overallChance : "0"}%
+          </div>
+        </div>
         {/* Success Metrics Content */}
         <div className="flex flex-col md:flex-row justify-center gap-5 w-full">
           {/* Academic Results Section */}
@@ -319,7 +330,6 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
             </p>
           </div>
         </div>
-
         {/* Blur Overlay with various states */}
         {!successGenerated && (
           <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center rounded-3xl transition-all duration-300">

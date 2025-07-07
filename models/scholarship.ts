@@ -161,6 +161,7 @@ const scholarshipSchema = new Schema({
         scholarship_type: [String],
         teaching_language: [String],
         university: [String],
+        countries: [String] // Added for eligible countries
     }
 }, {
     timestamps: true,
