@@ -11,6 +11,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import Link from "next/link";
+import { IoCallOutline, IoMailUnreadOutline } from "react-icons/io5";
 export default function ContactUs() {
   const countries = [
     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
@@ -121,6 +122,14 @@ export default function ContactUs() {
       setIsSubmitting(false);
     }
   };
+
+  const openGmail = () => {
+  window.open(
+    "https://mail.google.com/mail/?view=cm&to=info@wwah.ai",
+    "_blank",
+    "noopener,noreferrer"
+  );
+};
   return (
     <section className="sm:w-[90%] mx-auto">
       <div className="flex flex-col lg:flex-row gap-6 py-5 md:py-10 justify-center items-stretch p-2">
@@ -284,7 +293,18 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Email Address</p>
-                <p className="text-gray-600">info@wwah.ai</p>
+                 <div
+                                className="flex items-center space-x-3 cursor-pointer"
+                                onClick={() =>
+                                  (window.location.href =
+                                    "mailto:info@worldwideadmissionshub.com")
+                                }
+                              >
+                                <IoMailUnreadOutline className="text-xl min-w-[20px]" />
+                <p className="text-gray-600 font-normal hover:underline cursor-pointer"
+                  onClick={openGmail}
+>info@wwah.ai</p>
+</div>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
@@ -299,7 +319,14 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Phone Number</p>
+                   <div
+                className="flex items-center space-x-3 cursor-pointer"
+                onClick={() => (window.location.href = "tel:+923120762039")}
+              >
+                                <IoCallOutline className="text-xl min-w-[20px]" />
+                
                 <p className="text-gray-600">+971582514675</p>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">

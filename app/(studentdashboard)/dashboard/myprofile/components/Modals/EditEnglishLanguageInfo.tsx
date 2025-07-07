@@ -34,22 +34,21 @@ const formSchema = z.object({
     ["native speaker", "test", "willingToTest", "undefined", ""],
     { message: "Select a valid proficiency level" }
   ),
-  testType: z
-    .preprocess((val) => typeof val === "string" ? val.toUpperCase() : val,
-      z.enum([
-        "IELTS",
-        "PTE",
-        "TOEFL",
-        "DUOLINGO",
-        "Language Cert",
-        "OTHERS",
-        "",
-        "UNDEFINED",
-      ])
-    ),
+  testType: z.preprocess(
+    (val) => (typeof val === "string" ? val.toUpperCase() : val),
+    z.enum([
+      "IELTS",
+      "PTE",
+      "TOEFL",
+      "DUOLINGO",
+      "Language Cert",
+      "OTHERS",
+      "",
+      "UNDEFINED",
+    ])
+  ),
   score: z.string().optional().or(z.literal("")),
 });
-
 
 interface LanguageProficiency {
   test: string;
@@ -71,8 +70,11 @@ const EditEnglishLanguageInfo = ({
     resolver: zodResolver(formSchema),
     defaultValues: formSchema.parse({
       proficiencyLevel: "",
-      testType: `${data?.test}` || "",
-      score: `${data?.score}` || "",
+      testType:
+        data?.test && data?.test.toUpperCase() !== "NULL"
+          ? data.test.toUpperCase()
+          : "UNDEFINED",
+      score: data?.score ?? "",
     }),
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -83,7 +85,7 @@ const EditEnglishLanguageInfo = ({
           test: values.testType,
           score: values.score || "", // Ensure score remains a string
         },
-      };      
+      };
       const response = await updateDetailedInfo(transformedValues);
       if (response !== undefined) {
         setSuccessOpen(true);
@@ -99,7 +101,6 @@ const EditEnglishLanguageInfo = ({
     }
   }
 
-
   return (
     <>
       <div className="flex flex-col items-start space-y-2">
@@ -112,8 +113,7 @@ const EditEnglishLanguageInfo = ({
             height={18}
           />
           <p className="text-sm">
-            last updated on{" "}
-            {new Date(updatedAt).toLocaleDateString("en-GB")}
+            last updated on {new Date(updatedAt).toLocaleDateString("en-GB")}
           </p>
           <Image
             src="/DashboardPage/pen.svg"

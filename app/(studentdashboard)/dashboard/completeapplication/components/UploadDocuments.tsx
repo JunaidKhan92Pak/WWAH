@@ -24,6 +24,7 @@ interface Document {
 }
 export default function Home() {
   const [showUploadModal, setShowUploadModal] = useState(false);
+const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [documents, setDocuments] = useState<Document[]>([
     { id: "1", name: "Valid Passport", files: [], date: "", isChecked: false },
@@ -348,7 +349,9 @@ export default function Home() {
         }))
       );
 
-      alert("Document deleted successfully!");
+      // alert("Document deleted successfully!");
+      setShowDeleteModal(true);
+
     } catch (error) {
       console.error("Error deleting document:", error);
       if (error instanceof Error) {
@@ -438,11 +441,27 @@ export default function Home() {
                 height={150}
               />
               <DialogHeader>
-                <DialogTitle className="text-lg font-semibold text-gray-900">Upload Document Successful</DialogTitle>
+                <DialogTitle className="text-lg font-semibold text-gray-900">Upload Document Successfully</DialogTitle>
 
               </DialogHeader>
             </DialogContent>
           </Dialog>
+          <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+  <DialogContent className="flex flex-col justify-center items-center  max-w-72 md:max-w-96 !rounded-3xl">
+    <Image
+      src="/DashboardPage/success.svg"
+      alt="Success"
+      width={150}
+      height={150}
+    />
+    <DialogHeader>
+      <DialogTitle className="text-lg font-semibold text-gray-900">
+        Document Deleted Successfully!
+      </DialogTitle>
+    </DialogHeader>
+  </DialogContent>
+</Dialog>
+
 
           <div className="text-right my-4">
             <Button
