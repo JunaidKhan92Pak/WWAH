@@ -333,6 +333,7 @@ const ImprovedExcelUploader = () => {
           scholarship_type: columnData["Scholarship Type"] || [],
           teaching_language: columnData["Teaching Language"] || [],
           university: columnData["Host University"] || ["University"] || [],
+          countries: columnData["Eligible Countries"] || ["Country"] || [],
         } // Full table for each (memory intensive!)
       };
       return enhancedScholarship;

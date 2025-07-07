@@ -269,7 +269,7 @@ const transformScholarshipData = (scholarship: unknown): TransformedScholarship 
                 faculty_department: Array.isArray(tableData.faculty_department) ? tableData.faculty_department : [],
                 scholarship_type: Array.isArray(tableData.scholarship_type) ? tableData.scholarship_type : [],
                 teaching_language: Array.isArray(tableData.teaching_language) ? tableData.teaching_language : [],
-                university: Array.isArray(tableData.university) ? tableData.university : [],
+                university: Array.isArray(tableData.university) ? tableData.university : []
             };
 
             // If table has courses and programs array is empty, use table courses
