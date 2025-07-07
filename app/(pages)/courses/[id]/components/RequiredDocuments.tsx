@@ -203,7 +203,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
                 {embassyDocs.map((doc) => (
                   <li
                     key={doc.name}
-                    className="flex items-center space-x-2 cursor-pointer"
+                    className="flex items-start space-x-2 cursor-pointer"
                   >
                     <span className="text-red-500 text-4xl">•</span>
                     <p
