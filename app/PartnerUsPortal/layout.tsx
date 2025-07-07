@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: "World Wide Admission",
     images: [
       {
-        url: "https://www.wwah.ai/WWAHlogo.svg",
+        url: "https://www.wwah.ai/wwahpnglogo.png",
         width: 800,
         height: 600,
         alt: "WWAH Logo",
