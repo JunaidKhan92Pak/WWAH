@@ -13,7 +13,7 @@ export function StatusProgressBar({ progress }: StatusProgressBarProps) {
       <p className=" font-semibold mb-3">Status</p>
       <div className="relative">
         {/* Progress bar background */}
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden flex">
+        <div className="h-4 bg-gray-200 rounded-full overflow-hidden flex">
           {/* First segment (Red) */}
           <div
             className="h-full bg-red-500 transition-all duration-500"
@@ -47,7 +47,7 @@ export function StatusProgressBar({ progress }: StatusProgressBarProps) {
          <div className="absolute top-0 left-0 w-full flex justify-between -mt-1">
           <div className="relative">
             <div
-              className={`w-3 h-3 rounded-full border-2 border-white ${
+              className={`w-5 h-5 rounded-full border-2 border-white ${
                 clampedProgress >= 33 ? 'bg-red-500' : 'bg-gray-300'
               }`}
             />

@@ -15,7 +15,7 @@ const CompletedApplication = () => {
         {["/course1.svg", "/course1.svg"].map((courseImg, index) => (
           <div
             key={index}
-            className="flex flex-col xl:flex-row bg-[#FCE7D280] p-4 sm:p-5 rounded-xl gap-4 border border-orange-200"
+            className="flex flex-col xl:flex-row bg-[#FCE7D280] p-4 sm:p-2 rounded-xl gap-4 border border-orange-200"
           >
             {/* Course Image */}
             <Image
@@ -23,7 +23,7 @@ const CompletedApplication = () => {
               alt="courseImg"
               width={600}
               height={500}
-              className="w-full h-auto lg:h-48 lg:w-[290px] xl:w-[252px] object-cover rounded-2xl"
+              className="w-full h-auto lg:h-48 lg:w-[290px] xl:w-[250px] object-cover rounded-2xl"
             />
 
             {/* Course Details */}
@@ -32,9 +32,9 @@ const CompletedApplication = () => {
                 Bachelor of Engineering (Honors) - BE(Hons)
               </p>
 
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-nowrap">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-3 ">
                 {applicationDetails.map((item, i) => (
-                  <div key={i} className="flex items-center gap-2">
+                  <div key={i} className="flex items-center gap-1">
                     <Image
                       src={item.src}
                       width={18}
