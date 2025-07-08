@@ -241,11 +241,12 @@ const Footer = () => {
                         theft, or unauthorized access.
                       </p>
                       <p className="font-semibold">3. Eligibility</p>
-                      <p>
-                        To use our services, you must:  Be at least 16 years
-                        old or have parental/guardian consent.  Use the
-                        services for educational purposes only.
-                      </p>
+                     <p>To use our services, you must:</p>
+<ul className="list-disc pl-5">
+  <li>Be at least 16 years old or have parental/guardian consent.</li>
+  <li>Use the services for educational purposes only.</li>
+</ul>
+
                       <p>
                         You are not allowed to commit any fraudulent, unlawful,
                         or harmful activity on or with this website. If you
@@ -268,22 +269,32 @@ const Footer = () => {
                         purposes:
                       </p>
                       <p>
-                         Match you with suitable universities and their
-                        programs, according to your preferences.  Recommend
-                        scholarships and funding opportunities.  Generate
-                        cost-of-living estimates and a complete list of
-                        documents required (for universities and embassies of
-                        respective countries).
+                        <ul className="list-disc pl-5">
+  <li>
+    Match you with suitable universities and their programs, according to your preferences.
+  </li>
+  <li>
+    Recommend scholarships and funding opportunities.
+  </li>
+  <li>
+    Generate cost-of-living estimates and a complete list of documents required (for universities and embassies of respective countries).
+  </li>
+</ul>
+
                       </p>
                       <p className="font-semibold">5. Application Assistance</p>
                       <p>
                         We provide step-by-step assistance with university
                         applications, including:
                       </p>
-                      <p>
-                         Document preparation  Statement of purpose guidance 
-                        Application deadline reminders  Submission tracking
-                      </p>
+                     <p>Our services include:</p>
+<ul className="list-disc pl-5">
+  <li>Document preparation</li>
+  <li>Statement of purpose guidance</li>
+  <li>Application deadline reminders</li>
+  <li>Submission tracking</li>
+</ul>
+
                       <p>
                         You can access any and all resources that are uploaded
                         onto the website. You may also book counseling sessions
@@ -300,10 +311,13 @@ const Footer = () => {
                         We provide step-by-step assistance with university
                         applications, including:
                       </p>
-                      <p>
-                         Document preparation  Statement of purpose guidance 
-                        Application deadline reminders  Submission tracking
-                      </p>
+                     <ul className="list-disc pl-5">
+  <li>Document preparation</li>
+  <li>Statement of purpose guidance</li>
+  <li>Application deadline reminders</li>
+  <li>Submission tracking</li>
+</ul>
+
                       <p>
                         You can access any and all resources that are uploaded
                         onto the website. You may also book counseling sessions
@@ -333,8 +347,13 @@ const Footer = () => {
                         guides on:
                       </p>
                       <p>
-                         Types of student visas for various countries  Embassy
-                        appointments  Required documents  Travel regulations
+                       <ul className="list-disc pl-5">
+  <li>Types of student visas for various countries</li>
+  <li>Embassy appointments</li>
+  <li>Required documents</li>
+  <li>Travel regulations</li>
+</ul>
+
                       </p>
                       <p>
                         You are given access to numerous resources that provide
@@ -358,8 +377,12 @@ const Footer = () => {
                         Our cost analysis tools provide probable estimates for:
                       </p>
                       <p>
-                         Tuition fees  Travel expenses  Living expenses,
-                        including its breakdown
+                       <ul className="list-disc pl-5">
+  <li>Tuition fees</li>
+  <li>Travel expenses</li>
+  <li>Living expenses, including its breakdown</li>
+</ul>
+
                       </p>
                       <p>
                         *These are approximate values and subject to change.
@@ -392,9 +415,12 @@ const Footer = () => {
                         if you are found:
                       </p>
                       <p>
-                         Behaving inappropriately with our staff.  Fail to
-                        show up or log in to sessions repeatedly.  Guilty of
-                        harassment of any kind.
+                     <ul className="list-disc pl-5">
+  <li>Behaving inappropriately with our staff.</li>
+  <li>Fail to show up or log in to sessions repeatedly.</li>
+  <li>Guilty of harassment of any kind.</li>
+</ul>
+
                       </p>
                       <p className="font-bold">
                         10. Transportation and Airport Assistance
@@ -405,8 +431,11 @@ const Footer = () => {
                         optional services may include:
                       </p>
                       <p>
-                         Airport pickup arrangements  Guidance for local
-                        transport and temporary accommodation
+                      <ul className="list-disc pl-5">
+  <li>Airport pickup arrangements</li>
+  <li>Guidance for local transport and temporary accommodation</li>
+</ul>
+
                       </p>
                       <p>
                         *These services may be fulfilled by third-party
@@ -418,11 +447,14 @@ const Footer = () => {
                       <p className="font-bold">11. User Conduct</p>
                       <p>You agree not to:</p>
                       <p>
-                         Misrepresent your identity.  Forge academic
-                        qualifications.  Upload harmful, illegal, or
-                        plagiarized content.  Attempt to breach or bypass any
-                        security feature.  Use the platform for commercial,
-                        fraudulent, or unlawful purposes.
+                       <ul className="list-disc pl-5">
+  <li>Misrepresent your identity.</li>
+  <li>Forge academic qualifications.</li>
+  <li>Upload harmful, illegal, or plagiarized content.</li>
+  <li>Attempt to breach or bypass any security feature.</li>
+  <li>Use the platform for commercial, fraudulent, or unlawful purposes.</li>
+</ul>
+
                       </p>
                       <p>
                         Also, you are encouraged to inform or contact us if you
@@ -533,15 +565,17 @@ const Footer = () => {
                       </p>
                       <p>We use your data to:</p>
                       <p>
-                         Provide tailored university, course, and scholarship
-                        matches using AI-based algorithms  Offer personalized
-                        counseling recommendations  Facilitate virtual
-                        counseling sessions and webinars  Send email updates,
-                        alerts, and newsletters  Process applications or form
-                        submissions  Monitor and analyze usage trends for
-                        platform improvement  Send you marketing and
-                        promotional offers  Ensure compliance with legal
-                        obligations
+                      <ul className="list-disc pl-5">
+  <li>Provide tailored university, course, and scholarship matches using AI-based algorithms</li>
+  <li>Offer personalized counseling recommendations</li>
+  <li>Facilitate virtual counseling sessions and webinars</li>
+  <li>Send email updates, alerts, and newsletters</li>
+  <li>Process applications or form submissions</li>
+  <li>Monitor and analyze usage trends for platform improvement</li>
+  <li>Send you marketing and promotional offers</li>
+  <li>Ensure compliance with legal obligations</li>
+</ul>
+
                       </p>
                       <p>
                         We also have the right to share your consented
@@ -568,28 +602,42 @@ const Footer = () => {
                       </p>
                       <p className="font-bold">a. Personal Information</p>
                       <p>
-                         Full name  Date of birth  Email address  Phone
-                        number  Mailing address  Country of origin and
-                        citizenship  Passport information (if and where
-                        applicable)  Educational background (grades,
-                        transcripts, standardized test scores)  Career
-                        interests and preferences  Financial information (e.g.,
-                        scholarship eligibility, bank details, card information,
-                        etc.)  Uploaded documents (e.g., resumes, SOPs,
-                        recommendation letters)
+                       <ul className="list-disc pl-5">
+  <li>Full name</li>
+  <li>Date of birth</li>
+  <li>Email address</li>
+  <li>Phone number</li>
+  <li>Mailing address</li>
+  <li>Country of origin and citizenship</li>
+  <li>Passport information (if and where applicable)</li>
+  <li>Educational background (grades, transcripts, standardized test scores)</li>
+  <li>Career interests and preferences</li>
+  <li>Financial information (e.g., scholarship eligibility, bank details, card information, etc.)</li>
+  <li>Uploaded documents (e.g., resumes, SOPs, recommendation letters)</li>
+</ul>
+
                       </p>
                       <p className="font-bold">
                         b. Technical & Usage Information
                       </p>
                       <p>
-                         IP address  Browser type and version  Operating
-                        system  Referral source  Geographical location 
-                        Length of visit  Website navigation paths  Page views
-                         Frequency and pattern of service use  Cookies and
-                        similar tracking technologies (see Section 7) You may
-                        use our website or app, both will access these
-                        information bits that are necessary for profile
-                        completion and tailored assessment result.
+  <ul className="list-disc pl-5">
+    <li>IP address</li>
+    <li>Browser type and version</li>
+    <li>Operating system</li>
+    <li>Referral source</li>
+    <li>Geographical location</li>
+    <li>Length of visit</li>
+    <li>Website navigation paths</li>
+    <li>Page views</li>
+    <li>Frequency and pattern of service use</li>
+    <li>Cookies and similar tracking technologies (see Section 7)</li>
+  </ul>
+
+  <p className="mt-4">
+    You may use our website or app; both will access this information as it is necessary for profile completion and delivering a tailored assessment result.
+  </p>
+
                       </p>
                       <p className="font-bold">
                         4. Data Sharing and Disclosure
@@ -601,20 +649,26 @@ const Footer = () => {
                         your data under the following circumstances:
                       </p>
                       <p>
-                         With partner universities or institutions for
-                        application processing or eligibility assessment. It
-                        includes giving us consent to move forward with
-                        applications and enrolment with higher studies
-                        institutions on your behalf.  With third-party service
-                        providers (e.g., payment processors, cloud hosting,
-                        analytics tools) under strict data protection
-                        agreements. It may include making travel arrangements,
-                        applying for visa(s), and arranging accommodations or
-                        opening new bank accounts.  With counselors assigned to
-                        guide you, as per your consent.  When legally required
-                        to comply with investigations, subpoenas, or court
-                        orders.  In case of a merger or acquisition where user
-                        data is part of the transferred assets.
+                     <ul className="list-disc pl-5">
+  <li>
+    With partner universities or institutions for application processing or eligibility assessment. 
+    It includes giving us consent to move forward with applications and enrolment with higher studies institutions on your behalf.
+  </li>
+  <li>
+    With third-party service providers (e.g., payment processors, cloud hosting, analytics tools) under strict data protection agreements. 
+    It may include making travel arrangements, applying for visa(s), and arranging accommodations or opening new bank accounts.
+  </li>
+  <li>
+    With counselors assigned to guide you, as per your consent.
+  </li>
+  <li>
+    When legally required to comply with investigations, subpoenas, or court orders.
+  </li>
+  <li>
+    In case of a merger or acquisition where user data is part of the transferred assets.
+  </li>
+</ul>
+
                       </p>
                       <p>
                         Nevertheless, you should stay vigilant of the cyber
@@ -631,12 +685,13 @@ const Footer = () => {
                         rights regarding your shared information:
                       </p>
                       <p>
-                        {" "}
-                         Access – Request access to your personal information.
-                         Correction – Request correction of inaccurate or
-                        incomplete data.  Deletion – Request deletion of your
-                        data.  Objection/Restriction – Object to processing or
-                        request limitations placed on your personal data.
+                        <ul className="list-disc pl-5 space-y-2">
+  <li><strong>Access</strong> – Request access to your personal information.</li>
+  <li><strong>Correction</strong> – Request correction of inaccurate or incomplete data.</li>
+  <li><strong>Deletion</strong> – Request deletion of your data.</li>
+  <li><strong>Objection/Restriction</strong> – Object to processing or request limitations placed on your personal data.</li>
+</ul>
+
                       </p>
                       <p>
                         To exercise any of these rights, please contact us at
@@ -653,7 +708,11 @@ const Footer = () => {
                         unauthorized access, loss, misuse, or alteration. These
                         include:
                       </p>
-                      <p> SSL Encryption  Regular vulnerability scanning</p>
+<ul className="list-disc pl-5">
+  <li>SSL Encryption</li>
+  <li>Regular vulnerability scanning</li>
+</ul>
+
                       <p>
                         Still, we cannot guarantee accidental or intentional
                         misuse from unauthorized or harmful sources. We will
@@ -678,8 +737,12 @@ const Footer = () => {
                         to:
                       </p>
                       <p>
-                         Remember user preferences  Analyze usage patterns
-                        Improve platform performance
+                     <ul className="list-disc pl-5">
+  <li>Remember user preferences</li>
+  <li>Analyze usage patterns</li>
+  <li>Improve platform performance</li>
+</ul>
+
                       </p>
                       <p>
                         They do not store or share your personal information.

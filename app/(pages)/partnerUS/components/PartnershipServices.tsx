@@ -39,7 +39,7 @@ export default function PartnershipServices() {
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="border-0">
-                  <AccordionTrigger className="flex items-center gap-4 font-medium text-gray-800">
+                  <AccordionTrigger className="flex items-center text-left gap-4 font-medium text-gray-800">
                     <Image
                       src="/partnerUs/icon-placeholder-2.svg"
                       alt="Icon 2"
