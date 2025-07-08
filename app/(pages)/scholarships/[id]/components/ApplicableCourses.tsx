@@ -57,30 +57,31 @@ export default function ApplicableCourses({
 
   // Transform dynamic data to Course objects
   useEffect(() => {
-    if (tableData && tableData.course) {
+    if (tableData && Array.isArray(tableData.course)) {
       const transformedCourses: Course[] = tableData.course.map((_, index) => ({
         id: (index + 1).toString(),
-        department: tableData.faculty_department[index] || "",
-        course: tableData.course[index] || "",
-        university: tableData.university[index] || "",
-        duration: tableData.duration[index] || "",
-        deadline: tableData.deadline[index] || "",
-        entryRequirements: tableData.entry_requirements[index] || "",
-        scholarshipType: tableData.scholarship_type[index] || "",
-        teachingLanguage: tableData.teaching_language[index] || "",
-        countries: tableData.countries[index] || "",
+        department: tableData.faculty_department?.[index] || "",
+        course: tableData.course?.[index] || "",
+        university: tableData.university?.[index] || "",
+        duration: tableData.duration?.[index] || "",
+        deadline: tableData.deadline?.[index] || "",
+        entryRequirements: tableData.entry_requirements?.[index] || "",
+        scholarshipType: tableData.scholarship_type?.[index] || "",
+        teachingLanguage: tableData.teaching_language?.[index] || "",
+        countries: tableData.countries?.[index] || "", // this handles undefined safely
       }));
+
       setCourses(transformedCourses);
       setFilteredCourses(transformedCourses);
-      setCurrentPage(1); // Reset to first page when new data loads
-      setSearchTerm(""); // Clear search when new data loads
+      setCurrentPage(1);
+      setSearchTerm("");
     } else {
-      // Fallback to empty array if no data
       setCourses([]);
       setFilteredCourses([]);
       setCurrentPage(1);
     }
   }, [tableData]);
+
 
   const handleSearch = (value: string) => {
     setIsLoading(true);

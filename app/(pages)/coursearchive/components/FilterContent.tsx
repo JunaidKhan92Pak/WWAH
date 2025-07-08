@@ -129,7 +129,7 @@ const subjectAreas = [
 const MIN = 0;
 const MAX = 1000000;
 export default function FilterContent() {
-  const { universities, setSearch, setCountry, fetchUniversities, loading } =
+  const { filterUniversities, setSearch, setCountry, fetchAllUniversitiesForFilter, loading } =
     useUniversityStore();
   const {
     minBudget,
@@ -249,13 +249,13 @@ export default function FilterContent() {
     [debouncedSetSearch]
   );
   useEffect(() => {
-    if (universities.length === 0) {
-      fetchUniversities().catch((error) => {
+    if (filterUniversities.length === 0) {
+      fetchAllUniversitiesForFilter().catch((error) => {
         console.error("Failed to fetch universities:", error);
         // Display an error message to the user if needed
       });
     }
-  }, [fetchUniversities, universities.length]);
+  }, [fetchAllUniversitiesForFilter, filterUniversities.length]);
   const handleSelect = useCallback(
     (universityName: string) => {
       setSelectedUniversity(universityName);
@@ -428,8 +428,8 @@ export default function FilterContent() {
           <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-md mt-2 max-h-48 overflow-y-auto">
             {loading ? (
               <li className="p-3 text-gray-500">Loading...</li>
-            ) : universities.length > 0 ? (
-              universities.map((uni, index) => (
+            ) : filterUniversities.length > 0 ? (
+              filterUniversities.map((uni, index) => (
                 <li
                   key={index}
                   className="p-3 hover:bg-gray-50 cursor-pointer text-gray-700"
