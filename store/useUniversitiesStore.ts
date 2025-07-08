@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 interface UniversitiesState {
     universities: any[];
+    filterUniversities: any[]; // NEW: used only by filter dropdown
     country: string[];
     search: string;
     loading: boolean;
@@ -14,10 +15,12 @@ interface UniversitiesState {
     setCurrentPage: (page: number) => void;
     setLimit: (limit: number) => void;
     fetchUniversities: (page?: number, limitOverride?: number) => Promise<void>;
+    fetchAllUniversitiesForFilter: (page?: number, limitOverride?: number) => Promise<void>;
 }
 
 export const useUniversityStore = create<UniversitiesState>((set, get) => ({
     universities: [],
+    filterUniversities: [], // NEW: used only by filter dropdown
     country: [],
     search: "",
     loading: true,
@@ -86,4 +89,19 @@ export const useUniversityStore = create<UniversitiesState>((set, get) => ({
             set({ loading: false });
         }
     },
+    fetchAllUniversitiesForFilter: async () => {
+        set({ loading: true });
+        try {
+            const res = await fetch(`/api/getUniversities?all=true`);
+            const data = await res.json();
+            if (data.success && data.universities) {
+                set({ filterUniversities: data.universities }); // 👈 store separately
+            }
+        } catch (error) {
+            console.error("Error fetching universities for filter:", error);
+        } finally {
+            set({ loading: false });
+        }
+    }
+
 }));
