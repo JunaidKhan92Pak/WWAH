@@ -23,6 +23,7 @@ interface Course {
   entryRequirements: string;
   scholarshipType: string;
   teachingLanguage: string;
+  countries: string;
 }
 
 interface DynamicTableData {
@@ -35,6 +36,7 @@ interface DynamicTableData {
   scholarship_type: string[];
   teaching_language: string[];
   university: string[];
+  countries: string[];
 }
 
 interface ApplicableCoursesProps {
@@ -66,6 +68,7 @@ export default function ApplicableCourses({
         entryRequirements: tableData.entry_requirements[index] || "",
         scholarshipType: tableData.scholarship_type[index] || "",
         teachingLanguage: tableData.teaching_language[index] || "",
+        countries: tableData.countries[index] || "",
       }));
       setCourses(transformedCourses);
       setFilteredCourses(transformedCourses);
@@ -103,6 +106,7 @@ export default function ApplicableCourses({
               .toLowerCase()
               .includes(lowerCaseSearchTerm) ||
             course.teachingLanguage.toLowerCase().includes(lowerCaseSearchTerm)
+            || course.countries.toLowerCase().includes(lowerCaseSearchTerm)
         );
         setFilteredCourses(filtered);
       }
@@ -213,6 +217,7 @@ export default function ApplicableCourses({
     "entryRequirements",
     "scholarshipType",
     "teachingLanguage",
+    "countries",
     "action",
   ];
 
@@ -232,7 +237,7 @@ export default function ApplicableCourses({
             </div>
             <Input
               type="text"
-              placeholder="Search by department/faculty, Course, University..."
+              placeholder="Search by course, department, university.."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
               className="pl-10 py-6 bg-muted/30 border-muted focus-visible:ring-2 text-foreground transition-all duration-300 ease-in-out hover:bg-muted/50"
@@ -251,7 +256,7 @@ export default function ApplicableCourses({
                           className={cn(
                             "px-6 py-3 text-left text-sm font-semibold text-black uppercase tracking-wider whitespace-nowrap",
                             column !== "action" &&
-                              "cursor-pointer group transition-colors hover:bg-[#FCE7D2]",
+                            "cursor-pointer group transition-colors hover:bg-[#FCE7D2]",
                             column === "entryRequirements" && "min-w-[300px]"
                           )}
                           onClick={() =>
@@ -264,12 +269,12 @@ export default function ApplicableCourses({
                               {column === "entryRequirements"
                                 ? "Entry Requirements"
                                 : column === "scholarshipType"
-                                ? "Scholarship Type"
-                                : column === "teachingLanguage"
-                                ? "Teaching Language"
-                                : column === "action"
-                                ? ""
-                                : column}
+                                  ? "Scholarship Type"
+                                  : column === "teachingLanguage"
+                                    ? "Teaching Language"
+                                    : column === "action"
+                                      ? ""
+                                      : column}
                             </span>
                             {column !== "action" && (
                               <SortIcon field={column as keyof Course} />
@@ -356,6 +361,16 @@ export default function ApplicableCourses({
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             {course.teachingLanguage}
                           </td>
+                          <div className="relative group w-fit py-4">
+                            <td className="cursor-pointer text-md max-w-[300px] overflow-hidden line-clamp-2">
+                              {course.countries}
+                            </td>
+
+                            {/* Hover Tooltip to the right */}
+                            <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
+                              {course.countries}
+                            </div>
+                          </div>
                           <td className="px-2 py-2 whitespace-nowrap text-sm">
                             <Link href="/dashboard/overview">
                               {" "}
@@ -363,7 +378,7 @@ export default function ApplicableCourses({
                                 variant="default"
                                 size="sm"
                                 className="w-full bg-red-700 hover:bg-red-700 "
-                                onClick={() => {}}
+                                onClick={() => { }}
                               >
                                 Apply
                               </Button>
@@ -434,8 +449,8 @@ export default function ApplicableCourses({
                           currentPage === item
                             ? "bg-primary text-primary-foreground"
                             : typeof item === "number"
-                            ? "bg-card hover:bg-muted text-foreground"
-                            : "bg-card text-muted-foreground cursor-default"
+                              ? "bg-card hover:bg-muted text-foreground"
+                              : "bg-card text-muted-foreground cursor-default"
                         )}
                       >
                         {typeof item === "number" ? item : "..."}

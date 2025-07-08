@@ -150,12 +150,13 @@ export async function GET(req: Request) {
 
     // Build aggregation pipeline with $lookup to join university data
     const pipeline: PipelineStage[] = [
-      { $match: query },
+      { $match: query }, // 🟢 Apply filters first
+
       {
         $lookup: {
-          from: "universities", // name of the universities collection
-          localField: "universityname", // field in courses
-          foreignField: "university_name", // matching field in universities
+          from: "universities",
+          localField: "universityname",
+          foreignField: "university_name",
           as: "universityData",
         },
       },
@@ -165,9 +166,14 @@ export async function GET(req: Request) {
           preserveNullAndEmptyArrays: true,
         },
       },
-      { $sort: { course_title: sortOrder } },
+
+      // 🟡 Randomly sample more than needed (to support pagination)
+      { $sample: { size: limit * page } },
+
+      // 🔵 Then paginate
       { $skip: skip },
       { $limit: limit },
+
       {
         $project: {
           _id: 1,
@@ -182,6 +188,7 @@ export async function GET(req: Request) {
         },
       },
     ];
+
 
     // Run the aggregation pipeline to fetch courses with joined university info
     const courses = await Courses.aggregate(pipeline);

@@ -264,12 +264,14 @@ export default function FilterContent() {
     },
     [setSelectedUniversity, setSearch]
   );
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setCountry(countryFilter);
     }, 500);
     return () => clearTimeout(handler);
   }, [countryFilter, setCountry]);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
