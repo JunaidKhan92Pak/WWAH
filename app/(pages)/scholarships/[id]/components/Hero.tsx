@@ -150,7 +150,7 @@ const Hero: React.FC<HeroProps> = ({
         <section className="relative mt-4 md:my-6 z-10">
           <div
             className="flex md:grid md:grid-cols-4 items-center justify-items-center 
-      bg-white shadow-lg rounded-2xl mx-auto w-[90%] md:w-[66%] px-1 md:px-3 2xl:max-w-[2200px] 
+      bg-white shadow-lg rounded-2xl mx-auto w-[95%] md:w-[80%] lg:w-[66%] px-1 md:px-3 2xl:max-w-[2200px] 
       py-2 md:py-2 2xl:p-8 2xl:gap-5 sm:relative lg:absolute lg:-top-20 lg:left-1/2 lg:transform lg:-translate-x-1/2"
           >
             {scholarshipArr.map((item, index) => (

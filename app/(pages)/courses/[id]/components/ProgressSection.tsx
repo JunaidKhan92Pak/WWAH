@@ -228,7 +228,7 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   return (
     <section className="md:my-4 flex flex-col items-center justify-center p-4 sm:p-6">
       <h3 className="">Application Success Chances!</h3>
-      <p className="text-gray-600 mb-2">
+      <p className="text-gray-600 mb-4">
         Your application success chances are:
       </p>
 
@@ -249,11 +249,11 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
           </div>
 
           {/* Academic Progress Bars */}
-          <div className="text-center underline underline-offset-4">
+          <div className="justify-center underline underline-offset-4 flex md:hidden">
             {" "}
             <h4>Academic Chances</h4>
           </div>
-          <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-6">
+          <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-2 lg:px-6">
             {academicFactors.map((item, index) => (
               <div key={index} className="flex flex-col">
                 <div className="relative w-full h-[3.8rem] rounded-2xl bg-[#F7F7F7] overflow-hidden flex items-center px-4">
@@ -287,11 +287,11 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
           </div>
 
           {/* Financial Progress Bars */}
-          <div className="text-center underline underline-offset-4">
+          <div className="justify-center underline underline-offset-4 flex md:hidden">
             {" "}
             <h4>Financial Chances</h4>
           </div>
-          <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-2 md:px-6">
+          <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-2 lg:px-6">
             {financialFactors.map((item, index) => (
               <div key={index} className="mb-2">
                 <div className="relative w-full h-44 rounded-2xl bg-[#F7F7F7] overflow-hidden flex items-center px-4">

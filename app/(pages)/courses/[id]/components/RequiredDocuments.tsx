@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -6,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Image from "next/image";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import DOMPurify from "dompurify";
 
 interface Document {
@@ -20,32 +21,30 @@ interface Data {
   universityDocuments: Degree[];
   embassyDocuments: Document[];
 }
+
 export const RequiredDocuments = ({ data }: { data: Data }) => {
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
   const [selectedDocUni, setSelectedDocUni] = useState<Document | null>(null);
-  const [activeTabUni, setActiveTabUni] = useState(
-    "University Application Docs"
-  );
+  const [activeTabUni, setActiveTabUni] = useState("University Application Docs");
 
-  // Memoize document lists to prevent recalculations on every render
+  const scrollRef = useRef<HTMLDivElement | null>(null); // 👈 For smooth scroll
+
   const universityDocs = useMemo(
-    () =>
-      (data?.universityDocuments || [])?.flatMap((degree) => degree.doc || []),
+    () => (data?.universityDocuments || []).flatMap((degree) => degree.doc || []),
     [data]
   );
   const embassyDocs = useMemo(() => data?.embassyDocuments || [], [data]);
 
-  // Use useCallback to prevent function recreation on every render
-  const handleMouseEnterUni = useCallback(
-    (doc: Document) => setSelectedDocUni(doc),
-    []
-  );
-  const handleMouseEnterEmbassy = useCallback(
-    (doc: Document) => setSelectedDoc(doc),
-    []
-  );
+  const handleMouseEnterUni = useCallback((doc: Document) => setSelectedDocUni(doc), []);
+  const handleMouseEnterEmbassy = useCallback((doc: Document) => setSelectedDoc(doc), []);
 
-  // Return null if data is null, which will hide this component
+  const handleTabClick = (tab: string) => {
+    setActiveTabUni(tab);
+    setTimeout(() => {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
   if (!data) return null;
 
   return (
@@ -61,7 +60,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
               ? "border-red-700 text-red-700 font-semibold bg-transparent"
               : "border-gray-900 text-gray-900 bg-transparent"
           }`}
-          onClick={() => setActiveTabUni("University Application Docs")}
+          onClick={() => handleTabClick("University Application Docs")}
         >
           University Application Docs
         </Button>
@@ -72,13 +71,17 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
               ? "border-red-500 text-red-700 font-semibold bg-transparent"
               : "border-gray-900 text-gray-900 bg-transparent"
           }`}
-          onClick={() => setActiveTabUni("Embassy Documents")}
+          onClick={() => handleTabClick("Embassy Documents")}
         >
           Embassy Documents
         </Button>
       </div>
 
       {/* University Application Docs */}
+            {/* Scroll target */}
+      <div ref={scrollRef} className="w-full flex justify-center">
+        <div className="w-full flex flex-col items-center">
+
       {activeTabUni === "University Application Docs" && (
         <>
           {/* Mobile Accordion View (below sm) */}
@@ -245,6 +248,8 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
           </div>
         </>
       )}
+          </div>
+      </div>
     </section>
   );
 };

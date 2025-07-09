@@ -23,13 +23,13 @@ const Page = () => {
   return (
     <>
       <div className="border rounded-xl w-[97%] mx-auto p-2 md:p-8 h-auto  ">
-        <h5 className="text-center mb-4">Application Status Tracker</h5>
+        <h4 className="text-center mb-4">Application Status Tracker</h4>
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-start w-full mb-4">
           {tabs.map((tab) => (
             <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`transition  font-semibold text-lg px-8 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
+              className={`transition font-semibold text-sm md:text-lg px-8 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
                                 ${activeTab === tab.id
                   ? "bg-[#C7161E] text-white" : "text-gray-600"
                 }`}

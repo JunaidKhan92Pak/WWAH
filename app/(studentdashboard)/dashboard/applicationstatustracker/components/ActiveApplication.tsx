@@ -129,7 +129,7 @@ const ActiveApplication = () => {
       </div> */}
 
       <div className="bg-[#FCE7D280] w-full mx-auto rounded-xl border mt-4 p-0 sm:p-6">
-        <div className="flex flex-col sm:flex-row gap-6 w-[95%] mx-auto items-center md:items-start">
+        <div className="flex flex-col sm:flex-row gap-6 w-[95%] mx-auto items-center md:items-start p-2 md:p-0">
           {/* Course Image */}
           <Image
             src="/course1.svg"
@@ -140,7 +140,7 @@ const ActiveApplication = () => {
           />
 
           {/* Course Details */}
-          <div className="flex flex-col gap-3 items-start">
+          <div className="flex flex-col gap-3 items-start p-2 md:p-0">
             <p className="font-semibold text-lg">
               Bachelor of Engineering (Honors) - BE(Hons)
             </p>

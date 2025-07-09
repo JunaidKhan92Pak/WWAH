@@ -47,7 +47,7 @@ const Herosection = ({
 }: {
   data: CourseData;
   uniData: { banner: string; logo: string };
-  countryData: { _id: string; name: string, country_id: string };
+  countryData: { _id: string; name: string; country_id: string };
 }) => {
   const arr1 = [
     {
@@ -186,7 +186,7 @@ const Herosection = ({
         </div>
         <div className="relative mt-2 lg:-mt-10 flex justify-center">
           <div
-            className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4  rounded-2xl shadow-lg mx-auto w-[95%] lg:w-[70%] lg:grid lg:grid-cols-7"
+            className="flex overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal bg-white text-black py-3 md:py-8 md:px-4 rounded-2xl shadow-lg mx-auto w-[90%] lg:w-[70%] lg:grid lg:grid-cols-7"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -213,16 +213,24 @@ const Herosection = ({
                 </div>
 
                 {/* Name with Tooltip */}
-                {/* Name with Tooltip */}
-                <div className="relative group w-[100px]">
-                  <p className="text-xs truncate max-w-[100px] overflow-hidden">
-                    {item.Name}
-                  </p>
-                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-xs p-2 cursor-pointer rounded-md w-[200px] text-center shadow-lg">
-                    {item.Name}
-                  </span>
+<div className="relative group w-[100px]">
+  <p className="text-xs truncate md:max-w-[100px] overflow-hidden">
+    {item.Name}
+  </p>
 
-                </div>
+  <span
+    className="
+      absolute hidden group-hover:block z-10
+      bg-gray-200 text-black text-xs rounded-md text-center shadow-lg w-[200px] p-2
+
+      lg:top-full lg:mt-2 lg:left-1/2 lg:-translate-x-1/2     /* ↓ Tooltip below text for lg+ */
+      max-lg:bottom-full max-lg:mb-1 max-lg:left-1/2 max-lg:-translate-x-1/2 text-wrap  /* ↑ Tooltip above for md and mobile */
+    "
+  >
+    {item.Name}
+  </span>
+</div>
+
               </div>
             ))}
           </div>

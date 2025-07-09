@@ -52,9 +52,10 @@ interface FeeAndScholarshipsProps {
 export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
   const [activeTab, setActiveTab] = useState("scholarship");
   console.log(data, "cor");
-  const isNumeric = (value: string | number): boolean =>
-    !isNaN(parseFloat(value.toString())) && isFinite(Number(value));
-  
+function isCurrency(value: string): boolean {
+  return /^\s*(USD|PKR|\$|£|€)?\s*\d+([.,]\d+)?\s*$/i.test(value.trim());
+}
+
 
 
   return (
@@ -80,30 +81,43 @@ export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
                 <p className="font-semibold">$0</p>
                 <p className="text-gray-600">Server Fee (N/A)</p>
               </li>
-              <li className="flex items-center space-x-2">
-                <span className="vertical-line w-[1px] h-3 bg-black"></span>
+       <li className="flex items-center space-x-2">
+  {(() => {
+    const value = data.initial_deposit;
+    const isDollar = typeof value === 'string' && (value.includes('$') || value.toUpperCase().includes('USD'));
 
-                <div className="relative group w-[100px]">
-                  <p className="text-md truncate font-semibold max-w-[150px] overflow-hidden">
-                    {data.initial_deposit}
-                  </p>
+    if (!value) {
+      return <p className="text-red-500 font-medium">Required</p>;
+    }
 
-                  <span className="absolute left-1/2 -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-200 text-black text-sm font-medium p-2 rounded-md w-[200px] text-center shadow-lg z-10">
-                    {data.initial_deposit}
-                  </span>
-                </div>
+    if (isCurrency(value) || !isNaN(Number(value)) || isDollar) {
+      return (
+        <>
+          <span className="vertical-line w-[1px] h-3 bg-black" />
+          <p className="text-md font-semibold">{value}</p>
+          <p className="text-gray-600">Initial Deposit</p>
+        </>
+      );
+    }
 
-                {!isNumeric(data.initial_deposit) && (
-                  <div className="relative group flex items-center">
-                    <Info className="w-4 h-4 text-blue-500 cursor-pointer" />
-                    <span className="absolute left-1/2 -translate-x-1/2 mt-6 hidden group-hover:block bg-gray-100 text-black text-xs font-medium p-2 rounded-md w-[220px] text-center shadow-lg z-10">
-                      {data.initial_deposit}
-                    </span>
-                  </div>
-                )}
+    return (
+      <>
+        <span className="vertical-line w-[1px] h-3 bg-black" />
+        <div className="relative group flex items-center">
+          <Info className="w-4 h-4 text-blue-500 cursor-pointer" />
+         <span className="absolute top-full left-full mt-2 hidden group-hover:block bg-gray-100 text-black text-xs font-medium p-2 rounded-md w-[220px] text-left shadow-lg z-10">
+  {value}
+</span>
 
-                <p className="text-gray-600">Initial Deposit</p>
-              </li>
+        </div>
+        <p className="text-gray-600">Initial Deposit</p>
+      </>
+    );
+  })()}
+</li>
+
+
+
             </ul>
           </div>
 

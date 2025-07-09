@@ -416,7 +416,7 @@ const displayedScholarships = showFavorites
                     height={12}
                     alt="filter"
                   />
-                  <p className="font-bold">Filter</p>
+                  <p className="font-bold">Filters</p>
                 </div>
                 <Image
                   src="/right-arrow.png"
