@@ -147,7 +147,7 @@ export default function Countrypage({
         buttonLink="/schedulesession"
         backgroundImage="/bg-usa.png"
       />
-      <DreamStudy />
+      <DreamStudy countryname={country.country_name} />
     </div>
   );
 }

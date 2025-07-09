@@ -1,9 +1,29 @@
 import React from "react";
+
 interface HeroProps {
   country: string;
 }
 
+// Map of country names to adjectives
+const countryAdjectives: Record<string, string> = {
+  America: "American",
+  "United States of America": "American",
+  "United Kingdom": "British",
+  Australia: "Australian",
+  Canada: "Canadian",
+  Malaysia: "Malaysian",
+  Italy: "Italian",
+  Ireland: "Irish",
+  Germany: "German",
+};
+
+const getAdjectiveForm = (country: string): string => {
+  return countryAdjectives[country] || country;
+};
+
 const Hero: React.FC<HeroProps> = ({ country }) => {
+  const adjective = getAdjectiveForm(country);
+
   return (
     <div>
       <section className="w-[90%] md:w-[95%] mx-auto">
@@ -16,11 +36,11 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
           <div className="w-4/5 ">
             <div className="flex flex-col items-start md:w-3/5">
               <h1 className="text-left lg:leading-tight">
-                Your Comprehensive Guide to the {country} Visa Application
+                Your Comprehensive Guide to the {adjective} Visa Application
                 Process!
               </h1>
               <p className="py-2">
-                &quot;Step-by-Step Visa Application Process&quot;{" "}
+                &quot;Step-by-Step Visa Application Process&quot;
               </p>
             </div>
           </div>
@@ -29,4 +49,5 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
     </div>
   );
 };
+
 export default Hero;
