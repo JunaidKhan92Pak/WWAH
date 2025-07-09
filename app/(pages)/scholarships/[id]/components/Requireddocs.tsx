@@ -23,18 +23,13 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
     <div className="w-full">
       <section className="flex flex-col items-center justify-center py-4 lg:py-8 px-4 lg:w-[90%] mx-auto">
         {/* Main Title */}
-        <h3 className="lg:mb-4 mb-3">
-          Required Documents!
-        </h3>
+        <h3 className="lg:mb-4 mb-3">Required Documents!</h3>
 
         {/* Main Grid Container */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 w-full max-w-7xl">
-
           {/* Document List Section */}
           <div className="bg-white p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg h-full flex flex-col">
-            <h5 className="lg:mb-2 mb-1">
-              Required Document list:
-            </h5>
+            <h5 className="lg:mb-2 mb-1">Required Document list:</h5>
 
             {/* Documents Grid */}
             <div className="flex-1 overflow-hidden">
@@ -61,7 +56,7 @@ const Requireddocs = ({ requiredDocs }: RequireddocsProps) => {
           </div>
 
           {/* Details/Image Section */}
-          <div className="flex items-center justify-center rounded-2xl lg:rounded-3xl shadow-lg h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] bg-red-50 overflow-hidden">
+          <div className="flex items-center justify-center rounded-2xl lg:rounded-3xl shadow-lg h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] bg-[#ffe7cd] overflow-hidden">
             {selectedDoc ? (
               <div className="w-full h-full p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-start overflow-y-auto">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
