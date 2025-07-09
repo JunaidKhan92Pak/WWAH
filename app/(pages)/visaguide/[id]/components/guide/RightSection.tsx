@@ -32,15 +32,15 @@ export const RightSection = ({ data }: { data: DataType }) => {
     const defaultIcons = [
       "/visaguide/choose.svg",
       "/visaguide/register.svg",
-      "/visaguide/confirmation.svg",
+      "/visaguide/submit.svg",
       "/visaguide/fee.svg",
       "/visaguide/process.svg",
       "/visaguide/submit.svg",
       "/visaguide/track.svg",
       "/visaguide/recieve.svg",
       "/visaguide/accommodation.svg",
-      "/visaguide/arrival.svg",
-      "/visaguide/orientation.svg",
+      "/visaguide/recieve.svg",
+      "/visaguide/process.svg",
     ];
 
     return defaultIcons[index] || "/visaguide/choose.svg";
@@ -58,9 +58,11 @@ export const RightSection = ({ data }: { data: DataType }) => {
             </p>
           </div>
           <div className="md:w-1/2 flex md:justify-end justify-center items-center">
-            <button className="bg-[#C7161E] text-xs md:text-sm 2xl:text-xl text-white rounded-lg p-3">
-              Get personalized guidance from ZEUS
-            </button>
+            <Link href="/dashboard">
+              <button className="bg-[#C7161E] text-xs md:text-sm 2xl:text-xl text-white rounded-lg p-3">
+                Get in touch with WWAH advisor
+              </button>
+            </Link>
           </div>
         </div>
       );
@@ -72,12 +74,12 @@ export const RightSection = ({ data }: { data: DataType }) => {
     ) {
       return (
         <>
-          <div className="flex justify-end mt-4">
+          {/* <div className="flex justify-end mt-4">
             <p className="md:w-[55%] p-6 rounded-2xl bg-[#FCE7D2]">
               Prepare the necessary documents mentioned in the required
               documents section of your desired course page.
             </p>
-          </div>
+          </div> */}
           <div className="flex md:flex-row flex-col bg-[#F1F1F1] p-4 rounded-2xl w-full justify-end my-4 gap-2">
             <div>
               <p className="font-semibold">
@@ -105,10 +107,13 @@ export const RightSection = ({ data }: { data: DataType }) => {
               To find the right Accommodation for you
             </p>
           </div>
+
           <div className="md:w-1/2 flex md:justify-end justify-center items-center">
-            <button className="bg-[#C7161E] text-xs md:text-sm 2xl:text-xl text-white rounded-lg p-3">
-              Get in touch with WWAH advisor
-            </button>
+            <Link href="/dashboard">
+              <button className="bg-[#C7161E] text-xs md:text-sm 2xl:text-xl text-white rounded-lg p-3">
+                Get in touch with WWAH advisor
+              </button>
+            </Link>
           </div>
         </div>
       );

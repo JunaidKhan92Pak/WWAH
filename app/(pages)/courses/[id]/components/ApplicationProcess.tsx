@@ -45,7 +45,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
             </div>
             {/* Step 2 */}
             <div>
-              <h5>Submit Your Application</h5>
+              <h5 className="pt-1">Submit Your Application</h5>
               <p className="text-gray-700 mt-1">
                 Complete your Personal and Educational details. Upload your
                 documents and double-check all information before submission.
@@ -94,73 +94,74 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
             <>
               {/* Step 4 */}
               <div className="space-y-4 md:space-y-5 mt-5">
-              <div>
-                <h5>Track Your Application</h5>
-                <p className="text-gray-700 mt-1">
-                  Once your application is submitted, you can monitor its
-                  progress through your personalized WWAH dashboard. Stay
-                  informed with real-time updates and notifications.
-                </p>
-              </div>
-              {/* Step 5 */}
-              <div>
-                <h5>Receive Your Offer Letter</h5>
-                <p className="text-gray-700 mt-1">
-                  If your application is successful, you&apos;ll receive an
-                  offer letter from the university. Review the offer carefully
-                  and accept it through our portal.{" "}
-                  <Link
-                    target="blank"
-                    href="/visaguide"
-                    className="text-[#F0851D] hover:underline font-semibold"
+                <div>
+                  <h5>Track Your Application</h5>
+                  <p className="text-gray-700 mt-1">
+                    Once your application is submitted, you can monitor its
+                    progress through your personalized WWAH dashboard. Stay
+                    informed with real-time updates and notifications.
+                  </p>
+                </div>
+                {/* Step 5 */}
+                <div>
+                  <h5>Receive Your Offer Letter</h5>
+                  <p className="text-gray-700 mt-1">
+                    If your application is successful, you&apos;ll receive an
+                    offer letter from the university. Review the offer carefully
+                    and accept it through our portal.{" "}
+                    <Link
+                      target="blank"
+                      href="/visaguide"
+                      className="text-[#F0851D] hover:underline font-semibold"
+                    >
+                      Check
+                    </Link>{" "}
+                    Application process of {uniname} for more details.
+                  </p>
+                </div>
+                {/* Step 6 */}
+                <div>
+                  <h5>Apply for a Visa</h5>
+                  <p className="text-gray-700 mt-1">
+                    Once you&apos;ve accepted an offer and received your visa
+                    letter, start the visa application process. We&apos;ll
+                    provide guidance and resources to help you secure your
+                    student visa. For {countryname} Visa Application
+                    requirements and process,{" "}
+                    <Link
+                      target="blank"
+                      href="/visaguide"
+                      className="text-[#F0851D] hover:underline font-semibold"
+                    >
+                      Click Here.
+                    </Link>
+                  </p>
+                </div>
+                {/* Step 7 */}
+                <div>
+                  <h5>Plan Your Arrival</h5>
+                  <p className="text-gray-700 mt-1">
+                    After your visa is approved, begin planning journey. WWAH
+                    offers tips on accommodation, travel, and settling into your
+                    new environment.
+                  </p>
+                </div>
+                {/* Step 8 */}
+                <div>
+                  <h5>Begin Your Academic Journey</h5>
+                  <p className="text-gray-700 mt-1">
+                    Congratulations! You&apos;re all set to start your studies
+                    abroad. Stay connected with the WWAH team throughout your
+                    academic journey for any assistance.
+                  </p>
+                  {/* Show Less Button */}
+                  <button
+                    onClick={handleToggle}
+                    className="text-red-500 hover:underline font-medium text-[16px] "
                   >
-                    Check
-                  </Link>{" "}
-                  Application process of {uniname} for more details.
-                </p>
-              </div>
-              {/* Step 6 */}
-              <div>
-                <h5>Apply for a Visa</h5>
-                <p className="text-gray-700 mt-1">
-                  Once you&apos;ve accepted an offer and received your visa
-                  letter, start the visa application process. We&apos;ll provide
-                  guidance and resources to help you secure your student visa.
-                  For {countryname} Visa Application requirements and process,{" "}
-                  <Link
-                    target="blank"
-                    href="/visaguide"
-                    className="text-[#F0851D] hover:underline font-semibold"
-                  >
-                    Click Here.
-                  </Link>
-                </p>
-              </div>
-              {/* Step 7 */}
-              <div>
-                <h5>Plan Your Arrival</h5>
-                <p className="text-gray-700 mt-1">
-                  After your visa is approved, begin planning         journey. WWAH
-                  offers tips on accommodation, travel, and settling into your
-                  new environment.
-                </p>
-              </div>
-              {/* Step 8 */}
-              <div>
-                <h5>Begin Your Academic Journey</h5>
-                <p className="text-gray-700 mt-1">
-                  Congratulations! You&apos;re all set to start your studies
-                  abroad. Stay connected with the WWAH team throughout your
-                  academic journey for any assistance.
-                </p>
-                {/* Show Less Button */}
-                <button
-                  onClick={handleToggle}
-                  className="text-red-500 hover:underline font-medium text-[16px] "
-                >
-                  Read Less
-                </button>
-              </div>
+                    Read Less
+                  </button>
+                </div>
               </div>
             </>
           )}

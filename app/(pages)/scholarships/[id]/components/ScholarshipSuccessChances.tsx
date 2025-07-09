@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { calculateAllSuccessMetrics } from "@/utils/successChance/scholarshipsuccess";
 import Link from "next/link";
 import { useUserInfo } from "@/store/userStore/userSuccessInfo";
+import SuccessCircle from "@/components/SuccessCircle ";
 // Define types for props
 interface ScholarshipSuccessChancesProps {
   successChances?: {
@@ -177,7 +178,7 @@ export const ScholarshipSuccessChances = ({
       <div className="relative w-full lg:w-[80%]">
         {/* Overall Success Percentage */}
         <div className="flex justify-center items-center mb-4">
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Image
               src="/success-icon.svg"
               alt="Success Icon"
@@ -188,7 +189,11 @@ export const ScholarshipSuccessChances = ({
             <p className="text-lg font-semibold">
               {successGenerated ? overallSuccess : 0}%
             </p>
-          </div>
+          </div> */}
+          <SuccessCircle
+            overallSuccess={overallSuccess}
+            
+          />
           <span className="ml-2 text-gray-500">Overall Success</span>
         </div>
         <div className="sm:hidden  flex items-center justify-center mb-4">

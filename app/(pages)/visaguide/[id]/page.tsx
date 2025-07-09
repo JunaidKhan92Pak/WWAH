@@ -100,7 +100,7 @@ const Page = () => {
     <>
       <Hero country={visa.country_name} />
       <Guide data={visa} />
-      <Faqsection faqs={visa.faqs} />
+      <Faqsection faqs={visa.faqs} country={visa.country_name} />
     </>
   );
 };
