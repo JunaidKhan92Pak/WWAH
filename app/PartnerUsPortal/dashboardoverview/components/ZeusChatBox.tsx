@@ -25,14 +25,14 @@ const ZeusChatBox = () => {
                 {/* Robot and Text */}
                 <div className="flex flex-col items-center">
                   <Image
-                    src="/ZEUS-ANIMATION-LAPTOP.gif"
+                    src="/zeus.gif"
                     alt="AI Robot"
                     width={400}
                     height={400}
                     className="w-full xl:w-[80%]  h-[340px] object-cover"
                   />
                   <p className="text-center text-sm mb-2">
-                    Experience AI driven course matching with Zeus
+                    Experience AI driven course matching with Zeus 
                   </p>
                 </div>
 

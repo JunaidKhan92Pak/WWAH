@@ -165,293 +165,195 @@ const FilterSection = ({ isMobile = false }) => {
   return (
     <>
       {" "}
-      <div className={isMobile ? "p-2" : ""}>
-        <section>
-          {isMobile && (
-            <>
-              <div className="flex bg-[#F1F1F1] mx-2 mb-2 w-[80%] px-2 rounded-lg">
-                <Input
-                  placeholder="Search Scholarships..."
-                  name="search"
-                  value={localSearch}
-                  onChange={handleSearchChange}
-                  className="border-none bg-[#F1F1F1] outline-none focus:ring-0 placeholder:text-[12px]"
-                />
+      <div className={isMobile ? "p-1 md:p-2" : ""}>
+       <section className="my-4">
+  {/* Optional: Mobile-only search bar */}
+  {isMobile && (
+    <>
+      <div className="flex bg-[#F1F1F1] mx-2 mb-3 md:mb-2 w-[80%] px-2 rounded-lg">
+        <Input
+          placeholder="Search Scholarships..."
+          name="search"
+          value={localSearch}
+          onChange={handleSearchChange}
+          className="border-none bg-[#F1F1F1] outline-none focus:ring-0 placeholder:text-[12px]"
+        />
+        <Image
+          src="/search.svg"
+          width={16}
+          height={16}
+          alt="search"
+          className="2xl:w-[40px] 2xl:h-[40px] ml-2"
+        />
+      </div>
+      <hr className="mx-4 " />
+    </>
+  )}
+
+  <ScrollArea className="p-2 md:px-4 pb-4 h-[500px] md:h-[800px] overflow-y-auto">
+    {/* Country Filter */}
+    <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-3 md:p-2">
+      <h6 className="text-base md:text-lg font-bold">Country:</h6>
+      <ScrollArea className="h-[150px] overflow-y-auto md:p-2">
+        <ul className="py-2 space-y-3 mb-2 pr-2">
+          {countries.map((country) => (
+            <li key={country.value} className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <Image
-                  src="/search.svg"
-                  width={16}
-                  height={16}
-                  alt="search"
-                  className="2xl:w-[40px] 2xl:h-[40px] ml-2"
+                  src={country.img}
+                  width={18}
+                  height={18}
+                  alt={country.name}
+                  className="w-[26px] border rounded-full"
                 />
+                <span className="text-[16px] truncate">{country.name}</span>
               </div>
-              <hr className="mx-4" />
-            </>
-          )}
-          <ScrollArea
-            className={`p-2 ${isMobile ? "h-[400px]" : "px-4 pb-4 h-[500px] md:h-[800px]"
-              } overflow-y-auto`}
-          >
-            {/* Country Filter */}
-            <div
-              className={
-                isMobile
-                  ? ""
-                  : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"
-              }
-            >
-              <h6
-                className={`${isMobile ? "text-lg" : "text-base md:text-lg font-bold"
-                  }`}
-              >
-                Country:
-              </h6>
-              <ScrollArea
-                className={isMobile ? "" : "h-[200px] overflow-y-auto p-2"}
-              >
-                <ul
-                  className={`py-2 space-y-3 mb-2 ${!isMobile ? "pr-2" : ""}`}
-                >
-                  {countries.map((country) => (
-                    <li
-                      key={country.value}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Image
-                          src={country.img}
-                          width={18}
-                          height={18}
-                          alt={country.name}
-                          className="w-[26px]"
-                        />
-                        <span className="text-[16px] truncate">
-                          {country.name}
-                        </span>
-                      </div>
-                      <input
-                        type="checkbox"
-                        value={country.value}
-                        checked={selectedValues.includes(country.value)}
-                        onChange={handleCheckboxChange}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </ScrollArea>
-            </div>
+              <input
+                type="checkbox"
+                value={country.value}
+                checked={selectedValues.includes(country.value)}
+                onChange={handleCheckboxChange}
+                className="ml-2"
+              />
+            </li>
+          ))}
+        </ul>
+      </ScrollArea>
+    </div>
 
-            {!isMobile && <hr />}
+    <hr className="my-3 md:my-0" />
 
-            {/* Programs Filter */}
-            <div
-              className={
-                isMobile
-                  ? ""
-                  : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"
-              }
-            >
-              <p
-                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                  }`}
-              >
-                {isMobile ? "Programs:" : "Study Level:"}
-              </p>
-              <ul
-                className={`py-2 space-y-3 mb-2 ${!isMobile ? "py-4 space-y-3 md:space-y-4" : ""
-                  }`}
-              >
-                {["Bachelors", "Master", "PhD"].map((program) => (
-                  <li
-                    key={program}
-                    className="flex items-center justify-between"
-                  >
-                    <span className="text-[16px] truncate">{program}</span>
-                    <input
-                      type="checkbox"
-                      name={program.toLowerCase()}
-                      value={program.toLowerCase()}
-                      onChange={handleProgramChange}
-                      checked={programs.includes(program.toLowerCase())}
-                      className="ml-2"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+    {/* Programs Filter */}
+    <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-3 md:p-2">
 
-            {!isMobile && <hr />}
+      <p className="text-base md:text-lg font-bold">Study Level:</p>
+      <ul className="py-2 space-y-3 md:space-y-4 md:p-2">
+        {["Bachelors", "Master", "PhD"].map((program) => (
+          <li key={program} className="flex items-center justify-between">
+            <span className="text-[16px] truncate">{program}</span>
+            <input
+              type="checkbox"
+              name={program.toLowerCase()}
+              value={program.toLowerCase()}
+              onChange={handleProgramChange}
+              checked={programs.includes(program.toLowerCase())}
+              className="ml-2"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
 
-            {/* Scholarship Type Filter */}
-            <div
-              className={
-                isMobile
-                  ? ""
-                  : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-              }
-            >
-              <p
-                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                  }`}
-              >
-                Scholarship Type:
-              </p>
-              <ul
-                className={`py-3 space-y-3 mb-2 ${!isMobile ? "py-4 space-y-3 md:space-y-4" : ""
-                  }`}
-              >
-                {["Fully Funded", "Partial Funded"].map((type) => (
-                  <li key={type} className="flex items-center justify-between">
-                    <span className="text-[16px] truncate">{type}</span>
-                    <input
-                      type="checkbox"
-                      name={type}
-                      value={type}
-                      onChange={handleScholarshipTypeChange}
-                      checked={scholarshipType.includes(type)}
-                      className="ml-2"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <hr className="my-3 md:my-0" />
 
-            {!isMobile && <hr />}
 
-            {/* Application Deadline Filter */}
-            <div
-              className={
-                isMobile
-                  ? ""
-                  : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-              }
-            >
-              <p
-                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                  }`}
-              >
-                Application Deadline:
-              </p>
-              <ScrollArea
-                className={isMobile ? "" : "h-[300px] overflow-y-auto p-2"}
-              >
-                <ul
-                  className={`py-2 space-y-3 ${!isMobile ? "py-4 space-y-3 md:space-y-4 pr-2" : ""
-                    }`}
-                >
-                  {(isMobile
-                    ? ["Jan", "Feb", "March"]
-                    : [
-                      "January",
-                      "February",
-                      "March",
-                      "April",
-                      "May",
-                      "June",
-                      "July",
-                      "August",
-                      "September",
-                      "October",
-                      "November",
-                      "December",
-                    ]
-                  ).map((deadline) => (
-                    <li
-                      key={deadline}
-                      className="flex items-center justify-between"
-                    >
-                      <span className="text-[16px] truncate">{deadline}</span>
-                      <input
-                        type="checkbox"
-                        name={deadline}
-                        value={deadline}
-                        onChange={handleDeadlineChange}
-                        checked={deadlineFilters.includes(deadline)}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </ScrollArea>
-            </div>
+    {/* Scholarship Type Filter */}
+    <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-3 md:p-2">
 
-            {!isMobile && <hr />}
+      <p className="text-base md:text-lg font-bold">Scholarship Type:</p>
+      <ul className="py-2 space-y-3 md:space-y-4 md:p-2">
+        {["Fully Funded", "Partial Funded"].map((type) => (
+          <li key={type} className="flex items-center justify-between">
+            <span className="text-[16px] truncate">{type}</span>
+            <input
+              type="checkbox"
+              name={type}
+              value={type}
+              onChange={handleScholarshipTypeChange}
+              checked={scholarshipType.includes(type)}
+              className="ml-2"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
 
-            {/* Minimum Requirement Filter */}
-            <div
-              className={
-                isMobile
-                  ? ""
-                  : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-              }
-            >
-              <p
-                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                  }`}
-              >
-                Minimum Requirement:
-              </p>
-              <ul className="py-2 space-y-3">
-                {minimumRequirementsList.map((requirement) => (
-                  <li
-                    key={requirement}
-                    className="flex items-center justify-between"
-                  >
-                    <span className="text-[16px] truncate">{requirement}</span>
-                    <input
-                      type="checkbox"
-                      name={requirement}
-                      value={requirement}
-                      onChange={handleRequirementChange}
-                      checked={minimumRequirements.includes(requirement)}
-                      className="ml-2"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+      <hr className="my-3 md:my-0" />
 
-            {/* Scholarship Provider Filter */}
-            <div
-              className={
-                isMobile
-                  ? ""
-                  : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-              }
-            >
-              <p
-                className={`${isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-                  }`}
-              >
-                Scholarship Provider:
-              </p>
-              <ScrollArea className={isMobile ? "" : "p-2"}>
-                <ul
-                  className={`py-4 space-y-3 md:space-y-4 ${!isMobile ? "pr-2" : ""
-                    }`}
-                >
-                  {scholarshipProviders.map((provider) => (
-                    <li
-                      key={provider}
-                      className="flex items-center justify-between"
-                    >
-                      <span className="text-[16px] truncate">{provider}</span>
-                      <input
-                        type="checkbox"
-                        name={provider}
-                        value={provider}
-                        onChange={handleProviderChange}
-                        checked={selectedProviders?.includes(provider)}
-                        className="ml-2"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </ScrollArea>
-            </div>
-          </ScrollArea>
-        </section>
+
+    {/* Application Deadline Filter */}
+    <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-3 md:p-2">
+
+      <p className="text-base md:text-lg font-bold">Application Deadline:</p>
+      <ScrollArea className="h-[200px] overflow-y-auto md:p-2">
+        <ul className="py-2 space-y-3 md:space-y-4 pr-2">
+          {[
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December",
+          ].map((deadline) => (
+            <li key={deadline} className="flex items-center justify-between">
+              <span className="text-[16px] truncate">{deadline}</span>
+              <input
+                type="checkbox"
+                name={deadline}
+                value={deadline}
+                onChange={handleDeadlineChange}
+                checked={deadlineFilters.includes(deadline)}
+                className="ml-2"
+              />
+            </li>
+          ))}
+        </ul>
+      </ScrollArea>
+    </div>
+
+       <hr className="my-3 md:my-0" />
+
+
+    {/* Minimum Requirement Filter */}
+    <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-3 md:p-2">
+
+      <p className="text-base md:text-lg font-bold">Minimum Requirement:</p>
+            <ScrollArea className="h-[150px] overflow-y-auto md:p-2">
+
+      <ul className="py-2 space-y-3 md:p-2">
+        {minimumRequirementsList.map((requirement) => (
+          <li key={requirement} className="flex items-center justify-between">
+            <span className="text-[16px] truncate">{requirement}</span>
+            <input
+              type="checkbox"
+              name={requirement}
+              value={requirement}
+              onChange={handleRequirementChange}
+              checked={minimumRequirements.includes(requirement)}
+              className="ml-2"
+            />
+          </li>
+        ))}
+      </ul>
+            </ScrollArea>
+
+    </div>
+            <hr className="my-3 md:my-0" />
+
+
+
+    {/* Scholarship Provider Filter */}
+    <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-3 md:p-2">
+
+      <p className="text-base md:text-lg font-bold">Scholarship Provider:</p>
+      <ScrollArea className="overflow-y-auto md:p-2">
+
+        <ul className="py-2 space-y-3 md:space-y-4 pr-2">
+          {scholarshipProviders.map((provider) => (
+            <li key={provider} className="flex items-center justify-between">
+              <span className="text-[16px] truncate">{provider}</span>
+              <input
+                type="checkbox"
+                name={provider}
+                value={provider}
+                onChange={handleProviderChange}
+                checked={selectedProviders?.includes(provider)}
+                className="ml-2"
+              />
+            </li>
+          ))}
+        </ul>
+      </ScrollArea>
+    </div>
+  </ScrollArea>
+</section>
+
       </div>
     </>
   );

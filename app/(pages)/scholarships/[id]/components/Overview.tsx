@@ -34,15 +34,19 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration, info_link }) =>
                 </p>
                 <p className="">
                   <strong>Info Link:</strong>{" "}
-                  <a
+          <a
+  href={info_link}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="
+    text-blue-600 underline hover:text-blue-800 transition
+    break-words whitespace-normal
+    max-w-full block text-sm
+  "
+>
+  {info_link}
+</a>
 
-                    href={info_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline hover:text-blue-800 transition"
-                  >
-                    {info_link}
-                  </a>
                 </p>
 
               </div>
