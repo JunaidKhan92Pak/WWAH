@@ -325,7 +325,9 @@ export default function ContactUs() {
               >
                                 <IoCallOutline className="text-xl min-w-[20px]" />
                 
-                <p className="text-gray-600">+971582514675</p>
+                <p className="text-gray-600">+971 50 578 4006
+
+</p>
                 </div>
               </div>
             </div>

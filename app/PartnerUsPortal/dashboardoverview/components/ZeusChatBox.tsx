@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bot, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,13 +23,14 @@ const ZeusChatBox = () => {
               <div className="flex flex-col items-center w-full">
                 {/* Robot and Text */}
                 <div className="flex flex-col items-center">
-                  <Image
-                    src="/zeus.gif"
-                    alt="AI Robot"
-                    width={400}
-                    height={400}
-                    className="w-full xl:w-[80%]  h-[340px] object-cover"
-                  />
+                     <img
+                src="/zeus.gif"
+                alt="Animated Robot"
+                width={0}
+                height={0}
+                // sizes="60vw"
+                className="w-[440px]"
+              />
                   <p className="text-center text-sm mb-2">
                     Experience AI driven course matching with Zeus 
                   </p>

@@ -190,7 +190,7 @@ const FilterSection = ({ isMobile = false }) => {
     </>
   )}
 
-  <ScrollArea className="p-2 md:px-4 pb-4 h-[500px] md:h-[800px] overflow-y-auto">
+  <ScrollArea className=" md:px-4 pb-4 h-[500px] md:h-[800px] overflow-y-auto">
     {/* Country Filter */}
     <div className="border border-gray-200 shadow-md rounded-xl bg-white my-2 p-3 md:p-2">
       <h6 className="text-base md:text-lg font-bold">Country:</h6>
