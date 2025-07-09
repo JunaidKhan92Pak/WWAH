@@ -173,12 +173,17 @@ interface StudyInUkProps {
 const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
   console.log(":white_tick: WhyStudy component rendered");
   const [universities, setUniversities] = useState<UniversityType[]>([]);
+  const getCountryCode = (name: string) => {
+    if (name === "United States of America") return "USA";
+    return name;
+  };
+  const finalCountry = getCountryCode(countryName);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
         const res = await fetch(
-          `/api/getUniversities?country=${countryName}&limit=4`
+          `/api/getUniversities?country=${finalCountry}&limit=4`
         );
         const data = await res.json();
         if (Array.isArray(data.universities)) {
