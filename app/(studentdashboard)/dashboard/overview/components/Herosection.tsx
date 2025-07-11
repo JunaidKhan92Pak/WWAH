@@ -21,7 +21,7 @@ const Herosection = ({ user }: { user: User }) => {
     <div className="relative">
       {/* Large Banner Image */}
       <Image
-        src="/DashboardPage/banner.svg"
+        src="/DashboardPage/banner.png"
         alt="banner image"
         width={1200}
         height={900}
