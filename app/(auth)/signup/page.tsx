@@ -82,6 +82,7 @@ const Page = () => {
     phone: "",
     referralCode: "",
   });
+  console.log(errors)
   // const [formSubmitted, setFormSubmitted] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   // console.log(errors);
@@ -124,7 +125,7 @@ const Page = () => {
           }));
         }
       } catch (error) {
-        // console.error("Google sign-in error:", error);
+        console.error("Google sign-in error:", error);
         setErrors((prev) => ({
           ...prev,
           genralError:
@@ -397,7 +398,7 @@ const Page = () => {
         setError(data.message || "Failed to resend OTP");
       }
     } catch (err) {
-      // console.error("Network error during resend:", err);
+      console.error("Network error during resend:", err);
       setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
