@@ -160,8 +160,8 @@ export const AuthProvider = ({ children }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ otp: enteredOtp }),
           credentials: "include",
+          body: JSON.stringify({ otp: enteredOtp }),
         }
       );
       const verifyRes = await response.json();
