@@ -84,7 +84,7 @@ const Page = () => {
   });
   // const [formSubmitted, setFormSubmitted] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  console.log(errors);
+  // console.log(errors);
 
   // Handle Google Sign-In response
   const handleGoogleSignIn = useCallback(
@@ -124,7 +124,7 @@ const Page = () => {
           }));
         }
       } catch (error) {
-        console.error("Google sign-in error:", error);
+        // console.error("Google sign-in error:", error);
         setErrors((prev) => ({
           ...prev,
           genralError:
@@ -285,7 +285,7 @@ const Page = () => {
       if (response.ok) {
         setSessionId(data.sessionId);
         setCurrentStep("otp-verification");
-        setSuccess("OTP sent to your email and phone number");
+        setSuccess("OTP sent to your Email");
         setCountdown(60); // 60 seconds countdown for resend
       } else {
         setError(data.message || "Failed to send OTP");
@@ -305,7 +305,7 @@ const Page = () => {
     setLoading(true);
 
     if (!otpData.emailOtp) {
-      setError("Please enter both email and phone OTP");
+      setError("Please enter OTP");
       setLoading(false);
       return;
     }
@@ -348,7 +348,62 @@ const Page = () => {
       setLoading(false);
     }
   };
+  const handleResendOtp = async () => {
+    // console.log("Resend OTP clicked, sessionId:", sessionId);
 
+    // Check if sessionId exists
+    if (!sessionId) {
+      setError("Session expired. Please start registration again.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const requestBody = { sessionId };
+      // console.log("Sending request to resend OTP:", requestBody);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}signup/resend-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      // console.log("Response status:", response.status);
+      // console.log("Response headers:", response.headers);
+
+      const data = await response.json();
+
+
+      if (response.ok && data.success) {
+        // console.log("OTP resent successfully");
+        setSuccess("New OTP sent successfully to your email");
+        setCountdown(60);
+        setOtpData({ emailOtp: "", phoneOtp: "" });
+
+        // Clear success message after 5 seconds
+        setTimeout(() => {
+          setSuccess("");
+        }, 5000);
+      } else {
+        // console.error("Failed to resend OTP:", data.message);
+        setError(data.message || "Failed to resend OTP");
+      }
+    } catch (err) {
+      // console.error("Network error during resend:", err);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+      // console.log("Resend OTP process completed");
+    }
+  };
   const completeRegistration = async () => {
     try {
       const response = await fetch(
@@ -380,39 +435,6 @@ const Page = () => {
     }
   };
 
-  const handleResendOtp = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}signup/resend-otp`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ sessionId }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess("New OTP sent successfully");
-        setCountdown(60);
-        setOtpData({ emailOtp: "", phoneOtp: "" }); // Clear previous OTP inputs
-      } else {
-        setError(data.message || "Failed to resend OTP");
-      }
-    } catch (err) {
-      console.error("Network error", err);
-
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const resetForm = () => {
     setCurrentStep("register");
@@ -467,9 +489,8 @@ const Page = () => {
           <div className="w-full mb-4">
             <div
               id="google-signin-button"
-              className={`w-full ${
-                googleLoading ? "opacity-50 pointer-events-none" : ""
-              }`}
+              className={`w-full ${googleLoading ? "opacity-50 pointer-events-none" : ""
+                }`}
             ></div>
             {googleLoading && (
               <p className="text-center text-gray-600 mt-2">
@@ -786,9 +807,6 @@ const Page = () => {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   Welcome, {formData.firstName}!
                 </h3>
-                <p className="text-gray-600">
-                  Your account has been created and verified successfully.
-                </p>
               </div>
 
               <button
