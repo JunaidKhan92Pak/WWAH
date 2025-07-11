@@ -62,7 +62,7 @@ export default function Home() {
   const [responseMessage, setResponseMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  console.log(responseMessage)
   // Dynamically generated countries list
   const countries = useMemo(
     () =>
