@@ -480,84 +480,6 @@ function Page() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          {/* University Cards Grid */}
-
-          {/* {!uniLoading ? (
-            <>
-              <div
-                className="flex items-center space-x-3 md:space-x-6 overflow-x-auto p-3"
-                style={{
-                  scrollbarWidth: "none",
-                  msOverflowStyle: "none",
-                }}
-              >
-                {universities.length === 0 ? (
-                  <p className="text-[20px] font-semibold text-center p-4 w-full">
-                    No Universities Found
-                  </p>
-                ) : (
-                  universities.slice(0, 7).map((uni) => (
-                    <Card
-                      key={uni._id}
-                      className="flex-shrink-0 w-[90%] sm:w-1/2 lg:w-[25%] h-[340px] overflow-hidden group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg"
-                    >
-                      <Link
-                        href={`/Universities/${uni._id}`}
-                        className="relative h-48 block"
-                      >
-                        <Image
-                          src={uni.universityImages.banner}
-                          alt={uni.name}
-                          layout="fill"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute bottom-1 left-5">
-                          <Image
-                            src={uni.universityImages.logo}
-                            alt={`${uni.university_name} logo`}
-                            width={56}
-                            height={56}
-                            className="rounded-full bg-white border border-black"
-                          />
-                        </div>
-                      </Link>
-
-                      <div className="p-4">
-                        <h6 className="font-semibold leading-tight mb-2">
-                          {uni.university_name}
-                        </h6>
-                        <div className="text-muted-foreground text-sm space-y-1">
-                          <div className="flex justify-between">
-                            <span>{uni.country_name}</span>
-                            <span>Public</span>
-                          </div>
-                          <div className="leading-tight">
-                            Acceptance Rate: {uni.acceptance_rate}
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))
-                )}
-
-                <div className="relative flex items-center border-2 border-gray-200  h-[340px] group cursor-pointer rounded-2xl transition-all duration-300 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-400 to-transparent opacity-30 rounded-2xl pointer-events-none"></div>
-
-                  <Link
-                    href="/Universities"
-                    className="relative z-10 w-full flex justify-center"
-                  >
-                    <div className="rounded-lg text-black leading-tight flex flex-col items-center gap-2 px-3 font-extrabold text-[18px] w-[260px] mx-0 transition-transform duration-300 group-hover:scale-105">
-                      Explore all Universities
-                      <FaArrowUpRightFromSquare />
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </>
-          ) : (
-            <SkeletonCard arr={4} />
-          )} */}
 
           {!uniLoading ? (
             <div className="relative">
@@ -594,7 +516,8 @@ function Page() {
                   universities.slice(1, 7).map((uni) => (
                     <div
                       key={uni._id}
-                      className="flex-shrink-0 w-[260px] md:w-[300px] h-[328px] md:h-[364px] bg-white shadow-md rounded-2xl overflow-hidden p-3"
+                      className="flex-shrink-0 w-[260px] md:w-[300px] h-[328px] md:h-[364px] bg-white shadow-md rounded-2xl overflow-hidden p-3 
+             transform transition-transform duration-300 hover:scale-[1.02]"
                     >
                       {/* Image + Logo */}
                       <Link
