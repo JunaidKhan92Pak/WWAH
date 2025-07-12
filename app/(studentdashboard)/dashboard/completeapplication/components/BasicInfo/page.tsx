@@ -1454,7 +1454,7 @@ const nationalityOptions = countries.map((c) => ({
               />
             </div>
           )}
-
+          givenName
           {/* Component pages */}
           {currentPage === 2 && <ContactDetailForm form={form} />}
           {currentPage === 3 && <CurrentAddress form={form} />}
@@ -1462,7 +1462,6 @@ const nationalityOptions = countries.map((c) => ({
           {currentPage === 5 && <LearningExperienceAbroad form={form} />}
           {currentPage === 6 && <FinancialSponsorInformation form={form} />}
           {currentPage === 7 && <FamilyMembers form={form} />}
-
           <div className="mt-6 flex justify-between">
             <Pagination>
               <PaginationContent className="flex justify-center mt-4 gap-4 items-center">

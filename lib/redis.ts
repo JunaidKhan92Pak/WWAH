@@ -1,6 +1,12 @@
+// /lib/redis.ts
 import { UserStore } from "@/store/useUserData";
 import { Redis } from "@upstash/redis";
-
+interface PreloadedContext {
+  userRelevantCourses: unknown[];
+  userRelevantUniversities: unknown[];
+  userCountryInfo: unknown[];
+  userProfile: UserStore;
+}
 // Create Redis client with better error handling
 const createRedisClient = () => {
   const url = process.env.REDIS_URL;
@@ -146,3 +152,32 @@ export async function clearUserCache(userId: string): Promise<void> {
   await safeRedisOperation(() => redis.del(`user:${userId}`));
 }
 
+export async function cacheUserContext(
+  userId: string,
+  context: PreloadedContext,
+  ttl: number = 1800
+): Promise<void> {
+  if (!redis) return;
+
+  await safeRedisOperation(() =>
+    redis.set(`context:${userId}`, JSON.stringify(context), { ex: ttl })
+  );
+}
+
+export async function getCachedUserContext(
+  userId: string
+): Promise<PreloadedContext | null> {
+  if (!redis) return null;
+
+  try {
+    const data = await safeRedisOperation(() => redis.get(`context:${userId}`));
+    if (!data) return null;
+
+    return typeof data === "string"
+      ? JSON.parse(data)
+      : (data as PreloadedContext);
+  } catch (error) {
+    console.error("Error getting cached context:", error);
+    return null;
+  }
+}
