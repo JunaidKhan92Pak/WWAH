@@ -28,7 +28,7 @@ export default function ContactUs() {
     { code: "+86", flag: "/countryarchive/china_logo.png", country: "China" },
     {
       code: "+353",
-      flag: "/countryarchive/ireland_logo.png",
+      flag: "/countryarchive/IR_logo.png",
       country: "Ireland",
     },
     { code: "+64", flag: "/nz.png", country: "New Zealand" },
@@ -124,12 +124,12 @@ export default function ContactUs() {
   };
 
   const openGmail = () => {
-  window.open(
-    "https://mail.google.com/mail/?view=cm&to=info@wwah.ai",
-    "_blank",
-    "noopener,noreferrer"
-  );
-};
+    window.open(
+      "https://mail.google.com/mail/?view=cm&to=info@wwah.ai",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
   return (
     <section className="sm:w-[90%] mx-auto">
       <div className="flex flex-col lg:flex-row gap-6 py-5 md:py-10 justify-center items-stretch p-2">
@@ -293,18 +293,18 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Email Address</p>
-                 <div
-                                className="flex items-center space-x-3 cursor-pointer"
-                                onClick={() =>
-                                  (window.location.href =
-                                    "mailto:info@worldwideadmissionshub.com")
-                                }
-                              >
-                                <IoMailUnreadOutline className="text-xl min-w-[20px]" />
-                <p className="text-gray-600 font-normal hover:underline cursor-pointer"
-                  onClick={openGmail}
->info@wwah.ai</p>
-</div>
+                <div
+                  className="flex items-center space-x-3 cursor-pointer"
+                  onClick={() =>
+                  (window.location.href =
+                    "mailto:info@worldwideadmissionshub.com")
+                  }
+                >
+                  <IoMailUnreadOutline className="text-xl min-w-[20px]" />
+                  <p className="text-gray-600 font-normal hover:underline cursor-pointer"
+                    onClick={openGmail}
+                  >info@wwah.ai</p>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-[#F1F1F1] p-2">
@@ -319,15 +319,15 @@ export default function ContactUs() {
               </div>
               <div>
                 <p>Phone Number</p>
-                   <div
-                className="flex items-center space-x-3 cursor-pointer"
-                onClick={() => (window.location.href = "tel:+923120762039")}
-              >
-                                <IoCallOutline className="text-xl min-w-[20px]" />
-                
-                <p className="text-gray-600">+971 50 578 4006
+                <div
+                  className="flex items-center space-x-3 cursor-pointer"
+                  onClick={() => (window.location.href = "tel:+923120762039")}
+                >
+                  <IoCallOutline className="text-xl min-w-[20px]" />
 
-</p>
+                  <p className="text-gray-600">+971 50 578 4006
+
+                  </p>
                 </div>
               </div>
             </div>

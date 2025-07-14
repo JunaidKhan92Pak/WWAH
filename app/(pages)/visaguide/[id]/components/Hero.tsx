@@ -23,7 +23,7 @@ const getAdjectiveForm = (country: string): string => {
 
 const Hero: React.FC<HeroProps> = ({ country }) => {
   const adjective = getAdjectiveForm(country);
-
+  const capitalizedAdjective = adjective.charAt(0).toUpperCase() + adjective.slice(1);
   return (
     <div>
       <section className="w-[90%] md:w-[95%] mx-auto">
@@ -36,7 +36,7 @@ const Hero: React.FC<HeroProps> = ({ country }) => {
           <div className="w-4/5 ">
             <div className="flex flex-col items-start md:w-3/5">
               <h1 className="text-left lg:leading-tight">
-                Your Comprehensive Guide to the {adjective} Visa Application
+                Your Comprehensive Guide to the {capitalizedAdjective} Visa Application
                 Process!
               </h1>
               <p className="py-2">

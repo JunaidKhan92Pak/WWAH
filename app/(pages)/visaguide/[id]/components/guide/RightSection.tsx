@@ -86,7 +86,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
                 If you need any help with your embassy process, Contact with{" "}
                 <Link
                   target="blank"
-                  href="#"
+                  href="/dashboard"
                   className="text-[#F0851D] underline font-bold"
                 >
                   WWAH advisor
@@ -129,7 +129,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
             <p className="font-semibold">
               <Link
                 target="blank"
-                href="#"
+                href="/dashboard"
                 className="text-[#C7161E] underline font-bold"
               >
                 Reach out to your WWAH Advisor

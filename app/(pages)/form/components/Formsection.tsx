@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 
 const Formsection = () => {
   const countries = [
-     { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
+    { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
     { code: "+1", flag: "/countryarchive/usa_logo.png", country: "USA" },
     { code: "+91", flag: "/countryarchive/india_logo.png", country: "India" },
     { code: "+61", flag: "/australia.png", country: "Australia" },
@@ -21,7 +21,7 @@ const Formsection = () => {
     { code: "+44", flag: "/countryarchive/uk_logo.png", country: "United Kingdom" },
     { code: "+1", flag: "/countryarchive/canada_logo.png", country: "Canada" },
     { code: "+86", flag: "/countryarchive/china_logo.png", country: "China" },
-    { code: "+353", flag: "/countryarchive/ireland_logo.png", country: "Ireland" },
+    { code: "+353", flag: "/countryarchive/IR_logo.png", country: "Ireland" },
     { code: "+64", flag: "/nz.png", country: "New Zealand" },
     { code: "+49", flag: "/countryarchive/germany_logo.png", country: "Germany" },
     { code: "+60", flag: "/countryarchive/my_logo.png", country: "Malaysia" },
@@ -243,8 +243,8 @@ const Formsection = () => {
                                   height={20}
                                   className="object-cover"
                                 />
-                                <p className="text-xs truncate">{country.code}</p> 
-                                <p className="text-xs truncate">({country.country})</p> 
+                                <p className="text-xs truncate">{country.code}</p>
+                                <p className="text-xs truncate">({country.country})</p>
                               </div>
                             </SelectItem>
                           ))}
@@ -399,7 +399,7 @@ const Formsection = () => {
                                   height={20}
                                   className="object-cover"
                                 />
-                                <p className="text-xs truncate">{country.code}</p> 
+                                <p className="text-xs truncate">{country.code}</p>
                                 <p className="text-xs truncate">({country.country})</p>
                               </div>
                             </SelectItem>

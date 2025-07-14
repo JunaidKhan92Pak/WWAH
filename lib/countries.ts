@@ -70,38 +70,38 @@
 
 
 export const countries = [
-    {
-      name: "Pakistan",
-      code: "+92",
-      flag: "/pakflag.png"
+  {
+    name: "Pakistan",
+    code: "+92",
+    flag: "/pakflag.png"
 
-    },
-    {
-      name: "United States",
-      code: "+1",
-      flag: "/countryarchive/usa_logo.png"
-    },
-    {
-      name: "United Kingdom",
-      code: "+44",
-      flag: "/countryarchive/uk_logo.png"
-    },
-    {
-      name: "Canada",
-      code: "+1",
-      flag: "/countryarchive/canada_logo.png"
-    },
-    {
-      name: "Australia",
-      code: "+61",
-      flag: "/countryarchive/australia_logo.png"
-    },
-    {
-      name: "India",
-      code: "+91",
-      flag: "/countryarchive/india_logo.png"
-    },
-     // Additional countries from your second list:
+  },
+  {
+    name: "United States",
+    code: "+1",
+    flag: "/countryarchive/usa_logo.png"
+  },
+  {
+    name: "United Kingdom",
+    code: "+44",
+    flag: "/countryarchive/uk_logo.png"
+  },
+  {
+    name: "Canada",
+    code: "+1",
+    flag: "/countryarchive/canada_logo.png"
+  },
+  {
+    name: "Australia",
+    code: "+61",
+    flag: "/countryarchive/australia_logo.png"
+  },
+  {
+    name: "India",
+    code: "+91",
+    flag: "/countryarchive/india_logo.png"
+  },
+  // Additional countries from your second list:
   {
     name: "New Zealand",
     code: "+64",
@@ -120,7 +120,7 @@ export const countries = [
   {
     name: "Ireland",
     code: "+353",
-    flag: "/countryarchive/ireland_logo.png"
+    flag: "/countryarchive/IR_logo.png"
   },
   {
     name: "China",
@@ -132,16 +132,16 @@ export const countries = [
     code: "+39",
     flag: "/countryarchive/italy_logo.png"
   },
-      
-  { 
+
+  {
     name: "France",
-    code: "+33", 
-    flag: "/countryarchive/france_logo.png" 
+    code: "+33",
+    flag: "/countryarchive/france_logo.png"
   },
-{
+  {
     name: "Denmark",
     code: "+45",
     flag: "/countryarchive/denmark_logo.png",
-}
- 
-  ];
+  }
+
+];
