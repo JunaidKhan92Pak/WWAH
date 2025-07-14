@@ -10,7 +10,7 @@ interface ChatRequestBody {
   userId?: string;
   conversationHistory?: { role: string; content: string }[];
 }
-
+export const maxDuration = 60;
 // Helper function to validate user data
 function validateUserData(userData?: UserStore): {
   hasValidUser: boolean;
@@ -72,8 +72,7 @@ async function streamingChatHandler(
     console.log(`📨 Processing message: "${message}"`);
     console.log(`👤 User ID: ${userId || "Anonymous"}`);
 
-    const { hasValidUser, userSummary } =
-      validateUserData(userData);
+    const { hasValidUser, userSummary } = validateUserData(userData);
     console.log(`📋 ${userSummary}`);
 
     // Use unified query handler - this now handles all query types internally
@@ -82,7 +81,7 @@ async function streamingChatHandler(
         message,
         userData: userData || null,
         userId: userId || "",
-        conversationHistory
+        conversationHistory,
       });
 
       console.log(`✅ Query processed successfully`);

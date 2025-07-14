@@ -12,8 +12,7 @@ import {
   cacheVectorResults,
   generateVectorKey,
 } from "./redis";
-import {  UserStore } from "@/store/useUserData";
-
+import { UserStore } from "@/store/useUserData";
 
 type Filter = Record<string, unknown>;
 type QueryParams = {
@@ -33,19 +32,19 @@ const COLLECTION_CONFIG = {
     name: "course_embeddings",
     indexName: "course_vector_index",
     priority: 0.6, // Increased priority for courses
-    k: 20, // Increased k for more results
+    k: 8, // Increased k for more results
   },
   universities: {
     name: "university_embeddings",
     indexName: "university_vector_index",
     priority: 0.3,
-    k: 10,
+    k: 4,
   },
   countries: {
     name: "country_embeddings",
     indexName: "country_vector_index",
     priority: 0.1,
-    k: 5,
+    k: 2,
   },
 };
 
@@ -56,7 +55,246 @@ const userVectorStoreCache = new Map<string, MongoDBAtlasVectorSearch>();
 // Initialize embeddings instance
 const embeddings = new OpenAIEmbeddings({
   modelName: "text-embedding-3-small",
+  batchSize: 512,
+  maxConcurrency: 5,
 });
+function getEmbeddings(): OpenAIEmbeddings {
+  if (!embeddingsInstance) {
+    embeddingsInstance = new OpenAIEmbeddings({
+      modelName: "text-embedding-3-small",
+      batchSize: 100, // Reduced batch size
+      maxConcurrency: 3, // Reduced concurrency
+      stripNewLines: true,
+      timeout: 5000, // 5 second timeout
+    });
+  }
+  return embeddingsInstance;
+}
+let embeddingsInstance: OpenAIEmbeddings | null = null;
+let chatModelInstance: ChatOpenAI | null = null;
+const vectorStoreInstances: Map<string, MongoDBAtlasVectorSearch> = new Map();
+function getChatModel(): ChatOpenAI {
+  if (!chatModelInstance) {
+    chatModelInstance = new ChatOpenAI({
+      modelName: "gpt-4o-mini", // Faster model
+      temperature: 0.1, // Lower temperature for faster response
+      maxTokens: 400, // Reduced token limit
+      timeout: 10000, // 10 second timeout
+      streaming: false, // Disable streaming for faster processing
+    });
+  }
+  return chatModelInstance;
+}
+async function getVectorStore(
+  domain: keyof typeof COLLECTION_CONFIG
+): Promise<MongoDBAtlasVectorSearch> {
+  if (vectorStoreInstances.has(domain)) {
+    return vectorStoreInstances.get(domain)!;
+  }
+
+  const client = await clientPromise;
+  const db = client.db("wwah");
+  const config = COLLECTION_CONFIG[domain];
+
+  const vectorStore = new MongoDBAtlasVectorSearch(getEmbeddings(), {
+    collection: db.collection(config.name),
+    indexName: config.indexName,
+    textKey: "text",
+    embeddingKey: "embedding",
+  });
+
+  vectorStoreInstances.set(domain, vectorStore);
+  return vectorStore;
+}
+function getRelevantDomains(
+  query: string,
+  userData?: UserStore | null
+): (keyof typeof COLLECTION_CONFIG)[] {
+  const lowerQuery = query.toLowerCase();
+console.log(userData);
+  // Quick keyword matching for domain selection
+  if (/\b(course|program|degree|study)\b/i.test(lowerQuery)) {
+    return ["courses"]; // Only search courses for better performance
+  }
+
+  if (/\b(university|college|institution)\b/i.test(lowerQuery)) {
+    return ["universities", "courses"]; // Limit to 2 domains
+  }
+
+  if (/\b(country|location|where)\b/i.test(lowerQuery)) {
+    return ["countries", "courses"];
+  }
+
+  // Default: prioritize courses only
+  return ["courses"];
+}
+async function parallelVectorSearch(
+  query: string,
+  domains: (keyof typeof COLLECTION_CONFIG)[],
+  userData?: UserStore | null
+): Promise<Document[]> {
+  const searchPromises = domains.map(async (domain) => {
+    try {
+      const vectorStore = await getVectorStore(domain);
+      const config = COLLECTION_CONFIG[domain];
+
+      // Build optimized filters with proper typing
+      const filters: Record<string, string> = { domain };
+
+      if (userData?.detailedInfo?.studyPreferenced) {
+        const prefs = userData.detailedInfo.studyPreferenced;
+        if (prefs.country) filters.country = prefs.country;
+        if (prefs.subject && domain === "courses")
+          filters.subject = prefs.subject;
+        if (prefs.degree && domain === "courses") filters.degree = prefs.degree;
+      }
+
+      const retriever = vectorStore.asRetriever({
+        k: config.k,
+        filter: filters,
+      });
+
+      // Add timeout to each search
+      const timeoutPromise = new Promise<Document[]>((_, reject) => {
+        setTimeout(
+          () => reject(new Error(`Search timeout for ${domain}`)),
+          3000
+        );
+      });
+
+      const searchPromise = retriever.getRelevantDocuments(query);
+      const results = await Promise.race([searchPromise, timeoutPromise]);
+
+      return results.map((doc) => ({
+        ...doc,
+        metadata: { ...doc.metadata, domain },
+      }));
+    } catch (error) {
+      console.warn(`Search failed for ${domain}:`, error);
+      return [];
+    }
+  });
+
+  // Execute all searches in parallel with overall timeout
+  const allResults = await Promise.allSettled(searchPromises);
+  const successfulResults = allResults
+    .filter((result) => result.status === "fulfilled")
+    .flatMap((result) => (result as PromiseFulfilledResult<Document[]>).value);
+
+  return successfulResults;
+}
+function buildOptimizedContext(
+  documents: Document[],
+  maxLength: number = 2000
+): string {
+  if (documents.length === 0) return "";
+
+  let context = "";
+  let currentLength = 0;
+
+  // Prioritize documents by domain
+  const prioritizedDocs = documents.sort((a, b) => {
+    const aDomain = a.metadata?.domain || "";
+    const bDomain = b.metadata?.domain || "";
+
+    if (aDomain === "courses") return -1;
+    if (bDomain === "courses") return 1;
+    return 0;
+  });
+
+  for (const doc of prioritizedDocs) {
+    const content = doc.pageContent;
+    const truncatedContent =
+      content.length > 500 ? content.substring(0, 500) + "..." : content;
+
+    if (currentLength + truncatedContent.length > maxLength) {
+      break;
+    }
+
+    context += `\n--- ${
+      doc.metadata?.domain || "info"
+    } ---\n${truncatedContent}\n`;
+    currentLength += truncatedContent.length;
+  }
+
+  return context;
+}
+export async function optimizedQuery(
+  query: string,
+  userData?: UserStore | null,
+): Promise<string> {
+  console.log(`🚀 Processing optimized query: "${query}"`);
+
+  try {
+    // Step 1: Quick intent classification
+    const isGreeting = /^(hi|hello|hey|thanks|thank you)$/i.test(query.trim());
+    if (isGreeting) {
+      const name = userData?.user?.firstName || "";
+      return `Hello${
+        name ? ` ${name}` : ""
+      }! 👋 How can I help you with your study abroad journey today?`;
+    }
+
+    // Step 2: Get relevant domains (reduced scope)
+    const domains = getRelevantDomains(query, userData);
+    console.log(`🎯 Searching domains: ${domains.join(", ")}`);
+
+    // Step 3: Parallel vector search with timeout
+    const startTime = Date.now();
+    const documents = await parallelVectorSearch(query, domains, userData);
+    console.log(`⚡ Vector search completed in ${Date.now() - startTime}ms`);
+
+    if (documents.length === 0) {
+      return "I couldn't find specific information for your query. Could you please provide more details about what you're looking for?";
+    }
+
+    // Step 4: Build optimized context
+    const context = buildOptimizedContext(documents, 1500); // Reduced context size
+
+    // Step 5: Optimized prompt
+    const prompt = new PromptTemplate({
+      inputVariables: ["query", "context", "userInfo"],
+      template: `You are ZEUS, a study abroad assistant. Be concise and helpful.
+
+${
+  userData?.detailedInfo?.studyPreferenced
+    ? `
+User Preferences: ${userData.detailedInfo.studyPreferenced.degree} in ${userData.detailedInfo.studyPreferenced.subject} in ${userData.detailedInfo.studyPreferenced.country}
+`
+    : ""
+}
+
+Query: {query}
+
+Context: {context}
+
+Provide a focused, actionable response (max 300 words). Include specific details from the context.`,
+    });
+
+    // Step 6: Generate response with timeout
+    const model = getChatModel();
+    const formattedPrompt = await prompt.format({
+      query,
+      context,
+      userInfo: userData?.user?.firstName || "User",
+    });
+
+    const response = await model.invoke(formattedPrompt);
+
+    console.log(`✅ Total processing time: ${Date.now() - startTime}ms`);
+    return response.content as string;
+  } catch (error) {
+    console.error("❌ Optimized query error:", error);
+    return "I'm having trouble processing your request right now. Please try again or rephrase your question.";
+  }
+}
+
+// Connection cleanup function
+export function cleanupConnections() {
+  vectorStoreInstances.clear();
+  embeddingsInstance = null;
+  chatModelInstance = null;
+}
 function isGreeting(message: string): boolean {
   const greetingPatterns = [
     /^hi+\s*$/i,
@@ -131,607 +369,7 @@ function classifyQueryIntent(
 
   return { intent: "general", confidence: "low" };
 }
-// Enhanced semantic search with flexible user preference handling
-export async function flexibleSemanticSearch(
-  query: string,
-  domain: keyof typeof COLLECTION_CONFIG,
-  userData?: UserStore | null,
-  forceUserPreferences: boolean = false
-): Promise<Document[]> {
-  const client = await clientPromise;
-  const db = client.db("wwah");
-  const config = COLLECTION_CONFIG[domain];
-  const collection = db.collection(config.name);
 
-  // Build query - only enhance with user preferences if forced or query is generic
-  let enhancedQuery = query;
-  const isGenericQuery =
-    /^(study abroad|tell me about|suggest|recommend|find|looking for)$/i.test(
-      query.trim()
-    );
-
-  if (forceUserPreferences && userData?.detailedInfo?.studyPreferenced) {
-    const prefs = userData.detailedInfo.studyPreferenced;
-    enhancedQuery = `${query} ${prefs.degree} ${prefs.subject} ${prefs.country}`;
-  } else if (isGenericQuery && userData?.detailedInfo?.studyPreferenced) {
-    const prefs = userData.detailedInfo.studyPreferenced;
-    enhancedQuery = `${prefs.degree} in ${prefs.subject} in ${prefs.country}`;
-  }
-
-  console.log(`🔍 Enhanced query for ${domain}: "${enhancedQuery}"`);
-
-  try {
-    const vectorStore = await getDomainVectorStore(domain);
-
-    // Build filters more intelligently
-    const filters = buildFlexibleFilters(
-      query,
-      domain,
-      userData,
-      forceUserPreferences
-    );
-
-    // Test if filters work
-    const testCount = await collection.countDocuments(filters || {});
-    console.log(`🧪 Filter test for ${domain}: ${testCount} documents match`);
-
-    let results = [];
-
-    if (testCount > 0) {
-      const retriever = vectorStore.asRetriever({
-        k: config.k,
-        filter: filters,
-      });
-      results = await retriever.getRelevantDocuments(enhancedQuery);
-      console.log(
-        `✅ Found ${results.length} documents with filters for ${domain}`
-      );
-    } else {
-      // Fallback to domain-only search
-      const retriever = vectorStore.asRetriever({
-        k: config.k,
-        filter: { domain },
-      });
-      results = await retriever.getRelevantDocuments(enhancedQuery);
-      console.log(
-        `✅ Found ${results.length} documents with domain-only search for ${domain}`
-      );
-    }
-
-    // Smart post-processing based on query content
-    if (results.length > 0) {
-      results = rankResultsByQueryRelevance(
-        results,
-        query,
-        userData,
-        forceUserPreferences
-      );
-    }
-
-    return results;
-  } catch (error) {
-    console.error(`❌ Error in flexible semantic search for ${domain}:`, error);
-    throw error;
-  }
-}
-
-// Build filters that adapt to the query content
-function buildFlexibleFilters(
-  query: string,
-  domain: keyof typeof COLLECTION_CONFIG,
-  userData?: UserStore | null,
-  forceUserPreferences: boolean = false
-): Filter | undefined {
-  const filters: Filter = { domain };
-
-  console.log(
-    `🔍 Building flexible filters for domain: ${domain}, query: "${query}"`
-  );
-
-  // Extract explicit preferences from query
-  const querySubjects = extractSubjectsFromQuery(query.toLowerCase());
-  const queryDegree = detectDegreeFromQuery(query);
-  const queryCountry = detectCountryFromQuery(query);
-
-  if (domain === "courses") {
-    // Use query-specific preferences first, then fall back to user preferences
-    if (querySubjects.length > 0) {
-      filters.subject = { $in: getSubjectVariations(querySubjects[0]) };
-    } else if (
-      forceUserPreferences &&
-      userData?.detailedInfo?.studyPreferenced?.subject
-    ) {
-      filters.subject = {
-        $in: getSubjectVariations(
-          userData.detailedInfo.studyPreferenced.subject
-        ),
-      };
-    }
-
-    if (queryDegree) {
-      filters.degree = { $in: getDegreeVariations(queryDegree) };
-    } else if (
-      forceUserPreferences &&
-      userData?.detailedInfo?.studyPreferenced?.degree
-    ) {
-      filters.degree = {
-        $in: getDegreeVariations(userData.detailedInfo.studyPreferenced.degree),
-      };
-    }
-
-    if (queryCountry) {
-      filters.country = queryCountry;
-    } else if (
-      forceUserPreferences &&
-      userData?.detailedInfo?.studyPreferenced?.country
-    ) {
-      filters.country = userData.detailedInfo.studyPreferenced.country;
-    }
-  }
-
-  if (domain === "universities") {
-    if (queryCountry) {
-      filters.country = queryCountry;
-    } else if (
-      forceUserPreferences &&
-      userData?.detailedInfo?.studyPreferenced?.country
-    ) {
-      filters.country = userData.detailedInfo.studyPreferenced.country;
-    }
-  }
-
-  if (domain === "countries") {
-    if (queryCountry) {
-      filters.country = queryCountry;
-    } else if (
-      forceUserPreferences &&
-      userData?.detailedInfo?.studyPreferenced?.country
-    ) {
-      filters.country = userData.detailedInfo.studyPreferenced.country;
-    }
-  }
-
-  console.log(
-    `🔍 Flexible filters for ${domain}:`,
-    JSON.stringify(filters, null, 2)
-  );
-  return filters;
-}
-
-// Get subject variations for better matching
-function getSubjectVariations(subject: string): string[] {
-  const variations: Record<string, string[]> = {
-    physics: [
-      "Physics",
-      "physics",
-      "BSc Physics",
-      "BS Physics",
-      "Bachelor of Science in Physics",
-      "B.S. in Physics",
-    ],
-    biotechnology: [
-      "Biotechnology",
-      "biotechnology",
-      "Biotech",
-      "biotech",
-      "Biological Technology",
-      "Bio Technology",
-    ],
-    biology: [
-      "Biology",
-      "biology",
-      "Biological Science",
-      "Life Science",
-      "Biological Studies",
-    ],
-    chemistry: [
-      "Chemistry",
-      "chemistry",
-      "Chemical Science",
-      "Chemical Engineering",
-    ],
-    engineering: ["Engineering", "engineering", "Engineer", "Technical"],
-    "computer science": [
-      "Computer Science",
-      "computer science",
-      "CS",
-      "Computing",
-      "Software Engineering",
-    ],
-    business: [
-      "Business",
-      "business",
-      "Business Administration",
-      "Management",
-      "Commerce",
-    ],
-    medicine: [
-      "Medicine",
-      "medicine",
-      "Medical",
-      "Healthcare",
-      "Health Sciences",
-    ],
-  };
-
-  const lowerSubject = subject.toLowerCase();
-  return (
-    variations[lowerSubject] || [
-      subject,
-      subject.toLowerCase(),
-      subject.toUpperCase(),
-    ]
-  );
-}
-
-// Get degree variations for better matching
-function getDegreeVariations(degree: string): string[] {
-  const variations: Record<string, string[]> = {
-    Bachelor: [
-      "Bachelor",
-      "bachelor",
-      "Bachelor's",
-      "BS",
-      "BSc",
-      "BA",
-      "B.S.",
-      "B.A.",
-      "Undergraduate",
-    ],
-    Master: [
-      "Master",
-      "master",
-      "Master's",
-      "MS",
-      "MSc",
-      "MA",
-      "M.S.",
-      "M.A.",
-      "Graduate",
-    ],
-    PhD: [
-      "PhD",
-      "phd",
-      "Ph.D.",
-      "Doctorate",
-      "doctorate",
-      "Doctoral",
-      "Doctor",
-    ],
-    Diploma: [
-      "Diploma",
-      "diploma",
-      "Certificate",
-      "certificate",
-      "Advanced Diploma",
-    ],
-  };
-
-  return (
-    variations[degree] || [degree, degree.toLowerCase(), degree.toUpperCase()]
-  );
-}
-
-// Rank results by query relevance
-function rankResultsByQueryRelevance(
-  results: Document[],
-  query: string,
-  userData?: UserStore | null,
-  forceUserPreferences: boolean = false
-): Document[] {
-  const lowerQuery = query.toLowerCase();
-  const querySubjects = extractSubjectsFromQuery(lowerQuery);
-  const queryDegree = detectDegreeFromQuery(query);
-  const queryCountry = detectCountryFromQuery(query);
-
-  return results
-    .map((doc) => {
-      const content = doc.pageContent.toLowerCase();
-      let score = 0;
-
-      // Score based on query-specific terms (higher priority)
-      if (querySubjects.length > 0) {
-        querySubjects.forEach((subject) => {
-          if (content.includes(subject)) score += 5;
-        });
-      }
-
-      if (queryDegree && content.includes(queryDegree.toLowerCase())) {
-        score += 3;
-      }
-
-      if (queryCountry && content.includes(queryCountry.toLowerCase())) {
-        score += 3;
-      }
-
-      // Score based on user preferences (lower priority unless forced)
-      if (forceUserPreferences && userData?.detailedInfo?.studyPreferenced) {
-        const prefs = userData.detailedInfo.studyPreferenced;
-
-        if (prefs.subject && content.includes(prefs.subject.toLowerCase())) {
-          score += 2;
-        }
-        if (prefs.degree && content.includes(prefs.degree.toLowerCase())) {
-          score += 2;
-        }
-        if (prefs.country && content.includes(prefs.country.toLowerCase())) {
-          score += 2;
-        }
-      }
-
-      return { ...doc, relevanceScore: score };
-    })
-    .sort((a, b) => b.relevanceScore - a.relevanceScore);
-}
-
-// Enhanced query processing with better context selection
-export async function queryDocumentsWithFlexibleContext(
-  query: string,
-  userData: UserStore | null = null,
-  userId: string = ""
-) {
-  console.log(`🔍 Processing flexible query: "${query}"`);
-  console.log(`👤 User ID: ${userId}`);
-
-  // Determine if we should force user preferences
-  const querySubjects = extractSubjectsFromQuery(query.toLowerCase());
-  const userPreferredSubject =
-    userData?.detailedInfo?.studyPreferenced?.subject?.toLowerCase();
-  const forceUserPreferences =
-    !querySubjects.length ||
-    (userPreferredSubject && querySubjects.includes(userPreferredSubject));
-
-  console.log(`🎯 Force user preferences: ${forceUserPreferences}`);
-
-  // Check for cached results
-  const cacheKey = generateVectorKey(query, userId);
-  const cachedResults = await getCachedVectorResults(cacheKey);
-  if (cachedResults) {
-    console.log("✅ Returning cached results");
-    return cachedResults;
-  }
-
-  // Create smart ensemble retriever with flexible approach
-  const detectedDomains = detectQueryDomains(query, userData);
-  const retrievers = [];
-  const weights = [];
-
-  // Add domain-specific retrievers with flexible search
-  for (const domain of detectedDomains) {
-    try {
-      const documents = await flexibleSemanticSearch(
-        query,
-        domain,
-        userData,
-        forceUserPreferences || undefined
-      );
-
-      if (documents.length > 0) {
-        const vectorStore = await getDomainVectorStore(domain);
-        const config = COLLECTION_CONFIG[domain];
-
-        const retriever = vectorStore.asRetriever({
-          k: config.k,
-          filter: { domain },
-        });
-
-        retrievers.push(retriever);
-        weights.push(config.priority);
-        console.log(
-          `✅ Added ${domain} retriever (k=${config.k}, docs=${documents.length})`
-        );
-      }
-    } catch (error) {
-      console.error(`❌ Failed to add ${domain} retriever:`, error);
-    }
-  }
-
-  if (retrievers.length === 0) {
-    throw new Error("No retrievers could be initialized");
-  }
-
-  // Normalize weights
-  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-  const normalizedWeights = weights.map((weight) => weight / totalWeight);
-
-  const ensembleRetriever = new EnsembleRetriever({
-    retrievers,
-    weights: normalizedWeights,
-  });
-
-  // Get results
-  const retrievalResults = await ensembleRetriever.getRelevantDocuments(query);
-  console.log(`🧪 Retriever returned ${retrievalResults.length} documents`);
-
-  // Filter results based on query relevance
-  const filteredResults = filterResultsByQueryRelevance(
-    retrievalResults,
-    query
-  );
-
-  console.log(`📊 Filtered to ${filteredResults.length} relevant documents`);
-
-  // Use the enhanced prompt template
-  const model = new ChatOpenAI({
-    modelName: "gpt-4o",
-    temperature: 0.3,
-    topP: 0.9,
-  });
-
-  const promptTemplate = createFlexiblePromptTemplate(
-    query,
-    userData,
-    !!forceUserPreferences
-  );
-
-  const chain = RetrievalQAChain.fromLLM(model, ensembleRetriever, {
-    returnSourceDocuments: true,
-    prompt: promptTemplate,
-  });
-
-  try {
-    const organizedContext = organizeContextByRelevance(filteredResults, query);
-
-    const response = await chain.invoke({
-      query: query,
-      context: organizedContext,
-      userPreferences: userData?.detailedInfo?.studyPreferenced
-        ? JSON.stringify(userData.detailedInfo.studyPreferenced)
-        : "None specified",
-    });
-
-    await cacheVectorResults(cacheKey, response.text);
-    console.log("✅ Query processed successfully");
-    return response.text;
-  } catch (error) {
-    console.error("❌ Error in flexible query processing:", error);
-    throw error;
-  }
-}
-
-// Filter results by query relevance
-function filterResultsByQueryRelevance(
-  results: Document[],
-  query: string
-): Document[] {
-  const querySubjects = extractSubjectsFromQuery(query.toLowerCase());
-  const queryDegree = detectDegreeFromQuery(query);
-  const queryCountry = detectCountryFromQuery(query);
-
-  if (querySubjects.length === 0 && !queryDegree && !queryCountry) {
-    // Generic query - use user preferences if available
-    return results;
-  }
-
-  // Filter for query-specific content
-  const relevantResults = results.filter((doc) => {
-    const content = doc.pageContent.toLowerCase();
-
-    // Check if document matches query-specific criteria
-    const matchesSubject =
-      querySubjects.length === 0 ||
-      querySubjects.some((subject) => content.includes(subject));
-    const matchesDegree =
-      !queryDegree || content.includes(queryDegree.toLowerCase());
-    const matchesCountry =
-      !queryCountry || content.includes(queryCountry.toLowerCase());
-
-    return matchesSubject && matchesDegree && matchesCountry;
-  });
-
-  console.log(
-    `📊 Query-specific filtering: ${relevantResults.length} out of ${results.length} documents match`
-  );
-
-  return relevantResults.length > 0 ? relevantResults : results.slice(0, 10);
-}
-
-// Create flexible prompt template
-function createFlexiblePromptTemplate(
-  query: string,
-  userData?: UserStore | null,
-  forceUserPreferences: boolean = false
-): PromptTemplate {
-  const querySubjects = extractSubjectsFromQuery(query.toLowerCase());
-  const hasQuerySpecificContent =
-    querySubjects.length > 0 ||
-    detectDegreeFromQuery(query) ||
-    detectCountryFromQuery(query);
-
-  const baseInstructions = `You are ZEUS, an AI assistant specialized in university and study abroad information.
-
-CRITICAL INSTRUCTIONS:
-1. **Answer EXACTLY what the user asks** - don't add information about unrelated topics
-2. **Focus on the query content** - prioritize information that directly answers the question
-3. **Be specific and detailed** - include exact names, requirements, and fees from the context
-4. **Provide actionable information** - include application details and next steps when relevant`;
-
-  let userPreferenceSection = "";
-  if (userData?.detailedInfo?.studyPreferenced) {
-    const prefs = userData.detailedInfo.studyPreferenced;
-
-    if (forceUserPreferences && !hasQuerySpecificContent) {
-      userPreferenceSection = `
-🎯 USER PREFERENCES (Use these since query is generic):
-- Preferred Country: ${prefs.country}
-- Preferred Degree: ${prefs.degree}
-- Preferred Subject: ${prefs.subject}
-- Nationality: ${userData.detailedInfo.nationality}`;
-    } else if (hasQuerySpecificContent) {
-      userPreferenceSection = `
-📋 User Background (for context only):
-- User prefers: ${prefs.degree} in ${prefs.subject} in ${prefs.country}
-- But they're asking about something specific, so focus on their query`;
-    }
-  }
-
-  return new PromptTemplate({
-    inputVariables: ["question", "context", "userPreferences"],
-    template: `${baseInstructions}
-
-${userPreferenceSection}
-
-5. **If the user asks about a specific subject/topic, focus ONLY on that topic**
-6. **Don't mention the user's general preferences unless directly relevant**
-7.If a user asks anything about the application process or how to apply etc give them this clickable link to the dashboard http://localhost:3000/dashboard/overview
-
-Question: {question}
-
-Available Information:
-{context}
-
-Please provide a focused response that directly answers the user's question:`,
-  });
-}
-
-// Organize context by relevance to query
-function organizeContextByRelevance(
-  results: Document[],
-  query: string
-): string {
-  const querySubjects = extractSubjectsFromQuery(query.toLowerCase());
-  const queryDegree = detectDegreeFromQuery(query);
-
-  let organizedContext = "";
-
-  // Group results by relevance
-  const highRelevance = results.filter((doc) => {
-    const content = doc.pageContent.toLowerCase();
-    return (
-      querySubjects.some((subject) => content.includes(subject)) ||
-      (queryDegree && content.includes(queryDegree.toLowerCase()))
-    );
-  });
-
-  type ScoredDocument = Document & { relevanceScore?: number };
-
-  const mediumRelevance = results.filter(
-    (doc) =>
-      !highRelevance.includes(doc) &&
-      typeof (doc as ScoredDocument).relevanceScore === "number" &&
-      ((doc as ScoredDocument).relevanceScore ?? 0) > 0
-  );
-
-  // Add high relevance results first
-  if (highRelevance.length > 0) {
-    organizedContext += "\n=== MOST RELEVANT INFORMATION ===\n";
-    highRelevance.forEach((doc, index) => {
-      organizedContext += `\n--- Result ${index + 1} ---\n${doc.pageContent}\n`;
-    });
-  }
-
-  // Add medium relevance results
-  if (mediumRelevance.length > 0) {
-    organizedContext += "\n=== ADDITIONAL RELEVANT INFORMATION ===\n";
-    mediumRelevance.slice(0, 3).forEach((doc, index) => {
-      organizedContext += `\n--- Additional ${index + 1} ---\n${
-        doc.pageContent
-      }\n`;
-    });
-  }
-
-  return organizedContext || "No relevant information found in the database.";
-}
 function extractSubjectsFromQuery(query: string): string[] {
   const subjects = [
     "biotechnology",
@@ -966,9 +604,9 @@ async function handleGreeting(params: {
 
 // Create a dedicated model for general queries
 const generalQueryModel = new ChatOpenAI({
-  modelName: "gpt-4o-mini", // Use mini for cost efficiency on general queries
+  modelName: "gpt-4o-mini",
   temperature: 0.7,
-  maxTokens: 500, // Limit response length
+  maxTokens: 500,
 });
 
 // Enhanced general query handler
@@ -1019,202 +657,6 @@ Please provide a helpful response:`,
     return `I'd be happy to help, but I'm having trouble processing that right now. ${
       userName ? `${userName}, ` : ""
     } I specialize in university applications and study abroad information. Is there anything about studying abroad or universities I can help you with instead? 🎓`;
-  }
-}
-
-// Alternative approach: Use a more sophisticated classification system
-async function handleGeneralQueryWithClassification(params: {
-  message: string;
-  userData?: UserStore | null;
-}): Promise<string> {
-  const { message, userData } = params;
-  const userName = userData?.user?.firstName || "";
-
-  // First, determine what type of general query this is
-  const classificationPrompt = new PromptTemplate({
-    inputVariables: ["query"],
-    template: `Classify this query into one of these categories:
-- recipe: cooking, food recipes, ingredients
-- math: calculations, math problems, conversions
-- general_knowledge: facts, definitions, explanations
-- weather: weather, temperature, climate
-- entertainment: movies, music, books, games
-- technology: tech help, programming (non-educational)
-- health: health advice, medical questions
-- other: anything else
-
-Query: {query}
-
-Respond with just the category name:`,
-  });
-
-  try {
-    const classificationResponse = await generalQueryModel.invoke(
-      await classificationPrompt.format({ query: message })
-    );
-
-    const category = (classificationResponse.content as string)
-      .toLowerCase()
-      .trim();
-
-    // Create specialized responses based on category
-    const specializedPrompt = new PromptTemplate({
-      inputVariables: ["query", "category", "userName"],
-      template: `You are ZEUS, a helpful AI assistant specializing in university and study abroad information.
-
-The user asked a ${category} question: {query}
-${userName ? `User Name: ${userName}` : ""}
-
-Instructions:
-1. Provide a helpful, accurate answer to their ${category} question
-2. Keep it concise but informative
-3. Be friendly and use their name if provided
-4. End with a gentle transition to your specialty area
-
-Specialized endings based on category:
-- recipe: "Enjoy cooking! By the way, if you're interested in culinary arts programs or hospitality management courses abroad, I'd love to help with that too!"
-- math: "Hope that helps with the math! I also help students find engineering and mathematics programs at universities worldwide if you're interested."
-- general_knowledge: "Interesting question! I specialize in university applications and study abroad guidance. Any academic programs you're curious about?"
-- weather: "For current weather, check your weather app. I'm great at helping with university applications and study abroad planning though!"
-- entertainment: "Great topic! I also help with media studies, film programs, and other creative courses at universities. Interested in studying abroad?"
-- technology: "Tech questions are always interesting! I specialize in helping students find computer science and engineering programs worldwide if you're looking to study."
-- health: "Health is important! I also help students find medical programs, nursing courses, and health sciences degrees abroad if you're interested."
-- other: "I'm here to help! I specialize in university applications and study abroad information. Anything in that area I can assist with?"
-
-Please provide a helpful response:`,
-    });
-
-    const response = await generalQueryModel.invoke(
-      await specializedPrompt.format({
-        query: message,
-        category: category,
-        userName: userName,
-      })
-    );
-
-    return response.content as string;
-  } catch (error) {
-    console.error("❌ Error in classified general query handler:", error);
-
-    // Fallback to simple general handler
-    return handleGeneralQuery(params);
-  }
-}
-
-// Enhanced classification function that works with the existing system
-function enhanceGeneralQueryClassification(message: string): {
-  isDefinitelyGeneral: boolean;
-  category: string;
-  confidence: number;
-} {
-  const lowerMessage = message.toLowerCase();
-
-  // High confidence general patterns
-  const definitelyGeneral = [
-    {
-      pattern:
-        /recipe|cooking|how to make|how to cook|ingredients|food preparation/i,
-      category: "recipe",
-      confidence: 0.9,
-    },
-    {
-      pattern: /weather|temperature|climate|forecast|rain|snow|sunny/i,
-      category: "weather",
-      confidence: 0.9,
-    },
-    {
-      pattern: /calculate|solve|math|arithmetic|equation|formula|convert/i,
-      category: "math",
-      confidence: 0.8,
-    },
-    {
-      pattern: /movie|film|song|music|book|novel|game|entertainment/i,
-      category: "entertainment",
-      confidence: 0.8,
-    },
-    {
-      pattern: /joke|funny|humor|tell me something funny/i,
-      category: "entertainment",
-      confidence: 0.9,
-    },
-    {
-      pattern: /health|medical|doctor|symptoms|treatment/i,
-      category: "health",
-      confidence: 0.7,
-    },
-    {
-      pattern: /news|politics|current events|sports/i,
-      category: "news",
-      confidence: 0.8,
-    },
-    {
-      pattern: /what is|define|explain|meaning of|tell me about/i,
-      category: "general_knowledge",
-      confidence: 0.6,
-    },
-  ];
-
-  for (const item of definitelyGeneral) {
-    if (item.pattern.test(lowerMessage)) {
-      return {
-        isDefinitelyGeneral: true,
-        category: item.category,
-        confidence: item.confidence,
-      };
-    }
-  }
-
-  return {
-    isDefinitelyGeneral: false,
-    category: "unknown",
-    confidence: 0.0,
-  };
-}
-
-// Replace the existing handleGeneralQuery function with this enhanced version
-export async function handleEnhancedGeneralQuery(params: {
-  message: string;
-  userData?: UserStore | null;
-}): Promise<string> {
-  const { message } = params;
-
-  // Check if this is definitely a general query
-  const classification = enhanceGeneralQueryClassification(message);
-
-  if (classification.isDefinitelyGeneral && classification.confidence > 0.7) {
-    // Use the sophisticated classification approach
-    return handleGeneralQueryWithClassification(params);
-  } else {
-    // Use the simple general approach
-    return handleGeneralQuery(params);
-  }
-}
-
-// Integration point: Update your existing handleUnifiedQuery function
-export async function handleUnifiedQueryEnhanced(
-  params: QueryParams
-): Promise<string> {
-  const { intent, confidence } = classifyQueryIntent(
-    params.message,
-    params.userData
-  );
-
-  console.log(`🎯 Classified intent: ${intent} (confidence: ${confidence})`);
-
-  switch (intent) {
-    case "greeting":
-      return handleGreeting(params);
-    case "study":
-      return handleStudyQueryWithSubjectDetection(params);
-    case "general":
-      // Use the enhanced general query handler
-      return handleEnhancedGeneralQuery(params);
-    default:
-      // For unknown intents, try the enhanced general handler first
-      if (confidence === "low") {
-        return handleEnhancedGeneralQuery(params);
-      }
-      return `I'm not sure I understand what you're looking for. I specialize in helping with university applications, study abroad information, and course recommendations. Could you please ask me something specific about studying abroad or universities? 🎓`;
   }
 }
 
@@ -1365,10 +807,7 @@ export async function semanticSearchWithUserPreferences(
   domain: keyof typeof COLLECTION_CONFIG,
   userData?: UserStore | null
 ): Promise<Document[]> {
-  const client = await clientPromise;
-  const db = client.db("wwah");
   const config = COLLECTION_CONFIG[domain];
-  const collection = db.collection(config.name);
 
   // Build enhanced query with user preferences
   let enhancedQuery = query;
@@ -1377,14 +816,6 @@ export async function semanticSearchWithUserPreferences(
 
     // Weight user preferences heavily in the search query
     enhancedQuery = `${query} ${prefs.degree} ${prefs.subject} ${prefs.country}`;
-
-    // For specific study abroad queries, be more explicit
-    if (
-      query.toLowerCase().includes("study abroad") ||
-      query.toLowerCase().includes("suggest")
-    ) {
-      enhancedQuery = `${prefs.degree} in ${prefs.subject} in ${prefs.country} university course program`;
-    }
   }
 
   console.log(`🔍 Enhanced query for ${domain}: "${enhancedQuery}"`);
@@ -1395,13 +826,9 @@ export async function semanticSearchWithUserPreferences(
     // First, try with user preference filters
     const filters = buildLangChainFilters(query, domain, userData);
 
-    // Test if filters work
-    const testCount = await collection.countDocuments(filters || {});
-    console.log(`🧪 Filter test for ${domain}: ${testCount} documents match`);
-
     let results = [];
 
-    if (testCount > 0) {
+    try {
       // Use filters if they work
       const retriever = vectorStore.asRetriever({
         k: config.k,
@@ -1411,51 +838,45 @@ export async function semanticSearchWithUserPreferences(
       console.log(
         `✅ Found ${results.length} documents with filters for ${domain}`
       );
-    } else {
+      // If no results with filters, try without filters
+      if (results.length === 0) {
+        const fallbackRetriever = vectorStore.asRetriever({
+          k: config.k,
+          filter: { domain },
+        });
+        console.log(
+          `🔄 No results with filters, falling back to semantic search for ${domain}`
+        );
+        results = await fallbackRetriever.getRelevantDocuments(enhancedQuery);
+      }
+    } catch (error) {
       // Fallback to semantic search only with domain filter
-      console.log(
-        `⚠️ No documents match filters for ${domain}, using semantic search only`
-      );
-      const retriever = vectorStore.asRetriever({
-        k: config.k,
-        filter: { domain },
-      });
-      results = await retriever.getRelevantDocuments(enhancedQuery);
-      console.log(
-        `✅ Found ${results.length} documents with semantic search for ${domain}`
-      );
+      console.error(`❌ Error in vector search for ${domain}:`, error);
+      return [];
     }
 
-    // ENHANCED: Post-process results to prioritize user preferences
-    if (userData?.detailedInfo?.studyPreferenced && results.length > 0) {
-      const prefs = userData.detailedInfo.studyPreferenced;
-
-      results = results
-        .map((doc) => {
-          const content = doc.pageContent.toLowerCase();
-          let score = 0;
-
-          // Score based on user preferences
-          if (prefs.country && content.includes(prefs.country.toLowerCase())) {
-            score += 3;
-          }
-          if (prefs.subject && content.includes(prefs.subject.toLowerCase())) {
-            score += 3;
-          }
-          if (prefs.degree && content.includes(prefs.degree.toLowerCase())) {
-            score += 2;
-          }
-
-          return { ...doc, userPreferenceScore: score };
-        })
-        .sort((a, b) => b.userPreferenceScore - a.userPreferenceScore);
-
-      console.log(
-        `📊 Re-ranked ${results.length} results by user preference for ${domain}`
-      );
+    if (results.length > 0 && userData?.detailedInfo?.studyPreferenced) {
+      // Only re-score if we have many results
+      if (results.length > 10) {
+        const prefs = userData.detailedInfo.studyPreferenced;
+        results = results
+          .slice(0, 15)
+          .map((doc) => {
+            const content = doc.pageContent.toLowerCase();
+            let score = 0;
+            if (prefs.country && content.includes(prefs.country.toLowerCase()))
+              score += 3;
+            if (prefs.subject && content.includes(prefs.subject.toLowerCase()))
+              score += 3;
+            if (prefs.degree && content.includes(prefs.degree.toLowerCase()))
+              score += 2;
+            return { ...doc, userPreferenceScore: score };
+          })
+          .sort((a, b) => b.userPreferenceScore - a.userPreferenceScore);
+      }
     }
 
-    return results;
+    return results.slice(0, config.k);
   } catch (error) {
     console.error(`❌ Error in semantic search for ${domain}:`, error);
     throw error;
@@ -1532,7 +953,7 @@ function detectQueryDomains(
   return ["courses", "universities", "countries"];
 }
 
-// Improved ensemble retriever with better weighting
+//  ensemble retriever with better weighting
 export async function createSmartEnsembleRetriever(
   query: string,
   userId?: string,
@@ -1613,7 +1034,7 @@ export async function queryDocumentsWithUserContext(
   userId: string = "",
   conversationHistory: { role: string; content: string }[] = []
 ) {
-  console.log(conversationHistory)
+  console.log(conversationHistory);
   console.log(`🔍 Processing query: "${query}"`);
   console.log(`👤 User ID: ${userId}`);
   console.log(`📋 User data:`, userData?.detailedInfo?.studyPreferenced);
@@ -1696,6 +1117,8 @@ export async function queryDocumentsWithUserContext(
   const model = new ChatOpenAI({
     modelName: "gpt-4o",
     temperature: 0.3,
+    maxTokens: 800,
+    timeout: 30000,
     topP: 0.9,
   });
 
@@ -1818,17 +1241,6 @@ Please provide a comprehensive response that prioritizes the user's specific pre
   } catch (error) {
     console.error("❌ Error in queryDocumentsWithUserContext:", error);
     throw error;
-  }
-}
-
-// Clear cache functions
-export function clearDomainCache(domain?: keyof typeof COLLECTION_CONFIG) {
-  if (domain) {
-    vectorStoreCache.delete(`domain_${domain}`);
-  } else {
-    Object.keys(COLLECTION_CONFIG).forEach((d) => {
-      vectorStoreCache.delete(`domain_${d}`);
-    });
   }
 }
 
