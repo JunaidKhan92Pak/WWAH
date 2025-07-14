@@ -131,27 +131,6 @@ const MAX = 1000000;
 export default function FilterContent() {
   const { filterUniversities, setSearch, setCountry, fetchAllUniversitiesForFilter, loading } =
     useUniversityStore();
-
-  const formatNumberWithCommas = (num: number) => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-
-  // Remove commas and convert to number
-  const parseNumberFromFormatted = (str: string) => {
-    return parseInt(str.replace(/,/g, ''), 10) || 0;
-  };
-
-  // Remove leading zeros and format with commas
-  interface FormatBudgetInput {
-    (value: string): string;
-  }
-
-  const formatBudgetInput: FormatBudgetInput = (value) => {
-    // Convert to number to remove leading zeros, then format with commas
-    const numValue: number = parseInt(value, 10) || 0;
-    return formatNumberWithCommas(numValue);
-  };
-
   const {
     minBudget,
     maxBudget,
@@ -170,30 +149,23 @@ export default function FilterContent() {
     setSubjectAreaFilter,
     subjectAreaFilter,
   } = useCourseStore();
-
-  const [values, setValues] = useState([
+  // const [localMinBudget, setLocalMinBudget] = useState(minBudget || 0);
+  // const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget || 0);
+  const [values, setValues] = useState<number[]>([
     minBudget || MIN,
     maxBudget || MAX,
   ]);
 
-  // Add display values for formatted inputs
-  const [displayMinBudget, setDisplayMinBudget] = useState(
-    formatNumberWithCommas(minBudget || MIN)
-  );
-  const [displayMaxBudget, setDisplayMaxBudget] = useState(
-    formatNumberWithCommas(maxBudget || MAX)
-  );
-
   // Debounced store updates
   const debouncedUpdateMinBudget = useCallback(
-    debounce((value) => {
+    debounce((value: number) => {
       setMinBudget(value);
     }, 500),
     [setMinBudget]
   );
 
   const debouncedUpdateMaxBudget = useCallback(
-    debounce((value) => {
+    debounce((value: number) => {
       setMaxBudget(value);
     }, 500),
     [setMaxBudget]
@@ -202,63 +174,30 @@ export default function FilterContent() {
   // Sync with store updates
   useEffect(() => {
     setValues([minBudget || MIN, maxBudget || MAX]);
-    setDisplayMinBudget(formatNumberWithCommas(minBudget || MIN));
-    setDisplayMaxBudget(formatNumberWithCommas(maxBudget || MAX));
   }, [minBudget, maxBudget]);
 
   const handleSliderChange = (vals: number[]) => {
-    setValues(Array.from(vals));
-    setDisplayMinBudget(formatNumberWithCommas(vals[0]));
-    setDisplayMaxBudget(formatNumberWithCommas(vals[1]));
+    setValues(vals);
     debouncedUpdateMinBudget(vals[0]);
     debouncedUpdateMaxBudget(vals[1]);
   };
 
-  interface BudgetInputEvent extends React.ChangeEvent<HTMLInputElement> { }
-
-  const handleMinChange = (e: BudgetInputEvent) => {
-    const inputValue = e.target.value;
-    const numericValue = parseNumberFromFormatted(inputValue);
-    const clamped = Math.min(numericValue, values[1] - 1);
-
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    const clamped = Math.min(val, values[1] - 1);
     setValues([clamped, values[1]]);
-    setDisplayMinBudget(formatBudgetInput(inputValue));
     debouncedUpdateMinBudget(clamped);
   };
 
-  interface BudgetMaxInputEvent extends React.ChangeEvent<HTMLInputElement> { }
-
-  const handleMaxChange = (e: BudgetMaxInputEvent) => {
-    const inputValue: string = e.target.value;
-    const numericValue: number = parseNumberFromFormatted(inputValue);
-    const clamped: number = Math.max(numericValue, values[0] + 1);
-
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    const clamped = Math.max(val, values[0] + 1);
     setValues([values[0], clamped]);
-    setDisplayMaxBudget(formatBudgetInput(inputValue));
     debouncedUpdateMaxBudget(clamped);
   };
-
-  // Handle input focus to remove commas for easier editing
-  interface BudgetFocusEvent extends React.FocusEvent<HTMLInputElement> { }
-
-  const handleMinFocus = (e: BudgetFocusEvent) => {
-    e.target.value = values[0].toString();
-  };
-
-  interface BudgetMaxFocusEvent extends React.FocusEvent<HTMLInputElement> { }
-
-  const handleMaxFocus = (e: BudgetMaxFocusEvent) => {
-    e.target.value = values[1].toString();
-  };
-
-  // Handle input blur to restore formatting
-  const handleMinBlur = () => {
-    setDisplayMinBudget(formatNumberWithCommas(values[0]));
-  };
-
-  const handleMaxBlur = () => {
-    setDisplayMaxBudget(formatNumberWithCommas(values[1]));
-  };
+  useEffect(() => {
+    setValues([minBudget || MIN, maxBudget || MAX]);
+  }, [minBudget, maxBudget]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const studyDestinations = useMemo(
@@ -572,13 +511,12 @@ export default function FilterContent() {
             <div className="flex-1">
               <div className="bg-white rounded-lg shadow p-2 text-center">
                 <input
-                  type="text"
-                  value={displayMinBudget}
+                  type="number"
+                  value={values[0]}
                   onChange={handleMinChange}
-                  onFocus={handleMinFocus}
-                  onBlur={handleMinBlur}
                   className="w-full text-center text-xl font-medium focus:outline-none"
-                  placeholder="0"
+                  min={MIN}
+                  max={values[1] - 1}
                 />
               </div>
             </div>
@@ -586,13 +524,12 @@ export default function FilterContent() {
             <div className="flex-1">
               <div className="bg-white rounded-lg shadow p-2 text-center">
                 <input
-                  type="text"
-                  value={displayMaxBudget}
+                  type="number"
+                  value={values[1]}
                   onChange={handleMaxChange}
-                  onFocus={handleMaxFocus}
-                  onBlur={handleMaxBlur}
                   className="w-full text-center text-xl font-medium focus:outline-none"
-                  placeholder="0"
+                  min={values[0] + 1}
+                  max={MAX}
                 />
               </div>
             </div>
