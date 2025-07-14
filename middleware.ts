@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/dashboard/");
 
   // Check if path is an auth route
-  const isAuthRoute = pathname === "/signin" || pathname === "/register";
+  const isAuthRoute = pathname === "/signin" || pathname === "/signup";
 
   // 🔒 Redirect unauthenticated users away from protected pages
   if (!token && isProtectedRoute) {
@@ -35,6 +35,6 @@ export const config = {
     '/dashboard',
     '/dashboard/:path*', // This will match all paths under dashboard
     '/signin',
-    '/register'
+    '/signup'
   ],
 };

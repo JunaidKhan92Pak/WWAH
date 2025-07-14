@@ -47,7 +47,7 @@ const Page = () => {
     {
       name: "Ireland",
       value: "Ireland",
-      img: "/countryarchive/ireland_logo.png",
+      img: "/countryarchive/IR_logo.png",
     },
     { name: "Malaysia", value: "malaysia", img: "/countryarchive/my_logo.png" },
     {
@@ -80,7 +80,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const initialCountrySet = React.useRef(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
-const [favoriteUniversities, setFavoriteUniversities] = useState<Record<string, typeof universities[0]>>({});
+  const [favoriteUniversities, setFavoriteUniversities] = useState<Record<string, typeof universities[0]>>({});
 
   // Handle country param from URL - consolidated logic from previous duplicate useEffects
   useEffect(() => {
@@ -148,31 +148,31 @@ const [favoriteUniversities, setFavoriteUniversities] = useState<Record<string, 
   // No need to load favorites from localStorage
 
   const toggleFavorite = (id: string) => {
-  setFavorites((prev) => {
-    const updatedFavorites = { ...prev, [id]: !prev[id] };
+    setFavorites((prev) => {
+      const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-    // Add to or remove from full favoriteUniversities list
-    setFavoriteUniversities((prevFavs) => {
-      const updatedFavs = { ...prevFavs };
+      // Add to or remove from full favoriteUniversities list
+      setFavoriteUniversities((prevFavs) => {
+        const updatedFavs = { ...prevFavs };
 
-      const university = universities.find((u) => u._id === id);
-      if (updatedFavorites[id] && university) {
-        updatedFavs[id] = university;
-      } else {
-        delete updatedFavs[id];
-      }
-      return updatedFavs;
+        const university = universities.find((u) => u._id === id);
+        if (updatedFavorites[id] && university) {
+          updatedFavs[id] = university;
+        } else {
+          delete updatedFavs[id];
+        }
+        return updatedFavs;
+      });
+
+      // Update count and animate
+      const newCount = Object.values(updatedFavorites).filter(Boolean).length;
+      setFavoritesCount(newCount);
+      setHeartAnimation(id);
+      setTimeout(() => setHeartAnimation(null), 1000);
+
+      return updatedFavorites;
     });
-
-    // Update count and animate
-    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-    setFavoritesCount(newCount);
-    setHeartAnimation(id);
-    setTimeout(() => setHeartAnimation(null), 1000);
-
-    return updatedFavorites;
-  });
-};
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -180,9 +180,9 @@ const [favoriteUniversities, setFavoriteUniversities] = useState<Record<string, 
     }
   }, [currentPage]);
   // Filter universities by favorites if showFavorites is true
-const displayedUniversities = showFavorites
-  ? Object.values(favoriteUniversities)
-  : universities;
+  const displayedUniversities = showFavorites
+    ? Object.values(favoriteUniversities)
+    : universities;
 
   // Generate empty state message based on selected countries
   const getEmptyStateMessage = () => {
@@ -288,9 +288,8 @@ const displayedUniversities = showFavorites
             </DropdownMenu>
             <button
               onClick={() => setShowFavorites((prev) => !prev)}
-              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full lg:w-[90%] xl:w-[70%] h-10 ${
-                showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+                }`}
             >
               <Image
                 src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -448,11 +447,10 @@ const displayedUniversities = showFavorites
                               </Label>
                               <Input
                                 id={`link-${item._id}`}
-                                value={`${
-                                  typeof window !== "undefined"
+                                value={`${typeof window !== "undefined"
                                     ? window.location.origin
                                     : ""
-                                }/Universities/${item._id}`}
+                                  }/Universities/${item._id}`}
                                 readOnly
                               />
                             </div>
@@ -523,9 +521,8 @@ const displayedUniversities = showFavorites
 
                       <button
                         onClick={() => toggleFavorite(item._id)}
-                        className={`relative ${
-                          heartAnimation === item._id ? "animate-pop" : ""
-                        }`}
+                        className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
+                          }`}
                       >
                         {favorites[item._id] ? (
                           <Image

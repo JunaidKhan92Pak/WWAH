@@ -18,7 +18,7 @@ const countries = [
   // {
   //   name: "Ireland",
   //   value: "ireland",
-  //   img: "/countryarchive/ireland_logo.png",
+  //   img: "/countryarchive/IR_logo.png",
   // },
   // {
   //   name: "New Zealand",
