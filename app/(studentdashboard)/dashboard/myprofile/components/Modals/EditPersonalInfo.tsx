@@ -142,7 +142,7 @@ export default function EditPersonalInfo({ data }: { data: DetailedInfo }) {
     { code: "+86", flag: "/countryarchive/china_logo.png", country: "China" },
     {
       code: "+353",
-      flag: "/countryarchive/ireland_logo.png",
+      flag: "/countryarchive/IR_logo.png",
       country: "Ireland",
     },
     { code: "+64", flag: "/nz.png", country: "New Zealand" },

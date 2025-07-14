@@ -20,7 +20,7 @@ export const Navbar = () => {
       <div className="w-[90%] mx-auto sm:px-4 py-2 flex items-center">
         <Link href="/">
           <div className="flex items-center gap-4">
-            <Image src="/hellozeus.PNG" alt="zeus" width={40} height={20} />
+            <Image src="/hellozeus.png" alt="zeus" width={40} height={20} />
             <h4>Zeus by WWAH</h4>
           </div>
         </Link>

@@ -38,7 +38,7 @@ const images = [
   { src: "/countryarchive/aus_logo.png", name: "Australia", alt: "Australia" },
   { src: "/countryarchive/canada_logo.png", name: "Canada", alt: "Canada" },
   { src: "/countryarchive/my_logo.png", name: "Malaysia", alt: "Malaysia" },
-  { src: "/countryarchive/ireland_logo.png", name: "Ireland", alt: "Ireland" },
+  { src: "/countryarchive/IR_logo.png", name: "Ireland", alt: "Ireland" },
   { src: "/countryarchive/usa_logo.png", name: "USA", alt: "USA" },
   { src: "/countryarchive/china_logo.png", name: "China", alt: "China" },
   { src: "/countryarchive/italy_logo.png", name: "Italy", alt: "Italy" },
