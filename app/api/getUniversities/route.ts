@@ -127,7 +127,7 @@ export async function GET(req: Request) {
 
   const universities = await University.aggregate([
     { $match: match },
-    ...(all ? [] : [{ $sample: { size: totalCount } }]), // skip random sample in filter mode
+    ...(all ? [] : [{ $sort: { randomIndex: 1 as 1 } }]),
     { $skip: skip },
     { $limit: limit },
     {
@@ -144,6 +144,8 @@ export async function GET(req: Request) {
       }
     }
   ]);
+
+
 
   return NextResponse.json({
     success: true,
