@@ -110,11 +110,7 @@ const CourseArchive = () => {
     [setSearch]
   );
 
-  // Fetch courses on mount
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
-
+ 
   // Scroll to top whenever the currentPage changes
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -135,18 +131,19 @@ const CourseArchive = () => {
 
     
   const searchParams = useSearchParams();
-  const countryFromURL = searchParams.get("country");
 
-  useEffect(() => {
-    fetchCourses(); // 👈 Pehle se hai
-  }, [fetchCourses]);
+useEffect(() => {
+  const country = searchParams.get("country");
 
-  // ✅ Add this below fetchCourses useEffect
-  useEffect(() => {
-    if (countryFromURL) {
-      setCountryFilter([countryFromURL]);
-    }
-  }, [countryFromURL, setCountryFilter]);
+  if (country) {
+    setCountryFilter([country]);
+  } else {
+    fetchCourses();
+  }
+  // include fetchCourses & setCountryFilter in deps if stable
+}, [setCountryFilter, fetchCourses]);
+
+
   return (
     <section className="w-[95%] mx-auto p-2 ">
       <div className="flex flex-col lg:flex-row items-start">
