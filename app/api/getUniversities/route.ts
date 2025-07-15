@@ -127,7 +127,7 @@ export async function GET(req: Request) {
 
   const universities = await University.aggregate([
     { $match: match },
-    ...(all ? [] : [{ $sort: { randomIndex: 1 as 1 } }]),
+    ...(all ? [] : [{ $sort: { randomIndex: 1 } as const }]),
     { $skip: skip },
     { $limit: limit },
     {
