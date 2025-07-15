@@ -19,6 +19,7 @@ const Page = () => {
   useEffect(() => {
     fetchCountries();
   }, []);
+  
 
   const filteredCountries = search
     ? countries.filter((country) =>

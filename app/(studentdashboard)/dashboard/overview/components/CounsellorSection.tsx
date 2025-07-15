@@ -30,7 +30,7 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
         </p>
         <p className="mb-12 text-lg leading-snug">
           With extensive experience in guiding students toward their dream
-          universities, Fatima speci- alizes in personalized support, from
+          universities, Fatima specializes in personalized support, from
           application processes to visa assistance.
         </p>
 

@@ -1607,7 +1607,7 @@ const Footer = () => {
                 </Link>
                 <Link
                   target="blank"
-                  href="/ilets"
+                  href="/ielts"
                   className="hover:underline block"
                 >
                   IELTS Preparation

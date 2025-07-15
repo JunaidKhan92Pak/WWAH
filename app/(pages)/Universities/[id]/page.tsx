@@ -130,7 +130,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     };
     if (id) fetchData();
   }, [id]);
-  console.log(data, "data.universityData?.faqs")
+  // console.log(data, "data.universityData?.faqs")
   if (loading) return <HeroSkeleton />;
   if (error) return <p>Error: {error}</p>;
   if (!data || !data.universityData) return <p>Course Not Found</p>;

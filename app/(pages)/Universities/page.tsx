@@ -202,7 +202,7 @@ const Page = () => {
   return (
     <section className="w-[90%] mx-auto">
       <div className="md:flex md:justify-between py-5 md:pt-10">
-        <h3 className="font-bold">Discover Universities Worldwide</h3>
+        <h3 className="font-bold">Discover Universities Worldwide!</h3>
         <div className="flex flex-col md:flex-row md:items-start gap-3">
           <div className="w-full md:w-[70%] flex bg-[#F1F1F1] rounded-lg h-10">
             <Image
@@ -628,7 +628,7 @@ const Page = () => {
                             backgroundColor: bgColor,
                           }}
                         >
-                          <p className="text-sm font-normal leading-3 px-2 text-black">
+                          <p className="text-sm leading-3 px-2 text-black">
                             {displayRate}
                           </p>
                         </div>

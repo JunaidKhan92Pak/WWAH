@@ -20,11 +20,11 @@ interface Step {
 export default function Home() {
   const testTypes: { icon: string; title: string }[] = [
     {
-      icon: "/ilets/iletscap.svg",
+      icon: "/ielts/iletscap.svg",
       title: "IELTS Academic",
     },
     {
-      icon: "/ilets/iletsbook.svg",
+      icon: "/ielts/iletsbook.svg",
       title: "IELTS General Training",
     },
   ];
@@ -35,35 +35,35 @@ export default function Home() {
   };
   const steps: Step[] = [
     {
-      icon: "/Calendar-Search.png",
+      icon: "/ielts/Calendar-Search.svg",
       alt: "Calendar Icon",
       text: "1. Find a Test Location and Date",
     },
     {
-      icon: "/Clipboard.png",
+      icon: "/ielts/Clipboard.svg",
       alt: "Clipboard Icon",
       text: "2. Register Online",
       link: "https://ielts.org/take-a-test/booking-your-test",
     },
     {
-      icon: "/Shield-User.png",
+      icon: "/ielts/Shield-User.svg",
       alt: "Shield Icon",
       text: "3. Create an Account",
     },
     {
-      icon: "/Clipboard.png",
+      icon: "/ielts/Clipboard.svg",
       alt: "Clipboard Icon",
       text: "4. Complete the Application Form",
     },
-    { icon: "/Dollar.png", alt: "Dollar Icon", text: "5. Pay the Test Fee" },
-    { icon: "/Archive.png", alt: "Archive Icon", text: "6. Confirmation" },
+    { icon: "/ielts/Dollar.svg", alt: "Dollar Icon", text: "5. Pay the Test Fee" },
+    { icon: "/ielts/Archive.svg", alt: "Archive Icon", text: "6. Confirmation" },
     {
-      icon: "/Display.png",
+      icon: "/ielts/Display.svg",
       alt: "Display Icon",
       text: "7. Prepare for the Test",
     },
     {
-      icon: "/Confetti.png",
+      icon: "/ielts/Confetti.svg",
       alt: "Confetti Icon",
       text: "8. Receive Your Results",
     },
@@ -79,11 +79,11 @@ export default function Home() {
       <InfoSection
         title1="What is IELTS?"
         description1="IELTS stands for the International English Language Testing System – an English Language proficiency test. The International English Language Testing System (IELTS) is a globally recognized test that assesses the English language proficiency of individuals who wish to study or work in environments where English is the primary language."
-        imageSrc1="/ilets/iletsInfoImg1.svg"
+        imageSrc1="/ielts/iletsInfoImg1.svg"
         imageAlt1="iletsInfo"
         title2="Why IELTS?"
         description2="The International English Language Testing System (IELTS) offers two main types of tests:"
-        imageSrc2="/ilets/iletsInfoImg2.svg"
+        imageSrc2="/ielts/iletsInfoImg2.svg"
         imageAlt2="Why IELTS"
         dividerImageSrc="/dividerInfoSection.png"
         testTypes={testTypes}

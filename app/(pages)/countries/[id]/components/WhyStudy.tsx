@@ -103,6 +103,12 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
                         Ranking: {item.ranking[0]?.detail}
                       </p>
                     </div>
+                     <Link
+                      target="blank"
+                      rel="noopener noreferrer"
+                      href={`/Universities/${item._id}`}
+                      key={item._id}
+                    >
                     <Image
                       src={item.universityImages.banner}
                       alt={item.university_name}
@@ -111,6 +117,7 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
                       unoptimized
                       className="lg:h-[180px] lg:w-[350px] md:w-[320px] md:h-[135px] h-[120px] w-[300px] object-cover rounded-xl shadow-2xl border border-black"
                     />
+                    </Link>
                     <div className="absolute lg:bottom-1 -bottom-8 md:-bottom-6 left-3 lg:left-5 w-14 h-14">
                       <Image
                         src={item.universityImages.logo}

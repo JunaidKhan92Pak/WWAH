@@ -18,11 +18,11 @@ interface Step {
 export default function Home() {
   const testTypes: { icon: string; title: string }[] = [
     {
-      icon: "/ilets/iletscap.svg",
+      icon: "/ielts/iletscap.svg",
       title: "PTE Academic",
     },
     {
-      icon: "/ilets/iletsbook.svg",
+      icon: "/ielts/iletsbook.svg",
       title: "PTE General",
     },
   ];
@@ -33,39 +33,39 @@ export default function Home() {
   };
   const steps: Step[] = [
     {
-      icon: "/Shield-User--Streamline-Solar-Broken.png",
-      alt: "Calendar Icon",
+      icon: "/ielts/Shield-User.svg",
+      alt: "Sheild Icon",
       text: "1. Create a Pearson PTE Account",
       link: "https://www.pearsonpte.com/",
     },
     {
-      icon: "/Login--Streamline-Solar-Broken.png",
-      alt: "Clipboard Icon",
+      icon: "/ielts/Login.svg",
+      alt: "Login Icon",
       text: "2. Log into Your Account",
     },
     {
-      icon: "/Clipboard.svg",
-      alt: "Shield Icon",
+      icon: "/ielts/Clipboard.svg",
+      alt: "Clipboard Icon",
       text: "3. Choose the Test Type",
     },
     {
-      icon: "/Clipboard.svg",
+      icon: "/ielts/Clipboard.svg",
       alt: "Clipboard Icon",
       text: "4. Select Your Test Center and Date",
     },
     {
-      icon: "/Archive.png",
-      alt: "Dollar Icon",
+      icon: "/ielts/Archive.svg",
+      alt: "Archive Icon",
       text: "5. Review and Confirm Details",
     },
-    { icon: "/Dollar.png", alt: "Archive Icon", text: "6. Make Payment" },
+    { icon: "/ielts/Dollar.svg", alt: "Archive Icon", text: "6. Make Payment" },
     {
-      icon: "/Display.png",
+      icon: "/ielts/Display.svg",
       alt: "Display Icon",
       text: "7. Prepare for the Test",
     },
     {
-      icon: "/Confetti.png",
+      icon: "/ielts/Confetti.svg",
       alt: "Confetti Icon",
       text: "8. Receive Your Results",
     },
