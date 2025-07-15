@@ -51,9 +51,6 @@ export async function GET(req: Request) {
         }));
       }
     }
-
-
-
     // Budget filtering
     if (minBudget >= 0 && maxBudget < 999999) {
       console.log(minBudget, maxBudget);
@@ -168,9 +165,7 @@ export async function GET(req: Request) {
       },
 
       // 🟡 Randomly sample more than needed (to support pagination)
-      { $sample: { size: limit * page } },
-
-      // 🔵 Then paginate
+      { $sort: { randomIndex: 1 } },
       { $skip: skip },
       { $limit: limit },
 
