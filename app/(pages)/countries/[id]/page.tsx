@@ -14,6 +14,7 @@ import Banner from "@/components/ui/enrollment/Banner";
 import FAQ from "@/components/ui/enrollment/FAQ";
 import AccCrousel from "./components/AccCrousel";
 import Loading from "@/app/loading";
+
 export default function Countrypage({
   params,
 }: {
@@ -76,10 +77,16 @@ export default function Countrypage({
       }
     }
   };
+ useEffect(() => {
+  fetchData();
+}, []);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+useEffect(() => {
+  if (country) {
+    window.scrollTo(0, 0);
+  }
+}, [country]);
+
 
   // Only display the loading screen until country data is available.
   if (!country) {

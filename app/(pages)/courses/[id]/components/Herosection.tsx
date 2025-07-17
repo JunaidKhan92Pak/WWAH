@@ -213,23 +213,38 @@ const Herosection = ({
                 </div>
 
                 {/* Name with Tooltip */}
-<div className="relative group w-[100px]">
-  <p className="text-xs truncate md:max-w-[100px] overflow-hidden">
+                {/* <div className="relative group w-[100px]">
+                  <p className="text-xs truncate md:max-w-[200px] overflow-hidden">
+                    {item.Name}
+                  </p>
+
+                  <span
+                    className="
+                     absolute hidden group-hover:block z-10 bg-gray-200 text-black text-xs rounded-md text-center shadow-lg w-[130px] p-2
+                     lg:top-full lg:mt-2 lg:left-1/2 lg:-translate-x-1/2 max-lg:bottom-full max-lg:mb-1 max-lg:left-1/2 max-lg:-translate-x-1/2 text-wrap">
+                    {item.Name}
+                  </span>
+                </div> */}
+
+
+
+              <div className="relative group w-[100px]">
+  <p className="text-xs truncate md:max-w-[200px] overflow-hidden">
     {item.Name}
   </p>
 
   <span
     className="
-      absolute hidden group-hover:block z-10
-      bg-gray-200 text-black text-xs rounded-md text-center shadow-lg w-[200px] p-2
-
-      lg:top-full lg:mt-2 lg:left-1/2 lg:-translate-x-1/2     /* ↓ Tooltip below text for lg+ */
-      max-lg:bottom-full max-lg:mb-1 max-lg:left-1/2 max-lg:-translate-x-1/2 text-wrap  /* ↑ Tooltip above for md and mobile */
+      absolute hidden group-hover:block z-10 bg-gray-200 text-black text-xs rounded-md text-left shadow-lg
+      w-max max-w-[200px] p-2
+      top-full mt-2 right-0
+      whitespace-normal break-words
     "
   >
     {item.Name}
   </span>
 </div>
+
 
               </div>
             ))}

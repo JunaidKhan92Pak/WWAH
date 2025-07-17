@@ -129,9 +129,15 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
                     </div>
                   </div>
                   <div className="md:px-4 my-2 flex flex-col justify-between">
-                    <p className="text-gray-900 text-left text-[10px] leading-3 md:text-[12px] font-semibold lg:text-[14px] p-1 md:p-0">
+                     <Link
+            href={`/Universities?country=${countryName}`}
+            target="_blank"
+            className="cursor-pointer"
+          >
+                    <p className="text-gray-900 text-left text-[10px] leading-3 md:text-[12px] lg:text-[16px] p-1 md:p-0 hover:underline underline-offset-2">
                       {item.university_name}
                     </p>
+                    </Link>
                   </div>
                 </div>
               ))

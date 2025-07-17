@@ -71,8 +71,8 @@ function isCurrency(value: string): boolean {
               <li className="flex items-center space-x-2">
                 <span className="vertical-line w-[1px] h-3 bg-black"></span>
                 <p className="font-semibold">
-                  {data.annual_tuition_fee.currency}{" "}
-                  {data.annual_tuition_fee.amount}
+                  {data?.annual_tuition_fee?.currency}{" "}
+                  {data?.annual_tuition_fee?.amount}
                 </p>
                 <p className="text-gray-600">Annual Fee</p>
               </li>
@@ -222,10 +222,10 @@ function isCurrency(value: string): boolean {
 
             <p className=" text-gray-600 mb-4 leading-tight mt-2">
               To find out how to pay Your tuition fee, deposits & Accommodation
-              fee at {data.universityname}.
+              fee at {data?.universityname}.
             </p>
 
-            <Link target="blank" href={data.payment_method}>
+            <Link target="blank" href={data?.payment_method || "#"}>
               <Button
                 variant="outline"
                 className="w-full border-2 border-red-500 text-red-500 bg-[#FCEAD8] 

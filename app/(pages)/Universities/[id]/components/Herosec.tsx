@@ -247,7 +247,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CiLocationOn } from "react-icons/ci";
 import { useRouter } from "next/navigation";
-import {  } from "@/store/useCoursesStore";
+import { useCourseStore } from "@/store/useCoursesStore";
 
 interface UniversityData {
   establishment_year?: string;
