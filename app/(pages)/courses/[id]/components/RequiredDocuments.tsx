@@ -138,7 +138,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
             </div>
 
             {/* Image Section */}
-            <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 min-h-[300px] sm:min-h-[400px]  ">
+            <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-[#ffe7cd] min-h-[300px] sm:min-h-[400px]  ">
               {selectedDocUni ? (
                 <div className="text-center px-4 sm:px-8 lg:px-16">
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
@@ -222,7 +222,7 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
             </div>
 
             {/* Right Section: Show Image or Document Details */}
-            <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-red-50 min-h-[300px] sm:min-h-[400px] ">
+            <div className="flex items-center justify-center rounded-3xl shadow-lg h-full  bg-[#ffe7cd] min-h-[300px] sm:min-h-[400px] ">
               {selectedDoc ? (
                 <div className="text-center px-4 sm:px-8 lg:px-16">
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">

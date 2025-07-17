@@ -59,7 +59,7 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
     <div className="mx-auto max-w-3xl my-4">
       {fields.map((field, index) => (
         <div key={field.id}>
-          <div className="border p-4 rounded-md relative mb-4">
+          <div className="border p-4 rounded-md relative my-4">
             <div className="absolute top-2 right-2">
               <Button
                 variant="destructive"
@@ -81,11 +81,19 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
               name={`educationalBackground.${index}.highestDegree`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Highest Degree</FormLabel>
+                  <FormLabel>
+                    {index === 0 ? "Highest Degree" : "Select Degree"}
+                  </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Degree" />
+                        <SelectValue
+                          placeholder={
+                            index === 0
+                              ? "Select Highest Degree"
+                              : "Select Degree"
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

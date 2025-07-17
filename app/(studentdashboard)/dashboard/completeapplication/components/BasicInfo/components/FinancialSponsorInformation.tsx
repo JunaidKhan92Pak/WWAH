@@ -20,6 +20,8 @@ import { countries } from "@/lib/countries";
 import { z } from "zod";
 import { formSchema } from "./Schema";
 import { UseFormReturn } from "react-hook-form";
+import { getNames } from "country-list"; // ✅ NEW IMPORT
+
 type FormValues = z.infer<typeof formSchema>;
 
 const FinancialSponsorInformation = ({
@@ -27,6 +29,8 @@ const FinancialSponsorInformation = ({
 }: {
   form: UseFormReturn<FormValues>;
 }) => {
+  const nationalities = getNames(); // ✅ DYNAMIC COUNTRY NAMES USED AS NATIONALITIES
+
   return (
     <div className=" my-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -82,24 +86,12 @@ const FinancialSponsorInformation = ({
               <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-                    <SelectValue placeholder="Select Country" />
+                    <SelectValue placeholder="Select Nationality" />
                   </SelectTrigger>
                 </FormControl>
 
                 <SelectContent>
-                  {[
-                    "American",
-                    "Indian",
-                    "Australian",
-                    "Italian",
-                    "Pakistani",
-                    "Canadian",
-                    "British",
-                    "Chinese",
-                    "Irish",
-                    "New Zealander",
-                    "German",
-                  ].map((nation) => (
+                  {nationalities.map((nation) => (
                     <SelectItem key={nation} value={nation}>
                       {nation}
                     </SelectItem>
@@ -110,6 +102,7 @@ const FinancialSponsorInformation = ({
             </FormItem>
           )}
         />
+
         {/* Occupation */}
         <FormField
           control={form.control}
@@ -130,6 +123,7 @@ const FinancialSponsorInformation = ({
             </FormItem>
           )}
         />
+
         {/* Email */}
         <FormField
           control={form.control}
@@ -137,10 +131,8 @@ const FinancialSponsorInformation = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-
               <FormControl>
                 <div className="relative w-full">
-                  {/* Input Field */}
                   <Input
                     type="text"
                     placeholder="Enter your email address"
@@ -148,8 +140,6 @@ const FinancialSponsorInformation = ({
                     {...field}
                     value={field.value || ""}
                   />
-
-                  {/* Image inside the Input using Next.js Image */}
                   <span className="absolute left-3 top-1/2 -translate-y-1/2">
                     <Image
                       src="/DashboardPage/letter.svg"
@@ -167,74 +157,6 @@ const FinancialSponsorInformation = ({
         />
 
         {/* Phone Number */}
-        {/* <FormField
-          control={form.control}
-          name="sponsorsPhoneNo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone No.</FormLabel>
-              <div className="flex gap-2">
-              
-                <Select
-                  value={form.watch("sponsorsCountryCode") || "+92"}
-                  onValueChange={(value) =>
-                    form.setValue("sponsorsCountryCode", value)
-                  }
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
-                      <SelectValue>
-                        <div className="flex items-center gap-2">
-                          <Image
-                            src={
-                              countries.find(
-                                (c) =>
-                                  c.code === form.watch("sponsorsCountryCode")
-                              )?.flag || "/default-flag.png"
-                            }
-                            alt="Country Flag"
-                            width={20}
-                            height={20}
-                            className="object-contain"
-                            unoptimized
-                          />
-                          <span className="text-sm">
-                            {form.watch("sponsorsCountryCode") || "+92"}
-                          </span>
-                        </div>
-                      </SelectValue>
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {countries.map((country) => (
-                      <SelectItem key={country.code} value={country.code}>
-                        <div className="flex items-center gap-2">
-                          <Image
-                            src={country.flag}
-                            alt={`${country.name} Flag`}
-                            width={20}
-                            height={20}
-                            className="object-contain"
-                            unoptimized
-                          />
-                          <span className="text-sm">{`${country.code} (${country.name})`}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-           
-                <Input
-                  {...field}
-                  placeholder="Enter your phone number"
-                  className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm text-sm"
-                />
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <FormField
           control={form.control}
           name="sponsorsPhoneNo"

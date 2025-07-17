@@ -45,13 +45,13 @@ export default function ReviewPage() {
     gender?: string;
     maritalStatus?: string;
     religion?: string;
-    homeAddress?: string;
-    detailedAddress?: string;
+    currentAddress?: string;
+    permanentAddress?: string;
     country?: string;
     currentZipCode?: string;
     countryCode?: string;
     phoneNo?: string;
-    currentDetailedAddress?: string;
+    currentpermanentAddress?: string;
     currentCountry?: string;
     currentCity?: string;
     currentEmail?: string;
@@ -139,8 +139,8 @@ export default function ReviewPage() {
       religion: `${data1?.religion}`,
     },
     contactDetails: {
-      homeAddress: `${data1?.homeAddress}`,
-      detailedAddress: `${data1?.detailedAddress}`,
+      currentAddress: `${data1?.currentAddress}`,
+      permanentAddress: `${data1?.permanentAddress}`,
       country: `${data1?.country}`,
       // cityProvince: `${data1?.religion}`,
       zipCode: `${data1?.currentZipCode}`,
@@ -148,8 +148,8 @@ export default function ReviewPage() {
       // email: `${data1?.religion}`,
     },
     currentDetails: {
-      homeAddress: `${data1?.homeAddress}`,
-      detailedAddress: `${data1?.currentDetailedAddress}`,
+      currentAddress: `${data1?.currentAddress}`,
+      permanentAddress: `${data1?.currentpermanentAddress}`,
       country: `${data1?.currentCountry}`,
       cityProvince: `${data1?.currentCity}`,
       zipCode: `${data1?.currentZipCode}`,

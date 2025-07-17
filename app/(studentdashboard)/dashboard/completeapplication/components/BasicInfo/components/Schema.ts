@@ -14,7 +14,6 @@ export const formSchema = z.object({
     .max(50, { message: "Given name must be under 50 characters." }),
 
   gender: z.enum(["Male", "Female", "Other", "Prefer not to say"], {
-
     required_error: "Please select your gender.",
   }),
 
@@ -50,16 +49,16 @@ export const formSchema = z.object({
     .or(z.literal("")), // allows empty string if not required
 
   // Contact Details
-  homeAddress: z
+  currentAddress: z
     .string()
-    .min(5, { message: "Home address must be at least 5 characters." })
-    .max(100, { message: "Home address must be under 100 characters." })
+    .min(5, { message: "Current Address must be at least 5 characters." })
+    .max(100, { message: "Current Address must be under 100 characters." })
     .or(z.literal("")),
 
-  detailedAddress: z
+  permanentAddress: z
     .string()
-    .min(5, { message: "Detailed address must be at least 5 characters." })
-    .max(200, { message: "Detailed address must be under 200 characters." })
+    .min(5, { message: "Permanent Address must be at least 5 characters." })
+    .max(200, { message: "Permanent Address must be under 200 characters." })
     .or(z.literal("")),
 
   country: z
@@ -96,8 +95,8 @@ export const formSchema = z.object({
     .or(z.literal("")),
 
   // Current Address
-  currentHomeAddress: z.string().optional(),
-  currentDetailedAddress: z.string().optional(),
+  currentcurrentAddress: z.string().optional(),
+  currentpermanentAddress: z.string().optional(),
   currentCountry: z.string().optional(),
   currentCity: z.string().optional(),
   currentZipCode: z.string().optional(),
