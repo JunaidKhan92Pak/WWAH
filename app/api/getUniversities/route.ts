@@ -117,7 +117,7 @@ export async function GET(req: Request) {
 
   if (excludeUni) {
     match.university_name = {
-      ...(match.university_name || {}),
+      ...(match.university_namea || {}),
       $ne: excludeUni
     };
   }

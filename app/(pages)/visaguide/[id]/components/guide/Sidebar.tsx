@@ -82,8 +82,7 @@ export const steps = [
   },
 ];
 
-
-
+ 
 const handleScroll = (id: number) => {
   const rightSection = document.getElementById("right-section");
   const target = document.getElementById(id.toString());
