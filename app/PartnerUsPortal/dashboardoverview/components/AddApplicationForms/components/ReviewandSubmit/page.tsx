@@ -21,8 +21,7 @@ const Section = ({
 );
 
 export default function ReviewandSubmit() {
-
-return (
+  return (
     <div>
       <div className="flex justify-between mb-6">
         <div className="w-full space-y-2">
@@ -53,11 +52,11 @@ return (
       <Section title="Contact Details">
         <div className="w-full space-y-2">
           <Field
-            label="Current Detailed Address"
+            label="Current Permanent Address"
             value="123 Maple Street, Model Town"
           />
           <Field
-            label="Detailed Address"
+            label="Permanent Address"
             value="House #45, Block A, Model Town"
           />
           <Field label="Country" value="Pakistan" />
@@ -70,11 +69,11 @@ return (
       <Section title="Current Address">
         <div className="w-full space-y-2">
           <Field
-            label="Current Detailed Address"
+            label="Current Permanent Address"
             value="123 Maple Street, Model Town"
           />
           <Field
-            label="Detailed Address"
+            label="Permanent Address"
             value="House #45, Block A, Model Town"
           />
           <Field label="Country" value="Pakistan" />
@@ -143,49 +142,36 @@ return (
           <Field label="Date To" value="01/06/2022" />
         </Repeater>
       </Section>
-     <Section title="Language Proficiency">
-  <div className="w-full space-y-2">
-    <Field
-      label="What is your English proficiency level?"
-      value="Advanced"
-    />
-       <Field
-      label="Which English proficiency test have you taken?"
-      value="IELTS"
-    />
-    <Field
-      label="Country of study"
-      value="Pakistan"
-    />
-    <Field label="Score in Speaking" value="7.0" />
-    <Field label="Score in Writing" value="7.0" />
-    <Field label="Score in Listening" value="8.0" />
-    <Field label="Score in Reading" value="7.5" />
-    <Field label="Overall Score" value="7.5" />
-  </div>
-</Section>
+      <Section title="Language Proficiency">
+        <div className="w-full space-y-2">
+          <Field
+            label="What is your English proficiency level?"
+            value="Advanced"
+          />
+          <Field
+            label="Which English proficiency test have you taken?"
+            value="IELTS"
+          />
+          <Field label="Country of study" value="Pakistan" />
+          <Field label="Score in Speaking" value="7.0" />
+          <Field label="Score in Writing" value="7.0" />
+          <Field label="Score in Listening" value="8.0" />
+          <Field label="Score in Reading" value="7.5" />
+          <Field label="Overall Score" value="7.5" />
+        </div>
+      </Section>
 
+      <Section title="Standardized Test">
+        <div className="w-full space-y-2">
+          <Field label="Which standardized test have you taken?" value="SAT" />
+          <Field label="Overall Score" value="1400" />
+          <Field label="Sub Scores" value="56, 98, 78, 88" />
+        </div>
+      </Section>
 
-     <Section title="Standardized Test">
-  <div className="w-full space-y-2">
-    <Field
-      label="Which standardized test have you taken?"
-      value="SAT"
-    />
-    <Field
-      label="Overall Score"
-      value="1400"
-    />
-    <Field
-      label="Sub Scores"
-      value="56, 98, 78, 88"
-    />
-  </div>
-</Section>
-
-{/*Submit Button */}
+      {/*Submit Button */}
       <div className="flex justify-end mt-6">
-        <Button  className="bg-red-600 hover:bg-red-500 text-white px-12">
+        <Button className="bg-red-600 hover:bg-red-500 text-white px-12">
           Submit
         </Button>
       </div>

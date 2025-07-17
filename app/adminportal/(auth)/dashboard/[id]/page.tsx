@@ -88,15 +88,15 @@
 //     countryOfResidence: string;
 //     maritalStatus: string;
 //     religion: string;
-//     homeAddress: string;
-//     detailedAddress: string;
+//     currentAddress: string;
+//     permanentAddress: string;
 //     city: string;
 //     zipCode: string;
 //     email: string;
 //     countryCode: string;
 //     phoneNo: string;
-//     currentHomeAddress: string;
-//     currentDetailedAddress: string;
+//     currentcurrentAddress: string;
+//     currentpermanentAddress: string;
 //     currentCity: string;
 //     currentZipCode: string;
 //     currentEmail: string;
@@ -741,9 +741,9 @@
 //                     </div>
 //                     <div>
 //                       <label className="text-sm font-medium text-gray-500">
-//                         Home Address
+//                         Current Address
 //                       </label>
-//                       <p className="text-gray-900">{userBasics.homeAddress}</p>
+//                       <p className="text-gray-900">{userBasics.currentAddress}</p>
 //                     </div>
 //                     <div>
 //                       <label className="text-sm font-medium text-gray-500">
@@ -1227,15 +1227,15 @@ interface UserData {
     countryOfResidence: string;
     maritalStatus: string;
     religion: string;
-    homeAddress: string;
-    detailedAddress: string;
+    currentAddress: string;
+    permanentAddress: string;
     city: string;
     zipCode: string;
     email: string;
     countryCode: string;
     phoneNo: string;
-    currentHomeAddress: string;
-    currentDetailedAddress: string;
+    currentcurrentAddress: string;
+    currentpermanentAddress: string;
     currentCity: string;
     currentZipCode: string;
     currentEmail: string;
@@ -1632,9 +1632,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     </div>
                     <div>
                       <label className="text-sm font-medium text-gray-500">
-                        Home Address
+                        Current Address
                       </label>
-                      <p className="text-gray-900">{userBasics.homeAddress}</p>
+                      <p className="text-gray-900">
+                        {userBasics.currentAddress}
+                      </p>
                     </div>
                     <div>
                       <label className="text-sm font-medium text-gray-500">

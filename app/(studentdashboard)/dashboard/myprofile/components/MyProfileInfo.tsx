@@ -56,7 +56,7 @@ interface UserProps {
 }
 const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12 w-[80%] md:w-[60%] ml-4 md:ml-8 xl:ml-72 mt-24 sm:mt-56 xl:mt-10 mb-6 xl:mb-10 justify-between">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12 w-[100%] md:w-[60%] ml-4 md:ml-8 xl:ml-96 mt-24 md:mt-56 xl:mt-10 mb-6 xl:mb-10 justify-between">
       <EditfirstandlastName
         firstName={user?.firstName}
         lastName={user?.lastName}

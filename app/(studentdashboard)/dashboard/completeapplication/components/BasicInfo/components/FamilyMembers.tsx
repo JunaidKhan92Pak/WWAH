@@ -33,35 +33,32 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
     control: form.control,
   });
 
-  // ✅ Ensure at least one family member field exists on initial load
-useEffect(() => {
-  const members = form.getValues("familyMembers");
-  if (!members || members.length === 0) {
-    append({
-      name: "",
-      relationship: "",
-      nationality: "",
-      occupation: "",
-      email: "",
-      countryCode: "",
-      phoneNo: "",
-    });
-  }
-}, [append, form]);
+  useEffect(() => {
+    const members = form.getValues("familyMembers");
+    if (!members || members.length === 0) {
+      append({
+        name: "",
+        relationship: "",
+        nationality: "",
+        occupation: "",
+        email: "",
+        countryCode: "+92-Pakistan", // ✅ FIXED
+        phoneNo: "",
+      });
+    }
+  }, [append, form]);
 
   return (
     <div className="my-4">
       {fields.map((field, index) => (
-        <div key={field.id} className=" p-4 rounded-md relative mb-4">
+        <div key={field.id} className="p-4 rounded-md relative mb-4">
           <div className="border rounded-lg p-3 mb-2">
-            <div className="absolute  top-6 right-6">
+            <div className="absolute top-6 right-6">
               <Button
                 variant="destructive"
                 size="icon"
                 onClick={() => {
-                  if (fields.length > 1) {
-                    remove(index);
-                  }
+                  if (fields.length > 1) remove(index);
                 }}
               >
                 <Trash className="w-4 h-4" />
@@ -111,6 +108,8 @@ useEffect(() => {
                 </FormItem>
               )}
             />
+
+            {/* Nationality */}
             <FormField
               control={form.control}
               name={`familyMembers.${index}.nationality`}
@@ -188,13 +187,15 @@ useEffect(() => {
               )}
             />
 
+            {/* Phone No. */}
             <FormField
               control={form.control}
               name={`familyMembers.${index}.phoneNo`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone No.</FormLabel>
+                  <FormLabel>Phone No.</FormLabel>
                   <div className="flex gap-2">
+                    {/* Country Code Select */}
                     <FormField
                       control={form.control}
                       name={`familyMembers.${index}.countryCode`}
@@ -208,13 +209,15 @@ useEffect(() => {
                               <SelectValue>
                                 <div className="flex items-center gap-2">
                                   <Image
+                                    /* -----------------------------------------
+                                     * SAFE flag rendering with fallback image
+                                     * --------------------------------------- */
                                     src={
                                       countries.find(
                                         (c) =>
                                           `${c.code}-${c.name}` ===
-                                          (countryCodeField.value ||
-                                            "+92-Pakistan")
-                                      )?.flag || "/default-flag.png"
+                                          countryCodeField.value
+                                      )?.flag ?? "/default-flag.png"
                                     }
                                     alt="Country Flag"
                                     width={20}
@@ -223,7 +226,7 @@ useEffect(() => {
                                   <span className="text-sm">
                                     {
                                       (
-                                        countryCodeField.value || "+92-Pakistan"
+                                        countryCodeField.value ?? "+92-Pakistan"
                                       ).split("-")[0]
                                     }
                                   </span>
@@ -243,7 +246,9 @@ useEffect(() => {
                                       width={20}
                                       height={20}
                                     />
-                                    <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                                    <span className="text-sm">
+                                      {`${country.code} (${country.name})`}
+                                    </span>
                                   </div>
                                 </SelectItem>
                               );
@@ -252,6 +257,7 @@ useEffect(() => {
                         </Select>
                       )}
                     />
+                    {/* Phone number input */}
                     <Input
                       {...field}
                       value={field.value || ""}
@@ -273,7 +279,7 @@ useEffect(() => {
           type="button"
           variant="outline"
           size="sm"
-          className="flex items-center gap-2 rounded-3xl bg-[#f1f1f1] "
+          className="flex items-center gap-2 rounded-3xl bg-[#f1f1f1]"
           onClick={() =>
             append({
               name: "",
@@ -281,7 +287,7 @@ useEffect(() => {
               nationality: "",
               occupation: "",
               email: "",
-              countryCode: "+92",
+              countryCode: "+92-Pakistan", // ✅ FIXED
               phoneNo: "",
             })
           }
