@@ -774,6 +774,7 @@ import PassportAndVisaForm from "./components/PassportandVisaform";
 import LearningExperienceAbroad from "./components/LearningExperienceAbroad";
 import FinancialSponsorInformation from "./components/FinancialSponsorInformation";
 import FamilyMembers from "./components/FamilyMembers";
+import CurrentAddress from "./components/CurrentAddress";
 import { useRouter } from "next/navigation";
 import ContactDetailForm from "./components/ContactDetailform";
 import { formSchema } from "./components/Schema";
@@ -1458,9 +1459,8 @@ const BasicInfo = () => {
                       setCurrentPage((prev) => Math.max(prev - 1, 1));
                       setValidationErrors([]); // Clear errors when going back
                     }}
-                    className={`p-2 text-sm ${
-                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                    }`}
+                    className={`p-2 text-sm ${currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                      }`}
                   >
                     Previous
                   </PaginationPrevious>
@@ -1497,8 +1497,8 @@ const BasicInfo = () => {
                 {isSubmitting
                   ? "Submitting..."
                   : isSubmitted
-                  ? "Submitted"
-                  : "Save and Continue"}
+                    ? "Submitted"
+                    : "Save and Continue"}
               </Button>
             )}
 
