@@ -20,13 +20,16 @@ import { Input } from "@/components/ui/input";
 import { formSchema } from "./Schema";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { countries } from "@/lib/countries";
+import { countries } from "@/lib/countries"; // ✅ Now using dynamic countries list
+import { Checkbox } from "@/components/ui/checkbox";
 
 type FormValues = z.infer<typeof formSchema>;
+
 const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
-  const [selectedCountry, setSelectedCountry] = useState(
+  const [selectedCountry] = useState(
     form.watch("country") || "Pakistan"
   );
+  const [sameAsCurrent, setSameAsCurrent] = useState(false);
 
   useEffect(() => {
     const countryData = countries.find((c) => c.name === selectedCountry);
@@ -40,10 +43,10 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
       <div className="grid grid-cols-1 gap-2 items-end">
         <FormField
           control={form.control}
-          name="homeAddress"
+          name="currentAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Home Address</FormLabel>
+              <FormLabel>Current Address</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -56,28 +59,44 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             </FormItem>
           )}
         />
-        {/* detailedAddress  */}
+
         <FormField
           control={form.control}
-          name="detailedAddress"
+          name="permanentAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Detailed Address</FormLabel>
+              <div className="flex items-center justify-between">
+              <FormLabel>Permanent Address</FormLabel>
+                <label className="flex items-center gap-2 text-sm font-normal">
+                  <Checkbox 
+                    checked={sameAsCurrent}
+                    onCheckedChange={(checked: boolean) => {
+                      setSameAsCurrent(checked);
+                      if (checked) {
+                        form.setValue("permanentAddress", form.getValues("currentAddress"), {
+                          shouldValidate: true,
+                        });
+                      }
+                    }}
+                  />
+                  Same as Current Address
+                </label>
+              </div>
               <FormControl>
                 <Input
                   {...field}
                   value={field.value || ""}
                   placeholder="Write..."
                   className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                  disabled={sameAsCurrent}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {/* country */}
-          <FormField
+        <div className="grid grid-cols-1 gap-2">
+          {/* <FormField
             control={form.control}
             name="country"
             render={({ field }) => (
@@ -106,8 +125,8 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                 <FormMessage />
               </FormItem>
             )}
-          />
-          {/* city */}
+          /> */}
+
           <FormField
             control={form.control}
             name="city"
@@ -127,7 +146,6 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             )}
           />
 
-          {/* zipCode */}
           <FormField
             control={form.control}
             name="zipCode"
@@ -140,7 +158,6 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     placeholder="Write..."
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                     {...field}
-                    
                     value={field.value || ""}
                   />
                 </FormControl>
@@ -148,7 +165,7 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
               </FormItem>
             )}
           />
-          {/* email */}
+
           <FormField
             control={form.control}
             name="email"
@@ -179,7 +196,7 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             )}
           />
         </div>
-        {/* phone number  */}
+
         <FormField
           control={form.control}
           name="phoneNo"
@@ -192,7 +209,7 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                   name="countryCode"
                   render={({ field: countryCodeField }) => (
                     <Select
-                      value={countryCodeField.value || "+92-Pakistan"}
+                      value={countryCodeField.value || "+92"}
                       onValueChange={countryCodeField.onChange}
                     >
                       <FormControl>

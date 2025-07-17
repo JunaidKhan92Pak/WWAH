@@ -173,8 +173,8 @@
 //         ]);
 //       case 2:
 //         return form.trigger([
-//           "homeAddress",
-//           "detailedAddress",
+//           "currentAddress",
+//           "permanentAddress",
 //           "country",
 //           "city",
 //           "zipCode",
@@ -184,8 +184,8 @@
 //         ]);
 //       case 3:
 //         return form.trigger([
-//           "currentHomeAddress",
-//           "currentDetailedAddress",
+//           "currentcurrentAddress",
+//           "currentpermanentAddress",
 //           "currentCountry",
 //           "currentCity",
 //           "currentZipCode",
@@ -769,7 +769,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import CurrentAddress from "./components/CurrentAddress";
+
 import PassportAndVisaForm from "./components/PassportandVisaform";
 import LearningExperienceAbroad from "./components/LearningExperienceAbroad";
 import FinancialSponsorInformation from "./components/FinancialSponsorInformation";
@@ -780,24 +780,22 @@ import { formSchema } from "./components/Schema";
 import CompleteApplicationModal from "../CompleteApplicationModal";
 import countries from "world-countries";
 
-
-
 const BasicInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const totalPages = 7;
+  const totalPages = 6;
   const router = useRouter();
-// Get unique nationalities and country names
-const countryOptions = countries.map((c) => ({
-  label: c.name.common,
-  value: c.cca2,
-}));
+  // Get unique nationalities and country names
+  const countryOptions = countries.map((c) => ({
+    label: c.name.common,
+    value: c.cca2,
+  }));
 
-const nationalityOptions = countries.map((c) => ({
-  label: c.demonyms?.eng?.m || c.name.common, // fallback to country name
-  value: c.demonyms?.eng?.m || c.name.common,
-}));
+  const nationalityOptions = countries.map((c) => ({
+    label: c.demonyms?.eng?.m || c.name.common, // fallback to country name
+    value: c.demonyms?.eng?.m || c.name.common,
+  }));
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -1017,27 +1015,16 @@ const nationalityOptions = countries.map((c) => ({
         ]);
       case 2:
         return await form.trigger([
-          "homeAddress",
-          "detailedAddress",
-          "country",
+          "currentAddress",
+          "permanentAddress",
           "city",
           "zipCode",
           "email",
           "countryCode",
           "phoneNo",
         ]);
+
       case 3:
-        return await form.trigger([
-          "currentHomeAddress",
-          "currentDetailedAddress",
-          "currentCountry",
-          "currentCity",
-          "currentZipCode",
-          "currentEmail",
-          "currentCountryCode",
-          "currentPhoneNo",
-        ]);
-      case 4:
         return await form.trigger([
           "hasPassport",
           "passportNumber",
@@ -1045,7 +1032,7 @@ const nationalityOptions = countries.map((c) => ({
           "oldPassportNumber",
           "oldPassportExpiryDate",
         ]);
-      case 5:
+      case 4:
         return await form.trigger([
           "hasStudiedAbroad",
           "visitedCountry",
@@ -1055,7 +1042,7 @@ const nationalityOptions = countries.map((c) => ({
           "visaExpiryDate",
           "durationOfStudyAbroad",
         ]);
-      case 6:
+      case 5:
         return await form.trigger([
           "sponsorName",
           "sponsorRelationship",
@@ -1065,7 +1052,7 @@ const nationalityOptions = countries.map((c) => ({
           "sponsorsCountryCode",
           "sponsorsPhoneNo",
         ]);
-      case 7:
+      case 6:
         return await form.trigger(["familyMembers"]);
       default:
         return true;
@@ -1101,37 +1088,35 @@ const nationalityOptions = countries.map((c) => ({
       {currentPage === 2 && (
         <h6 className="font-semibold text-center">Contact Details</h6>
       )}
+
       {currentPage === 3 && (
-        <h6 className="font-semibold text-center">Current Address</h6>
-      )}
-      {currentPage === 4 && (
         <h6 className="font-semibold text-center">
           Passport & Visa Information
         </h6>
       )}
-      {currentPage === 5 && (
+      {currentPage === 4 && (
         <h6 className="font-semibold text-center">
           Learning Experience Abroad
         </h6>
       )}
-      {currentPage === 6 && (
+      {currentPage === 5 && (
         <h6 className="font-semibold text-center">
           Financial Sponsor Information
         </h6>
       )}
-      {currentPage === 7 && (
+      {currentPage === 6 && (
         <h6 className="font-semibold text-center">Family Members</h6>
       )}
 
       {/* Display validation errors */}
       {validationErrors.length > 0 && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <h3 className="text-red-800 font-semibold mb-2">
+          <p className="text-red-800 font-semibold mb-2">
             Please fix the following errors:
-          </h3>
-          <ul className="text-red-700 text-sm space-y-1">
+          </p>
+          <ul className="text-red-700 text-xs space-y-1">
             {validationErrors.map((error, index) => (
-              <li key={index} className="flex items-start">
+              <li key={index} className="flex items-start text-sm" >
                 <span className="text-red-500 mr-2">•</span>
                 {error}
               </li>
@@ -1334,19 +1319,19 @@ const nationalityOptions = countries.map((c) => ({
                   <FormItem>
                     <FormLabel>Nationality</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
-  <FormControl>
-    <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-      <SelectValue placeholder="Select Nationality" />
-    </SelectTrigger>
-  </FormControl>
-  <SelectContent className="max-h-[300px] overflow-y-auto">
-    {nationalityOptions.map((option) => (
-      <SelectItem key={option.value} value={option.value}>
-        {option.label}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                      <FormControl>
+                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+                          <SelectValue placeholder="Select Nationality" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="max-h-[300px] overflow-y-auto">
+                        {nationalityOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
                     <FormMessage />
                   </FormItem>
@@ -1361,19 +1346,19 @@ const nationalityOptions = countries.map((c) => ({
                   <FormItem>
                     <FormLabel>Country of Residence:</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
-  <FormControl>
-    <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
-      <SelectValue placeholder="Select Country" />
-    </SelectTrigger>
-  </FormControl>
-  <SelectContent className="max-h-[300px] overflow-y-auto">
-    {countryOptions.map((option) => (
-      <SelectItem key={option.value} value={option.label}>
-        {option.label}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                      <FormControl>
+                        <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+                          <SelectValue placeholder="Select Country" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="max-h-[300px] overflow-y-auto">
+                        {countryOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.label}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
                     <FormMessage />
                   </FormItem>
@@ -1457,11 +1442,12 @@ const nationalityOptions = countries.map((c) => ({
           givenName
           {/* Component pages */}
           {currentPage === 2 && <ContactDetailForm form={form} />}
-          {currentPage === 3 && <CurrentAddress form={form} />}
-          {currentPage === 4 && <PassportAndVisaForm form={form} />}
-          {currentPage === 5 && <LearningExperienceAbroad form={form} />}
-          {currentPage === 6 && <FinancialSponsorInformation form={form} />}
-          {currentPage === 7 && <FamilyMembers form={form} />}
+          {/* {currentPage === 3 && <CurrentAddress form={form} />} */}
+          {currentPage === 3 && <PassportAndVisaForm form={form} />}
+          {currentPage === 4 && <LearningExperienceAbroad form={form} />}
+          {currentPage === 5 && <FinancialSponsorInformation form={form} />}
+          {currentPage === 6 && <FamilyMembers form={form} />}
+
           <div className="mt-6 flex justify-between">
             <Pagination>
               <PaginationContent className="flex justify-center mt-4 gap-4 items-center">
@@ -1522,7 +1508,7 @@ const nationalityOptions = countries.map((c) => ({
               onClose={handleCloseModal}
               onCompleteApplication={handleCompleteApplication}
             />
-        </div>
+          </div>
         </form>
       </Form>
     </div>

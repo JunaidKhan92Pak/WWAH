@@ -157,7 +157,7 @@ const ApplicationInfo = () => {
       <h6 className="font-semibold text-center">
         {currentPage === 1 && "Educational Background"}
         {currentPage === 2 && "Work Experience"}
-        {currentPage === 3 && "Language Proficiency"}
+        {currentPage === 3 && "English Language Proficiency"}
         {currentPage === 4 && "Standardized Test"}
       </h6>
       <Form {...form}>
@@ -188,7 +188,7 @@ const ApplicationInfo = () => {
 
               {/* Current Page Number */}
               <span className="px-4 py-2 text-sm font-semibold rounded-lg border">
-                {currentPage}
+                {currentPage} of {totalPages}
               </span>
 
               {/* Next Button */}

@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Form,
   FormField,
@@ -10,63 +10,64 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/ui/select'
-import { countries } from '@/lib/countries'
-import Image from "next/image"
+} from "@/components/ui/select";
+import { countries } from "@/lib/countries";
+import Image from "next/image";
 
 // ✅ Schema
 const formSchema = z.object({
-  currentAddress: z.string().min(3, 'Required'),
-  detailedAddress: z.string().min(3, 'Required'),
-  country: z.string().min(2, 'Required'),
-  city: z.string().min(2, 'Required'),
-  zipCode: z.string().min(3, 'Required'),
-  email: z.string().email('Invalid email'),
-  phoneNo: z.string().min(6, 'Invalid number'),
-  countryCode: z.string().min(2, 'Required'),
-  phoneCode: z.string().min(2, 'Required'),
-})
+  currentAddress: z.string().min(3, "Required"),
+  permanentAddress: z.string().min(3, "Required"),
+  country: z.string().min(2, "Required"),
+  city: z.string().min(2, "Required"),
+  zipCode: z.string().min(3, "Required"),
+  email: z.string().email("Invalid email"),
+  phoneNo: z.string().min(6, "Invalid number"),
+  countryCode: z.string().min(2, "Required"),
+  phoneCode: z.string().min(2, "Required"),
+});
 
-type FormData = z.infer<typeof formSchema>
+type FormData = z.infer<typeof formSchema>;
 
 export default function ContactDetailsForm() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
-      currentAddress: '',
-      detailedAddress: '',
-      country: '',
-      city: '',
-      zipCode: '',
-      email: '',
-      phoneNo: '',
-      countryCode: '+92-Pakistan',
-      phoneCode: '+92',
+      currentAddress: "",
+      permanentAddress: "",
+      country: "",
+      city: "",
+      zipCode: "",
+      email: "",
+      phoneNo: "",
+      countryCode: "+92-Pakistan",
+      phoneCode: "+92",
     },
-  })
+  });
 
-  const { control } = form
+  const { control } = form;
 
   return (
     <Form {...form}>
       <form>
-        <h2 className="text-center text-xl font-semibold my-4">Contact Details</h2>
+        <h2 className="text-center text-xl font-semibold my-4">
+          Contact Details
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-
           {/* Current Address */}
           <FormField
             control={control}
             name="currentAddress"
-            render={({ field}) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Current Address</FormLabel>
                 <FormControl>
@@ -81,13 +82,13 @@ export default function ContactDetailsForm() {
             )}
           />
 
-          {/* Detailed Address */}
+          {/* Permanent Address */}
           <FormField
             control={control}
-            name="detailedAddress"
+            name="permanentAddress"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Detailed Address</FormLabel>
+                <FormLabel>Permanent Address</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Write..."
@@ -108,10 +109,7 @@ export default function ContactDetailsForm() {
               <FormItem>
                 <FormLabel>Country</FormLabel>
                 <FormControl>
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="bg-[#f1f1f1]">
                       <SelectValue placeholder="Select Country" />
                     </SelectTrigger>
@@ -139,15 +137,12 @@ export default function ContactDetailsForm() {
               <FormItem>
                 <FormLabel>City/Province</FormLabel>
                 <FormControl>
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
                       <SelectValue placeholder="Select City/Province" />
                     </SelectTrigger>
                     <SelectContent>
-                      {['Lahore', 'Islamabad', 'Karachi'].map(city => (
+                      {["Lahore", "Islamabad", "Karachi"].map((city) => (
                         <SelectItem key={city} value={city}>
                           {city}
                         </SelectItem>
@@ -235,14 +230,14 @@ export default function ContactDetailsForm() {
                                       (c) =>
                                         `${c.code}-${c.name}` ===
                                         countryCodeField.value
-                                    )?.flag || '/default-flag.png'
+                                    )?.flag || "/default-flag.png"
                                   }
                                   alt="Flag"
                                   width={20}
                                   height={20}
                                 />
                                 <span className="text-sm">
-                                  {(countryCodeField.value || '').split('-')[0]}
+                                  {(countryCodeField.value || "").split("-")[0]}
                                 </span>
                               </div>
                             </SelectValue>
@@ -286,5 +281,5 @@ export default function ContactDetailsForm() {
         </div>
       </form>
     </Form>
-  )
+  );
 }

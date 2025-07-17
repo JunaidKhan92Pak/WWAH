@@ -141,7 +141,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
               name="oldPassportNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Old Passport No.</FormLabel>
+                  <FormLabel>Old Passport No (If Any)</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
