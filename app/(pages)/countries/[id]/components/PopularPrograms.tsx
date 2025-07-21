@@ -9,17 +9,15 @@ interface PopularProgramsProps {
   costOfLiving: CostOfLiving;
 }
 interface CostOfLiving {
-  rent: string; 
+  rent: string;
   groceries: string;
   transportation: string;
   eating_out: string;
   household_bills: string;
   miscellaneous: string;
-  healthcare: string; 
+  healthcare: string;
   health: { name: string; description: string[] }[];
 }
-
-
 
 const PopularPrograms: React.FC<PopularProgramsProps> = ({
   country,
@@ -28,27 +26,27 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
 }) => {
   const arr1 = [
     {
-      icon: "/Suitcasesvg.svg",
+      icon: "/countrypage/Suitcasesvg.svg",
       caption: "Business & Management",
     },
     {
-      icon: "/Notebooksvg.svg",
+      icon: "/countrypage/Notebooksvg.svg",
       caption: `${country?.[0]}`,
     },
     {
-      icon: "/Atomsvg.svg",
+      icon: "/countrypage/Laptop.svg",
       caption: `${country?.[1]}`,
     },
     {
-      icon: "/Laptopsvg.svg",
+      icon: "/degree-icon.svg",
       caption: `${country?.[2]}`,
     },
     {
-      icon: "/solarbroken.svg",
+      icon: "/countrypage/Medical.svg",
       caption: `${country?.[3]}`,
     },
     {
-      icon: "/Heartsvg.svg",
+      icon: "/countrypage/social.svg",
       caption: `${country?.[4]}`,
     },
   ];
@@ -93,7 +91,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
   // Inside your component:
   const scrollRef = useRef<HTMLDivElement>(null);
   console.log("PopularPrograms rendered with countryName:", costOfLiving);
-  
+
   // const scroll = (direction: "left" | "right") => {
   //   if (scrollRef.current) {
   //     const scrollAmount = direction === "left" ? -200 : 200;
@@ -120,9 +118,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
             </h5>
           </div>
 
-         
           <div className="relative lg:w-3/5">
-           
             <div
               ref={scrollRef}
               className="flex overflow-x-auto scrollbar-hide space-x-2 md:space-x-3 py-2 pl-8 md:pl-10 md:mx-0 scroll-smooth"
@@ -142,7 +138,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
                       alt={item.caption}
                       width={40}
                       height={40}
-                      className="w-8 h-8 md:w-10 md:h-10"
+                      className="w-8 h-8"
                     />
                   </div>
                   <p className="text-center w-24 sm:w-28 text-[12px] sm:text-[14px] md:text-[15px] font-medium mt-2">
@@ -163,43 +159,55 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
         </div>
       </section>
 
-        <div className="text-center">
-          <h4 className="px-2 md:px-0">Cost of Living in {countryName}!</h4>
-          <div className="relative flex justify-start md:justify-center overflow-hidden">
-            <div
-              className="flex overflow-x-auto pt-4 gap-2 md:gap-5"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
-              {data.map((item, index) => (
-                <div
-                  key={index}
-                  className="relative pl-3 md:pl-0 flex flex-col items-center"
-                >
-                  <Image
-                    src={item.icon}
-                    alt={item.title}
-                    width={110}
-                    height={110}
-                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
-                  />
-                  <p className="text-center w-24 sm:w-28 text-[12px] sm:text-[14px] md:text-[15px] font-semibold mt-2">
-                    {item.title}
-                  </p>
-                  <p className="text-sm text-gray-600">{item.cost}</p>
-                </div>
-              ))}
-            </div>
+      <div className="text-center">
+        <h4 className="px-2 md:px-0">Cost of Living in {countryName}!</h4>
+        <div className="relative flex justify-start md:justify-center overflow-hidden">
+          <div
+            className="flex overflow-x-auto pt-4 gap-2 md:gap-5"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {data.map((item, index) => (
+              <div
+                key={index}
+                className="relative pl-3 md:pl-0 flex flex-col items-center"
+              >
+                <Image
+                  src={item.icon}
+                  alt={item.title}
+                  width={110}
+                  height={110}
+                  className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
+                />
+                <p className="text-center w-24 sm:w-28 text-[12px] sm:text-[14px] md:text-[15px] font-semibold mt-2">
+                  {item.title}
+                </p>
+                <p className="text-sm text-gray-600">{item.cost}</p>
+              </div>
+            ))}
           </div>
         </div>
+      </div>
       <Banner
         title="Create your Application today for your desired program!"
         buttonText="Apply Now!"
-        buttonLink="/coursearchive"
+        buttonLink={`/coursearchive?country=${
+          countryName === "United States of America"
+            ? "USA"
+            : encodeURIComponent(countryName)
+        }`}
         backgroundImage="/bg-usa.png"
       />
+
+      {/* <Banner
+  title="Create your Application today for your desired program!"
+  buttonText="Apply Now!"
+  buttonLink={`/coursearchive?country=${encodeURIComponent(countryName)}`}
+  backgroundImage="/bg-usa.png"
+/> */}
+
     </>
   );
 };

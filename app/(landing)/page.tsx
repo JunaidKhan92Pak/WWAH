@@ -282,13 +282,14 @@ function Page() {
                   </h1>
                   <h3 className="text-white leading-snug">
                     <Typewriter
-                      words={[
-                        "Let's explore your study options.",
-                        "I simplify your university search",
-                        "Find courses that truly fit",
-                        "Smart scholarship search starts here.",
-                        "Know your success chances first",
-                      ]}
+                    words={[
+  "Let's explore your study options.",
+  "I simplify your university search.",
+  "Find courses that truly fit.",
+  "Smart scholarship search starts here.",
+  "Know your success chances first.",
+]}
+
                       loop={true}
                       cursor
                       cursorStyle="|"

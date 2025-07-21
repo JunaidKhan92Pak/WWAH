@@ -19,6 +19,7 @@ const Page = () => {
   useEffect(() => {
     fetchCountries();
   }, []);
+  
 
   const filteredCountries = search
     ? countries.filter((country) =>
@@ -55,13 +56,14 @@ const Page = () => {
         ) : (
           filteredCountries.map((country) => (
             <Link
-              target="blank"
+              target="_blank"
               key={country._id}
               href={`/countries/${country._id}`}
 
               className="cursor-pointer"
             >
-              <div className="overflow-hidden rounded-xl relative min-h-[255px] md:min-h-[250px]">
+              <div className="overflow-hidden rounded-xl relative min-h-[255px] md:min-h-[250px] transform transition-transform duration-300 hover:scale-[1.05]
+">
                 <ImageWithLoader
                   src={`/countryarchive/${country.short_name}.png`}
                   alt={country.alt}

@@ -29,35 +29,35 @@ export default function Home() {
 
   const steps: Step[] = [
     {
-      icon: "/Shield-User--Streamline-Solar-Broken.png",
-      alt: "Calendar Icon",
+      icon: "/ielts/Shield-User.svg",
+      alt: "Sheild Icon",
       text: "1. Create an ETS Account",
       link: "https://www.ets.org/toefl.html",
     },
     {
-      icon: "/Login--Streamline-Solar-Broken.png",
+      icon: "/ielts/Clipboard.svg",
       alt: "Clipboard Icon",
       text: "2. Select Your Test Type and Location",
     },
     {
-      icon: "/Clipboard-Text--Streamline-Solar-Broken.svg",
-      alt: "Shield Icon",
+      icon: "/ielts/Calendar-Search.svg",
+      alt: "Calendar Icon",
       text: "3. Pick a Test Date and Time",
     },
 
     {
-      icon: "/Archive.png",
-      alt: "Dollar Icon",
+      icon: "/ielts/Archive.svg",
+      alt: "Archive Icon",
       text: "4. Confirm Your Registration",
     },
-    { icon: "/Dollar.png", alt: "Archive Icon", text: "5. Make Payment" },
+    { icon: "/ielts/Dollar.svg", alt: "Dollar Icon", text: "5. Complete Payment" },
     {
-      icon: "/Display.png",
+      icon: "/ielts/Display.svg",
       alt: "Display Icon",
       text: "6. Prepare for Test Day",
     },
     {
-      icon: "/Confetti.png",
+      icon: "/ielts/Confetti.svg",
       alt: "Confetti Icon",
       text: "7. Receive Your Results",
     },

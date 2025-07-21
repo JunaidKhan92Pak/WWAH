@@ -36,6 +36,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   return (
@@ -55,6 +56,7 @@ const CourseArchive = () => {
     setPage,
     loading,
     fetchCourses,
+    setCountryFilter,
   } = useCourseStore();
 
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
@@ -63,6 +65,7 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+  
   //  Step 1: Add this new state to store full course data
   const [favoriteCourses, setFavoriteCourses] = useState<
     Record<string, (typeof courses)[0]>
@@ -107,11 +110,7 @@ const CourseArchive = () => {
     [setSearch]
   );
 
-  // Fetch courses on mount
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
-
+ 
   // Scroll to top whenever the currentPage changes
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -129,6 +128,21 @@ const CourseArchive = () => {
   const displayedCourses = showFavorites
     ? Object.values(favoriteCourses)
     : courses;
+
+    
+  const searchParams = useSearchParams();
+
+useEffect(() => {
+  const country = searchParams.get("country");
+
+  if (country) {
+    setCountryFilter([country]);
+  } else {
+    fetchCourses();
+  }
+  // include fetchCourses & setCountryFilter in deps if stable
+}, [setCountryFilter, fetchCourses]);
+
 
   return (
     <section className="w-[95%] mx-auto p-2 ">

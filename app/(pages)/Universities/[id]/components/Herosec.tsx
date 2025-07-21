@@ -4,7 +4,7 @@
 // import Image from "next/image";
 // import { CiLocationOn } from "react-icons/ci";
 // import { useRouter } from "next/navigation";
-// import { useCourseStore } from "@/store/useCoursesStore";
+// import {  } from "@/store/useCoursesStore";
 // interface UniversityData {
 //   establishment_year?: string;
 //   national_students?: string;
@@ -24,7 +24,7 @@
 
 // const Herosec = ({ data }: { data: UniversityData }) => {
 //   const router = useRouter();
-//   const { setSelectedUniversity } = useCourseStore();
+//   const { setSelectedUniversity } = ();
 //   // Memoize the derived array
 //   const universityDetails = useMemo(
 //     () => [

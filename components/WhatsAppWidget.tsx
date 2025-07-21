@@ -18,8 +18,8 @@ const WhatsAppWidget = () => {
       bgColor: "bg-blue-50",
     },
     {
-      name: "Admission Officer",
-      phone: "923279541070",
+      name: "Visa Advisor",
+      phone: "+923126917771",
       message: "Hi! I need help with the admission process.",
       description: "Get assistance with applications and enrollment",
       icon: FileText,
@@ -27,8 +27,8 @@ const WhatsAppWidget = () => {
       bgColor: "bg-orange-50",
     },
     {
-      name: "Scholarship Counselor",
-      phone: "923120762041",
+      name: "Application Advisor",
+      phone: "+923126917771",
       message: "Hello! I have a question about scholarships.",
       description: "Get help finding and applying for scholarships",
       icon: DollarSign,
@@ -63,12 +63,12 @@ const WhatsAppWidget = () => {
               <IoLogoWhatsapp className="text-white mx-auto" size={20} />
             </div>
             <h3 className="text-lg font-semibold text-gray-800">
-              Welcome to Live Chat
+              Talk to our Expert Advisors
             </h3>
-            <p className="text-sm text-gray-500">
+            {/* <p className="text-sm text-gray-500">
               Our professional support team is always ready to help you with
               your queries.
-            </p>
+            </p> */}
           </div>
 
           {/* Contacts Row */}
@@ -91,7 +91,7 @@ const WhatsAppWidget = () => {
                     <IconComponent size={24} />
                   </div>
                   <span className="text-sm font-medium text-gray-700 mt-1 text-center">
-                    {contact.name.split(" ")[0]}
+                    {contact.name}
                   </span>
                 </a>
               );

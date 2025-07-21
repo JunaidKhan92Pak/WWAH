@@ -9,30 +9,20 @@ import Link from "next/link";
 export function Navbar() {
   return (
     <nav className="  h-16 flex items-center px-2 sm:px-6 justify-between bg-white">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <MobileNav />
         {/* Logo */}
         <div className="flex items-center">
           <Link  href="/">
             <Image
-              src="/DashboardPage/wwahframe.svg"
+              src="/wwah-textb.svg"
               alt="Worldwide Admissions Hub Logo"
-              width={250}
-              height={32}
-              priority
-              className="hidden md:block"
+              width={200}
+              height={200}
+              className="w-[120px] h-[120px] md:w-[140px] md:h-[140px] lg:w-[180px] lg:h-[180px]"
             />
           </Link>
-          <Link target="blank" href="/">
-            <Image
-              src="/DashboardPage/wwah.svg"
-              alt="Worldwide Admissions Hub Logo for larger screens"
-              width={150}
-              height={32}
-              priority
-              className="block md:hidden h-[80px] w-[80px]"
-            />
-          </Link>
+          
         </div>
       </div>
 

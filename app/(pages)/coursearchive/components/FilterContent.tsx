@@ -151,6 +151,15 @@ export default function FilterContent() {
   } = useCourseStore();
   // const [localMinBudget, setLocalMinBudget] = useState(minBudget || 0);
   // const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget || 0);
+
+  const parseNumber = (value: string) => {
+  return parseInt(value.replace(/,/g, ""), 10) || 0;
+};
+
+const formatNumber = (value: number | string) => {
+  return Number(value).toLocaleString("en-US");
+};
+
   const [values, setValues] = useState<number[]>([
     minBudget || MIN,
     maxBudget || MAX,
@@ -182,19 +191,23 @@ export default function FilterContent() {
     debouncedUpdateMaxBudget(vals[1]);
   };
 
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    const clamped = Math.min(val, values[1] - 1);
-    setValues([clamped, values[1]]);
-    debouncedUpdateMinBudget(clamped);
-  };
+ const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const rawValue = e.target.value;
+  const parsed = parseNumber(rawValue);
+  const clamped = Math.min(parsed, values[1] - 1);
+  setValues([clamped, values[1]]);
+  debouncedUpdateMinBudget(clamped);
+};
 
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    const clamped = Math.max(val, values[0] + 1);
-    setValues([values[0], clamped]);
-    debouncedUpdateMaxBudget(clamped);
-  };
+
+ const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const rawValue = e.target.value;
+  const parsed = parseNumber(rawValue);
+  const clamped = Math.max(parsed, values[0] + 1);
+  setValues([values[0], clamped]);
+  debouncedUpdateMaxBudget(clamped);
+};
+
   useEffect(() => {
     setValues([minBudget || MIN, maxBudget || MAX]);
   }, [minBudget, maxBudget]);
@@ -210,6 +223,7 @@ export default function FilterContent() {
       "New Zealand",
       "Ireland",
       "Malaysia",
+      "Italy",
     ],
     []
   );
@@ -303,6 +317,8 @@ export default function FilterContent() {
     },
     [subjectAreaFilter, setSubjectAreaFilter]
   );
+
+  
   return (
     <div className="space-y-6 p-6 bg-gray-50 rounded-lg h-full overflow-y-auto">
       {/* Study Destinations */}
@@ -508,31 +524,26 @@ export default function FilterContent() {
         <div className="mt-4 space-y-6">
           {/* Inputs */}
           <div className="flex justify-between items-center space-x-6">
-            <div className="flex-1">
-              <div className="bg-white rounded-lg shadow p-2 text-center">
-                <input
-                  type="number"
-                  value={values[0]}
-                  onChange={handleMinChange}
-                  className="w-full text-center text-xl font-medium focus:outline-none"
-                  min={MIN}
-                  max={values[1] - 1}
-                />
-              </div>
-            </div>
+            {/* Min Input */}
+  <div className="flex-1 bg-white rounded-lg shadow p-2 text-center">
+   <input
+  type="text"
+  value={formatNumber(values[0])}
+  onChange={handleMinChange}
+  className="w-full text-center text-xl font-medium focus:outline-none"
+/>
 
-            <div className="flex-1">
-              <div className="bg-white rounded-lg shadow p-2 text-center">
-                <input
-                  type="number"
-                  value={values[1]}
-                  onChange={handleMaxChange}
-                  className="w-full text-center text-xl font-medium focus:outline-none"
-                  min={values[0] + 1}
-                  max={MAX}
-                />
-              </div>
-            </div>
+  </div>
+
+  {/* Max Input */}
+  <div className="flex-1 bg-white rounded-lg shadow p-2 text-center">
+   <input
+  type="text"
+  value={formatNumber(values[1])}
+  onChange={handleMaxChange}
+  className="w-full text-center text-xl font-medium focus:outline-none"
+/>
+  </div>
           </div>
           {/* React-Range Slider */}
           <div className="mt-6 px-4">
