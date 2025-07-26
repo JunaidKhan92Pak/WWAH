@@ -120,10 +120,6 @@ CourseSchema.index(
   }
 );
 
-// OPTION 2: Alternative - Remove conflicting indexes and use conditional unique indexes
-// Uncomment this section and comment out OPTION 1 if you prefer this approach
-
-
 // Only create unique constraint when course_id exists
 CourseSchema.index(
   { universityname: 1, countryname: 1, university_id: 1, course_id: 1 },
@@ -132,15 +128,6 @@ CourseSchema.index(
     partialFilterExpression: { course_id: { $exists: true, $type: "string", $ne: "" } }
   }
 );
-
-// Only create unique constraint when course_link exists  
-// CourseSchema.index(
-//   { universityname: 1, countryname: 1, university_id: 1, course_link: 1 },
-//   {
-//     unique: true,
-//     partialFilterExpression: { course_link: { $exists: true, $type: "string", $ne: "" } }
-//   }
-// );
 
 // Fallback uniqueness on course_title
 CourseSchema.index(

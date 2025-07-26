@@ -89,7 +89,7 @@ const Page = () => {
             Date.now() + 24 * 60 * 60 * 1000
           ).toUTCString();
           document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
-          router.push(callbackUrl);
+          window.location.href = callbackUrl;
         } else {
           setErrors((prev) => ({
             ...prev,
@@ -174,7 +174,7 @@ const Page = () => {
     try {
       const res = await loginAction(formData);
       if (res.success) {
-        router.push(callbackUrl);
+        window.location.href = callbackUrl;
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
