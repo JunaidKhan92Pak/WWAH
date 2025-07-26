@@ -17,9 +17,19 @@ const countryAdjectives: Record<string, string> = {
   Germany: "German",
 };
 
+// const getAdjectiveForm = (country: string): string => {
+//   return countryAdjectives[country] || country;
+// };
 const getAdjectiveForm = (country: string): string => {
+  const normalized = country.trim().toLowerCase();
+
+  if (normalized === "usa" || normalized === "us" || normalized === "united states" || normalized === "united states of america") {
+    return "USA";
+  }
+
   return countryAdjectives[country] || country;
 };
+
 
 const Hero: React.FC<HeroProps> = ({ country }) => {
   const adjective = getAdjectiveForm(country);

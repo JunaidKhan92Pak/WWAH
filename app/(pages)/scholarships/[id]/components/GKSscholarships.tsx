@@ -31,7 +31,7 @@ const GKSscholarships: React.FC<GKSscholarshipsProps> = ({ benefit }) => {
       </h1>
 
       <div
-        className="gap-2 xl:grid xl:grid-cols-6 flex overflow-x-auto xl:max-w-6xl pl-6 xl:pl-0 mx-auto"
+        className="xl:gap-2 xl:grid xl:grid-cols-6 flex overflow-x-auto xl:max-w-6xl pl-6 xl:pl-0 mx-auto"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
@@ -40,9 +40,9 @@ const GKSscholarships: React.FC<GKSscholarshipsProps> = ({ benefit }) => {
         {benefit.map((text, index) => (
           <div
             key={index}
-            className={`p-[6px] rounded-xl ${bgColors[index % bgColors.length]} flex-shrink-0 w-[180px] lg:w-[170px] xl:w-auto transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl m-2`}
+            className={`p-[6px] rounded-xl ${bgColors[index % bgColors.length]} flex-shrink-0 w-[180px] lg:w-[175px] transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl m-2`}
           >
-            <div className="bg-white rounded-xl flex flex-col space-y-3 items-center justify-center h-40 text-center font-semibold text-black px-4 leading-1">
+            <div className="bg-white rounded-xl flex flex-col items-center justify-center h-40 md:h-44 text-center font-semibold text-black px-3 leading-1">
               <Image
                 src={images[index % images.length]}
                 alt={text}

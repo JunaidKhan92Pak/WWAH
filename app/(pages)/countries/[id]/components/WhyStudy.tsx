@@ -92,7 +92,7 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
               universities.map((item) => (
                 <div
                   key={item._id}
-                  className="bg-white shadow-xl rounded-2xl overflow-hidden p-2 md:p-3 relative flex-shrink-0 max-w-[180px] md:max-w-[230px] lg:max-w-[300px] xl:max-w-[320px]"
+                  className="bg-white shadow-xl rounded-2xl overflow-hidden p-2 md:p-3 relative flex-shrink-0 max-w-[180px] md:max-w-[230px] lg:max-w-[300px]"
                 >
                   <div className="relative h-[130px] md:h-[150px] lg:h-[210px]">
                     <div className="absolute top-3 left-0 bg-gradient-to-r from-[#FCE7D2] to-transparent text-black px-2 rounded-tr-lg z-10 text-left leading-2">

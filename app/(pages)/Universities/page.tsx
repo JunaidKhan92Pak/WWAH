@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { FaFacebook } from "react-icons/fa";
+import { usePathname } from 'next/navigation';
 
 const Page = () => {
   const countries = [
@@ -80,8 +81,11 @@ const Page = () => {
   const searchParams = useSearchParams();
   const initialCountrySet = React.useRef(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
-  const [favoriteUniversities, setFavoriteUniversities] = useState<Record<string, typeof universities[0]>>({});
+  const [favoriteUniversities, setFavoriteUniversities] = useState<
+    Record<string, (typeof universities)[0]>
+  >({});
 
+  
   // Handle country param from URL - consolidated logic from previous duplicate useEffects
   useEffect(() => {
     if (initialCountrySet.current) return;
@@ -103,9 +107,20 @@ const Page = () => {
   }, [searchParams, setCountry, countries]);
 
   // Fetch universities when the component mounts or when currentPage changes
-  useEffect(() => {
+  // useEffect(() => {
+  //   fetchUniversities(currentPage);
+  // }, [currentPage, fetchUniversities]);
+  const pathname = usePathname();
+
+useEffect(() => {
+  // Clear immediately
+  setLocalSearch("");
+  setSearch("");
+
+  setTimeout(() => {
     fetchUniversities(currentPage);
-  }, [currentPage, fetchUniversities]);
+  }, 0); // run in next tick
+}, [currentPage, pathname]);
 
 
   // Handle Search with debounce
@@ -115,7 +130,7 @@ const Page = () => {
     }, 500),
     [setSearch]
   );
-
+ 
   // Handle checkbox changes for country filtering
   function handleCheckboxChange(destination: string): void {
     if (destination === "All") {
@@ -133,7 +148,6 @@ const Page = () => {
     }
   }
 
-
   // Pagination handlers
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -144,7 +158,7 @@ const Page = () => {
   };
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-
+console.log("university_type" , universities)
   // No need to load favorites from localStorage
 
   const toggleFavorite = (id: string) => {
@@ -200,11 +214,14 @@ const Page = () => {
   };
 
   return (
-    <section className="w-[90%] mx-auto">
+    <section className="w-[90%] md:w-[92%] mx-auto">
       <div className="md:flex md:justify-between py-5 md:pt-10">
-        <h3 className="font-bold">Discover Universities Worldwide!</h3>
-        <div className="flex flex-col md:flex-row md:items-start gap-3">
-          <div className="w-full md:w-[70%] flex bg-[#F1F1F1] rounded-lg h-10">
+        <div className="w-full">
+          <h3 className="font-bold w-full">Discover Universities Worldwide!</h3>
+          <p className="text-gray-600">Over 1000+ Universities Available.</p>
+        </div>
+        <div className="flex flex-col md:flex-row md:items-start gap-2 w-full xl:w-1/2 mt-2 md:mt-0">
+          <div className="md:w-[60%] xl:w-[70%] flex bg-[#F1F1F1] rounded-lg h-10">
             <Image
               src="/search.svg"
               width={16}
@@ -225,9 +242,9 @@ const Page = () => {
               aria-label="Search Universities"
             />
           </div>
-          <div className="flex flex-row gap-3 w-full">
+          <div className="flex flex-row gap-2 w-full">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[80%] lg:w-[60%] h-10">
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[70%] h-10">
                 <Image src="/filterr.svg" width={16} height={14} alt="filter" />
                 <div className="flex gap-2">
                   Filter
@@ -288,8 +305,9 @@ const Page = () => {
             </DropdownMenu>
             <button
               onClick={() => setShowFavorites((prev) => !prev)}
-              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-                }`}
+              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[70%] h-10 ${
+                showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
             >
               <Image
                 src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -447,10 +465,11 @@ const Page = () => {
                               </Label>
                               <Input
                                 id={`link-${item._id}`}
-                                value={`${typeof window !== "undefined"
+                                value={`${
+                                  typeof window !== "undefined"
                                     ? window.location.origin
                                     : ""
-                                  }/Universities/${item._id}`}
+                                }/Universities/${item._id}`}
                                 readOnly
                               />
                             </div>
@@ -521,8 +540,9 @@ const Page = () => {
 
                       <button
                         onClick={() => toggleFavorite(item._id)}
-                        className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
-                          }`}
+                        className={`relative ${
+                          heartAnimation === item._id ? "animate-pop" : ""
+                        }`}
                       >
                         {favorites[item._id] ? (
                           <Image
@@ -639,39 +659,61 @@ const Page = () => {
               ))
             )}
           </div>
-
         </>
-
       )}
       {/* Pagination Button  */}
       {displayedUniversities.length >= 0 && totalPages > 0 && (
         <div className="flex flex-wrap justify-center items-center my-8 gap-3">
           {/* Pagination controls always visible container */}
-          <div className="flex items-center gap-3" >
+          <div className="flex items-center gap-3">
             {/* First page button */}
             <button
               onClick={() => setCurrentPage(1)}
-              className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
+                currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               aria-label="First page"
               disabled={currentPage <= 1}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                <path fillRule="evenodd" d="M9.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z"
+                  clipRule="evenodd"
+                />
+                <path
+                  fillRule="evenodd"
+                  d="M9.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
 
             {/* Previous button */}
             <button
               onClick={handlePrevPage}
-              className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
+                currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               aria-label="Previous page"
               disabled={currentPage <= 1}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
 
@@ -717,10 +759,11 @@ const Page = () => {
                     <button
                       key={i}
                       onClick={() => setCurrentPage(i)}
-                      className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${currentPage === i
-                        ? "bg-red-700 text-white shadow-md"
-                        : "bg-gray-100 text-gray-700 hover:bg-red-100"
-                        }`}
+                      className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${
+                        currentPage === i
+                          ? "bg-red-700 text-white shadow-md"
+                          : "bg-gray-100 text-gray-700 hover:bg-red-100"
+                      }`}
                       aria-current={currentPage === i ? "page" : undefined}
                     >
                       {i}
@@ -759,8 +802,17 @@ const Page = () => {
                 className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
                 aria-label="Next page"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
             )}
@@ -772,9 +824,22 @@ const Page = () => {
                 className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
                 aria-label="Last page"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
-                  <path fillRule="evenodd" d="M10.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L14.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z"
+                    clipRule="evenodd"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L14.586 10l-4.293 4.293a1 1 0 000 1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
             )}

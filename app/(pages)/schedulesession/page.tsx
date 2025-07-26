@@ -178,6 +178,21 @@ export default function Home() {
     }
   };
 
+
+const timeOptions = Array.from({ length: 20 }, (_, i) => {
+  const hour24 = 10 + Math.floor(i / 2); // 10 to 19
+  const minute = i % 2 === 0 ? "00" : "30";
+  const value = `${hour24.toString().padStart(2, "0")}:${minute}`;
+
+  // Convert to 12-hour format
+  const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
+  const ampm = hour24 < 12 ? "AM" : "PM";
+  const label = `${hour12}:${minute} ${ampm}`;
+
+  return { value, label };
+});
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
@@ -336,75 +351,73 @@ export default function Home() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="date"
-                      render={({ field }) => {
-                        const tomorrow = new Date();
-                        tomorrow.setDate(tomorrow.getDate() + 1);
-                        const minDate = tomorrow.toISOString().split("T")[0];
+<FormField
+  control={form.control}
+  name="date"
+  render={({ field }) => {
+    // Set minDate to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const minDate = tomorrow.toISOString().split("T")[0];
 
-                        return (
-                          <FormItem>
-                            <FormLabel className="text-gray-700 font-medium">
-                              Session Date *
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                className="placeholder:text-gray-400 placeholder:text-sm w-full h-11 border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-lg"
-                                type="date"
-                                min={minDate}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        );
-                      }}
-                    />
+    return (
+      <FormItem>
+        <FormLabel className="text-gray-700 font-medium">
+          Session Date *
+        </FormLabel>
+        <FormControl>
+          <Input
+            type="date"
+            min={minDate}
+            value={field.value || ""}
+            onChange={field.onChange}
+            className="placeholder:text-gray-400 placeholder:text-sm w-full h-11 border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-lg"
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    );
+  }}
+/>
 
-                    <FormField
-                      control={form.control}
-                      name="fromTime"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-700 font-medium">
-                            Start Time *
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              className="placeholder:text-gray-400 placeholder:text-sm w-full h-11 border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-lg"
-                              type="time"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                                const selectedTime = e.target.value;
-                                if (selectedTime) {
-                                  const [hour, minute] = selectedTime
-                                    .split(":")
-                                    .map(Number);
-                                  const startDate = new Date();
-                                  startDate.setHours(hour);
-                                  startDate.setMinutes(minute + 30);
+                <FormField
+  control={form.control}
+  name="fromTime"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel className="text-gray-700 font-medium">Start Time *</FormLabel>
+      <Select
+        onValueChange={(value) => {
+          field.onChange(value);
+          const [hour, minute] = value.split(":").map(Number);
+          const startDate = new Date();
+          startDate.setHours(hour);
+          startDate.setMinutes(minute + 30);
 
-                                  const endHour = String(
-                                    startDate.getHours()
-                                  ).padStart(2, "0");
-                                  const endMinute = String(
-                                    startDate.getMinutes()
-                                  ).padStart(2, "0");
-                                  form.setValue(
-                                    "toTime",
-                                    `${endHour}:${endMinute}`
-                                  );
-                                }
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+          const endHour = String(startDate.getHours()).padStart(2, "0");
+          const endMinute = String(startDate.getMinutes()).padStart(2, "0");
+          form.setValue("toTime", `${endHour}:${endMinute}`);
+        }}
+        value={field.value}
+      >
+        <FormControl>
+          <SelectTrigger className="h-11 w-full">
+            <SelectValue placeholder="Select time" />
+          </SelectTrigger>
+        </FormControl>
+       <SelectContent className="w-48">
+  {timeOptions.map(({ value, label }) => (
+    <SelectItem key={value} value={value}>
+      {label}
+    </SelectItem>
+  ))}
+</SelectContent>
+
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
                     <FormField
                       control={form.control}
@@ -440,7 +453,7 @@ export default function Home() {
                           <RadioGroup
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            className="flex flex-row gap-8 mt-2"
+                            className="flex flex-row gap-6 mt-2"
                           >
                             <div className="flex items-center space-x-3 bg-gray-50 p-4 rounded-lg border border-gray-200 hover:border-red-300 transition-colors">
                               <RadioGroupItem

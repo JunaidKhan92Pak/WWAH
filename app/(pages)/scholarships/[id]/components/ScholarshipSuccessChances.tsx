@@ -140,7 +140,7 @@ export const ScholarshipSuccessChances = ({
   );
   // Helper function for progress bar colors
   const getProgressBarColor = (value: number): string => {
-    return value >= 75 ? "#90EE90" : value >= 50 ? "#E5EDDE" : "#F4D0D2";
+    return value >= 75 ? "#4194001A" : value >= 50 ? "#E5EDDE" : "#F4D0D2";
   };
   const LoginPrompt = () => (
     <div className="flex flex-col items-center justify-center h-full">
