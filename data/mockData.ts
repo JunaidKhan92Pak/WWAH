@@ -105,11 +105,10 @@ export const countries = [
   'Canada',
   'Australia',
   'Germany',
-  'France',
-  'Netherlands',
-  'Spain',
+  'Malaysia',
+  'Ireland',
+  'New Zealand',
   'Italy',
-  'Sweden'
 ];
 
 export const universities = [

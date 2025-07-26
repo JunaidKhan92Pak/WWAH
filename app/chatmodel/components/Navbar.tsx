@@ -2,16 +2,11 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
-import { useUserStore } from "@/store/userStore";
-// import { useEffect } from "react";
+import { useUserStore } from "@/store/useUserData";
 import Loading from "@/app/loading";
 export const Navbar = () => {
-  const { isAuthenticate, user, loading } = useUserStore();
+  const { user, isAuthenticated, loading } = useUserStore();
 
-  // useEffect(() => {
-  //   console.log("Wellcome to Chat Moadal:"); // Log user data for debugging
-  //   fetchUser(); // Fetch user data when the component mounts
-  // }, []);
   if (loading) {
     return <Loading />;
   }
@@ -25,7 +20,7 @@ export const Navbar = () => {
           </div>
         </Link>
         <div className="ml-auto flex gap-2 items-center">
-          {isAuthenticate ? (
+          {isAuthenticated ? (
             <>
               <h6>Hello, {user?.firstName || "Newbie"}!</h6>
               <FaUser className="text-gray-800  w-8 h-8 text-xl p-1 border border-gray-400 rounded-full" />

@@ -20,6 +20,8 @@ type QueryParams = {
   userId?: string;
   conversationHistory?: { role: string; content: string }[];
   userData?: UserStore | null;
+  conversationContext?: string;
+  preloadedContext?: unknown;
 };
 type QueryIntent = "study" | "greeting" | "general" | "unknown";
 interface IntentResult {
@@ -47,7 +49,31 @@ const COLLECTION_CONFIG = {
     k: 2,
   },
 };
+function enhanceQueryWithContext(
+  query: string,
+  conversationHistory: { role: string; content: string }[] = [],
+  userData?: UserStore | null
+): string {
+  let enhancedQuery = query;
 
+  // Add conversation context if available
+  if (conversationHistory.length > 0) {
+    const recentMessages = conversationHistory.slice(-3); // Last 3 messages
+    const contextParts = recentMessages.map(
+      (msg) => `${msg.role}: ${msg.content}`
+    );
+    const contextString = contextParts.join(" | ");
+    enhancedQuery = `Previous context: ${contextString} | Current query: ${query}`;
+  }
+
+  // Add user preferences
+  if (userData?.detailedInfo?.studyPreferenced) {
+    const prefs = userData.detailedInfo.studyPreferenced;
+    enhancedQuery += ` [User preferences: ${prefs.degree} in ${prefs.subject} in ${prefs.country}]`;
+  }
+
+  return enhancedQuery;
+}
 // Vector store instances cache
 const vectorStoreCache = new Map<string, MongoDBAtlasVectorSearch>();
 const userVectorStoreCache = new Map<string, MongoDBAtlasVectorSearch>();
@@ -80,7 +106,7 @@ function getChatModel(): ChatOpenAI {
       temperature: 0.1, // Lower temperature for faster response
       maxTokens: 400, // Reduced token limit
       timeout: 10000, // 10 second timeout
-      streaming: false, // Disable streaming for faster processing
+      streaming: true,
     });
   }
   return chatModelInstance;
@@ -111,7 +137,7 @@ function getRelevantDomains(
   userData?: UserStore | null
 ): (keyof typeof COLLECTION_CONFIG)[] {
   const lowerQuery = query.toLowerCase();
-console.log(userData);
+  console.log(userData);
   // Quick keyword matching for domain selection
   if (/\b(course|program|degree|study)\b/i.test(lowerQuery)) {
     return ["courses"]; // Only search courses for better performance
@@ -221,7 +247,7 @@ function buildOptimizedContext(
 }
 export async function optimizedQuery(
   query: string,
-  userData?: UserStore | null,
+  userData?: UserStore | null
 ): Promise<string> {
   console.log(`🚀 Processing optimized query: "${query}"`);
 
@@ -263,7 +289,12 @@ User Preferences: ${userData.detailedInfo.studyPreferenced.degree} in ${userData
 `
     : ""
 }
+${`
+🗣️ CONVERSATION HISTORY:
+{conversationHistory}
 
+This conversation history should inform your response to maintain context and avoid repetition.
+`}
 Query: {query}
 
 Context: {context}
@@ -372,24 +403,84 @@ function classifyQueryIntent(
 
 function extractSubjectsFromQuery(query: string): string[] {
   const subjects = [
-    "biotechnology",
-    "biotech",
-    "biology",
-    "physics",
-    "chemistry",
-    "mathematics",
-    "engineering",
-    "computer science",
-    "business",
-    "medicine",
-    "law",
-    "psychology",
-    "economics",
-    "arts",
-    "literature",
-    "history",
-    "geography",
-    "sociology",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Earth and Environmental Sciences",
+    "Astronomy",
+    "Biotechnology",
+    "Geology",
+    "Oceanography",
+    "Computer Science",
+    "Information Technology",
+    "Artificial Intelligence AI",
+    "Cybersecurity",
+    "Data Science and Analytics",
+    "Software Engineering",
+    "Game Development",
+    "Engineering",
+    "Robotics and Automation",
+    "Mathematics",
+    "Statistics",
+    "Actuarial Science",
+    "Medicine MBBS and MD",
+    "Dentistry",
+    "Nursing",
+    "Pharmacy",
+    "Physiotherapy",
+    "Public Health",
+    "Veterinary Science",
+    "Biochemistry",
+    "Molecular Biology",
+    "Neuroscience",
+    "Genetics",
+    "Microbiology",
+    "Immunology",
+    "Radiology",
+    "Medical Imaging",
+    "Nutrition and Dietetics",
+    "Occupational Therapy",
+    "Speech and Language Therapy",
+    "Business Administration",
+    "Marketing",
+    "Human Resource Management",
+    "Operations Management",
+    "Supply Chain Management",
+    "Financial Management",
+    "Investment and Asset Management",
+    "Banking",
+    " Risk Management",
+    "Accounting and  Auditing",
+    "Economics",
+    "Law",
+    "International Law",
+    "Political Science",
+    "Public Administration",
+    "International Relations",
+    "Psychology",
+    "Social Work",
+    "Graphic Design",
+    "Fashion Design",
+    "Interior Design",
+    "Architecture",
+    "Theatre and Drama",
+    "Film and Television",
+    "Music Performance and Production",
+    "Dance",
+    "Journalism",
+    "Public Relations (PR)",
+    "Digital Media",
+    "Advertising",
+    "Education and Pedagogy",
+    "Agricultural Sciences",
+    "Food Science and Technology",
+    "Tourism and Travel Management",
+    "Event Management",
+    "Culinary Arts",
+    "Gender Studies",
+    "Visual Arts",
+    "Sports and Exercise Sciences",
+    "Media and Communication",
   ];
 
   return subjects.filter(
@@ -404,6 +495,11 @@ export async function handleStudyQueryWithSubjectDetection(params: {
   conversationHistory?: { role: string; content: string }[];
 }): Promise<string> {
   const { message, userData, userId, conversationHistory = [] } = params;
+  const enhancedMessage = enhanceQueryWithContext(
+    message,
+    conversationHistory,
+    userData
+  );
 
   // Detect if user is asking about a different subject
   const querySubjects = extractSubjectsFromQuery(message.toLowerCase());
@@ -416,21 +512,19 @@ export async function handleStudyQueryWithSubjectDetection(params: {
     (userPreferredSubject && querySubjects.includes(userPreferredSubject));
 
   if (shouldUseUserPreferences) {
-    // Use existing logic with user preferences
     return await queryDocumentsWithUserContext(
-      message,
+      enhancedMessage,
       userData || null,
       userId || "",
       conversationHistory
     );
   } else {
-    // Create temporary user data with query-specific preferences
     const querySpecificUserData = createQuerySpecificUserData(
       message,
       userData
     );
     return await queryDocumentsWithUserContext(
-      message,
+      enhancedMessage,
       querySpecificUserData,
       userId || "",
       conversationHistory
@@ -545,8 +639,9 @@ function detectCountryFromQuery(query: string): string | null {
 async function handleGreeting(params: {
   message: string;
   userData?: UserStore | null;
+  conversationHistory?: { role: string; content: string }[];
 }): Promise<string> {
-  const { userData, message } = params;
+  const { userData, message, conversationHistory = [] } = params;
   const userName = userData?.user?.firstName || "there";
   const hasValidUser = !!(userData?.user?._id && userData?.user?.firstName);
   const hasValidDetailedInfo = !!(
@@ -559,27 +654,50 @@ async function handleGreeting(params: {
 
   const lowerMessage = message.toLowerCase().trim();
 
+  // Check if this is a return greeting (conversation already started)
+  const isReturningUser = conversationHistory.length > 0;
+
   if (/^(hi+|hello+|hey+)\s*$/i.test(lowerMessage)) {
-    const greeting = hasValidUser
-      ? hasValidDetailedInfo
-        ? `Hello ${userName}! 👋 I can see your study preferences. How can I help you today?`
-        : `Hello ${userName}! 👋 How can I help you with your university or scholarship search today?`
-      : "Hello there! 👋 How can I help you with your university or scholarship search today?";
+    let greeting;
+    if (isReturningUser) {
+      // Return greeting - reference previous conversation
+      greeting = hasValidUser
+        ? `Hello again ${userName}! 👋 How can I continue helping you with your study abroad journey?`
+        : "Hello again! 👋 How can I continue helping you today?";
+    } else {
+      // First greeting
+      greeting = hasValidUser
+        ? hasValidDetailedInfo
+          ? `Hello ${userName}! 👋 I can see your study preferences. How can I help you today?`
+          : `Hello ${userName}! 👋 How can I help you with your university or scholarship search today?`
+        : "Hello there! 👋 How can I help you with your university or scholarship search today?";
+    }
 
     return (
       greeting +
-      " I can provide detailed information about countries, universities, courses, and scholarships! 🎓"
+      ` I can provide detailed information about countries, universities, courses, and scholarships! 🎓\n\n` +
+      `**🔍 Quick Links:**\n` +
+      `[Browse Courses](${ARCHIVE_LINKS.courses}) • ` +
+      `[Explore Universities](${ARCHIVE_LINKS.universities}) • ` +
+      `[View Scholarships](${ARCHIVE_LINKS.scholarships})`
     );
   }
 
+  // Similar enhancements for other greeting patterns...
   if (/^how are you\?*\s*$/i.test(lowerMessage)) {
     const personalizedPart = hasValidUser
-      ? `Nice to see you again, ${userName}! 🌟`
+      ? isReturningUser
+        ? `Still doing great, ${userName}! 🌟`
+        : `Nice to see you again, ${userName}! 🌟`
       : "I'm doing great, thanks for asking! 🌟";
 
     return (
       personalizedPart +
-      " I'm ready to help you with comprehensive information about universities, courses, scholarships, and study abroad opportunities. What would you like to know? 🎓"
+      " I'm ready to help you with comprehensive information about universities, courses, scholarships, and study abroad opportunities. What would you like to know? 🎓\n\n" +
+      `**🔍 Start Exploring:**\n` +
+      `[All Courses](${ARCHIVE_LINKS.courses}) • ` +
+      `[All Universities](${ARCHIVE_LINKS.universities}) • ` +
+      `[All Scholarships](${ARCHIVE_LINKS.scholarships})`
     );
   }
 
@@ -590,7 +708,10 @@ async function handleGreeting(params: {
 
     return (
       personalizedPart +
-      " Is there anything else I can help you with regarding your study abroad journey? I'm here to assist with universities, courses, or any other questions you might have! 🎓"
+      " Is there anything else I can help you with regarding your study abroad journey? I'm here to assist with universities, courses, or any other questions you might have! 🎓\n\n" +
+      `**🔍 Continue Exploring:**\n` +
+      `[Browse More Options](${ARCHIVE_LINKS.courses}) • ` +
+      `[Visit Dashboard](${ARCHIVE_LINKS.dashboard})`
     );
   }
 
@@ -598,7 +719,11 @@ async function handleGreeting(params: {
   const fallback = hasValidUser ? `Hello ${userName}! 🌍` : "Hello there! 🌍";
   return (
     fallback +
-    " How can I assist you today? I can provide detailed information about universities, courses, scholarships, and countries for studying abroad! ✨"
+    " How can I assist you today? I can provide detailed information about universities, courses, scholarships, and countries for studying abroad! ✨\n\n" +
+    `**🔍 Explore:**\n` +
+    `[Courses](${ARCHIVE_LINKS.courses}) • ` +
+    `[Universities](${ARCHIVE_LINKS.universities}) • ` +
+    `[Scholarships](${ARCHIVE_LINKS.scholarships})`
   );
 }
 
@@ -613,70 +738,153 @@ const generalQueryModel = new ChatOpenAI({
 async function handleGeneralQuery(params: {
   message: string;
   userData?: UserStore | null;
+  conversationHistory?: { role: string; content: string }[];
 }): Promise<string> {
-  const { message, userData } = params;
+  const { message, userData, conversationHistory = [] } = params;
   const userName = userData?.user?.firstName || "";
 
-  // Create a smart prompt that can handle any general query
+  // Build conversation context for general queries
+  const recentContext = conversationHistory
+    .slice(-3)
+    .map((msg) => `${msg.role}: ${msg.content}`)
+    .join("\n");
+
+  // Enhanced general prompt that includes archive links
   const generalPrompt = new PromptTemplate({
-    inputVariables: ["query", "userName"],
+    inputVariables: ["query", "userName", "conversationContext"],
     template: `You are ZEUS, a helpful AI assistant. You specialize in university and study abroad information, but you can also help with general questions.
+
+${
+  conversationHistory.length > 0
+    ? `
+Recent Conversation Context:
+{conversationContext}
+
+Consider this context when responding to maintain conversation flow.
+`
+    : ""
+}
 
 User Query: {query}
 ${userName ? `User Name: ${userName}` : ""}
 
 Instructions:
 1. Answer the user's question helpfully and accurately
-2. Keep your response concise (under 300 words)
-3. At the end, gently remind them that you specialize in university/study abroad information
-4. If appropriate, ask if they need help with studies/universities
-5. Be friendly and personable${userName ? ` (use their name: ${userName})` : ""}
-6.If a user asks anything about the application process or how to apply etc give them this clickable link to the dashboard http://localhost:3000/dashboard/overview
+2. Consider the conversation history to avoid repetition and maintain context
+3. Keep your response concise (under 300 words)
+4. At the end, gently remind them that you specialize in university/study abroad information
+5. Include relevant archive links for study abroad resources
+6. Be friendly and personable${userName ? ` (use their name: ${userName})` : ""}
 
-Example transitions:
-- "Hope this helps! By the way, I specialize in university applications and study abroad guidance. Need any help with that?"
-- "There you go! I'm also great at helping with course recommendations and university searches if you're interested."
+Archive Links Available:
+- Courses: ${ARCHIVE_LINKS.courses}
+- Universities: ${ARCHIVE_LINKS.universities}
+- Scholarships: ${ARCHIVE_LINKS.scholarships}
+- Dashboard: ${ARCHIVE_LINKS.dashboard}
 
-Please provide a helpful response:`,
+Please provide a helpful response with relevant archive links:`,
   });
 
   try {
-    // Use the general model to generate a response
     const response = await generalQueryModel.invoke(
       await generalPrompt.format({
         query: message,
         userName: userName,
+        conversationContext: recentContext || "No previous conversation.",
       })
     );
 
-    return response.content as string;
+    let finalResponse = response.content as string;
+
+    // Add study abroad resources if not already included
+    if (
+      !finalResponse.includes("[Browse") &&
+      !finalResponse.includes("[Explore")
+    ) {
+      finalResponse +=
+        `\n\n**🎓 Study Abroad Resources:**\n` +
+        `[Browse Courses](${ARCHIVE_LINKS.courses}) • ` +
+        `[Explore Universities](${ARCHIVE_LINKS.universities}) • ` +
+        `[View Scholarships](${ARCHIVE_LINKS.scholarships})`;
+    }
+
+    return finalResponse;
   } catch (error) {
     console.error("❌ Error in general query handler:", error);
 
-    // Fallback to basic response if OpenAI fails
-    return `I'd be happy to help, but I'm having trouble processing that right now. ${
-      userName ? `${userName}, ` : ""
-    } I specialize in university applications and study abroad information. Is there anything about studying abroad or universities I can help you with instead? 🎓`;
+    return (
+      `I'd be happy to help, but I'm having trouble processing that right now. ${
+        userName ? `${userName}, ` : ""
+      } I specialize in university applications and study abroad information. Is there anything about studying abroad or universities I can help you with instead? 🎓\n\n` +
+      `**🔍 Explore Options:**\n` +
+      `[All Courses](${ARCHIVE_LINKS.courses}) • ` +
+      `[All Universities](${ARCHIVE_LINKS.universities})`
+    );
   }
 }
+function isAmbiguousFollowUp(message: string): boolean {
+  const followUpPatterns = [
+    /^(what about|how about|tell me more|and what|also|any other)/i,
+    /^(yes|yeah|ok|okay|sure|thanks)/i,
+    /^(can you|could you|would you)/i,
+  ];
 
-export async function handleUnifiedQuery(params: QueryParams): Promise<string> {
-  const { intent, confidence } = classifyQueryIntent(
-    params.message,
-    params.userData
+  return followUpPatterns.some((pattern) => pattern.test(message.trim()));
+}
+function classifyQueryIntentWithHistory(
+  message: string,
+  conversationHistory: { role: string; content: string }[] = [],
+  userData?: UserStore | null
+): IntentResult {
+  // Check if previous messages establish study context
+  const recentMessages = conversationHistory.slice(-3);
+  const hasStudyContext = recentMessages.some((msg) =>
+    /\b(study|course|program|degree|university|college)\b/i.test(msg.content)
   );
 
-  console.log(`🎯 Classified intent: ${intent} (confidence: ${confidence})`);
+  // If there's study context and current message is ambiguous, assume study intent
+  if (hasStudyContext && isAmbiguousFollowUp(message)) {
+    return { intent: "study", confidence: "medium" };
+  }
 
-  switch (intent) {
+  // Use existing logic for clear intents
+  return classifyQueryIntent(message, userData);
+}
+export async function handleUnifiedQuery(params: QueryParams): Promise<string> {
+  const {
+    message,
+    userData,
+    conversationHistory = [],
+    conversationContext,
+  } = params;
+  console.log(conversationContext);
+  // Enhanced intent classification that considers conversation history
+  const intent = classifyQueryIntentWithHistory(
+    message,
+    conversationHistory,
+    userData
+  );
+
+  console.log(
+    `🎯 Classified intent: ${intent.intent} (confidence: ${intent.confidence})`
+  );
+  console.log(
+    `💬 Using conversation history: ${conversationHistory.length} messages`
+  );
+
+  switch (intent.intent) {
     case "greeting":
-      return handleGreeting(params);
+      return handleGreeting({ message, userData, conversationHistory });
     case "study":
-      return handleStudyQueryWithSubjectDetection(params);
+      return handleStudyQueryWithSubjectDetection({
+        message,
+        userData,
+        userId: params.userId,
+        conversationHistory,
+      });
     case "general":
-      return handleGeneralQuery(params);
+      return handleGeneralQuery({ message, userData, conversationHistory });
     default:
-      // For unknown intents with low confidence, ask for clarification
       return `I'm not sure I understand what you're looking for. I specialize in helping with university applications, study abroad information, and course recommendations. Could you please ask me something specific about studying abroad or universities? 🎓`;
   }
 }
@@ -1026,8 +1234,12 @@ export async function createSmartEnsembleRetriever(
     weights: normalizedWeights,
   });
 }
-
-// Better query function with improved filtering and context
+const ARCHIVE_LINKS = {
+  universities: "/Universities",
+  courses: "/coursearchive",
+  scholarships: "/scholarships",
+  dashboard: "/dashboard/overview",
+};
 export async function queryDocumentsWithUserContext(
   query: string,
   userData: UserStore | null = null,
@@ -1124,10 +1336,29 @@ export async function queryDocumentsWithUserContext(
 
   const hasUserData = userData && userData.detailedInfo?.studyPreferenced;
 
-  // ENHANCED: Better prompt template with stronger user preference emphasis
+  // Build conversation history string first
+  const conversationHistoryString =
+    conversationHistory.length > 0
+      ? conversationHistory
+          .slice(-5)
+          .map((msg) => `${msg.role}: ${msg.content}`)
+          .join("\n")
+      : "No previous conversation.";
+
+  // FIXED: Properly configure PromptTemplate with all required input variables
   const promptTemplate = new PromptTemplate({
-    inputVariables: ["question", "context", "userPreferences"],
+    inputVariables: [
+      "question",
+      "context",
+      "userPreferences",
+      "conversationHistory",
+    ], // Added conversationHistory
     template: `You are ZEUS, an AI assistant specialized in providing comprehensive information about universities, scholarships, and study abroad opportunities.
+
+🗣️ CONVERSATION HISTORY:
+{conversationHistory}
+
+This conversation history should inform your response to maintain context and avoid repetition.
 
 ${
   hasUserData
@@ -1143,14 +1374,13 @@ CRITICAL INSTRUCTIONS:
 2. **Look for ${userData.detailedInfo?.studyPreferenced.degree} programs in ${userData.detailedInfo?.studyPreferenced.subject} in ${userData.detailedInfo?.studyPreferenced.country}**
 3. **If you find matching courses in the context, mention them first and prominently**
 4. **Be specific about course names, universities, and exact details from the context**
-
 `
     : `
-  CRITICAL INSTRUCTIONS:
-        **When a user whose data is not available asks about studying abroad, ALWAYS ask them about their preferences first:**
-   - What country are they interested in?
-   - What degree level (Bachelor's, Master's, PhD)?
-   - What subject/field of study?
+CRITICAL INSTRUCTIONS:
+**When a user whose data is not available asks about studying abroad, ALWAYS ask them about their preferences first:**
+- What country are they interested in?
+- What degree level (Bachelor's, Master's, PhD)?
+- What subject/field of study?
 `
 }
 
@@ -1160,7 +1390,27 @@ IMPORTANT INSTRUCTIONS:
 3. **Provide actionable information** - include application details and next steps
 4. **If user asks for suggestions, provide concrete options from the context**
 5. **Match user preferences exactly when possible**
-6.**If a user asks anything about the application process or how to apply etc give them this clickable link to the dashboard http://localhost:3000/dashboard/overview **
+6. Never provide the user any links other than the ones provided here and never tell the user to visit any official website keep them engaged to our website
+
+📚 ARCHIVE LINKS - Use these strategically in your responses:
+- For university recommendations: [Explore All Universities](${
+      ARCHIVE_LINKS.universities
+    })
+- For course suggestions: [Browse All Courses](${ARCHIVE_LINKS.courses})
+- For scholarship information: [View All Scholarships](${
+      ARCHIVE_LINKS.scholarships
+    })
+- For application processes: [Visit Dashboard](${ARCHIVE_LINKS.dashboard})
+
+ARCHIVE LINK GUIDELINES:
+- Include relevant archive links based on what the user is asking about
+- If discussing universities, include the universities archive link
+- If discussing courses, include the courses archive link
+- If discussing scholarships, include the scholarships archive link
+- For application/dashboard queries, use the dashboard link
+- Format links as clickable markdown: [Link Text](URL)
+- Add archive links in a "Next Steps" or "Explore More" section at the end
+
 
 Question: {question}
 
@@ -1177,7 +1427,6 @@ Please provide a comprehensive response that prioritizes the user's specific pre
   });
 
   try {
-    // Better context organization
     const contextByDomain: Record<string, string[]> = {
       courses: [],
       universities: [],
@@ -1224,20 +1473,75 @@ Please provide a comprehensive response that prioritizes the user's specific pre
       `📄 Final context length: ${organizedContext.length} characters`
     );
 
-    // Execute the chain
+    //Execute the chain with all required parameters
     const response = await chain.invoke({
       query: enhancedQuery,
       context: organizedContext || "No specific context found for this query.",
       userPreferences: hasUserData
         ? `User wants ${userData.detailedInfo?.studyPreferenced.degree} in ${userData.detailedInfo?.studyPreferenced.subject} in ${userData.detailedInfo?.studyPreferenced.country}`
         : "No user preferences available.",
+      conversationHistory: conversationHistoryString,
     });
+    let finalResponse = response.text;
+    // Cache the results
+    if (
+      !finalResponse.includes("[Explore All Universities](") &&
+      !finalResponse.includes("[Browse All Courses](") &&
+      !finalResponse.includes("[View All Scholarships](")
+    ) {
+      // Determine which links to add based on query content
+      const queryLower = query.toLowerCase();
+      const archiveLinksToAdd = [];
+
+      if (queryLower.includes("university") || queryLower.includes("college")) {
+        archiveLinksToAdd.push(
+          `[Explore All Universities](${ARCHIVE_LINKS.universities})`
+        );
+      }
+
+      if (
+        queryLower.includes("course") ||
+        queryLower.includes("program") ||
+        queryLower.includes("degree")
+      ) {
+        archiveLinksToAdd.push(
+          `[Browse All Courses](${ARCHIVE_LINKS.courses})`
+        );
+      }
+
+      if (
+        queryLower.includes("scholarship") ||
+        queryLower.includes("funding")
+      ) {
+        archiveLinksToAdd.push(
+          `[View All Scholarships](${ARCHIVE_LINKS.scholarships})`
+        );
+      }
+
+      if (queryLower.includes("apply") || queryLower.includes("application")) {
+        archiveLinksToAdd.push(`[Visit Dashboard](${ARCHIVE_LINKS.dashboard})`);
+      }
+
+      // If no specific matches, add general exploration links
+      if (archiveLinksToAdd.length === 0) {
+        archiveLinksToAdd.push(
+          `[Browse All Courses](${ARCHIVE_LINKS.courses})`,
+          `[Explore All Universities](${ARCHIVE_LINKS.universities})`
+        );
+      }
+
+      if (archiveLinksToAdd.length > 0) {
+        finalResponse += `\n\n**🔍 Explore More:**\n${archiveLinksToAdd.join(
+          " • "
+        )}`;
+      }
+    }
 
     // Cache the results
-    await cacheVectorResults(cacheKey, response.text);
+    await cacheVectorResults(cacheKey, finalResponse);
 
     console.log("✅ Query processed successfully");
-    return response.text;
+    return finalResponse;
   } catch (error) {
     console.error("❌ Error in queryDocumentsWithUserContext:", error);
     throw error;
