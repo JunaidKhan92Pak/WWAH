@@ -4,6 +4,7 @@ import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
 
 // Basic user profile data
 export interface User {
+  favouriteCourse: never[];
   _id: string;
   firstName: string;
   lastName: string;
