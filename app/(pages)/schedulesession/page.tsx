@@ -25,6 +25,7 @@ import { useState, useMemo } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import countriesData from "world-countries";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -641,22 +642,15 @@ const timeOptions = Array.from({ length: 20 }, (_, i) => {
       {showModal && isSuccess && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
-            <div className="text-center p-8">
-              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
-                <svg
-                  className="h-8 w-8 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  ></path>
-                </svg>
-              </div>
+            <div className="flex flex-col items-center text-center p-8">
+              <Image
+                src="/modalImg.svg"
+                alt="Modal"
+                width={32}
+                height={32}
+              className="w-2/5 mb-3" 
+              />
+
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
                 Session Booked Successfully!
               </h3>
@@ -667,7 +661,7 @@ const timeOptions = Array.from({ length: 20 }, (_, i) => {
               </p>
               <Button
                 onClick={() => setShowModal(false)}
-                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-[#F0851D] hover:bg-[#F0851D] text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Perfect, Thank You!
               </Button>
