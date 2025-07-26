@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import io from "socket.io-client";
+import { useSocket } from "@/context/socket-context"; // Use the unified socket context
 import {
   X,
   Smile,
@@ -13,10 +13,6 @@ import {
 import dynamic from "next/dynamic";
 const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
-const socket = io(`${process.env.NEXT_PUBLIC_BACKEND_API}`, {
-  autoConnect: false,
-});
-
 type Message = {
   text: string;
   sender: "user" | "admin";
@@ -27,7 +23,7 @@ type Message = {
     type: string;
     size: number;
     s3Key?: string;
-    downloadUrl?: string; // Pre-signed URL for downloading
+    downloadUrl?: string;
   };
 };
 
@@ -37,6 +33,7 @@ interface ChatModalProps {
   };
   onClose: () => void;
 }
+
 interface FileUploadResult {
   name: string;
   url: string;
@@ -44,12 +41,13 @@ interface FileUploadResult {
   size: number;
   s3Key: string;
 }
+
 interface EmojiData {
   emoji: string;
   unified: string;
   names: string[];
-  // Add other properties if your emoji picker provides them
 }
+
 export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -60,42 +58,76 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // ✅ Use the unified socket context
+  const { socket } = useSocket() as {
+    socket: import("socket.io-client").Socket | null;
+  };
+
   useEffect(() => {
-    if (!userEmail) return;
+    if (!userEmail || !socket) return;
+
     console.log(userEmail, "User email for chat");
     const mail = userEmail.email;
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}chat/messages/${mail}`)
-      .then((res) => res.json())
-      .then((data: Message[]) => {
-        setMessages(data);
+
+    // Load existing messages
+    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}chat/messages/${mail}`)
+    //   .then((res) => res.json())
+    //   .then((data: Message[]) => {
+    //     setMessages(data);
+    //     setTimeout(
+    //       () => scrollRef.current?.scrollIntoView({ behavior: "smooth" }),
+    //       50
+    //     );
+    //   });
+    const loadMessages = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}chat/messages/${mail}`
+        );
+        if (res.ok) {
+          const data: Message[] = await res.json();
+          setMessages(data);
+        }
+      } catch (err) {
+        console.error("Failed to load messages:", err);
+      } finally {
         setTimeout(
           () => scrollRef.current?.scrollIntoView({ behavior: "smooth" }),
           50
         );
-      });
+      }
+    };
 
-    socket.connect();
-    socket.emit("join", userEmail);
-    socket.on("receive_message", (msg: Message) => {
-      console.log("Received message");
+    loadMessages();
+
+    // Join chat room
+    socket.emit("join", { email: userEmail.email });
+
+    // ✅ Join chat room (socket is already connected via SocketProvider)
+    socket.emit("join", { email: userEmail.email });
+
+    // ✅ Listen for new messages in chat modal
+    const handleReceiveMessage = (msg: Message) => {
+      console.log("📨 Chat Modal: Received message", msg);
+      // setMessages((prev) => [...prev, msg]);
       setMessages((prev) => [...prev, msg]);
       setTimeout(
         () => scrollRef.current?.scrollIntoView({ behavior: "smooth" }),
         50
       );
-    });
+    };
+
+    socket.on("receive_message", handleReceiveMessage);
 
     return () => {
-      socket.off("receive_message");
-      socket.disconnect();
+      socket.off("receive_message", handleReceiveMessage);
       setMessages([]);
     };
-  }, [userEmail]);
+  }, [userEmail, socket]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Check file size (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
         alert("File size must be less than 10MB");
         return;
@@ -142,6 +174,41 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
     }
   };
 
+  // const sendMessage = async () => {
+  //   if (!input.trim() && !selectedFile) return;
+
+  //   try {
+  //     let fileData = null;
+
+  //     if (selectedFile) {
+  //       fileData = await uploadFile(selectedFile);
+  //     }
+
+  //     console.log("📤 Sending message:", input);
+
+  //     // ✅ Send message via socket
+  //     if (socket) {
+  //       socket.emit("send_message", {
+  //         email: userEmail,
+  //         text:
+  //           input || (selectedFile ? `Sent a file: ${selectedFile.name}` : ""),
+  //         sender: "user",
+  //         file: fileData,
+  //       });
+  //     }
+
+  //     setInput("");
+  //     setSelectedFile(null);
+  //     setShowEmojiPicker(false); // 🔧 Close emoji picker after sending message
+
+  //     if (fileInputRef.current) {
+  //       fileInputRef.current.value = "";
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending message:", error);
+  //     alert("Failed to send message. Please try again.");
+  //   }
+  // };
   const sendMessage = async () => {
     if (!input.trim() && !selectedFile) return;
 
@@ -152,17 +219,32 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
         fileData = await uploadFile(selectedFile);
       }
 
-      console.log("Sending message:", input);
-      socket.emit("send_message", {
-        email: userEmail,
+      const message: Message = {
         text:
           input || (selectedFile ? `Sent a file: ${selectedFile.name}` : ""),
         sender: "user",
-        file: fileData,
+        timestamp: new Date().toISOString(),
+        file: fileData || undefined,
+      };
+
+      // Optimistic UI update
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...message,
+          timestamp: message.timestamp, // keep as string
+        },
+      ]);
+
+      socket?.emit("send_message", {
+        ...message,
+        email: userEmail,
       });
 
       setInput("");
       setSelectedFile(null);
+      setShowEmojiPicker(false);
+      // fileInputRef.current && (fileInputRef.current.value = "");
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -200,7 +282,6 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
     try {
       let downloadUrl = file.downloadUrl || file.url;
 
-      // If we have an S3 key but no download URL, get a fresh pre-signed URL
       if (file.s3Key && !file.downloadUrl) {
         const response = await fetch(
           `${
@@ -214,7 +295,6 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
         }
       }
 
-      // Create download link
       const link = document.createElement("a");
       link.href = downloadUrl;
       link.download = file.name;
@@ -231,7 +311,7 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
   return (
     <div className="fixed bottom-0 right-0 h-[500px] w-full max-w-md p-4 z-50">
       <div className="relative bg-white rounded-2xl shadow-xl h-full flex flex-col overflow-hidden">
-        {/* Close Icons */}
+        {/* Close Icon */}
         <button
           onClick={onClose}
           className="absolute top-5 right-4 text-white z-20"

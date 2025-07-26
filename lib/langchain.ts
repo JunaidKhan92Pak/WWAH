@@ -551,6 +551,7 @@ function createQuerySpecificUserData(
       email: originalUserData?.user?.email || "",
       phone: originalUserData?.user?.phone || 0,
       gender: originalUserData?.user?.gender || "",
+      favouriteCourse: originalUserData?.user?.favouriteCourse || [],
       createdAt: originalUserData?.user?.createdAt || new Date().toISOString(),
       updatedAt: originalUserData?.user?.updatedAt || new Date().toISOString(),
     },

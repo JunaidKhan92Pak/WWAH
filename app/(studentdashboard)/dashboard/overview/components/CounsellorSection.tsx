@@ -1,12 +1,47 @@
-import React, { useState } from "react";
+import React, {  useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import ChatModal from "./ChatBox";
 import Link from "next/link";
+import { useChatStore } from "@/store/chatStore";
+import { useSocket } from "@/context/socket-context"; // Import socket context
 
 const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const closeChat = () => setIsChatOpen(false);
+  const { isChatOpen, setIsChatOpen } = useChatStore();
+  const { socket, unreadCount, clearNotifications } =
+    useSocket(); // Use socket context
+
+  console.log("Current isChatOpen:", isChatOpen);
+  console.log("setIsChatOpen function:", setIsChatOpen);
+
+  // ✅ Ensure user joins notification room when component mounts
+  useEffect(() => {
+    if (socket && userEmail?.email && socket.connected) {
+      console.log("🔔 Joining notification room for:", userEmail.email);
+
+      // Join the notification room immediately
+      socket.emit("join_notification_room", { userId: userEmail.email });
+
+      // Also join regular room for good measure
+      socket.emit("join", userEmail.email);
+
+      console.log("✅ Notification room join events emitted");
+    }
+  }, [socket, userEmail?.email, socket?.connected]);
+
+  const closeChat = () => {
+    setIsChatOpen(false);
+    // Clear notifications when chat closes
+    clearNotifications();
+  };
+
+  const handleChatClick = () => {
+    console.log("Button clicked - before:", isChatOpen);
+    setIsChatOpen(true);
+    // Clear notifications when opening chat
+    clearNotifications();
+    console.log("Button clicked - after calling set");
+  };
 
   return (
     <>
@@ -34,23 +69,32 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
           application processes to visa assistance.
         </p>
 
-        <Button
-          onClick={() => setIsChatOpen(true)}
-          className="text-white px-11 bg-[#C7161E] hover:bg-[#C7161E] "
-        >
-          <Image
-            src="/DashboardPage/chat.svg"
-            alt="chat"
-            width={18}
-            height={18}
-          />
-          Chat with Fatima
-        </Button>
+        <div className="relative">
+          <Button
+            onClick={handleChatClick}
+            className="text-white px-11 bg-[#C7161E] hover:bg-[#C7161E]"
+          >
+            <Image
+              src="/DashboardPage/chat.svg"
+              alt="chat"
+              width={18}
+              height={18}
+            />
+            Chat with Fatima
+          </Button>
+
+          {/* ✅ Show notification badge if there are unread messages */}
+          {unreadCount > 0 && (
+            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {unreadCount}
+            </div>
+          )}
+        </div>
+
         {isChatOpen && <ChatModal userEmail={userEmail} onClose={closeChat} />}
         <p className="my-4">OR</p>
 
         <Link href="/schedulesession">
-          {" "}
           <Button className="text-white bg-[#C7161E] hover:bg-[#C7161E]">
             <Image
               src="/DashboardPage/counsellingsession.svg"
