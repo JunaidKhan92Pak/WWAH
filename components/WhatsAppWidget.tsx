@@ -99,14 +99,14 @@ const WhatsAppWidget = () => {
           </div>
 
           {/* Divider */}
-          <div className="flex items-center justify-center my-4">
+          {/* <div className="flex items-center justify-center my-4">
             <div className="h-px flex-1 bg-gray-200" />
             <span className="text-xs text-gray-400 px-2">OR</span>
             <div className="h-px flex-1 bg-gray-200" />
-          </div>
+          </div> */}
 
           {/* General Contact Button */}
-          <button
+          {/* <button
             className="bg-red-700 text-white w-full py-3 rounded-full font-semibold hover:bg-red-800 transition flex items-center justify-center gap-2"
             onClick={() => {
               window.open(
@@ -119,7 +119,7 @@ const WhatsAppWidget = () => {
           >
             <IoLogoWhatsapp size={18} />
             Start Chatting
-          </button>
+          </button> */}
         </div>
       )}
     </div>

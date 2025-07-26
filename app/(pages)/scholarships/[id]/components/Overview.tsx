@@ -29,23 +29,28 @@ const Overview: React.FC<OverviewProps> = ({ overview, duration, info_link }) =>
                   <strong>Degree:</strong> {duration?.bachelors}
                   {duration?.masters}  {duration?.phd}{" "}
                 </p>
-                <p>
+                {/* <p>
                   <strong>Research:</strong> 6 months or 1 year
-                </p>
+                </p> */}
                 <p className="">
                   <strong>Info Link:</strong>{" "}
-          <a
-  href={info_link}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="
-    text-blue-600 underline hover:text-blue-800 transition
-    break-words whitespace-normal
-    max-w-full block text-sm
-  "
->
-  {info_link}
-</a>
+         {info_link && info_link.startsWith("http") ? (
+  <a
+    href={info_link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+      text-blue-600 underline hover:text-blue-800 transition
+      break-words whitespace-normal
+      max-w-full block text-sm
+    "
+  >
+    {info_link}
+  </a>
+) : (
+  <span className="font bold">Not Available</span>
+)}
+
 
                 </p>
 

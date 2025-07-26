@@ -228,7 +228,7 @@ const FilterSection = ({ isMobile = false }) => {
 
       <p className="text-base md:text-lg font-bold">Study Level:</p>
       <ul className="py-2 space-y-3 md:space-y-4 md:p-2">
-        {["Bachelors", "Master", "PhD"].map((program) => (
+        {["Bachelor's", "Master's", "PhD"].map((program) => (
           <li key={program} className="flex items-center justify-between">
             <span className="text-[16px] truncate">{program}</span>
             <input

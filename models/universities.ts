@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 const universitySchema = new mongoose.Schema(
     {
         country_name: { type: String, required: true },
+        university_type: { type: String, required: true },
         university_name: { type: String, required: true },
         location: { type: String, required: true },
         university_video: { type: String, default: null },

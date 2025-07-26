@@ -136,6 +136,7 @@ export async function GET(req: Request) {
         university_name: 1,
         qs_world_university_ranking: 1,
         times_higher_education_ranking: 1,
+        university_type: 1, // Include university_type in the projection
         country_name: 1,
         acceptance_rate: 1,
         "universityImages.banner": 1,

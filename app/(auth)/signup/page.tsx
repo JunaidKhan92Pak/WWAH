@@ -456,7 +456,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen ">
+    <div className="flex flex-col md:flex-row min-h-screen">
       {/* Sign-up Form Section */}
       <div className="w-full md:w-1/2 pt-5 md:pt-0 px-8 flex flex-col items-center justify-center lg:w-[60%] 2xl:px-20 2xl:w-[60%] my-2">
         <div>
