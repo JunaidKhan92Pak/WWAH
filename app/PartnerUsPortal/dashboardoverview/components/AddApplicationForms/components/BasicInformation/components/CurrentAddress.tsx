@@ -30,14 +30,14 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
 
   // Function to copy contact details to current address
   const copyContactDetails = () => {
-    form.setValue(
-      "currentcurrentAddress",
-      form.getValues("currentAddress") || ""
-    );
-    form.setValue(
-      "currentpermanentAddress",
-      form.getValues("permanentAddress") || ""
-    );
+    // form.setValue(
+    //   "currentcurrentAddress",
+    //   form.getValues("currentAddress") || ""
+    // );
+    // form.setValue(
+    //   "currentpermanentAddress",
+    //   form.getValues("permanentAddress") || ""
+    // );
     form.setValue("currentCountry", form.getValues("country") || "");
     form.setValue("currentCity", form.getValues("city") || "");
     form.setValue("currentZipCode", form.getValues("zipCode") || "");
@@ -56,8 +56,8 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
     }
   }, [
     sameAsContact,
-    form.watch("currentAddress"),
-    form.watch("permanentAddress"),
+    // form.watch("currentAddress"),
+    // form.watch("permanentAddress"),
     form.watch("country"),
     form.watch("city"),
     form.watch("zipCode"),
@@ -88,7 +88,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
           </label>
         </div>
 
-        {[
+        {/* {[
           { name: "currentcurrentAddress" as const, label: "Current Address" },
           {
             name: "currentpermanentAddress" as const,
@@ -109,14 +109,14 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                     {...field}
                     value={field.value || ""}
-                    // disabled={sameAsContact}
+                  // disabled={sameAsContact}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        ))}
+        ))} */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {/* country */}
           <FormField
@@ -137,7 +137,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     }
                   }}
                   value={field.value || ""}
-                  // disabled={sameAsContact}
+                // disabled={sameAsContact}
                 >
                   <FormControl>
                     <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131]">
@@ -166,7 +166,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                 <Select
                   onValueChange={field.onChange}
                   value={field.value || ""}
-                  // disabled={sameAsContact}
+                // disabled={sameAsContact}
                 >
                   <FormControl>
                     <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131]">
@@ -199,7 +199,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                     {...field}
                     value={field.value || ""}
-                    // disabled={sameAsContact}
+                  // disabled={sameAsContact}
                   />
                 </FormControl>
                 <FormMessage />
@@ -221,7 +221,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       className="bg-[#f1f1f1] placeholder-[#313131] pl-10"
                       {...field}
                       value={field.value || ""}
-                      // disabled={sameAsContact}
+                    // disabled={sameAsContact}
                     />
                     <span className="absolute left-3 top-1/2 -translate-y-1/2">
                       <Image
@@ -252,7 +252,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     <Select
                       value={countryCodeField.value || "+92-Pakistan"}
                       onValueChange={countryCodeField.onChange}
-                      // disabled={sameAsContact}
+                    // disabled={sameAsContact}
                     >
                       <FormControl>
                         <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
@@ -307,7 +307,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                   value={field.value || ""}
                   placeholder="Enter your phone number"
                   className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
-                  // disabled={sameAsContact}
+                // disabled={sameAsContact}
                 />
               </div>
               <FormMessage />

@@ -7,8 +7,9 @@ export const countries = worldCountries.map((country) => {
       ? `${country.idd.root}${country.idd.suffixes[0]}`
       : "";
   return {
+    id: country.cca3, // Unique 3-letter code
     name: country.name.common,
     code: callingCode,
-    flag: `https://flagcdn.com/w40/${country.cca2.toLowerCase()}.png`, // use ISO 2-letter code
+    flag: `https://flagcdn.com/w40/${country.cca2.toLowerCase()}.png`,
   };
 });
