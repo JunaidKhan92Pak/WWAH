@@ -96,8 +96,8 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {countries.map((country, key) => (
-                      <SelectItem key={key} value={country.name}>
+                    {countries.map((country) => (
+                      <SelectItem key={country.name} value={country.name}>
                         {country.name}
                       </SelectItem>
                     ))}
@@ -140,7 +140,7 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     placeholder="Write..."
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                     {...field}
-
+                    
                     value={field.value || ""}
                   />
                 </FormControl>
