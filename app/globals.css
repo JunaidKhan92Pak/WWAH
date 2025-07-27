@@ -68,6 +68,10 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+#google-signin-button > div {
+  width: 100% !important;
+  display: block !important;
+}
 
 @layer base {
   * {
@@ -470,7 +474,8 @@ input::placeholder {
 }
 
 @keyframes bounce-once {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
