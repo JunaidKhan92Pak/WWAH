@@ -71,11 +71,13 @@ const CourseArchive = () => {
     Record<string, (typeof courses)[0]>
   >({});
 
-  const { isAuthenticated , user} = useUserStore();
+  // const { isAuthenticated , user} = useUserStore();
+  const { user } = useUserStore();
+
   const [loadingFavorites, setLoadingFavorites] = useState<
     Record<string, boolean>
   >({});
-   console.log(user?.favouriteCourse, "user.favouriteCourse"); 
+  console.log(user?.favouriteCourse, "user.favouriteCourse");
   // Toggle favorite and animate heart
   // Function to add/remove course from favorites in database
   const toggleFavorite = async (courseId: string, action: "add" | "remove") => {
@@ -214,6 +216,7 @@ const CourseArchive = () => {
   //   }
   // };
   const toggleFavoriteInDB = async (id: string, p0: string) => {
+    console.log(p0);
     const token = getAuthToken();
 
     // ✅ Check token directly instead of relying only on isAuthenticated
@@ -267,6 +270,8 @@ const CourseArchive = () => {
         }
       );
     } catch (error) {
+      console.error("Failed to update favorites:", error);
+
       // Revert optimistic UI on failure
       setFavorites((prev) => {
         const revertedFavorites = { ...prev, [id]: !prev[id] };
