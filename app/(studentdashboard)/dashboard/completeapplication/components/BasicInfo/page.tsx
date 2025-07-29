@@ -77,7 +77,7 @@ const BasicInfo = () => {
       isGivenNameEmpty: false,
     },
   });
-
+  const token = getAuthToken();
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValidationErrors([]);
@@ -162,14 +162,16 @@ const BasicInfo = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+
           },
           credentials: "include",
           body: JSON.stringify(formattedData),
         }
       );
 
-      console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
+      // console.log("Response status:", response.status);
+      // console.log("Response headers:", response.headers);
 
       // Check if response is ok
       if (!response.ok) {
@@ -346,7 +348,7 @@ const BasicInfo = () => {
   const handleCompleteApplication = () => {
     console.log("Application Completed!");
   };
-  const token = getAuthToken()
+
   useEffect(() => {
     async function loadSaved() {
       try {
