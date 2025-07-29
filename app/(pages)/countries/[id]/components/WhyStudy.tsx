@@ -130,7 +130,9 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
                   </div>
                   <div className="md:px-4 my-2 flex flex-col justify-between">
                      <Link
-            href={`/Universities?country=${countryName}`}
+                                           href={`/Universities/${item._id}`}
+
+            // href={`/Universities?country=${countryName}`}
             target="_blank"
             className="cursor-pointer"
           >
@@ -145,7 +147,7 @@ const WhyStudy = ({ country, countryName }: StudyInUkProps) => {
           </div>
           <Link
             href={`/Universities?country=${countryName}`}
-            target="_blank"
+            // target="_blank"
             className="cursor-pointer"
           >
             <Button className="bg-red-700 mt-3">

@@ -523,7 +523,7 @@ const Page = () => {
           {currentStep === "register" && (
             <div className="space-y-2">
               {/* First Name and Last Name */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     First Name<span className="text-red-500">*</span>
@@ -579,7 +579,7 @@ const Page = () => {
               </div>
 
               {/* Phone and Referral Code */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Phone<span className="text-red-500">*</span>
@@ -603,7 +603,7 @@ const Page = () => {
                   </label>
                   <div className="relative">
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 flex items-center justify-center">
-                      <MdOutlineRepeat className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />{" "}
+                      <MdOutlineRepeat className="absolute  top-1/2 transform -translate-y-1/2 text-gray-400 2xl:text-2xl 2xl:w-10" />{" "}
                     </div>
                     <input
                       type="text"

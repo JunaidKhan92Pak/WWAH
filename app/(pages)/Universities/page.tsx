@@ -221,7 +221,7 @@ console.log("university_type" , universities)
           <p className="text-gray-600">Over 1000+ Universities Available.</p>
         </div>
         <div className="flex flex-col md:flex-row md:items-start gap-2 w-full xl:w-1/2 mt-2 md:mt-0">
-          <div className="md:w-[60%] xl:w-[70%] flex bg-[#F1F1F1] rounded-lg h-10">
+          <div className="md:w-[60%] xl:w-[80%] flex bg-[#F1F1F1] rounded-lg h-10">
             <Image
               src="/search.svg"
               width={16}
@@ -244,8 +244,8 @@ console.log("university_type" , universities)
           </div>
           <div className="flex flex-row gap-2 w-full">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[70%] h-10">
-                <Image src="/filterr.svg" width={16} height={14} alt="filter" />
+              <DropdownMenuTrigger className="text-sm text-gray-600 flex items-center justify-center gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[60%] h-10">
+                <Image src="/filterr.svg" width={16} height={14} alt="filter" className="ml-2" />
                 <div className="flex gap-2">
                   Filter
                   {/* Always reserve space for count by using opacity instead of conditional rendering */}
@@ -305,7 +305,7 @@ console.log("university_type" , universities)
             </DropdownMenu>
             <button
               onClick={() => setShowFavorites((prev) => !prev)}
-              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[70%] h-10 ${
+              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[80%] h-10 ${
                 showFavorites ? "text-red-500 font-bold" : "text-gray-600"
               }`}
             >
