@@ -156,7 +156,7 @@ const EditStudentPreference = ({ data }: { data: DetailedInfo }) => {
         <p className="text-gray-600 text-base">Student Preference:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
-            src="/DashboardPage/Backpack.svg"
+            src="/DashboardPage/backpack.svg"
             alt="Icon"
             width={18}
             height={18}
