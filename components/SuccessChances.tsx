@@ -566,7 +566,7 @@ const SuccessChances = () => {
           type="number"
           min="0"
           placeholder={q.placeholder}
-          value={(answers[q.id] as number) || 0}
+          value={(answers[q.id] as number)}
           onChange={(e) => handleAnswer(Number(e.target.value), q.id)}
           className={`w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 ${hasError ? 'border-red-500' : 'border-gray-300'
             }`}
