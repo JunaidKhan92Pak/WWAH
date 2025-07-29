@@ -39,6 +39,7 @@ import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/store/useUserData";
 import toast from "react-hot-toast";
 import { getAuthToken } from "@/utils/authHelper";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   return (
@@ -58,6 +59,8 @@ const CourseArchive = () => {
     setPage,
     loading,
     fetchCourses,
+        setCountryFilter, // ✅ Make sure it's destructured here
+
   } = useCourseStore();
 
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
@@ -316,6 +319,14 @@ const CourseArchive = () => {
   useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
+  
+   const searchParams = useSearchParams();
+  const countryFromURL = searchParams.get("country");
+   useEffect(() => {
+    if (countryFromURL) {
+      setCountryFilter([countryFromURL]);
+    }
+  }, [countryFromURL, setCountryFilter]);
 
   // Scroll to top whenever the currentPage changes
   useEffect(() => {

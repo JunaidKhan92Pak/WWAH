@@ -58,7 +58,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
             </p>
           </div>
           <div className="md:w-1/2 flex md:justify-end justify-center items-center">
-            <Link href="https://api.whatsapp.com/send/?phone=923120762039&text=Hello%21+I+have+a+question.&type=phone_number&app_absent=0">
+            <Link href="https://api.whatsapp.com/send/?phone=923126917771&text=Hello%21+I+have+a+question.&type=phone_number&app_absent=0">
               <button className="bg-[#C7161E] text-xs md:text-sm 2xl:text-xl text-white rounded-lg p-3">
                 Get in touch with WWAH advisor
               </button>
