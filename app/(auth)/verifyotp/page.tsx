@@ -92,13 +92,33 @@ const VerifyOtp = () => {
       console.log(`Something went wrong. Please try again ${error}`);
     }
   };
-  const handleResendOtp = () => {
-    setOtp(["", "", "", "", "", ""]);
-    setTimer(120); // Reset timer to 2 minutes
-    setIsOtpExpired(false);
-    setErrorMessage("");
-    setSuccessMessage("A new OTP has been sent to your email!");
+  const handleResendOtp = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}verifyOtp/resend`, {
+        method: "POST",
+        credentials: "include", // Required to send session cookie
+      });
+
+      const data = await res.json();
+      console.log("Resending OTP...", data);
+
+      if (res.ok) {
+        setOtp(["", "", "", "", "", ""]);
+        setTimer(120); // Reset timer
+        setIsOtpExpired(false);
+        setSuccessMessage(data.message || "OTP resent successfully!");
+        setErrorMessage("");
+      } else {
+        setErrorMessage(data.message || "Failed to resend OTP.");
+        setSuccessMessage("");
+      }
+    } catch (error) {
+      console.log("Error resending OTP:", error);
+      setErrorMessage("Something went wrong while resending OTP.");
+      setSuccessMessage("");
+    }
   };
+
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
