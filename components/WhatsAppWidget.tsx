@@ -10,7 +10,7 @@ const WhatsAppWidget = () => {
   const contacts = [
     {
       name: "Student Advisor",
-      phone: "923120762039",
+      phone: "+923126917771",
       message: "Hello! I'm interested in your services.",
       description: "Get guidance on study plans and course selection",
       icon: GraduationCap,
