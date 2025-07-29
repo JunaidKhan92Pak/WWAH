@@ -111,7 +111,9 @@ const VerifyOtp = () => {
       {/* Sign-in Form Section */}
       <div className="flex-1 max-w-2xl sm:pl-44 px-20 sm:pr-28">
         {/* <Image src={Logo} alt="Logo" className="mb-4 w-28 mx-auto" /> */}
-        <Image src="/logowwah.svg" alt="WWAH Logo" width={150} height={60} />
+         <div className="flex justify-center mb-2">
+    <Image src="/logowwah.svg" alt="WWAH Logo" width={150} height={60} />
+  </div>
         <div className="text-2xl font-bold mb-2 text-center">Verify OTP!</div>
         <p className="text-gray-600 text-center text-sm sm:px-10 mb-6">
           We have sent a 6-digit OTP to your email!

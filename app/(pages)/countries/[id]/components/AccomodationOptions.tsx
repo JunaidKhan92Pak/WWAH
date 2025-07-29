@@ -137,7 +137,7 @@ const AccomodationOptions = ({ accomodation }: Accomodation) => {
           <Banner
             title="Need help finding the perfect place to live abroad? Ask the WWAH Advisor now!"
             buttonText="Consult with WWAH Advisor"
-            buttonLink="/contactus"
+            buttonLink="https://api.whatsapp.com/send/?phone=923120762039&text=Hello%21+I+have+a+question.&type=phone_number&app_absent=0"
             backgroundImage="/bg-usa.png"
           />
         </div>
