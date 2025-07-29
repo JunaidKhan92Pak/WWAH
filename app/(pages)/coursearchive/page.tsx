@@ -41,6 +41,13 @@ import toast from "react-hot-toast";
 import { getAuthToken } from "@/utils/authHelper";
 import { useSearchParams } from "next/navigation";
 
+interface Course {
+  _id: string;
+  title: string;
+  description?: string;
+  // add any other relevant fields from your schema
+}
+
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -85,16 +92,31 @@ const CourseArchive = () => {
         console.log("User favorite courses:", user.favouriteCourse);
 
         const favoriteMap: Record<string, boolean> = {};
-        const favoriteCoursesMap: Record<string, any> = {};
+        const favoriteCoursesMap: Record<string, Course> = {};
 
-        user.favouriteCourse.forEach((course: any) => {
+        user.favouriteCourse.forEach((course: unknown) => {
           // Handle different possible data structures
-          const courseId = course._id || course.id || course;
+          let courseId: string | undefined;
+          if (typeof course === "object" && course !== null) {
+         
+            courseId =
+              (course as { _id?: string; id?: string })._id ||
+              (course as { id?: string }).id;
+          } else if (typeof course === "string") {
+            courseId = course;
+          }
           if (courseId) {
             favoriteMap[courseId] = true;
             // If the course object has full data, store it
-            if (course._id && course.course_title) {
-              favoriteCoursesMap[courseId] = course;
+            if (
+              typeof course === "object" &&
+              course !== null &&
+              
+              (course as { _id?: string; course_title?: string })._id &&
+              
+              (course as { course_title?: string }).course_title
+            ) {
+              favoriteCoursesMap[courseId] = course as Course;
             }
           }
         });
@@ -127,7 +149,7 @@ const CourseArchive = () => {
   // Update favoriteCourses when courses are loaded and we have favorites
   useEffect(() => {
     if (courses.length > 0 && Object.keys(favorites).length > 0) {
-      const updatedFavoriteCourses: Record<string, any> = {};
+      const updatedFavoriteCourses: Record<string, string> = {};
 
       courses.forEach((course) => {
         if (favorites[course._id]) {

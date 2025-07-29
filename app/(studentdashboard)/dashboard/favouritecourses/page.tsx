@@ -6,6 +6,7 @@ import ImageWithLoader from "@/components/ImageWithLoader";
 import { SkeletonCard } from "@/components/skeleton";
 import toast from "react-hot-toast";
 import { useUserStore } from "@/store/useUserData";
+import { getAuthToken } from "@/utils/authHelper";
 
 interface Course {
   _id: string;
@@ -31,37 +32,65 @@ const FavoriteCoursesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
-  const { user } = useUserStore();
+  const { user, fetchUserProfile } = useUserStore();
 
-  // Remove favorite without auth token
+  // Remove favorite with proper backend integration
   const removeFavorite = async (courseId: string) => {
     setRemovingId(courseId);
 
     try {
-      const response = await fetch("/api/favorites", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          courseId,
-          action: "remove",
-        }),
-      });
+      const token = getAuthToken();
+      
+      // Call the same backend endpoint as CourseArchive
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}favorites`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            courseId,
+            action: "remove",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to remove from favorites");
+      }
 
       const data = await response.json();
+      console.log("Favorite removed successfully", data);
 
       if (data.success) {
+        // Update local state immediately for better UX
         setFavorites((prev) =>
           prev.filter((course) => course._id !== courseId)
         );
-        toast.success("Course removed from favorites!");
+        
+        // Refresh user profile to sync with backend
+        await fetchUserProfile();
+        
+        toast.success("Course removed from favorites!", {
+          duration: 2000,
+          position: "top-center",
+        });
       } else {
-        toast.error(data.message || "Failed to remove from favorites");
+        throw new Error(data.message || "Failed to remove from favorites");
       }
     } catch (error) {
       console.error("Error removing favorite:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(
+        error instanceof Error 
+          ? error.message 
+          : "Something went wrong. Please try again.",
+        {
+          duration: 3000,
+          position: "top-center",
+        }
+      );
     } finally {
       setRemovingId(null);
     }
@@ -81,7 +110,7 @@ const FavoriteCoursesPage = () => {
           return;
         }
 
-        const favoriteIds = (user?.favouriteCourse || []) as string[];
+        const favoriteIds = (user?.favouriteCourse || []) as unknown as string[];
         console.log("User favorite course IDs:", favoriteIds);
 
         if (favoriteIds.length === 0) {
@@ -140,7 +169,15 @@ const FavoriteCoursesPage = () => {
     };
 
     fetchFavorites();
-  }, [user]); // Add user as dependency
+  }, [user]); // Re-fetch when user data changes
+
+  // Fetch user profile on component mount if not already loaded
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token && !user) {
+      fetchUserProfile();
+    }
+  }, [fetchUserProfile, user]);
 
   if (loading) return <SkeletonCard arr={8} />;
 
