@@ -41,6 +41,13 @@ import toast from "react-hot-toast";
 import { getAuthToken } from "@/utils/authHelper";
 import { useSearchParams } from "next/navigation";
 
+interface Course {
+  _id: string;
+  title: string;
+  description?: string;
+  // add any other relevant fields from your schema
+}
+
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -69,19 +76,99 @@ const CourseArchive = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-  //  Step 1: Add this new state to store full course data
   const [favoriteCourses, setFavoriteCourses] = useState<
     Record<string, (typeof courses)[0]>
   >({});
 
-  // const { isAuthenticated , user} = useUserStore();
-  const { user } = useUserStore();
-
+  const { user, fetchUserProfile } = useUserStore();
   const [loadingFavorites, setLoadingFavorites] = useState<
     Record<string, boolean>
   >({});
-  console.log(user?.favouriteCourse, "user.favouriteCourse");
-  // Toggle favorite and animate heart
+
+  // Initialize favorites from user data
+  useEffect(() => {
+    const initializeFavorites = () => {
+      if (user?.favouriteCourse && Array.isArray(user.favouriteCourse)) {
+        console.log("User favorite courses:", user.favouriteCourse);
+
+        const favoriteMap: Record<string, boolean> = {};
+        const favoriteCoursesMap: Record<string, Course> = {};
+
+        user.favouriteCourse.forEach((course: unknown) => {
+          // Handle different possible data structures
+          let courseId: string | undefined;
+          if (typeof course === "object" && course !== null) {
+         
+            courseId =
+              (course as { _id?: string; id?: string })._id ||
+              (course as { id?: string }).id;
+          } else if (typeof course === "string") {
+            courseId = course;
+          }
+          if (courseId) {
+            favoriteMap[courseId] = true;
+            // If the course object has full data, store it
+            if (
+              typeof course === "object" &&
+              course !== null &&
+              
+              (course as { _id?: string; course_title?: string })._id &&
+              
+              (course as { course_title?: string }).course_title
+            ) {
+              favoriteCoursesMap[courseId] = course as Course;
+            }
+          }
+        });
+
+        setFavorites(favoriteMap);
+        setFavoritesCount(Object.keys(favoriteMap).length);
+
+        if (Object.keys(favoriteCoursesMap).length > 0) {
+          setFavoriteCourses(favoriteCoursesMap);
+        }
+      } else {
+        // Reset favorites if no user or no favorite courses
+        setFavorites({});
+        setFavoritesCount(0);
+        setFavoriteCourses({});
+      }
+    };
+
+    initializeFavorites();
+  }, [user?.favouriteCourse]);
+
+  // Fetch user profile on component mount
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token && !user) {
+      fetchUserProfile();
+    }
+  }, [fetchUserProfile, user]);
+
+  // Update favoriteCourses when courses are loaded and we have favorites
+  useEffect(() => {
+    if (courses.length > 0 && Object.keys(favorites).length > 0) {
+      const updatedFavoriteCourses: Record<string, string> = {};
+
+      courses.forEach((course) => {
+        if (favorites[course._id]) {
+          updatedFavoriteCourses[course._id] = course;
+        }
+      });
+
+      setFavoriteCourses((prev) => ({
+        ...prev,
+        ...updatedFavoriteCourses,
+      }));
+    }
+  }, [courses, favorites]);
+
+  console.log("Current user:", user);
+  console.log("User favorite courses:", user?.favouriteCourse);
+  console.log("Favorites state:", favorites);
+  console.log("Favorites count:", favoritesCount);
+
   // Function to add/remove course from favorites in database
   const toggleFavorite = async (courseId: string, action: "add" | "remove") => {
     try {
@@ -105,13 +192,19 @@ const CourseArchive = () => {
         throw new Error("Failed to update favorites");
       }
 
-      console.log("Favorite updated successfully", response);
-      return await response.json();
+      const result = await response.json();
+      console.log("Favorite updated successfully", result);
+
+      // Refresh user profile to get updated favorites
+      await fetchUserProfile();
+
+      return result;
     } catch (error) {
       console.error("Error updating favorites:", error);
       throw error;
     }
   };
+
   const showLoginPrompt = () => {
     toast.error("Please login to add courses to your favorites!", {
       duration: 4000,
@@ -124,105 +217,11 @@ const CourseArchive = () => {
         border: "1px solid #fecaca",
       },
     });
-
-    // Optional: Redirect to login page after a delay
-    setTimeout(() => {
-      // window.location.href = '/login'; // Uncomment if you want to redirect
-    }, 2000);
   };
 
-  // Updated toggle favorite function with authentication
-  // const toggleFavoriteInDB = async (id: string) => {
-  //   // Check if user is authenticated
-  //   if (!isAuthenticated) {
-  //     showLoginPrompt();
-  //     return;
-  //   }
-
-  //   // Set loading state for this specific course
-  //   setLoadingFavorites((prev) => ({ ...prev, [id]: true }));
-
-  //   try {
-  //     const isCurrentlyFavorited = favorites[id];
-  //     const action = isCurrentlyFavorited ? "remove" : "add";
-
-  //     // Optimistically update UI
-  //     setFavorites((prev) => {
-  //       const updatedFavorites = { ...prev, [id]: !prev[id] };
-  //       const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-  //       setFavoritesCount(newCount);
-  //       return updatedFavorites;
-  //     });
-
-  //     // Animate heart
-  //     setHeartAnimation(id);
-  //     setTimeout(() => setHeartAnimation(null), 1000);
-
-  //     // Update favoriteCourses state
-  //     setFavoriteCourses((prevCourses) => {
-  //       const updated = { ...prevCourses };
-  //       const courseObj = courses.find((c) => c._id === id);
-
-  //       if (!isCurrentlyFavorited && courseObj) {
-  //         updated[id] = courseObj;
-  //       } else {
-  //         delete updated[id];
-  //       }
-
-  //       return updated;
-  //     });
-
-  //     // Update database
-  //     await toggleFavoriteInDB(id, action);
-
-  //     // Show success message
-  //     toast.success(
-  //       action === "add"
-  //         ? "Course added to favorites!"
-  //         : "Course removed from favorites!",
-  //       {
-  //         duration: 2000,
-  //         position: "top-center",
-  //       }
-  //     );
-  //   } catch (error) {
-  //     // Revert optimistic update on error
-  //     setFavorites((prev) => {
-  //       const revertedFavorites = { ...prev, [id]: !prev[id] };
-  //       const newCount =
-  //         Object.values(revertedFavorites).filter(Boolean).length;
-  //       setFavoritesCount(newCount);
-  //       return revertedFavorites;
-  //     });
-
-  //     // Revert favoriteCourses state
-  //     setFavoriteCourses((prevCourses) => {
-  //       const reverted = { ...prevCourses };
-  //       const courseObj = courses.find((c) => c._id === id);
-
-  //       if (favorites[id] && courseObj) {
-  //         reverted[id] = courseObj;
-  //       } else {
-  //         delete reverted[id];
-  //       }
-
-  //       return reverted;
-  //     });
-
-  //     toast.error("Failed to update favorites. Please try again.", {
-  //       duration: 3000,
-  //       position: "top-center",
-  //     });
-  //   } finally {
-  //     // Remove loading state
-  //     setLoadingFavorites((prev) => ({ ...prev, [id]: false }));
-  //   }
-  // };
-  const toggleFavoriteInDB = async (id: string, p0: string) => {
-    console.log(p0);
+  const toggleFavoriteInDB = async (id: string) => {
     const token = getAuthToken();
 
-    // ✅ Check token directly instead of relying only on isAuthenticated
     if (!token) {
       showLoginPrompt();
       return;
@@ -260,7 +259,7 @@ const CourseArchive = () => {
         return updated;
       });
 
-      // 🔥 Call backend
+      // Call backend
       await toggleFavorite(id, action);
 
       toast.success(
@@ -334,6 +333,7 @@ const CourseArchive = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [currentPage]);
+
   const handlePrevPage = () => {
     if (currentPage > 1) setPage(currentPage - 1);
   };
@@ -341,6 +341,7 @@ const CourseArchive = () => {
   const handleNextPage = () => {
     if (currentPage < totalPages) setPage(currentPage + 1);
   };
+
   // Determine which courses to display (all or favorites only)
   const displayedCourses = showFavorites
     ? Object.values(favoriteCourses)
@@ -372,7 +373,6 @@ const CourseArchive = () => {
                 handleSearch(value);
               }}
               value={localSearch}
-              // className="w-full h-8 border-none bg-transparent outline-none focus:ring-0"
               className="w-full pl-2 pt-2 rounded-lg  bg-[#F1F1F1] placeholder:text-[12px] placeholder:md:text-[12px] placeholder:lg:text-[14px] border-none focus:ring-0 truncate"
             />
           </div>
@@ -510,7 +510,7 @@ const CourseArchive = () => {
                               const link = `${window.location.origin}/courses/${item._id}`;
                               navigator.clipboard.writeText(link).then(() => {
                                 setCopiedLinkId(item._id);
-                                setTimeout(() => setCopiedLinkId(null), 2000); // auto-hide after 2s
+                                setTimeout(() => setCopiedLinkId(null), 2000);
                               });
                             }}
                           >
@@ -519,14 +519,12 @@ const CourseArchive = () => {
                           </Button>
                         </div>
 
-                        {/* 👇 Show message conditionally */}
                         {copiedLinkId === item._id && (
                           <p className="text-black text-sm mt-2">
                             Link copied to clipboard!
                           </p>
                         )}
 
-                        {/* Share buttons */}
                         <div className="mt-2 flex gap-4 justify-left">
                           <a
                             href={`https://wa.me/?text=${encodeURIComponent(
@@ -569,7 +567,7 @@ const CourseArchive = () => {
                     </Dialog>
 
                     <button
-                      onClick={() => toggleFavoriteInDB(item._id, "add")}
+                      onClick={() => toggleFavoriteInDB(item._id)}
                       disabled={loadingFavorites[item._id]}
                       className={`relative ${
                         heartAnimation === item._id ? "animate-pop" : ""
@@ -598,7 +596,6 @@ const CourseArchive = () => {
                   </div>
                 </div>
                 <div className="p-4 flex-grow">
-                  {/* University Name and Course Title */}
                   <Link
                     target="blank"
                     href={`/courses/${item._id}`}
@@ -613,7 +610,6 @@ const CourseArchive = () => {
                     </h3>
                   </Link>
                   <div className="mt-3 grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-4">
-                    {/* Country */}
                     <div className="flex items-center gap-2">
                       <Image
                         src="/location.svg"
@@ -627,7 +623,6 @@ const CourseArchive = () => {
                       </p>
                     </div>
 
-                    {/* Intake with Tooltip */}
                     <div className="relative group flex items-center gap-2">
                       <Image
                         src="/shop.svg"
@@ -644,7 +639,6 @@ const CourseArchive = () => {
                       </div>
                     </div>
 
-                    {/* Duration */}
                     <div className="flex items-center gap-2">
                       <Image
                         src="/clock.svg"
@@ -658,7 +652,6 @@ const CourseArchive = () => {
                       </p>
                     </div>
 
-                    {/* Fees */}
                     <div className="flex items-center gap-2">
                       <Image
                         src="/money.svg"
@@ -700,9 +693,7 @@ const CourseArchive = () => {
       )}
 
       <div className="flex flex-wrap justify-center items-center mt-10  gap-3">
-        {/* Pagination controls always visible container */}
         <div className="flex items-center gap-3">
-          {/* First page button */}
           <button
             onClick={() => setPage(1)}
             className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
@@ -730,7 +721,6 @@ const CourseArchive = () => {
             </svg>
           </button>
 
-          {/* Previous button */}
           <button
             onClick={handlePrevPage}
             className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
@@ -753,22 +743,17 @@ const CourseArchive = () => {
             </svg>
           </button>
 
-          {/* Page numbers */}
           <div className="hidden sm:flex space-x-2 ">
             {(() => {
-              // Calculate pagination range
               let startPage = 1;
               let endPage = totalPages;
 
               if (totalPages > 10) {
                 if (currentPage <= 6) {
-                  // Show first 5 pages
                   endPage = 10;
                 } else if (currentPage + 4 >= totalPages) {
-                  // Show last 5 pages
                   startPage = Math.max(totalPages - 8, 1);
                 } else {
-                  // Show current page with neighbors
                   startPage = currentPage - 4;
                   endPage = currentPage + 4;
                 }
@@ -776,7 +761,6 @@ const CourseArchive = () => {
 
               const pages = [];
 
-              // Add ellipsis at the beginning if needed
               if (startPage > 1) {
                 pages.push(
                   <button
@@ -789,7 +773,6 @@ const CourseArchive = () => {
                 );
               }
 
-              // Add page buttons
               for (let i = startPage; i <= endPage; i++) {
                 pages.push(
                   <button
@@ -807,7 +790,6 @@ const CourseArchive = () => {
                 );
               }
 
-              // Add ellipsis at the end if needed
               if (endPage < totalPages) {
                 pages.push(
                   <button
@@ -824,14 +806,12 @@ const CourseArchive = () => {
             })()}
           </div>
 
-          {/* Mobile-friendly current page indicator */}
           <div className="flex sm:hidden items-center border-2 border-red-600">
             <span className="text-gray-700 font-medium px-3">
               Page {currentPage} of {totalPages}
             </span>
           </div>
 
-          {/* Next button */}
           {currentPage < totalPages && (
             <button
               onClick={handleNextPage}
@@ -853,7 +833,6 @@ const CourseArchive = () => {
             </button>
           )}
 
-          {/* Last page button */}
           {currentPage < totalPages && (
             <button
               onClick={() => setPage(totalPages)}

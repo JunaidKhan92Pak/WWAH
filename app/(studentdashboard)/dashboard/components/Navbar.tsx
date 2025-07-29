@@ -73,25 +73,15 @@ export function Navbar() {
       <div className="flex items-center gap-4">
         <MobileNav />
         {/* Logo */}
-        <div className="flex items-center">
+        <div className="flex justify-center">
           <Link href="/">
             <Image
-              src="/DashboardPage/wwahframe.svg"
+              src="/wwah-textb.svg"
               alt="Worldwide Admissions Hub Logo - desktop"
-              width={250}
+              width={170}
               height={32}
               priority
               className="hidden md:block"
-            />
-          </Link>
-          <Link href="/">
-            <Image
-              src="/DashboardPage/wwah.svg"
-              alt="Worldwide Admissions Hub Logo - mobile"
-              width={150}
-              height={32}
-              priority
-              className="block md:hidden h-[80px] w-[80px]"
             />
           </Link>
         </div>

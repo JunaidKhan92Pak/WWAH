@@ -2,9 +2,30 @@
 import { create } from "zustand";
 import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
 
+// Course interface (you might want to move this to a separate types file)
+interface FavoriteCourse {
+  _id: string;
+  course_title: string;
+  universityData?: {
+    university_name: string;
+    universityImages: {
+      logo: string;
+      banner: string;
+    };
+  };
+  countryname: string;
+  intake: string;
+  duration: string;
+  annual_tuition_fee: {
+    amount: number;
+    currency: string;
+  };
+  // Add other course properties as needed
+}
+
 // Basic user profile data
 export interface User {
-  favouriteCourse: never[];
+  favouriteCourse: FavoriteCourse[]; // Changed from never[] to FavoriteCourse[]
   _id: string;
   firstName: string;
   lastName: string;
@@ -110,6 +131,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         }
       );
       console.log(response, "response from fetchUserProfile");
+
       if (!response.ok) {
         throw new Error(
           `Failed to fetch user data: ${response.status} ${response.statusText}`
@@ -118,13 +140,17 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
       const apiData = await response.json();
       console.log(apiData, "apiData from fetchUserProfile");
+
       if (!apiData.success) {
         throw new Error(apiData.message || "Failed to fetch user data");
       }
 
       // Set user data and detailed info
       set({
-        user: apiData.user,
+        user: {
+          ...apiData.user,
+          favouriteCourse: apiData.user.favouriteCourse || [], // Ensure it's always an array
+        },
         detailedInfo: apiData.detailedInfo || { ...defaultDetailedInfo },
         loading: false,
         isAuthenticated: true,
@@ -250,7 +276,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   setUser: (userData) =>
     set({
-      user: userData,
+      user: {
+        ...userData,
+        favouriteCourse: userData.favouriteCourse || [], // Ensure it's always an array
+      },
       isAuthenticated: true,
     }),
 
