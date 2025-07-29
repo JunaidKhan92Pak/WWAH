@@ -201,12 +201,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
         backgroundImage="/bg-usa.png"
       />
 
-      {/* <Banner
-  title="Create your Application today for your desired program!"
-  buttonText="Apply Now!"
-  buttonLink={`/coursearchive?country=${encodeURIComponent(countryName)}`}
-  backgroundImage="/bg-usa.png"
-/> */}
+  \
 
     </>
   );

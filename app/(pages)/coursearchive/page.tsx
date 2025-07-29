@@ -66,8 +66,7 @@ const CourseArchive = () => {
     setPage,
     loading,
     fetchCourses,
-        setCountryFilter, // ✅ Make sure it's destructured here
-
+    setCountryFilter, // ✅ Make sure it's destructured here
   } = useCourseStore();
 
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
@@ -98,7 +97,6 @@ const CourseArchive = () => {
           // Handle different possible data structures
           let courseId: string | undefined;
           if (typeof course === "object" && course !== null) {
-         
             courseId =
               (course as { _id?: string; id?: string })._id ||
               (course as { id?: string }).id;
@@ -111,9 +109,7 @@ const CourseArchive = () => {
             if (
               typeof course === "object" &&
               course !== null &&
-              
               (course as { _id?: string; course_title?: string })._id &&
-              
               (course as { course_title?: string }).course_title
             ) {
               favoriteCoursesMap[courseId] = course as Course;
@@ -314,18 +310,27 @@ const CourseArchive = () => {
     [setSearch]
   );
 
-  // Fetch courses on mount
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
-  
-   const searchParams = useSearchParams();
+  // Get search params
+  const searchParams = useSearchParams();
   const countryFromURL = searchParams.get("country");
-   useEffect(() => {
+
+  // Set country filter from URL parameter FIRST, before fetching courses
+  useEffect(() => {
     if (countryFromURL) {
       setCountryFilter([countryFromURL]);
     }
   }, [countryFromURL, setCountryFilter]);
+
+  // Fetch courses AFTER setting the country filter
+  useEffect(() => {
+    // Only fetch courses after we've processed the URL parameters
+    // Add a small delay to ensure the country filter is set first
+    const timer = setTimeout(() => {
+      fetchCourses();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [fetchCourses, countryFromURL]); // Add countryFromURL as dependency
 
   // Scroll to top whenever the currentPage changes
   useEffect(() => {
