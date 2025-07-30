@@ -81,6 +81,11 @@ export interface UserStore {
   logout: () => void;
 }
 
+// Helper function to get current date and time in ISO format
+const getCurrentDateTime = (): string => {
+  return new Date().toISOString();
+};
+
 // Default empty detailed
 const defaultDetailedInfo: DetailedInfo = {
   livingCosts: { amount: 0, currency: "" },
@@ -203,9 +208,23 @@ export const useUserStore = create<UserStore>((set, get) => ({
         throw new Error(result.message || "Failed to update profile");
       }
 
-      // Update the local store with new user data
+      // Update the local store with new user data and current timestamp
+      const currentDateTime = getCurrentDateTime();
       set((state) => ({
-        user: state.user ? { ...state.user, ...updateData } : null,
+        user: state.user
+          ? {
+              ...state.user,
+              ...updateData,
+              updatedAt: currentDateTime,
+            }
+          : null,
+        // Also update detailedInfo updatedAt to keep them in sync
+        detailedInfo: state.detailedInfo
+          ? {
+              ...state.detailedInfo,
+              updatedAt: currentDateTime,
+            }
+          : null,
         loading: false,
       }));
     } catch (error) {
@@ -256,11 +275,28 @@ export const useUserStore = create<UserStore>((set, get) => ({
       if (!result.success) {
         return res;
       }
-      // Update the local store with new detailed info
+
+      // Update the local store with new detailed info and current timestamp
+      const currentDateTime = getCurrentDateTime();
       set((state) => ({
         detailedInfo: state.detailedInfo
-          ? { ...state.detailedInfo, ...updateData }
-          : { ...defaultDetailedInfo, ...updateData },
+          ? {
+              ...state.detailedInfo,
+              ...updateData,
+              updatedAt: currentDateTime,
+            }
+          : {
+              ...defaultDetailedInfo,
+              ...updateData,
+              updatedAt: currentDateTime,
+            },
+        // Also update user updatedAt to keep them in sync
+        user: state.user
+          ? {
+              ...state.user,
+              updatedAt: currentDateTime,
+            }
+          : null,
         loading: false,
       }));
       return res; // Return the result for further processing if needed
