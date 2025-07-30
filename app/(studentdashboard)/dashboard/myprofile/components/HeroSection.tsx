@@ -81,7 +81,7 @@ const HeroSection = ({ user }: HeroSectionProps) => {
         </Button>
       </div>
 
-      <div className="absolute -bottom-32 md:-bottom-52  md:left-6 flex flex-col py-12 items-center text-start md:text-center justify-center gap-2 bg-transparent md:bg-white p-5 md:rounded-3xl md:shadow-lg ">
+      <div className="absolute -bottom-32 md:-bottom-48  md:left-6 flex flex-col py-8 items-center text-start md:text-center justify-center gap-2 bg-transparent md:bg-white p-5 md:rounded-3xl md:shadow-lg ">
         <div className="relative rounded-full border flex items-center justify-center overflow-hidden md:mb-4">
           <Image
             src={profilePic}
