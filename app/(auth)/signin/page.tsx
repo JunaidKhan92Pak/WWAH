@@ -112,6 +112,38 @@ const Page = () => {
   );
 
   // Initialize Google Sign-In
+  // useEffect(() => {
+  //   const initializeGoogleSignIn = () => {
+  //     if (window.google) {
+  //       window.google.accounts.id.initialize({
+  //         client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+  //         callback: handleGoogleSignIn,
+  //         auto_select: false,
+  //       });
+
+  //       const googleButton = document.getElementById("google-signin-button");
+  //       if (googleButton) {
+  //         window.google.accounts.id.renderButton(googleButton, {
+  //           theme: "outline",
+  //           size: "large",
+  //           width: "100%",
+  //           text: "signin_with",
+  //         });
+  //       }
+  //     }
+  //   };
+
+  //   if (!window.google) {
+  //     const script = document.createElement("script");
+  //     script.src = "https://accounts.google.com/gsi/client";
+  //     script.async = true;
+  //     script.defer = true;
+  //     script.onload = initializeGoogleSignIn;
+  //     document.head.appendChild(script);
+  //   } else {
+  //     initializeGoogleSignIn();
+  //   }
+  // }, [handleGoogleSignIn]);
   useEffect(() => {
     const initializeGoogleSignIn = () => {
       if (window.google) {
@@ -123,10 +155,13 @@ const Page = () => {
 
         const googleButton = document.getElementById("google-signin-button");
         if (googleButton) {
+          // Get the actual width of the container
+          const containerWidth = googleButton.offsetWidth;
+
           window.google.accounts.id.renderButton(googleButton, {
             theme: "outline",
             size: "large",
-            width: "100%",
+            width: containerWidth.toString(), // Use actual pixel width as a string
             text: "signin_with",
           });
         }
@@ -144,7 +179,6 @@ const Page = () => {
       initializeGoogleSignIn();
     }
   }, [handleGoogleSignIn]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));

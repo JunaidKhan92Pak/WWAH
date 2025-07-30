@@ -36,6 +36,8 @@ export default function EditPhone({
   phone: number;
   updatedAt: string;
 }) {
+  console.log("Updated At:", updatedAt);
+
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
