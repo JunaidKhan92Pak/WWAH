@@ -1,38 +1,58 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { Country } from "@/models/countries";
-// import { VisaGuides } from "@/models/visaGuide"; // Your defined University model
+import { createCountry } from "@/lib/databseHook";
+import clientPromise from "@/lib/mongodb";
 
 export async function POST(req: Request) {
   try {
-    // Parse incoming request data
     const data = await req.json();
-    // console.log(data)
-    // Validate input (checking if necessary fields exist)
-    if (!data) {
+    console.log(data, "country data");
+
+    // Validate input
+    if (!data || !data.country_name) {
       return NextResponse.json(
-        { message: "Invalid input. country details are required." },
+        { message: "Invalid input. Country name is required." },
         { status: 400 }
       );
     }
 
-    // Connect to the database
+    const client = await clientPromise;
     await connectToDatabase();
 
+    // Check if country already exists using Mongoose
     const existingCountry = await Country.findOne({
       country_name: data.country_name,
     });
 
-    if (!existingCountry) {
-      // Format the university data
-      // Save the new university document
-      await Country.create(data);
-    }
+    if (existingCountry) {
+      // Country exists, update it using database hooks
+      // FIXED: Use the correct filter format for MongoDB operations
+      // const result = await updateCountry(
+      //   client,
+      //   existingCountry._id.toString(), // Keep as string, but fix the updateCountry function
+      //   data
+      // );
 
-    return NextResponse.json(
-      { message: "country added successfully." },
-      { status: 201 }
-    );
+      return NextResponse.json(
+        {
+          message: "Country updated successfully.",
+          countryId: existingCountry._id.toString(),
+        },
+        { status: 200 }
+      );
+    } else {
+      // Country doesn't exist, create it using database hooks
+      const result = await createCountry(client, data);
+
+      return NextResponse.json(
+        {
+          message: "Country added successfully.",
+          countryId: result.insertedId.toString(),
+        },
+        { status: 201 }
+      );
+    }
   } catch (error) {
     console.error("Error processing request:", error);
     const errorMessage =

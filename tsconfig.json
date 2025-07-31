@@ -40,7 +40,7 @@
     ".next/types/**/*.ts",
     "utils/bucket.js",
     "app/api/addCourse/route.ts"
-  ],
+, "app/api/webhooks/embeddingUpdate"  ],
   "exclude": [
     "node_modules"
   ]

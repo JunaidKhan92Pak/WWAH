@@ -1,28 +1,6 @@
-// scripts/build-meta-index.ts
-import "dotenv/config";
+// lib/embedding-operations.ts
 import { OpenAIEmbeddings } from "@langchain/openai";
-import clientPromise from "../lib/mongodb";
-
-// Environment validation
-console.log("🔍 Validating environment...");
-if (!process.env.MONGODB_URI) {
-  console.error("❌ MONGODB_URI is not set");
-  process.exit(1);
-}
-if (!process.env.OPENAI_API_KEY) {
-  console.error("❌ OPENAI_API_KEY is not set");
-  process.exit(1);
-}
-console.log("✅ Environment validated");
-
-// Collection mapping configuration
-const COLLECTION_MAPPING = {
-  countries: { source: "countries", target: "country_embeddings" },
-  universities: { source: "universities", target: "university_embeddings" },
-  courses: { source: "courses", target: "course_embeddings" },
-  scholarships: { source: "scholarships", target: "scholarship_embeddings" },
-  expenses: { source: "expenses", target: "expense_embeddings" },
-};
+import { MongoClient } from "mongodb";
 
 // Initialize OpenAI embeddings
 const embeddings = new OpenAIEmbeddings({
@@ -44,7 +22,7 @@ function truncateText(text: string, maxTokens: number = 2000): string {
   return result.trim() || text.substring(0, maxChars);
 }
 
-// Enhanced interfaces matching embedding-operations.ts
+// Types for user data (matching build-meta-index.ts structure)
 interface UserProfile {
   _id: string;
   name?: string;
@@ -100,7 +78,7 @@ interface CountryProfile {
   scholarships?: Array<{ name: string; details: string }>;
 }
 
-interface CountryDocumentData {
+export interface CountryDocumentData {
   _id?: string;
   countryname?: string;
   embassyDocuments?: Array<{ name: string; detail?: string }>;
@@ -110,328 +88,7 @@ interface CountryDocumentData {
   }>;
 }
 
-// Enhanced createCombinedUserTextContent function (matching embedding-operations.ts)
-function createCombinedUserTextContent(
-  user: UserProfile,
-  successChances: SuccessChance[]
-): string {
-  let textContent = "";
-
-  // Basic user profile
-  textContent += `User Profile:\n`;
-  textContent += `ID: ${user._id}\n`;
-  textContent += `Name: ${
-    user.name || `${user.firstName || ""} ${user.lastName || ""}`.trim()
-  }\n`;
-  textContent += `Email: ${user.email}\n`;
-
-  // Handle both array of success chances AND embedded successChanceData
-  let successChanceData = successChances;
-
-  // If user has embedded successChanceData (from Express API), use that
-  if (user.successChanceData && !successChances?.length) {
-    successChanceData = [user.successChanceData];
-  }
-
-  // Academic preferences from success chances
-  if (successChanceData && successChanceData.length > 0) {
-    textContent += `\nAcademic Profile:\n`;
-
-    successChanceData.forEach((record, index) => {
-      textContent += `\n--- Profile ${index + 1} ---\n`;
-
-      // User ID reference
-      textContent += `User ID: ${record.userId || ""}\n`;
-
-      // Academic Information
-      textContent += `Study Level: ${record.studyLevel || ""}\n`;
-      textContent += `Grade: ${record.grade || ""} (${
-        record.gradeType || ""
-      })\n`;
-      textContent += `Nationality: ${record.nationality || ""}\n`;
-      textContent += `Major Subject: ${record.majorSubject || ""}\n`;
-      textContent += `Work Experience: ${record.workExperience || "0"} years\n`;
-
-      // Financial Information
-      if (record.livingCosts) {
-        textContent += `Living Budget: ${record.livingCosts.amount || 0} ${
-          record.livingCosts.currency || ""
-        }\n`;
-      }
-
-      if (record.tuitionFee) {
-        textContent += `Tuition Budget: ${record.tuitionFee.amount || 0} ${
-          record.tuitionFee.currency || ""
-        }\n`;
-      }
-
-      // Language Proficiency
-      if (record.languageProficiency) {
-        const test = record.languageProficiency.test || "";
-        const score = record.languageProficiency.score || "";
-        if (test || score) {
-          textContent += `Language Proficiency: ${test} ${score}\n`;
-        }
-      }
-
-      // Study Preferences
-      if (record.studyPreferenced) {
-        textContent += `Study Preferences:\n`;
-        textContent += `  Preferred Country: ${
-          record.studyPreferenced.country || ""
-        }\n`;
-        textContent += `  Preferred Degree: ${
-          record.studyPreferenced.degree || ""
-        }\n`;
-        textContent += `  Preferred Subject: ${
-          record.studyPreferenced.subject || ""
-        }\n`;
-      }
-    });
-  } else {
-    textContent += `\nAcademic Profile: No success chance data available\n`;
-  }
-
-  return textContent;
-}
-
-// Create combined country text content (matching embedding-operations.ts)
-function createCombinedCountryTextContent(
-  country: CountryProfile,
-  countryDocuments: CountryDocumentData[]
-): string {
-  let textContent = "";
-
-  // Basic country profile from 'countries' collection
-  textContent += `Country Profile:\n`;
-  textContent += `Country: ${country.country_name || ""}\n`;
-  textContent += `Capital: ${country.capital || ""}\n`;
-  textContent += `Language: ${country.language || ""}\n`;
-  textContent += `Population: ${country.population || ""}\n`;
-  textContent += `Currency: ${country.currency || ""}\n`;
-  textContent += `International Students: ${
-    country.international_students || ""
-  }\n`;
-  textContent += `Academic Intakes: ${country.academic_intakes || ""}\n`;
-
-  if (country.why_study) {
-    textContent += `Why Study: ${truncateText(
-      typeof country.why_study === "string" ? country.why_study : "",
-      400
-    )}\n`;
-  }
-
-  textContent += `Work While Studying: ${country.work_while_studying || ""}\n`;
-  textContent += `Work After Study: ${country.work_after_study || ""}\n`;
-
-  // Living costs breakdown
-  textContent += `Living Costs - Rent: ${country.rent || ""}, Groceries: ${
-    country.groceries || ""
-  }, Transport: ${country.transportation || ""}\n`;
-  textContent += `Healthcare: ${country.healthcare || ""}, Eating Out: ${
-    country.eating_out || ""
-  }\n`;
-  textContent += `Household Bills: ${
-    country.household_bills || ""
-  }, Miscellaneous: ${country.miscellaneous || ""}\n`;
-
-  // Residency options
-  if (country.residency && Array.isArray(country.residency)) {
-    textContent += `Residency Options: ${country.residency.join(", ")}\n`;
-  }
-
-  // Popular programs
-  if (country.popular_programs && Array.isArray(country.popular_programs)) {
-    textContent += `Popular Programs: ${country.popular_programs.join(", ")}\n`;
-  }
-
-  // Visa requirements
-  if (country.visa_requirements && Array.isArray(country.visa_requirements)) {
-    textContent += `Visa Requirements: ${country.visa_requirements.join(
-      ", "
-    )}\n`;
-  }
-
-  // Accommodation options
-  if (
-    country.accomodation_options &&
-    Array.isArray(country.accomodation_options)
-  ) {
-    textContent += `Accommodation Options: ${country.accomodation_options.join(
-      ", "
-    )}\n`;
-  }
-
-  // Health information
-  if (country.health && Array.isArray(country.health)) {
-    const healthInfo = country.health
-      .map(
-        (h: { name: string; location: string }) => `${h.name} (${h.location})`
-      )
-      .join(", ");
-    textContent += `Health Facilities: ${healthInfo}\n`;
-  }
-
-  // Scholarships
-  if (country.scholarships && Array.isArray(country.scholarships)) {
-    const scholarshipInfo = country.scholarships
-      .map((s: { name: string; details: string }) => `${s.name}: ${s.details}`)
-      .join(" | ");
-    textContent += `Available Scholarships: ${scholarshipInfo}\n`;
-  }
-
-  // Add document requirements from 'countryData' collection
-  if (countryDocuments && countryDocuments.length > 0) {
-    textContent += `\nDocument Requirements:\n`;
-
-    countryDocuments.forEach((docData, index) => {
-      textContent += `\n--- Document Set ${index + 1} ---\n`;
-
-      // Embassy documents
-      if (docData.embassyDocuments && docData.embassyDocuments.length > 0) {
-        textContent += `Embassy Documents Required:\n`;
-        docData.embassyDocuments.forEach((doc) => {
-          textContent += `- ${doc.name}`;
-          if (doc.detail) {
-            textContent += `: ${doc.detail}`;
-          }
-          textContent += `\n`;
-        });
-      }
-
-      // University documents by course level
-      if (
-        docData.universityDocuments &&
-        docData.universityDocuments.length > 0
-      ) {
-        textContent += `University Documents by Course Level:\n`;
-        docData.universityDocuments.forEach((courseDoc) => {
-          textContent += `${courseDoc.course_level} Level Documents:\n`;
-          courseDoc.doc.forEach((doc) => {
-            textContent += `  - ${doc.name}`;
-            if (doc.detail) {
-              textContent += `: ${doc.detail}`;
-            }
-            textContent += `\n`;
-          });
-        });
-      }
-    });
-  } else {
-    textContent += `\nDocument Requirements: No specific document requirements available\n`;
-  }
-
-  return textContent;
-}
-
-// Create user embeddings (prioritized first)
-export async function createUserEmbeddings() {
-  console.log("🚀 Starting user embeddings creation...");
-
-  try {
-    const client = await clientPromise;
-    const db = client.db("wwah");
-    const userEmbeddingsCollection = db.collection("user_embeddings");
-
-    // Clear existing embeddings
-    console.log("🗑️ Clearing existing user embeddings...");
-    await userEmbeddingsCollection.deleteMany({});
-
-    // Get user data
-    const userDbCollection = db.collection("userdbs");
-    const successChanceCollection = db.collection("successchances");
-
-    console.log("🔍 Fetching user data...");
-    const users = await userDbCollection.find({}).toArray();
-    const successChances = await successChanceCollection.find({}).toArray();
-
-    // Map success chances by userId
-    const successChanceMap = new Map();
-    successChances.forEach((record) => {
-      const userId = record.userId?.toString();
-      if (userId) {
-        if (!successChanceMap.has(userId)) {
-          successChanceMap.set(userId, []);
-        }
-        successChanceMap.get(userId).push(record);
-      }
-    });
-
-    console.log(`📊 Processing ${users.length} users...`);
-
-    const batchSize = 20;
-    let totalProcessed = 0;
-
-    for (let i = 0; i < users.length; i += batchSize) {
-      const batch = users.slice(i, i + batchSize);
-      const batchEmbeddings = [];
-
-      for (const user of batch) {
-        try {
-          const userId = user._id.toString();
-          const userSuccessChances = successChanceMap.get(userId) || [];
-          const textContent = createCombinedUserTextContent(
-            { ...user, _id: user._id.toString() },
-            userSuccessChances
-          );
-
-          if (textContent.trim()) {
-            const embedding = await embeddings.embedQuery(textContent);
-
-            batchEmbeddings.push({
-              text: textContent,
-              embedding: embedding,
-              userId: userId,
-              sourceCollection: "combined_user_data",
-              originalId: user._id.toString(),
-              domain: "user",
-              metadata: {
-                title:
-                  `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
-                  user.name ||
-                  "User Profile",
-                email: user.email || "",
-                userId: userId,
-                userProfile: {
-                  firstName: user.firstName || "",
-                  lastName: user.lastName || "",
-                  name: user.name || "",
-                  email: user.email || "",
-                },
-                successChances: userSuccessChances,
-                hasSuccessChanceData: userSuccessChances.length > 0,
-              },
-              createdAt: new Date(),
-            });
-
-            totalProcessed++;
-
-            // Rate limiting
-            await new Promise((resolve) => setTimeout(resolve, 50));
-          }
-        } catch (error) {
-          console.error(`❌ Error processing user ${user._id}:`, error);
-        }
-      }
-
-      // Insert batch
-      if (batchEmbeddings.length > 0) {
-        await userEmbeddingsCollection.insertMany(batchEmbeddings);
-        console.log(`✅ Processed batch: ${totalProcessed}/${users.length}`);
-      }
-    }
-
-    console.log(
-      `✅ User embeddings completed: ${totalProcessed} users processed`
-    );
-    return { totalProcessed, collectionName: "user_embeddings" };
-  } catch (error) {
-    console.error("❌ Error in createUserEmbeddings:", error);
-    throw error;
-  }
-}
-
-// Enhanced text content creation with comprehensive field extraction (matching embedding-operations.ts exactly)
+// Create combined text content from user data
 function createTextContent(
   doc: Record<string, unknown>,
   collectionName: string
@@ -441,6 +98,7 @@ function createTextContent(
 
   switch (collectionName) {
     case "universities":
+      // ... existing universities case
       textContent += `University: ${doc.university_name || ""}\n`;
       textContent += `Country: ${doc.country_name || ""}\n`;
       textContent += `University Type: ${doc.university_type || ""}\n`;
@@ -508,11 +166,11 @@ function createTextContent(
       // About city information
       if (doc.about_city && typeof doc.about_city === "object") {
         const city = doc.about_city as {
-          historical_places: string;
-          food_and_cafe: string;
-          transportation: string;
-          cultures: string;
-          famous_places_to_visit: string[];
+          historical_places?: string;
+          food_and_cafe?: string;
+          transportation?: string;
+          cultures?: string;
+          famous_places_to_visit?: string[];
         };
         if (city.historical_places) {
           textContent += `Historical Places: ${city.historical_places}\n`;
@@ -562,6 +220,7 @@ function createTextContent(
       break;
 
     case "countries":
+      // ... existing countries case (keep as is)
       textContent += `Country: ${doc.country_name || ""}\n`;
       textContent += `Capital: ${doc.capital || ""}\n`;
       textContent += `Language: ${doc.language || ""}\n`;
@@ -672,6 +331,7 @@ function createTextContent(
       break;
 
     case "courses":
+      // ... existing courses case (keep as is)
       const courseTitle = Array.isArray(doc.course_title)
         ? doc.course_title.join(", ")
         : doc.course_title || "";
@@ -693,7 +353,7 @@ function createTextContent(
         typeof doc.annual_tuition_fee === "object"
       ) {
         const fee = doc.annual_tuition_fee as {
-          amount: string;
+          amount: number;
           currency: string;
         };
         textContent += `Annual Tuition Fee: ${fee.currency} ${
@@ -809,6 +469,7 @@ function createTextContent(
       break;
 
     case "scholarships":
+      // ... existing scholarships case (keep as is)
       textContent += `Scholarship: ${doc.name || ""}\n`;
       textContent += `Host Country: ${doc.hostCountry || ""}\n`;
       textContent += `Type: ${doc.type || ""}\n`;
@@ -953,6 +614,7 @@ function createTextContent(
       break;
 
     case "expenses":
+      // ... existing expenses case (keep as is)
       textContent += `Country: ${doc.country_name || ""}\n`;
       textContent += `University: ${doc.university_name || ""}\n`;
 
@@ -1073,7 +735,512 @@ function createTextContent(
   return { textContent, metadata };
 }
 
-// Combined country embeddings (NEW from embedding-operations.ts)
+// NEW: Create combined text content for country + countryData
+function createCombinedCountryTextContent(
+  country: CountryProfile,
+  countryDocuments: CountryDocumentData[]
+): string {
+  let textContent = "";
+
+  // Basic country profile from 'countries' collection
+  textContent += `Country Profile:\n`;
+  textContent += `Country: ${country.country_name || ""}\n`;
+  textContent += `Capital: ${country.capital || ""}\n`;
+  textContent += `Language: ${country.language || ""}\n`;
+  textContent += `Population: ${country.population || ""}\n`;
+  textContent += `Currency: ${country.currency || ""}\n`;
+  textContent += `International Students: ${
+    country.international_students || ""
+  }\n`;
+  textContent += `Academic Intakes: ${country.academic_intakes || ""}\n`;
+
+  if (country.why_study) {
+    textContent += `Why Study: ${truncateText(
+      typeof country.why_study === "string" ? country.why_study : "",
+      400
+    )}\n`;
+  }
+
+  textContent += `Work While Studying: ${country.work_while_studying || ""}\n`;
+  textContent += `Work After Study: ${country.work_after_study || ""}\n`;
+
+  // Living costs breakdown
+  textContent += `Living Costs - Rent: ${country.rent || ""}, Groceries: ${
+    country.groceries || ""
+  }, Transport: ${country.transportation || ""}\n`;
+  textContent += `Healthcare: ${country.healthcare || ""}, Eating Out: ${
+    country.eating_out || ""
+  }\n`;
+  textContent += `Household Bills: ${
+    country.household_bills || ""
+  }, Miscellaneous: ${country.miscellaneous || ""}\n`;
+
+  // Residency options
+  if (country.residency && Array.isArray(country.residency)) {
+    textContent += `Residency Options: ${country.residency.join(", ")}\n`;
+  }
+
+  // Popular programs
+  if (country.popular_programs && Array.isArray(country.popular_programs)) {
+    textContent += `Popular Programs: ${country.popular_programs.join(", ")}\n`;
+  }
+
+  // Visa requirements
+  if (country.visa_requirements && Array.isArray(country.visa_requirements)) {
+    textContent += `Visa Requirements: ${country.visa_requirements.join(
+      ", "
+    )}\n`;
+  }
+
+  // Accommodation options
+  if (
+    country.accomodation_options &&
+    Array.isArray(country.accomodation_options)
+  ) {
+    textContent += `Accommodation Options: ${country.accomodation_options.join(
+      ", "
+    )}\n`;
+  }
+
+  // Health information
+  if (country.health && Array.isArray(country.health)) {
+    const healthInfo = country.health
+      .map(
+        (h: { name: string; location: string }) => `${h.name} (${h.location})`
+      )
+      .join(", ");
+    textContent += `Health Facilities: ${healthInfo}\n`;
+  }
+
+  // Scholarships
+  if (country.scholarships && Array.isArray(country.scholarships)) {
+    const scholarshipInfo = country.scholarships
+      .map((s: { name: string; details: string }) => `${s.name}: ${s.details}`)
+      .join(" | ");
+    textContent += `Available Scholarships: ${scholarshipInfo}\n`;
+  }
+
+  // Add document requirements from 'countryData' collection
+  if (countryDocuments && countryDocuments.length > 0) {
+    textContent += `\nDocument Requirements:\n`;
+
+    countryDocuments.forEach((docData, index) => {
+      textContent += `\n--- Document Set ${index + 1} ---\n`;
+
+      // Embassy documents
+      if (docData.embassyDocuments && docData.embassyDocuments.length > 0) {
+        textContent += `Embassy Documents Required:\n`;
+        docData.embassyDocuments.forEach((doc) => {
+          textContent += `- ${doc.name}`;
+          if (doc.detail) {
+            textContent += `: ${doc.detail}`;
+          }
+          textContent += `\n`;
+        });
+      }
+
+      // University documents by course level
+      if (
+        docData.universityDocuments &&
+        docData.universityDocuments.length > 0
+      ) {
+        textContent += `University Documents by Course Level:\n`;
+        docData.universityDocuments.forEach((courseDoc) => {
+          textContent += `${courseDoc.course_level} Level Documents:\n`;
+          courseDoc.doc.forEach((doc) => {
+            textContent += `  - ${doc.name}`;
+            if (doc.detail) {
+              textContent += `: ${doc.detail}`;
+            }
+            textContent += `\n`;
+          });
+        });
+      }
+    });
+  } else {
+    textContent += `\nDocument Requirements: No specific document requirements available\n`;
+  }
+
+  return textContent;
+}
+
+function createCombinedUserTextContent(
+  user: UserProfile,
+  successChances: SuccessChance[]
+): string {
+  let textContent = "";
+
+  // Basic user profile
+  textContent += `User Profile:\n`;
+  textContent += `ID: ${user._id}\n`;
+  textContent += `Name: ${
+    user.name || `${user.firstName || ""} ${user.lastName || ""}`.trim()
+  }\n`;
+  textContent += `Email: ${user.email}\n`;
+
+  // Handle both array of success chances AND embedded successChanceData
+  let successChanceData = successChances;
+
+  // If user has embedded successChanceData (from Express API), use that
+  if (user.successChanceData && !successChances?.length) {
+    successChanceData = [user.successChanceData];
+  }
+
+  // Academic preferences from success chances
+  if (successChanceData && successChanceData.length > 0) {
+    textContent += `\nAcademic Profile:\n`;
+
+    successChanceData.forEach((record, index) => {
+      textContent += `\n--- Profile ${index + 1} ---\n`;
+
+      // User ID reference
+      textContent += `User ID: ${record.userId || ""}\n`;
+
+      // Academic Information
+      textContent += `Study Level: ${record.studyLevel || ""}\n`;
+      textContent += `Grade: ${record.grade || ""} (${
+        record.gradeType || ""
+      })\n`;
+      textContent += `Nationality: ${record.nationality || ""}\n`;
+      textContent += `Major Subject: ${record.majorSubject || ""}\n`;
+      textContent += `Work Experience: ${record.workExperience || "0"} years\n`;
+
+      // Financial Information
+      if (record.livingCosts) {
+        textContent += `Living Budget: ${record.livingCosts.amount || 0} ${
+          record.livingCosts.currency || ""
+        }\n`;
+      }
+
+      if (record.tuitionFee) {
+        textContent += `Tuition Budget: ${record.tuitionFee.amount || 0} ${
+          record.tuitionFee.currency || ""
+        }\n`;
+      }
+
+      // Language Proficiency
+      if (record.languageProficiency) {
+        const test = record.languageProficiency.test || "";
+        const score = record.languageProficiency.score || "";
+        if (test || score) {
+          textContent += `Language Proficiency: ${test} ${score}\n`;
+        }
+      }
+
+      // Study Preferences
+      if (record.studyPreferenced) {
+        textContent += `Study Preferences:\n`;
+        textContent += `  Preferred Country: ${
+          record.studyPreferenced.country || ""
+        }\n`;
+        textContent += `  Preferred Degree: ${
+          record.studyPreferenced.degree || ""
+        }\n`;
+        textContent += `  Preferred Subject: ${
+          record.studyPreferenced.subject || ""
+        }\n`;
+      }
+    });
+  } else {
+    textContent += `\nAcademic Profile: No success chance data available\n`;
+  }
+
+  return textContent;
+}
+
+// Updated createEmbeddingForDocument function to handle combined country data
+export async function createEmbeddingForDocument(
+  document: Record<string, unknown>,
+  sourceCollection: string,
+  targetCollection: string
+) {
+  try {
+    const client = await MongoClient.connect(process.env.MONGODB_URI!);
+    const db = client.db("wwah");
+    const embeddingCollection = db.collection(targetCollection);
+
+    let textContent: string;
+    let metadata: Record<string, unknown>;
+    let embeddingDoc: Record<string, unknown>;
+
+    // Handle user embeddings
+    if (
+      sourceCollection === "users" ||
+      sourceCollection === "combined_user_data" ||
+      sourceCollection === "userdbs"
+    ) {
+      const userId =
+        document._id?.toString() || document.userId?.toString() || "";
+
+      let successChances = [];
+
+      // Check if user data already has embedded success chance data
+      if (document.successChanceData) {
+        successChances = [document.successChanceData];
+        console.log(`📊 Using embedded success chance data for user ${userId}`);
+      } else {
+        // Fetch success chances from database
+        const successChanceCollection = db.collection("successchances");
+        successChances = await successChanceCollection
+          .find({ userId: userId })
+          .toArray();
+        console.log(
+          `📊 Fetched ${successChances.length} success chances for user ${userId}`
+        );
+      }
+
+      // Create combined text content
+      textContent = createCombinedUserTextContent(
+        { ...document, _id: userId },
+        successChances
+      );
+
+      console.log(
+        `📝 Generated text content for user ${userId}:`,
+        textContent.substring(0, 200) + "..."
+      );
+
+      metadata = {
+        title:
+          `${document.firstName || ""} ${document.lastName || ""}`.trim() ||
+          document.name ||
+          "User Profile",
+        email: document.email || "",
+        userId: userId,
+        userProfile: {
+          firstName: document.firstName || "",
+          lastName: document.lastName || "",
+          name: document.name || "",
+          email: document.email || "",
+        },
+        successChances: successChances,
+        hasSuccessChanceData: successChances.length > 0,
+      };
+
+      embeddingDoc = {
+        text: textContent,
+        embedding: await embeddings.embedQuery(textContent),
+        userId: userId,
+        sourceCollection: "combined_user_data",
+        originalId: userId,
+        domain: "user",
+        metadata: metadata,
+        createdAt: new Date(),
+      };
+    }
+    // NEW: Handle combined country embeddings
+    else if (
+      sourceCollection === "countries" ||
+      sourceCollection === "combined_country_data"
+    ) {
+      const countryName = document.country_name || document.countryname || "";
+      const countryId = document._id?.toString() || "";
+
+      let countryDocuments = [];
+
+      // Check if country data already has embedded document data
+      if (document.documentData) {
+        countryDocuments = Array.isArray(document.documentData)
+          ? document.documentData
+          : [document.documentData];
+        console.log(
+          `📋 Using embedded document data for country ${countryName}`
+        );
+      } else {
+        // Fetch country documents from countryData collection
+        const countryDataCollection = db.collection("countrydatas");
+        countryDocuments = await countryDataCollection
+          .find({
+            countryname: { $regex: new RegExp(String(countryName), "i") },
+          })
+          .toArray();
+        console.log(
+          `📋 Fetched ${countryDocuments.length} document sets for country ${countryName}`
+        );
+      }
+
+      // Create combined text content
+      textContent = createCombinedCountryTextContent(
+        document,
+        countryDocuments
+      );
+
+      console.log(
+        `📝 Generated text content for country ${countryName}:`,
+        textContent.substring(0, 200) + "..."
+      );
+
+      metadata = {
+        title: countryName || "Country Profile",
+        country: countryName,
+        capital: document.capital || "",
+        language: document.language || "",
+        population: document.population || null,
+        currency: document.currency || "",
+        internationalStudents: document.international_students || null,
+        academicIntakes: document.academic_intakes || "",
+        workRights: {
+          whileStudying: document.work_while_studying || "",
+          afterStudy: document.work_after_study || "",
+        },
+        livingCosts: {
+          rent: document.rent || null,
+          groceries: document.groceries || null,
+          transportation: document.transportation || null,
+          healthcare: document.healthcare || null,
+          eatingOut: document.eating_out || null,
+          householdBills: document.household_bills || null,
+          miscellaneous: document.miscellaneous || null,
+        },
+        residency: document.residency || [],
+        popularPrograms: document.popular_programs || [],
+        visaRequirements: document.visa_requirements || [],
+        accommodationOptions: document.accomodation_options || [],
+        health: document.health || [],
+        scholarships: document.scholarships || [],
+        documentRequirements: countryDocuments.map((docData: {embassyDocuments:string,universityDocuments:string}) => ({
+          embassyDocuments: docData.embassyDocuments || [],
+          universityDocuments: docData.universityDocuments || [],
+        })),
+        hasDocumentData: countryDocuments.length > 0,
+        originalDoc: document,
+      };
+
+      embeddingDoc = {
+        text: textContent,
+        embedding: await embeddings.embedQuery(textContent),
+        countryName: countryName,
+        sourceCollection: "combined_country_data",
+        originalId: countryId,
+        domain: "country",
+        metadata: metadata,
+        createdAt: new Date(),
+      };
+    }
+    // Handle other domain documents (existing code)
+    else {
+      const result = createTextContent(document, sourceCollection);
+      textContent = result.textContent;
+      metadata = result.metadata;
+
+      if (!textContent.trim()) {
+        console.log(
+          `No text content generated for document in ${sourceCollection}`
+        );
+        await client.close();
+        return;
+      }
+
+      const embedding = await embeddings.embedQuery(textContent);
+
+      embeddingDoc = {
+        text: textContent,
+        embedding: embedding,
+        domain: sourceCollection,
+        sourceCollection: sourceCollection,
+        originalId: document._id?.toString() || "",
+        ...metadata,
+        metadata: metadata,
+        createdAt: new Date(),
+      };
+    }
+
+    // Insert the embedding
+    const result = await embeddingCollection.insertOne(embeddingDoc);
+    console.log(
+      `✅ Created embedding for ${sourceCollection} document:`,
+      result.insertedId
+    );
+
+    await client.close();
+  } catch (error) {
+    console.error(
+      `❌ Error creating embedding for ${sourceCollection}:`,
+      error
+    );
+    throw error;
+  }
+}
+
+// Update embedding for a document
+export async function updateEmbeddingForDocument(
+  documentId: string,
+  document: Record<string, unknown>,
+  sourceCollection: string,
+  targetCollection: string
+) {
+  try {
+    // Determine the correct ID field based on collection type
+    let idField = "originalId";
+    if (
+      sourceCollection === "users" ||
+      sourceCollection === "combined_user_data"
+    ) {
+      idField = "userId";
+    } else if (
+      sourceCollection === "countries" ||
+      sourceCollection === "combined_country_data"
+    ) {
+      idField = "countryName";
+      // For countries, we need to use the country name instead of ID
+      documentId =
+        (typeof document.country_name === "string" && document.country_name) ||
+        (typeof document.countryname === "string" && document.countryname) ||
+        documentId;
+    }
+
+    // Delete existing embedding
+    await deleteEmbeddingForDocument(documentId, targetCollection, idField);
+
+    // Create new embedding
+    await createEmbeddingForDocument(
+      document,
+      sourceCollection,
+      targetCollection
+    );
+
+    console.log(
+      `✅ Updated embedding for ${sourceCollection} document ${documentId}`
+    );
+  } catch (error) {
+    console.error(
+      `❌ Error updating embedding for ${sourceCollection} document ${documentId}:`,
+      error
+    );
+    throw error;
+  }
+}
+
+// Delete embedding for a document
+export async function deleteEmbeddingForDocument(
+  documentId: string,
+  targetCollection: string,
+  idField: string = "originalId"
+) {
+  try {
+    const client = await MongoClient.connect(process.env.MONGODB_URI!);
+    const db = client.db("wwah");
+    const embeddingCollection = db.collection(targetCollection);
+
+    const result = await embeddingCollection.deleteMany({
+      [idField]: documentId,
+    });
+
+    console.log(
+      `✅ Deleted ${result.deletedCount} embeddings for ${targetCollection} document ${documentId}`
+    );
+
+    await client.close();
+  } catch (error) {
+    console.error(
+      `❌ Error deleting embedding for ${targetCollection} document ${documentId}:`,
+      error
+    );
+    throw error;
+  }
+}
+
+// NEW: Function to create combined country embeddings
 export async function createCombinedCountryEmbeddings(
   targetCollection: string = "country_embeddings",
   batchSize: number = 5
@@ -1081,7 +1248,7 @@ export async function createCombinedCountryEmbeddings(
   console.log(`🌍 Creating combined country embeddings...`);
 
   try {
-    const client = await clientPromise;
+    const client = await MongoClient.connect(process.env.MONGODB_URI!);
     const db = client.db("wwah");
 
     // Get all countries
@@ -1090,320 +1257,72 @@ export async function createCombinedCountryEmbeddings(
 
     console.log(`📊 Found ${countries.length} countries to process`);
 
-    // Clear existing embeddings
-    const embeddingCollection = db.collection(targetCollection);
-    await embeddingCollection.deleteMany({});
-
     // Process countries in batches
     for (let i = 0; i < countries.length; i += batchSize) {
       const batch = countries.slice(i, i + batchSize);
-      const batchEmbeddings = [];
 
-      for (const country of batch) {
+      const promises = batch.map(async (country) => {
         try {
-          const countryName = country.country_name || "";
-          const countryId = country._id?.toString() || "";
-
-          // Fetch country documents from countryData collection
-          const countryDataCollection = db.collection("countrydatas");
-          const countryDocuments = await countryDataCollection
-            .find({
-              countryname: { $regex: new RegExp(countryName, "i") },
-            })
-            .toArray();
-
-          console.log(
-            `📋 Fetched ${countryDocuments.length} document sets for country ${countryName}`
+          await createEmbeddingForDocument(
+            country,
+            "combined_country_data",
+            targetCollection
           );
-
-          // Create combined text content
-          const textContent = createCombinedCountryTextContent(
-            { ...country, _id: country._id?.toString?.() ?? "" },
-            countryDocuments.map((doc) => ({
-              ...doc,
-              _id: doc._id?.toString?.() ?? "",
-            }))
-          );
-
-          console.log(
-            `📝 Generated text content for country ${countryName}:`,
-            textContent.substring(0, 200) + "..."
-          );
-
-          const metadata = {
-            title: countryName || "Country Profile",
-            country: countryName,
-            capital: country.capital || "",
-            language: country.language || "",
-            population: country.population || null,
-            currency: country.currency || "",
-            internationalStudents: country.international_students || null,
-            academicIntakes: country.academic_intakes || "",
-            workRights: {
-              whileStudying: country.work_while_studying || "",
-              afterStudy: country.work_after_study || "",
-            },
-            livingCosts: {
-              rent: country.rent || null,
-              groceries: country.groceries || null,
-              transportation: country.transportation || null,
-              healthcare: country.healthcare || null,
-              eatingOut: country.eating_out || null,
-              householdBills: country.household_bills || null,
-              miscellaneous: country.miscellaneous || null,
-            },
-            residency: country.residency || [],
-            popularPrograms: country.popular_programs || [],
-            visaRequirements: country.visa_requirements || [],
-            accommodationOptions: country.accomodation_options || [],
-            health: country.health || [],
-            scholarships: country.scholarships || [],
-            documentRequirements: countryDocuments.map((docData) => ({
-              embassyDocuments: docData.embassyDocuments || [],
-              universityDocuments: docData.universityDocuments || [],
-            })),
-            hasDocumentData: countryDocuments.length > 0,
-            originalDoc: country,
-          };
-
-          const embedding = await embeddings.embedQuery(textContent);
-
-          batchEmbeddings.push({
-            text: textContent,
-            embedding: embedding,
-            countryName: countryName,
-            sourceCollection: "combined_country_data",
-            originalId: countryId,
-            domain: "country",
-            metadata: metadata,
-            createdAt: new Date(),
-          });
-
-          // Rate limiting
-          await new Promise((resolve) => setTimeout(resolve, 100));
         } catch (error) {
           console.error(
             `❌ Error processing country ${country.country_name}:`,
             error
           );
         }
-      }
+      });
 
-      // Insert batch
-      if (batchEmbeddings.length > 0) {
-        await embeddingCollection.insertMany(batchEmbeddings);
-        console.log(
-          `✅ Processed batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(
-            countries.length / batchSize
-          )}`
-        );
-      }
+      await Promise.all(promises);
+
+      console.log(
+        `✅ Processed batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(
+          countries.length / batchSize
+        )}`
+      );
+
+      // Rate limiting
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
+    await client.close();
     console.log(`🎉 Completed creating combined country embeddings!`);
-    return {
-      totalProcessed: countries.length,
-      collectionName: targetCollection,
-    };
   } catch (error) {
     console.error(`❌ Error creating combined country embeddings:`, error);
     throw error;
   }
 }
 
-// Updated createDomainEmbeddings function with enhanced metadata
-export async function createDomainEmbeddings() {
-  console.log("🚀 Starting domain embeddings creation...");
-
-  try {
-    const client = await clientPromise;
-    const db = client.db("wwah");
-    const results: Record<
-      string,
-      {
-        documentsProcessed: number;
-        embeddingsCreated: number;
-        collectionName?: string;
-      }
-    > = {};
-
-    for (const [domain, config] of Object.entries(COLLECTION_MAPPING)) {
-      console.log(`\n🔄 Processing ${domain}...`);
-
-      const sourceCollection = db.collection(config.source);
-      const targetCollection = db.collection(config.target);
-
-      // Clear existing embeddings
-      await targetCollection.deleteMany({});
-
-      // Get documents
-      const documents = await sourceCollection.find({}).toArray();
-      console.log(`📊 Found ${documents.length} ${domain} documents`);
-
-      if (documents.length === 0) {
-        results[domain] = { documentsProcessed: 0, embeddingsCreated: 0 };
-        continue;
-      }
-
-      let totalProcessed = 0;
-      const batchSize = 10;
-
-      for (let i = 0; i < documents.length; i += batchSize) {
-        const batch = documents.slice(i, i + batchSize);
-        const batchEmbeddings = [];
-
-        for (const doc of batch) {
-          try {
-            // Use the enhanced createTextContent function
-            const { textContent, metadata } = createTextContent(
-              doc,
-              config.source
-            );
-
-            if (textContent.trim()) {
-              const embedding = await embeddings.embedQuery(textContent);
-
-              batchEmbeddings.push({
-                text: textContent,
-                embedding: embedding,
-                domain: domain,
-                sourceCollection: config.source,
-                originalId: doc._id.toString(),
-                ...metadata, // Spread metadata at root level for compatibility
-                metadata: metadata, // Also keep nested for new structure
-                createdAt: new Date(),
-              });
-
-              totalProcessed++;
-
-              // Rate limiting
-              await new Promise((resolve) => setTimeout(resolve, 50));
-            }
-          } catch (error) {
-            console.error(
-              `❌ Error processing ${domain} document ${doc._id}:`,
-              error
-            );
-          }
-        }
-
-        // Insert batch
-        if (batchEmbeddings.length > 0) {
-          await targetCollection.insertMany(batchEmbeddings);
-          console.log(
-            `✅ ${domain}: ${totalProcessed}/${documents.length} processed`
-          );
-        }
-      }
-
-      results[domain] = {
-        documentsProcessed: totalProcessed,
-        embeddingsCreated: totalProcessed,
-        collectionName: config.target,
-      };
-    }
-
-    console.log("✅ Domain embeddings completed");
-    return results;
-  } catch (error) {
-    console.error("❌ Error in createDomainEmbeddings:", error);
-    throw error;
-  }
-}
-
-// Main function - Enhanced with combined country embeddings option
-export async function createAllEmbeddings(
-  includeCombinedCountries: boolean = false
+// Batch operations for efficiency
+export async function createEmbeddingsForDocuments(
+  documents: Record<string, unknown>[],
+  sourceCollection: string,
+  targetCollection: string,
+  batchSize: number = 10
 ) {
-  console.log("🚀 Starting complete embeddings creation...");
+  console.log(
+    `🔄 Creating embeddings for ${documents.length} documents in batches of ${batchSize}`
+  );
 
-  try {
-    // Step 1: Create user embeddings first (prioritized)
-    console.log("👤 Step 1: Creating user embeddings...");
-    const userResults = await createUserEmbeddings();
-    console.log("✅ User embeddings completed");
+  for (let i = 0; i < documents.length; i += batchSize) {
+    const batch = documents.slice(i, i + batchSize);
 
-    // Step 2: Create domain embeddings
-    console.log("\n📋 Step 2: Creating domain embeddings...");
-    const domainResults = await createDomainEmbeddings();
-    console.log("✅ Domain embeddings completed");
-
-    // Step 3: Optionally create combined country embeddings
-    let combinedCountryResults = null;
-    if (includeCombinedCountries) {
-      console.log("\n🌍 Step 3: Creating combined country embeddings...");
-      combinedCountryResults = await createCombinedCountryEmbeddings();
-      console.log("✅ Combined country embeddings completed");
-    }
-
-    const finalResults = {
-      users: userResults,
-      domains: domainResults,
-      combinedCountries: combinedCountryResults,
-      timestamp: new Date().toISOString(),
-    };
-
-    console.log("\n🎉 All embeddings creation completed");
-    console.log("📊 Results:", JSON.stringify(finalResults, null, 2));
-
-    return finalResults;
-  } catch (error) {
-    console.error("❌ Error in createAllEmbeddings:", error);
-    throw error;
-  }
-}
-
-// Utility function to get embedding statistics
-export async function getEmbeddingStats() {
-  console.log("📊 Getting embedding statistics...");
-
-  try {
-    const client = await clientPromise;
-    const db = client.db("wwah");
-    const stats: Record<string, { count: number; collection: string }> = {};
-
-    // User embeddings stats
-    const userCollection = db.collection("user_embeddings");
-    const userCount = await userCollection.countDocuments();
-    stats["users"] = { count: userCount, collection: "user_embeddings" };
-
-    // Domain embeddings stats
-    for (const [domain, config] of Object.entries(COLLECTION_MAPPING)) {
-      const collection = db.collection(config.target);
-      const count = await collection.countDocuments();
-      stats[domain] = { count, collection: config.target };
-    }
-
-    console.log("📊 Statistics:", JSON.stringify(stats, null, 2));
-    return stats;
-  } catch (error) {
-    console.error("❌ Error getting stats:", error);
-    throw error;
-  }
-}
-
-// Execute main function
-async function main() {
-  try {
-    console.log("🚀 Starting embeddings creation process...");
-
-    // You can set this to true if you want to include combined country embeddings
-    const includeCombinedCountries = process.argv.includes(
-      "--combined-countries"
+    const promises = batch.map((doc) =>
+      createEmbeddingForDocument(doc, sourceCollection, targetCollection)
     );
 
-    const results = await createAllEmbeddings(includeCombinedCountries);
-    console.log("✅ Process completed successfully", results);
-  } catch (error) {
-    console.error("❌ Process failed:", error);
-    process.exit(1);
-  } finally {
-    console.log("🔄 Exiting...");
-    process.exit(0);
-  }
-}
+    await Promise.all(promises);
 
-// Run if executed directly
-if (require.main === module) {
-  main();
+    console.log(
+      `✅ Processed batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(
+        documents.length / batchSize
+      )}`
+    );
+
+    // Rate limiting
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 }
