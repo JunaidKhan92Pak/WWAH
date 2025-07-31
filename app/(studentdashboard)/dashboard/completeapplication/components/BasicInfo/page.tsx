@@ -59,8 +59,8 @@ const BasicInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [hasAcceptedConsent, setHasAcceptedConsent] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  console.log("Step from query:", hasAcceptedConsent);
+  const [isSubmitted] = useState(false);
+  // console.log("Step from query:", hasAcceptedConsent);
   // setCurrentPage(parseInt(step));
   useEffect(() => {
     if (!isNaN(stepFromQuery)) {
