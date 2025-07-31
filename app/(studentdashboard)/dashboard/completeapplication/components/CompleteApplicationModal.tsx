@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,12 +21,6 @@ export default function CompleteApplicationModal({
   onCompleteApplication,
 }: CompleteApplicationModalProps) {
   const [isChecked, setIsChecked] = useState(false);
-  const [submittedStatus, setSubmittedStatus] = useState<null | boolean>(null); // null = loading, true/false = actual value
-
-  useEffect(() => {
-    const hasSubmitted = sessionStorage.getItem("applicationSubmitted") === "true";
-    setSubmittedStatus(hasSubmitted);
-  }, []);
 
   const handleCheckboxChange = () => {
     setIsChecked((prev) => !prev);
@@ -35,16 +29,14 @@ export default function CompleteApplicationModal({
   const handleSubmit = () => {
     if (isChecked) {
       sessionStorage.setItem("applicationSubmitted", "true");
-      setSubmittedStatus(true);
       onCompleteApplication();
       onClose();
     }
   };
 
-  const shouldRenderModal = submittedStatus === false && isOpen;
-
-  return shouldRenderModal ? (
-    <Dialog open={true} onOpenChange={onClose}>
+  // Show modal when isOpen is true (parent component controls the logic)
+  return isOpen ? (
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[300px] md:max-w-[550px] max-h-[80vh] overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >

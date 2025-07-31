@@ -1,4 +1,3 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +7,7 @@ import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -40,11 +40,10 @@ import FamilyMembers from "./components/FamilyMembers";
 import { useRouter } from "next/navigation";
 import ContactDetailForm from "./components/ContactDetailform";
 import { formSchema } from "./components/Schema";
-import CompleteApplicationModal from "../CompleteApplicationModal";
 import countries from "world-countries";
 import { getAuthToken } from "@/utils/authHelper";
-
-
+import CompleteApplicationModal from "../CompleteApplicationModal";
+import SubmissionSuccessModal from "../SubmissionSuccessModal";
 
 const BasicInfo = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +51,22 @@ const BasicInfo = () => {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const totalPages = 6;
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const stepFromQuery = parseInt(searchParams.get("step") || "1", 10);
+  const step = searchParams.get("step") || "1";
+  console.log("Step from query:", step);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [hasAcceptedConsent, setHasAcceptedConsent] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  console.log("Step from query:", hasAcceptedConsent);
+  // setCurrentPage(parseInt(step));
+  useEffect(() => {
+    if (!isNaN(stepFromQuery)) {
+      setCurrentPage(stepFromQuery);
+    }
+  }, [stepFromQuery]);
   // Get unique nationalities and country names
   const countryOptions = countries.map((c) => ({
     label: c.name.common,
@@ -75,9 +89,11 @@ const BasicInfo = () => {
       countryCode: "+1",
       isFamilyNameEmpty: false,
       isGivenNameEmpty: false,
+      religion: "",
+      nativeLanguage: "",
     },
   });
-  const token = getAuthToken();
+
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValidationErrors([]);
@@ -107,7 +123,7 @@ const BasicInfo = () => {
       console.log("Form validation failed:", errors);
 
       // Show validation errors in toast
-      toast.error("Please fix the following errors:", {
+      toast.error("Please add the following field:", {
         description:
           errorMessages.slice(0, 3).join(", ") +
           (errorMessages.length > 3 ? "..." : ""),
@@ -117,6 +133,11 @@ const BasicInfo = () => {
     }
   };
 
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    router.replace(`/dashboard/completeapplication?tab=basicinfo&step=${page}`);
+
+  };
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Starting form submission...");
 
@@ -156,6 +177,7 @@ const BasicInfo = () => {
 
       console.log("Sending formatted data:", formattedData);
 
+      const token = getAuthToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}studentDashboard/completeApplication/basicInformation`,
         {
@@ -163,15 +185,14 @@ const BasicInfo = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-
           },
           credentials: "include",
           body: JSON.stringify(formattedData),
         }
       );
 
-      // console.log("Response status:", response.status);
-      // console.log("Response headers:", response.headers);
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
 
       // Check if response is ok
       if (!response.ok) {
@@ -182,22 +203,9 @@ const BasicInfo = () => {
       console.log("API Response:", result);
 
       if (result.success) {
-        toast.success("Basic information saved successfully!", {
-          duration: 4000,
-          position: "top-center",
-          style: {
-            backgroundColor: "#10b981",
-            color: "white",
-            fontSize: "16px",
-            padding: "16px",
-            borderRadius: "8px",
-          },
-        });
-
-        // Wait a bit before navigation to show the success message
-        setTimeout(() => {
-          router.push("/dashboard/completeapplication");
-        }, 1500);
+        // Show success modal instead of toast and navigation
+        console.log("API call successful, showing success modal");
+        setIsSuccessModalOpen(true);
       } else {
         // Handle API error response
         const errorMessage =
@@ -243,11 +251,12 @@ const BasicInfo = () => {
     }
   };
 
+
   const handleNextPage = async () => {
     const currentPageIsValid = await validateCurrentPage();
     if (currentPageIsValid) {
-      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-      setValidationErrors([]); // Clear errors when moving to next page
+      goToPage(Math.min(currentPage + 1, totalPages));
+      setValidationErrors([]);
     } else {
       // Show validation errors for current page
       const errors = form.formState.errors;
@@ -272,21 +281,30 @@ const BasicInfo = () => {
   const validateCurrentPage = async () => {
     switch (currentPage) {
       case 1:
-        return await form.trigger([
-          "familyName",
-          "givenName",
-          "gender",
-          "DOB",
-          "nationality",
-          "countryOfResidence",
-          "maritalStatus",
-          // "religion",
-          // "nativeLanguage",
-        ]);
+        return await form.trigger(
+          form.watch("isGivenNameEmpty")
+            ? [
+              "familyName",
+              "gender",
+              "DOB",
+              "nationality",
+              "countryOfResidence",
+              "maritalStatus",
+            ]
+            : [
+              "familyName",
+              "givenName",
+              "gender",
+              "DOB",
+              "nationality",
+              "countryOfResidence",
+              "maritalStatus",
+            ]
+        );
       case 2:
         return await form.trigger([
-          "homeAddress",
-          "detailedAddress",
+          "currentDetailedAddress",
+          "currentHomeAddress",
           "country",
           "city",
           "zipCode",
@@ -294,7 +312,7 @@ const BasicInfo = () => {
           "countryCode",
           "phoneNo",
         ]);
-      case 4:
+      case 3:
         return await form.trigger([
           "hasPassport",
           "passportNumber",
@@ -302,7 +320,7 @@ const BasicInfo = () => {
           "oldPassportNumber",
           "oldPassportExpiryDate",
         ]);
-      case 5:
+      case 4:
         return await form.trigger([
           "hasStudiedAbroad",
           "visitedCountry",
@@ -312,7 +330,7 @@ const BasicInfo = () => {
           "visaExpiryDate",
           "durationOfStudyAbroad",
         ]);
-      case 6:
+      case 5:
         return await form.trigger([
           "sponsorName",
           "sponsorRelationship",
@@ -322,7 +340,7 @@ const BasicInfo = () => {
           "sponsorsCountryCode",
           "sponsorsPhoneNo",
         ]);
-      case 7:
+      case 6:
         return await form.trigger(["familyMembers"]);
       default:
         return true;
@@ -332,13 +350,46 @@ const BasicInfo = () => {
   // Use watch to observe form values
   const watchedValues = form.watch();
   console.log("Watched Values:", watchedValues);
+  useEffect(() => {
+    // For testing purposes, clear the sessionStorage to always show modal
+    // Remove this line in production if you want to remember consent
+    sessionStorage.removeItem("applicationSubmitted");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+    const hasAccepted = sessionStorage.getItem("applicationSubmitted") === "true";
+    setHasAcceptedConsent(hasAccepted);
 
-  const handleSaveAndContinue = () => {
-    setIsModalOpen(true);
-    setIsSubmitted(true);
+    // Always show modal if consent hasn't been accepted
+    if (!hasAccepted) {
+      // Add a small delay to ensure the component is fully mounted
+      setTimeout(() => {
+        setIsModalOpen(true);
+      }, 100);
+    }
+  }, []);
+  const handleSaveAndContinue = async (event: React.MouseEvent) => {
+    event.preventDefault(); // Prevent form submission
+
+    if (!hasAcceptedConsent) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    // If consent is already accepted, proceed with form submission
+    console.log("Save and Continue clicked, checking form validity...");
+    const isValid = await form.trigger();
+    console.log("Form is valid:", isValid);
+
+    if (isValid) {
+      const formData = form.getValues();
+      console.log("Calling onSubmit with form data...");
+      await onSubmit(formData);
+    } else {
+      console.log("Form validation failed");
+      toast.error("Please fix the form errors before submitting", {
+        duration: 4000,
+        position: "top-center",
+      });
+    }
   };
 
   const handleCloseModal = () => {
@@ -347,8 +398,17 @@ const BasicInfo = () => {
 
   const handleCompleteApplication = () => {
     console.log("Application Completed!");
+    setIsModalOpen(false); // Close the consent modal
+    setHasAcceptedConsent(true); // Mark consent as accepted
+    // Don't show success modal here - it will be shown after API submission
   };
 
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    // Navigate to dashboard after closing success modal
+    router.push("/dashboard/completeapplication?tab=appinfo&step=1")
+  };
+  const token = getAuthToken();
   useEffect(() => {
     async function loadSaved() {
       try {
@@ -357,9 +417,9 @@ const BasicInfo = () => {
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-            credentials: 'include',
+            credentials: "include",
           }
         );
         console.log("Response status:", res.status);
@@ -382,6 +442,8 @@ const BasicInfo = () => {
               ? new Date(data.visaExpiryDate)
               : null,
             familyMembers: data.familyMembers ?? [],
+            religion: data.religion ?? "",
+            nativeLanguage: data.nativeLanguage ?? "",
           };
           // 5️⃣ Reset RHF with fetched values
           form.reset(formatted);
@@ -409,24 +471,20 @@ const BasicInfo = () => {
       {currentPage === 2 && (
         <h6 className="font-semibold text-center">Contact Details</h6>
       )}
-      {currentPage === 4 && (
+      {currentPage === 3 && (
         <h6 className="font-semibold text-center">
           Passport & Visa Information
         </h6>
       )}
-      {currentPage === 5 && (
+      {currentPage === 4 && (
         <h6 className="font-semibold text-center">
           Learning Experience Abroad
         </h6>
       )}
-      {currentPage === 6 && (
-        <h6 className="font-semibold text-center">
-          Financial Sponsor Information
-        </h6>
+      {currentPage === 5 && (
+        <h6 className="font-semibold text-center"> Financial Sponsor Information </h6>
       )}
-      {currentPage === 7 && (
-        <h6 className="font-semibold text-center">Family Members</h6>
-      )}
+      {currentPage === 6 && (<h6 className="font-semibold text-center">Family Members</h6>)}
 
       {/* Display validation errors */}
       {validationErrors.length > 0 && (
@@ -774,8 +832,8 @@ const BasicInfo = () => {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      setCurrentPage((prev) => Math.max(prev - 1, 1));
-                      setValidationErrors([]); // Clear errors when going back
+                      goToPage(Math.max(currentPage - 1, 1));
+                      setValidationErrors([]);
                     }}
                     className={`p-2 text-sm ${currentPage === 1 ? "pointer-events-none opacity-50" : ""
                       }`}
@@ -819,11 +877,15 @@ const BasicInfo = () => {
                     : "Save and Continue"}
               </Button>
             )}
-
             <CompleteApplicationModal
               isOpen={isModalOpen}
               onClose={handleCloseModal}
               onCompleteApplication={handleCompleteApplication}
+            />
+
+            <SubmissionSuccessModal
+              isOpen={isSuccessModalOpen}
+              onClose={handleCloseSuccessModal}
             />
           </div>
         </form>

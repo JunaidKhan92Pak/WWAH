@@ -81,11 +81,19 @@ const EducationalBackground: React.FC<Props> = ({ form }) => {
               name={`educationalBackground.${index}.highestDegree`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Highest Degree</FormLabel>
+                  <FormLabel>
+                    {index === 0 ? "Highest Degree" : "Degree"}
+                  </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Degree" />
+                        <SelectValue
+                          placeholder={
+                            index === 0
+                              ? "Select Highest Degree"
+                              : "Select Degree"
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

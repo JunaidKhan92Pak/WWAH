@@ -1,10 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BasicInfo from "./components/BasicInfo/page";
 import UploadDocuments from "./components/UploadDocuments";
 import ReviewSection from "./components/ReviewSection";
 import { Button } from "@/components/ui/button";
 import ApplicationInfo from "./components/ApplicationInfo/page";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Tab = {
   label: string;
@@ -19,7 +21,18 @@ const Page = () => {
     { label: "Review & Submit", id: "review" },
   ];
 
-  const [activeTab, setActiveTab] = useState<string>("basicinfo");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const defaultTab = searchParams.get("tab") || "basicinfo";
+  const [activeTab, setActiveTab] = useState<string>(defaultTab);
+
+  useEffect(() => {
+    // const tabFromQuery = searchParams.get("tab");
+    const tabFromQuery = searchParams.get("tab") || "basicinfo";
+    if (tabFromQuery) {
+      setActiveTab(tabFromQuery);
+    }
+  }, [searchParams]);
 
   return (
     <>
@@ -29,7 +42,12 @@ const Page = () => {
           {tabs.map((tab) => (
             <Button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                router.replace(`/dashboard/completeapplication?tab=${tab.id}`);
+              }}
+
+
               className={`transition md:w-1/4 px-4 font-semibold text-sm sm:text-base py-4  rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
                         ${activeTab === tab.id
                   ? "bg-[#C7161E] text-white"

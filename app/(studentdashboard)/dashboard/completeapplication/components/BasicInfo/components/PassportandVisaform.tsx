@@ -57,23 +57,25 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="flex items-center bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm pl-6 rounded-lg py-0.5 border">
+                <div className="flex items-center bg-[#f1f1f1] pl-6 rounded-lg border">
                   <Checkbox
                     checked={field.value === true}
-                    onCheckedChange={() => {
-                      field.onChange(true);
-                      form.setValue("hasPassport", false);
-                      form.setValue("passportNumber", "");
-                      form.setValue("passportExpiryDate", undefined);
-                      form.setValue("oldPassportNumber", "");
-                      form.setValue("oldPassportExpiryDate", undefined);
+                    onCheckedChange={(checked) => {
+                      field.onChange(!!checked);
+                      if (checked) {
+                        form.setValue("hasPassport", false);
+                        form.setValue("passportNumber", "");
+                        form.setValue("passportExpiryDate", undefined);
+                        form.setValue("oldPassportNumber", "");
+                        form.setValue("oldPassportExpiryDate", undefined);
+                      }
                     }}
                   />
                   <Input
                     type="text"
                     value="I don’t have a passport"
                     readOnly
-                    className="bg-transparent text-[#313131] placeholder:text-sm border-none focus:ring-0 flex-1"
+                    className="bg-transparent text-[#313131] border-none focus:ring-0 flex-1"
                   />
                 </div>
               </FormControl>

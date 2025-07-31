@@ -21,9 +21,20 @@ import { formSchema } from "./Schema";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { countries } from "@/lib/countries";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type FormValues = z.infer<typeof formSchema>;
 const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
+  const [isSameAsCurrent, setIsSameAsCurrent] = useState(false);
+  const currentDetailedAddress = form.watch("currentDetailedAddress");
+  const handleCheckboxChange = (checked: boolean) => {
+    setIsSameAsCurrent(checked);
+    if (checked) {
+      form.setValue("currentHomeAddress", currentDetailedAddress, {
+        shouldValidate: true,
+      });
+    }
+  };
   const [selectedCountry, setSelectedCountry] = useState(
     form.watch("country") || "Pakistan"
   );
@@ -40,15 +51,15 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
       <div className="grid grid-cols-1 gap-2 items-end">
         <FormField
           control={form.control}
-          name="homeAddress"
+          name="currentDetailedAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Home Address</FormLabel>
+              <FormLabel>Current Address</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   value={field.value || ""}
-                  placeholder="Write..."
+                  placeholder="Write...."
                   className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                 />
               </FormControl>
@@ -56,25 +67,39 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             </FormItem>
           )}
         />
-        {/* detailedAddress  */}
+        {/* permanentAddress  */}
         <FormField
           control={form.control}
-          name="detailedAddress"
+          name="currentHomeAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Detailed Address</FormLabel>
+              <div className="flex items-center justify-between">
+                <FormLabel>Permanent Address</FormLabel>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={isSameAsCurrent}
+                    onCheckedChange={handleCheckboxChange}
+                    id="sameAsCurrent"
+                  />
+                  <label htmlFor="sameAsCurrent" className="text-sm">
+                    Same as current
+                  </label>
+                </div>
+              </div>
               <FormControl>
                 <Input
                   {...field}
                   value={field.value || ""}
                   placeholder="Write..."
                   className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                  disabled={isSameAsCurrent}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {/* country */}
           <FormField
@@ -140,7 +165,6 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     placeholder="Write..."
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                     {...field}
-
                     value={field.value || ""}
                   />
                 </FormControl>
@@ -179,6 +203,7 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
             )}
           />
         </div>
+
         {/* phone number  */}
         <FormField
           control={form.control}
