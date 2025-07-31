@@ -200,7 +200,14 @@ const ApplicationInfo = () => {
             // educationalBackground → array of objects
             educationalBackground:
               Array.isArray(data.educationalBackground) && data.educationalBackground.length
-                ? data.educationalBackground.map((bg: any) => ({
+                ? data.educationalBackground.map((bg: {
+                  highestDegree?: string;
+                  subjectName?: string;
+                  institutionAttended?: string;
+                  marks?: string | number;
+                  degreeStartDate?: string | Date | null;
+                  degreeEndDate?: string | Date | null;
+                }) => ({
                   highestDegree: bg.highestDegree || "",
                   subjectName: bg.subjectName || "",
                   institutionAttended: bg.institutionAttended || "",
@@ -214,10 +221,17 @@ const ApplicationInfo = () => {
                 }))
                 : [],
 
+
             // workExperience → array of objects
             workExperience:
               Array.isArray(data.workExperience) && data.workExperience.length
-                ? data.workExperience.map((we: any) => ({
+                ? data.workExperience.map((we: {
+                  jobTitle?: string;
+                  organizationName?: string;
+                  employmentType?: string;
+                  from?: string | Date | null;
+                  to?: string | Date | null;
+                }) => ({
                   jobTitle: we.jobTitle || "",
                   organizationName: we.organizationName || "",
                   employmentType: we.employmentType || "",
