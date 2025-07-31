@@ -24,7 +24,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
     <div className="flex flex-col  my-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
         {/* Country Selector */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="countryOfStudy"
           render={({ field }) => (
@@ -50,7 +50,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="proficiencyLevel"
@@ -100,6 +100,9 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     </SelectItem>
                     <SelectItem value="cambridge">
                       Cambridge English Exam
+                    </SelectItem>
+                    <SelectItem value="cambridge">
+                      I am planning to give the one
                     </SelectItem>
                   </SelectContent>
                 </Select>

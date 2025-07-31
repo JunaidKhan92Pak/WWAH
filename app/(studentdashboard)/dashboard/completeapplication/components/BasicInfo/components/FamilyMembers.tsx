@@ -209,30 +209,45 @@ useEffect(() => {
                                 <div className="flex items-center gap-2">
                                   <Image
                                     src={
-                                      countries.find(
+
+                                              (countries.find(
                                         (c) =>
-                                          `${c.code}-${c.name}` ===
-                                          (countryCodeField.value ||
-                                            "+92-Pakistan")
-                                      )?.flag || "/default-flag.png"
+
+
+
+
+                                                  `${c.code}-${c.name}` === countryCodeField.value
+                                              ) ||
+                                                countries.find(
+                                                  (c) => `${c.code}-${c.name}` === "+92-Pakistan"
+                                                )
+                                              )?.flag || "/default-flag.png"
                                     }
                                     alt="Country Flag"
                                     width={20}
                                     height={20}
                                   />
                                   <span className="text-sm">
-                                    {
-                                      (
-                                        countryCodeField.value || "+92-Pakistan"
-                                      ).split("-")[0]
-                                    }
-                                  </span>
-                                </div>
-                              </SelectValue>
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {countries.map((country) => {
+
+
+
+
+
+
+
+
+
+
+
+
+                                            {(countryCodeField.value || "+92-Pakistan").split("-")[0]}
+                                          </span>
+                                        </div>
+                                      </SelectValue>
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {countries.map((country) => {
                               const fullValue = `${country.code}-${country.name}`;
                               return (
                                 <SelectItem key={fullValue} value={fullValue}>

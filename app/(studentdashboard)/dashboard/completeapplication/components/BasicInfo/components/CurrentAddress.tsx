@@ -30,10 +30,10 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
 
   // Function to copy contact details to current address
   const copyContactDetails = () => {
-    form.setValue("currentHomeAddress", form.getValues("homeAddress") || "");
+    form.setValue("currentHomeAddress", form.getValues("currentDetailedAddress") || "");
     form.setValue(
       "currentDetailedAddress",
-      form.getValues("detailedAddress") || ""
+      form.getValues("currentHomeAddress") || ""
     );
     form.setValue("currentCountry", form.getValues("country") || "");
     form.setValue("currentCity", form.getValues("city") || "");
@@ -50,8 +50,8 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
     }
   }, [
     sameAsContact,
-    form.watch("homeAddress"),
-    form.watch("detailedAddress"),
+    form.watch("currentDetailedAddress"),
+    form.watch("currentHomeAddress"),
     form.watch("country"),
     form.watch("city"),
     form.watch("zipCode"),
@@ -83,10 +83,10 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
         </div>
 
         {[
-          { name: "currentHomeAddress" as const, label: "Home Address" },
+          { name: "currentHomeAddress" as const, label: "Current Address" },
           {
             name: "currentDetailedAddress" as const,
-            label: "Detailed Address",
+            label: "Permanent Address",
           },
         ].map(({ name, label }) => (
           <FormField
@@ -103,7 +103,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                     {...field}
                     value={field.value || ""}
-                    // disabled={sameAsContact}
+                  // disabled={sameAsContact}
                   />
                 </FormControl>
                 <FormMessage />
@@ -131,7 +131,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     }
                   }}
                   value={field.value || ""}
-                  // disabled={sameAsContact}
+                // disabled={sameAsContact}
                 >
                   <FormControl>
                     <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131]">
@@ -157,12 +157,12 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>City</FormLabel>
-                  <Input
-          {...field}
-          placeholder="Enter City"
-          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
-          value={field.value || ""}
-        />
+                <Input
+                  {...field}
+                  placeholder="Enter City"
+                  className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                  value={field.value || ""}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -181,7 +181,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
                     {...field}
                     value={field.value || ""}
-                    // disabled={sameAsContact}
+                  // disabled={sameAsContact}
                   />
                 </FormControl>
                 <FormMessage />
@@ -203,7 +203,7 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       className="bg-[#f1f1f1] placeholder-[#313131] pl-10"
                       {...field}
                       value={field.value || ""}
-                      // disabled={sameAsContact}
+                    // disabled={sameAsContact}
                     />
                     <span className="absolute left-3 top-1/2 -translate-y-1/2">
                       <Image
@@ -221,78 +221,81 @@ const CurrentAddress = ({ form }: { form: UseFormReturn<FormValues> }) => {
           />
         </div>
         <FormField
-  control={form.control}
-  name="currentPhoneNo"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Phone No.</FormLabel>
-      <div className="flex gap-2">
-        <FormField
           control={form.control}
-          name="currentCountryCode"
-          render={({ field: countryCodeField }) => (
-            <Select
-              value={countryCodeField.value || "+92-Pakistan"}
-              onValueChange={countryCodeField.onChange}
-              // disabled={sameAsContact}
-            >
-              <FormControl>
-                <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
-                  <SelectValue>
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={
-                          countries.find(
-                            (c) =>
-                              `${c.code}-${c.name}` ===
-                              (countryCodeField.value || "+92-Pakistan")
-                          )?.flag || "/default-flag.png"
-                        }
-                        alt="Country Flag"
-                        width={20}
-                        height={20}
-                      />
-                      <span className="text-sm">
-                        {(countryCodeField.value || "+92-Pakistan").split("-")[0]}
-                      </span>
-                    </div>
-                  </SelectValue>
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {countries.map((country) => (
-                  <SelectItem
-                    key={`${country.code}-${country.name}`}
-                    value={`${country.code}-${country.name}`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={country.flag}
-                        alt={`${country.name} Flag`}
-                        width={20}
-                        height={20}
-                      />
-                      <span className="text-sm">{`${country.code} (${country.name})`}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          name="currentPhoneNo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone No.</FormLabel>
+              <div className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name="currentCountryCode"
+                  render={({ field: countryCodeField }) => (
+                    <Select
+                      value={countryCodeField.value || "+92-Pakistan"}
+                      onValueChange={countryCodeField.onChange}
+                    // disabled={sameAsContact}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-[140px] bg-[#f1f1f1] rounded-lg border-r-0">
+                          <SelectValue>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={
+                                  countries.find(
+                                    (c) =>
+                                      `${c.code}-${c.name}` ===
+                                      (countryCodeField.value || "+92-Pakistan")
+                                  )?.flag || "/default-flag.png"
+                                }
+                                alt="Country Flag"
+                                width={20}
+                                height={20}
+                              />
+                              <span className="text-sm">
+                                {
+                                  (
+                                    countryCodeField.value || "+92-Pakistan"
+                                  ).split("-")[0]
+                                }
+                              </span>
+                            </div>
+                          </SelectValue>
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem
+                            key={`${country.code}-${country.name}`}
+                            value={`${country.code}-${country.name}`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={country.flag}
+                                alt={`${country.name} Flag`}
+                                width={20}
+                                height={20}
+                              />
+                              <span className="text-sm">{`${country.code} (${country.name})`}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <Input
+                  {...field}
+                  value={field.value || ""}
+                  placeholder="Enter your phone number"
+                  className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
+                // disabled={sameAsContact}
+                />
+              </div>
+              <FormMessage />
+            </FormItem>
           )}
         />
-        <Input
-          {...field}
-          value={field.value || ""}
-          placeholder="Enter your phone number"
-          className="rounded-lg bg-[#f1f1f1] placeholder-[#313131] text-sm"
-          // disabled={sameAsContact}
-        />
-      </div>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
       </div>
     </div>
   );

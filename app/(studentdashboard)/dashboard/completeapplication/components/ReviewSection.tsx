@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { fetchApplicationInfo, fetchBasicInfo } from "@/utils/stdDashboard";
 import { useEffect, useState } from "react";
 import { MdModeEditOutline } from "react-icons/md";
+import { useRouter } from "next/navigation";
 const Section = ({
   title,
   data,
@@ -36,6 +37,7 @@ const Section = ({
   </div>
 );
 export default function ReviewPage() {
+  const router = useRouter();
   interface Data1Type {
     familyName?: string;
     givenName?: string;
@@ -45,8 +47,8 @@ export default function ReviewPage() {
     gender?: string;
     maritalStatus?: string;
     religion?: string;
-    homeAddress?: string;
-    detailedAddress?: string;
+    currentHomeAddress?: string;
+    permanentAddress?: string;
     country?: string;
     currentZipCode?: string;
     countryCode?: string;
@@ -139,8 +141,8 @@ export default function ReviewPage() {
       religion: `${data1?.religion}`,
     },
     contactDetails: {
-      homeAddress: `${data1?.homeAddress}`,
-      detailedAddress: `${data1?.detailedAddress}`,
+      currentAddress: `${data1?.currentHomeAddress}`,
+      permanentAddress: `${data1?.currentDetailedAddress}`,
       country: `${data1?.country}`,
       // cityProvince: `${data1?.religion}`,
       zipCode: `${data1?.currentZipCode}`,
@@ -148,8 +150,8 @@ export default function ReviewPage() {
       // email: `${data1?.religion}`,
     },
     currentDetails: {
-      homeAddress: `${data1?.homeAddress}`,
-      detailedAddress: `${data1?.currentDetailedAddress}`,
+      currentAddress: `${data1?.currentHomeAddress}`,
+      permanentAddress: `${data1?.currentDetailedAddress}`,
       country: `${data1?.currentCountry}`,
       cityProvince: `${data1?.currentCity}`,
       zipCode: `${data1?.currentZipCode}`,
@@ -205,6 +207,7 @@ export default function ReviewPage() {
   const fdataMap = studentData?.familyMembers;
   const wdataMap = studentData?.workExperience;
   const edataMap = studentData?.educationalBackground;
+
   return (
     <div className="mx-auto p-4">
       {/* Personal Information Section */}
@@ -212,178 +215,258 @@ export default function ReviewPage() {
         <Section title="Personal Information" data={studentData.personalInfo} />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => window.location.reload()}
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=1")
+          }
         >
           Edit <MdModeEditOutline />
         </Button>
       </div>
 
       {/* Contact Details Section */}
-      <Section title="Contact Details" data={studentData.contactDetails} />
+      <div className="flex justify-between">
+        <Section title="Contact Details" data={studentData.contactDetails} />
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=2")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
+
       {/* Current Details Section */}
-      <Section title="Current Details" data={studentData.currentDetails} />
+      {/* <div className="flex justify-between">
+        <Section title="Current Details" data={studentData.currentDetails} />
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=3")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div> */}
+
       {/* Passport Information Section */}
-      <Section title="Passport Information" data={studentData.passportInfo} />
+      <div className="flex justify-between">
+        <Section title="Passport Information" data={studentData.passportInfo} />
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=3")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
+
       {/* Learning Experience Abroad Section */}
-      <Section
-        title="Learning Experience Abroad"
-        data={studentData.learningExperienceAbroad}
-      />
+      <div className="flex justify-between">
+        <Section title="Learning Experience Abroad" data={studentData.learningExperienceAbroad} />
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=4")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
       {/* Financial Sponsor Information Section */}
-      <Section
-        title="Financial Sponsor Information"
-        data={studentData.financialSponsorInfo}
-      />
+      <div className="flex justify-between">
+        <Section title="Financial Sponsor Information" data={studentData.financialSponsorInfo} />
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=5")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
       {/* Language Proficiency Section */}
-      <Section
-        title="Language Proficiency"
-        data={studentData.languageProficiency}
-      />
+      {/* <div>
+        <Section title="Language Proficiency" data={studentData.languageProficiency} />
+      </div> */}
       {/* Family Members Section */}
-      <Section title="Family Members">
-        <div className="grid grid-cols-1 gap-4">
-          {fdataMap?.map((member, index) => (
-            <div
-              key={index}
-              className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
-            >
-              {/* Index Number */}
-              <p className="font-medium">{index + 1}</p>
-              <p className="text-sm text-muted-foreground">-</p>
+      <div className="flex justify-between">
+        <Section title="Family Members">
+          <div className="grid grid-cols-1 gap-4">
+            {fdataMap?.map((member, index) => (
+              <div
+                key={index}
+                className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
+              >
+                {/* Index Number */}
+                <p className="font-medium">{index + 1}</p>
+                <p className="text-sm text-muted-foreground">-</p>
 
-              {/* Name */}
-              <p className="text-sm text-muted-foreground">Name</p>
-              <p className="font-medium">{member.name}</p>
+                {/* Name */}
+                <p className="text-sm text-muted-foreground">Name</p>
+                <p className="font-medium">{member.name}</p>
 
-              {/* Relationship */}
-              <p className="text-sm text-muted-foreground">Relationship</p>
-              <p className="font-medium">{member.relationship}</p>
+                {/* Relationship */}
+                <p className="text-sm text-muted-foreground">Relationship</p>
+                <p className="font-medium">{member.relationship}</p>
 
-              {/* Nationality */}
-              <p className="text-sm text-muted-foreground">Nationality</p>
-              <p className="font-medium">{member.nationality}</p>
+                {/* Nationality */}
+                <p className="text-sm text-muted-foreground">Nationality</p>
+                <p className="font-medium">{member.nationality}</p>
 
-              {/* Occupation */}
-              <p className="text-sm text-muted-foreground">Occupation</p>
-              <p className="font-medium">{member.occupation}</p>
+                {/* Occupation */}
+                <p className="text-sm text-muted-foreground">Occupation</p>
+                <p className="font-medium">{member.occupation}</p>
 
-              {/* Email */}
-              <p className="text-sm text-muted-foreground">Email</p>
-              <p className="font-medium">{member.email}</p>
+                {/* Email */}
+                <p className="text-sm text-muted-foreground">Email</p>
+                <p className="font-medium">{member.email}</p>
 
-              {/* Phone */}
-              <p className="text-sm text-muted-foreground">Phone</p>
-              <p className="font-medium">{member.phoneNo}</p>
+                {/* Phone */}
+                <p className="text-sm text-muted-foreground">Phone</p>
+                <p className="font-medium">{member.phoneNo}</p>
 
-              {/* Divider */}
-              <hr className="col-span-2" />
-            </div>
-          ))}
-        </div>
-      </Section>
-      {/* Educational Background Section */}
-      <Section title="Educational Background">
-        <div className="grid grid-cols-1 gap-4">
-          {edataMap?.map((education, index) => (
-            <div
-              key={index}
-              className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
-            >
-              {/* Index Number */}
-              <p className="font-medium">{index + 1}</p>
-              <p className="text-sm text-muted-foreground">-</p>
-
-              {/* Highest Degree */}
-              <p className="text-sm text-muted-foreground">Highest Degree</p>
-              <p className="font-medium">{education.highestDegree}</p>
-
-              {/* Subject Name */}
-              <p className="text-sm text-muted-foreground">Subject Name</p>
-              <p className="font-medium">{education.subjectName}</p>
-
-              {/* Institution Attended */}
-              <p className="text-sm text-muted-foreground">
-                Institution Attended
-              </p>
-              <p className="font-medium">{education.institutionAttended}</p>
-
-              {/* CGPA/Marks */}
-              <p className="text-sm text-muted-foreground">CGPA/Marks</p>
-              <p className="font-medium">{education.marks}</p>
-
-              {/* Degree Start Date */}
-              <p className="text-sm text-muted-foreground">Degree Start Date</p>
-
-              <p className="font-medium">
-                {new Date(education.degreeStartDate).toLocaleDateString()}
-              </p>
-
-              {/* Degree Completion Date */}
-              <p className="text-sm text-muted-foreground">
-                Degree Completion Date
-              </p>
-              <p className="font-medium">
-                {new Date(education.degreeEndDate).toLocaleDateString()}
-              </p>
-
-              {/* Divider */}
-              <hr className="col-span-2" />
-            </div>
-          ))}
-        </div>
-      </Section>
-      {/* Work Experience Section */}
-      <Section title="Work Experience">
-        <div className="grid grid-cols-1 gap-4">
-          {wdataMap?.map((experience, index) => (
-            <div
-              key={index}
-              className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
-            >
-              {/* Index Number */}
-              <p className="font-medium">{index + 1}</p>
-              <p className="text-sm text-muted-foreground">-</p>
-
-              {/* Job Title */}
-              <p className="text-sm text-muted-foreground">Job Title</p>
-              <p className="font-medium">{experience.jobTitle}</p>
-
-              {/* Organization Name */}
-              <p className="text-sm text-muted-foreground">Organization</p>
-              <p className="font-medium">{experience.organizationName}</p>
-
-              {/* Employment Type */}
-              <p className="text-sm text-muted-foreground">Employment Type</p>
-              <p className="font-medium">{experience.employmentType}</p>
-
-              {/* Date From */}
-              <p className="text-sm text-muted-foreground">Start Date</p>
-
-              <p className="font-medium">
-                {new Date(experience.from).toLocaleDateString()}
-              </p>
-
-              {/* Date To */}
-              <p className="text-sm text-muted-foreground">End Date</p>
-              <p className="font-medium">
-                {new Date(experience.to).toLocaleDateString()}
-              </p>
-
-              {/* Divider */}
-              <hr className="col-span-2" />
-            </div>
-          ))}
-        </div>
-      </Section>
-      {/* Standardized Test Section */}
-      <Section title="Standardized Test" data={studentData.standardizedTests}>
-        <div className="grid grid-cols-1 gap-4">
-          <div className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]">
-            {/* Divider */}
-            <hr className="col-span-2" />
+                {/* Divider */}
+                <hr className="col-span-2" />
+              </div>
+            ))}
           </div>
-        </div>
-      </Section>
+        </Section>
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=6")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
+
+      {/* Educational Background Section */}
+      <div className="flex justify-between">
+        <Section title="Educational Background">
+          <div className="grid grid-cols-1 gap-4">
+            {edataMap?.map((education, index) => (
+              <div
+                key={index}
+                className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
+              >
+                {/* Index Number */}
+                <p className="font-medium">{index + 1}</p>
+                <p className="text-sm text-muted-foreground">-</p>
+
+                {/* Highest Degree */}
+                <p className="text-sm text-muted-foreground">Highest Degree</p>
+                <p className="font-medium">{education.highestDegree}</p>
+
+                {/* Subject Name */}
+                <p className="text-sm text-muted-foreground">Subject Name</p>
+                <p className="font-medium">{education.subjectName}</p>
+
+                {/* Institution Attended */}
+                <p className="text-sm text-muted-foreground">
+                  Institution Attended
+                </p>
+                <p className="font-medium">{education.institutionAttended}</p>
+
+                {/* CGPA/Marks */}
+                <p className="text-sm text-muted-foreground">CGPA/Marks</p>
+                <p className="font-medium">{education.marks}</p>
+
+                {/* Degree Start Date */}
+                <p className="text-sm text-muted-foreground">Degree Start Date</p>
+
+                <p className="font-medium">
+                  {new Date(education.degreeStartDate).toLocaleDateString()}
+                </p>
+
+                {/* Degree Completion Date */}
+                <p className="text-sm text-muted-foreground">
+                  Degree Completion Date
+                </p>
+                <p className="font-medium">
+                  {new Date(education.degreeEndDate).toLocaleDateString()}
+                </p>
+
+                {/* Divider */}
+                <hr className="col-span-2" />
+              </div>
+            ))}
+          </div>
+        </Section>
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=appinfo&step=1")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
+      {/* Work Experience Section */}
+      <div className="flex justify-between">
+
+        <Section title="Work Experience">
+          <div className="grid grid-cols-1 gap-4">
+            {wdataMap?.map((experience, index) => (
+              <div
+                key={index}
+                className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
+              >
+                {/* Index Number */}
+                <p className="font-medium">{index + 1}</p>
+                <p className="text-sm text-muted-foreground">-</p>
+
+                {/* Job Title */}
+                <p className="text-sm text-muted-foreground">Job Title</p>
+                <p className="font-medium">{experience.jobTitle}</p>
+
+                {/* Organization Name */}
+                <p className="text-sm text-muted-foreground">Organization</p>
+                <p className="font-medium">{experience.organizationName}</p>
+
+                {/* Employment Type */}
+                <p className="text-sm text-muted-foreground">Employment Type</p>
+                <p className="font-medium">{experience.employmentType}</p>
+
+                {/* Date From */}
+                <p className="text-sm text-muted-foreground">Start Date</p>
+
+                <p className="font-medium">
+                  {new Date(experience.from).toLocaleDateString()}
+                </p>
+
+                {/* Date To */}
+                <p className="text-sm text-muted-foreground">End Date</p>
+                <p className="font-medium">
+                  {new Date(experience.to).toLocaleDateString()}
+                </p>
+
+                {/* Divider */}
+                <hr className="col-span-2" />
+              </div>
+            ))}
+          </div>
+        </Section>
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=appinfo&step=2")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
+      {/* Standardized Test Section */}
+      <div className="flex justify-between">
+        <Section title="Standardized Test" data={studentData.standardizedTests}>
+          <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]">
+              {/* Divider */}
+              <hr className="col-span-2" />
+            </div>
+          </div>
+        </Section>
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() => router.push("/dashboard/completeapplication?tab=appinfo&step=3")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
       {/* <div className="text-right my-4">
         <Button
           type="submit"
