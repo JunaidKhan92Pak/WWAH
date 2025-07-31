@@ -1,15 +1,18 @@
-
 "use server";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { University } from "@/models/universities";
-
+import clientPromise from "@/lib/mongodb";
+import { createUniversity, updateUniversity } from "../../../lib/databseHook";
 export async function POST(req: Request) {
   try {
     // Connect to the database
     await connectToDatabase();
     if (!University) {
-      return NextResponse.json({ message: "Database model not found.", success: false }, { status: 500 });
+      return NextResponse.json(
+        { message: "Database model not found.", success: false },
+        { status: 500 }
+      );
     }
 
     // Parse JSON request
@@ -17,15 +20,23 @@ export async function POST(req: Request) {
     console.log("Received Data:", data);
 
     // Validate input: ensure 'university' is present (as an object or an array)
-    if (!data.university || (typeof data.university !== "object" && !Array.isArray(data.university))) {
+    if (
+      !data.university ||
+      (typeof data.university !== "object" && !Array.isArray(data.university))
+    ) {
       return NextResponse.json(
-        { message: "Invalid input. University details are required.", success: false },
+        {
+          message: "Invalid input. University details are required.",
+          success: false,
+        },
         { status: 400 }
       );
     }
 
     // If 'university' is an array, extract the first element; otherwise, use the object
-    const uni = Array.isArray(data.university) ? data.university[0] : data.university;
+    const uni = Array.isArray(data.university)
+      ? data.university[0]
+      : data.university;
     const universityImages = data.universityImages || {};
     // Prepare university data for insertion/updating
     const universityData = {
@@ -40,7 +51,8 @@ export async function POST(req: Request) {
       acceptance_rate: uni.acceptance_rate || "N/A",
       distance_from_city: uni.distance_from_city || "N/A",
       qs_world_university_ranking: uni.qs_world_university_ranking || "N/A",
-      times_higher_education_ranking: uni.times_higher_education_ranking || "N/A",
+      times_higher_education_ranking:
+        uni.times_higher_education_ranking || "N/A",
       overview: uni.overview || "N/A",
       origin_and_establishment: uni.origin_and_establishment || "N/A",
       modern_day_development: uni.modern_day_development || "N/A",
@@ -58,11 +70,31 @@ export async function POST(req: Request) {
         { name: uni.ranking_4, detail: uni.ranking_4_detail },
       ].filter((rank) => rank.name && rank.detail),
       notable_alumni: [
-        uni.notable_alumni_1 && { name: uni.notable_alumni_1, profession: uni.profession_1, image: uni.notable_alumni_1_image },
-        uni.notable_alumni_2 && { name: uni.notable_alumni_2, profession: uni.profession_2, image: uni.notable_alumni_2_image },
-        uni.notable_alumni_3 && { name: uni.notable_alumni_3, profession: uni.profession_3, image: uni.notable_alumni_3_image },
-        uni.notable_alumni_4 && { name: uni.notable_alumni_4, profession: uni.profession_4, image: uni.notable_alumni_4_image },
-        uni.notable_alumni_5 && { name: uni.notable_alumni_5, profession: uni.profession_5, image: uni.notable_alumni_5_image },
+        uni.notable_alumni_1 && {
+          name: uni.notable_alumni_1,
+          profession: uni.profession_1,
+          image: uni.notable_alumni_1_image,
+        },
+        uni.notable_alumni_2 && {
+          name: uni.notable_alumni_2,
+          profession: uni.profession_2,
+          image: uni.notable_alumni_2_image,
+        },
+        uni.notable_alumni_3 && {
+          name: uni.notable_alumni_3,
+          profession: uni.profession_3,
+          image: uni.notable_alumni_3_image,
+        },
+        uni.notable_alumni_4 && {
+          name: uni.notable_alumni_4,
+          profession: uni.profession_4,
+          image: uni.notable_alumni_4_image,
+        },
+        uni.notable_alumni_5 && {
+          name: uni.notable_alumni_5,
+          profession: uni.profession_5,
+          image: uni.notable_alumni_5_image,
+        },
       ].filter(Boolean),
       key_achievements: [
         uni.key_achievement_1,
@@ -100,7 +132,8 @@ export async function POST(req: Request) {
       ].filter((faq) => faq.question && faq.answer),
       universityImages,
     };
-
+    // 🆕 GET CLIENT FOR HOOK FUNCTIONS
+    const client = await clientPromise;
     // Check if the university already exists (using unique fields: country_name and university_name)
     const existingUniversity = await University.findOne({
       country_name: universityData.country_name,
@@ -108,16 +141,49 @@ export async function POST(req: Request) {
     });
 
     if (existingUniversity) {
-      // Update the existing university document
-      await University.findOneAndUpdate(
-        { country_name: universityData.country_name, university_name: universityData.university_name },
+      console.log("Updating existing university with auto-embedding...");
+      // Update using Mongoose
+      const updatedDoc = await University.findOneAndUpdate(
+        {
+          country_name: universityData.country_name,
+          university_name: universityData.university_name,
+        },
         { $set: universityData },
         { new: true }
       );
+      // 🆕 TRIGGER EMBEDDING UPDATE using the hook function
+      if (updatedDoc) {
+        await updateUniversity(
+          client,
+          updatedDoc._id.toString(),
+          universityData
+        );
+        console.log("✅ University embedding updated automatically");
+      }
+      // Update the existing university document
+      // await University.findOneAndUpdate(
+      //   {
+      //     country_name: universityData.country_name,
+      //     university_name: universityData.university_name,
+      //   },
+      //   { $set: universityData },
+      //   { new: true }
+      // );
     } else {
+      console.log("Creating new university with auto-embedding...");
+      // Create using Mongoose (for your app logic)
+      const newUniversity = await University.create(universityData);
+      console.log("New university created:", newUniversity._id);
+
+      // 🆕 TRIGGER EMBEDDING CREATION using the hook function
+      await createUniversity(client, {
+        ...universityData,
+        _id: newUniversity._id,
+      });
+      console.log("✅ University embedding created automatically");
       // Create a new university record
-      await University.create(universityData);
-      console.log("New university created:");
+      // await University.create(universityData);
+      // console.log("New university created:");
     }
 
     return NextResponse.json(
@@ -126,9 +192,14 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Error processing request:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { message: "Failed to process request.", error: errorMessage, success: false },
+      {
+        message: "Failed to process request.",
+        error: errorMessage,
+        success: false,
+      },
       { status: 500 }
     );
   }

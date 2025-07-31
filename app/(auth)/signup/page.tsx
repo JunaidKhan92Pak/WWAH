@@ -82,7 +82,7 @@ const Page = () => {
     phone: "",
     referralCode: "",
   });
-  console.log(errors)
+  console.log(errors);
   // const [formSubmitted, setFormSubmitted] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   // console.log(errors);
@@ -174,12 +174,6 @@ const Page = () => {
     }
   }, [handleGoogleSignIn]);
 
-  // Handle input change
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prevData) => ({ ...prevData, [name]: value }));
-  //   setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-  // };
 
   // Handle form submission
   const [otpData, setOtpData] = useState({
@@ -382,7 +376,6 @@ const Page = () => {
 
       const data = await response.json();
 
-
       if (response.ok && data.success) {
         // console.log("OTP resent successfully");
         setSuccess("New OTP sent successfully to your email");
@@ -435,7 +428,6 @@ const Page = () => {
       setError("Network error. Please try again.");
     }
   };
-
 
   const resetForm = () => {
     setCurrentStep("register");
@@ -490,8 +482,9 @@ const Page = () => {
           <div className="w-full mb-4">
             <div
               id="google-signin-button"
-              className={`w-full ${googleLoading ? "opacity-50 pointer-events-none" : ""
-                }`}
+              className={`w-full ${
+                googleLoading ? "opacity-50 pointer-events-none" : ""
+              }`}
             ></div>
             {googleLoading && (
               <p className="text-center text-gray-600 mt-2">
