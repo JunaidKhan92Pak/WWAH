@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FC} from "react";
+import { useState, FC } from "react";
 import Image from "next/image";
 import {
   Dialog,
@@ -42,16 +42,12 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
   async function onSubmit(values: z.infer<typeof nameSchema>) {
     console.log(values, "values");
     try {
-      const response = await updateUserProfile(values);
-      if (response !== undefined) {
-        setConfirmOpen(true);
-        setTimeout(() => {
-          setConfirmOpen(false);
-          setOpen(false);
-        }, 2000);
-      } else {
-        console.error("Failed to update name");
-      }      
+      await updateUserProfile(values);
+      setConfirmOpen(true);
+      setTimeout(() => {
+        setConfirmOpen(false);
+        setOpen(false);
+      }, 2000);
     } catch (error) {
       console.error("Network error:", error);
     }
