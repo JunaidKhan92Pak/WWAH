@@ -200,7 +200,6 @@ const CourseArchive = () => {
       throw error;
     }
   };
-
   const showLoginPrompt = () => {
     toast.error("Please login to add courses to your favorites!", {
       duration: 4000,
@@ -215,6 +214,120 @@ const CourseArchive = () => {
     });
   };
 
+  // const appliedCourses = async () => {
+  //   const token = getAuthToken();
+
+  //   if (!token) {
+  //     showLoginPrompt();
+  //     return;
+  //   }
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch applied courses");
+  //     }
+
+  //     const data = await response.json();
+  //     console.log("Applied courses:", data);
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching applied courses:", error);
+  //     throw error;
+  //   }
+  // };
+  // ✅ Fixed function to fetch applied courses
+  // const appliedCourses = async () => {
+  //   const token = getAuthToken();
+
+  //   if (!token) {
+  //     showLoginPrompt();
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses`,
+  //       {
+  //         method: "GET", // ✅ Now matches the backend GET route
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch applied courses");
+  //     }
+
+  //     const data = await response.json();
+  //     console.log("Applied courses:", data);
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching applied courses:", error);
+  //     toast.error("Failed to fetch applied courses", {
+  //       duration: 3000,
+  //       position: "top-center",
+  //     });
+  //     throw error;
+  //   }
+  // };
+
+  // ✅ Function to add a course to applied courses
+  const addToAppliedCourses = async (courseId: unknown) => {
+    const token = getAuthToken();
+
+    if (!token) {
+      showLoginPrompt();
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            courseId,
+            action: "add",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to add course to applied courses");
+      }
+
+      const data = await response.json();
+      console.log("Course added to applied courses:", data);
+      toast.success("Course added to applied courses!", {
+        duration: 2000,
+        position: "top-center",
+      });
+      return data;
+    } catch (error) {
+      console.error("Error adding course to applied courses:", error);
+      toast.error("Failed to add course. Please try again.", {
+        duration: 3000,
+        position: "top-center",
+      });
+      throw error;
+    }
+  };
   const toggleFavoriteInDB = async (id: string) => {
     const token = getAuthToken();
 
@@ -685,11 +798,14 @@ const CourseArchive = () => {
                     </button>
                   </Link>
 
-                  <Link target="blank" href="dashboard" className="w-1/2">
-                    <button className="w-full border border-red-500 text-red-500 text-sm p-2 rounded-lg">
-                      Create Application
-                    </button>
-                  </Link>
+                  {/* <Link target="blank" href="dashboard" className="w-1/2"> */}
+                  <button
+                    onClick={() => addToAppliedCourses(item._id)}
+                    className="w-full border border-red-500 text-red-500 text-sm p-2 rounded-lg"
+                  >
+                    Create Application
+                  </button>
+                  {/* </Link> */}
                 </div>
               </div>
             ))

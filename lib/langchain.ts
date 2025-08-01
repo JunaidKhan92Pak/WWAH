@@ -554,6 +554,7 @@ function createQuerySpecificUserData(
       favouriteCourse: originalUserData?.user?.favouriteCourse || [],
       createdAt: originalUserData?.user?.createdAt || new Date().toISOString(),
       updatedAt: originalUserData?.user?.updatedAt || new Date().toISOString(),
+      appliedCourse: []
     },
     detailedInfo: {
       dateOfBirth: originalUserData?.detailedInfo?.dateOfBirth || "",

@@ -25,6 +25,7 @@ interface FavoriteCourse {
 
 // Basic user profile data
 export interface User {
+  appliedCourse: never[];
   favouriteCourse: FavoriteCourse[]; // Changed from never[] to FavoriteCourse[]
   _id: string;
   firstName: string;
