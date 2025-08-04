@@ -127,7 +127,7 @@ export async function POST(req: Request) {
 
     // Parse and validate input data
     const data = await req.json();
-
+    console.log("Received data:", data);
     // Enhanced validation
     if (!data.country?.trim()) {
       return NextResponse.json(
@@ -187,9 +187,11 @@ export async function POST(req: Request) {
     for (const course of data.courses) {
       try {
         // Validate individual course mandatory fields
-        if (!course.course_title) {
-          console.warn(`Course without title skipped`);
-          result.skipped.push({ ...course, reason: "Missing course title" });
+        if (!course.course_id || course.course_id.trim() === "") {
+          result.skipped.push({
+            title: course.course_title,
+            reason: "Missing course_id - required for uniqueness check"
+          });
           continue;
         }
 
@@ -361,13 +363,6 @@ function createUniqueFilter(
     console.log(`Using course_id for uniqueness: ${course.course_id}`);
     return { ...baseFilter, course_id: course.course_id };
   }
-
-  // PRIORITY 2: Use course_link only if it's not null/empty
-  else if (course.course_link && course.course_link.trim() !== "") {
-    console.log(`Using course_link for uniqueness: ${course.course_link}`);
-    return { ...baseFilter, course_link: course.course_link };
-  }
-
   // PRIORITY 3: Fallback to course_title
   else {
     console.log(`Using course_title for uniqueness: ${course.course_title}`);
@@ -395,14 +390,14 @@ function prepareCoursesData(
     intake: Array.isArray(course.intake)
       ? course.intake
       : course.intake
-      ? [course.intake]
-      : [],
+        ? [course.intake]
+        : [],
     duration: course.duration || null,
     start_date: Array.isArray(course.start_date)
       ? course.start_date
       : course.start_date
-      ? [course.start_date]
-      : [],
+        ? [course.start_date]
+        : [],
     degree_format: course.degree_format || null,
     location_campus: course.location_campus || null,
     annual_tuition_fee: course.annual_tuition_fee || {

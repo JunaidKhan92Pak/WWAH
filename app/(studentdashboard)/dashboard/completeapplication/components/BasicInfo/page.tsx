@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
+import { startCase } from 'lodash';
 import {
   Form,
   FormControl,
@@ -488,15 +489,15 @@ const BasicInfo = () => {
 
       {/* Display validation errors */}
       {validationErrors.length > 0 && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <h3 className="text-red-800 font-semibold mb-2">
+        <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+          <h4 className="text-red-800 font-semibold mb-2">
             Please fix the following errors:
-          </h3>
+          </h4>
           <ul className="text-red-700 text-sm space-y-1">
             {validationErrors.map((error, index) => (
               <li key={index} className="flex items-start">
                 <span className="text-red-500 mr-2">•</span>
-                {error}
+                {startCase(error)}
               </li>
             ))}
           </ul>
@@ -817,7 +818,6 @@ const BasicInfo = () => {
               />
             </div>
           )}
-
           {/* Component pages */}
           {currentPage === 2 && <ContactDetailForm form={form} />}
           {currentPage === 3 && <PassportAndVisaForm form={form} />}
