@@ -47,23 +47,23 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     socket.connect();
 
     socket.on("connect", () => {
-      console.log("✅ Socket connected successfully");
+      // console.log("✅ Socket connected successfully");
       setIsConnected(true);
 
       // Get user email from localStorage after connection
       const email =
         typeof window !== "undefined" ? localStorage.getItem("email") : "admin";
-      console.log("👤 User email from localStorage:", email);
+      // console.log("👤 User email from localStorage:", email);
 
       if (email && email !== "admin") {
         // ✅ IMMEDIATELY join both rooms when socket connects
-        console.log("🏠 Joining regular room:", email);
+        // console.log("🏠 Joining regular room:", email);
         socket.emit("join", email);
 
-        console.log("🔔 Joining notification room:", email);
+        // console.log("🔔 Joining notification room:", email);
         socket.emit("join_notification_room", { userId: email });
 
-        console.log("✅ Both room join events emitted for:", email);
+        // console.log("✅ Both room join events emitted for:", email);
       }
     });
 
@@ -74,21 +74,21 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     // ✅ Confirmation that room was joined
     socket.on("joined", (data) => {
-      console.log("🎉 Successfully joined room:", data);
+      // console.log("🎉 Successfully joined room:", data);
     });
 
     // ✅ Handle received messages - ONLY show notifications for admin messages
     socket.on("receive_message", (data) => {
-      console.log("📨 Message received:", data);
+      // console.log("📨 Message received:", data);
 
       // ✅ Only show notification if message is from admin
       if (data.sender === "admin") {
-        console.log("🔔 Admin message - showing notification");
+        // console.log("🔔 Admin message - showing notification");
 
         // Add to notifications
         setNotifications((prev) => {
           const newNotifications = [...prev, data];
-          console.log("📋 Updated notifications:", newNotifications);
+          // console.log("📋 Updated notifications:", newNotifications);
           return newNotifications;
         });
 
@@ -100,7 +100,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
               t.visible ? "animate-enter" : "animate-leave"
             } max-w-md w-full bg-[#C7161E] text-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 cursor-pointer hover:bg-[#a01419] transition-colors`}
             onClick={() => {
-              console.log("🖱️ Toast clicked - opening chat");
+              // console.log("🖱️ Toast clicked - opening chat");
               useChatStore.getState().setIsChatOpen(true);
               toast.dismiss(t.id);
             }}
@@ -145,17 +145,17 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
           </div>
         ));
       } else {
-        console.log("👤 User message - no notification needed");
+        // console.log("👤 User message - no notification needed");
       }
     });
 
     // ✅ Handle notification room messages separately
     socket.on("new_notification", (data) => {
-      console.log("🔔 General notification received:", data);
+      // console.log("🔔 General notification received:", data);
 
       setNotifications((prev) => {
         const newNotifications = [...prev, data];
-        console.log("📋 Updated notifications:", newNotifications);
+        // console.log("📋 Updated notifications:", newNotifications);
         return newNotifications;
       });
 
@@ -171,7 +171,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
             t.visible ? "animate-enter" : "animate-leave"
           } w-full max-w-sm bg-white border border-gray-200 text-gray-900 shadow-md rounded-md pointer-events-auto flex transition-all cursor-pointer hover:bg-gray-50`}
           onClick={() => {
-            console.log("🖱️ Notification toast clicked - opening chat");
+            // console.log("🖱️ Notification toast clicked - opening chat");
             useChatStore.getState().setIsChatOpen(true);
             toast.dismiss(t.id);
           }}
@@ -206,12 +206,12 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     // ✅ Handle notification room join confirmation
     socket.on("notification_room_joined", (data) => {
-      console.log("🔔 Successfully joined notification room:", data);
+      // console.log("🔔 Successfully joined notification room:", data);
     });
 
     // ✅ Cleanup function
     return () => {
-      console.log("🧹 Cleaning up socket connection...");
+      // console.log("🧹 Cleaning up socket connection...");
       socket.off("connect");
       socket.off("disconnect");
       socket.off("joined");
@@ -223,7 +223,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const clearNotifications = () => {
-    console.log("🗑️ Clearing notifications...");
+    // console.log("🗑️ Clearing notifications...");
     setNotifications([]);
   };
 

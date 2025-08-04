@@ -42,14 +42,14 @@ export const NotificationProvider = ({
 
     // Handle connection
     socket.on("connect", () => {
-      console.log("✅ Socket connected successfully");
+      // console.log("✅ Socket connected successfully");
       setIsConnected(true);
 
-      console.log("👤 User email for notifications:", email || "admin");
+      // console.log("👤 User email for notifications:", email || "admin");
 
       // Join room with user email
       socket.emit("join", email || "admin");
-      console.log("🏠 Emitted join event with email:", email || "admin");
+      // console.log("🏠 Emitted join event with email:", email || "admin");
     });
 
     // Handle disconnection
@@ -60,7 +60,7 @@ export const NotificationProvider = ({
 
     // Handle successful room join
     socket.on("joined", (data) => {
-      console.log("🎉 Successfully joined room:", data);
+      // console.log("🎉 Successfully joined room:", data);
     });
 
     // ✅ Handle notifications - only for messages received from others
@@ -71,11 +71,11 @@ export const NotificationProvider = ({
 
       // Only process notification if it's meant for this user
       if (data.recipientEmail === (email || "admin")) {
-        console.log("✅ Processing notification for current user");
+        // console.log("✅ Processing notification for current user");
 
         setNotifications((prev) => {
           const newNotifications = [...prev, data];
-          console.log("📋 Updated notifications:", newNotifications);
+          // console.log("📋 Updated notifications:", newNotifications);
           return newNotifications;
         });
 

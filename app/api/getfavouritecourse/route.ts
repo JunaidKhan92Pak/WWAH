@@ -199,13 +199,13 @@ export async function GET(req: NextRequest) {
     const requestedIds = validObjectIds.map((id) => id.toString());
     const missingIds = requestedIds.filter((id) => !foundIds.includes(id));
 
-    console.log("=== ID MATCHING ANALYSIS ===");
-    console.log("Requested IDs:", requestedIds);
-    console.log("Found IDs:", foundIds);
-    console.log("Missing IDs:", missingIds);
+    // console.log("=== ID MATCHING ANALYSIS ===");
+    // console.log("Requested IDs:", requestedIds);
+    // console.log("Found IDs:", foundIds);
+    // console.log("Missing IDs:", missingIds);
 
     if (missingIds.length > 0) {
-      console.warn(`Could not find courses with IDs: ${missingIds.join(", ")}`);
+      // console.warn(`Could not find courses with IDs: ${missingIds.join(", ")}`);
 
       // Try to find if these courses exist in the database with different criteria
       for (const missingId of missingIds) {

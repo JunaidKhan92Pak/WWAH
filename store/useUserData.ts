@@ -25,7 +25,6 @@ interface FavoriteCourse {
 
 // Basic user profile data
 export interface User {
-  appliedCourse: never[];
   favouriteCourse: FavoriteCourse[]; // Changed from never[] to FavoriteCourse[]
   _id: string;
   firstName: string;
@@ -74,18 +73,15 @@ export interface UserStore {
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
+  lastUpdated: string | null; // Add last updated timestamp
   // Actions
   fetchUserProfile: () => Promise<void>;
-  updateUserProfile: (updateData: Partial<User>) => Promise<void>;
+  updateUserProfile: (updateData: Partial<User>) => Promise<boolean>;
   updateDetailedInfo: (updateData: Partial<DetailedInfo>) => Promise<void>;
   setUser: (userData: User) => void;
   logout: () => void;
+  getLastUpdatedDate: () => string | null; // Helper to get formatted last updated date
 }
-
-// Helper function to get current date and time in ISO format
-const getCurrentDateTime = (): string => {
-  return new Date().toISOString();
-};
 
 // Default empty detailed
 const defaultDetailedInfo: DetailedInfo = {
@@ -110,6 +106,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
   loading: false,
   error: null,
   isAuthenticated: false,
+  lastUpdated: null,
 
   fetchUserProfile: async () => {
     const token = getAuthToken();
@@ -136,7 +133,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
           credentials: "include",
         }
       );
-      console.log(response, "response from fetchUserProfile");
+      // console.log(response, "response from fetchUserProfile");
 
       if (!response.ok) {
         throw new Error(
@@ -145,7 +142,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       }
 
       const apiData = await response.json();
-      console.log(apiData, "apiData from fetchUserProfile");
+      // console.log(apiData, "apiData from fetchUserProfile");
 
       if (!apiData.success) {
         throw new Error(apiData.message || "Failed to fetch user data");
@@ -161,6 +158,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         loading: false,
         isAuthenticated: true,
         error: null,
+        lastUpdated: apiData.user.updatedAt || new Date().toISOString(),
       });
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -177,11 +175,15 @@ export const useUserStore = create<UserStore>((set, get) => ({
     const token = getAuthToken();
     if (!token) {
       set({ error: "No authentication token found" });
-      return;
+      return false;
     }
 
     try {
       set({ loading: true, error: null });
+      
+      // console.log("Sending update data:", updateData);
+      // console.log("API URL:", `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/update-personal-infomation`);
+      
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/update-personal-infomation`,
         {
@@ -195,46 +197,60 @@ export const useUserStore = create<UserStore>((set, get) => ({
         }
       );
 
-      console.log(response, "response from updateUserProfile");
+      // console.log("Response status:", response.status);
+      // console.log("Response headers:", response.headers);
+
+      // Always try to get response text first for debugging
+      const responseText = await response.text();
+      // console.log("Raw response:", responseText);
+
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("Failed to parse JSON response:", parseError);
+        throw new Error(`Invalid JSON response: ${responseText}`);
+      }
+
+      // console.log("Parsed result:", result);
 
       if (!response.ok) {
-        alert("Error updating profile. Please try again.");
         throw new Error(
-          `Failed to update profile: ${response.status} ${response.statusText}`
+          result.message || `HTTP ${response.status}: ${response.statusText}`
         );
       }
-      const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.message || "Failed to update profile");
+        throw new Error(result.message || "API returned success: false");
       }
 
-      // Update the local store with new user data and current timestamp
-      const currentDateTime = getCurrentDateTime();
+      // Get current timestamp for update
+      const currentTimestamp = new Date().toISOString();
+
+      // Update the local store with new user data and timestamp
       set((state) => ({
-        user: state.user
-          ? {
-              ...state.user,
-              ...updateData,
-              updatedAt: currentDateTime,
-            }
-          : null,
-        // Also update detailedInfo updatedAt to keep them in sync
-        detailedInfo: state.detailedInfo
-          ? {
-              ...state.detailedInfo,
-              updatedAt: currentDateTime,
-            }
-          : null,
+        user: state.user ? { 
+          ...state.user, 
+          ...updateData,
+          updatedAt: currentTimestamp // Update the user's updatedAt field
+        } : null,
         loading: false,
+        lastUpdated: currentTimestamp, // Update the store's lastUpdated field
+        error: null,
       }));
+
+      // console.log("Profile updated successfully");
+      return true; // Return success
     } catch (error) {
       console.error("Error updating profile:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      
       set({
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        error: errorMessage,
         loading: false,
       });
+      
+      return false; // Return failure
     }
   },
 
@@ -247,10 +263,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
     try {
       set({ loading: true, error: null });
-      // Format the data structure as expected by your API
-      const apiUpdateData = {
-        detailedInfo: updateData,
-      };
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}success-chance/update`,
@@ -261,46 +273,48 @@ export const useUserStore = create<UserStore>((set, get) => ({
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify(apiUpdateData.detailedInfo),
+          body: JSON.stringify(updateData), // Send updateData directly, not nested
         }
       );
-      console.log(response, "response from updateDetailedInfo");
-      const result = await response.json();
-      const res = result.success;
-      // Return the result for further processing if needed
-      console.log(result, "result from updateDetailedInfo");
+      
+      // console.log(response, "response from updateDetailedInfo");
+
       if (!response.ok) {
-        return res;
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `Failed to update detailed info: ${response.status} ${response.statusText}`
+        );
       }
+
+      const result = await response.json();
+      // console.log(result, "result from updateDetailedInfo");
 
       if (!result.success) {
-        return res;
+        throw new Error(result.message || "Failed to update detailed info");
       }
 
-      // Update the local store with new detailed info and current timestamp
-      const currentDateTime = getCurrentDateTime();
+      // Get current timestamp for update
+      const currentTimestamp = new Date().toISOString();
+
+      // Update the local store with new detailed info and timestamp
       set((state) => ({
         detailedInfo: state.detailedInfo
-          ? {
-              ...state.detailedInfo,
+          ? { 
+              ...state.detailedInfo, 
               ...updateData,
-              updatedAt: currentDateTime,
+              updatedAt: currentTimestamp // Update the detailedInfo's updatedAt field
             }
-          : {
-              ...defaultDetailedInfo,
+          : { 
+              ...defaultDetailedInfo, 
               ...updateData,
-              updatedAt: currentDateTime,
+              updatedAt: currentTimestamp
             },
-        // Also update user updatedAt to keep them in sync
-        user: state.user
-          ? {
-              ...state.user,
-              updatedAt: currentDateTime,
-            }
-          : null,
         loading: false,
+        lastUpdated: currentTimestamp, // Update the store's lastUpdated field
+        error: null,
       }));
-      return res; // Return the result for further processing if needed
+
+      return result.success; // Return the result for further processing if needed
     } catch (error) {
       console.error("Error updating detailed info:", error);
       set({
@@ -308,6 +322,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
           error instanceof Error ? error.message : "Unknown error occurred",
         loading: false,
       });
+      return false;
     }
   },
 
@@ -318,6 +333,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         favouriteCourse: userData.favouriteCourse || [], // Ensure it's always an array
       },
       isAuthenticated: true,
+      lastUpdated: userData.updatedAt || new Date().toISOString(),
     }),
 
   logout: () => {
@@ -328,6 +344,20 @@ export const useUserStore = create<UserStore>((set, get) => ({
       isAuthenticated: false,
       loading: false,
       error: null,
+      lastUpdated: null,
     });
+  },
+
+  getLastUpdatedDate: () => {
+    const state = get();
+    if (!state.lastUpdated) return null;
+    
+    try {
+      const date = new Date(state.lastUpdated);
+      return date.toLocaleString(); // Returns formatted date string
+    } catch (error) {
+      console.error("Error formatting last updated date:", error);
+      return null;
+    }
   },
 }));

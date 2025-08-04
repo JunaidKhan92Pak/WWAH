@@ -11,13 +11,13 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
   const { socket, unreadCount, clearNotifications } =
     useSocket(); // Use socket context
 
-  console.log("Current isChatOpen:", isChatOpen);
-  console.log("setIsChatOpen function:", setIsChatOpen);
+  // console.log("Current isChatOpen:", isChatOpen);
+  // console.log("setIsChatOpen function:", setIsChatOpen);
 
   // ✅ Ensure user joins notification room when component mounts
   useEffect(() => {
     if (socket && userEmail?.email && socket.connected) {
-      console.log("🔔 Joining notification room for:", userEmail.email);
+      // console.log("🔔 Joining notification room for:", userEmail.email);
 
       // Join the notification room immediately
       socket.emit("join_notification_room", { userId: userEmail.email });
@@ -25,7 +25,7 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
       // Also join regular room for good measure
       socket.emit("join", userEmail.email);
 
-      console.log("✅ Notification room join events emitted");
+      // console.log("✅ Notification room join events emitted");
     }
   }, [socket, userEmail?.email, socket?.connected]);
 
@@ -36,11 +36,11 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
   };
 
   const handleChatClick = () => {
-    console.log("Button clicked - before:", isChatOpen);
+    // console.log("Button clicked - before:", isChatOpen);
     setIsChatOpen(true);
     // Clear notifications when opening chat
     clearNotifications();
-    console.log("Button clicked - after calling set");
+    // console.log("Button clicked - after calling set");
   };
 
   return (

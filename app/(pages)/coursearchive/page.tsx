@@ -88,7 +88,7 @@ const CourseArchive = () => {
   useEffect(() => {
     const initializeFavorites = () => {
       if (user?.favouriteCourse && Array.isArray(user.favouriteCourse)) {
-        console.log("User favorite courses:", user.favouriteCourse);
+        // console.log("User favorite courses:", user.favouriteCourse);
 
         const favoriteMap: Record<string, boolean> = {};
         const favoriteCoursesMap: Record<string, Course> = {};
@@ -160,10 +160,10 @@ const CourseArchive = () => {
     }
   }, [courses, favorites]);
 
-  console.log("Current user:", user);
-  console.log("User favorite courses:", user?.favouriteCourse);
-  console.log("Favorites state:", favorites);
-  console.log("Favorites count:", favoritesCount);
+  // console.log("Current user:", user);
+  // console.log("User favorite courses:", user?.favouriteCourse);
+  // console.log("Favorites state:", favorites);
+  // console.log("Favorites count:", favoritesCount);
 
   // Function to add/remove course from favorites in database
   const toggleFavorite = async (courseId: string, action: "add" | "remove") => {
@@ -189,7 +189,7 @@ const CourseArchive = () => {
       }
 
       const result = await response.json();
-      console.log("Favorite updated successfully", result);
+      // console.log("Favorite updated successfully", result);
 
       // Refresh user profile to get updated favorites
       await fetchUserProfile();
@@ -313,7 +313,7 @@ const CourseArchive = () => {
       }
 
       const data = await response.json();
-      console.log("Course added to applied courses:", data);
+      // console.log("Course added to applied courses:", data);
       toast.success("Course added to applied courses!", {
         duration: 2000,
         position: "top-center",
@@ -798,14 +798,14 @@ const CourseArchive = () => {
                     </button>
                   </Link>
 
-                  {/* <Link target="blank" href="dashboard" className="w-1/2"> */}
+                  <div  className="w-1/2">
                   <button
                     onClick={() => addToAppliedCourses(item._id)}
                     className="w-full border border-red-500 text-red-500 text-sm p-2 rounded-lg"
                   >
                     Create Application
                   </button>
-                  {/* </Link> */}
+                  </div>
                 </div>
               </div>
             ))

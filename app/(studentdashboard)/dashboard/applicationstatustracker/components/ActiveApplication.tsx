@@ -45,7 +45,7 @@ const ActiveApplication = () => {
   }, [currentStatus, animatedStatus]);
 
   useEffect(() => {
-    console.log("Fetching status data for studentId:");
+    // console.log("Fetching status data for studentId:");
     const token = getAuthToken();
 
     const fetchStatusData = async () => {
@@ -67,7 +67,7 @@ const ActiveApplication = () => {
         }
 
         const jsonData = await res.json();
-        console.log(jsonData, "res from status update api");
+        // console.log(jsonData, "res from status update api");
 
         // Set the current status from API response
         const statusFromAPI = parseInt(jsonData.data.applicationStatus) || 1;

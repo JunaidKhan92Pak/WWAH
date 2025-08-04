@@ -37,7 +37,7 @@ const ApplyingSection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("ApplyingSection component rendered", appliedCourseIds);
+  // console.log("ApplyingSection component rendered", appliedCourseIds);
 
   // Function to fetch applied course IDs (basic data with IDs)
   const fetchAppliedCourses = async () => {
@@ -66,12 +66,12 @@ const ApplyingSection: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("Applied courses data:", data);
+      // console.log("Applied courses data:", data);
 
       // Extract the course IDs array from the response
       const appliedCoursesData = data.data?.appliedCourses || [];
-      console.log("Applied course IDs:", appliedCoursesData);
-      console.log("Number of applied courses:", appliedCoursesData.length);
+      // console.log("Applied course IDs:", appliedCoursesData);
+      // console.log("Number of applied courses:", appliedCoursesData.length);
 
       // Store the course IDs
       setAppliedCourseIds(appliedCoursesData);
@@ -94,9 +94,9 @@ const ApplyingSection: React.FC = () => {
       return;
     }
 
-    console.log("=== DETAILED COURSE FETCH DEBUG ===");
-    console.log("Fetching detailed applied courses for IDs:", courseIds);
-    console.log("Current appliedCourseIds state:", courseIds);
+    // console.log("=== DETAILED COURSE FETCH DEBUG ===");
+    // console.log("Fetching detailed applied courses for IDs:", courseIds);
+    // console.log("Current appliedCourseIds state:", courseIds);
 
     try {
       const idsString = courseIds.join(",");
@@ -104,8 +104,8 @@ const ApplyingSection: React.FC = () => {
         idsString
       )}&type=applied`;
 
-      console.log("API URL:", apiUrl);
-      console.log("Making API request...");
+      // console.log("API URL:", apiUrl);
+      // console.log("Making API request...");
 
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -114,8 +114,8 @@ const ApplyingSection: React.FC = () => {
         },
       });
 
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
+      // console.log("Response status:", response.status);
+      // console.log("Response ok:", response.ok);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -126,18 +126,18 @@ const ApplyingSection: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("=== DETAILED API RESPONSE ===");
-      console.log("Full API Response:", JSON.stringify(data, null, 2));
-      console.log("Response success:", data.success);
-      console.log("Applied courses in response:", data.appliedCourses);
-      console.log(
-        "Number of courses returned:",
-        data.appliedCourses?.length || 0
-      );
+      // console.log("=== DETAILED API RESPONSE ===");
+      // console.log("Full API Response:", JSON.stringify(data, null, 2));
+      // console.log("Response success:", data.success);
+      // console.log("Applied courses in response:", data.appliedCourses);
+      // console.log(
+      //   "Number of courses returned:",
+      //   data.appliedCourses?.length || 0
+      // );
 
       if (data.success) {
         const detailedCourses = data.appliedCourses || [];
-        console.log("=== DETAILED COURSES ===");
+        // console.log("=== DETAILED COURSES ===");
         detailedCourses.forEach((course: Course, index: number) => {
           console.log(`Detailed Course ${index + 1}:`, {
             id: course._id,
@@ -159,11 +159,11 @@ const ApplyingSection: React.FC = () => {
           })
         );
 
-        console.log("=== COURSES WITH SUCCESS CHANCE ===");
-        console.log(
-          "Final courses with success chance:",
-          coursesWithSuccessChance
-        );
+        // console.log("=== COURSES WITH SUCCESS CHANCE ===");
+        // console.log(
+        //   "Final courses with success chance:",
+        //   coursesWithSuccessChance
+        // );
         setDetailedAppliedCourses(coursesWithSuccessChance);
 
         if (coursesWithSuccessChance.length === 0) {
@@ -202,12 +202,12 @@ const ApplyingSection: React.FC = () => {
 
   // Fetch detailed course information when applied course IDs change
   useEffect(() => {
-    console.log("=== USE EFFECT TRIGGER ===");
-    console.log("Applied course IDs length:", appliedCourseIds.length);
-    console.log("Applied course IDs data:", appliedCourseIds);
+    // console.log("=== USE EFFECT TRIGGER ===");
+    // console.log("Applied course IDs length:", appliedCourseIds.length);
+    // console.log("Applied course IDs data:", appliedCourseIds);
 
     if (appliedCourseIds.length > 0) {
-      console.log("Course IDs for detailed fetch:", appliedCourseIds);
+      // console.log("Course IDs for detailed fetch:", appliedCourseIds);
 
       // Add a small delay to ensure state is fully updated
       setTimeout(() => {
@@ -221,7 +221,7 @@ const ApplyingSection: React.FC = () => {
 
   // Function to remove course from applied courses
   const removeFromAppliedCourses = async (courseId: string) => {
-    console.log("Attempting to remove course with ID:", courseId);
+    // console.log("Attempting to remove course with ID:", courseId);
 
     const token = getAuthToken();
 
@@ -254,13 +254,13 @@ const ApplyingSection: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("Course removed from applied courses:", data);
+      // console.log("Course removed from applied courses:", data);
 
       const updatedAppliedCourseIds = data.data?.appliedCourses || [];
-      console.log(
-        "Remaining course IDs after removal:",
-        updatedAppliedCourseIds
-      );
+      // console.log(
+      //   "Remaining course IDs after removal:",
+      //   updatedAppliedCourseIds
+      // );
 
       // Update local state with the new course IDs
       setAppliedCourseIds(updatedAppliedCourseIds);
@@ -316,7 +316,7 @@ const ApplyingSection: React.FC = () => {
 
   // No applied courses state
   if (!appliedCourseIds || appliedCourseIds.length === 0) {
-    console.log("No applied course IDs to display");
+    // console.log("No applied course IDs to display");
     return (
       <div className="relative">
         {/* Blur Overlay */}
@@ -351,17 +351,17 @@ const ApplyingSection: React.FC = () => {
   const coursesToRender = detailedAppliedCourses;
 
   // Log final courses before rendering
-  console.log("=== RENDERING DECISION ===");
-  console.log("Detailed courses available:", detailedAppliedCourses.length);
-  console.log("Applied course IDs:", appliedCourseIds.length);
-  console.log(
-    "Courses to render:",
-    coursesToRender.map((course) => ({
-      id: course._id,
-      title: course.course_title,
-      hasUniversityData: !!course.universityData,
-    }))
-  );
+  // console.log("=== RENDERING DECISION ===");
+  // console.log("Detailed courses available:", detailedAppliedCourses.length);
+  // console.log("Applied course IDs:", appliedCourseIds.length);
+  // console.log(
+  //   "Courses to render:",
+  //   coursesToRender.map((course) => ({
+  //     id: course._id,
+  //     title: course.course_title,
+  //     hasUniversityData: !!course.universityData,
+  //   }))
+  // );
 
   // Show loading state if we have IDs but no detailed courses yet
   if (appliedCourseIds.length > 0 && detailedAppliedCourses.length === 0) {

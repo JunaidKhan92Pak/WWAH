@@ -228,13 +228,13 @@ export default function ChatModal({ userEmail, onClose }: ChatModalProps) {
       };
 
       // Optimistic UI update
-      setMessages((prev) => [
-        ...prev,
-        {
-          ...message,
-          timestamp: message.timestamp, // keep as string
-        },
-      ]);
+      // setMessages((prev) => [
+      //   ...prev,
+      //   {
+      //     ...message,
+      //     timestamp: message.timestamp, // keep as string
+      //   },
+      // ]);
 
       socket?.emit("send_message", {
         ...message,
