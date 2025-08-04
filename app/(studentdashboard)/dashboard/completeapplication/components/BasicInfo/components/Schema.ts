@@ -52,6 +52,18 @@ export const formSchema = z
       .max(100, { message: "Native language must be under 100 characters." })
       .optional(),
 
+    // Contact Details
+    currentAddress: z
+      .string()
+      .min(5, { message: "Home address must be at least 5 characters." })
+      .max(100, { message: "Home address must be under 100 characters." })
+      .or(z.literal("")),
+
+    permanentAddress: z
+      .string()
+      .min(5, { message: "Detailed address must be at least 5 characters." })
+      .max(200, { message: "Detailed address must be under 200 characters." })
+      .or(z.literal("")),
 
     country: z
       .string()
@@ -99,24 +111,24 @@ export const formSchema = z
     currentCountryCode: z.string().optional(),
     currentPhoneNo: z.string().optional(),
 
-    // Passport Information
-    hasPassport: z.boolean().optional(),
+  // Passport Information
+  hasPassport: z.boolean().optional(),
 
-    noPassport: z.boolean().optional(),
+  noPassport: z.boolean().optional(),
 
-    passportNumber: z
-      .string()
-      .min(6, { message: "Passport number must be at least 6 characters." })
-      .max(20, { message: "Passport number must be under 20 characters." })
-      .regex(/^[A-Za-z0-9]+$/, {
-        message: "Passport number can only contain letters and numbers.",
-      })
-      .or(z.literal("")),
+  passportNumber: z
+    .string()
+    .min(6, { message: "Passport number must be at least 6 characters." })
+    .max(20, { message: "Passport number must be under 20 characters." })
+    .regex(/^[A-Za-z0-9]+$/, {
+      message: "Passport number can only contain letters and numbers.",
+    })
+    .or(z.literal("")),
 
-    passportExpiryDate: z.date().optional(),
+  passportExpiryDate: z.date().optional(),
 
-    oldPassportNumber: z.string().optional(),
-    oldPassportExpiryDate: z.date().optional(),
+  oldPassportNumber: z.string().optional(),
+  oldPassportExpiryDate: z.date().optional(),
 
     // Study Abroad
     hasStudiedAbroad: z.boolean().optional(),
