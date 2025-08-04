@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FC } from "react";
+import { useState, FC, useEffect } from "react";
 import Image from "next/image";
 import {
   Dialog,
@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import { Form } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserStore } from "@/store/useUserData";
@@ -32,26 +32,51 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const { updateUserProfile } = useUserStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { updateUserProfile, user, getLastUpdatedDate, loading, error } =
+    useUserStore();
 
   const form = useForm({
     resolver: zodResolver(nameSchema),
     defaultValues: { firstName, lastName },
   });
 
+  // Update form values when props change (when user data is updated)
+  useEffect(() => {
+    form.reset({ firstName, lastName });
+  }, [firstName, lastName, form]);
+
   async function onSubmit(values: z.infer<typeof nameSchema>) {
-    console.log(values, "values");
+    // console.log(values, "values");
+    setIsSubmitting(true);
+
     try {
-      await updateUserProfile(values);
-      setConfirmOpen(true);
-      setTimeout(() => {
-        setConfirmOpen(false);
-        setOpen(false);
-      }, 2000);
+      const success = await updateUserProfile(values);
+      if (success) {
+        setConfirmOpen(true);
+        // Auto-close after 2 seconds
+        setTimeout(() => {
+          setConfirmOpen(false);
+          setOpen(false);
+          setIsSubmitting(false);
+        }, 2000);
+      } else {
+        // Handle error case
+        console.error("Failed to update profile");
+        alert("Failed to update profile. Please try again.");
+        setIsSubmitting(false);
+      }
     } catch (error) {
       console.error("Network error:", error);
+      alert("Network error. Please check your connection and try again.");
+      setIsSubmitting(false);
     }
   }
+
+  // Get the current user data from store (this will be updated after successful API call)
+  const currentFirstName = user?.firstName || firstName;
+  const currentLastName = user?.lastName || lastName;
+  const lastUpdated = getLastUpdatedDate();
 
   return (
     <>
@@ -65,7 +90,7 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
             width={16}
             height={16}
           />
-          <p className="text-sm">{firstName}</p>
+          <p className="text-sm">{currentFirstName}</p>
           <Image
             src="/DashboardPage/pen.svg"
             alt="Edit"
@@ -87,9 +112,16 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
             width={16}
             height={16}
           />
-          <p className="text-sm">{lastName}</p>
+          <p className="text-sm">{currentLastName}</p>
         </div>
       </div>
+
+      {/* Last Updated Info */}
+      {lastUpdated && (
+        <div className="flex flex-col space-y-2">
+          <p className="text-gray-500 text-xs">Last updated: {lastUpdated}</p>
+        </div>
+      )}
 
       {/* Edit Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
@@ -99,19 +131,46 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <Input
-                {...form.register("firstName")}
-                placeholder="First Name"
-                className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <Input
+                      {...field}
+                      placeholder="First Name"
+                      className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                      disabled={isSubmitting || loading}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
-              <Input
-                {...form.register("lastName")}
-                placeholder="Last Name"
-                className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <Input
+                      {...field}
+                      placeholder="Last Name"
+                      className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                      disabled={isSubmitting || loading}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <Button type="submit" className="w-full md:w-[30%] bg-[#C7161E]">
-                Update Name
+
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+
+              <Button
+                type="submit"
+                className="w-full md:w-[30%] bg-[#C7161E]"
+                disabled={isSubmitting || loading}
+              >
+                {isSubmitting || loading ? "Updating..." : "Update Name"}
               </Button>
             </form>
           </Form>

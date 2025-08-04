@@ -16,9 +16,9 @@ export function Navbar() {
   const notificationMenuRef = useRef<HTMLDivElement>(null);
   const setIsChatOpen = useChatStore((state) => state.setIsChatOpen);
 
-  console.log("🔔 Navbar - unreadCount:", unreadCount);
-  console.log("🔌 Navbar - isConnected:", isConnected);
-  console.log("📋 Navbar - notifications:", notifications);
+  // console.log("🔔 Navbar - unreadCount:", unreadCount);
+  // console.log("🔌 Navbar - isConnected:", isConnected);
+  // console.log("📋 Navbar - notifications:", notifications);
 
   // Close notification menu when clicking outside
   useEffect(() => {
@@ -38,19 +38,19 @@ export function Navbar() {
   }, []);
 
   const handleNotificationClick = () => {
-    console.log("🔔 Notification button clicked");
+    // console.log("🔔 Notification button clicked");
     setShowNotificationMenu(!showNotificationMenu);
   };
 
   const handleChatClick = () => {
-    console.log("🔔 Opening chat and clearing notifications");
+    // console.log("🔔 Opening chat and clearing notifications");
     setIsChatOpen(true);
     clearNotifications(); // Clear notifications when chat is opened
     setShowNotificationMenu(false); // Also close the notification menu
   };
 
   const handleClearNotifications = () => {
-    console.log("🗑️ Clearing notifications from navbar...");
+    // console.log("🗑️ Clearing notifications from navbar...");
     clearNotifications();
     setShowNotificationMenu(false);
   };

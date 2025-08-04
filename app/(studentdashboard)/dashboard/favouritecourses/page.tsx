@@ -62,7 +62,7 @@ const FavoriteCoursesPage = () => {
       }
 
       const data = await response.json();
-      console.log("Favorite removed successfully", data);
+      // console.log("Favorite removed successfully", data);
 
       if (data.success) {
         // Update local state immediately for better UX
@@ -105,16 +105,16 @@ const FavoriteCoursesPage = () => {
       try {
         // Check if user exists and has favorite courses
         if (!user) {
-          console.log("No user found");
+          // console.log("No user found");
           setFavorites([]);
           return;
         }
 
         const favoriteIds = (user?.favouriteCourse || []) as unknown as string[];
-        console.log("User favorite course IDs:", favoriteIds);
+        // console.log("User favorite course IDs:", favoriteIds);
 
         if (favoriteIds.length === 0) {
-          console.log("No favorite courses found for user");
+          // console.log("No favorite courses found for user");
           setFavorites([]);
           return;
         }
@@ -125,14 +125,14 @@ const FavoriteCoursesPage = () => {
         );
 
         if (validIds.length === 0) {
-          console.log("No valid favorite course IDs found");
+          // console.log("No valid favorite course IDs found");
           setFavorites([]);
           return;
         }
 
         // Convert array of IDs to comma-separated string
         const idsString = validIds.join(",");
-        console.log("Fetching courses with IDs:", idsString);
+        // console.log("Fetching courses with IDs:", idsString);
 
         const response = await fetch(
           `/api/getfavouritecourse?ids=${encodeURIComponent(idsString)}`,
@@ -149,7 +149,7 @@ const FavoriteCoursesPage = () => {
         }
 
         const data = await response.json();
-        console.log("API Response:", data);
+        // console.log("API Response:", data);
 
         if (data.success) {
           setFavorites(data.favouriteCourses || []);

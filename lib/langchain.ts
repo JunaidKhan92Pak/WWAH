@@ -554,7 +554,6 @@ function createQuerySpecificUserData(
       favouriteCourse: originalUserData?.user?.favouriteCourse || [],
       createdAt: originalUserData?.user?.createdAt || new Date().toISOString(),
       updatedAt: originalUserData?.user?.updatedAt || new Date().toISOString(),
-      appliedCourse: []
     },
     detailedInfo: {
       dateOfBirth: originalUserData?.detailedInfo?.dateOfBirth || "",
@@ -596,10 +595,14 @@ function createQuerySpecificUserData(
     error: null,
     isAuthenticated: false,
     fetchUserProfile: async () => {},
-    updateUserProfile: async () => {},
+    updateUserProfile: async () => false,
     updateDetailedInfo: async () => {},
     setUser: () => {},
     logout: () => {},
+    lastUpdated: null,
+    getLastUpdatedDate: function (): string | null {
+      throw new Error("Function not implemented.");
+    },
   };
 
   return querySpecificData;

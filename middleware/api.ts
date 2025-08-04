@@ -128,11 +128,15 @@ async function fetchAndCacheUserData(userId: string) {
     loading: false,
     error: null,
     isAuthenticated: !!user,
-    fetchUserProfile: async () => {}, // stub
-    setUser: () => {}, // stub
-    logout: () => {}, // stub
-    updateUserProfile: async () => {}, // stub
-    updateDetailedInfo: async () => {}, // stub
+    fetchUserProfile: async () => { }, // stub
+    setUser: () => { }, // stub
+    logout: () => { }, // stub
+    updateUserProfile: async () => false, // stub
+    updateDetailedInfo: async () => { },
+    lastUpdated: null,
+    getLastUpdatedDate: function (): string | null {
+      throw new Error("Function not implemented.");
+    }
   };
 
   console.log("userData", userData);
