@@ -10,7 +10,7 @@ import { Info } from "lucide-react";
 interface FeeAndScholarshipsProps {
   data: {
     funding_link: string;
-    payment_method:string;
+    payment_method: string;
     scholarship_link: string;
     _id: string;
     countryname: string;
@@ -52,9 +52,9 @@ interface FeeAndScholarshipsProps {
 export const FeeAndScholarships = ({ data }: FeeAndScholarshipsProps) => {
   const [activeTab, setActiveTab] = useState("scholarship");
   console.log(data, "cor");
-function isCurrency(value: string): boolean {
-  return /^\s*(USD|PKR|\$|£|€)?\s*\d+([.,]\d+)?\s*$/i.test(value.trim());
-}
+  function isCurrency(value: string): boolean {
+    return /^\s*(USD|PKR|\$|£|€)?\s*\d+([.,]\d+)?\s*$/i.test(value.trim());
+  }
 
 
 
@@ -81,40 +81,40 @@ function isCurrency(value: string): boolean {
                 <p className="font-semibold">$0</p>
                 <p className="text-gray-600">Server Fee (N/A)</p>
               </li>
-       <li className="flex items-center space-x-2">
-  {(() => {
-    const value = data.initial_deposit;
-    const isDollar = typeof value === 'string' && (value.includes('$') || value.toUpperCase().includes('USD'));
+              <li className="flex items-center space-x-2">
+                {(() => {
+                  const value = data.initial_deposit;
+                  const isDollar = typeof value === 'string' && (value.includes('$') || value.toUpperCase().includes('USD'));
 
-    if (!value) {
-      return <p className="text-red-500 font-medium">Required</p>;
-    }
+                  if (!value) {
+                    return <p className="text-red-500 font-medium">Required</p>;
+                  }
 
-    if (isCurrency(value) || !isNaN(Number(value)) || isDollar) {
-      return (
-        <>
-          <span className="vertical-line w-[1px] h-3 bg-black" />
-          <p className="text-md font-semibold">{value}</p>
-          <p className="text-gray-600">Initial Deposit</p>
-        </>
-      );
-    }
+                  if (isCurrency(value) || !isNaN(Number(value)) || isDollar) {
+                    return (
+                      <>
+                        <span className="vertical-line w-[1px] h-3 bg-black" />
+                        <p className="text-md font-semibold">{value}</p>
+                        <p className="text-gray-600">Initial Deposit</p>
+                      </>
+                    );
+                  }
 
-    return (
-      <>
-        <span className="vertical-line w-[1px] h-3 bg-black" />
-        <div className="relative group flex items-center">
-          <Info className="w-4 h-4 text-blue-500 cursor-pointer" />
-         <span className="absolute top-full left-full mt-2 hidden group-hover:block bg-gray-100 text-black text-xs font-medium p-2 rounded-md w-[220px] text-left shadow-lg z-10">
-  {value}
-</span>
+                  return (
+                    <>
+                      <span className="vertical-line w-[1px] h-3 bg-black" />
+                      <div className="relative group flex items-center">
+                        <Info className="w-4 h-4 text-blue-500 cursor-pointer" />
+                        <span className="absolute top-full left-full mt-2 hidden group-hover:block bg-gray-100 text-black text-xs font-medium p-2 rounded-md w-[220px] text-left shadow-lg z-10">
+                          {value}
+                        </span>
 
-        </div>
-        <p className="text-gray-600">Initial Deposit</p>
-      </>
-    );
-  })()}
-</li>
+                      </div>
+                      <p className="text-gray-600">Initial Deposit</p>
+                    </>
+                  );
+                })()}
+              </li>
 
 
 
@@ -156,30 +156,32 @@ function isCurrency(value: string): boolean {
           <div className="flex w-full rounded-lg bg-[#FDF2E8]">
             <button
               onClick={() => setActiveTab("scholarship")}
-              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
-                activeTab === "scholarship"
-                  ? "bg-[#F57C00] text-white"
-                  : "bg-transparent text-black"
-              }`}
+              className={`flex-1 py-2 px-1 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "scholarship"
+                ? "bg-[#F57C00] text-white"
+                : "bg-transparent text-black"
+                }`}
             >
-              <Link target="blank" href={data.scholarship_link}>
+
+              <Link target="blank" href={typeof data?.scholarship_link === "string" ? data.scholarship_link : ""}>
                 Scholarship Details
               </Link>
+
             </button>
             <button
               onClick={() => setActiveTab("funding")}
-              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${
-                activeTab === "funding"
-                  ? "bg-[#F57C00] text-white"
-                  : "bg-transparent text-black"
-              }`}
+              className={`flex-1 py-2 text-center rounded-lg text-xs sm:text-sm transition-colors duration-300 ${activeTab === "funding"
+                ? "bg-[#F57C00] text-white"
+                : "bg-transparent text-black"
+                }`}
             >
+
               <Link
-                // target="blank"
-                href={data.funding_link}
+                target="_blank"
+                href={typeof data?.funding_link === "string" ? data.funding_link : "#"}
               >
                 Funding Details
               </Link>
+
             </button>
           </div>
 
@@ -225,7 +227,8 @@ function isCurrency(value: string): boolean {
               fee at {data?.universityname}.
             </p>
 
-            <Link target="blank" href={data?.payment_method || "#"}>
+            <Link target="_blank" href={typeof data?.payment_method === "string" ? data.payment_method : "#"}>
+
               <Button
                 variant="outline"
                 className="w-full border-2 border-red-500 text-red-500 bg-[#FCEAD8] 
@@ -234,6 +237,7 @@ function isCurrency(value: string): boolean {
                 Click here
               </Button>
             </Link>
+
           </Card>
 
           {/* Calculator Card */}

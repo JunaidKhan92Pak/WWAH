@@ -512,9 +512,8 @@ const CourseArchive = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
-              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-            }`}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+              }`}
           >
             <Image
               src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -612,11 +611,10 @@ const CourseArchive = () => {
                             </Label>
                             <Input
                               id={`link-${item._id}`}
-                              value={`${
-                                typeof window !== "undefined"
-                                  ? window.location.origin
-                                  : ""
-                              }/courses/${item._id}`}
+                              value={`${typeof window !== "undefined"
+                                ? window.location.origin
+                                : ""
+                                }/courses/${item._id}`}
                               readOnly
                             />
                           </div>
@@ -687,13 +685,11 @@ const CourseArchive = () => {
                     <button
                       onClick={() => toggleFavoriteInDB(item._id)}
                       disabled={loadingFavorites[item._id]}
-                      className={`relative ${
-                        heartAnimation === item._id ? "animate-pop" : ""
-                      } ${
-                        loadingFavorites[item._id]
+                      className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
+                        } ${loadingFavorites[item._id]
                           ? "opacity-50 cursor-not-allowed"
                           : ""
-                      }`}
+                        }`}
                     >
                       {favorites[item._id] ? (
                         <Image
@@ -798,13 +794,13 @@ const CourseArchive = () => {
                     </button>
                   </Link>
 
-                  <div  className="w-1/2">
-                  <button
-                    onClick={() => addToAppliedCourses(item._id)}
-                    className="w-full border border-red-500 text-red-500 text-sm p-2 rounded-lg"
-                  >
-                    Create Application
-                  </button>
+                  <div className="w-1/2">
+                    <button
+                      onClick={() => addToAppliedCourses(item._id)}
+                      className="w-full border border-red-500 text-red-500 text-sm p-2 rounded-lg"
+                    >
+                      Create Application
+                    </button>
                   </div>
                 </div>
               </div>
@@ -814,12 +810,11 @@ const CourseArchive = () => {
       )}
 
       <div className="flex flex-wrap justify-center items-center mt-10  gap-3">
-        <div className="flex items-center gap-3">
-          <button
+        <div className="flex items-center gap-3 ">
+          {/* <button
             onClick={() => setPage(1)}
-            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
-              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             aria-label="First page"
             disabled={currentPage <= 1}
           >
@@ -840,13 +835,12 @@ const CourseArchive = () => {
                 clipRule="evenodd"
               />
             </svg>
-          </button>
+          </button> */}
 
           <button
             onClick={handlePrevPage}
-            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
-              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`text-white  bg-red-500 hover:text-red-500 flex items-center hover:bg-red-200 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed border-2" : ""
+              }`}
             aria-label="Previous page"
             disabled={currentPage <= 1}
           >
@@ -862,9 +856,10 @@ const CourseArchive = () => {
                 clipRule="evenodd"
               />
             </svg>
+            <p className="text-white font-medium " >Previous</p>
           </button>
 
-          <div className="hidden sm:flex space-x-2 ">
+          {/* <div className="hidden sm:flex space-x-2 ">
             {(() => {
               let startPage = 1;
               let endPage = totalPages;
@@ -899,11 +894,10 @@ const CourseArchive = () => {
                   <button
                     key={i}
                     onClick={() => setPage(i)}
-                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${
-                      currentPage === i
-                        ? "bg-red-700 text-white shadow-md"
-                        : "bg-gray-100 text-gray-700 hover:bg-red-100"
-                    }`}
+                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${currentPage === i
+                      ? "bg-red-700 text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-red-100"
+                      }`}
                     aria-current={currentPage === i ? "page" : undefined}
                   >
                     {i}
@@ -925,20 +919,21 @@ const CourseArchive = () => {
 
               return pages;
             })()}
-          </div>
+          </div> */}
 
-          <div className="flex sm:hidden items-center border-2 border-red-600">
+          {/* <div className="flex sm:hidden items-center border-2 border-red-600">
             <span className="text-gray-700 font-medium px-3">
               Page {currentPage} of {totalPages}
             </span>
-          </div>
+          </div> */}
 
           {currentPage < totalPages && (
             <button
               onClick={handleNextPage}
-              className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
+              className="text-white flex items-center hover:text-red-600 hover:bg-red-300 rounded-lg p-2 transition-colors duration-200  bg-red-500"
               aria-label="Next page"
             >
+              <p className="text-white font-medium ">Next page</p>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -951,10 +946,10 @@ const CourseArchive = () => {
                   clipRule="evenodd"
                 />
               </svg>
+
             </button>
           )}
-
-          {currentPage < totalPages && (
+          {/* {currentPage < totalPages && (
             <button
               onClick={() => setPage(totalPages)}
               className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
@@ -978,7 +973,7 @@ const CourseArchive = () => {
                 />
               </svg>
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </section>

@@ -127,7 +127,7 @@ export async function POST(req: Request) {
 
     // Parse and validate input data
     const data = await req.json();
-    console.log("Received data:", data);
+    // console.log("Received data:", data);
     // Enhanced validation
     if (!data.country?.trim()) {
       return NextResponse.json(

@@ -343,22 +343,22 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
       {/* Career Opportunities Section */}
       <div id="careerOpportunities">
-        <CareerOpportunities data={data.courseData} />
+        <CareerOpportunities data={data?.courseData} />
       </div>
       {/* fee and scholarship     */}
       <div id="feeScholarships">
-        <FeeAndScholarships data={data.courseData} />
+        <FeeAndScholarships data={data?.courseData} />
       </div>
 
       {/* progress bar  */}
-      <ProgressSection data={data.courseData} />
+      <ProgressSection data={data?.courseData} />
 
       {/* English Requirnment Section      */}
-      <EnglishRequirement data={data.courseData} />
+      <EnglishRequirement data={data?.courseData} />
 
       {/* Required Documents! */}
       <div id="entryRequirements">
-        <RequiredDocuments data={data.countryData} />
+        <RequiredDocuments data={data?.countryData} />
       </div>
       {/* application process */}
       <div id="applicationProcess">
