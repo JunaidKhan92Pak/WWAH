@@ -85,7 +85,7 @@ const Page = () => {
     Record<string, (typeof universities)[0]>
   >({});
 
-  
+
   // Handle country param from URL - consolidated logic from previous duplicate useEffects
   useEffect(() => {
     if (initialCountrySet.current) return;
@@ -112,15 +112,15 @@ const Page = () => {
   // }, [currentPage, fetchUniversities]);
   const pathname = usePathname();
 
-useEffect(() => {
-  // Clear immediately
-  setLocalSearch("");
-  setSearch("");
+  useEffect(() => {
+    // Clear immediately
+    setLocalSearch("");
+    setSearch("");
 
-  setTimeout(() => {
-    fetchUniversities(currentPage);
-  }, 0); // run in next tick
-}, [currentPage, pathname]);
+    setTimeout(() => {
+      fetchUniversities(currentPage);
+    }, 0); // run in next tick
+  }, [currentPage, pathname]);
 
 
   // Handle Search with debounce
@@ -130,7 +130,7 @@ useEffect(() => {
     }, 500),
     [setSearch]
   );
- 
+
   // Handle checkbox changes for country filtering
   function handleCheckboxChange(destination: string): void {
     if (destination === "All") {
@@ -158,7 +158,7 @@ useEffect(() => {
   };
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-console.log("university_type" , universities)
+  console.log("university_type", universities)
   // No need to load favorites from localStorage
 
   const toggleFavorite = (id: string) => {
@@ -305,9 +305,8 @@ console.log("university_type" , universities)
             </DropdownMenu>
             <button
               onClick={() => setShowFavorites((prev) => !prev)}
-              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[80%] h-10 ${
-                showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+              className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-[60%] xl:w-[80%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+                }`}
             >
               <Image
                 src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -465,11 +464,10 @@ console.log("university_type" , universities)
                               </Label>
                               <Input
                                 id={`link-${item._id}`}
-                                value={`${
-                                  typeof window !== "undefined"
-                                    ? window.location.origin
-                                    : ""
-                                }/Universities/${item._id}`}
+                                value={`${typeof window !== "undefined"
+                                  ? window.location.origin
+                                  : ""
+                                  }/Universities/${item._id}`}
                                 readOnly
                               />
                             </div>
@@ -540,9 +538,8 @@ console.log("university_type" , universities)
 
                       <button
                         onClick={() => toggleFavorite(item._id)}
-                        className={`relative ${
-                          heartAnimation === item._id ? "animate-pop" : ""
-                        }`}
+                        className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
+                          }`}
                       >
                         {favorites[item._id] ? (
                           <Image
@@ -667,7 +664,7 @@ console.log("university_type" , universities)
           {/* Pagination controls always visible container */}
           <div className="flex items-center gap-3">
             {/* First page button */}
-            <button
+            {/* <button
               onClick={() => setCurrentPage(1)}
               className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
                 currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
@@ -692,14 +689,13 @@ console.log("university_type" , universities)
                   clipRule="evenodd"
                 />
               </svg>
-            </button>
+            </button> */}
 
             {/* Previous button */}
             <button
               onClick={handlePrevPage}
-              className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
-                currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`text-white  bg-red-500 hover:text-red-500 flex items-center hover:bg-red-200 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed border-2" : ""
+                }`}
               aria-label="Previous page"
               disabled={currentPage <= 1}
             >
@@ -715,10 +711,11 @@ console.log("university_type" , universities)
                   clipRule="evenodd"
                 />
               </svg>
+              <p className="text-white font-medium " >Previous</p>
             </button>
 
             {/* Page numbers */}
-            <div className="hidden sm:flex space-x-2 ">
+            {/* <div className="hidden sm:flex space-x-2 ">
               {(() => {
                 // Calculate pagination range
                 let startPage = 1;
@@ -786,7 +783,7 @@ console.log("university_type" , universities)
 
                 return pages;
               })()}
-            </div>
+            </div> */}
 
             {/* Mobile-friendly current page indicator */}
             <div className="flex sm:hidden items-center border-2 border-red-600">
@@ -799,9 +796,9 @@ console.log("university_type" , universities)
             {currentPage < totalPages && (
               <button
                 onClick={handleNextPage}
-                className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
-                aria-label="Next page"
+                className="text-white flex items-center hover:text-red-600 hover:bg-red-300 rounded-lg p-2 transition-colors duration-200  bg-red-500"
               >
+                <p className="text-white font-medium ">Next page</p>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
@@ -818,7 +815,7 @@ console.log("university_type" , universities)
             )}
 
             {/* Last page button */}
-            {currentPage < totalPages && (
+            {/* {currentPage < totalPages && (
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
@@ -842,7 +839,7 @@ console.log("university_type" , universities)
                   />
                 </svg>
               </button>
-            )}
+            )} */}
           </div>
         </div>
       )}

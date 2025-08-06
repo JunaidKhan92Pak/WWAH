@@ -11,6 +11,7 @@ import { Range, getTrackBackground } from "react-range";
 import { debounce } from "lodash";
 import { useCourseStore } from "@/store/useCoursesStore";
 import { useUniversityStore } from "@/store/useUniversitiesStore";
+
 const studyLevels = [
   "Foundation",
   "Pre-Master",
@@ -45,6 +46,7 @@ const currencies = [
   "Malaysian Ringgit (RM)",
   "Pakistani Rupees (PKR)",
 ];
+
 // New filter options for Subject Area
 const subjectAreas = [
   "Physics",
@@ -126,8 +128,10 @@ const subjectAreas = [
   "Sports and Exercise Sciences",
   "Media and Communication",
 ];
+
 const MIN = 0;
 const MAX = 1000000;
+
 export default function FilterContent() {
   const { filterUniversities, setSearch, setCountry, fetchAllUniversitiesForFilter, loading } =
     useUniversityStore();
@@ -149,21 +153,26 @@ export default function FilterContent() {
     setSubjectAreaFilter,
     subjectAreaFilter,
   } = useCourseStore();
-  // const [localMinBudget, setLocalMinBudget] = useState(minBudget || 0);
-  // const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget || 0);
 
   const parseNumber = (value: string) => {
-  return parseInt(value.replace(/,/g, ""), 10) || 0;
-};
+    return parseInt(value.replace(/,/g, ""), 10) || 0;
+  };
 
-const formatNumber = (value: number | string) => {
-  return Number(value).toLocaleString("en-US");
-};
+  const formatNumber = (value: number | string) => {
+    return Number(value).toLocaleString("en-US");
+  };
 
   const [values, setValues] = useState<number[]>([
     minBudget || MIN,
     maxBudget || MAX,
   ]);
+
+  // Local state for immediate UI updates
+  const [localStudyLevel, setLocalStudyLevel] = useState(studyLevel);
+  const [localStudyMode, setLocalStudyMode] = useState(studyMode);
+  const [localIntakeYear, setLocalIntakeYear] = useState(intakeYear);
+  const [localCountryFilter, setLocalCountryFilter] = useState<string[]>(countryFilter);
+  const [localSubjectAreaFilter, setLocalSubjectAreaFilter] = useState<string[]>(subjectAreaFilter);
 
   // Debounced store updates
   const debouncedUpdateMinBudget = useCallback(
@@ -180,10 +189,72 @@ const formatNumber = (value: number | string) => {
     [setMaxBudget]
   );
 
-  // Sync with store updates
+  const debouncedUpdateStudyLevel = useCallback(
+    debounce((value: string) => {
+      setStudyLevel(value);
+    }, 500),
+    [setStudyLevel]
+  );
+
+  const debouncedUpdateStudyMode = useCallback(
+    debounce((value: string) => {
+      setStudyMode(value);
+    }, 500),
+    [setStudyMode]
+  );
+
+  const debouncedUpdateIntakeYear = useCallback(
+    debounce((value: string) => {
+      setIntakeYear(value);
+    }, 500),
+    [setIntakeYear]
+  );
+
+  const debouncedUpdateCountryFilter = useCallback(
+    debounce((value: string[]) => {
+      setCountryFilter(value);
+    }, 500),
+    [setCountryFilter]
+  );
+
+  const debouncedUpdateSubjectAreaFilter = useCallback(
+    debounce((value: string[]) => {
+      setSubjectAreaFilter(value);
+    }, 500),
+    [setSubjectAreaFilter]
+  );
+
+  const debouncedSetSearch = useCallback(
+    debounce((value: string) => {
+      setSearch(value);
+    }, 500),
+    []
+  );
+
+  // Sync local state with store updates
   useEffect(() => {
     setValues([minBudget || MIN, maxBudget || MAX]);
   }, [minBudget, maxBudget]);
+
+  useEffect(() => {
+    setLocalStudyLevel(studyLevel);
+  }, [studyLevel]);
+
+  useEffect(() => {
+    setLocalStudyMode(studyMode);
+  }, [studyMode]);
+
+  useEffect(() => {
+    setLocalIntakeYear(intakeYear);
+  }, [intakeYear]);
+
+  useEffect(() => {
+    setLocalCountryFilter(countryFilter);
+  }, [countryFilter]);
+
+  useEffect(() => {
+    setLocalSubjectAreaFilter(subjectAreaFilter);
+  }, [subjectAreaFilter]);
 
   const handleSliderChange = (vals: number[]) => {
     setValues(vals);
@@ -191,26 +262,36 @@ const formatNumber = (value: number | string) => {
     debouncedUpdateMaxBudget(vals[1]);
   };
 
- const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const rawValue = e.target.value;
-  const parsed = parseNumber(rawValue);
-  const clamped = Math.min(parsed, values[1] - 1);
-  setValues([clamped, values[1]]);
-  debouncedUpdateMinBudget(clamped);
-};
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+    const parsed = parseNumber(rawValue);
+    const clamped = Math.min(parsed, values[1] - 1);
+    setValues([clamped, values[1]]);
+    debouncedUpdateMinBudget(clamped);
+  };
 
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+    const parsed = parseNumber(rawValue);
+    const clamped = Math.max(parsed, values[0] + 1);
+    setValues([values[0], clamped]);
+    debouncedUpdateMaxBudget(clamped);
+  };
 
- const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const rawValue = e.target.value;
-  const parsed = parseNumber(rawValue);
-  const clamped = Math.max(parsed, values[0] + 1);
-  setValues([values[0], clamped]);
-  debouncedUpdateMaxBudget(clamped);
-};
+  const handleStudyLevelChange = (level: string) => {
+    setLocalStudyLevel(level);
+    debouncedUpdateStudyLevel(level);
+  };
 
-  useEffect(() => {
-    setValues([minBudget || MIN, maxBudget || MAX]);
-  }, [minBudget, maxBudget]);
+  const handleStudyModeChange = (mode: string) => {
+    setLocalStudyMode(mode);
+    debouncedUpdateStudyMode(mode);
+  };
+
+  const handleIntakeYearChange = (year: string) => {
+    setLocalIntakeYear(year);
+    debouncedUpdateIntakeYear(year);
+  };
 
   const [searchTerm, setSearchTerm] = useState("");
   const studyDestinations = useMemo(
@@ -231,29 +312,28 @@ const formatNumber = (value: number | string) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [localSearch, setLocalSearch] = useState("");
 
-  const debouncedSetSearch = useCallback(
-    debounce((value: string) => {
-      setSearch(value);
-    }, 500),
-    []
-  );
   const handleCheckboxChange = useCallback(
     (destination: string) => {
+      let updatedSelected: string[];
+
       if (destination === "All") {
-        if (countryFilter.length === studyDestinations.length) {
-          setCountryFilter([]); // Uncheck all
+        if (localCountryFilter.length === studyDestinations.length) {
+          updatedSelected = []; // Uncheck all
         } else {
-          setCountryFilter(studyDestinations); // Select all
+          updatedSelected = studyDestinations; // Select all
         }
       } else {
-        const updatedSelected = countryFilter.includes(destination)
-          ? countryFilter.filter((item) => item !== destination)
-          : [...countryFilter, destination];
-        setCountryFilter(updatedSelected);
+        updatedSelected = localCountryFilter.includes(destination)
+          ? localCountryFilter.filter((item) => item !== destination)
+          : [...localCountryFilter, destination];
       }
+
+      setLocalCountryFilter(updatedSelected);
+      debouncedUpdateCountryFilter(updatedSelected);
     },
-    [countryFilter, setCountryFilter, studyDestinations]
+    [localCountryFilter, studyDestinations, debouncedUpdateCountryFilter]
   );
+
   const handleSearch = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const val = event.target.value;
@@ -262,14 +342,15 @@ const formatNumber = (value: number | string) => {
     },
     [debouncedSetSearch]
   );
+
   useEffect(() => {
     if (filterUniversities.length === 0) {
       fetchAllUniversitiesForFilter().catch((error) => {
         console.error("Failed to fetch universities:", error);
-        // Display an error message to the user if needed
       });
     }
   }, [fetchAllUniversitiesForFilter, filterUniversities.length]);
+
   const handleSelect = useCallback(
     (universityName: string) => {
       setSelectedUniversity(universityName);
@@ -281,10 +362,10 @@ const formatNumber = (value: number | string) => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setCountry(countryFilter);
+      setCountry(localCountryFilter);
     }, 500);
     return () => clearTimeout(handler);
-  }, [countryFilter, setCountry]);
+  }, [localCountryFilter, setCountry]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -299,26 +380,30 @@ const formatNumber = (value: number | string) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  // New handler for Subject Area checkboxes
+
+  // Updated handler for Subject Area checkboxes with debouncing
   const handleSubjectCheckboxChange = useCallback(
     (subject: string) => {
+      let updatedSelected: string[];
+
       if (subject === "All") {
-        if (subjectAreaFilter.length === subjectAreas.length) {
-          setSubjectAreaFilter([]); // Uncheck all
+        if (localSubjectAreaFilter.length === subjectAreas.length) {
+          updatedSelected = []; // Uncheck all
         } else {
-          setSubjectAreaFilter(subjectAreas); // Select all
+          updatedSelected = subjectAreas; // Select all
         }
       } else {
-        const updatedSelected = subjectAreaFilter.includes(subject)
-          ? subjectAreaFilter.filter((item) => item !== subject)
-          : [...subjectAreaFilter, subject];
-        setSubjectAreaFilter(updatedSelected);
+        updatedSelected = localSubjectAreaFilter.includes(subject)
+          ? localSubjectAreaFilter.filter((item) => item !== subject)
+          : [...localSubjectAreaFilter, subject];
       }
+
+      setLocalSubjectAreaFilter(updatedSelected);
+      debouncedUpdateSubjectAreaFilter(updatedSelected);
     },
-    [subjectAreaFilter, setSubjectAreaFilter]
+    [localSubjectAreaFilter, debouncedUpdateSubjectAreaFilter]
   );
 
-  
   return (
     <div className="space-y-6 p-6 bg-gray-50 rounded-lg h-full overflow-y-auto">
       {/* Study Destinations */}
@@ -335,7 +420,7 @@ const formatNumber = (value: number | string) => {
           <label className="flex items-center space-x-3">
             <input
               type="checkbox"
-              checked={countryFilter.length === studyDestinations.length}
+              checked={localCountryFilter.length === studyDestinations.length}
               onChange={() => handleCheckboxChange("All")}
               className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
               aria-label="Select All Destinations"
@@ -350,7 +435,7 @@ const formatNumber = (value: number | string) => {
               <label key={destination} className="flex items-center space-x-3">
                 <input
                   type="checkbox"
-                  checked={countryFilter.includes(destination)}
+                  checked={localCountryFilter.includes(destination)}
                   onChange={() => handleCheckboxChange(destination)}
                   className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                   aria-label={`Select ${destination}`}
@@ -360,6 +445,7 @@ const formatNumber = (value: number | string) => {
             ))}
         </div>
       </FilterSection>
+
       {/* Study Level */}
       <FilterSection title="Study Level">
         <div className="space-y-3">
@@ -368,8 +454,8 @@ const formatNumber = (value: number | string) => {
               type="radio"
               name="studyLevel"
               value=""
-              checked={studyLevel === ""}
-              onChange={() => setStudyLevel("")}
+              checked={localStudyLevel === ""}
+              onChange={() => handleStudyLevelChange("")}
               className="form-radio h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500"
               aria-label="None"
             />
@@ -381,8 +467,8 @@ const formatNumber = (value: number | string) => {
                 type="radio"
                 name="studyLevel"
                 value={level}
-                checked={studyLevel === level}
-                onChange={() => setStudyLevel(level)}
+                checked={localStudyLevel === level}
+                onChange={() => handleStudyLevelChange(level)}
                 className="form-radio h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500"
                 aria-label={`Select ${level}`}
               />
@@ -391,13 +477,14 @@ const formatNumber = (value: number | string) => {
           ))}
         </div>
       </FilterSection>
+
       {/* Subject Area Filter */}
       <FilterSection title="Subject Area">
         <div className="space-y-3 max-h-80 overflow-y-auto scroll-smooth overflow-hidden p-2 border border-gray-300 rounded-md">
           <label className="flex items-center space-x-3">
             <input
               type="checkbox"
-              checked={subjectAreaFilter.length === subjectAreas.length}
+              checked={localSubjectAreaFilter.length === subjectAreas.length}
               onChange={() => handleSubjectCheckboxChange("All")}
               className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
               aria-label="Select All Subject Areas"
@@ -408,7 +495,7 @@ const formatNumber = (value: number | string) => {
             <label key={subject} className="flex items-center space-x-3">
               <input
                 type="checkbox"
-                checked={subjectAreaFilter.includes(subject)}
+                checked={localSubjectAreaFilter.includes(subject)}
                 onChange={() => handleSubjectCheckboxChange(subject)}
                 className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                 aria-label={`Select ${subject}`}
@@ -418,6 +505,7 @@ const formatNumber = (value: number | string) => {
           ))}
         </div>
       </FilterSection>
+
       {/* Filter by University */}
       <div
         className="p-6 bg-white rounded-lg shadow-sm border border-gray-100 relative"
@@ -433,7 +521,7 @@ const formatNumber = (value: number | string) => {
           onChange={(e) => {
             const value = e.target.value;
             setLocalSearch(value);
-            debouncedSetSearch(value); // Use the debounced function
+            debouncedSetSearch(value);
             setIsDropdownOpen(true);
           }}
           onFocus={() => setIsDropdownOpen(true)}
@@ -467,12 +555,13 @@ const formatNumber = (value: number | string) => {
           </p>
         )}
       </div>
+
       {/* Filter by Intake Year */}
       <FilterSection title="Filter by Intake Year">
         <select
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
-          value={intakeYear}
-          onChange={(e) => setIntakeYear(e.target.value)}
+          value={localIntakeYear}
+          onChange={(e) => handleIntakeYearChange(e.target.value)}
           aria-label="Select Intake Year"
         >
           <option value="">All Years</option>
@@ -483,6 +572,7 @@ const formatNumber = (value: number | string) => {
           ))}
         </select>
       </FilterSection>
+
       {/* Filter by Intake Month */}
       <FilterSection title="Filter by Intake Month">
         <select className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700">
@@ -493,12 +583,13 @@ const formatNumber = (value: number | string) => {
           ))}
         </select>
       </FilterSection>
+
       {/* Filter by Mode of Study */}
       <FilterSection title="Filter by Mode of Study">
         <select
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
-          value={studyMode}
-          onChange={(e) => setStudyMode(e.target.value)}
+          value={localStudyMode}
+          onChange={(e) => handleStudyModeChange(e.target.value)}
           aria-label="Select Mode of Study"
         >
           <option value="">All Modes</option>
@@ -509,6 +600,7 @@ const formatNumber = (value: number | string) => {
           ))}
         </select>
       </FilterSection>
+
       {/* Filter by Budget */}
       <FilterSection title="Filter by Budget">
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -525,25 +617,24 @@ const formatNumber = (value: number | string) => {
           {/* Inputs */}
           <div className="flex justify-between items-center space-x-6">
             {/* Min Input */}
-  <div className="flex-1 bg-white rounded-lg shadow p-2 text-center">
-   <input
-  type="text"
-  value={formatNumber(values[0])}
-  onChange={handleMinChange}
-  className="w-full text-center text-xl font-medium focus:outline-none"
-/>
+            <div className="flex-1 bg-white rounded-lg shadow p-2 text-center">
+              <input
+                type="text"
+                value={formatNumber(values[0])}
+                onChange={handleMinChange}
+                className="w-full text-center text-xl font-medium focus:outline-none"
+              />
+            </div>
 
-  </div>
-
-  {/* Max Input */}
-  <div className="flex-1 bg-white rounded-lg shadow p-2 text-center">
-   <input
-  type="text"
-  value={formatNumber(values[1])}
-  onChange={handleMaxChange}
-  className="w-full text-center text-xl font-medium focus:outline-none"
-/>
-  </div>
+            {/* Max Input */}
+            <div className="flex-1 bg-white rounded-lg shadow p-2 text-center">
+              <input
+                type="text"
+                value={formatNumber(values[1])}
+                onChange={handleMaxChange}
+                className="w-full text-center text-xl font-medium focus:outline-none"
+              />
+            </div>
           </div>
           {/* React-Range Slider */}
           <div className="mt-6 px-4">
@@ -596,10 +687,12 @@ const formatNumber = (value: number | string) => {
     </div>
   );
 }
+
 interface FilterSectionProps {
   title: string;
   children: React.ReactNode;
 }
+
 function FilterSection({ title, children }: FilterSectionProps) {
   return (
     <section className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
