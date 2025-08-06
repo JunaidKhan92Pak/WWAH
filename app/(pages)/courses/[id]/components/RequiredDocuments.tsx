@@ -202,23 +202,25 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
             <div className="bg-white p-6 rounded-xl shadow-md h-full">
               <h5 className="md:mb-4">Embassy Documents:</h5>
               <h6 className="md:mb-4">Required Documents:</h6>
-              <ul className="grid grid-cols-2 gap-2 md:gap-4 text-gray-700">
-                {embassyDocs.map((doc) => (
-                  <li
-                    key={doc.name}
-                    className="flex items-start space-x-2 cursor-pointer"
-                  >
-                    <span className="text-red-500 text-4xl">•</span>
-                    <p
-                      className="hover:underline"
-                      onMouseEnter={() => handleMouseEnterEmbassy(doc)}
-                      onClick={() => setSelectedDoc(doc)}
-                    >
-                      {doc.name}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+             <ul className="grid grid-cols-2 gap-2 md:gap-4 text-gray-700">
+  {embassyDocs.map((doc) => (
+    <li
+      key={doc.name}
+      className="flex items-center space-x-2 cursor-pointer"
+    >
+      <span className="text-red-500 text-4xl">•</span>
+      <p
+        className="hover:underline"
+        onMouseEnter={() => handleMouseEnterEmbassy(doc)}
+        onClick={() => setSelectedDoc(doc)}
+      >
+        {/* Remove any bullet point inside the name */}
+        {doc.name.replace(/^•\s*/, '')}
+      </p>
+    </li>
+  ))}
+</ul>
+
             </div>
 
             {/* Right Section: Show Image or Document Details */}
@@ -226,10 +228,10 @@ export const RequiredDocuments = ({ data }: { data: Data }) => {
               {selectedDoc ? (
                 <div className="text-center px-4 sm:px-8 lg:px-16">
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
-                    {selectedDoc.name} Details
-                  </h3>
+  {selectedDoc.name.replace(/•/g, '')} Details
+</h3>
                   <p
-                    className="text-gray-700 mt-2 text-sm sm:text-base lg:text-lg"
+                    className="text-red-5- mt-2 text-sm sm:text-base lg:text-lg"
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(selectedDoc.detail),
                     }}

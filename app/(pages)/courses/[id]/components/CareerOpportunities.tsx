@@ -46,7 +46,7 @@ export const CareerOpportunities: React.FC<CareerOpportunitiesProps> = ({
   return (
     <>
       <section className="hidden md:flex flex-col items-center bg-black text-white py-8 mt-5">
-        <h4>Career Opportunities in {data?.course_title}!</h4>
+        <h4 className="w-[85%] text-center">Career Opportunities in {data?.course_title}!</h4>
         {/* Timeline Image */}
         <div className="relative w-full flex justify-center mt-4">
           <Image

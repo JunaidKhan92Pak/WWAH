@@ -53,6 +53,14 @@ const Navbar = () => {
                     <NavigationMenuLink asChild>
                       <Link
                         href="/countries"
+                        target={
+                          pathname !== "/countries" ? "_blank" : undefined
+                        }
+                        rel={
+                          pathname !== "/countries"
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
                         className={linkClasses("/countries")}
                       >
                         Study Destinations
@@ -63,6 +71,14 @@ const Navbar = () => {
                     <NavigationMenuLink asChild>
                       <Link
                         href="/Universities"
+                        target={
+                          pathname !== "/Universities" ? "_blank" : undefined
+                        }
+                        rel={
+                          pathname !== "/Universities"
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
                         className={linkClasses("/Universities")}
                       >
                         Universities
@@ -73,6 +89,14 @@ const Navbar = () => {
                     <NavigationMenuLink asChild>
                       <Link
                         href="/coursearchive"
+                        target={
+                          pathname !== "/coursearchive" ? "_blank" : undefined
+                        }
+                        rel={
+                          pathname !== "/coursearchive"
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
                         className={linkClasses("/coursearchive")}
                       >
                         Courses
@@ -83,6 +107,14 @@ const Navbar = () => {
                     <NavigationMenuLink asChild>
                       <Link
                         href="/scholarships"
+                        target={
+                          pathname !== "/scholarships" ? "_blank" : undefined
+                        }
+                        rel={
+                          pathname !== "/scholarships"
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
                         className={linkClasses("/scholarships")}
                       >
                         Scholarships

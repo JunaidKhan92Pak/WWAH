@@ -275,7 +275,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         target="blank"
                         href={`/Universities/${data?.courseData?.university_id}`}
                       >
-                        <Button className="bg-white text-[#C7161E] px-0 py-0 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
+                        <Button className="bg-white text-[#C7161E] font-normal px-4 md:px-8 py-0 sm:py-3 rounded-md hover:bg-gray-300 transition">
+
                           Explore Here
                         </Button>
                       </Link>
@@ -301,7 +302,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         {data?.courseData?.universityname}!
                       </p>
                       <Link target="blank" href="/universityarchievepage">
-                        <Button className="bg-white text-[#C7161E] font-normal px-0 md:px-8 py-0 sm:py-3 rounded-md hover:bg-gray-300 transition w-full">
+                        <Button className="bg-white text-[#C7161E] font-normal px-4 md:px-8 py-0 sm:py-3 rounded-md hover:bg-gray-300 transition">
                           Discover More
                         </Button>
                       </Link>
