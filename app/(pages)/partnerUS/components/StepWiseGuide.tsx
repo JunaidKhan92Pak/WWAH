@@ -88,7 +88,7 @@ function StepWiseGuide() {
               className="h-full "
             />
           </div>
-          <div className=" flex flex-col gap-20 justify-between ">
+          <div className=" flex flex-col gap-10 justify-between ">
             <div className="flex items-start space-x-4">
               <span className="block md:hidden">-</span>
               <p className="text-gray-700 leading-tight">

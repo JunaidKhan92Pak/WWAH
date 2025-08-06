@@ -126,7 +126,8 @@ const Herosection = ({
                   </p>
                 </div>
 
-                <div className="w-[120px] bg-white bg-opacity-10 rounded-lg text-white inline-block text-left px-2 md:py-2">
+
+<div className="inline-flex items-center gap-2 bg-white bg-opacity-10 rounded-lg text-white px-3 py-2 text-sm text-center">
                   {" "}
                   <Link
                     target="blank"
@@ -134,9 +135,9 @@ const Herosection = ({
                     href={`/countries/${countryData.country_id}`}
                     className="cursor-pointer"
                   >
-                    <div className="  flex items-center gap-1  ">
-                      <CiLocationOn className="h-4 w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-8" />
-                      <p className="text-base">
+                    <div className="flex items-center gap-1">
+                      <CiLocationOn className="h-4 w-4 sm:h-5  sm:w-5 lg:h-5 lg:w-6 flex-shrink-0"/>
+                      <p className="text-base text-nowrap">
                         {data.countryname ? data.countryname : "Not Avialable"}
                       </p>
                     </div>

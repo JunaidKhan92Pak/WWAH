@@ -241,7 +241,7 @@ export default function ApplicableCourses({
               placeholder="Search by course, department, university.."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className="pl-10 py-6 bg-muted/30 border-muted focus-visible:ring-2 text-foreground transition-all duration-300 ease-in-out hover:bg-muted/50"
+              className="placeholder:text-base pl-10 py-6 bg-muted/30 border-muted focus-visible:ring-2 text-foreground transition-all duration-300 ease-in-out hover:bg-muted/50"
             />
           </div>
 

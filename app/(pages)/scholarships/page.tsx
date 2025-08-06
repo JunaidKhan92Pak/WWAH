@@ -434,7 +434,7 @@ const displayedScholarships = showFavorites
 
         {/* Desktop Filter Sidebar */}
         <div className="flex gap-2 pt-1">
-          <section className="hidden lg:block lg:w-[30%] xl:w-[25%]">
+          <section className="hidden lg:block lg:w-[35%] xl:w-[28%]">
             <div className="border-2 rounded-3xl p-4 md:p-0 bg-gray-100">
               <div className="hidden md:flex items-center gap-2 px-6 py-3">
                 <Image src="/filterr.svg" width={20} height={20} alt="filter" />

@@ -149,7 +149,7 @@ const MobileNavbar = () => {
               <div>
                 <div className="space-y-6">
                   {[
-                    { href: "/", label: "Home", icon: Home },
+                    { href: "/", label: "Homekjnknk", icon: Home },
                     {
                       href: "/countries",
                       label: "Study Destination",

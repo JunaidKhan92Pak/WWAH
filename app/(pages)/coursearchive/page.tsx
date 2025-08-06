@@ -715,7 +715,7 @@ const CourseArchive = () => {
                 </div>
                 <div className="p-4 flex-grow">
                   <Link
-                    target="blank"
+                    target="_blank"
                     href={`/courses/${item._id}`}
                     rel="noopener noreferrer"
                     className="w-1/2"
@@ -788,7 +788,7 @@ const CourseArchive = () => {
 
                 <div className="flex justify-between items-center mb-4 mt-auto gap-2">
                   <Link
-                    target="blank"
+                    target="_blank"
                     href={`/courses/${item._id}`}
                     rel="noopener noreferrer"
                     className="w-1/2"

@@ -4,7 +4,7 @@ import Image from "next/image";
 function ServiceBanner() {
   const arr2 = [
     {
-      icon: "/notebook.svg",
+      icon: "/countrypage/Notebooksvg.svg",
       caption: "Comprehensive Course Listings",
     },
     {
@@ -12,7 +12,7 @@ function ServiceBanner() {
       caption: "Streamlined Application Process",
     },
     {
-      icon: "/Laptopsvg.svg",
+      icon: "/countrypage/Laptop.svg",
       caption: "Airport Transportation Service",
     },
     {
