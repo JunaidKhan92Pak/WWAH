@@ -59,7 +59,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
               <FormControl>
                 <div className="flex items-center bg-[#f1f1f1] pl-6 rounded-lg border">
                   <Checkbox
-                    checked={field.value === true}
+                    checked={field.value}
                     onCheckedChange={(checked) => {
                       field.onChange(!!checked);
                       if (checked) {
@@ -68,6 +68,8 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                         form.setValue("passportExpiryDate", undefined);
                         form.setValue("oldPassportNumber", "");
                         form.setValue("oldPassportExpiryDate", undefined);
+                      } else {
+                        form.setValue("hasPassport", true);
                       }
                     }}
                   />
@@ -75,7 +77,7 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     type="text"
                     value="I don’t have a passport"
                     readOnly
-                    className="bg-transparent text-[#313131] border-none focus:ring-0 flex-1"
+                    className="bg-transparent text-[#313131] border-none focus:ring-0 flex-1 placeholder:text-sm"
                   />
                 </div>
               </FormControl>

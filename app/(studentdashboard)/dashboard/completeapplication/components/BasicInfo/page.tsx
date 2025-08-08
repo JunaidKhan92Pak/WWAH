@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
-import { startCase } from 'lodash';
+import { startCase } from "lodash";
 import {
   Form,
   FormControl,
@@ -137,7 +137,6 @@ const BasicInfo = () => {
   const goToPage = (page: number) => {
     setCurrentPage(page);
     router.replace(`/dashboard/completeapplication?tab=basicinfo&step=${page}`);
-
   };
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Starting form submission...");
@@ -252,7 +251,6 @@ const BasicInfo = () => {
     }
   };
 
-
   const handleNextPage = async () => {
     const currentPageIsValid = await validateCurrentPage();
     if (currentPageIsValid) {
@@ -304,8 +302,8 @@ const BasicInfo = () => {
         );
       case 2:
         return await form.trigger([
-          "currentDetailedAddress",
-          "currentHomeAddress",
+          "currentAddress",
+          "permanentAddress",
           "country",
           "city",
           "zipCode",
@@ -325,7 +323,6 @@ const BasicInfo = () => {
         return await form.trigger([
           "hasStudiedAbroad",
           "visitedCountry",
-          "studyDuration",
           "institution",
           "visaType",
           "visaExpiryDate",
@@ -356,7 +353,8 @@ const BasicInfo = () => {
     // Remove this line in production if you want to remember consent
     sessionStorage.removeItem("applicationSubmitted");
 
-    const hasAccepted = sessionStorage.getItem("applicationSubmitted") === "true";
+    const hasAccepted =
+      sessionStorage.getItem("applicationSubmitted") === "true";
     setHasAcceptedConsent(hasAccepted);
 
     // Always show modal if consent hasn't been accepted
@@ -407,7 +405,7 @@ const BasicInfo = () => {
   const handleCloseSuccessModal = () => {
     setIsSuccessModalOpen(false);
     // Navigate to dashboard after closing success modal
-    router.push("/dashboard/completeapplication?tab=appinfo&step=1")
+    router.push("/dashboard/completeapplication?tab=appinfo&step=1");
   };
   const token = getAuthToken();
   useEffect(() => {
@@ -483,9 +481,14 @@ const BasicInfo = () => {
         </h6>
       )}
       {currentPage === 5 && (
-        <h6 className="font-semibold text-center"> Financial Sponsor Information </h6>
+        <h6 className="font-semibold text-center">
+          {" "}
+          Financial Sponsor Information{" "}
+        </h6>
       )}
-      {currentPage === 6 && (<h6 className="font-semibold text-center">Family Members</h6>)}
+      {currentPage === 6 && (
+        <h6 className="font-semibold text-center">Family Members</h6>
+      )}
 
       {/* Display validation errors */}
       {validationErrors.length > 0 && (
