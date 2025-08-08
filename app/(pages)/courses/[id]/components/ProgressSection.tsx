@@ -215,7 +215,7 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   const ProfilePrompt = () => (
     <div className="flex flex-col items-center justify-center h-full">
       <p className="text-center text-gray-600 mb-4">
-        Please complete your profile to see your scholarship success chances
+        Please complete your profile to see your Courses success chances
       </p>
       <Link href="/successratioform">
         <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-full transition-colors duration-300 shadow-lg">

@@ -140,7 +140,7 @@ export const formSchema = z
       .min(1, { message: "Please fill in the sponsor's occupation." }),
 
     sponsorsEmail: z.string().email("Please fill in a valid email address."),
-    sponsorsCountryCode: z.string().trim().min(1, { message: "Required." }),
+    sponsorsCountryCode: z.string().optional(),
     sponsorsPhoneNo: z
       .string()
       .trim()
