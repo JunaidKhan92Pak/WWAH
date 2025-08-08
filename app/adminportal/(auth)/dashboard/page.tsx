@@ -275,8 +275,8 @@ export default function AdminDashboard() {
               <div>
                 <button
                   className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${showTracker
-                      ? "bg-yellow-600 text-white hover:bg-red-700"
-                      : "bg-white text-red-600   hover:bg-red-50"
+                    ? "bg-yellow-600 text-white hover:bg-red-700"
+                    : "bg-white text-red-600   hover:bg-red-50"
                     }`}
                 >
                   <Link href={"/adminportal/chatPage"}>
@@ -287,8 +287,8 @@ export default function AdminDashboard() {
               <button
                 onClick={() => setShowTracker(!showTracker)}
                 className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${showTracker
-                    ? "bg-yellow-600 text-white hover:bg-red-700"
-                    : "bg-white text-red-600 border-2 border-red-600 hover:bg-red-50"
+                  ? "bg-yellow-600 text-white hover:bg-red-700"
+                  : "bg-white text-red-600 border-2 border-red-600 hover:bg-red-50"
                   }`}
               >
                 <TrendingUp className="w-5 h-5" />
@@ -365,8 +365,8 @@ export default function AdminDashboard() {
                     <div className="flex flex-col items-center text-center">
                       <div
                         className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${count > 0
-                            ? "bg-yellow-100 text-yellow-600"
-                            : "bg-gray-100 text-gray-400"
+                          ? "bg-yellow-100 text-yellow-600"
+                          : "bg-gray-100 text-gray-400"
                           }`}
                       >
                         <Icon className="w-6 h-6" />
@@ -550,7 +550,7 @@ export default function AdminDashboard() {
                               className="bg-gradient-to-r from-yellow-500 to-red-500 h-2 rounded-full transition-all"
                               style={{
                                 width: `${(applicationStage /
-                                    APPLICATION_STAGES.length) *
+                                  APPLICATION_STAGES.length) *
                                   100
                                   }%`,
                               }}

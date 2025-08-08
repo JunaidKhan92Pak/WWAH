@@ -26,11 +26,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 type FormValues = z.infer<typeof formSchema>;
 const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
   const [isSameAsCurrent, setIsSameAsCurrent] = useState(false);
-  const currentDetailedAddress = form.watch("currentDetailedAddress");
+  const currentAddress = form.watch("currentAddress");
   const handleCheckboxChange = (checked: boolean) => {
     setIsSameAsCurrent(checked);
     if (checked) {
-      form.setValue("currentHomeAddress", currentDetailedAddress, {
+      form.setValue("permanentAddress", currentAddress, {
         shouldValidate: true,
       });
     }
@@ -51,7 +51,7 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
       <div className="grid grid-cols-1 gap-2 items-end">
         <FormField
           control={form.control}
-          name="currentDetailedAddress"
+          name="currentAddress"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Current Address</FormLabel>
@@ -70,7 +70,7 @@ const ContactDetailForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
         {/* permanentAddress  */}
         <FormField
           control={form.control}
-          name="currentHomeAddress"
+          name="permanentAddress"
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">

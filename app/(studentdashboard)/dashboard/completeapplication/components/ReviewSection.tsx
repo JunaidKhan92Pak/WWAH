@@ -47,13 +47,12 @@ export default function ReviewPage() {
     gender?: string;
     maritalStatus?: string;
     religion?: string;
-    currentHomeAddress?: string;
     permanentAddress?: string;
     country?: string;
     currentZipCode?: string;
     countryCode?: string;
     phoneNo?: string;
-    currentDetailedAddress?: string;
+    currentAddress?: string;
     currentCountry?: string;
     currentCity?: string;
     currentEmail?: string;
@@ -141,8 +140,8 @@ export default function ReviewPage() {
       religion: `${data1?.religion}`,
     },
     contactDetails: {
-      currentAddress: `${data1?.currentHomeAddress}`,
-      permanentAddress: `${data1?.currentDetailedAddress}`,
+      currentAddress: `${data1?.permanentAddress}`,
+      permanentAddress: `${data1?.currentAddress}`,
       country: `${data1?.country}`,
       // cityProvince: `${data1?.religion}`,
       zipCode: `${data1?.currentZipCode}`,
@@ -150,8 +149,8 @@ export default function ReviewPage() {
       // email: `${data1?.religion}`,
     },
     currentDetails: {
-      currentAddress: `${data1?.currentHomeAddress}`,
-      permanentAddress: `${data1?.currentDetailedAddress}`,
+      currentAddress: `${data1?.permanentAddress}`,
+      permanentAddress: `${data1?.currentAddress}`,
       country: `${data1?.currentCountry}`,
       cityProvince: `${data1?.currentCity}`,
       zipCode: `${data1?.currentZipCode}`,
@@ -215,7 +214,8 @@ export default function ReviewPage() {
         <Section title="Personal Information" data={studentData.personalInfo} />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=1")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=basicinfo&step=1")
           }
         >
           Edit <MdModeEditOutline />
@@ -227,7 +227,8 @@ export default function ReviewPage() {
         <Section title="Contact Details" data={studentData.contactDetails} />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=2")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=basicinfo&step=2")
           }
         >
           Edit <MdModeEditOutline />
@@ -251,7 +252,8 @@ export default function ReviewPage() {
         <Section title="Passport Information" data={studentData.passportInfo} />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=3")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=basicinfo&step=3")
           }
         >
           Edit <MdModeEditOutline />
@@ -260,10 +262,14 @@ export default function ReviewPage() {
 
       {/* Learning Experience Abroad Section */}
       <div className="flex justify-between">
-        <Section title="Learning Experience Abroad" data={studentData.learningExperienceAbroad} />
+        <Section
+          title="Learning Experience Abroad"
+          data={studentData.learningExperienceAbroad}
+        />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=4")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=basicinfo&step=4")
           }
         >
           Edit <MdModeEditOutline />
@@ -271,10 +277,14 @@ export default function ReviewPage() {
       </div>
       {/* Financial Sponsor Information Section */}
       <div className="flex justify-between">
-        <Section title="Financial Sponsor Information" data={studentData.financialSponsorInfo} />
+        <Section
+          title="Financial Sponsor Information"
+          data={studentData.financialSponsorInfo}
+        />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=5")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=basicinfo&step=5")
           }
         >
           Edit <MdModeEditOutline />
@@ -329,7 +339,8 @@ export default function ReviewPage() {
         </Section>
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=6")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=basicinfo&step=6")
           }
         >
           Edit <MdModeEditOutline />
@@ -368,7 +379,9 @@ export default function ReviewPage() {
                 <p className="font-medium">{education.marks}</p>
 
                 {/* Degree Start Date */}
-                <p className="text-sm text-muted-foreground">Degree Start Date</p>
+                <p className="text-sm text-muted-foreground">
+                  Degree Start Date
+                </p>
 
                 <p className="font-medium">
                   {new Date(education.degreeStartDate).toLocaleDateString()}
@@ -390,7 +403,8 @@ export default function ReviewPage() {
         </Section>
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=appinfo&step=1")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=appinfo&step=1")
           }
         >
           Edit <MdModeEditOutline />
@@ -398,7 +412,6 @@ export default function ReviewPage() {
       </div>
       {/* Work Experience Section */}
       <div className="flex justify-between">
-
         <Section title="Work Experience">
           <div className="grid grid-cols-1 gap-4">
             {wdataMap?.map((experience, index) => (
@@ -443,7 +456,8 @@ export default function ReviewPage() {
         </Section>
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=appinfo&step=2")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=appinfo&step=2")
           }
         >
           Edit <MdModeEditOutline />
@@ -461,7 +475,8 @@ export default function ReviewPage() {
         </Section>
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=appinfo&step=3")
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=appinfo&step=3")
           }
         >
           Edit <MdModeEditOutline />
