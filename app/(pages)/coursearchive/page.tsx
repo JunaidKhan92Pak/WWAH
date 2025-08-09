@@ -77,13 +77,13 @@ const CourseArchive = () => {
   const [favoriteCourses, setFavoriteCourses] = useState<
   Record<string, (typeof courses)[0]>
   >({});
-  const [appliedCourses, setAppliedCourses] = useState<Record<string, boolean>>(
-    {}
-  );
-  const [appliedCoursesCount, setAppliedCoursesCount] = useState(0);
-  const [loadingApplied, setLoadingApplied] = useState<Record<string, boolean>>(
-    {}
-  );
+  // const [appliedCourses, setAppliedCourses] = useState<Record<string, boolean>>(
+  //   {}
+  // );
+  // const [appliedCoursesCount, setAppliedCoursesCount] = useState(0);
+  // const [loadingApplied, setLoadingApplied] = useState<Record<string, boolean>>(
+  //   {}
+  // );
   
   const { user, fetchUserProfile } = useUserStore();
   const [loadingFavorites, setLoadingFavorites] = useState<
@@ -265,49 +265,49 @@ const CourseArchive = () => {
       throw error;
     }
   };
-  const deleteAppliedCourse = async (courseId: string) => {
-    const token = getAuthToken();
-    if (!token) {
-      showLoginPrompt();
-      return;
-    }
+  // const deleteAppliedCourse = async (courseId: string) => {
+  //   const token = getAuthToken();
+  //   if (!token) {
+  //     showLoginPrompt();
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            courseId,
-            action: "remove",
-          }),
-        }
-      );
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           courseId,
+  //           action: "remove",
+  //         }),
+  //       }
+  //     );
 
-      if (!response.ok) {
-        throw new Error("Failed to remove course from applied courses");
-      }
+  //     if (!response.ok) {
+  //       throw new Error("Failed to remove course from applied courses");
+  //     }
 
-      const data = await response.json(); // optionally wrap this in try-catch
+  //     const data = await response.json(); // optionally wrap this in try-catch
 
-      toast.success("Course removed from applied courses!", {
-        duration: 2000,
-        position: "top-center",
-      });
+  //     toast.success("Course removed from applied courses!", {
+  //       duration: 2000,
+  //       position: "top-center",
+  //     });
 
-      // You might want to update the local state here too
-    } catch (error) {
-      console.error("Error deleting applied course:", error);
-      toast.error("Something went wrong while removing the course.", {
-        duration: 2000,
-        position: "top-center",
-      });
-    }
-  };
+  //     // You might want to update the local state here too
+  //   } catch (error) {
+  //     console.error("Error deleting applied course:", error);
+  //     toast.error("Something went wrong while removing the course.", {
+  //       duration: 2000,
+  //       position: "top-center",
+  //     });
+  //   }
+  // };
 
   const toggleFavoriteInDB = async (id: string) => {
     const token = getAuthToken();
