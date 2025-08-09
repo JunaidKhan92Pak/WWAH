@@ -206,7 +206,7 @@ const FilterSection = ({ isMobile = false }) => {
                   alt={country.name}
                   className="w-[26px] border rounded-full"
                 />
-                <span className="text-[16px] truncate">{country.name}</span>
+                <span className="text-[14px] truncate">{country.name}</span>
               </div>
               <input
                 type="checkbox"
@@ -230,7 +230,7 @@ const FilterSection = ({ isMobile = false }) => {
       <ul className="py-2 space-y-3 md:space-y-4 md:p-2">
         {["Bachelor's", "Master's", "PhD"].map((program) => (
           <li key={program} className="flex items-center justify-between">
-            <span className="text-[16px] truncate">{program}</span>
+            <span className="text-[14px] truncate">{program}</span>
             <input
               type="checkbox"
               name={program.toLowerCase()}
@@ -254,7 +254,7 @@ const FilterSection = ({ isMobile = false }) => {
       <ul className="py-2 space-y-3 md:space-y-4 md:p-2">
         {["Fully Funded", "Partial Funded"].map((type) => (
           <li key={type} className="flex items-center justify-between">
-            <span className="text-[16px] truncate">{type}</span>
+            <span className="text-[14px] truncate">{type}</span>
             <input
               type="checkbox"
               name={type}
@@ -282,7 +282,7 @@ const FilterSection = ({ isMobile = false }) => {
             "July", "August", "September", "October", "November", "December",
           ].map((deadline) => (
             <li key={deadline} className="flex items-center justify-between">
-              <span className="text-[16px] truncate">{deadline}</span>
+              <span className="text-[14px] truncate">{deadline}</span>
               <input
                 type="checkbox"
                 name={deadline}
@@ -309,7 +309,7 @@ const FilterSection = ({ isMobile = false }) => {
       <ul className="py-2 space-y-3 md:p-2">
         {minimumRequirementsList.map((requirement) => (
           <li key={requirement} className="flex items-center justify-between">
-            <span className="text-[16px] truncate">{requirement}</span>
+            <span className="text-[14px] truncate">{requirement}</span>
             <input
               type="checkbox"
               name={requirement}

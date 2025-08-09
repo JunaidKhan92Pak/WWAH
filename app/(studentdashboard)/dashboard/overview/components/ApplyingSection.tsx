@@ -220,8 +220,10 @@ const ApplyingSection: React.FC = () => {
   }, [appliedCourseIds]);
 
   // Function to remove course from applied courses
+  // Alternative: Using the DELETE endpoint (more RESTful)
   const removeFromAppliedCourses = async (courseId: string) => {
-    // console.log("Attempting to remove course with ID:", courseId);
+    console.log("=== REMOVING COURSE (DELETE METHOD) ===");
+    console.log("Course ID to remove:", courseId);
 
     const token = getAuthToken();
 
@@ -233,51 +235,60 @@ const ApplyingSection: React.FC = () => {
       return;
     }
 
+    const loadingToast = toast.loading("Removing course...", {
+      position: "top-center",
+    });
+
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses/remove`,
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            courseId,
-            action: "remove",
+            courseId: courseId.toString(),
           }),
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to remove course from applied courses");
+        const errorData = await response.text();
+        throw new Error(
+          `Failed to remove course: ${response.status} - ${errorData}`
+        );
       }
 
       const data = await response.json();
-      // console.log("Course removed from applied courses:", data);
+      console.log("Remove response:", data);
 
-      const updatedAppliedCourseIds = data.data?.appliedCourses || [];
-      // console.log(
-      //   "Remaining course IDs after removal:",
-      //   updatedAppliedCourseIds
-      // );
+      if (data.success) {
+        const updatedAppliedCourseIds = data.data?.appliedCourses || [];
 
-      // Update local state with the new course IDs
-      setAppliedCourseIds(updatedAppliedCourseIds);
+        // Update states
+        setAppliedCourseIds(updatedAppliedCourseIds);
+        setDetailedAppliedCourses((prev) =>
+          prev.filter((course) => course._id !== courseId)
+        );
 
-      // Also update detailed courses by filtering out the removed course
-      setDetailedAppliedCourses((prev) =>
-        prev.filter((course) => course._id !== courseId)
-      );
-
-      toast.success("Course removed from applications!", {
-        duration: 2000,
-        position: "top-center",
-      });
+        toast.dismiss(loadingToast);
+        toast.success("Course removed from applications!", {
+          duration: 2000,
+          position: "top-center",
+        });
+      } else {
+        throw new Error(data.message || "Unknown error occurred");
+      }
     } catch (error: unknown) {
       console.error("Error removing course:", error);
-      toast.error("Failed to remove course. Please try again.", {
-        duration: 3000,
+      toast.dismiss(loadingToast);
+
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to remove course: ${errorMessage}`, {
+        duration: 4000,
         position: "top-center",
       });
     }
