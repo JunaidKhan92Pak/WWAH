@@ -1,18 +1,49 @@
 import { z } from "zod";
 
 // ✅ Zod Schema (Validation)
+const proficiencyMap = {
+  beginner: "Beginner",
+  intermediate: "Intermediate",
+  advanced: "Advanced",
+  fluent: "Fluent",
+  native: "Native Speaker",
+} as const;
+const proficiencyTestMap = {
+  ielts: "IELTS",
+  toefl: "TOEFL",
+  pte: "PTE",
+  duolingo: "Duolingo",
+  other: "Other"
+} as const;
+
 export const formSchema = z.object({
   countryOfStudy: z.string().optional(),
-  proficiencyLevel: z.enum(["Beginner", "Fluent", "Intermediate", "Advanced", "Native Speaker"]).optional(),
+  proficiencyLevel: z
+    .string()
+    .toLowerCase()
+    .refine(val => val in proficiencyMap, {
+      message: "Invalid proficiency level",
+    })
+    .transform(val => proficiencyMap[val as keyof typeof proficiencyMap])
+    .optional(),
+
+  proficiencyTest: z
+    .string()
+    .toLowerCase()
+    .refine(val => val in proficiencyTestMap, {
+      message: "Invalid proficiency test",
+    })
+    .transform(val => proficiencyTestMap[val as keyof typeof proficiencyTestMap])
+    .optional(),
   overAllScore: z.string()
 
     .refine(
       val => !val || /^\d{1,3}$/.test(val),
       "Overall score must be a number between 0 and 999"
     ),
-  proficiencyTest: z.enum(["IELTS", "TOEFL", "PTE", "Duolingo", "Other"]).optional(),
-  listeningScore: z.string()
+  // proficiencyTest: z.enum(["IELTS", "TOEFL", "PTE", "Duolingo", "Other"]).optional(),
 
+  listeningScore: z.string()
     .refine(
       val => !val || /^\d{1,3}$/.test(val),
       "Listening score must be a number between 0 and 999"
@@ -66,16 +97,14 @@ export const formSchema = z.object({
           .regex(/^\d{1,3}(\.\d{1,2})?$|^A*B*C*D*E*F*$/i, {
             message: "Enter valid marks (number 0-100, or letter A-F).",
           }),
-        degreeStartDate: z.date().optional().nullable(),
-        degreeEndDate: z.date().optional().nullable(),
+        degreeStartDate: z.coerce.date().optional().nullable(),
+        degreeEndDate: z.coerce.date().optional().nullable(),
       })
     )
     .optional(),
   workExperience: z
     .array(
       z.object({
-
-
         jobTitle: z.string()
           .min(2, "Job title must be at least 2 characters")
           .max(100, "Job title must not exceed 100 characters")
