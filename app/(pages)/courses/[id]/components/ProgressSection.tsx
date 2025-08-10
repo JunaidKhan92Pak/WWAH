@@ -26,8 +26,7 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [showProfilePrompt, setShowProfilePrompt] = useState(false);
-  const { userSuccessInfo, isLoggedIn, hasData, fetchUserSuccessInfo } =
-    useUserInfo();
+  const { userSuccessInfo, isLoggedIn, hasData, fetchUserSuccessInfo } = useUserInfo();
 
   // Initial state for success metrics
   const [successMetrics, setSuccessMetrics] = useState({
@@ -52,7 +51,6 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   // Fetch user info when component mounts
   useEffect(() => {
     console.log("Fetching user success info...");
-
     fetchUserSuccessInfo();
   }, [fetchUserSuccessInfo]);
 
@@ -98,39 +96,6 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
         return;
       }
 
-      // If logged in and has data, calculate metrics
-      // const userInfo = {
-      //   languageProficiency: {
-      //     test: userSuccessInfo.languageProficiency.test,
-      //     score: parseInt(userSuccessInfo.languageProficiency.score) || 0
-      //   },
-      //   majorSubject: {
-      //     previousGradingScore: userSuccessInfo.grade || 20,
-      //     previousGradingScale: userSuccessInfo.gradetype || "percentage",
-      //     qualification: userSuccessInfo.studyLevel || "Inter",
-      //   },
-      //   subject: userSuccessInfo.majorSubject || "Computer",
-      //   workExperience: parseInt(userSuccessInfo.workExperience) || 2,
-      //   isProfileComplete: true,
-      //   tuitionFee: userSuccessInfo.tuitionFee || "$200",
-      //   costofliving: userSuccessInfo.livingCosts || "$200",
-      // };
-      // const userInfo = {
-      //   languageProficiency: {
-      //     test: userSuccessInfo.languageProficiency.test,
-      //     score: parseInt(userSuccessInfo.languageProficiency.score) || 0
-      //   },
-      //   majorSubject: {
-      //     previousGradingScore: userSuccessInfo.grade || 20,
-      //     previousGradingScale: userSuccessInfo.gradetype || "percentage",
-      //     qualification: userSuccessInfo.studyLevel || "Inter",
-      //   },
-      //   subject: userSuccessInfo.majorSubject || "Computer",
-      //   workExperience: parseInt(userSuccessInfo.workExperience) || 2,
-      //   isProfileComplete: true,
-      //   tuitionFee: userSuccessInfo.tuitionFee || "$200",
-      //   costofliving: userSuccessInfo.livingCosts || "$200",
-      // };
 
       const metrics = calculateAllSuccessMetrics(
         userSuccessInfo,
@@ -176,6 +141,7 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
       icon: "/Tea-Cup.svg",
     },
   ];
+
   const overallChance = Math.round(
     (academicFactors.reduce((sum, factor) => sum + factor.value, 0) +
       financialFactors.reduce((sum, factor) => sum + factor.value, 0)) /
@@ -194,8 +160,7 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
   );
 
   // Helper function for progress bar color
-  const getProgressBarColor = (value: number) =>
-    value >= 75 ? "#90EE90" : value >= 50 ? "#e5edde" : "#f4d0d2";
+  const getProgressBarColor = (value: number) => value >= 75 ? "#90EE90" : value >= 50 ? "#e5edde" : "#f4d0d2";
 
   // Login prompt content
   const LoginPrompt = () => (
@@ -250,7 +215,6 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
 
           {/* Academic Progress Bars */}
           <div className="justify-center underline underline-offset-4 flex md:hidden">
-            {" "}
             <h4>Academic Chances</h4>
           </div>
           <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-2 lg:px-6">
@@ -288,7 +252,6 @@ export const ProgressSection = ({ data }: { data: CourseData }) => {
 
           {/* Financial Progress Bars */}
           <div className="justify-center underline underline-offset-4 flex md:hidden">
-            {" "}
             <h4>Financial Chances</h4>
           </div>
           <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white shadow rounded-3xl p-4 md:px-2 lg:px-6">

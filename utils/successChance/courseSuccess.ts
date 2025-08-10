@@ -84,7 +84,6 @@ export const extractGradeRequirement = (gradesText: string) => {
 
 // Calculate grade success percentage
 export const calculateGradeSuccess = (studentScore: number | string, studentScale: string, courseGradeText: string) => {
-
     console.log("studentScore", studentScore, studentScale, courseGradeText);
     if (!studentScore || !courseGradeText) return 10;
     const score = typeof studentScore === 'string' ? parseFloat(studentScore) : studentScore;

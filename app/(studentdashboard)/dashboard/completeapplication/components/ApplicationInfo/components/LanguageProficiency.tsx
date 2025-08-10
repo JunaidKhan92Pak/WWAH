@@ -20,6 +20,7 @@ import { formSchema } from "./Schema";
 type FormValues = z.infer<typeof formSchema>;
 
 const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
+
   return (
     <div className="flex flex-col  my-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">

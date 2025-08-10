@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import {
   Pagination,
   PaginationContent,
@@ -29,7 +30,7 @@ const ApplicationInfo = () => {
   const totalPages = 4;
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  const token = getAuthToken();
   useEffect(() => {
     const stepParam = parseInt(searchParams.get("step") || "1", 10);
     if (!isNaN(stepParam) && stepParam >= 1 && stepParam <= totalPages) {
@@ -53,7 +54,6 @@ const ApplicationInfo = () => {
   // ✅ Function to Handle Form Submission
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Form submission started");
-
     try {
       setIsSubmitting(true);
       console.log("Form data:", data);
@@ -100,6 +100,7 @@ const ApplicationInfo = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           credentials: "include",
           body: JSON.stringify(formattedData),
@@ -159,7 +160,7 @@ const ApplicationInfo = () => {
         return true;
     }
   };
-  const token = getAuthToken();
+
   useEffect(() => {
     async function loadSaved() {
       try {
@@ -177,7 +178,6 @@ const ApplicationInfo = () => {
         const result = await res.json();
         if (result.success && result.data) {
           const data = result.data;
-
           // ─── Build a `formatted` object matching your zod schema exactly ───
           const formatted = {
             // primitive or string fields
@@ -205,19 +205,19 @@ const ApplicationInfo = () => {
                   subjectName?: string;
                   institutionAttended?: string;
                   marks?: string | number;
-                  degreeStartDate?: string | Date | null;
-                  degreeEndDate?: string | Date | null;
+                  degreeStartDate?: string | Date
+                  degreeEndDate?: string | Date
                 }) => ({
                   highestDegree: bg.highestDegree || "",
                   subjectName: bg.subjectName || "",
                   institutionAttended: bg.institutionAttended || "",
                   marks: bg.marks ?? "",
                   degreeStartDate: bg.degreeStartDate
-                    ? new Date(bg.degreeStartDate)
-                    : null,
+                    ? format(bg.degreeStartDate, "yyyy-MM-dd")
+                    : undefined,
                   degreeEndDate: bg.degreeEndDate
-                    ? new Date(bg.degreeEndDate)
-                    : null,
+                    ? format(bg.degreeEndDate, "yyyy-MM-dd")
+                    : undefined,
                 }))
                 : [],
 
