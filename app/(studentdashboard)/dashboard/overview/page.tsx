@@ -5,9 +5,11 @@ import Herosection from "./components/Herosection";
 import CounsellorSection from "./components/CounsellorSection";
 import ApplyingSection from "./components/ApplyingSection";
 import Coursesuggestion from "./components/Coursesuggestion";
-import { StatusProgressBar } from "../components/StatusProgressBar";
+// import { StatusProgressBar } from "../components/StatusProgressBar";
 import { useUserStore } from "@/store/useUserData";
 import { getAuthToken } from "@/utils/authHelper";
+// import AppliedScholarships from "./components/AppliedScholarships";
+import AppliedScholarships from "./components/AppliedScholarship";
 // interface CounsellorSectionProps {
 //   userEmail: {
 //     email: string;
@@ -30,11 +32,14 @@ const Page = () => {
         <div className="w-full mx-auto flex flex-col xl:flex-row gap-4  items-center md:items-stretch  my-6 justify-center">
           <div className="w-full xl:w-[72%] rounded-xl border p-3 flex flex-col space-y-4">
             <ApplyingSection />
-            <div className="flex flex-col items-center justify-center">
+            <div id="applied-scholarships" className="mt-1">
+              <AppliedScholarships />
+            </div>
+            {/* <div className="flex flex-col items-center justify-center">
               <div className="w-full">
                 <StatusProgressBar progress={70} />
               </div>
-            </div>
+              </div> */}
             <Coursesuggestion />
           </div>
 

@@ -551,6 +551,10 @@ function createQuerySpecificUserData(
       phone: originalUserData?.user?.phone || 0,
       gender: originalUserData?.user?.gender || "",
       favouriteCourse: originalUserData?.user?.favouriteCourse || [],
+      favouriteScholarship: originalUserData?.user?.favouriteScholarship || [],
+      favouriteUniversity: originalUserData?.user?.favouriteUniversity || [],
+      appliedScholarshipCourses:
+        originalUserData?.user?.appliedScholarshipCourses || [],
       createdAt: originalUserData?.user?.createdAt || new Date().toISOString(),
       updatedAt: originalUserData?.user?.updatedAt || new Date().toISOString(),
     },
@@ -593,15 +597,48 @@ function createQuerySpecificUserData(
     loading: false,
     error: null,
     isAuthenticated: false,
+    lastUpdated: null,
+
+    // Favorite universities state
+    favoriteUniversities: {},
+    favoriteUniversityIds: originalUserData?.user?.favouriteUniversity || [],
+    loadingFavorites: false,
+
+    // Favorite scholarships state
+    favoriteScholarships: {},
+    favoriteScholarshipIds: originalUserData?.user?.favouriteScholarship || [],
+    loadingScholarships: false,
+
+    // Applied scholarship courses state
+    appliedScholarshipCourses: {},
+    appliedScholarshipCourseIds:
+      originalUserData?.user?.appliedScholarshipCourses?.map((course) =>
+        typeof course === "string" ? course : course._id || course.toString()
+      ) || [],
+    loadingApplications: false,
+
+    // Action methods - Fix the type signatures
     fetchUserProfile: async () => {},
-    updateUserProfile: async () => false,
-    updateDetailedInfo: async () => {},
+    updateUserProfile: async () => false, // Fixed: Return boolean
+    updateDetailedInfo: async () => false, // Fixed: Return boolean instead of void
     setUser: () => {},
     logout: () => {},
-    lastUpdated: null,
-    getLastUpdatedDate: function (): string | null {
-      throw new Error("Function not implemented.");
-    },
+    getLastUpdatedDate: (): string | null => null,
+
+    // Favorite universities actions
+    fetchFavoriteUniversities: async () => {},
+    toggleUniversityFavorite: async () => false,
+    getFavoriteStatus: () => false,
+
+    // Favorite scholarships actions
+    fetchFavoriteScholarships: async () => {},
+    toggleScholarshipFavorite: async () => false,
+    getScholarshipFavoriteStatus: () => false,
+
+    // Applied scholarship courses actions
+    fetchAppliedScholarshipCourses: async () => {},
+    addAppliedScholarshipCourse: async () => false,
+    refreshApplications: async () => {},
   };
 
   return querySpecificData;

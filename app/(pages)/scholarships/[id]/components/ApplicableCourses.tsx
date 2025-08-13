@@ -11,7 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { applyCourse } from "@/lib/appliedScholarships"; // Make sure this path is correct
 
 interface Course {
   id: string;
@@ -37,39 +39,78 @@ interface DynamicTableData {
   teaching_language: string[];
   university: string[];
   countries: string[];
+  // Add optional alternative field names
+  country?: string[];
+  host_country?: string[];
+  hostCountry?: string[];
+  location?: string[];
 }
 
 interface ApplicableCoursesProps {
+  hostCountry?: string;
+  banner?: string;
   tableData?: DynamicTableData;
 }
 
 export default function ApplicableCourses({
+  hostCountry,
+  banner,
   tableData,
 }: ApplicableCoursesProps) {
+  const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [applyingCourseId, setApplyingCourseId] = useState<string | null>(null);
   const [sortField, setSortField] = useState<keyof Course | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
 
+  console.log("Host country:", hostCountry);
+  console.log("Banner:", banner);
+
   // Transform dynamic data to Course objects
   useEffect(() => {
+    // Debug: Log the incoming tableData
+    console.log("Raw tableData:", tableData);
+    console.log("Countries array:", tableData?.countries);
+    console.log(
+      "All tableData keys:",
+      tableData ? Object.keys(tableData) : "No tableData"
+    );
+
     if (tableData && Array.isArray(tableData.course)) {
-      const transformedCourses: Course[] = tableData.course.map((_, index) => ({
-        id: (index + 1).toString(),
-        department: tableData.faculty_department?.[index] || "",
-        course: tableData.course?.[index] || "",
-        university: tableData.university?.[index] || "",
-        duration: tableData.duration?.[index] || "",
-        deadline: tableData.deadline?.[index] || "",
-        entryRequirements: tableData.entry_requirements?.[index] || "",
-        scholarshipType: tableData.scholarship_type?.[index] || "",
-        teachingLanguage: tableData.teaching_language?.[index] || "",
-        countries: tableData.countries?.[index] || "", // this handles undefined safely
-      }));
+      const transformedCourses: Course[] = tableData.course.map((_, index) => {
+        const courseObj = {
+          id: (index + 1).toString(),
+          department: tableData.faculty_department?.[index] || "",
+          course: tableData.course?.[index] || "",
+          university: tableData.university?.[index] || "",
+          duration: tableData.duration?.[index] || "",
+          deadline: tableData.deadline?.[index] || "",
+          entryRequirements: tableData.entry_requirements?.[index] || "",
+          scholarshipType: tableData.scholarship_type?.[index] || "",
+          teachingLanguage: tableData.teaching_language?.[index] || "",
+          // Try multiple possible field names for countries
+          countries:
+            tableData.countries?.[index] ||
+            tableData.country?.[index] ||
+            tableData.host_country?.[index] ||
+            tableData.hostCountry?.[index] ||
+            tableData.location?.[index] ||
+            "",
+        };
+
+        // Debug: Log each transformed course
+        console.log(`Course ${index + 1}:`, courseObj);
+        console.log(`Course ${index + 1} countries:`, courseObj.countries);
+
+        return courseObj;
+      });
+
+      console.log("All transformed courses:", transformedCourses);
 
       setCourses(transformedCourses);
       setFilteredCourses(transformedCourses);
@@ -82,11 +123,82 @@ export default function ApplicableCourses({
     }
   }, [tableData]);
 
+  // Function to handle course application using API service
+  const handleApplyCourse = async (course: Course) => {
+    try {
+      setApplyingCourseId(course.id);
+
+      // Debug: Log the course object to see what data we have
+      console.log("Applying for course:", course);
+      console.log("Host country from props:", hostCountry);
+      console.log("Banner from props:", banner);
+
+      // Prepare application data with proper fallbacks
+      const applicationData = {
+        scholarshipName: course.course || `${course.university} Scholarship`,
+        hostCountry: hostCountry || course.countries || "Not specified",
+        banner: banner || "",
+        courseName: course.course || "Not specified",
+        duration: course.duration || "Not specified",
+        language: course.teachingLanguage || "Not specified",
+        universityName: course.university || "Not specified",
+        scholarshipType: course.scholarshipType || "Not specified",
+        deadline: course.deadline || "Not specified",
+      };
+
+      console.log("Submitting application with data:", applicationData);
+
+      const result = await applyCourse(applicationData);
+
+      console.log("Application result:", result);
+
+      if (result.success) {
+        toast.success("Application submitted successfully!");
+
+        // Redirect to dashboard with a slight delay to allow the toast to show
+        setTimeout(() => {
+          router.push("/dashboard/overview#applied-scholarships");
+        }, 1000);
+      } else {
+        throw new Error(result.message || "Application failed");
+      }
+    } catch (error: unknown) {
+      console.error("Error applying for course:", error);
+
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+
+      // Handle different types of errors
+      if (
+        errorMessage.includes("login") ||
+        errorMessage.includes("authentication") ||
+        errorMessage.includes("Please login")
+      ) {
+        toast.error("Please login to apply for courses");
+        setTimeout(() => {
+          router.push("/signin");
+        }, 1500);
+      } else if (errorMessage.includes("already applied")) {
+        toast.error("You have already applied for this course");
+      } else if (errorMessage.includes("User not found")) {
+        toast.error("User session expired. Please login again.");
+        setTimeout(() => {
+          router.push("/signin");
+        }, 1500);
+      } else {
+        toast.error(
+          errorMessage || "Failed to submit application. Please try again."
+        );
+      }
+    } finally {
+      setApplyingCourseId(null);
+    }
+  };
 
   const handleSearch = (value: string) => {
     setIsLoading(true);
     setSearchTerm(value);
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1);
 
     setTimeout(() => {
       if (!value.trim()) {
@@ -106,8 +218,10 @@ export default function ApplicableCourses({
             course.scholarshipType
               .toLowerCase()
               .includes(lowerCaseSearchTerm) ||
-            course.teachingLanguage.toLowerCase().includes(lowerCaseSearchTerm)
-            || course.countries.toLowerCase().includes(lowerCaseSearchTerm)
+            course.teachingLanguage
+              .toLowerCase()
+              .includes(lowerCaseSearchTerm) ||
+            course.countries.toLowerCase().includes(lowerCaseSearchTerm)
         );
         setFilteredCourses(filtered);
       }
@@ -116,7 +230,7 @@ export default function ApplicableCourses({
   };
 
   const handleSort = (field: keyof Course) => {
-    setCurrentPage(1); // Reset to first page when sorting
+    setCurrentPage(1);
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -152,38 +266,31 @@ export default function ApplicableCourses({
     }
   };
 
-  // Calculate pagination display values
   const actualFirst = sortedCourses.length === 0 ? 0 : indexOfFirstCourse + 1;
   const actualLast = Math.min(indexOfLastCourse, sortedCourses.length);
 
-  // Generate pagination buttons with ellipsis for large page counts
-  const getPaginationItems = () => {
-    const maxVisible = 7; // Maximum number of page buttons to show
-    const items = [];
+  const getPaginationItems = (): (number | string)[] => {
+    const maxVisible = 7;
+    const items: (number | string)[] = [];
 
     if (totalPages <= maxVisible) {
-      // Show all pages if total pages is small
       for (let i = 1; i <= totalPages; i++) {
         items.push(i);
       }
     } else {
-      // Show first page, current page neighborhood, and last page with ellipsis
       if (currentPage <= 4) {
-        // Show 1, 2, 3, 4, 5, ..., last
         for (let i = 1; i <= 5; i++) {
           items.push(i);
         }
         items.push("ellipsis");
         items.push(totalPages);
       } else if (currentPage >= totalPages - 3) {
-        // Show 1, ..., last-4, last-3, last-2, last-1, last
         items.push(1);
         items.push("ellipsis");
         for (let i = totalPages - 4; i <= totalPages; i++) {
           items.push(i);
         }
       } else {
-        // Show 1, ..., current-1, current, current+1, ..., last
         items.push(1);
         items.push("ellipsis");
         for (let i = currentPage - 1; i <= currentPage + 1; i++) {
@@ -257,7 +364,7 @@ export default function ApplicableCourses({
                           className={cn(
                             "px-6 py-3 text-left text-sm font-semibold text-black uppercase tracking-wider whitespace-nowrap",
                             column !== "action" &&
-                            "cursor-pointer group transition-colors hover:bg-[#FCE7D2]",
+                              "cursor-pointer group transition-colors hover:bg-[#FCE7D2]",
                             column === "entryRequirements" && "min-w-[300px]"
                           )}
                           onClick={() =>
@@ -270,12 +377,12 @@ export default function ApplicableCourses({
                               {column === "entryRequirements"
                                 ? "Entry Requirements"
                                 : column === "scholarshipType"
-                                  ? "Scholarship Type"
-                                  : column === "teachingLanguage"
-                                    ? "Teaching Language"
-                                    : column === "action"
-                                      ? ""
-                                      : column}
+                                ? "Scholarship Type"
+                                : column === "teachingLanguage"
+                                ? "Teaching Language"
+                                : column === "action"
+                                ? ""
+                                : column}
                             </span>
                             {column !== "action" && (
                               <SortIcon field={column as keyof Course} />
@@ -342,48 +449,49 @@ export default function ApplicableCourses({
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             {course.deadline}
                           </td>
-                          {/* <td className="px-6 py-4 text-sm">
-                            {course.entryRequirements}
-                          </td> */}
-                          <div className="relative group w-fit py-4">
-                            <td className="cursor-pointer text-md max-w-[300px] overflow-hidden line-clamp-2">
-                              {course.entryRequirements}
-                            </td>
-
-                            {/* Hover Tooltip to the right */}
-                            <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
-                              {course.entryRequirements}
+                          <td className="px-6 py-4 text-sm">
+                            <div className="relative group w-fit">
+                              <div className="cursor-pointer max-w-[300px] overflow-hidden line-clamp-2">
+                                {course.entryRequirements}
+                              </div>
+                              <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
+                                {course.entryRequirements}
+                              </div>
                             </div>
-                          </div>
-
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             {course.scholarshipType}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             {course.teachingLanguage}
                           </td>
-                          <div className="relative group w-fit py-4">
-                            <td className="cursor-pointer text-md max-w-[300px] overflow-hidden line-clamp-2">
-                              {course.countries}
-                            </td>
-
-                            {/* Hover Tooltip to the right */}
-                            <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
-                              {course.countries}
+                          <td className="px-6 py-4 text-sm">
+                            <div className="relative group w-fit">
+                              <div className="cursor-pointer max-w-[300px] overflow-hidden line-clamp-2">
+                                {course.countries}
+                              </div>
+                              <div className="absolute top-0 left-full ml-2 hidden group-hover:block bg-gray-100 text-black text-sm font-medium p-2 rounded-md w-[300px] shadow-lg z-10">
+                                {course.countries}
+                              </div>
                             </div>
-                          </div>
+                          </td>
                           <td className="px-2 py-2 whitespace-nowrap text-sm">
-                            <Link href="/dashboard/overview">
-                              {" "}
-                              <Button
-                                variant="default"
-                                size="sm"
-                                className="w-full bg-red-700 hover:bg-red-700 "
-                                onClick={() => { }}
-                              >
-                                Apply
-                              </Button>
-                            </Link>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              className="w-full bg-red-700 hover:bg-red-800 disabled:opacity-50"
+                              onClick={() => handleApplyCourse(course)}
+                              disabled={applyingCourseId === course.id}
+                            >
+                              {applyingCourseId === course.id ? (
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                  <span>Applying...</span>
+                                </div>
+                              ) : (
+                                "Apply"
+                              )}
+                            </Button>
                           </td>
                         </tr>
                       ))
@@ -450,8 +558,8 @@ export default function ApplicableCourses({
                           currentPage === item
                             ? "bg-primary text-primary-foreground"
                             : typeof item === "number"
-                              ? "bg-card hover:bg-muted text-foreground"
-                              : "bg-card text-muted-foreground cursor-default"
+                            ? "bg-card hover:bg-muted text-foreground"
+                            : "bg-card text-muted-foreground cursor-default"
                         )}
                       >
                         {typeof item === "number" ? item : "..."}
