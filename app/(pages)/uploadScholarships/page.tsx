@@ -573,19 +573,19 @@ const ImprovedExcelUploader = () => {
       setProcessedData(processedData);
 
       // Send to API
-      // const res = await fetch("/api/addScholarship", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(processedData),
-      //   credentials: "include",
-      // });
+      const res = await fetch("/api/addScholarship", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(processedData),
+        credentials: "include",
+      });
 
-      // if (!res.ok) {
-      //   throw new Error(`API returned status: ${res.status}`);
-      // }
+      if (!res.ok) {
+        throw new Error(`API returned status: ${res.status}`);
+      }
 
-      // const json = await res.json();
-      // console.log(`API response:`, json);
+      const json = await res.json();
+      console.log(`API response:`, json);
 
       setResult(`Successfully processed ${processedData.length} scholarship(s)${file2 ? ' with merged data from both files' : ''}`);
 
