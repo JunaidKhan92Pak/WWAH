@@ -413,15 +413,25 @@ const Page = () => {
                         </div>
 
                         {/* Content Section */}
-                        <div className="p-2 flex-grow">
+                        <div className=" flex-grow">
                           <Link
-                            target="blank"
-                            href={`/scholarships/${item._id}`}
-                            rel="noopener noreferrer"
-                          >
-                            <p className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1">
-                              {item.name}
-                            </p>
+                          target="blank"
+                          href={`/scholarships/${item._id}`}
+                          rel="noopener noreferrer"
+                        >
+<div className="relative group">
+  <p
+  className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1 line-clamp-2"
+
+>
+    {item.name}
+  </p>
+  <span className="absolute left-0 bottom-full mb-1 hidden group-hover:block 
+                    bg-gray-200 text-black text-xs px-2 py-1 rounded shadow-lg z-10 w-[200px]">
+    {item.name}
+  </span>
+</div>
+
                           </Link>
                           <p className="text-sm text-gray-600">
                             <span className="font-semibold">
@@ -448,9 +458,16 @@ const Page = () => {
                                 width={10}
                                 height={10}
                               />
-                              <p className="text-sm text-gray-600 truncate">
-                                {item.type}
-                              </p>
+                            <div className="relative group w-24"> {/* Width small so first word fits */}
+  <p className="text-sm text-gray-600 truncate">
+    {item.type}
+  </p>
+  <span className="absolute right-2 bottom-full mb-1 hidden group-hover:block text-center
+    bg-gray-200  text-xs px-2 py-1 rounded shadow-lg z-10 ">
+    {item.type}
+  </span>
+</div>
+
                             </div>
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
@@ -471,7 +488,7 @@ const Page = () => {
 
                               {/* Tooltip (only appears on large screens and above) */}
                               {item.programs && (
-                                <span className="hidden lg:group-hover:block absolute top-full left-0 mt-1 z-10 bg-gray-200 text-black text-xs p-2 rounded-md shadow-lg w-max max-w-xs whitespace-normal">
+                                <span className="hidden lg:group-hover:block absolute bottom-full left-0 mt-1 z-10 bg-gray-200 text-black text-xs p-2 rounded-md shadow-lg w-max max-w-xs whitespace-normal">
                                   {item.programs}
                                 </span>
                               )}
@@ -499,9 +516,9 @@ const Page = () => {
                               <span
                                 className="
       hidden lg:group-hover:block
-      absolute top-full mt-1 left-1/2 -translate-x-1/2 
+      absolute bottom-full left-8 -translate-x-1/2 
       bg-gray-200 text-black text-xs p-2 rounded-md shadow-md 
-      w-max max-w-[300px] z-10
+      w-max max-w-[200px] z-10 
       text-center
     "
                               >
@@ -511,20 +528,14 @@ const Page = () => {
                           </div>
                         </div>
 
-                        <div className=" ">
-                          {" "}
-                          <Link
-                            target="blank"
-                            href={`/scholarships/${item._id}`}
-                            rel="noopener noreferrer"
-                            className=" flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-lg text-white text-xs md:text-[12px] px-2 py-2 border border-red-500 text-center"
-                          >
-                            Explore Courses
-                          </Link>
-                          {/* <div className="flex-1 flex items-center justify-center  hover:bg-red-600 rounded-lg text-orange-500 hover:text-white text-xs md:text-[12px] px-1 py-2 border border-orange-500 text-center">
-                            Start Your Application{" "}
-                          </div>{" "} */}
-                        </div>
+                        <Link
+                          target="blank"
+                          href={`/scholarships/${item._id}`}
+                          rel="noopener noreferrer"
+                          className=" mt-1 flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
+                        >
+                          Explore Courses
+                        </Link>
                       </div>
                     ))
                   )}
