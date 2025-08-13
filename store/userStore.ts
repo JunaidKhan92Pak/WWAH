@@ -3,7 +3,7 @@ import { getAuthToken, deleteAuthToken } from "@/utils/authHelper";
 import { getUserData } from "@/utils/getUser";
 
 export interface UserData {
-    id: string;
+    _id: string;
     firstName: string;
     lastName: string;
     phone: number;

@@ -110,6 +110,7 @@ export async function withCaching(
 }
 
 // Helper function to fetch and cache user data
+// Helper function to fetch and cache user data
 async function fetchAndCacheUserData(userId: string) {
   const client = await clientPromise;
   const db = client.db("wwah");
@@ -120,23 +121,46 @@ async function fetchAndCacheUserData(userId: string) {
     db.collection("successchances").findOne({ userId: new ObjectId(userId) }),
   ]);
 
-  // Create a UserStore compatible object
-  // ✅ RIGHT
+  // Create a complete UserStore compatible object
   const userData: UserStore = {
     detailedInfo: detailedInfo as DetailedInfo | null,
     user: user as User | null,
     loading: false,
     error: null,
     isAuthenticated: !!user,
-    fetchUserProfile: async () => { }, // stub
-    setUser: () => { }, // stub
-    logout: () => { }, // stub
-    updateUserProfile: async () => false, // stub
-    updateDetailedInfo: async () => { },
     lastUpdated: null,
-    getLastUpdatedDate: function (): string | null {
-      throw new Error("Function not implemented.");
-    }
+    // Add all missing required properties with sensible defaults
+    favoriteUniversities: {},
+    favoriteUniversityIds: [],
+    loadingFavorites: false,
+    favoriteScholarships: {},
+    favoriteScholarshipIds: [],
+    loadingScholarships: false,
+    appliedScholarshipCourses: {},
+    appliedScholarshipCourseIds: [],
+    loadingApplications: false,
+    // Fixed stub methods with correct type signatures
+    fetchUserProfile: async () => {},
+    setUser: () => {},
+    logout: () => {},
+    updateUserProfile: async () => false,
+    updateDetailedInfo: async () => false, // Fixed: Return boolean instead of void
+    getLastUpdatedDate: () => null,
+    addAppliedScholarshipCourse: async (_applicationData: any) => false,
+    refreshApplications: async () => {},
+    fetchFavoriteUniversities: async () => {},
+    toggleUniversityFavorite: async (
+      _universityId: string,
+      _action: "add" | "remove"
+    ) => false,
+    getFavoriteStatus: (_universityId: string) => false,
+    fetchFavoriteScholarships: async () => {},
+    toggleScholarshipFavorite: async (
+      _scholarshipId: string,
+      _action: "add" | "remove"
+    ) => false,
+    getScholarshipFavoriteStatus: (_scholarshipId: string) => false,
+    fetchAppliedScholarshipCourses: async () => {},
   };
 
   console.log("userData", userData);

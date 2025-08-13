@@ -133,8 +133,13 @@ const MIN = 0;
 const MAX = 1000000;
 
 export default function FilterContent() {
-  const { filterUniversities, setSearch, setCountry, fetchAllUniversitiesForFilter, loading } =
-    useUniversityStore();
+  const {
+    filterUniversities,
+    setSearch,
+    setCountry,
+    fetchAllUniversitiesForFilter,
+    loading,
+  } = useUniversityStore();
   const {
     minBudget,
     maxBudget,
@@ -500,7 +505,7 @@ export default function FilterContent() {
                 className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                 aria-label={`Select ${subject}`}
               />
-              <span className="text-gray-700">{subject}</span>
+              <span className="text-gray-700 text-[12px]">{subject}</span>
             </label>
           ))}
         </div>

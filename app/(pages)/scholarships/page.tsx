@@ -1,7 +1,6 @@
 "use client";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useState, useEffect } from "react";
 import Image from "next/image";
-// import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -27,375 +26,123 @@ import { Copy } from "lucide-react";
 
 import { Label } from "@/components/ui/label";
 import FilterSection from "./Components/FilterSection";
+import { getAuthToken } from "@/utils/authHelper";
+import { useUserStore } from "@/store/useUserData";
+import toast from "react-hot-toast";
 
 const Page = () => {
-  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
-  const [showFavorites, setShowFavorites] = useState(false);
-  const [favoritesCount, setFavoritesCount] = useState<number>(0);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
   const [localSearch, setLocalSearch] = useState("");
-const [favoriteScholarships, setFavoriteScholarships] = useState<Record<string, typeof scholarships[0]>>({});
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
 
+  // User store hooks
+  const {
+    user,
+    fetchUserProfile,
+    favoriteScholarships,
+    favoriteScholarshipIds,
+    loadingScholarships,
+    toggleScholarshipFavorite,
+    getScholarshipFavoriteStatus,
+    fetchFavoriteScholarships,
+  } = useUserStore();
 
+  // Scholarship store hooks
   const { scholarships, loading, page, totalPages, setPage, setSearch } =
     useScholarships();
+
+  // Initialize favorites from user store
+  useEffect(() => {
+    if (user && user.favouriteScholarship?.length > 0) {
+      fetchFavoriteScholarships();
+    }
+  }, [user]);
+  // console.log("favoriteScholarships object:", favoriteScholarships);
+
+  // Fetch user profile on component mount
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token && !user) {
+      fetchUserProfile();
+    }
+  }, [fetchUserProfile, user]);
+
+  // console.log("User favorite scholarships:", user?.favouriteScholarship);
+  // console.log("Favorite scholarships data:", favoriteScholarships);
 
   const handlePrev = () => {
     if (page > 1) {
       setPage(page - 1);
     }
   };
+
   const debouncedSetSearch = useCallback(
     debounce((value: string) => {
       setSearch(value);
     }, 500),
     [setSearch]
   );
-  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
 
+  // Updated to use store data
+  const displayedScholarships = showFavorites
+    ? Object.values(favoriteScholarships)
+    : scholarships;
 
-const displayedScholarships = showFavorites
-  ? Object.values(favoriteScholarships)
-  : scholarships;
-
+  const favoritesCount = favoriteScholarshipIds.length;
+  // console.log(displayedScholarships, "displayedScholarships");
   const handleNext = () => {
     if (page < totalPages) {
       setPage(page + 1);
     }
   };
+
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalSearch(value);
     debouncedSetSearch(value);
   };
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const updatedFavorites = { ...prev, [id]: !prev[id] };
 
-    // Update favorites count
-    const newCount = Object.values(updatedFavorites).filter(Boolean).length;
-    setFavoritesCount(newCount);
+  // Updated toggle function using store
+  const toggleFavoriteInDB = async (id: string) => {
+    const token = getAuthToken();
+    if (!token) {
+      // Handle login prompt if needed
+      return;
+    }
 
-    // Trigger heart animation
-    setHeartAnimation(id);
-    setTimeout(() => setHeartAnimation(null), 1000);
+    try {
+      const isCurrentlyFavorited = getScholarshipFavoriteStatus(id);
+      const action = isCurrentlyFavorited ? "remove" : "add";
 
-    // Update full favoriteScholarships map
-    setFavoriteScholarships((prevFavs) => {
-      const updatedFavs = { ...prevFavs };
-      const scholarship = scholarships.find((s) => s._id === id);
+      // Animate heart
+      setHeartAnimation(id);
+      setTimeout(() => setHeartAnimation(null), 1000);
 
-      if (updatedFavorites[id] && scholarship) {
-        updatedFavs[id] = scholarship;
+      // Call store function
+      const success = await toggleScholarshipFavorite(id, action);
+
+      if (success) {
+        toast.success(
+          action === "add"
+            ? "Scholarship added to favorites!"
+            : "Scholarship removed from favorites!",
+          {
+            duration: 2000,
+            position: "top-center",
+          }
+        );
       } else {
-        delete updatedFavs[id];
+        throw new Error("Failed to update favorites");
       }
-
-      return updatedFavs;
-    });
-
-    return updatedFavorites;
-  });
-};
-
-
-  // Filter component for mobile
-  // const FilterSection = ({ isMobile = false }) => (
-  //   <div className={isMobile ? "p-2" : ""}>
-  //     <section>
-  //       {isMobile && (
-  //         <>
-  //           <div className="flex bg-[#F1F1F1] mx-2 mb-2 w-[80%] px-2 rounded-lg">
-  //             <Input
-  //               placeholder="Search Scholarships..."
-  //               name="search"
-  //               value={localSearch}
-  //               onChange={handleSearchChange}
-  //               className="border-none bg-[#F1F1F1] outline-none focus:ring-0 placeholder:text-[12px]"
-  //             />
-  //             <Image
-  //               src="/search.svg"
-  //               width={16}
-  //               height={16}
-  //               alt="search"
-  //               className="2xl:w-[40px] 2xl:h-[40px] ml-2"
-  //             />
-  //           </div>
-  //           <hr className="mx-4" />
-  //         </>
-  //       )}
-  //       <ScrollArea
-  //         className={`p-2 ${
-  //           isMobile ? "h-[400px]" : "px-4 pb-4 h-[500px] md:h-[800px]"
-  //         } overflow-y-auto`}
-  //       >
-  //         {/* Country Filter */}
-  //         <div
-  //           className={
-  //             isMobile
-  //               ? ""
-  //               : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"
-  //           }
-  //         >
-  //           <h6
-  //             className={`${
-  //               isMobile ? "text-lg" : "text-base md:text-lg font-bold"
-  //             }`}
-  //           >
-  //             Country:
-  //           </h6>
-  //           <ScrollArea
-  //             className={isMobile ? "" : "h-[200px] overflow-y-auto p-2"}
-  //           >
-  //             <ul className={`py-2 space-y-3 mb-2 ${!isMobile ? "pr-2" : ""}`}>
-  //               {countries.map((country) => (
-  //                 <li
-  //                   key={country.value}
-  //                   className="flex items-center justify-between"
-  //                 >
-  //                   <div className="flex items-center gap-2">
-  //                     <Image
-  //                       src={country.img}
-  //                       width={18}
-  //                       height={18}
-  //                       alt={country.name}
-  //                       className="w-[26px]"
-  //                     />
-  //                     <span className="text-[16px] truncate">
-  //                       {country.name}
-  //                     </span>
-  //                   </div>
-  //                   <input
-  //                     type="checkbox"
-  //                     value={country.value}
-  //                     checked={selectedValues.includes(country.value)}
-  //                     onChange={handleCheckboxChange}
-  //                     className="ml-2"
-  //                   />
-  //                 </li>
-  //               ))}
-  //             </ul>
-  //           </ScrollArea>
-  //         </div>
-
-  //         {!isMobile && <hr />}
-
-  //         {/* Programs Filter */}
-  //         <div
-  //           className={
-  //             isMobile
-  //               ? ""
-  //               : "border border-gray-200 shadow-md rounded-xl bg-white my-2 p-2"
-  //           }
-  //         >
-  //           <p
-  //             className={`${
-  //               isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-  //             }`}
-  //           >
-  //             {isMobile ? "Programs:" : "Study Level:"}
-  //           </p>
-  //           <ul
-  //             className={`py-2 space-y-3 mb-2 ${
-  //               !isMobile ? "py-4 space-y-3 md:space-y-4" : ""
-  //             }`}
-  //           >
-  //             {["Bachelors", "Master", "PhD"].map((program) => (
-  //               <li key={program} className="flex items-center justify-between">
-  //                 <span className="text-[16px] truncate">{program}</span>
-  //                 <input
-  //                   type="checkbox"
-  //                   name={program.toLowerCase()}
-  //                   value={program.toLowerCase()}
-  //                   onChange={handleProgramChange}
-  //                   checked={programs.includes(program.toLowerCase())}
-  //                   className="ml-2"
-  //                 />
-  //               </li>
-  //             ))}
-  //           </ul>
-  //         </div>
-
-  //         {!isMobile && <hr />}
-
-  //         {/* Scholarship Type Filter */}
-  //         <div
-  //           className={
-  //             isMobile
-  //               ? ""
-  //               : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-  //           }
-  //         >
-  //           <p
-  //             className={`${
-  //               isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-  //             }`}
-  //           >
-  //             Scholarship Type:
-  //           </p>
-  //           <ul
-  //             className={`py-3 space-y-3 mb-2 ${
-  //               !isMobile ? "py-4 space-y-3 md:space-y-4" : ""
-  //             }`}
-  //           >
-  //             {["Fully Funded", "Partial Funded"].map((type) => (
-  //               <li key={type} className="flex items-center justify-between">
-  //                 <span className="text-[16px] truncate">{type}</span>
-  //                 <input
-  //                   type="checkbox"
-  //                   name={type}
-  //                   value={type}
-  //                   onChange={handleScholarshipTypeChange}
-  //                   checked={scholarshipType.includes(type)}
-  //                   className="ml-2"
-  //                 />
-  //               </li>
-  //             ))}
-  //           </ul>
-  //         </div>
-
-  //         {!isMobile && <hr />}
-
-  //         {/* Application Deadline Filter */}
-  //         <div
-  //           className={
-  //             isMobile
-  //               ? ""
-  //               : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-  //           }
-  //         >
-  //           <p
-  //             className={`${
-  //               isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-  //             }`}
-  //           >
-  //             Application Deadline:
-  //           </p>
-  //           <ScrollArea
-  //             className={isMobile ? "" : "h-[300px] overflow-y-auto p-2"}
-  //           >
-  //             <ul
-  //               className={`py-2 space-y-3 ${
-  //                 !isMobile ? "py-4 space-y-3 md:space-y-4 pr-2" : ""
-  //               }`}
-  //             >
-  //               {(isMobile
-  //                 ? ["Jan", "Feb", "March"]
-  //                 : [
-  //                     "January",
-  //                     "February",
-  //                     "March",
-  //                     "April",
-  //                     "May",
-  //                     "June",
-  //                     "July",
-  //                     "August",
-  //                     "September",
-  //                     "October",
-  //                     "November",
-  //                     "December",
-  //                   ]
-  //               ).map((deadline) => (
-  //                 <li
-  //                   key={deadline}
-  //                   className="flex items-center justify-between"
-  //                 >
-  //                   <span className="text-[16px] truncate">{deadline}</span>
-  //                   <input
-  //                     type="checkbox"
-  //                     name={deadline}
-  //                     value={deadline}
-  //                     onChange={handleDeadlineChange}
-  //                     checked={deadlineFilters.includes(deadline)}
-  //                     className="ml-2"
-  //                   />
-  //                 </li>
-  //               ))}
-  //             </ul>
-  //           </ScrollArea>
-  //         </div>
-
-  //         {!isMobile && <hr />}
-
-  //         {/* Minimum Requirement Filter */}
-  //         <div
-  //           className={
-  //             isMobile
-  //               ? ""
-  //               : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-  //           }
-  //         >
-  //           <p
-  //             className={`${
-  //               isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-  //             }`}
-  //           >
-  //             Minimum Requirement:
-  //           </p>
-  //           <ul className="py-2 space-y-3">
-  //             {minimumRequirementsList.map((requirement) => (
-  //               <li
-  //                 key={requirement}
-  //                 className="flex items-center justify-between"
-  //               >
-  //                 <span className="text-[16px] truncate">{requirement}</span>
-  //                 <input
-  //                   type="checkbox"
-  //                   name={requirement}
-  //                   value={requirement}
-  //                   onChange={handleRequirementChange}
-  //                   checked={minimumRequirements.includes(requirement)}
-  //                   className="ml-2"
-  //                 />
-  //               </li>
-  //             ))}
-  //           </ul>
-  //         </div>
-
-  //         {/* Scholarship Provider Filter */}
-  //         <div
-  //           className={
-  //             isMobile
-  //               ? ""
-  //               : "border border-gray-200 bg-white shadow-md rounded-xl my-2 p-2"
-  //           }
-  //         >
-  //           <p
-  //             className={`${
-  //               isMobile ? "text-lg mt-4" : "text-base md:text-lg font-bold"
-  //             }`}
-  //           >
-  //             Scholarship Provider:
-  //           </p>
-  //           <ScrollArea className={isMobile ? "" : "p-2"}>
-  //             <ul
-  //               className={`py-4 space-y-3 md:space-y-4 ${
-  //                 !isMobile ? "pr-2" : ""
-  //               }`}
-  //             >
-  //               {scholarshipProviders.map((provider) => (
-  //                 <li
-  //                   key={provider}
-  //                   className="flex items-center justify-between"
-  //                 >
-  //                   <span className="text-[16px] truncate">{provider}</span>
-  //                   <input
-  //                     type="checkbox"
-  //                     name={provider}
-  //                     value={provider}
-  //                     onChange={handleProviderChange}
-  //                     checked={selectedProviders?.includes(provider)}
-  //                     className="ml-2"
-  //                   />
-  //                 </li>
-  //               ))}
-  //             </ul>
-  //           </ScrollArea>
-  //         </div>
-  //       </ScrollArea>
-  //     </section>
-  //   </div>
-  // );
+    } catch (error) {
+      console.error("Failed to update favorites:", error);
+      toast.error("Failed to update favorites. Please try again.", {
+        duration: 3000,
+        position: "top-center",
+      });
+    }
+  };
 
   return (
     <>
@@ -489,7 +236,8 @@ const displayedScholarships = showFavorites
               </div>
             </div>
 
-            {loading ? (
+            {/* Show loading state for scholarships */}
+            {loading || (showFavorites && loadingScholarships) ? (
               <SkeletonCard arr={9} />
             ) : (
               <>
@@ -639,12 +387,13 @@ const displayedScholarships = showFavorites
                             </Dialog>
 
                             <button
-                              onClick={() => toggleFavorite(item._id)}
+                              onClick={() => toggleFavoriteInDB(item._id)}
+                              disabled={loadingScholarships}
                               className={`relative ${
                                 heartAnimation === item._id ? "animate-pop" : ""
-                              }`}
+                              } ${loadingScholarships ? "opacity-50" : ""}`}
                             >
-                              {favorites[item._id] ? (
+                              {getScholarshipFavoriteStatus(item._id) ? (
                                 <Image
                                   src="/redheart.svg"
                                   width={20}
@@ -666,11 +415,13 @@ const displayedScholarships = showFavorites
                         {/* Content Section */}
                         <div className="p-2 flex-grow">
                           <Link
-                          target="blank"
-                          href={`/scholarships/${item._id}`}
-                          rel="noopener noreferrer"
-                        >
-                          <p className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1">{item.name}</p>
+                            target="blank"
+                            href={`/scholarships/${item._id}`}
+                            rel="noopener noreferrer"
+                          >
+                            <p className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1">
+                              {item.name}
+                            </p>
                           </Link>
                           <p className="text-sm text-gray-600">
                             <span className="font-semibold">
@@ -687,12 +438,11 @@ const displayedScholarships = showFavorites
                                 height={17}
                               />
                               <p className="text-sm text-gray-600 truncate">
-                                {item.hostCountry}
+                                {item.hostCountry || item.country}
                               </p>
                             </div>
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
                               <Image
-                                // src={"/money.svg"}
                                 src={"/scholarshipdetail/Money.svg"}
                                 alt="scholarship type"
                                 width={10}
@@ -761,38 +511,46 @@ const displayedScholarships = showFavorites
                           </div>
                         </div>
 
-                        <Link
-                          target="blank"
-                          href={`/scholarships/${item._id}`}
-                          rel="noopener noreferrer"
-                          className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
-                        >
-                          Explore Courses
-                        </Link>
+                        <div className=" ">
+                          {" "}
+                          <Link
+                            target="blank"
+                            href={`/scholarships/${item._id}`}
+                            rel="noopener noreferrer"
+                            className=" flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-lg text-white text-xs md:text-[12px] px-2 py-2 border border-red-500 text-center"
+                          >
+                            Explore Courses
+                          </Link>
+                          {/* <div className="flex-1 flex items-center justify-center  hover:bg-red-600 rounded-lg text-orange-500 hover:text-white text-xs md:text-[12px] px-1 py-2 border border-orange-500 text-center">
+                            Start Your Application{" "}
+                          </div>{" "} */}
+                        </div>
                       </div>
                     ))
                   )}
                 </div>
-                {/* Pagination Controls */}
-                <div className="flex justify-center items-center m-4 gap-4 p-2">
-                  <button
-                    onClick={handlePrev}
-                    disabled={page === 1}
-                    className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-red-300"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-lg font-semibold text-gray-700">
-                    Page {page} of {totalPages}
-                  </span>
-                  <button
-                    onClick={handleNext}
-                    disabled={page === totalPages}
-                    className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-red-300"
-                  >
-                    Next
-                  </button>
-                </div>
+                {/* Pagination Controls - Only show for "Show All" mode */}
+                {!showFavorites && (
+                  <div className="flex justify-center items-center m-4 gap-4 p-2">
+                    <button
+                      onClick={handlePrev}
+                      disabled={page === 1}
+                      className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-red-300"
+                    >
+                      Previous
+                    </button>
+                    <span className="text-lg font-semibold text-gray-700">
+                      Page {page} of {totalPages}
+                    </span>
+                    <button
+                      onClick={handleNext}
+                      disabled={page === totalPages}
+                      className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:bg-red-300"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </section>

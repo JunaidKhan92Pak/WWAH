@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { MobileNav } from "./sd-mobile-nav";
 import Link from "next/link";
 import { useNotification } from "@/context/socket-context";
+import { useRouter } from "next/navigation"; // or "next/router" depending on your Next.js version
+
 import { useState, useRef, useEffect } from "react";
 import { X, MessageCircle } from "lucide-react";
 import { useChatStore } from "@/store/chatStore";
@@ -41,13 +43,33 @@ export function Navbar() {
     // console.log("🔔 Notification button clicked");
     setShowNotificationMenu(!showNotificationMenu);
   };
-
+  const router = useRouter();
   const handleChatClick = () => {
-    // console.log("🔔 Opening chat and clearing notifications");
-    setIsChatOpen(true);
-    clearNotifications(); // Clear notifications when chat is opened
-    setShowNotificationMenu(false); // Also close the notification menu
+    const currentPath = window.location.pathname;
+
+    if (currentPath === "/dashboard/overview") {
+      setIsChatOpen(true);
+      clearNotifications();
+      setShowNotificationMenu(false);
+    } else {
+      // Navigate first, then open chat after route change
+      router.push("/dashboard/overview");
+
+      // Use a slight delay to allow the page to change, then open chat
+      setTimeout(() => {
+        setIsChatOpen(true);
+        clearNotifications();
+        setShowNotificationMenu(false);
+      }, 500); // Adjust the delay if necessary
+    }
   };
+  // const handleChatClick = () => {
+  //   // console.log("🔔 Opening chat and clearing notifications");
+  //   setIsChatOpen(true);
+
+  //   clearNotifications(); // Clear notifications when chat is opened
+  //   setShowNotificationMenu(false); // Also close the notification menu
+  // };
 
   const handleClearNotifications = () => {
     // console.log("🗑️ Clearing notifications from navbar...");
