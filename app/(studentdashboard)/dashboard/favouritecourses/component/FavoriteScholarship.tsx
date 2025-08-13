@@ -512,7 +512,7 @@ export default function FavoriteScholarship() {
               No Favorites Yet
             </h3>
             <p className="text-gray-600 mb-4">
-              You haven't favorited any scholarships yet.
+              You haven&apos;t favorited any scholarships yet.
             </p>
             <p className="text-sm text-gray-500 mb-6">
               Start exploring scholarships and save your favorites for easy

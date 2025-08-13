@@ -406,6 +406,7 @@ const ApplyingSection: React.FC = () => {
             key={course._id || index}
             className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 bg-white rounded-xl  p-2 md:p-4 overflow-hidden border border-gray-200 "
           >
+            
             {/* Remove Button */}
             <button
               onClick={() => removeFromAppliedCourses(course._id)}
@@ -418,15 +419,17 @@ const ApplyingSection: React.FC = () => {
             {/* Left Section: Course Info */}
             <div className="flex flex-col md:flex-row items-start gap-4 flex-1">
               <div>
-                <div className="relative  md:w-[150px] h-[150px] rounded-xl overflow-hidden">
+                <div className="relative  md:w-[200px] h-[150px] rounded-xl overflow-hidden">
                   <Image
                     src={
                       course.universityData?.universityImages?.banner ||
                       `/course-${index + 1}.png`
                     }
                     alt="Course Banner"
-                    fill
-                    className="object-cover"
+                    // fill
+                    width={200}
+                    height={150}
+                    className="w-[200px] h-[150px] object-cover"
                   />
                   <div className="absolute top-4 left-0">
                     <div className=" bg-gradient-to-t from-white to-transparent opacity-100 w-[70%] ">

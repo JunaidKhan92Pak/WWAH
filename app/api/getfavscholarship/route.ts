@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import Scholarship from "@/models/scholarship";
 import mongoose from "mongoose";
-import { parse } from "path";
+// import { parse } from "path";
 
 // Type definition matching your schema
 type ScholarshipData = {

@@ -68,6 +68,7 @@ const CourseArchive = () => {
     fetchCourses,
     setCountryFilter, // ✅ Make sure it's destructured here
   } = useCourseStore();
+
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [localSearch, setLocalSearch] = useState("");
@@ -75,27 +76,19 @@ const CourseArchive = () => {
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
   const [favoriteCourses, setFavoriteCourses] = useState<
-  Record<string, (typeof courses)[0]>
+    Record<string, (typeof courses)[0]>
   >({});
-  // const [appliedCourses, setAppliedCourses] = useState<Record<string, boolean>>(
-  //   {}
-  // );
-  // const [appliedCoursesCount, setAppliedCoursesCount] = useState(0);
-  // const [loadingApplied, setLoadingApplied] = useState<Record<string, boolean>>(
-  //   {}
-  // );
-  
+
   const { user, fetchUserProfile } = useUserStore();
   const [loadingFavorites, setLoadingFavorites] = useState<
-  Record<string, boolean>
+    Record<string, boolean>
   >({});
-  // console.log(user?.favouriteCourse, "user.favouriteCourse");
 
   // Initialize favorites from user data
   useEffect(() => {
     const initializeFavorites = () => {
       if (user?.favouriteCourse && Array.isArray(user.favouriteCourse)) {
-        // console.log("User favorite courses:", user.favouriteCourse);
+        console.log("User favorite courses:", user.favouriteCourse);
 
         const favoriteMap: Record<string, boolean> = {};
         const favoriteCoursesMap: Record<string, Course> = {};
@@ -167,10 +160,10 @@ const CourseArchive = () => {
     }
   }, [courses, favorites]);
 
-  // console.log("Current user:", user);
-  // console.log("User favorite courses:", user?.favouriteCourse);
-  // console.log("Favorites state:", favorites);
-  // console.log("Favorites count:", favoritesCount);
+  console.log("Current user:", user);
+  console.log("User favorite courses:", user?.favouriteCourse);
+  console.log("Favorites state:", favorites);
+  console.log("Favorites count:", favoritesCount);
 
   // Function to add/remove course from favorites in database
   const toggleFavorite = async (courseId: string, action: "add" | "remove") => {
@@ -196,7 +189,7 @@ const CourseArchive = () => {
       }
 
       const result = await response.json();
-      // console.log("Favorite updated successfully", result);
+      console.log("Favorite updated successfully", result);
 
       // Refresh user profile to get updated favorites
       await fetchUserProfile();
@@ -221,6 +214,7 @@ const CourseArchive = () => {
     });
   };
 
+  // ✅ Function to add a course to applied courses
   const addToAppliedCourses = async (courseId: unknown) => {
     const token = getAuthToken();
 
@@ -250,7 +244,7 @@ const CourseArchive = () => {
       }
 
       const data = await response.json();
-      // console.log("Course added to applied courses:", data);
+      console.log("Course added to applied courses:", data);
       toast.success("Course added to applied courses!", {
         duration: 2000,
         position: "top-center",
@@ -265,52 +259,9 @@ const CourseArchive = () => {
       throw error;
     }
   };
-  // const deleteAppliedCourse = async (courseId: string) => {
-  //   const token = getAuthToken();
-  //   if (!token) {
-  //     showLoginPrompt();
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses`,
-  //       {
-  //         method: "DELETE",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           courseId,
-  //           action: "remove",
-  //         }),
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to remove course from applied courses");
-  //     }
-
-  //     const data = await response.json(); // optionally wrap this in try-catch
-
-  //     toast.success("Course removed from applied courses!", {
-  //       duration: 2000,
-  //       position: "top-center",
-  //     });
-
-  //     // You might want to update the local state here too
-  //   } catch (error) {
-  //     console.error("Error deleting applied course:", error);
-  //     toast.error("Something went wrong while removing the course.", {
-  //       duration: 2000,
-  //       position: "top-center",
-  //     });
-  //   }
-  // };
-
   const toggleFavoriteInDB = async (id: string) => {
     const token = getAuthToken();
+
     if (!token) {
       showLoginPrompt();
       return;
@@ -492,8 +443,9 @@ const CourseArchive = () => {
           </DropdownMenu>
           <button
             onClick={() => setShowFavorites((prev) => !prev)}
-            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-              }`}
+            className={`text-sm flex items-center justify-start md:justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 w-full md:w-[95%] lg:w-[90%] xl:w-[70%] h-10 ${
+              showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+            }`}
           >
             <Image
               src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -591,10 +543,11 @@ const CourseArchive = () => {
                             </Label>
                             <Input
                               id={`link-${item._id}`}
-                              value={`${typeof window !== "undefined"
-                                ? window.location.origin
-                                : ""
-                                }/courses/${item._id}`}
+                              value={`${
+                                typeof window !== "undefined"
+                                  ? window.location.origin
+                                  : ""
+                              }/courses/${item._id}`}
                               readOnly
                             />
                           </div>
@@ -665,11 +618,13 @@ const CourseArchive = () => {
                     <button
                       onClick={() => toggleFavoriteInDB(item._id)}
                       disabled={loadingFavorites[item._id]}
-                      className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
-                        } ${loadingFavorites[item._id]
+                      className={`relative ${
+                        heartAnimation === item._id ? "animate-pop" : ""
+                      } ${
+                        loadingFavorites[item._id]
                           ? "opacity-50 cursor-not-allowed"
                           : ""
-                        }`}
+                      }`}
                     >
                       {favorites[item._id] ? (
                         <Image
@@ -691,7 +646,7 @@ const CourseArchive = () => {
                 </div>
                 <div className="p-4 flex-grow">
                   <Link
-                    target="_blank"
+                    target="blank"
                     href={`/courses/${item._id}`}
                     rel="noopener noreferrer"
                     className="w-1/2"
@@ -764,7 +719,7 @@ const CourseArchive = () => {
 
                 <div className="flex justify-between items-center mb-4 mt-auto gap-2">
                   <Link
-                    target="_blank"
+                    target="blank"
                     href={`/courses/${item._id}`}
                     rel="noopener noreferrer"
                     className="w-1/2"
@@ -790,11 +745,12 @@ const CourseArchive = () => {
       )}
 
       <div className="flex flex-wrap justify-center items-center mt-10  gap-3">
-        <div className="flex items-center gap-3 ">
-          {/* <button
+        <div className="flex items-center gap-3">
+          <button
             onClick={() => setPage(1)}
-            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
+              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             aria-label="First page"
             disabled={currentPage <= 1}
           >
@@ -815,12 +771,13 @@ const CourseArchive = () => {
                 clipRule="evenodd"
               />
             </svg>
-          </button> */}
+          </button>
 
           <button
             onClick={handlePrevPage}
-            className={`text-white  bg-red-500 hover:text-red-500 flex items-center hover:bg-red-200 rounded-lg p-2 transition-colors duration-200 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed border-2" : ""
-              }`}
+            className={`text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200 ${
+              currentPage <= 1 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             aria-label="Previous page"
             disabled={currentPage <= 1}
           >
@@ -836,10 +793,9 @@ const CourseArchive = () => {
                 clipRule="evenodd"
               />
             </svg>
-            <p className="text-white font-medium " >Previous</p>
           </button>
 
-          {/* <div className="hidden sm:flex space-x-2 ">
+          <div className="hidden sm:flex space-x-2 ">
             {(() => {
               let startPage = 1;
               let endPage = totalPages;
@@ -874,10 +830,11 @@ const CourseArchive = () => {
                   <button
                     key={i}
                     onClick={() => setPage(i)}
-                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${currentPage === i
-                      ? "bg-red-700 text-white shadow-md"
-                      : "bg-gray-100 text-gray-700 hover:bg-red-100"
-                      }`}
+                    className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${
+                      currentPage === i
+                        ? "bg-red-700 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-red-100"
+                    }`}
                     aria-current={currentPage === i ? "page" : undefined}
                   >
                     {i}
@@ -899,21 +856,20 @@ const CourseArchive = () => {
 
               return pages;
             })()}
-          </div> */}
+          </div>
 
-          {/* <div className="flex sm:hidden items-center border-2 border-red-600">
+          <div className="flex sm:hidden items-center border-2 border-red-600">
             <span className="text-gray-700 font-medium px-3">
               Page {currentPage} of {totalPages}
             </span>
-          </div> */}
+          </div>
 
           {currentPage < totalPages && (
             <button
               onClick={handleNextPage}
-              className="text-white flex items-center hover:text-red-600 hover:bg-red-300 rounded-lg p-2 transition-colors duration-200  bg-red-500"
+              className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
               aria-label="Next page"
             >
-              <p className="text-white font-medium ">Next page</p>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -926,10 +882,10 @@ const CourseArchive = () => {
                   clipRule="evenodd"
                 />
               </svg>
-
             </button>
           )}
-          {/* {currentPage < totalPages && (
+
+          {currentPage < totalPages && (
             <button
               onClick={() => setPage(totalPages)}
               className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-colors duration-200"
@@ -953,7 +909,7 @@ const CourseArchive = () => {
                 />
               </svg>
             </button>
-          )} */}
+          )}
         </div>
       </div>
     </section>

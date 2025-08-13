@@ -511,14 +511,20 @@ const Page = () => {
                           </div>
                         </div>
 
-                        <Link
-                          target="blank"
-                          href={`/scholarships/${item._id}`}
-                          rel="noopener noreferrer"
-                          className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-lg text-white text-xs md:text-[13px] px-1 py-2 border border-red-500 text-center"
-                        >
-                          Explore Courses
-                        </Link>
+                        <div className=" ">
+                          {" "}
+                          <Link
+                            target="blank"
+                            href={`/scholarships/${item._id}`}
+                            rel="noopener noreferrer"
+                            className=" flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-lg text-white text-xs md:text-[12px] px-2 py-2 border border-red-500 text-center"
+                          >
+                            Explore Courses
+                          </Link>
+                          {/* <div className="flex-1 flex items-center justify-center  hover:bg-red-600 rounded-lg text-orange-500 hover:text-white text-xs md:text-[12px] px-1 py-2 border border-orange-500 text-center">
+                            Start Your Application{" "}
+                          </div>{" "} */}
+                        </div>
                       </div>
                     ))
                   )}

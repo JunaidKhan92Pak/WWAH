@@ -144,10 +144,11 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
-                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 rounded-t-xl  md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${activeTabPro === tab.label
-                  ? "bg-[#C7161E] text-white"
-                  : "text-gray-800"
-                  }`}
+                className={`border-b md:border-none font-medium text-left md:text-center transition px-4 md:text-[16px] text-[12px] md:py-2 py-1 rounded-t-xl  md:rounded-t-xl  border-gray-400  w-full hover:bg-[#FCE7D2] hover:text-black ${
+                  activeTabPro === tab.label
+                    ? "bg-[#C7161E] text-white"
+                    : "text-gray-800"
+                }`}
               >
                 {tab.label}
               </button>
@@ -176,7 +177,11 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           applicableCourses={data?.applicableCourses || []} />
       </div> */}
       <div id="Applicable-Departments">
-        <ApplicableCourses tableData={data?.table} />
+        <ApplicableCourses
+          tableData={data?.table}
+          hostCountry={data.hostCountry}
+          banner={data.banner}
+        />
       </div>
 
       <div id="Eligibility Criteria">
@@ -197,9 +202,9 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           applicationProcess={
             data?.applicationProcess
               ? data.applicationProcess.map((step, idx) => ({
-                ...step,
-                _id: idx
-              }))
+                  ...step,
+                  _id: idx,
+                }))
               : []
           }
         />

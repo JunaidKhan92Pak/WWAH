@@ -35,7 +35,7 @@ interface FavoriteCourse {
   };
 }
 
-// Scholarship interface - updated to match your API response
+// Scholarship interface
 interface FavoriteScholarship {
   _id: string;
   name: string;
@@ -57,12 +57,30 @@ interface FavoriteScholarship {
   updatedAt?: Date;
 }
 
+// Applied Scholarship Course interface
+interface AppliedScholarshipCourse {
+  _id: string;
+  scholarshipName: string;
+  hostCountry: string;
+  banner?: string;
+  courseName: string;
+  duration: string;
+  language: string;
+  universityName: string;
+  scholarshipType: string;
+  deadline: string;
+  status?: string;
+  appliedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // Basic user profile data
 export interface User {
-  favouriteScholarship: string[]; // Changed to array of IDs to match your logic
+  favouriteScholarship: string[];
   favouriteCourse: FavoriteCourse[];
-  favourite: FavoriteCourse[];
-  favouriteUniversity: string[]; // Array of university IDs
+  favouriteUniversity: string[];
+  appliedScholarshipCourses: AppliedScholarshipCourse[];
   _id: string;
   firstName: string;
   lastName: string;
@@ -122,10 +140,15 @@ export interface UserStore {
   favoriteScholarshipIds: string[];
   loadingScholarships: boolean;
 
+  // Applied scholarship courses state
+  appliedScholarshipCourses: Record<string, AppliedScholarshipCourse>;
+  appliedScholarshipCourseIds: string[];
+  loadingApplications: boolean;
+
   // Actions
   fetchUserProfile: () => Promise<void>;
   updateUserProfile: (updateData: Partial<User>) => Promise<boolean>;
-  updateDetailedInfo: (updateData: Partial<DetailedInfo>) => Promise<void>;
+  updateDetailedInfo: (updateData: Partial<DetailedInfo>) => Promise<boolean>;
   setUser: (userData: User) => void;
   logout: () => void;
   getLastUpdatedDate: () => string | null;
@@ -145,9 +168,16 @@ export interface UserStore {
     action: "add" | "remove"
   ) => Promise<boolean>;
   getScholarshipFavoriteStatus: (scholarshipId: string) => boolean;
+
+  // Applied scholarship courses actions
+  fetchAppliedScholarshipCourses: () => Promise<void>;
+  addAppliedScholarshipCourse: (
+    applicationData: AppliedScholarshipCourse
+  ) => Promise<boolean>;
+  refreshApplications: () => Promise<void>;
 }
 
-// Default empty detailed
+// Default empty detailed info
 const defaultDetailedInfo: DetailedInfo = {
   livingCosts: { amount: 0, currency: "" },
   tuitionFee: { amount: 0, currency: "" },
@@ -181,6 +211,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
   favoriteScholarships: {},
   favoriteScholarshipIds: [],
   loadingScholarships: false,
+
+  // Applied scholarship courses state
+  appliedScholarshipCourses: {},
+  appliedScholarshipCourseIds: [],
+  loadingApplications: false,
 
   fetchUserProfile: async () => {
     const token = getAuthToken();
@@ -228,11 +263,13 @@ export const useUserStore = create<UserStore>((set, get) => ({
         favouriteCourse: Array.isArray(apiData.user.favouriteCourse)
           ? apiData.user.favouriteCourse
           : [],
-        favourite: Array.isArray(apiData.user.favourite)
-          ? apiData.user.favourite
-          : [],
         favouriteUniversity: Array.isArray(apiData.user.favouriteUniversity)
           ? apiData.user.favouriteUniversity
+          : [],
+        appliedScholarshipCourses: Array.isArray(
+          apiData.user.appliedScholarshipCourses
+        )
+          ? apiData.user.appliedScholarshipCourses
           : [],
       };
 
@@ -246,6 +283,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
         lastUpdated: apiData.user.updatedAt || new Date().toISOString(),
         favoriteUniversityIds: userData.favouriteUniversity,
         favoriteScholarshipIds: userData.favouriteScholarship,
+        appliedScholarshipCourseIds: userData.appliedScholarshipCourses.map(
+          (app: AppliedScholarshipCourse) => app._id
+        ),
       });
 
       // Fetch favorite universities details if there are any
@@ -256,6 +296,20 @@ export const useUserStore = create<UserStore>((set, get) => ({
       // Fetch favorite scholarships details if there are any
       if (userData.favouriteScholarship.length > 0) {
         get().fetchFavoriteScholarships();
+      }
+
+      // Convert applied courses array to Record for the appliedScholarshipCourses state
+      if (userData.appliedScholarshipCourses.length > 0) {
+        const applicationsMap: Record<string, AppliedScholarshipCourse> = {};
+        userData.appliedScholarshipCourses.forEach(
+          (app: AppliedScholarshipCourse) => {
+            applicationsMap[app._id] = app;
+          }
+        );
+
+        set({
+          appliedScholarshipCourses: applicationsMap,
+        });
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -293,7 +347,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
       }
 
       const result = await response.json();
-      // console.log(result, "Favorite universities result");
 
       if (result.success) {
         set({
@@ -316,9 +369,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  // Updated fetchFavoriteScholarships function for your store
-  // Replace your fetchFavoriteScholarships method in the store with this:
-
   fetchFavoriteScholarships: async () => {
     const state = get();
     const token = getAuthToken();
@@ -339,12 +389,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
     try {
       set({ loadingScholarships: true });
-      // console.log(
-      //   "Fetching scholarships for IDs:",
-      //   state.favoriteScholarshipIds
-      // );
 
-      // FIXED: Use the correct API endpoint that matches your actual API file
       const idsString = state.favoriteScholarshipIds.join(",");
       const response = await fetch(`/api/getfavscholarship?ids=${idsString}`, {
         method: "GET",
@@ -361,20 +406,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
       }
 
       const result = await response.json();
-      // console.log("API Response:", result);
 
       if (result.success && result.scholarships) {
-        // Convert array to map for easy lookup with proper field mapping
         const scholarshipsMap: Record<string, FavoriteScholarship> = {};
 
         result.scholarships.forEach((scholarship: any) => {
-          // FIXED: Map all fields correctly including field name mismatches
           const transformedScholarship: FavoriteScholarship = {
             _id: scholarship._id,
             name: scholarship.name || "Unknown Scholarship",
             banner: scholarship.banner,
             logo: scholarship.logo,
-            // FIXED: Handle both field names
             minRequirements:
               scholarship.minRequirements ||
               scholarship.minimumRequirements ||
@@ -389,7 +430,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
             category: scholarship.category,
             type: scholarship.type || "Not specified",
             duration: scholarship.duration,
-            // FIXED: Handle programs field - convert array to string if needed
             programs: Array.isArray(scholarship.programs)
               ? scholarship.programs.join(", ")
               : scholarship.programs || "Not specified",
@@ -400,7 +440,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           scholarshipsMap[scholarship._id] = transformedScholarship;
         });
 
-        // console.log("Transformed scholarships map:", scholarshipsMap);
         console.log(
           "Number of scholarships in map:",
           Object.keys(scholarshipsMap).length
@@ -412,7 +451,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           error: null,
         });
       } else {
-        // console.error("API response unsuccessful:", result);
         throw new Error(
           result.message || "Failed to fetch favorite scholarships"
         );
@@ -425,6 +463,157 @@ export const useUserStore = create<UserStore>((set, get) => ({
         loadingScholarships: false,
       });
     }
+  },
+
+  fetchAppliedScholarshipCourses: async () => {
+    const state = get();
+    const token = getAuthToken();
+
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    try {
+      set({ loadingApplications: true });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/my-applications/${state.user?._id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch applied scholarship courses: ${response.status}`
+        );
+      }
+
+      const result = await response.json();
+
+      if (result.success && result.applications) {
+        const applicationsMap: Record<string, AppliedScholarshipCourse> = {};
+        const applicationIds: string[] = [];
+
+        result.applications.forEach((application: any) => {
+          const transformedApplication: AppliedScholarshipCourse = {
+            _id: application._id,
+            banner: application.banner || "",
+            scholarshipName:
+              application.scholarshipName || "Unknown Scholarship",
+            hostCountry: application.hostCountry || "Not specified",
+            courseName: application.courseName || "Not specified",
+            duration: application.duration || "Not specified",
+            language: application.language || "Not specified",
+            universityName: application.universityName || "Not specified",
+            scholarshipType: application.scholarshipType || "Not specified",
+            deadline: application.deadline || "Not specified",
+            status: application.status || "pending",
+            appliedAt: application.appliedAt,
+            createdAt: application.createdAt,
+            updatedAt: application.updatedAt,
+          };
+
+          applicationsMap[application._id] = transformedApplication;
+          applicationIds.push(application._id);
+        });
+
+        console.log(
+          "Number of applications in map:",
+          Object.keys(applicationsMap).length
+        );
+
+        // Update both the Record and the user's array
+        set({
+          appliedScholarshipCourses: applicationsMap,
+          appliedScholarshipCourseIds: applicationIds,
+          loadingApplications: false,
+          error: null,
+          user: state.user
+            ? {
+                ...state.user,
+                appliedScholarshipCourses: Object.values(applicationsMap),
+              }
+            : null,
+        });
+      } else {
+        throw new Error(
+          result.message || "Failed to fetch applied scholarship courses"
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching applied scholarship courses:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loadingApplications: false,
+      });
+    }
+  },
+
+  // Add applied scholarship course after successful application
+  addAppliedScholarshipCourse: async (
+    applicationData: AppliedScholarshipCourse
+  ): Promise<boolean> => {
+    try {
+      if (applicationData._id) {
+        const newApplication: AppliedScholarshipCourse = {
+          _id: applicationData._id,
+          banner: applicationData.banner || "",
+          scholarshipName:
+            applicationData.scholarshipName || "Unknown Scholarship",
+          hostCountry: applicationData.hostCountry || "Not specified",
+          courseName: applicationData.courseName || "Not specified",
+          duration: applicationData.duration || "Not specified",
+          language: applicationData.language || "Not specified",
+          universityName: applicationData.universityName || "Not specified",
+          scholarshipType: applicationData.scholarshipType || "Not specified",
+          deadline: applicationData.deadline || "Not specified",
+          status: applicationData.status || "pending",
+          appliedAt: applicationData.appliedAt || new Date().toISOString(),
+          createdAt: applicationData.createdAt,
+          updatedAt: applicationData.updatedAt,
+        };
+
+        set((currentState) => ({
+          appliedScholarshipCourseIds: [
+            ...currentState.appliedScholarshipCourseIds,
+            applicationData._id,
+          ],
+          appliedScholarshipCourses: {
+            ...currentState.appliedScholarshipCourses,
+            [applicationData._id]: newApplication,
+          },
+          user: currentState.user
+            ? {
+                ...currentState.user,
+                appliedScholarshipCourses: [
+                  ...currentState.user.appliedScholarshipCourses,
+                  newApplication,
+                ],
+              }
+            : null,
+        }));
+
+        console.log("Successfully added new application to store");
+        return true;
+      }
+
+      console.warn("Application data missing _id, cannot add to store");
+      return false;
+    } catch (error) {
+      console.error("Error adding application to store:", error);
+      return false;
+    }
+  },
+
+  refreshApplications: async () => {
+    await get().fetchAppliedScholarshipCourses();
   },
 
   toggleUniversityFavorite: async (
@@ -460,7 +649,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
       const result = await response.json();
 
       if (result.success) {
-        // Update local state
         set((state) => {
           const newFavoriteIds = result.favouriteUniversity || [];
 
@@ -475,7 +663,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           };
         });
 
-        // Refresh favorite universities if we're removing and need to update the map
         if (action === "remove") {
           get().fetchFavoriteUniversities();
         }
@@ -494,7 +681,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  // NEW: Toggle scholarship favorite function
   toggleScholarshipFavorite: async (
     scholarshipId: string,
     action: "add" | "remove"
@@ -528,7 +714,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
       const result = await response.json();
 
       if (result.success) {
-        // Update local state
         set((state) => {
           const newFavoriteIds = result.favouriteScholarship || [];
 
@@ -543,7 +728,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           };
         });
 
-        // Refresh favorite scholarships if we're removing and need to update the map
         if (action === "remove") {
           get().fetchFavoriteScholarships();
         }
@@ -569,13 +753,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
     return state.favoriteUniversityIds.includes(universityId);
   },
 
-  // NEW: Get scholarship favorite status function
   getScholarshipFavoriteStatus: (scholarshipId: string) => {
     const state = get();
     return state.favoriteScholarshipIds.includes(scholarshipId);
   },
 
-  updateUserProfile: async (updateData) => {
+  updateUserProfile: async (updateData: Partial<User>): Promise<boolean> => {
     const token = getAuthToken();
     if (!token) {
       set({ error: "No authentication token found" });
@@ -647,11 +830,13 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  updateDetailedInfo: async (updateData) => {
+  updateDetailedInfo: async (
+    updateData: Partial<DetailedInfo>
+  ): Promise<boolean> => {
     const token = getAuthToken();
     if (!token) {
       set({ error: "No authentication token found" });
-      return;
+      return false;
     }
 
     try {
@@ -703,7 +888,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         error: null,
       }));
 
-      return result.success;
+      return true;
     } catch (error) {
       console.error("Error updating detailed info:", error);
       set({
@@ -715,18 +900,23 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  setUser: (userData) =>
+  setUser: (userData: User) =>
     set({
       user: {
         ...userData,
         favouriteCourse: userData.favouriteCourse || [],
         favouriteUniversity: userData.favouriteUniversity || [],
         favouriteScholarship: userData.favouriteScholarship || [],
+        appliedScholarshipCourses: userData.appliedScholarshipCourses || [],
       },
       isAuthenticated: true,
       lastUpdated: userData.updatedAt || new Date().toISOString(),
       favoriteUniversityIds: userData.favouriteUniversity || [],
       favoriteScholarshipIds: userData.favouriteScholarship || [],
+      appliedScholarshipCourseIds:
+        userData.appliedScholarshipCourses?.map(
+          (app: AppliedScholarshipCourse) => app._id
+        ) || [],
     }),
 
   logout: () => {
@@ -744,6 +934,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
       favoriteScholarships: {},
       favoriteScholarshipIds: [],
       loadingScholarships: false,
+      appliedScholarshipCourses: {},
+      appliedScholarshipCourseIds: [],
+      loadingApplications: false,
     });
   },
 
