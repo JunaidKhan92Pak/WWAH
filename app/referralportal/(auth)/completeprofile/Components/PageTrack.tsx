@@ -7,28 +7,30 @@ import React from "react";
 const routes = [
   {
     id: 1,
-    href: "/completeprofile",
+    href: "/referralportal/completeprofile",
   },
   {
     id: 2,
 
-    href: "/completeprofile/academicinformation",
+    href: "/referralportal/completeprofile/academicinformation",
   },
   {
     id: 3,
 
-    href: "/completeprofile/workexperience",
+    href: "/referralportal/completeprofile/workexperience",
   },
+
   {
     id: 4,
 
-    href: "/completeprofile/languageproficiency",
+    href: "/referralportal/completeprofile/paymentinformation",
   },
   {
     id: 5,
 
-    href: "/completeprofile/studentpreference",
+    href: "/referralportal/completeprofile/termsagreement",
   },
+
 ];
 
 const PageTrack = () => {

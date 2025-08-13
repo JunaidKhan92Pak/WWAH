@@ -95,11 +95,11 @@ const Page = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      {/* Sign-in Form Section */}
-      <div className="flex-1 max-w-2xl px-8 lg:px-20">
-        <div className="bg-white p-8 rounded-lg shadow-sm">
-          <div className="flex justify-center mb-6">
+
+     <div className="flex flex-col md:flex-row min-h-screen">
+      <div className="w-full md:w-1/2 pt-5 md:pt-0 px-8 flex flex-col items-center justify-center lg:w-[50%]">
+        <div>
+          <div className="flex justify-center items-center">
             <Link href="/">
               <Image
                 src="/logowwah.svg"
@@ -109,8 +109,7 @@ const Page = () => {
               />
             </Link>
           </div>
-
-          <div className="text-center mb-6">
+      <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Reset Password
             </h2>
@@ -137,7 +136,7 @@ const Page = () => {
                   name="newPassword"
                   value={formData.newPassword}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-12 p-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${
+                  className={`w-full pl-10 pr-12 p-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${
                     errors.newPassword ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter new password (min 8 characters)"
@@ -173,7 +172,7 @@ const Page = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-12 p-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${
+                  className={`w-full pl-10 pr-12 p-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${
                     errors.confirmPassword
                       ? "border-red-500"
                       : "border-gray-300"
@@ -203,7 +202,7 @@ const Page = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-red-700 hover:bg-red-800 disabled:bg-red-400 disabled:cursor-not-allowed text-white p-3 rounded-lg transition-colors flex items-center justify-center"
+              className="w-full bg-red-700 hover:bg-red-800 disabled:bg-red-400 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors flex items-center justify-center"
             >
               {loading ? (
                 <>
@@ -238,7 +237,7 @@ const Page = () => {
               <p className="text-sm text-gray-600">
                 Remember your password?{" "}
                 <Link
-                  href="/signin"
+                  href="/referralportal/signin"
                   className="text-red-600 hover:text-red-800 font-medium"
                 >
                   Sign In
@@ -250,14 +249,13 @@ const Page = () => {
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:block flex-1 max-w-md">
-        <div className="flex items-center justify-center">
+      <div className="hidden md:flex justify-center md:w-[50%]  ">
+        <div className="relative xl:w-[100%] xl:h-[100%] h-[95%] w-[100%]">
           <Image
             src="/Group.png"
-            width={400}
-            height={400}
             alt="Decorative"
-            className="object-contain h-auto"
+            layout="fill"
+            className="object-cover rounded-3xl p-1"
           />
         </div>
       </div>

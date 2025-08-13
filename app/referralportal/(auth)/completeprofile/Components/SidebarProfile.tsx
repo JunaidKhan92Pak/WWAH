@@ -4,85 +4,84 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { CiUser } from "react-icons/ci";
-import { IconType } from "react-icons";
-import { FaGraduationCap } from "react-icons/fa";
-import { RiMic2Line } from "react-icons/ri";
+
+
 // import { SiMicrosoftacademic } from "react-icons/si";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { CgWorkAlt } from "react-icons/cg";
-import { PiStudent } from "react-icons/pi";
+import MobileSidebar from "./MobileSidebar";
+
+
 // import MobileSidebar from "./MobileSidebar";
 
 interface RouteProps {
   href: string;
   label: string;
-  icon: IconType;
+
 }
 export const routes: RouteProps[] = [
   {
-    href: "/completeprofile",
-    label: "Personal Information",
-    icon: CiUser,
+    href: "/referralportal/completeprofile",
+    label: "Basic Details",
+ 
   },
   {
-    href: "/completeprofile/academicinformation",
+    href: "/referralportal/completeprofile/academicinformation",
     label: "Academic Information",
-    icon: FaGraduationCap,
+
   },
   {
-    href: "/completeprofile/workexperience",
+    href: "/referralportal/completeprofile/workexperience",
     label: "Work Experience",
-    icon: CgWorkAlt,
-  },
-  {
-    href: "/completeprofile/languageproficiency",
-    label: "English Language Proficiency",
-    icon: RiMic2Line,
+   
   },
 
+    {
+    href: "/referralportal/completeprofile/paymentinformation",
+    label: "Payment Information",
+  
+  },
   {
-    href: "/completeprofile/studentpreference",
-    label: "Student Preference",
-    icon: PiStudent,
+    href: "/referralportal/completeprofile/termsagreement",
+    label: "Terms and Agreement",
+
   },
 ];
 export const SidebarProfile = () => {
   const pathname = usePathname();
   return (
     <>
-      {/* <MobileSidebar /> */}
-      <div className=" px-4">
-        {/* <div> */}
+      <MobileSidebar />
+      <div className="px-4">
         <section className="space-y-4">
           <div className="space-y-2">
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="logo"
-              width={100}
-              height={100}
+              width={200}
+              height={200}
               className="py-4"
             />
-
             <h1 className="text-2xl font-bold py-2">Complete Profile!</h1>
             <p className="w-full lg:w-[60%]">
               Please provide your information below to begin your learning
               journey.
             </p>
           </div>
-          <div className="">
+
+          <div>
             {routes.map((route) => (
               <Link
-                target="blank"
                 href={route.href}
                 key={route.href}
                 className={cn(
-                  pathname === route.href ? "text-[#C7161E]" : "text-black"
+                  "relative block", // ensure clickable area is block-level
+                  pathname === route.href
+                    ? "text-[#C7161E] before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-[3px] before:bg-[#C7161E]"
+                    : "text-black"
                 )}
               >
-                <div className="flex my-5 items-center  ">
-                  <route.icon />
+                <div className="flex my-5 items-center">
                   <div className="px-3">{route.label}</div>
                 </div>
               </Link>
