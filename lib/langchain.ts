@@ -1,7 +1,4 @@
-// /lib/langchain.ts
-import { OpenAIEmbeddings } from "@langchain/openai";
-import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-import { ChatOpenAI } from "@langchain/openai";
+// /lib/langchain.ts import { OpenAIEmbeddings } from "@langchain/openai"; import { MongoDBAtlasVectorSearch } from "@langchain/mongodb"; import { ChatOpenAI } from "@langchain/openai";
 import { RetrievalQAChain } from "langchain/chains";
 import clientPromise from "./mongodb";
 import { PromptTemplate } from "@langchain/core/prompts";
@@ -13,6 +10,8 @@ import {
   generateVectorKey,
 } from "./redis";
 import { UserStore } from "@/store/useUserData";
+import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 
 type Filter = Record<string, unknown>;
 type QueryParams = {

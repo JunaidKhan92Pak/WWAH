@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/authHelper";
+import { Button } from "@/components/ui/button";
 
 const countries = [
   { value: "USA", label: "United States" },
@@ -39,6 +40,9 @@ const Step1 = () => {
     country: "",
     nationality: "",
     city: "",
+    facebook: "",
+    linkedin: "",
+    instagram: "",
   });
 
   const handleChange = (
@@ -96,7 +100,9 @@ const Step1 = () => {
 
             {/* Column 2 */}
             <div className="flex flex-col space-y-2">
-              <label className="block text-gray-700 text-sm">Email</label>
+              <label className="block text-gray-700 text-sm">
+                Email Address
+              </label>
               <input
                 type="email"
                 name="email"
@@ -176,53 +182,75 @@ const Step1 = () => {
               </select>
             </div>
             <div className="md:w-1/2">
-              <label className="block text-gray-700 text-sm">Nationality</label>
+              <label className="block text-gray-700 text-sm">City</label>
               <select
-                name="nationality"
-                value={personalInfo.nationality}
+                name="city"
+                value={personalInfo.city}
                 onChange={handleChange}
                 className="w-full px-4 py-2 text-sm bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="" disabled>
-                  Select your nationality
+                  Select a city
                 </option>
-                {countries.map((country) => (
-                  <option key={country.value} value={country.value}>
-                    {country.label}
+                {cities.map((city) => (
+                  <option key={city.value} value={city.value}>
+                    {city.label}
                   </option>
                 ))}
               </select>
             </div>
           </div>
-
-          <div>
-            <label className="block text-gray-700 text-sm">City</label>
-            <select
-              name="city"
-              value={personalInfo.city}
-              onChange={handleChange}
-              className="w-full sm:w-1/2 px-4 py-2 text-sm bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="" disabled>
-                Select a city
-              </option>
-              {cities.map((city) => (
-                <option key={city.value} value={city.value}>
-                  {city.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="text-left">
-            <button
-              type="submit"
-              className="w-1/2 py-2 mt-4 bg-[#C7161E] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-800"
-            >
-              Continue
-            </button>
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              Social Media Links
+            </h3>
+            <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center">
+              <div className="w-[95%]">
+                <label className="block text-gray-700 text-sm">Facebook</label>
+                <input
+                  type="url"
+                  name="facebook"
+                  placeholder="Facebook profile link"
+                  value={personalInfo.facebook}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="w-[95%]">
+                <label className="block text-gray-700 text-sm">LinkedIn</label>
+                <input
+                  type="url"
+                  name="linkedin"
+                  placeholder="LinkedIn profile link"
+                  value={personalInfo.linkedin}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="w-[95%]">
+                <label className="block text-gray-700 text-sm">Instagram</label>
+                <input
+                  type="url"
+                  name="instagram"
+                  placeholder="Instagram profile link"
+                  value={personalInfo.instagram}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
           </div>
         </form>
+
+        <div className="text-left">
+          <Button
+            type="submit"
+            size={"lg"}
+            className="py- mt-4 bg-[#C7161E] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-800"
+          >
+            Continue
+          </Button>
+        </div>
       </section>
     </div>
   );
