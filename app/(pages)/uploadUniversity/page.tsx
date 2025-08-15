@@ -46,7 +46,6 @@ export default function Home() {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [missingImages, setMissingImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
@@ -65,16 +64,23 @@ export default function Home() {
       const file = files[0];
 
       // Check if file is an allowed image format (only JPG and PNG)
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        setError(`Unsupported file type: ${file.type} for ${imageType}. Please use JPG or PNG formats only.`);
+        setError(
+          `Unsupported file type: ${file.type} for ${imageType}. Please use JPG or PNG formats only.`
+        );
         e.target.value = ""; // Reset input
         return;
       }
 
       setImageFiles((prev) => ({ ...prev, [imageType]: file }));
       // Remove from missing images list if it was there
-      setMissingImages(prev => prev.filter(img => img !== imageType));
+      setMissingImages((prev) => prev.filter((img) => img !== imageType));
     }
   };
 
@@ -89,14 +95,16 @@ export default function Home() {
       const workbook = XLSX.read(data, { type: "array" });
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-      const json: Record<string, string | number>[] = XLSX.utils.sheet_to_json(worksheet, { raw: false });
+      const json: Record<string, string | number>[] = XLSX.utils.sheet_to_json(
+        worksheet,
+        { raw: false }
+      );
       const normalizedData = normalizeData(json);
       setParsedData((prev) => ({
         ...prev,
         university: normalizedData,
       }));
       setError(null);
-
 
       if (normalizedData.length === 0) {
         setError("The file does not contain any university.");
@@ -148,7 +156,7 @@ export default function Home() {
 
     // Check for missing images
     const missing: string[] = [];
-    allImages.forEach(imageType => {
+    allImages.forEach((imageType) => {
       if (!imageFiles[imageType]) {
         missing.push(imageType);
       }
@@ -157,7 +165,11 @@ export default function Home() {
     // If there are missing images, update state and return
     if (missing.length > 0) {
       setMissingImages(missing);
-      setError(`Missing images: ${missing.join(", ")}. Please upload all required images.`);
+      setError(
+        `Missing images: ${missing.join(
+          ", "
+        )}. Please upload all required images.`
+      );
       return;
     }
 
@@ -171,7 +183,6 @@ export default function Home() {
       const selectedImages = Object.entries(imageFiles).filter(
         ([, file]) => file
       );
-
 
       const imagesData: { [key: string]: string } = {};
       await Promise.all(
@@ -192,7 +203,8 @@ export default function Home() {
         })
       );
 
-      const universityName = parsedData.university[0]?.university_name || "unnamed_university";
+      const universityName =
+        parsedData.university[0]?.university_name || "unnamed_university";
       const response = await fetch("/api/addUniversityImges", {
         method: "POST",
         body: JSON.stringify({ images: imagesData, universityName }),
@@ -227,17 +239,21 @@ export default function Home() {
     }
 
     // Ensure all images are uploaded
-    const missingImageUrls: string[] = [];
-    for (const imageType of allImages) {
-      if (!universityImages[imageType]) {
-        missingImageUrls.push(imageType);
-      }
-    }
+    // const missingImageUrls: string[] = [];
+    // for (const imageType of allImages) {
+    //   if (!universityImages[imageType]) {
+    //     missingImageUrls.push(imageType);
+    //   }
+    // }
 
-    if (missingImageUrls.length > 0) {
-      setError(`Missing image URLs for: ${missingImageUrls.join(", ")}. Please upload all required images.`);
-      return;
-    }
+    // if (missingImageUrls.length > 0) {
+    //   setError(
+    //     `Missing image URLs for: ${missingImageUrls.join(
+    //       ", "
+    //     )}. Please upload all required images.`
+    //   );
+    //   return;
+    // }
 
     // Set uploading state to true
     setUploading(true);
@@ -268,9 +284,7 @@ export default function Home() {
         setMissingImages([]);
       } else {
         const errorData = await response.json();
-        setError(
-          `Error: ${errorData.message || "Unknown error occurred."}`
-        );
+        setError(`Error: ${errorData.message || "Unknown error occurred."}`);
         setUploadStatus(null);
       }
     } catch (error) {
@@ -288,11 +302,14 @@ export default function Home() {
   return (
     <div className="bg-gradient-to-br from-indigo-100 to-purple-50 min-h-screen flex justify-center py-10">
       <div className="w-full max-w-3xl bg-white shadow-2xl rounded-lg p-4">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">University Data Upload</h1>
+        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">
+          University Data Upload
+        </h1>
         {/* Alert box for file format */}
         <div className="bg-blue-50 border border-blue-300 text-blue-800 px-4 py-3 rounded mb-4">
           <p className="text-sm">
-            <strong>Important:</strong> Only JPG and PNG image formats are supported. WebP and other formats will be rejected.
+            <strong>Important:</strong> Only JPG and PNG image formats are
+            supported. WebP and other formats will be rejected.
           </p>
         </div>
 
@@ -322,7 +339,9 @@ export default function Home() {
               name="country"
               placeholder="Enter Country"
               value={parsedData.country}
-              onChange={(e) => setParsedData({ ...parsedData, country: e.target.value })}
+              onChange={(e) =>
+                setParsedData({ ...parsedData, country: e.target.value })
+              }
               className="w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -333,8 +352,19 @@ export default function Home() {
                 htmlFor="excel-upload"
                 className="cursor-pointer bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
                 </svg>
                 Select Excel File
               </label>
@@ -354,10 +384,23 @@ export default function Home() {
           {file && (
             <div className="bg-gray-50 p-3 rounded-lg">
               <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-green-500 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
-                <span className="text-sm font-medium">Selected file: {file.name}</span>
+                <span className="text-sm font-medium">
+                  Selected file: {file.name}
+                </span>
               </div>
             </div>
           )}
@@ -365,7 +408,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {allImages.map((imageType) => (
               <div key={imageType} className="relative flex flex-col">
-                <label className={`block text-sm font-medium ${missingImages.includes(imageType) ? 'text-red-600' : 'text-gray-700'}`}>
+                <label
+                  className={`block text-sm font-medium ${
+                    missingImages.includes(imageType)
+                      ? "text-red-600"
+                      : "text-gray-700"
+                  }`}
+                >
                   {imageType.replace(/_/g, " ")}
                   {missingImages.includes(imageType) && " (Missing)"}
                 </label>
@@ -373,13 +422,26 @@ export default function Home() {
                   type="file"
                   accept="image/jpeg,image/jpg,image/png,image/webp"
                   onChange={(e) => handleImageChange(e, imageType)}
-                  className={`block w-full border p-3 rounded-lg shadow-sm my-1 ${missingImages.includes(imageType) ? 'border-red-500' : ''}`}
+                  className={`block w-full border p-3 rounded-lg shadow-sm my-1 ${
+                    missingImages.includes(imageType) ? "border-red-500" : ""
+                  }`}
                   required
                 />
                 {imageFiles[imageType] && (
                   <div className="flex items-center mt-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-green-500 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                     <span className="text-xs text-green-600">
                       {Math.round((imageFiles[imageType]?.size || 0) / 1024)} KB
@@ -394,50 +456,107 @@ export default function Home() {
             type="button"
             onClick={handleAllImagesUpload}
             disabled={uploading || parsedData.university.length === 0}
-            className={`w-full py-3 rounded-lg transition mt-6 flex items-center justify-center ${uploading || parsedData.university.length === 0
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-indigo-600 text-white hover:bg-indigo-700'
-              }`}
+            className={`w-full py-3 rounded-lg transition mt-6 flex items-center justify-center ${
+              uploading || parsedData.university.length === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-indigo-600 text-white hover:bg-indigo-700"
+            }`}
           >
             {uploading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Uploading...
               </>
             ) : (
               <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                  />
                 </svg>
                 Upload Images
               </>
             )}
           </button>
 
-          {Object.keys(universityImages).length === allImages.length && parsedData.university.length > 0 ? (
+          {Object.keys(universityImages).length === allImages.length &&
+          parsedData.university.length > 0 ? (
             <button
               type="submit"
               disabled={uploading}
-              className={`w-full py-3 rounded-lg transition mt-6 flex items-center justify-center ${uploading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-green-600 text-white hover:bg-green-700'
-                }`}
+              className={`w-full py-3 rounded-lg transition mt-6 flex items-center justify-center ${
+                uploading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 text-white hover:bg-green-700"
+              }`}
             >
               {uploading ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Uploading to MongoDB...
                 </>
               ) : (
                 <>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Save to MongoDB
                 </>
@@ -446,10 +565,24 @@ export default function Home() {
           ) : (
             <div className="text-amber-600 text-sm mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
               <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
-                <span>Upload all university images and add Excel data to enable the save button</span>
+                <span>
+                  Upload all university images and add Excel data to enable the
+                  save button
+                </span>
               </div>
             </div>
           )}
@@ -458,17 +591,39 @@ export default function Home() {
       <div className="w-[400px] ml-4 border-2 border-dashed border-gray-300 rounded-lg p-4">
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
             Image Upload Status
           </h2>
           <div className="overflow-auto h-64 border border-gray-200 rounded p-2 bg-white">
             {allImages.map((imageType) => (
-              <div key={imageType} className="flex justify-between items-center py-1 border-b">
-                <span className="font-medium text-sm">{imageType.replace(/_/g, " ")}:</span>
-                <span className={`text-sm px-2 py-1 rounded-full ${universityImages[imageType] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                  {universityImages[imageType] ? 'Uploaded ✓' : 'Not uploaded'}
+              <div
+                key={imageType}
+                className="flex justify-between items-center py-1 border-b"
+              >
+                <span className="font-medium text-sm">
+                  {imageType.replace(/_/g, " ")}:
+                </span>
+                <span
+                  className={`text-sm px-2 py-1 rounded-full ${
+                    universityImages[imageType]
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {universityImages[imageType] ? "Uploaded ✓" : "Not uploaded"}
                 </span>
               </div>
             ))}
@@ -476,8 +631,19 @@ export default function Home() {
         </div>
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
             Parsed Excel Data
           </h2>
@@ -487,7 +653,8 @@ export default function Home() {
                 <div key={index} className="mb-2 pb-2 border-b">
                   {Object.entries(item).map(([key, value]) => (
                     <div key={key} className="text-sm">
-                      <span className="font-medium">{key}:</span> {String(value)}
+                      <span className="font-medium">{key}:</span>{" "}
+                      {String(value)}
                     </div>
                   ))}
                 </div>

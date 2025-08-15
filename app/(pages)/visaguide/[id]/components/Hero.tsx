@@ -17,9 +17,6 @@ const countryAdjectives: Record<string, string> = {
   Germany: "German",
 };
 
-// const getAdjectiveForm = (country: string): string => {
-//   return countryAdjectives[country] || country;
-// };
 const getAdjectiveForm = (country: string): string => {
   const normalized = country.trim().toLowerCase();
 

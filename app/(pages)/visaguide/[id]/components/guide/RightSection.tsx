@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 
-// Update your interfaces in both files
 interface StepSection {
   heading: string;
   points: string[];
@@ -25,7 +24,6 @@ interface DataType {
 export const RightSection = ({ data }: { data: DataType }) => {
   const targetRef = useRef<HTMLDivElement>(null);
 
-  // Default icons mapping (you can customize this)
   const getStepIcon = (index: number, customIcon?: string) => {
     if (customIcon) return customIcon;
 
@@ -46,9 +44,7 @@ export const RightSection = ({ data }: { data: DataType }) => {
     return defaultIcons[index] || "/visaguide/choose.svg";
   };
 
-  // Special sections that need custom styling/content
   const renderSpecialContent = (stepIndex: number, step: StepSection) => {
-    // Add custom content for specific steps
     if (step.heading.toLowerCase().includes("program") || stepIndex === 0) {
       return (
         <div className="flex md:flex-row flex-col bg-[#F1F1F1] p-4 rounded-2xl w-full justify-end my-4 gap-2">
@@ -74,12 +70,6 @@ export const RightSection = ({ data }: { data: DataType }) => {
     ) {
       return (
         <>
-          {/* <div className="flex justify-end mt-4">
-            <p className="md:w-[55%] p-6 rounded-2xl bg-[#FCE7D2]">
-              Prepare the necessary documents mentioned in the required
-              documents section of your desired course page.
-            </p>
-          </div> */}
           <div className="flex md:flex-row flex-col bg-[#F1F1F1] p-4 rounded-2xl w-full justify-end my-4 gap-2">
             <div>
               <p className="font-semibold">

@@ -21,6 +21,7 @@ export async function POST(req: Request) {
 
     // Validate input: ensure 'university' is present (as an object or an array)
     if (
+    
       !data.university ||
       (typeof data.university !== "object" && !Array.isArray(data.university))
     ) {

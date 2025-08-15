@@ -1,6 +1,24 @@
 // lib/embedding-operations.ts
+import {
+  CountryDocumentData,
+  CountryProfile,
+  SuccessChance,
+  UserProfile,
+} from "@/scripts/types";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MongoClient } from "mongodb";
+
+interface StepData {
+  title?: string;
+  heading?: string;
+  description?: string;
+  points?: string[];
+  requirements?: string[];
+  documents?: string[];
+  timeline?: string;
+  cost?: string;
+  [key: string]: unknown;
+}
 
 // Initialize OpenAI embeddings
 const embeddings = new OpenAIEmbeddings({
@@ -22,72 +40,6 @@ function truncateText(text: string, maxTokens: number = 2000): string {
   return result.trim() || text.substring(0, maxChars);
 }
 
-// Types for user data (matching build-meta-index.ts structure)
-interface UserProfile {
-  _id: string;
-  name?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  successChanceData?: SuccessChance; // For embedded data
-}
-
-interface SuccessChance {
-  studyLevel?: string;
-  grade?: string;
-  gradeType?: string;
-  nationality?: string;
-  majorSubject?: string;
-  workExperience?: string | number;
-  livingCosts?: { amount: number; currency: string };
-  tuitionFee?: { amount: number; currency: string };
-  languageProficiency?: { test: string; score: string | number };
-  studyPreferenced?: {
-    country?: string;
-    degree?: string;
-    subject?: string;
-  };
-  userId?: string;
-}
-
-// Types for country data
-interface CountryProfile {
-  _id?: string;
-  country_name?: string;
-  capital?: string;
-  language?: string;
-  population?: string;
-  currency?: string;
-  international_students?: string;
-  academic_intakes?: string;
-  why_study?: string;
-  work_while_studying?: string;
-  work_after_study?: string;
-  rent?: string;
-  groceries?: string;
-  transportation?: string;
-  healthcare?: string;
-  eating_out?: string;
-  household_bills?: string;
-  miscellaneous?: string;
-  residency?: string[];
-  popular_programs?: string[];
-  visa_requirements?: string[];
-  accomodation_options?: string[];
-  health?: Array<{ name: string; location: string }>;
-  scholarships?: Array<{ name: string; details: string }>;
-}
-
-export interface CountryDocumentData {
-  _id?: string;
-  countryname?: string;
-  embassyDocuments?: Array<{ name: string; detail?: string }>;
-  universityDocuments?: Array<{
-    course_level: string;
-    doc: Array<{ name: string; detail?: string }>;
-  }>;
-}
-
 // Create combined text content from user data
 function createTextContent(
   doc: Record<string, unknown>,
@@ -97,8 +49,135 @@ function createTextContent(
   let metadata: Record<string, unknown> = {};
 
   switch (collectionName) {
+    case "visaguides":
+      console.log(`🔍 Processing visa guide document:`, {
+        country_name: doc.country_name,
+        hasSteps: !!doc.steps,
+        stepsType: typeof doc.steps,
+        stepsLength: Array.isArray(doc.steps) ? doc.steps.length : "Not array",
+        allKeys: Object.keys(doc),
+      });
+
+      textContent += `Visa Guide: ${doc.country_name || "Unknown Country"}\n`;
+
+      // Process the clean steps array structure
+      if (doc.steps && Array.isArray(doc.steps) && doc.steps.length > 0) {
+        console.log(`📝 Processing ${doc.steps.length} steps from steps array`);
+        textContent += `Visa Application Process:\n`;
+
+        doc.steps.forEach((step: StepData, index: number) => {
+          console.log(`📝 Processing step ${index + 1}:`, {
+            title: step.title || step.heading,
+            hasPoints: !!step.points,
+            pointsLength: Array.isArray(step.points) ? step.points.length : 0,
+            hasRequirements: !!step.requirements,
+            hasDocuments: !!step.documents,
+          });
+
+          // Use title or heading
+          const stepTitle = step.title || step.heading || `Step ${index + 1}`;
+          textContent += `\nStep ${index + 1}: ${stepTitle}\n`;
+
+          // Add description if available
+          if (step.description) {
+            textContent += `Description: ${step.description}\n`;
+          }
+
+          // Add points
+          if (step.points && Array.isArray(step.points)) {
+            step.points.forEach((point: string, pointIndex: number) => {
+              if (point && typeof point === "string") {
+                textContent += `  ${pointIndex + 1}. ${point}\n`;
+              }
+            });
+          }
+
+          // Add requirements
+          if (step.requirements && Array.isArray(step.requirements)) {
+            textContent += `Requirements:\n`;
+            step.requirements.forEach((req: string, reqIndex: number) => {
+              console.log(reqIndex);
+              if (req && typeof req === "string") {
+                textContent += `  - ${req}\n`;
+              }
+            });
+          }
+
+          // Add documents
+          if (step.documents && Array.isArray(step.documents)) {
+            textContent += `Documents:\n`;
+            step.documents.forEach((doc: string, docIndex: number) => {
+              console.log(docIndex);
+              if (doc && typeof doc === "string") {
+                textContent += `  - ${doc}\n`;
+              }
+            });
+          }
+
+          // Add timeline and cost if available
+          if (step.timeline) {
+            textContent += `Timeline: ${step.timeline}\n`;
+          }
+          if (step.cost) {
+            textContent += `Cost: ${step.cost}\n`;
+          }
+        });
+      } else {
+        console.log(`⚠️ No valid steps array found`);
+        textContent += `No steps available\n`;
+      }
+
+      if (doc.requirements && Array.isArray(doc.requirements)) {
+        textContent += `\nGeneral Requirements: ${doc.requirements.join(
+          ", "
+        )}\n`;
+      }
+
+      if (doc.processing_time) {
+        textContent += `Processing Time: ${doc.processing_time}\n`;
+      }
+
+      if (doc.visa_fee) {
+        textContent += `Visa Fee: ${doc.visa_fee}\n`;
+      }
+
+      if (doc.validity) {
+        textContent += `Visa Validity: ${doc.validity}\n`;
+      }
+
+      // Log the final text content preview
+      console.log(
+        `📄 Generated text content (first 500 chars):`,
+        textContent.substring(0, 500)
+      );
+
+      // Enhanced metadata for visa guides
+      metadata = {
+        title: `${doc.country_name || "Unknown Country"} Visa Guide`,
+        country: doc.country_name || "",
+        countryId: doc.country_id || null,
+        stepCount: Array.isArray(doc.steps) ? doc.steps.length : 0,
+        steps: Array.isArray(doc.steps)
+          ? doc.steps.map((step: StepData, index: number) => ({
+              stepNumber: index + 1,
+              title: step.title || step.heading || `Step ${index + 1}`,
+              description: step.description || "",
+              pointCount: Array.isArray(step.points) ? step.points.length : 0,
+              points: step.points || [],
+              requirements: step.requirements || [],
+              documents: step.documents || [],
+              timeline: step.timeline || "",
+              cost: step.cost || "",
+            }))
+          : [],
+        createdAt: doc.createdAt || null,
+        updatedAt: doc.updatedAt || null,
+        originalDoc: doc,
+      };
+      break;
+
     case "universities":
-      // ... existing universities case
+      // ... existing universities case (keep as is)
       textContent += `University: ${doc.university_name || ""}\n`;
       textContent += `Country: ${doc.country_name || ""}\n`;
       textContent += `University Type: ${doc.university_type || ""}\n`;
@@ -262,13 +341,6 @@ function createTextContent(
         textContent += `Popular Programs: ${doc.popular_programs.join(", ")}\n`;
       }
 
-      // Visa requirements
-      if (doc.visa_requirements && Array.isArray(doc.visa_requirements)) {
-        textContent += `Visa Requirements: ${doc.visa_requirements.join(
-          ", "
-        )}\n`;
-      }
-
       // Accommodation options
       if (doc.accomodation_options && Array.isArray(doc.accomodation_options)) {
         textContent += `Accommodation Options: ${doc.accomodation_options.join(
@@ -331,7 +403,7 @@ function createTextContent(
       break;
 
     case "courses":
-      // ... existing courses case (keep as is)
+      // ... existing courses case (keep as is) - keeping this unchanged for brevity
       const courseTitle = Array.isArray(doc.course_title)
         ? doc.course_title.join(", ")
         : doc.course_title || "";
@@ -469,7 +541,7 @@ function createTextContent(
       break;
 
     case "scholarships":
-      // ... existing scholarships case (keep as is)
+      // ... existing scholarships case (keep as is) - keeping unchanged for brevity
       textContent += `Scholarship: ${doc.name || ""}\n`;
       textContent += `Host Country: ${doc.hostCountry || ""}\n`;
       textContent += `Type: ${doc.type || ""}\n`;
@@ -614,73 +686,79 @@ function createTextContent(
       break;
 
     case "expenses":
-      // ... existing expenses case (keep as is)
       textContent += `Country: ${doc.country_name || ""}\n`;
       textContent += `University: ${doc.university_name || ""}\n`;
 
       if (doc.lifestyles && Array.isArray(doc.lifestyles)) {
-        doc.lifestyles.forEach(
-          (
-            lifestyle: {
-              type: string;
-              currency: string;
-              rent: { min: number; max: number };
-              groceries: { min: number; max: number };
-              public_transport: { min: number; max: number };
-              utilities: { min: number; max: number };
-              internet: { min: number; max: number };
-              mobile: { min: number; max: number };
-              total_estimated_cost: { min: number; max: number };
-            },
-            index: number
-          ) => {
-            if (typeof lifestyle === "object" && lifestyle !== null) {
-              textContent += `\nLifestyle ${index + 1} - ${
-                lifestyle.type || "Unknown"
-              } (${lifestyle.currency || ""})\n`;
+        doc.lifestyles.forEach((lifestyle, index) => {
+          if (typeof lifestyle === "object" && lifestyle !== null) {
+            const lifestyleObj = lifestyle as {
+              type?: string;
+              currency?: string;
+              rent?: { min: number; max: number } | number;
+              groceries?: { min: number; max: number } | number;
+              public_transport?: { min: number; max: number } | number;
+              utilities?: { min: number; max: number } | number;
+              internet?: { min: number; max: number } | number;
+              mobile?: { min: number; max: number } | number;
+              total_estimated_cost?: { min: number; max: number } | number;
+            };
 
-              // Cost breakdown
-              if (lifestyle.rent) {
-                textContent += `Rent: ${lifestyle.rent.min || 0} - ${
-                  lifestyle.rent.max || 0
-                }\n`;
+            textContent += `\nLifestyle ${index + 1} - ${
+              lifestyleObj.type || "Unknown"
+            } (${lifestyleObj.currency || ""})\n`;
+
+            // Helper function to format cost ranges
+            const formatCost = (
+              cost: { min: number; max: number } | number | undefined
+            ): string => {
+              if (!cost) return "0";
+              if (typeof cost === "number") return cost.toString();
+              if (
+                typeof cost === "object" &&
+                cost.min !== undefined &&
+                cost.max !== undefined
+              ) {
+                return `${cost.min} - ${cost.max}`;
               }
-              if (lifestyle.groceries) {
-                textContent += `Groceries: ${lifestyle.groceries.min || 0} - ${
-                  lifestyle.groceries.max || 0
-                }\n`;
-              }
-              if (lifestyle.public_transport) {
-                textContent += `Public Transport: ${
-                  lifestyle.public_transport.min || 0
-                } - ${lifestyle.public_transport.max || 0}\n`;
-              }
-              if (lifestyle.utilities) {
-                textContent += `Utilities: ${lifestyle.utilities.min || 0} - ${
-                  lifestyle.utilities.max || 0
-                }\n`;
-              }
-              if (lifestyle.internet) {
-                textContent += `Internet: ${lifestyle.internet.min || 0} - ${
-                  lifestyle.internet.max || 0
-                }\n`;
-              }
-              if (lifestyle.mobile) {
-                textContent += `Mobile: ${lifestyle.mobile.min || 0} - ${
-                  lifestyle.mobile.max || 0
-                }\n`;
-              }
-              if (lifestyle.total_estimated_cost) {
-                textContent += `Total Estimated Cost: ${
-                  lifestyle.total_estimated_cost.min || 0
-                } - ${lifestyle.total_estimated_cost.max || 0}\n`;
-              }
+              return "0";
+            };
+
+            // Cost breakdown with proper formatting
+            if (lifestyleObj.rent) {
+              textContent += `Rent: ${formatCost(lifestyleObj.rent)}\n`;
+            }
+            if (lifestyleObj.groceries) {
+              textContent += `Groceries: ${formatCost(
+                lifestyleObj.groceries
+              )}\n`;
+            }
+            if (lifestyleObj.public_transport) {
+              textContent += `Public Transport: ${formatCost(
+                lifestyleObj.public_transport
+              )}\n`;
+            }
+            if (lifestyleObj.utilities) {
+              textContent += `Utilities: ${formatCost(
+                lifestyleObj.utilities
+              )}\n`;
+            }
+            if (lifestyleObj.internet) {
+              textContent += `Internet: ${formatCost(lifestyleObj.internet)}\n`;
+            }
+            if (lifestyleObj.mobile) {
+              textContent += `Mobile: ${formatCost(lifestyleObj.mobile)}\n`;
+            }
+            if (lifestyleObj.total_estimated_cost) {
+              textContent += `Total Estimated Cost: ${formatCost(
+                lifestyleObj.total_estimated_cost
+              )}\n`;
             }
           }
-        );
+        });
       }
 
-      // Enhanced metadata for expenses
+      // Enhanced metadata for expenses with proper cost formatting
       metadata = {
         title: `${doc.country_name || "Country"} - ${
           doc.university_name || "University"
@@ -688,42 +766,72 @@ function createTextContent(
         country: doc.country_name || "",
         university: doc.university_name || "",
         lifestyles: Array.isArray(doc.lifestyles)
-          ? doc.lifestyles.map(
-              (lifestyle: {
-                type: string;
-                currency: string;
-                rent: { min: number; max: number };
-                groceries: { min: number; max: number };
-                public_transport: { min: number; max: number };
-                utilities: { min: number; max: number };
-                internet: { min: number; max: number };
-                mobile: { min: number; max: number };
-                total_estimated_cost: { min: number; max: number };
-              }) => ({
-                type: lifestyle?.type || "",
-                currency: lifestyle?.currency || "",
+          ? doc.lifestyles.map((lifestyle) => {
+              if (typeof lifestyle === "object" && lifestyle !== null) {
+                const lifestyleObj = lifestyle as {
+                  type?: string;
+                  currency?: string;
+                  rent?: { min: number; max: number } | number;
+                  groceries?: { min: number; max: number } | number;
+                  public_transport?: { min: number; max: number } | number;
+                  utilities?: { min: number; max: number } | number;
+                  internet?: { min: number; max: number } | number;
+                  mobile?: { min: number; max: number } | number;
+                  total_estimated_cost?: { min: number; max: number } | number;
+                };
+
+                // Helper function to normalize cost data
+                const normalizeCost = (
+                  cost: { min: number; max: number } | number | undefined
+                ) => {
+                  if (!cost) return { min: 0, max: 0 };
+                  if (typeof cost === "number") return { min: cost, max: cost };
+                  if (
+                    typeof cost === "object" &&
+                    cost.min !== undefined &&
+                    cost.max !== undefined
+                  ) {
+                    return { min: cost.min, max: cost.max };
+                  }
+                  return { min: 0, max: 0 };
+                };
+
+                return {
+                  type: lifestyleObj.type || "",
+                  currency: lifestyleObj.currency || "",
+                  costs: {
+                    rent: normalizeCost(lifestyleObj.rent),
+                    groceries: normalizeCost(lifestyleObj.groceries),
+                    publicTransport: normalizeCost(
+                      lifestyleObj.public_transport
+                    ),
+                    utilities: normalizeCost(lifestyleObj.utilities),
+                    internet: normalizeCost(lifestyleObj.internet),
+                    mobile: normalizeCost(lifestyleObj.mobile),
+                    totalEstimatedCost: normalizeCost(
+                      lifestyleObj.total_estimated_cost
+                    ),
+                  },
+                };
+              }
+              return {
+                type: "",
+                currency: "",
                 costs: {
-                  rent: lifestyle?.rent || { min: 0, max: 0 },
-                  groceries: lifestyle?.groceries || { min: 0, max: 0 },
-                  publicTransport: lifestyle?.public_transport || {
-                    min: 0,
-                    max: 0,
-                  },
-                  utilities: lifestyle?.utilities || { min: 0, max: 0 },
-                  internet: lifestyle?.internet || { min: 0, max: 0 },
-                  mobile: lifestyle?.mobile || { min: 0, max: 0 },
-                  totalEstimatedCost: lifestyle?.total_estimated_cost || {
-                    min: 0,
-                    max: 0,
-                  },
+                  rent: { min: 0, max: 0 },
+                  groceries: { min: 0, max: 0 },
+                  publicTransport: { min: 0, max: 0 },
+                  utilities: { min: 0, max: 0 },
+                  internet: { min: 0, max: 0 },
+                  mobile: { min: 0, max: 0 },
+                  totalEstimatedCost: { min: 0, max: 0 },
                 },
-              })
-            )
+              };
+            })
           : [],
         originalDoc: doc,
       };
       break;
-
     default:
       metadata = {
         title: "Untitled",
@@ -948,7 +1056,7 @@ function createCombinedUserTextContent(
   return textContent;
 }
 
-// Updated createEmbeddingForDocument function to handle combined country data
+// createEmbeddingForDocument function to handle combined country data
 export async function createEmbeddingForDocument(
   document: Record<string, unknown>,
   sourceCollection: string,
@@ -962,7 +1070,101 @@ export async function createEmbeddingForDocument(
     let textContent: string;
     let metadata: Record<string, unknown>;
     let embeddingDoc: Record<string, unknown>;
+    // Handle combined country embeddings
+    // if (
+    //   sourceCollection === "countries" ||
+    //   sourceCollection === "combined_country_data"
+    // ) {
+    //   const countryName = document.country_name || document.countryname || "";
+    //   const countryId = document._id?.toString() || "";
 
+    //   let countryDocuments = [];
+
+    //   // Check if country data already has embedded document data
+    //   if (document.documentData) {
+    //     countryDocuments = Array.isArray(document.documentData)
+    //       ? document.documentData
+    //       : [document.documentData];
+    //     console.log(
+    //       `📋 Using embedded document data for country ${countryName}`
+    //     );
+    //   } else {
+    //     // Fetch country documents from countryData collection
+    //     const countryDataCollection = db.collection("countrydatas");
+    //     countryDocuments = await countryDataCollection
+    //       .find({
+    //         countryname: { $regex: new RegExp(String(countryName), "i") },
+    //       })
+    //       .toArray();
+    //     console.log(
+    //       `📋 Fetched ${countryDocuments.length} document sets for country ${countryName}`
+    //     );
+    //   }
+
+    //   // Create combined text content
+    //   textContent = createCombinedCountryTextContent(
+    //     document,
+    //     countryDocuments
+    //   );
+
+    //   console.log(
+    //     `📝 Generated text content for country ${countryName}:`,
+    //     textContent.substring(0, 200) + "..."
+    //   );
+
+    //   metadata = {
+    //     title: countryName || "Country Profile",
+    //     country: countryName,
+    //     capital: document.capital || "",
+    //     language: document.language || "",
+    //     population: document.population || null,
+    //     currency: document.currency || "",
+    //     internationalStudents: document.international_students || null,
+    //     academicIntakes: document.academic_intakes || "",
+    //     workRights: {
+    //       whileStudying: document.work_while_studying || "",
+    //       afterStudy: document.work_after_study || "",
+    //     },
+    //     livingCosts: {
+    //       rent: document.rent || null,
+    //       groceries: document.groceries || null,
+    //       transportation: document.transportation || null,
+    //       healthcare: document.healthcare || null,
+    //       eatingOut: document.eating_out || null,
+    //       householdBills: document.household_bills || null,
+    //       miscellaneous: document.miscellaneous || null,
+    //     },
+    //     residency: document.residency || [],
+    //     popularPrograms: document.popular_programs || [],
+    //     visaRequirements: document.visa_requirements || [],
+    //     accommodationOptions: document.accomodation_options || [],
+    //     health: document.health || [],
+    //     scholarships: document.scholarships || [],
+    //     documentRequirements: countryDocuments.map(
+    //       (docData: {
+    //         embassyDocuments: string;
+    //         universityDocuments: string;
+    //       }) => ({
+    //         embassyDocuments: docData.embassyDocuments || [],
+    //         universityDocuments: docData.universityDocuments || [],
+    //       })
+    //     ),
+    //     hasDocumentData: countryDocuments.length > 0,
+    //     originalDoc: document,
+    //   };
+
+    //   embeddingDoc = {
+    //     text: textContent,
+    //     embedding: await embeddings.embedQuery(textContent),
+    //     countryName: countryName,
+    //     sourceCollection: "combined_country_data",
+    //     originalId: countryId,
+    //     domain: "country",
+    //     metadata: metadata,
+    //     createdAt: new Date(),
+    //     updatedAt: new Date(), // Add updatedAt for tracking
+    //   };
+    // }
     // Handle user embeddings
     if (
       sourceCollection === "users" ||
@@ -1028,7 +1230,7 @@ export async function createEmbeddingForDocument(
         createdAt: new Date(),
       };
     }
-    // NEW: Handle combined country embeddings
+    // Handle combined country embeddings
     else if (
       sourceCollection === "countries" ||
       sourceCollection === "combined_country_data"
@@ -1098,10 +1300,15 @@ export async function createEmbeddingForDocument(
         accommodationOptions: document.accomodation_options || [],
         health: document.health || [],
         scholarships: document.scholarships || [],
-        documentRequirements: countryDocuments.map((docData: {embassyDocuments:string,universityDocuments:string}) => ({
-          embassyDocuments: docData.embassyDocuments || [],
-          universityDocuments: docData.universityDocuments || [],
-        })),
+        documentRequirements: countryDocuments.map(
+          (docData: {
+            embassyDocuments: string;
+            universityDocuments: string;
+          }) => ({
+            embassyDocuments: docData.embassyDocuments || [],
+            universityDocuments: docData.universityDocuments || [],
+          })
+        ),
         hasDocumentData: countryDocuments.length > 0,
         originalDoc: document,
       };
@@ -1115,6 +1322,44 @@ export async function createEmbeddingForDocument(
         domain: "country",
         metadata: metadata,
         createdAt: new Date(),
+      };
+    }
+    // Handle scholarship embeddings with improved metadata
+    else if (sourceCollection === "scholarships") {
+      const result = createTextContent(document, sourceCollection);
+      textContent = result.textContent;
+      metadata = result.metadata;
+
+      if (!textContent.trim()) {
+        console.log(
+          `No text content generated for scholarship: ${document.name}`
+        );
+        await client.close();
+        return;
+      }
+
+      const embedding = await embeddings.embedQuery(textContent);
+
+      // Enhanced scholarship embedding document with compound identifier
+      embeddingDoc = {
+        text: textContent,
+        embedding: embedding,
+        domain: sourceCollection,
+        sourceCollection: sourceCollection,
+        originalId: document._id?.toString() || "",
+        // Add compound identifier fields for easier querying
+        scholarshipName: document.name || "",
+        hostCountry: document.hostCountry || "",
+        scholarshipProvider: document.provider || "",
+        ...metadata,
+        metadata: {
+          ...metadata,
+          // Ensure these are in metadata for deletion queries
+          scholarshipName: document.name || "",
+          hostCountry: document.hostCountry || "",
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
     }
     // Handle other domain documents (existing code)
@@ -1170,8 +1415,14 @@ export async function updateEmbeddingForDocument(
   targetCollection: string
 ) {
   try {
-    // Determine the correct ID field based on collection type
+    console.log(
+      `🔄 Updating embedding for ${sourceCollection} document ${documentId}`
+    );
+
+    // Determine the correct ID field and value based on collection type
     let idField = "originalId";
+    let idValue = documentId;
+
     if (
       sourceCollection === "users" ||
       sourceCollection === "combined_user_data"
@@ -1183,14 +1434,79 @@ export async function updateEmbeddingForDocument(
     ) {
       idField = "countryName";
       // For countries, we need to use the country name instead of ID
-      documentId =
+      idValue =
         (typeof document.country_name === "string" && document.country_name) ||
         (typeof document.countryname === "string" && document.countryname) ||
         documentId;
+
+      // Additional check to prevent duplicates for countries
+      const client = await MongoClient.connect(process.env.MONGODB_URI!);
+      const db = client.db("wwah");
+      const embeddingCollection = db.collection(targetCollection);
+
+      // Check if embedding already exists with exact match
+      const existingEmbeddings = await embeddingCollection
+        .find({
+          countryName: { $regex: new RegExp(`^${idValue}$`, "i") }, // Exact match
+        })
+        .toArray();
+
+      if (existingEmbeddings.length > 0) {
+        console.log(
+          `🔍 Found ${existingEmbeddings.length} existing embeddings for country ${idValue}, deleting all before update`
+        );
+
+        const deleteResult = await embeddingCollection.deleteMany({
+          countryName: { $regex: new RegExp(`^${idValue}$`, "i") },
+        });
+
+        console.log(
+          `🗑️ Deleted ${deleteResult.deletedCount} existing embeddings`
+        );
+      }
+
+      await client.close();
+    } else if (sourceCollection === "scholarships") {
+      // For scholarships, use compound identifier (name + hostCountry)
+      const scholarshipName = document.name as string;
+      const hostCountry = document.hostCountry as string;
+
+      if (scholarshipName && hostCountry) {
+        // Delete using compound filter instead of single ID
+        await deleteScholarshipEmbedding(
+          scholarshipName,
+          hostCountry,
+          targetCollection
+        );
+      } else {
+        // Fallback to original ID if compound key is not available
+        await deleteEmbeddingForDocument(
+          documentId,
+          targetCollection,
+          "originalId"
+        );
+      }
+
+      // Create new embedding
+      await createEmbeddingForDocument(
+        document,
+        sourceCollection,
+        targetCollection
+      );
+
+      console.log(
+        `✅ Updated scholarship embedding for ${scholarshipName} in ${hostCountry}`
+      );
+      return;
     }
 
-    // Delete existing embedding
-    await deleteEmbeddingForDocument(documentId, targetCollection, idField);
+    // For non-scholarship collections, delete existing and create new
+    if (
+      sourceCollection !== "countries" &&
+      sourceCollection !== "combined_country_data"
+    ) {
+      await deleteEmbeddingForDocument(idValue, targetCollection, idField);
+    }
 
     // Create new embedding
     await createEmbeddingForDocument(
@@ -1210,7 +1526,35 @@ export async function updateEmbeddingForDocument(
     throw error;
   }
 }
+export async function deleteScholarshipEmbedding(
+  scholarshipName: string,
+  hostCountry: string,
+  targetCollection: string
+) {
+  try {
+    const client = await MongoClient.connect(process.env.MONGODB_URI!);
+    const db = client.db("wwah");
+    const embeddingCollection = db.collection(targetCollection);
 
+    // Delete using compound filter matching the scholarship's unique identifier
+    const result = await embeddingCollection.deleteMany({
+      "metadata.title": scholarshipName,
+      "metadata.country": hostCountry,
+    });
+
+    console.log(
+      `✅ Deleted ${result.deletedCount} scholarship embeddings for "${scholarshipName}" in ${hostCountry}`
+    );
+
+    await client.close();
+  } catch (error) {
+    console.error(
+      `❌ Error deleting scholarship embedding for "${scholarshipName}" in ${hostCountry}:`,
+      error
+    );
+    throw error;
+  }
+}
 // Delete embedding for a document
 export async function deleteEmbeddingForDocument(
   documentId: string,
@@ -1236,6 +1580,62 @@ export async function deleteEmbeddingForDocument(
       `❌ Error deleting embedding for ${targetCollection} document ${documentId}:`,
       error
     );
+    throw error;
+  }
+}
+
+// NEW: Function to create visa guide embeddings
+export async function createVisaGuideEmbeddings(
+  targetCollection: string = "visaguide_embeddings",
+  batchSize: number = 5
+) {
+  console.log(`📋 Creating visa guide embeddings...`);
+
+  try {
+    const client = await MongoClient.connect(process.env.MONGODB_URI!);
+    const db = client.db("wwah");
+
+    // Get all visa guides
+    const visaGuidesCollection = db.collection("visaguides");
+    const visaGuides = await visaGuidesCollection.find({}).toArray();
+
+    console.log(`📊 Found ${visaGuides.length} visa guides to process`);
+
+    // Process visa guides in batches
+    for (let i = 0; i < visaGuides.length; i += batchSize) {
+      const batch = visaGuides.slice(i, i + batchSize);
+
+      const promises = batch.map(async (visaGuide) => {
+        try {
+          await createEmbeddingForDocument(
+            visaGuide,
+            "visaguides",
+            targetCollection
+          );
+        } catch (error) {
+          console.error(
+            `❌ Error processing visa guide for ${visaGuide.country_name}:`,
+            error
+          );
+        }
+      });
+
+      await Promise.all(promises);
+
+      console.log(
+        `✅ Processed batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(
+          visaGuides.length / batchSize
+        )}`
+      );
+
+      // Rate limiting
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    await client.close();
+    console.log(`🎉 Completed creating visa guide embeddings!`);
+  } catch (error) {
+    console.error(`❌ Error creating visa guide embeddings:`, error);
     throw error;
   }
 }
@@ -1324,5 +1724,60 @@ export async function createEmbeddingsForDocuments(
 
     // Rate limiting
     await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+}
+
+// NEW: Helper function to create all visa guide embeddings at once
+export async function createAllVisaGuideEmbeddings() {
+  try {
+    console.log(`🚀 Starting visa guide embedding creation process...`);
+
+    // Create embeddings for all visa guides
+    await createVisaGuideEmbeddings("visaguide_embeddings", 5);
+
+    console.log(`✅ All visa guide embeddings created successfully!`);
+  } catch (error) {
+    console.error(`❌ Failed to create visa guide embeddings:`, error);
+    throw error;
+  }
+}
+
+// NEW: Helper function to update a specific visa guide embedding
+export async function updateVisaGuideEmbedding(
+  visaGuideId: string,
+  visaGuideData: Record<string, unknown>
+) {
+  try {
+    console.log(`🔄 Updating embedding for visa guide ${visaGuideId}...`);
+
+    await updateEmbeddingForDocument(
+      visaGuideId,
+      visaGuideData,
+      "visaguides",
+      "visaguide_embeddings"
+    );
+
+    console.log(`✅ Visa guide embedding updated successfully!`);
+  } catch (error) {
+    console.error(`❌ Failed to update visa guide embedding:`, error);
+    throw error;
+  }
+}
+
+// NEW: Helper function to delete a specific visa guide embedding
+export async function deleteVisaGuideEmbedding(visaGuideId: string) {
+  try {
+    console.log(`🗑️ Deleting embedding for visa guide ${visaGuideId}...`);
+
+    await deleteEmbeddingForDocument(
+      visaGuideId,
+      "visaguide_embeddings",
+      "originalId"
+    );
+
+    console.log(`✅ Visa guide embedding deleted successfully!`);
+  } catch (error) {
+    console.error(`❌ Failed to delete visa guide embedding:`, error);
+    throw error;
   }
 }

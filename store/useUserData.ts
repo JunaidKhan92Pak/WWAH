@@ -807,7 +807,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           ? {
               ...state.user,
               ...updateData,
+
               updatedAt: currentTimestamp,
+
             }
           : null,
         loading: false,
@@ -826,7 +828,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
         loading: false,
       });
 
+
       return false;
+
     }
   },
 
@@ -876,7 +880,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           ? {
               ...state.detailedInfo,
               ...updateData,
+
               updatedAt: currentTimestamp,
+
             }
           : {
               ...defaultDetailedInfo,

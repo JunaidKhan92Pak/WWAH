@@ -4,12 +4,8 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { RightSection } from "./RightSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
-// import { BiAlignLeft } from "react-icons/bi";
-
 import { Button } from "@/components/ui/button";
-// import { SidebarProfile } from "./SidebarProfile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-// import { Menu } from "lucide-react";
 import { IoIosArrowDropright } from "react-icons/io";
 
 interface Faq {

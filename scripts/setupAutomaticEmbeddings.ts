@@ -45,7 +45,7 @@ async function testWebhookSystem() {
   }
 }
 
-// Create vector search indexes
+// Create
 async function createVectorIndexes() {
   console.log("📊 Creating vector search indexes...");
 
@@ -127,6 +127,20 @@ async function createVectorIndexes() {
       {
         collection: "user_embeddings",
         indexName: "user_vector_index",
+        definition: {
+          fields: [
+            {
+              type: "vector",
+              path: "embedding",
+              numDimensions: 1536,
+              similarity: "cosine",
+            },
+          ],
+        },
+      },
+      {
+        collection: "visaguide_embeddings",
+        indexName: "visaguide_vector_index",
         definition: {
           fields: [
             {
@@ -303,6 +317,7 @@ async function checkDatabaseConnection() {
       "expenses",
       "userdbs",
       "successchances",
+      "visaGuides",
     ];
 
     const missingCollections = requiredCollections.filter(

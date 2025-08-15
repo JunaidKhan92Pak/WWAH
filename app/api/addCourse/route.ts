@@ -190,7 +190,7 @@ export async function POST(req: Request) {
         if (!course.course_id || course.course_id.trim() === "") {
           result.skipped.push({
             title: course.course_title,
-            reason: "Missing course_id - required for uniqueness check"
+            reason: "Missing course_id - required for uniqueness check",
           });
           continue;
         }
@@ -390,14 +390,14 @@ function prepareCoursesData(
     intake: Array.isArray(course.intake)
       ? course.intake
       : course.intake
-        ? [course.intake]
-        : [],
+      ? [course.intake]
+      : [],
     duration: course.duration || null,
     start_date: Array.isArray(course.start_date)
       ? course.start_date
       : course.start_date
-        ? [course.start_date]
-        : [],
+      ? [course.start_date]
+      : [],
     degree_format: course.degree_format || null,
     location_campus: course.location_campus || null,
     annual_tuition_fee: course.annual_tuition_fee || {

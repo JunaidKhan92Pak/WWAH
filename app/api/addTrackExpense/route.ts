@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       (typeof data.university !== "object" && !Array.isArray(data.university))
     ) {
       return NextResponse.json(
-        { message: "Invalid input. University details are required." },
+        { message: "Invalid input. Expense details are required." },
         { status: 400 }
       );
     }
