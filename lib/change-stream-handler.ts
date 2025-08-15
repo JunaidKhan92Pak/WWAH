@@ -1,4 +1,4 @@
-// lib/change-stream-handler.ts
+// lib/change-stream-handler.ts - Updated for clean visa guide structure
 import {
   MongoClient,
   ChangeStream,
@@ -10,6 +10,7 @@ import {
   createEmbeddingForDocument,
   updateEmbeddingForDocument,
   deleteEmbeddingForDocument,
+  deleteScholarshipEmbedding,
 } from "./embedding-operations";
 
 interface ChangeStreamConfig {
@@ -20,6 +21,18 @@ interface ChangeStreamConfig {
     document: Record<string, unknown> | null,
     documentId: string
   ) => Promise<void>;
+}
+
+interface StepData {
+  title?: string;
+  heading?: string;
+  description?: string;
+  points?: string[];
+  requirements?: string[];
+  documents?: string[];
+  timeline?: string;
+  cost?: string;
+  [key: string]: unknown;
 }
 
 const COLLECTION_MAPPINGS: Record<string, ChangeStreamConfig> = {
@@ -58,11 +71,15 @@ const COLLECTION_MAPPINGS: Record<string, ChangeStreamConfig> = {
     embeddingCollection: "user_embeddings",
     handler: handleSuccessChanceChange,
   },
-  // NEW: Add countryData change stream
   countrydatas: {
     collection: "countrydatas",
     embeddingCollection: "country_embeddings",
     handler: handleCountryDataChange,
+  },
+  visaguides: {
+    collection: "visaguides",
+    embeddingCollection: "visaguide_embeddings",
+    handler: handleVisaGuideChange,
   },
 };
 
@@ -110,67 +127,113 @@ async function handleCountryChange(
   }
 }
 
-// NEW: Handle countryData changes - these should trigger country embedding updates
+// Handle countryData changes
 async function handleCountryDataChange(
   operation: string,
   document: Record<string, unknown> | null,
   documentId: string
 ) {
-  console.log(`📋 CountryData ${operation}: ${documentId}`);
+  console.log(
+    `📋 CountryData ${operation}, updating country embedding for: ${documentId}`
+  );
 
   // When countryData changes, we need to update the related country embedding
   const countryName = document?.countryname as string;
 
-  if (countryName) {
-    try {
-      const client = await MongoClient.connect(process.env.MONGODB_URI!);
-      const db = client.db("wwah");
-
-      // Find the related country document
-      const countryDoc = await db.collection("countries").findOne({
-        country_name: { $regex: new RegExp(countryName, "i") },
-      });
-
-      if (countryDoc) {
-        console.log(
-          `🔄 Updating country embedding for ${countryName} due to countryData change`
-        );
-
-        switch (operation) {
-          case "insert":
-          case "replace":
-          case "update":
-            await updateEmbeddingForDocument(
-              countryName, // Use country name as ID
-              countryDoc as Record<string, unknown>,
-              "combined_country_data",
-              "country_embeddings"
-            );
-            break;
-          case "delete":
-            // Re-create country embedding without the deleted document data
-            await updateEmbeddingForDocument(
-              countryName,
-              countryDoc as Record<string, unknown>,
-              "combined_country_data",
-              "country_embeddings"
-            );
-            break;
-        }
-      } else {
-        console.warn(`⚠️ No country found for countryData: ${countryName}`);
-      }
-
-      await client.close();
-    } catch (error) {
-      console.error(
-        `❌ Error handling countryData change for ${countryName}:`,
-        error
-      );
-    }
-  } else {
+  if (!countryName) {
     console.warn(
       `⚠️ No countryname found in countryData document: ${documentId}`
+    );
+    return;
+  }
+
+  try {
+    const client = await MongoClient.connect(process.env.MONGODB_URI!);
+    const db = client.db("wwah");
+
+    // Find the related country document
+    const countryDoc = await db.collection("countries").findOne({
+      $or: [
+        { country_name: { $regex: new RegExp(countryName, "i") } },
+        { countryname: { $regex: new RegExp(countryName, "i") } },
+      ],
+    });
+
+    if (!countryDoc) {
+      console.warn(
+        `⚠️ No matching country found for countryData: ${countryName}. Skipping embedding creation.`
+      );
+      await client.close();
+      return;
+    }
+
+    console.log(
+      `🔄 Updating country embedding for ${countryName} due to countryData change`
+    );
+
+    // Check if country embedding already exists
+    const embeddingCollection = db.collection("country_embeddings");
+    const existingEmbedding = await embeddingCollection.findOne({
+      countryName: { $regex: new RegExp(`^${countryName}$`, "i") },
+    });
+
+    switch (operation) {
+      case "insert":
+      case "replace":
+      case "update":
+        if (existingEmbedding) {
+          // UPDATE existing embedding instead of creating new one
+          console.log(
+            `📝 Updating existing country embedding for ${countryName}`
+          );
+
+          // Use the country name as the documentId for country embeddings
+          await updateEmbeddingForDocument(
+            countryName, // Use country name as ID for country embeddings
+            countryDoc as Record<string, unknown>,
+            "combined_country_data",
+            "country_embeddings"
+          );
+        } else {
+          // Create new country embedding only if none exists
+          console.log(
+            `➕ Creating new country embedding for ${countryName} with countryData`
+          );
+          await createEmbeddingForDocument(
+            countryDoc as Record<string, unknown>,
+            "combined_country_data",
+            "country_embeddings"
+          );
+        }
+        break;
+
+      case "delete":
+        if (existingEmbedding) {
+          // Update country embedding without the deleted document data
+          console.log(
+            `🔄 Updating country embedding for ${countryName} without deleted countryData`
+          );
+
+          // Update existing embedding rather than delete and recreate
+          await updateEmbeddingForDocument(
+            countryName,
+            countryDoc as Record<string, unknown>,
+            "combined_country_data",
+            "country_embeddings"
+          );
+        } else {
+          console.log(
+            `ℹ️ No existing embedding found for ${countryName}, nothing to update after delete`
+          );
+        }
+        break;
+    }
+
+    await client.close();
+  } catch (error) {
+    console.error(
+      `❌ Error handling countryData change for ${countryName}:`,
+      error
     );
   }
 }
@@ -263,6 +326,14 @@ async function handleScholarshipChange(
       break;
     case "update":
       if (document) {
+        // For scholarship updates, use the compound identifier approach
+        const scholarshipName = document.name as string;
+        const hostCountry = document.hostCountry as string;
+
+        console.log(
+          `🔄 Updating scholarship embedding: ${scholarshipName} in ${hostCountry}`
+        );
+
         await updateEmbeddingForDocument(
           documentId,
           document,
@@ -272,7 +343,26 @@ async function handleScholarshipChange(
       }
       break;
     case "delete":
-      await deleteEmbeddingForDocument(documentId, "scholarship_embeddings");
+      // For deletion, try to use compound identifier if available
+      if (document) {
+        const scholarshipName = document.name as string;
+        const hostCountry = document.hostCountry as string;
+
+        if (scholarshipName && hostCountry) {
+          await deleteScholarshipEmbedding(
+            scholarshipName,
+            hostCountry,
+            "scholarship_embeddings"
+          );
+        } else {
+          await deleteEmbeddingForDocument(
+            documentId,
+            "scholarship_embeddings"
+          );
+        }
+      } else {
+        await deleteEmbeddingForDocument(documentId, "scholarship_embeddings");
+      }
       break;
   }
 }
@@ -353,6 +443,127 @@ async function handleSuccessChanceChange(
   }
 }
 
+// UPDATED: Handle visa guide changes with clean structure support
+async function handleVisaGuideChange(
+  operation: string,
+  document: Record<string, unknown> | null,
+  documentId: string
+) {
+  try {
+    console.log(
+      `📋 Processing visa guide ${operation} for document ${documentId}`
+    );
+
+    // Always fetch the complete document to ensure we have all data
+    let completeDocument = document;
+
+    if (operation !== "delete") {
+      console.log(`🔍 Fetching complete document from database...`);
+
+      const client = await MongoClient.connect(process.env.MONGODB_URI!);
+      const db = client.db("wwah");
+
+      try {
+        const fetchedDoc = await db.collection("visaguides").findOne({
+          _id: new ObjectId(documentId),
+        });
+
+        if (fetchedDoc) {
+          completeDocument = fetchedDoc as Record<string, unknown>;
+
+          // Log the document structure for debugging
+          console.log(`✅ Fetched complete visa guide document:`, {
+            country_name: completeDocument.country_name,
+            hasSteps: !!completeDocument.steps,
+            stepsCount: Array.isArray(completeDocument.steps)
+              ? completeDocument.steps.length
+              : 0,
+            totalKeys: Object.keys(completeDocument).length,
+          });
+
+          // Log sample step for debugging
+          if (
+            Array.isArray(completeDocument.steps) &&
+            completeDocument.steps.length > 0
+          ) {
+            const sampleStep = completeDocument.steps[0] as StepData;
+            console.log(`📝 Sample step structure:`, {
+              title: sampleStep.title || sampleStep.heading,
+              hasDescription: !!sampleStep.description,
+              pointsCount: Array.isArray(sampleStep.points)
+                ? sampleStep.points.length
+                : 0,
+              requirementsCount: Array.isArray(sampleStep.requirements)
+                ? sampleStep.requirements.length
+                : 0,
+              documentsCount: Array.isArray(sampleStep.documents)
+                ? sampleStep.documents.length
+                : 0,
+              hasTimeline: !!sampleStep.timeline,
+              hasCost: !!sampleStep.cost,
+            });
+          }
+        } else {
+          console.error(`❌ Could not fetch visa guide document ${documentId}`);
+        }
+      } finally {
+        await client.close();
+      }
+    }
+
+    switch (operation) {
+      case "insert":
+      case "replace":
+        console.log(
+          `📋 Creating visa guide embedding for: ${completeDocument?.country_name}`
+        );
+        if (completeDocument) {
+          await createEmbeddingForDocument(
+            completeDocument,
+            "visaguides",
+            "visaguide_embeddings"
+          );
+        } else {
+          console.error(
+            `❌ Cannot create embedding: completeDocument is null for documentId ${documentId}`
+          );
+        }
+        break;
+
+      case "update":
+        console.log(
+          `📋 Updating visa guide embedding for: ${completeDocument?.country_name}`
+        );
+        if (completeDocument) {
+          await updateEmbeddingForDocument(
+            documentId,
+            completeDocument,
+            "visaguides",
+            "visaguide_embeddings"
+          );
+        } else {
+          console.error(
+            `❌ Cannot update embedding: completeDocument is null for documentId ${documentId}`
+          );
+        }
+        break;
+
+      case "delete":
+        console.log(`📋 Deleting visa guide embedding for: ${documentId}`);
+        await deleteEmbeddingForDocument(documentId, "visaguide_embeddings");
+        break;
+    }
+
+    console.log(`✅ Visa guide ${operation} completed for ${documentId}`);
+  } catch (error) {
+    console.error(
+      `❌ Error handling visa guide change for ${documentId}:`,
+      error
+    );
+    throw error;
+  }
+}
+
 // User-specific embedding functions
 async function createUserEmbedding(
   userId: string,
@@ -366,7 +577,10 @@ async function createUserEmbedding(
     if (!userDocument) {
       userDocument = (await db
         .collection("userdbs")
-        .findOne({ _id: new ObjectId(userId) })) as Record<string, unknown> | null;
+        .findOne({ _id: new ObjectId(userId) })) as Record<
+        string,
+        unknown
+      > | null;
     }
 
     if (!userDocument) {
@@ -410,6 +624,79 @@ async function updateUserEmbedding(
   }
 }
 
+// UPDATED: Visa guide validation and structure checking
+function validateVisaGuideStructure(document: Record<string, unknown>): {
+  isValid: boolean;
+  hasCleanStructure: boolean;
+  hasLegacyStructure: boolean;
+  errors: string[];
+  warnings: string[];
+} {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // Check for required fields
+  if (!document.country_name) {
+    errors.push("Missing required field: country_name");
+  }
+
+  if (!document.country_id) {
+    warnings.push("Missing country_id reference");
+  }
+
+  // Check for clean structure (steps array)
+  const hasCleanStructure = !!(
+    document.steps &&
+    Array.isArray(document.steps) &&
+    document.steps.length > 0
+  );
+
+  // Check for legacy structure (individual step properties)
+  const legacyStepProperties = [
+    "program",
+    "register_apply",
+    "submit_application",
+    "applicationFee",
+    "track_application",
+    "confirmation_enrollment",
+    "visa_application",
+    "recive_visa",
+    "accommodation",
+    "prepare_arrival",
+    "attend_orientation",
+  ];
+
+  const hasLegacyStructure = legacyStepProperties.some(
+    (prop) => document[prop] && typeof document[prop] === "object"
+  );
+
+  // Validate steps structure if present
+  if (hasCleanStructure) {
+    const steps = document.steps as StepData[];
+    steps.forEach((step, index) => {
+      if (!step.title && !step.heading) {
+        warnings.push(`Step ${index + 1} missing title/heading`);
+      }
+      if (
+        !step.points ||
+        !Array.isArray(step.points) ||
+        step.points.length === 0
+      ) {
+        warnings.push(`Step ${index + 1} missing or empty points array`);
+      }
+    });
+  }
+  const isValid = errors.length === 0;
+
+  return {
+    isValid,
+    hasCleanStructure,
+    hasLegacyStructure,
+    errors,
+    warnings,
+  };
+}
+
 // Main change stream setup function
 export async function setupChangeStreams() {
   const client = await MongoClient.connect(process.env.MONGODB_URI!);
@@ -449,7 +736,11 @@ export async function setupChangeStreams() {
               operationType === "replace" ||
               operationType === "delete"
             ) {
-              const documentKey = (change as ChangeStreamDocument<Document> & { documentKey: { _id: unknown } }).documentKey;
+              const documentKey = (
+                change as ChangeStreamDocument<Document> & {
+                  documentKey: { _id: unknown };
+                }
+              ).documentKey;
               documentId = documentKey?._id?.toString();
             }
 
@@ -471,6 +762,45 @@ export async function setupChangeStreams() {
             console.log(
               `📝 Change detected in ${collectionName}: ${operationType} ${documentId}`
             );
+
+            // Special validation for visa guides
+            if (
+              collectionName === "visaguides" &&
+              fullDocument &&
+              operationType !== "delete"
+            ) {
+              const validation = validateVisaGuideStructure(fullDocument);
+              console.log(`🔍 Visa guide structure validation:`, {
+                isValid: validation.isValid,
+                hasCleanStructure: validation.hasCleanStructure,
+                hasLegacyStructure: validation.hasLegacyStructure,
+                errorCount: validation.errors.length,
+                warningCount: validation.warnings.length,
+              });
+
+              if (validation.errors.length > 0) {
+                console.error(
+                  `❌ Visa guide validation errors:`,
+                  validation.errors
+                );
+              }
+
+              if (validation.warnings.length > 0) {
+                console.warn(
+                  `⚠️ Visa guide validation warnings:`,
+                  validation.warnings
+                );
+              }
+
+              if (
+                validation.hasLegacyStructure &&
+                !validation.hasCleanStructure
+              ) {
+                console.warn(
+                  `⚠️ Visa guide ${documentId} still uses legacy structure. Consider migrating to clean structure.`
+                );
+              }
+            }
 
             // Handle the change using the specific handler
             await config.handler(operationType, fullDocument, documentId);
@@ -509,4 +839,4 @@ export async function setupChangeStreams() {
   return changeStreams;
 }
 
-export { COLLECTION_MAPPINGS };
+export { COLLECTION_MAPPINGS, validateVisaGuideStructure };

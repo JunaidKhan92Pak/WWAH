@@ -7,66 +7,81 @@ import {
 import clientPromise from "@/lib/mongodb";
 import { MongoClient, ObjectId } from "mongodb";
 
-// Helper function to trigger webhook
-async function triggerEmbeddingWebhook(
-  action: string,
-  collection: string,
-  documentId: string,
-  document: unknown
-) {
-  try {
-    const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/embeddingUpdate`;
-    const webhookSecret =
-      process.env.WEBHOOK_SECRET ||
-      "8f3fda4b91822b4a0d5b2a27947f9f21a8cbbd1a124a20aa8b2f76f0e6cfac12";
-
-    console.log(
-      `🔄 Triggering webhook: ${action} for ${collection} document ${documentId}`
-    );
-
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        action,
-        collection,
-        documentId,
-        document,
-        secret: webhookSecret,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(
-        `❌ Webhook failed: ${response.status} ${response.statusText}`,
-        errorText
-      );
-      throw new Error(`Webhook failed: ${response.status} ${errorText}`);
-    } else {
-      const result = await response.json();
-      console.log(
-        `✅ Webhook triggered successfully: ${action} for ${collection}`,
-        result
-      );
-      return result;
-    }
-  } catch (error) {
-    console.error("❌ Error triggering webhook:", error);
-    throw error;
-  }
+// Helper function to check if country exists
+async function checkCountryExists(client: MongoClient, countryname: string) {
+  const db = client.db("wwah");
+  const collection = db.collection("countries");
+  return await collection.findOne({
+    $or: [
+      { country_name: { $regex: new RegExp(countryname, "i") } },
+      { countryname: { $regex: new RegExp(countryname, "i") } },
+    ],
+  });
 }
 
+// Helper function to check if countryData exists
 async function checkCountryDataExists(
   client: MongoClient,
   countryname: string
 ) {
   const db = client.db("wwah");
   const collection = db.collection("countrydatas");
-  return await collection.findOne({ countryname });
+  return await collection.findOne({
+    countryname: { $regex: new RegExp(countryname, "i") },
+  });
 }
+// Helper function to trigger webhook
+
+// async function triggerEmbeddingWebhook(
+//   action: string,
+//   collection: string,
+//   documentId: string,
+//   document: unknown
+// ) {
+//   try {
+//     const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/embeddingUpdate`;
+//     const webhookSecret =
+//       process.env.WEBHOOK_SECRET ||
+//       "8f3fda4b91822b4a0d5b2a27947f9f21a8cbbd1a124a20aa8b2f76f0e6cfac12";
+
+//     console.log(
+//       `🔄 Triggering webhook: ${action} for ${collection} document ${documentId}`
+//     );
+
+//     const response = await fetch(webhookUrl, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         action,
+//         collection,
+//         documentId,
+//         document,
+//         secret: webhookSecret,
+//       }),
+//     });
+
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       console.error(
+//         `❌ Webhook failed: ${response.status} ${response.statusText}`,
+//         errorText
+//       );
+//       throw new Error(`Webhook failed: ${response.status} ${errorText}`);
+//     } else {
+//       const result = await response.json();
+//       console.log(
+//         `✅ Webhook triggered successfully: ${action} for ${collection}`,
+//         result
+//       );
+//       return result;
+//     }
+//   } catch (error) {
+//     console.error("❌ Error triggering webhook:", error);
+//     throw error;
+//   }
+// }
 
 export async function POST(req: Request) {
   try {
@@ -82,7 +97,30 @@ export async function POST(req: Request) {
 
     const client = await clientPromise;
 
-    // Check if country data exists
+    // IMPORTANT: Check if the related country exists first
+    const relatedCountry = await checkCountryExists(client, data.countryname);
+
+    if (!relatedCountry) {
+      console.warn(
+        `⚠️ No country found with name: ${data.countryname}. CountryData will not be added.`
+      );
+      return NextResponse.json(
+        {
+          message: `Cannot add country data. No country found with name: ${data.countryname}. Please add the country first.`,
+          countryname: data.countryname,
+          action: "rejected",
+        },
+        { status: 400 }
+      );
+    }
+
+    console.log(
+      `✅ Found related country: ${
+        relatedCountry.country_name || relatedCountry.countryname
+      }`
+    );
+
+    // Check if country data already exists
     const existingData = await checkCountryDataExists(client, data.countryname);
 
     let result;
@@ -95,7 +133,7 @@ export async function POST(req: Request) {
       console.log(`📝 Updating existing country data for: ${data.countryname}`);
       result = await updateCountryDataByFilter(
         client,
-        { countryname: data.countryname },
+        { countryname: { $regex: new RegExp(data.countryname, "i") } },
         data
       );
       countryDataId = existingData._id.toString();
@@ -104,7 +142,6 @@ export async function POST(req: Request) {
     } else {
       // Create new
       console.log(`➕ Creating new country data for: ${data.countryname}`);
-
       result = await createCountryData(client, data);
       if (!("insertedId" in result)) {
         throw new Error("Expected InsertOneResult but got UpdateResult");
@@ -124,23 +161,15 @@ export async function POST(req: Request) {
       throw new Error("Failed to retrieve created/updated document");
     }
 
-    // Trigger webhook for embedding update
-    try {
-      await triggerEmbeddingWebhook(action, "countrydatas", countryDataId, {
-        ...fullDocument,
-        _id: fullDocument._id.toString(), // Convert ObjectId to string
-      });
-    } catch (webhookError) {
-      console.error(
-        "❌ Webhook trigger failed, but country data was saved:",
-        webhookError
-      );
-      // Don't fail the request if webhook fails
-    }
+    // DON'T trigger webhook for countrydatas - let the change stream handle it
+    // The change stream will automatically update the related country embedding
+    console.log(
+      `ℹ️ Skipping webhook trigger - change stream will handle embedding update for ${data.countryname}`
+    );
 
     const message = existingData
-      ? "Country data updated successfully."
-      : "Country data added successfully.";
+      ? "Country data updated successfully. Related country embedding will be updated automatically."
+      : "Country data added successfully. Related country embedding will be updated automatically.";
 
     const statusCode = existingData ? 200 : 201;
 
@@ -149,7 +178,10 @@ export async function POST(req: Request) {
         message,
         countryDataId,
         action,
-        webhookTriggered: true,
+        relatedCountry:
+          relatedCountry.country_name || relatedCountry.countryname,
+        webhookTriggered: false, // Changed to false since we're letting change stream handle it
+        changeStreamWillHandle: true,
       },
       { status: statusCode }
     );

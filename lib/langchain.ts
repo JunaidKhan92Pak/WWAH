@@ -32,8 +32,8 @@ const COLLECTION_CONFIG = {
   courses: {
     name: "course_embeddings",
     indexName: "course_vector_index",
-    priority: 0.6, // Increased priority for courses
-    k: 8, // Increased k for more results
+    priority: 0.6, 
+    k: 8, 
   },
   universities: {
     name: "university_embeddings",
@@ -44,6 +44,24 @@ const COLLECTION_CONFIG = {
   countries: {
     name: "country_embeddings",
     indexName: "country_vector_index",
+    priority: 0.1,
+    k: 2,
+  },
+  expenses: {
+    name: "expense_embeddings",
+    indexName: "expense_vector_index",
+    priority: 0.1,
+    k: 2,
+  },
+  scholarships: {
+    name: "scholarship_embeddings",
+    indexName: "expense_vector_index",
+    priority: 0.1,
+    k: 2,
+  },
+  visaguide: {
+    name: "visaguide_embeddings",
+    indexName: "visaguide_vector_index",
     priority: 0.1,
     k: 2,
   },
@@ -318,7 +336,6 @@ Provide a focused, actionable response (max 300 words). Include specific details
     return "I'm having trouble processing your request right now. Please try again or rephrase your question.";
   }
 }
-
 // Connection cleanup function
 export function cleanupConnections() {
   vectorStoreInstances.clear();

@@ -1,3 +1,4 @@
+// /app/models/scholarship.ts
 import mongoose, { Schema, Document } from "mongoose";
 
 // Define interface for type safety

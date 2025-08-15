@@ -29,7 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/store/useUserData";
-//import { Button } from "@/components/ui/button";
+
 interface User {
   _id: string;
   firstName?: string;
@@ -105,7 +105,6 @@ export default function AdminDashboard() {
   const [showTracker, setShowTracker] = useState(false);
   const handlelogout = () => {
     logout();
-    // Use window.location.href for a full page reload instead of client-side navigation
     window.location.href = "/";
   };
   useEffect(() => {
@@ -552,7 +551,7 @@ export default function AdminDashboard() {
                                 width: `${(applicationStage /
                                   APPLICATION_STAGES.length) *
                                   100
-                                  }%`,
+                                }%`,
                               }}
                             ></div>
                           </div>

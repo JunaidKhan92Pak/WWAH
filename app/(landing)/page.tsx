@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Typewriter } from "react-simple-typewriter";
 import { ScrollArea } from "@/components/ui/scroll-area";
-// import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { useRef } from "react";
 import {
   FaArrowLeft,

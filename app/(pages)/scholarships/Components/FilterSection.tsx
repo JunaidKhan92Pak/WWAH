@@ -14,7 +14,6 @@ const countries = [
   // { name: "China", value: "china", img: "/countryarchive/china_logo.png" },
   // { name: "Canada", value: "canada", img: "/countryarchive/canada_logo.png" },
   // { name: "Italy", value: "italy", img: "/countryarchive/italy_logo.png" },
-  { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
   // {
   //   name: "Ireland",
   //   value: "ireland",
@@ -51,6 +50,7 @@ const countries = [
   { name: "Japan", value: "japan", img: "/japan.svg" },
   // { name: "Romania", value: "romania", img: "/romania.svg" },
   { name: "Turkiye", value: "Turkiye", img: "/turkiye.svg" },
+  { name: "United Kingdom", value: "United Kingdom", img: "/ukflag.png" },
 ];
 const FilterSection = ({ isMobile = false }) => {
   const {
@@ -58,7 +58,6 @@ const FilterSection = ({ isMobile = false }) => {
     setMinimumRequirements,
     scholarshipProviders: selectedProviders, // Add this to your store
     setScholarshipProviders, // Add this to your store
-
     fetchScholarships,
     setSearch,
     setCountry,

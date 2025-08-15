@@ -1,4 +1,4 @@
-// Enhanced api/chat/route.ts with archive link support
+// Enhanced api/chat/route.ts 
 import { NextRequest } from "next/server";
 import { withCaching } from "@/middleware/api";
 import { UserStore } from "@/store/useUserData";
