@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { useEffect} from "react";
 import { getAuthToken } from "@/utils/authHelper";
 import { useUserStore } from "@/store/useUserData";
+import { IoPodiumOutline } from "react-icons/io5";
+import { TfiHeadphoneAlt } from "react-icons/tfi";
 
 const sidebarItems = [
   {
@@ -25,6 +27,16 @@ const sidebarItems = [
     href: "/referralportal/commissiontracker",
     icon: TbCurrentLocation,
     title: "Commission Tracker",
+  },
+   {
+    href: "/referralportal/referralcontest",
+    icon: IoPodiumOutline ,
+    title: "Referral Contest",
+  },
+    {
+    href: "/referralportal/contactandsupport",
+    icon: TfiHeadphoneAlt,
+    title: "Contact & Support",
   },
 ];
 export function Sidebar() {
