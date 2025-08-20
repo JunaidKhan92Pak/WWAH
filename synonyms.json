@@ -1,1758 +1,2929 @@
 {
-    "Physics": {
-        "Exact Match": [
-            "Physics"
+    "physics": {
+        "exact_match": [
+            "physics",
+            "astronomy",
+            "engineering",
+            "theoretical physics",
+            "applied physics",
+            "mathematical physics",
+            "experimental physics"
         ],
-        "Closely Related": [
-            "Astronomy",
-            "Engineering",
-            "Mathematics"
+        "closely_related": [
+            "Aeronautics",
+            "Astronautics",
+            "astrophysics",
+            "nuclear physics",
+            "quantum mechanics",
+            "quantum physics",
+            "particle physics",
+            "condensed matter physics",
+            "optics",
+            "thermodynamics",
+            "electromagnetism",
+            "mechanics",
+            "relativity",
+            "plasma physics"
         ],
-        "Somewhat Related": [
-            "Chemistry",
-            "Computer Science",
-            "Earth & Environmental Sciences"
+        "somewhat_related": [
+            "mathematics",
+            "chemistry",
+            "computer science",
+            "software development",
+            "engineering",
+            "software engineering",
+            "ai & robotics",
+            "ai",
+            "robotics",
+            "biophysics",
+            "geophysics",
+            "earth & environmental sciences",
+            "materials science",
+            "nanotechnology",
+            "biophysics",
+            "geophysics"
         ],
-        "Weak Connection": [
-            "Business",
-            "Psychology",
-            "Economics"
+        "weak_connection": [
+            "artificial intelligence",
+            "business",
+            "psychology",
+            "economics",
+            "statistics",
+            "philosophy"
         ],
-        "Unrelated": [
-            "Fashion Design",
-            "Culinary Arts"
+        "unrelated": [
+            "fashion design",
+            "culinary arts",
+            "music",
+            "theatre"
         ]
     },
-    "Chemistry": {
-        "Exact Match": [
-            "Chemistry"
+    "astronomy": {
+        "exact_match": [
+            "astronomy",
+            "astrophysics",
+            "space science",
+            "planetary science",
+            "cosmology"
         ],
-        "Closely Related": [
-            "Biochemistry",
-            "Pharmacy",
-            "Chemical Engineering"
+        "closely_related": [
+            "physics",
+            "space science",
+            "aerospace engineering",
+            "radio astronomy",
+            "optical astronomy",
+            "theoretical astrophysics",
+            "observational astronomy"
         ],
-        "Somewhat Related": [
-            "Medicine",
-            "Environmental Science",
-            "Food Science"
+        "somewhat_related": [
+            "mathematics",
+            "computer science",
+            "engineering",
+            "geology",
+            "atmospheric science"
         ],
-        "Weak Connection": [
-            "Business",
-            "Law",
-            "Political Science"
+        "weak_connection": [
+            "economics",
+            "political science",
+            "philosophy",
+            "statistics"
         ],
-        "Unrelated": [
-            "Theatre",
-            "Music"
+        "unrelated": [
+            "fine arts",
+            "culinary arts",
+            "fashion design",
+            "theatre"
         ]
     },
-    "Biology": {
-        "Exact Match": [
-            "Biology"
+    "chemistry": {
+        "exact_match": [
+            "chemistry",
+            "organic chemistry",
+            "inorganic chemistry",
+            "physical chemistry",
+            "analytical chemistry"
         ],
-        "Closely Related": [
-            "Biotechnology",
-            "Molecular Biology",
-            "Genetics"
+        "closely_related": [
+            "biochemistry",
+            "pharmacy",
+            "chemical engineering",
+            "materials science",
+            "medicinal chemistry",
+            "forensic chemistry",
+            "polymer chemistry",
+            "electrochemistry",
+            "environmental chemistry",
+            "industrial chemistry"
         ],
-        "Somewhat Related": [
-            "Public Health",
-            "Nutrition",
-            "Environmental Science"
+        "somewhat_related": [
+            "medicine",
+            "environmental science",
+            "food science",
+            "physics",
+            "biology",
+            "nanotechnology",
+            "toxicology",
+            "agricultural sciences"
         ],
-        "Weak Connection": [
-            "Economics",
-            "Computer Science"
+        "weak_connection": [
+            "business",
+            "law",
+            "political science",
+            "mathematics",
+            "psychology"
         ],
-        "Unrelated": [
-            "Fashion Design",
-            "Digital Media"
+        "unrelated": [
+            "theatre",
+            "music",
+            "fashion design",
+            "journalism"
         ]
     },
-    "Earth & Environmental Sciences": {
-        "Exact Match": [
-            "Earth & Environmental Sciences"
+    "biology": {
+        "exact_match": [
+            "biology",
+            "life sciences",
+            "biological sciences",
+            "cell biology",
+            "ecology",
+            "zoology",
+            "botany"
         ],
-        "Closely Related": [
-            "Geology",
-            "Oceanography",
-            "Geography"
+        "closely_related": [
+            "biotechnology",
+            "molecular biology",
+            "genetics",
+            "biochemistry",
+            "microbiology",
+            "marine biology",
+            "evolutionary biology",
+            "developmental biology",
+            "physiology",
+            "anatomy",
+            "immunology",
+            "virology"
         ],
-        "Somewhat Related": [
-            "Chemistry",
-            "Biology",
-            "Climate Studies"
+        "somewhat_related": [
+            "public health",
+            "nutrition",
+            "environmental science",
+            "medicine",
+            "agriculture",
+            "bioinformatics",
+            "neuroscience",
+            "veterinary science"
         ],
-        "Weak Connection": [
+        "weak_connection": [
+            "economics",
+            "computer science",
+            "psychology",
+            "statistics"
+        ],
+        "unrelated": [
+            "fashion design",
+            "digital media",
+            "music",
+            "theatre"
+        ]
+    },
+    "earth environmental sciences": {
+        "exact_match": [
+            "earth & environmental sciences",
+            "earth sciences",
+            "environmental science",
+            "environmental studies"
+        ],
+        "closely_related": [
+            "geology",
+            "oceanography",
+            "geography",
+            "meteorology",
+            "climatology",
+            "hydrology",
+            "atmospheric science",
+            "environmental engineering",
+            "conservation biology"
+        ],
+        "somewhat_related": [
+            "chemistry",
+            "biology",
+            "climate studies",
+            "physics",
+            "agricultural sciences",
+            "forestry",
+            "urban planning"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "performing arts",
+            "law",
+            "fashion design",
+            "music"
+        ]
+    },
+    "biotechnology": {
+        "exact_match": [
+            "biotechnology",
+            "bioengineering",
+            "biotech"
+        ],
+        "closely_related": [
+            "molecular biology",
+            "biochemistry",
+            "genetics",
+            "bioinformatics",
+            "biomedical engineering",
+            "synthetic biology",
+            "industrial biotechnology",
+            "agricultural biotechnology"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "pharmacology",
+            "environmental science",
+            "chemical engineering",
+            "microbiology",
+            "immunology"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "music",
+            "interior design",
+            "fashion design",
+            "theatre"
+        ]
+    },
+    "geology": {
+        "exact_match": [
+            "geology",
+            "geological sciences",
+            "earth geology",
+            "structural geology"
+        ],
+        "closely_related": [
+            "earth sciences",
+            "environmental science",
+            "oceanography",
+            "geophysics",
+            "mineralogy",
+            "petrology",
+            "sedimentology",
+            "paleontology",
+            "hydrogeology"
+        ],
+        "somewhat_related": [
+            "civil engineering",
+            "physics",
+            "geography",
+            "chemistry",
+            "mining engineering",
+            "petroleum engineering"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "economics",
+            "mathematics"
+        ],
+        "unrelated": [
+            "performing arts",
+            "culinary arts",
+            "fashion design",
+            "music"
+        ]
+    },
+    "oceanography": {
+        "exact_match": [
+            "oceanography",
+            "marine science",
+            "ocean science"
+        ],
+        "closely_related": [
+            "marine biology",
+            "environmental science",
+            "geology",
+            "physical oceanography",
+            "chemical oceanography",
+            "biological oceanography",
+            "marine geology"
+        ],
+        "somewhat_related": [
+            "climate science",
+            "physics",
+            "chemistry",
+            "meteorology",
+            "fisheries science"
+        ],
+        "weak_connection": [
+            "business",
+            "public administration",
+            "economics",
+            "geography"
+        ],
+        "unrelated": [
+            "music",
+            "law",
+            "fashion design",
+            "theatre"
+        ]
+    },
+    "computer": {
+        "exact_match": [
+            "computer science",
+            "software engineering",
+            "data science",
+            "artificial intelligence",
+            "ai",
+            "information technology",
+            "computer programming",
+            "software development",
+            "web development",
+            "mobile app development",
+            "machine learning",
+            "deep learning"
+        ],
+        "closely_related": [
+            "cybersecurity",
+            "graphic design",
+            "information security",
+            "database management",
+            "network engineering",
+            "systems administration",
+            "cloud computing",
+            "devops",
+            "blockchain technology",
+            "computer graphics",
+            "human-computer interaction",
+            "algorithms",
+            "data structures"
+        ],
+        "somewhat_related": [
+            "physics",
+            "mathematics",
+            "robotics",
+            "electrical engineering",
+            "statistics",
+            "bioinformatics",
+            "digital media",
+            "game development"
+        ],
+        "weak_connection": [
+            "business",
+            "economics",
+            "psychology",
+            "journalism",
+            "computing"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "theatre",
+            "fashion design",
+            "music"
+        ]
+    },
+    "computer science": {
+        "exact_match": [
+            "computer science",
+            "software engineering",
+            "data science",
+            "artificial intelligence",
+            "ai",
+            "information technology",
+            "information technologies",
+            "computer programming",
+            "software development",
+            "web development",
+            "mobile app development",
+            "machine learning",
+            "deep learning"
+        ],
+        "closely_related": [
+            "cybersecurity",
+            "graphic design",
+            "information security",
+            "database management",
+            "network engineering",
+            "systems administration",
+            "cloud computing",
+            "devops",
+            "blockchain technology",
+            "computer graphics",
+            "human-computer interaction",
+            "algorithms",
+            "data structures",
+            "web design"
+        ],
+        "somewhat_related": [
+            "physics",
+            "mathematics",
+            "robotics",
+            "electrical engineering",
+            "statistics",
+            "bioinformatics",
+            "digital media",
+            "game development"
+        ],
+        "weak_connection": [
+            "business",
+            "economics",
+            "psychology",
+            "journalism",
+            "computing",
+            "public relations",
+            "geography"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "theatre",
+            "fashion design",
+            "music"
+        ]
+    },
+    "information technology": {
+        "exact_match": [
+            "information technology",
+            "it",
+            "information systems",
+            "it management"
+        ],
+        "closely_related": [
+            "cybersecurity",
+            "computer science",
+            "data science",
+            "network administration",
+            "systems analysis",
+            "database administration",
+            "it support",
+            "cloud computing",
+            "artificial intelligence",
+            "ai",
+            "web design",
+            "web development"
+        ],
+        "somewhat_related": [
+            "business analytics",
+            "software development",
+            "telecommunications",
+            "digital forensics",
+            "project management"
+        ],
+        "weak_connection": [
+            "journalism",
+            "psychology",
+            "business administration",
+            "economics"
+        ],
+        "unrelated": [
+            "fashion design",
+            "law",
+            "culinary arts",
+            "music"
+        ]
+    },
+    "artificial intelligence": {
+        "exact_match": [
+            "artificial intelligence",
+            "ai",
+            "machine intelligence",
+            "computational intelligence"
+        ],
+        "closely_related": [
+            "machine learning",
+            "data science",
+            "robotics",
+            "deep learning",
+            "neural networks",
+            "natural language processing",
+            "computer vision",
+            "cognitive computing"
+        ],
+        "somewhat_related": [
+            "mathematics",
+            "software engineering",
+            "statistics",
+            "cognitive science",
+            "philosophy",
+            "neuroscience"
+        ],
+        "weak_connection": [
+            "political science",
+            "public relations",
+            "business",
+            "psychology"
+        ],
+        "unrelated": [
+            "performing arts",
+            "nursing",
+            "culinary arts",
+            "fashion design"
+        ]
+    },
+    "cybersecurity": {
+        "exact_match": [
+            "cybersecurity",
+            "cyber security",
+            "information security",
+            "computer security"
+        ],
+        "closely_related": [
+            "information security",
+            "computer science",
+            "networking",
+            "ethical hacking",
+            "digital forensics",
+            "cryptography",
+            "network security",
+            "application security"
+        ],
+        "somewhat_related": [
+            "data science",
+            "it management",
+            "risk management",
+            "compliance",
+            "telecommunications"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "political science",
+            "psychology"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "music",
+            "fashion design",
+            "theatre"
+        ]
+    },
+    "data science analytics": {
+        "exact_match": [
+            "data science & analytics",
+            "data science",
+            "data analytics",
+            "business analytics",
+            "data analysis"
+        ],
+        "closely_related": [
+            "business analytics",
+            "machine learning",
+            "ai",
+            "statistics",
+            "big data",
+            "predictive analytics",
+            "data mining",
+            "business intelligence"
+        ],
+        "somewhat_related": [
+            "mathematics",
+            "statistics",
+            "economics",
+            "computer science",
+            "operations research",
+            "market research"
+        ],
+        "weak_connection": [
+            "journalism",
+            "political science",
+            "psychology",
+            "sociology"
+        ],
+        "unrelated": [
+            "theatre",
+            "fashion design",
+            "culinary arts",
+            "music"
+        ]
+    },
+    "software engineering": {
+        "exact_match": [
+            "software engineering",
+            "software development",
+            "application development",
+            "systems engineering"
+        ],
+        "closely_related": [
+            "computer science",
+            "it",
+            "game development",
+            "web development",
+            "mobile development",
+            "full-stack development",
+            "devops",
+            "software architecture"
+        ],
+        "somewhat_related": [
+            "data science",
+            "cybersecurity",
+            "database design",
+            "user experience design",
+            "project management"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "mathematics",
+            "psychology"
+        ],
+        "unrelated": [
+            "performing arts",
+            "culinary arts",
+            "fashion design",
+            "music"
+        ]
+    },
+    "game development": {
+        "exact_match": [
+            "game development",
+            "game design",
+            "video game development",
+            "interactive media"
+        ],
+        "closely_related": [
+            "software engineering",
+            "digital media",
+            "computer science",
+            "3d modeling",
+            "game programming",
+            "level design",
+            "game art"
+        ],
+        "somewhat_related": [
+            "animation",
+            "graphic design",
+            "computer graphics",
+            "user experience design",
+            "storytelling"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "music production",
+            "film studies"
+        ],
+        "unrelated": [
+            "nursing",
+            "law",
+            "medicine",
+            "agriculture"
+        ]
+    },
+    "engineering": {
+        "exact_match": [
+            "engineering",
+            "mechanical engineering",
+            "civil engineering",
+            "electrical engineering",
+            "chemical engineering",
+            "aerospace engineering",
+            "biomedical engineering"
+        ],
+        "closely_related": [
+            "applied physics",
+            "materials science",
+            "structural engineering",
+            "environmental engineering",
+            "industrial engineering",
+            "petroleum engineering",
+            "nuclear engineering",
+            "robotics engineering",
+            "automotive engineering",
+            "marine engineering"
+        ],
+        "somewhat_related": [
+            "computer science",
+            "mathematics",
+            "physics",
+            "chemistry",
+            "architecture",
+            "construction management"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "economics",
+            "psychology"
+        ],
+        "unrelated": [
+            "performing arts",
+            "music",
+            "fashion design",
+            "culinary arts"
+        ]
+    },
+    "robotics automation": {
+        "exact_match": [
+            "robotics & automation",
+            "robotics",
+            "automation engineering",
+            "robotic systems"
+        ],
+        "closely_related": [
+            "mechatronics",
+            "electrical engineering",
+            "ai",
+            "mechanical engineering",
+            "control systems",
+            "industrial automation",
+            "autonomous systems"
+        ],
+        "somewhat_related": [
+            "physics",
+            "computer science",
+            "manufacturing engineering",
+            "systems engineering",
+            "machine learning"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "economics",
+            "psychology"
+        ],
+        "unrelated": [
+            "fashion design",
+            "music",
+            "culinary arts",
+            "theatre"
+        ]
+    },
+    "mathematics": {
+        "exact_match": [
+            "mathematics",
+            "pure mathematics",
+            "applied mathematics",
+            "algebra",
+            "calculus",
+            "geometry",
+            "number theory",
+            "discrete mathematics"
+        ],
+        "closely_related": [
+            "statistics",
+            "actuarial science",
+            "data science",
+            "mathematical modeling",
+            "operations research",
+            "cryptography",
+            "mathematical physics",
+            "computational mathematics",
+            "mathematical analysis"
+        ],
+        "somewhat_related": [
+            "economics",
+            "physics",
+            "engineering",
+            "computer science",
+            "finance",
+            "business analytics",
+            "psychology"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "biology",
+            "chemistry"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "theatre",
+            "fashion design",
+            "music"
+        ]
+    },
+    "statistics": {
+        "exact_match": [
+            "statistics",
+            "statistical analysis",
+            "biostatistics",
+            "mathematical statistics"
+        ],
+        "closely_related": [
+            "actuarial science",
+            "data science",
+            "mathematics",
+            "econometrics",
+            "survey methodology",
+            "statistical modeling",
+            "probability theory"
+        ],
+        "somewhat_related": [
+            "economics",
+            "business analytics",
+            "psychology",
+            "sociology",
+            "epidemiology",
+            "market research"
+        ],
+        "weak_connection": [
+            "psychology",
+            "journalism",
+            "political science",
+            "public health"
+        ],
+        "unrelated": [
+            "performing arts",
+            "fashion",
+            "culinary arts",
+            "music"
+        ]
+    },
+    "actuarial science": {
+        "exact_match": [
+            "actuarial science",
+            "actuarial studies",
+            "risk analysis"
+        ],
+        "closely_related": [
+            "statistics",
+            "mathematics",
+            "financial analytics",
+            "insurance",
+            "risk management",
+            "probability theory",
+            "financial modeling"
+        ],
+        "somewhat_related": [
+            "economics",
+            "business",
+            "finance",
+            "accounting",
+            "data science",
+            "quantitative finance"
+        ],
+        "weak_connection": [
+            "psychology",
+            "law",
+            "political science",
+            "sociology"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "music",
+            "fashion design",
+            "theatre"
+        ]
+    },
+    "medicine": {
+        "exact_match": [
+            "medicine",
+            "mbbs",
+            "md",
+            "clinical medicine",
+            "internal medicine",
+            "family medicine",
+            "emergency medicine"
+        ],
+        "closely_related": [
+            "nursing",
+            "dentistry",
+            "pharmacy",
+            "surgery",
+            "pediatrics",
+            "cardiology",
+            "neurology",
+            "psychiatry",
+            "radiology",
+            "pathology",
+            "anesthesiology",
+            "oncology",
+            "dermatology"
+        ],
+        "somewhat_related": [
+            "public health",
+            "biochemistry",
+            "physiology",
+            "anatomy",
+            "medical research",
+            "biomedical engineering",
+            "nutrition"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "psychology",
+            "statistics"
+        ],
+        "unrelated": [
+            "performing arts",
+            "fashion design",
+            "music",
+            "journalism"
+        ]
+    },
+    "dentistry": {
+        "exact_match": [
+            "dentistry",
+            "dental medicine",
+            "oral health",
+            "dental surgery"
+        ],
+        "closely_related": [
+            "medicine",
+            "pharmacy",
+            "biochemistry",
+            "oral surgery",
+            "orthodontics",
+            "periodontics",
+            "endodontics",
+            "prosthodontics"
+        ],
+        "somewhat_related": [
+            "public health",
+            "nutrition",
+            "anatomy",
+            "physiology",
+            "medical technology"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "psychology",
+            "sociology"
+        ],
+        "unrelated": [
+            "theatre",
+            "music",
+            "fashion design",
+            "journalism"
+        ]
+    },
+    "nursing": {
+        "exact_match": [
+            "nursing",
+            "nursing science",
+            "registered nursing",
+            "clinical nursing"
+        ],
+        "closely_related": [
+            "medicine",
+            "physiotherapy",
+            "public health",
+            "critical care nursing",
+            "psychiatric nursing",
+            "pediatric nursing",
+            "geriatric nursing"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "occupational therapy",
+            "nutrition",
+            "social work",
+            "health administration"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "sociology",
+            "education"
+        ],
+        "unrelated": [
+            "fashion",
+            "music",
+            "engineering",
+            "computer science"
+        ]
+    },
+    "pharmacy": {
+        "exact_match": [
+            "pharmacy",
+            "pharmaceutical sciences",
+            "clinical pharmacy",
+            "hospital pharmacy"
+        ],
+        "closely_related": [
+            "medicine",
+            "chemistry",
+            "biochemistry",
+            "pharmacology",
+            "medicinal chemistry",
+            "pharmaceutical chemistry",
+            "toxicology"
+        ],
+        "somewhat_related": [
+            "nutrition",
+            "public health",
+            "biotechnology",
+            "chemical engineering",
+            "microbiology"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "economics",
+            "law"
+        ],
+        "unrelated": [
+            "music",
+            "interior design",
+            "fashion design",
+            "theatre"
+        ]
+    },
+    "physiotherapy": {
+        "exact_match": [
+            "physiotherapy",
+            "physical therapy",
+            "rehabilitation therapy",
+            "sports physiotherapy"
+        ],
+        "closely_related": [
+            "occupational therapy",
+            "medicine",
+            "sports science",
+            "kinesiology",
+            "rehabilitation sciences",
+            "exercise physiology",
+            "sports medicine"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "public health",
+            "anatomy",
+            "biomechanics",
+            "nutrition"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "economics",
+            "sociology"
+        ],
+        "unrelated": [
+            "fashion",
+            "journalism",
+            "music",
+            "computer science"
+        ]
+    },
+    "public health": {
+        "exact_match": [
+            "public health",
+            "community health",
+            "global health",
+            "population health"
+        ],
+        "closely_related": [
+            "medicine",
+            "nursing",
+            "epidemiology",
+            "health policy",
+            "environmental health",
+            "occupational health",
+            "health promotion",
+            "biostatistics"
+        ],
+        "somewhat_related": [
+            "nutrition",
+            "psychology",
+            "sociology",
+            "social work",
+            "health administration"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "economics",
+            "law"
+        ],
+        "unrelated": [
+            "performing arts",
+            "culinary arts",
+            "fashion design",
+            "music"
+        ]
+    },
+    "veterinary science": {
+        "exact_match": [
+            "veterinary science",
+            "veterinary medicine",
+            "animal health",
+            "veterinary pathology"
+        ],
+        "closely_related": [
+            "medicine",
+            "biology",
+            "biochemistry",
+            "animal science",
+            "zoology",
+            "veterinary surgery",
+            "animal behavior"
+        ],
+        "somewhat_related": [
+            "public health",
+            "animal science",
+            "agriculture",
+            "microbiology",
+            "pharmacology"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "economics",
+            "psychology"
+        ],
+        "unrelated": [
+            "performing arts",
+            "journalism",
+            "fashion design",
+            "music"
+        ]
+    },
+    "biochemistry": {
+        "exact_match": [
+            "biochemistry",
+            "biological chemistry",
+            "molecular biochemistry"
+        ],
+        "closely_related": [
+            "molecular biology",
+            "biotechnology",
+            "pharmacy",
+            "genetics",
+            "microbiology",
+            "chemical biology",
+            "structural biology",
+            "enzymology",
+            "metabolomics"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "environmental science",
+            "food science",
+            "chemical engineering",
+            "neuroscience",
+            "immunology"
+        ],
+        "weak_connection": [
+            "psychology",
+            "business",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "fashion design",
+            "music",
+            "theatre",
+            "journalism"
+        ]
+    },
+    "molecular biology": {
+        "exact_match": [
+            "molecular biology",
+            "cell and molecular biology",
+            "molecular genetics"
+        ],
+        "closely_related": [
+            "genetics",
+            "biochemistry",
+            "biotechnology",
+            "microbiology",
+            "immunology",
+            "cell biology",
+            "developmental biology",
+            "structural biology"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "pharmacology",
+            "neuroscience",
+            "environmental science",
+            "biomedical engineering",
+            "bioinformatics"
+        ],
+        "weak_connection": [
+            "psychology",
+            "public health",
+            "nutrition",
+            "statistics"
+        ],
+        "unrelated": [
+            "business",
+            "law",
+            "music",
+            "fashion design"
+        ]
+    },
+    "neuroscience": {
+        "exact_match": [
+            "neuroscience",
+            "neural science",
+            "brain science",
+            "cognitive neuroscience"
+        ],
+        "closely_related": [
+            "psychology",
+            "neurology",
+            "biochemistry",
+            "molecular biology",
+            "pharmacology",
+            "neuropsychology",
+            "behavioral neuroscience",
+            "computational neuroscience"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "cognitive science",
+            "ai & robotics",
+            "biomedical engineering",
+            "public health",
+            "philosophy"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "education",
+            "sociology"
+        ],
+        "unrelated": [
+            "music",
+            "theatre",
+            "journalism",
+            "interior design"
+        ]
+    },
+    "genetics": {
+        "exact_match": [
+            "genetics",
+            "human genetics",
+            "medical genetics",
+            "population genetics"
+        ],
+        "closely_related": [
+            "molecular biology",
+            "biotechnology",
+            "biochemistry",
+            "genomics",
+            "bioinformatics",
+            "genetic counseling",
+            "evolutionary biology",
+            "cytogenetics"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "pharmacology",
+            "forensic science",
+            "agriculture",
+            "environmental science",
+            "anthropology"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "political science",
+            "sociology"
+        ],
+        "unrelated": [
+            "fashion design",
+            "performing arts",
+            "culinary arts",
+            "music"
+        ]
+    },
+    "microbiology": {
+        "exact_match": [
+            "microbiology",
+            "medical microbiology",
+            "industrial microbiology",
+            "environmental microbiology"
+        ],
+        "closely_related": [
+            "biochemistry",
+            "immunology",
+            "molecular biology",
+            "biotechnology",
+            "virology",
+            "bacteriology",
+            "mycology",
+            "parasitology"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "public health",
+            "pharmacology",
+            "environmental science",
+            "food science",
+            "agriculture"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "theatre",
+            "music",
+            "interior design",
+            "journalism"
+        ]
+    },
+    "immunology": {
+        "exact_match": [
+            "immunology",
+            "clinical immunology",
+            "immunobiology"
+        ],
+        "closely_related": [
+            "microbiology",
+            "biochemistry",
+            "molecular biology",
+            "virology",
+            "pathology",
+            "allergy and immunology",
+            "transplant immunology",
+            "autoimmunity"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "public health",
+            "pharmacology",
+            "epidemiology",
+            "biomedical research",
+            "biotechnology"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "political science",
+            "sociology"
+        ],
+        "unrelated": [
+            "fashion design",
+            "music",
+            "theatre",
+            "journalism"
+        ]
+    },
+    "radiology medical imaging": {
+        "exact_match": [
+            "radiology & medical imaging",
+            "radiology",
+            "medical imaging",
+            "diagnostic radiology"
+        ],
+        "closely_related": [
+            "medicine",
+            "biomedical engineering",
+            "nuclear medicine",
+            "diagnostic imaging",
+            "anatomy",
+            "interventional radiology",
+            "radiation therapy",
+            "medical physics"
+        ],
+        "somewhat_related": [
+            "physics",
+            "computer science",
+            "neuroscience",
+            "medical technology",
+            "public health",
+            "oncology"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "fashion design",
+            "music",
+            "journalism",
+            "performing arts"
+        ]
+    },
+    "nutrition dietetics": {
+        "exact_match": [
+            "nutrition & dietetics",
+            "nutrition",
+            "dietetics",
+            "clinical nutrition"
+        ],
+        "closely_related": [
+            "food science",
+            "public health",
+            "biochemistry",
+            "medicine",
+            "sports science",
+            "nutritional biochemistry",
+            "community nutrition",
+            "pediatric nutrition"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "nursing",
+            "occupational therapy",
+            "pharmacology",
+            "environmental science",
+            "agriculture"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "education",
+            "sociology"
+        ],
+        "unrelated": [
+            "fashion design",
+            "theatre",
+            "music",
+            "journalism"
+        ]
+    },
+    "occupational therapy": {
+        "exact_match": [
+            "occupational therapy",
+            "occupational science",
+            "ot"
+        ],
+        "closely_related": [
+            "physiotherapy",
+            "nursing",
+            "public health",
+            "psychology",
+            "rehabilitation sciences",
+            "disability studies",
+            "geriatric therapy",
+            "pediatric therapy"
+        ],
+        "somewhat_related": [
+            "medicine",
+            "social work",
+            "special education",
+            "sports science",
+            "neuroscience",
+            "ergonomics"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "fashion design",
+            "journalism",
+            "music",
+            "theatre"
+        ]
+    },
+    "speech language therapy": {
+        "exact_match": [
+            "speech & language therapy",
+            "speech therapy",
+            "speech pathology",
+            "communication disorders"
+        ],
+        "closely_related": [
+            "audiology",
+            "linguistics",
+            "neuroscience",
+            "communication sciences",
+            "language pathology",
+            "voice therapy",
+            "swallowing disorders"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "occupational therapy",
+            "special education",
+            "cognitive science",
+            "developmental psychology"
+        ],
+        "weak_connection": [
+            "public health",
+            "nursing",
+            "medicine",
+            "education"
+        ],
+        "unrelated": [
+            "engineering",
+            "business",
+            "law",
+            "fashion design"
+        ]
+    },
+    "business administration": {
+        "exact_match": [
+            "business administration",
+            "business management",
+            "business studies",
+            "mba",
+            "commerce",
+            "entrepreneurship"
+        ],
+        "closely_related": [
+            "marketing",
+            "hr",
+            "finance",
+            "accounting",
+            "operations management",
+            "supply chain management",
+            "project management",
+            "business analytics",
+            "international business",
+            "strategic management"
+        ],
+        "somewhat_related": [
+            "economics",
+            "public relations",
+            "law",
+            "statistics",
+            "psychology",
+            "sociology"
+        ],
+        "weak_connection": [
+            "journalism",
+            "psychology",
+            "political science",
+            "mathematics"
+        ],
+        "unrelated": [
+            "astronomy",
+            "physics",
+            "medicine",
+            "engineering"
+        ]
+    },
+    "marketing": {
+        "exact_match": [
+            "marketing",
+            "digital marketing",
+            "marketing management",
+            "brand management"
+        ],
+        "closely_related": [
+            "digital media",
+            "advertising",
+            "business",
+            "public relations",
+            "consumer behavior",
+            "market research",
+            "social media marketing",
+            "content marketing"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "public relations",
+            "graphic design",
+            "communications",
+            "data analytics"
+        ],
+        "weak_connection": [
+            "political science",
+            "journalism",
+            "sociology",
+            "economics"
+        ],
+        "unrelated": [
+            "chemistry",
+            "physics",
+            "medicine",
+            "engineering"
+        ]
+    },
+    "human resource management": {
+        "exact_match": [
+            "human resource management",
+            "hr",
+            "human resources",
+            "personnel management"
+        ],
+        "closely_related": [
+            "organizational behavior",
+            "business administration",
+            "psychology",
+            "labor relations",
+            "talent management",
+            "compensation management",
+            "training and development"
+        ],
+        "somewhat_related": [
+            "public administration",
+            "sociology",
+            "industrial relations",
+            "law",
+            "management"
+        ],
+        "weak_connection": [
+            "political science",
+            "law",
+            "economics",
+            "education"
+        ],
+        "unrelated": [
+            "engineering",
+            "medicine",
+            "physics",
+            "chemistry"
+        ]
+    },
+    "operations management": {
+        "exact_match": [
+            "operations management",
+            "production management",
+            "operations research"
+        ],
+        "closely_related": [
+            "business administration",
+            "supply chain management",
+            "quality management",
+            "lean manufacturing",
+            "project management",
+            "logistics",
+            "process improvement"
+        ],
+        "somewhat_related": [
+            "industrial engineering",
+            "data analytics",
+            "mathematics",
+            "statistics",
+            "economics"
+        ],
+        "weak_connection": [
+            "public administration",
+            "economics",
+            "psychology",
+            "law"
+        ],
+        "unrelated": [
+            "performing arts",
+            "fashion design",
+            "music",
+            "culinary arts"
+        ]
+    },
+    "supply chain management": {
+        "exact_match": [
+            "supply chain management",
+            "logistics",
+            "procurement"
+        ],
+        "closely_related": [
+            "logistics",
+            "operations management",
+            "business administration",
+            "transportation management",
+            "inventory management",
+            "vendor management",
+            "distribution management"
+        ],
+        "somewhat_related": [
+            "industrial engineering",
+            "procurement",
+            "international business",
+            "economics",
+            "data analytics"
+        ],
+        "weak_connection": [
+            "economics",
+            "public administration",
+            "mathematics",
+            "law"
+        ],
+        "unrelated": [
+            "nursing",
+            "music",
+            "fashion design",
+            "theatre"
+        ]
+    },
+    "financial management": {
+        "exact_match": [
+            "financial management",
+            "finance",
+            "corporate finance"
+        ],
+        "closely_related": [
+            "corporate finance",
+            "investment management",
+            "accounting",
+            "financial planning",
+            "financial analysis",
+            "portfolio management",
+            "risk management",
+            "treasury management"
+        ],
+        "somewhat_related": [
+            "business administration",
+            "economics",
+            "banking",
+            "insurance",
+            "real estate"
+        ],
+        "weak_connection": [
+            "public administration",
+            "political science",
+            "mathematics",
+            "law"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "performing arts",
+            "fashion design"
+        ]
+    },
+    "investment asset management": {
+        "exact_match": [
+            "investment & asset management",
+            "investment management",
+            "asset management",
+            "portfolio management"
+        ],
+        "closely_related": [
+            "financial management",
+            "portfolio management",
+            "economics",
+            "wealth management",
+            "hedge fund management",
+            "private equity",
+            "quantitative finance"
+        ],
+        "somewhat_related": [
+            "business analytics",
+            "banking",
+            "accounting",
+            "actuarial science",
+            "mathematics"
+        ],
+        "weak_connection": [
+            "political science",
+            "law",
+            "statistics",
+            "psychology"
+        ],
+        "unrelated": [
+            "performing arts",
+            "nursing",
+            "culinary arts",
+            "fashion design"
+        ]
+    },
+    "banking risk management": {
+        "exact_match": [
+            "banking & risk management",
+            "banking",
+            "risk management",
+            "commercial banking"
+        ],
+        "closely_related": [
+            "finance",
+            "accounting",
+            "economics",
+            "credit analysis",
+            "investment banking",
+            "retail banking",
+            "financial regulation"
+        ],
+        "somewhat_related": [
+            "actuarial science",
+            "investment analysis",
+            "business law",
+            "financial economics"
+        ],
+        "weak_connection": [
+            "public administration",
+            "business law",
+            "political science",
+            "mathematics"
+        ],
+        "unrelated": [
+            "music",
+            "theatre",
+            "fashion design",
+            "culinary arts"
+        ]
+    },
+    "accounting auditing": {
+        "exact_match": [
+            "accounting & auditing",
+            "accounting",
+            "auditing",
+            "public accounting"
+        ],
+        "closely_related": [
+            "financial management",
+            "taxation",
+            "corporate law",
+            "forensic accounting",
+            "management accounting",
+            "cost accounting",
+            "financial reporting"
+        ],
+        "somewhat_related": [
+            "business administration",
+            "economics",
+            "finance",
+            "business law",
+            "statistics"
+        ],
+        "weak_connection": [
+            "public administration",
+            "statistics",
+            "mathematics",
+            "law"
+        ],
+        "unrelated": [
+            "performing arts",
+            "engineering",
+            "medicine",
+            "fashion design"
+        ]
+    },
+    "economics": {
+        "exact_match": [
+            "economics",
+            "economic theory",
+            "macroeconomics",
+            "microeconomics"
+        ],
+        "closely_related": [
+            "finance",
+            "business analytics",
+            "actuarial science",
+            "econometrics",
+            "development economics",
+            "international economics",
+            "behavioral economics"
+        ],
+        "somewhat_related": [
+            "political science",
+            "public policy",
+            "data science",
+            "mathematics",
+            "statistics",
+            "sociology"
+        ],
+        "weak_connection": [
+            "psychology",
+            "journalism",
+            "business administration",
+            "law"
+        ],
+        "unrelated": [
+            "performing arts",
+            "nursing",
+            "fashion design",
+            "culinary arts"
+        ]
+    },
+    "law": {
+        "exact_match": [
+            "law",
+            "legal studies",
+            "jurisprudence",
+            "criminal law",
+            "civil law",
+            "constitutional law",
+            "corporate law"
+        ],
+        "closely_related": [
+            "international law",
+            "public administration",
+            "legal practice",
+            "family law",
+            "environmental law",
+            "intellectual property law",
+            "tax law",
+            "labor law",
+            "human rights law"
+        ],
+        "somewhat_related": [
+            "political science",
+            "business law",
+            "public policy",
+            "criminology",
+            "sociology",
+            "philosophy"
+        ],
+        "weak_connection": [
+            "journalism",
+            "economics",
+            "psychology",
+            "history"
+        ],
+        "unrelated": [
+            "nursing",
+            "astronomy",
+            "physics",
+            "culinary arts"
+        ]
+    },
+    "international law": {
+        "exact_match": [
+            "international law",
+            "global law",
+            "transnational law"
+        ],
+        "closely_related": [
+            "political science",
+            "human rights law",
+            "international relations",
+            "diplomatic law",
+            "trade law",
+            "maritime law",
+            "space law"
+        ],
+        "somewhat_related": [
+            "public administration",
+            "business law",
+            "economics",
+            "comparative law",
+            "european law"
+        ],
+        "weak_connection": [
+            "sociology",
+            "journalism",
+            "history",
+            "philosophy"
+        ],
+        "unrelated": [
+            "engineering",
+            "medicine",
+            "physics",
+            "fashion design"
+        ]
+    },
+    "political science": {
+        "exact_match": [
+            "political science",
+            "politics",
+            "government",
+            "political theory"
+        ],
+        "closely_related": [
+            "international relations",
+            "public administration",
+            "public policy",
+            "comparative politics",
+            "political philosophy",
+            "electoral studies",
+            "governance"
+        ],
+        "somewhat_related": [
+            "law",
+            "sociology",
+            "history",
+            "economics",
+            "journalism",
+            "philosophy"
+        ],
+        "weak_connection": [
+            "economics",
+            "business studies",
+            "psychology",
+            "anthropology"
+        ],
+        "unrelated": [
+            "nursing",
+            "computer science",
+            "physics",
+            "fashion design"
+        ]
+    },
+    "public administration": {
+        "exact_match": [
+            "public administration",
+            "public management",
+            "government administration"
+        ],
+        "closely_related": [
+            "political science",
+            "governance",
+            "public policy",
+            "public sector management",
+            "municipal administration",
+            "policy analysis",
+            "nonprofit management"
+        ],
+        "somewhat_related": [
+            "economics",
+            "law",
+            "business administration",
+            "sociology",
+            "urban planning"
+        ],
+        "weak_connection": [
+            "sociology",
+            "international law",
+            "psychology",
+            "journalism"
+        ],
+        "unrelated": [
+            "music",
+            "engineering",
+            "medicine",
+            "fashion design"
+        ]
+    },
+    "international relations": {
+        "exact_match": [
+            "international relations",
+            "global studies",
+            "foreign affairs"
+        ],
+        "closely_related": [
+            "political science",
+            "global studies",
+            "international law",
+            "diplomacy",
+            "security studies",
+            "area studies",
+            "conflict resolution"
+        ],
+        "somewhat_related": [
+            "economics",
+            "sociology",
+            "public administration",
+            "history",
+            "anthropology",
+            "geography"
+        ],
+        "weak_connection": [
+            "business management",
+            "journalism",
+            "psychology",
+            "law"
+        ],
+        "unrelated": [
+            "medicine",
+            "performing arts",
+            "fashion design",
+            "culinary arts"
+        ]
+    },
+    "psychology": {
+        "exact_match": [
+            "psychology",
+            "clinical psychology",
+            "cognitive psychology",
+            "social psychology",
+            "developmental psychology",
+            "behavioral psychology"
+        ],
+        "closely_related": [
+            "clinical psychology",
+            "neuroscience",
+            "psychiatry",
+            "counseling",
+            "psychotherapy",
+            "behavioral science",
+            "cognitive science",
+            "abnormal psychology",
+            "educational psychology"
+        ],
+        "somewhat_related": [
+            "public health",
+            "sociology",
+            "anthropology",
+            "philosophy",
+            "education",
+            "social work",
+            "human resources"
+        ],
+        "weak_connection": [
+            "business",
+            "education",
+            "law",
+            "medicine"
+        ],
+        "unrelated": [
+            "engineering",
+            "music",
+            "physics",
+            "chemistry"
+        ]
+    },
+    "social work": {
+        "exact_match": [
+            "social work",
+            "clinical social work",
+            "community social work"
+        ],
+        "closely_related": [
+            "psychology",
+            "public administration",
+            "counseling",
+            "human services",
+            "family therapy",
+            "community development",
+            "child welfare"
+        ],
+        "somewhat_related": [
+            "education",
+            "sociology",
+            "public health",
+            "criminal justice",
+            "nonprofit management"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "mathematics",
+            "engineering",
+            "physics",
+            "fashion design"
+        ]
+    },
+    "graphic design": {
+        "exact_match": [
+            "graphic design",
+            "visual design",
+            "communication design"
+        ],
+        "closely_related": [
+            "digital media",
+            "interior design",
+            "web design",
+            "brand design",
+            "typography",
+            "illustration",
+            "user interface design"
+        ],
+        "somewhat_related": [
+            "animation",
+            "marketing",
+            "advertising",
+            "fine arts",
+            "photography"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "psychology",
+            "film studies"
+        ],
+        "unrelated": [
+            "medicine",
+            "law",
+            "engineering",
+            "physics"
+        ]
+    },
+    "fashion design": {
+        "exact_match": [
+            "fashion design",
+            "apparel design",
+            "costume design"
+        ],
+        "closely_related": [
+            "textile design",
+            "visual arts",
+            "fashion merchandising",
+            "fashion marketing",
+            "pattern making",
+            "fashion illustration",
+            "accessory design"
+        ],
+        "somewhat_related": [
+            "marketing",
+            "interior design",
+            "graphic design",
+            "business",
+            "art history"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "psychology",
+            "sociology"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "interior design": {
+        "exact_match": [
+            "interior design",
+            "interior architecture",
+            "space planning"
+        ],
+        "closely_related": [
+            "architecture",
+            "graphic design",
+            "visual arts",
+            "furniture design",
+            "lighting design",
+            "sustainable design",
+            "commercial design"
+        ],
+        "somewhat_related": [
+            "marketing",
+            "digital media",
+            "construction management",
+            "real estate",
+            "art history"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "psychology",
+            "sociology"
+        ],
+        "unrelated": [
+            "medicine",
+            "physics",
+            "chemistry",
+            "mathematics"
+        ]
+    },
+    "architecture": {
+        "exact_match": [
+            "architecture",
+            "architectural design",
+            "building design"
+        ],
+        "closely_related": [
+            "interior design",
+            "civil engineering",
+            "urban planning",
+            "landscape architecture",
+            "sustainable architecture",
+            "architectural engineering",
+            "construction management"
+        ],
+        "somewhat_related": [
+            "urban planning",
+            "graphic design",
+            "environmental design",
+            "real estate development",
+            "art history"
+        ],
+        "weak_connection": [
+            "business",
+            "marketing",
+            "sociology",
+            "economics"
+        ],
+        "unrelated": [
+            "medicine",
+            "law",
+            "fashion design",
+            "music"
+        ]
+    },
+    "theatre drama": {
+        "exact_match": [
+            "theatre & drama",
+            "theatre",
+            "drama",
+            "performing arts"
+        ],
+        "closely_related": [
+            "film & tv",
+            "performing arts",
+            "acting",
+            "directing",
+            "playwriting",
+            "stage management",
+            "theatre design",
+            "musical theatre"
+        ],
+        "somewhat_related": [
+            "journalism",
+            "public relations",
+            "english literature",
+            "creative writing",
+            "music"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "education",
+            "sociology"
+        ],
+        "unrelated": [
+            "mathematics",
+            "medicine",
+            "engineering",
+            "physics"
+        ]
+    },
+    "film television": {
+        "exact_match": [
+            "film & television",
+            "film studies",
+            "television production",
+            "cinematography"
+        ],
+        "closely_related": [
+            "digital media",
+            "performing arts",
+            "journalism",
+            "film production",
+            "video editing",
+            "screenwriting",
+            "documentary filmmaking"
+        ],
+        "somewhat_related": [
+            "advertising",
+            "public relations",
+            "graphic design",
+            "creative writing",
+            "photography"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "sociology",
+            "communications"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "music performance production": {
+        "exact_match": [
+            "music performance & production",
+            "music",
+            "music production",
+            "music performance"
+        ],
+        "closely_related": [
+            "performing arts",
+            "theatre & drama",
+            "digital media",
+            "sound engineering",
+            "music composition",
+            "music therapy",
+            "audio production"
+        ],
+        "somewhat_related": [
+            "journalism",
+            "public relations",
+            "education",
+            "psychology",
+            "film studies"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "sociology",
+            "mathematics"
+        ],
+        "unrelated": [
+            "medicine",
+            "law",
+            "engineering",
+            "physics"
+        ]
+    },
+    "dance": {
+        "exact_match": [
+            "dance",
+            "dance performance",
+            "choreography"
+        ],
+        "closely_related": [
+            "performing arts",
+            "theatre & drama",
+            "music",
+            "movement therapy",
+            "dance education",
+            "dance therapy",
+            "ballet"
+        ],
+        "somewhat_related": [
+            "film & television",
+            "public relations",
+            "physical therapy",
+            "kinesiology",
+            "psychology"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "education",
+            "sociology"
+        ],
+        "unrelated": [
+            "engineering",
+            "medicine",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "journalism": {
+        "exact_match": [
+            "journalism",
+            "news reporting",
+            "broadcast journalism",
+            "investigative journalism"
+        ],
+        "closely_related": [
+            "media & communication",
+            "public relations",
+            "mass communication",
+            "digital journalism",
+            "photojournalism",
+            "sports journalism",
+            "science journalism"
+        ],
+        "somewhat_related": [
+            "political science",
+            "digital media",
+            "english literature",
+            "sociology",
+            "communications"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "law",
+            "economics"
+        ],
+        "unrelated": [
+            "nursing",
+            "physics",
+            "chemistry",
+            "mathematics"
+        ]
+    },
+    "public relations": {
+        "exact_match": [
+            "public relations (pr)",
+            "public relations",
+            "pr",
+            "corporate communications"
+        ],
+        "closely_related": [
+            "journalism",
+            "media & communication",
+            "advertising",
+            "marketing communications",
+            "crisis communication",
+            "internal communications",
+            "brand management"
+        ],
+        "somewhat_related": [
+            "business",
+            "digital media",
+            "marketing",
+            "organizational communication",
+            "event management"
+        ],
+        "weak_connection": [
+            "psychology",
+            "political science",
+            "sociology",
+            "law"
+        ],
+        "unrelated": [
+            "engineering",
+            "medicine",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "digital media": {
+        "exact_match": [
+            "digital media",
+            "new media",
+            "multimedia",
+            "interactive media"
+        ],
+        "closely_related": [
+            "graphic design",
+            "film & television",
+            "advertising",
+            "web design",
+            "social media",
+            "content creation",
+            "digital marketing"
+        ],
+        "somewhat_related": [
+            "journalism",
+            "marketing",
+            "computer science",
+            "photography",
+            "animation"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "communications",
+            "sociology"
+        ],
+        "unrelated": [
+            "medicine",
+            "physics",
+            "chemistry",
+            "mathematics"
+        ]
+    },
+    "advertising": {
+        "exact_match": [
+            "advertising",
+            "creative advertising",
+            "digital advertising"
+        ],
+        "closely_related": [
+            "marketing",
+            "public relations",
+            "digital media",
+            "brand management",
+            "copywriting",
+            "art direction",
+            "media planning"
+        ],
+        "somewhat_related": [
+            "journalism",
+            "business",
+            "graphic design",
+            "consumer psychology",
+            "communications"
+        ],
+        "weak_connection": [
+            "psychology",
+            "political science",
+            "sociology",
+            "economics"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "education pedagogy": {
+        "exact_match": [
+            "education & pedagogy",
+            "education",
+            "pedagogy",
+            "teaching"
+        ],
+        "closely_related": [
+            "early childhood education",
+            "teaching",
+            "psychology",
+            "curriculum development",
+            "educational leadership",
+            "special education",
+            "educational technology",
+            "teacher training"
+        ],
+        "somewhat_related": [
+            "public administration",
+            "sociology",
+            "child development",
+            "social work",
+            "linguistics"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "political science",
+            "economics"
+        ],
+        "unrelated": [
+            "engineering",
+            "medicine",
+            "physics",
+            "chemistry"
+        ]
+    },
+    "agricultural sciences": {
+        "exact_match": [
+            "agricultural sciences",
+            "agriculture",
+            "agronomy",
+            "crop science"
+        ],
+        "closely_related": [
+            "environmental science",
+            "food science",
+            "biology",
+            "horticulture",
+            "animal science",
+            "soil science",
+            "agricultural engineering",
+            "plant pathology"
+        ],
+        "somewhat_related": [
+            "chemistry",
+            "biotechnology",
+            "nutrition",
+            "geography",
+            "economics",
+            "rural development"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "political science",
+            "sociology"
+        ],
+        "unrelated": [
+            "music",
+            "performing arts",
+            "fashion design",
+            "theatre"
+        ]
+    },
+    "food science technology": {
+        "exact_match": [
+            "food science & technology",
+            "food science",
+            "food technology"
+        ],
+        "closely_related": [
+            "nutrition",
+            "biotechnology",
+            "agricultural sciences",
+            "food engineering",
+            "food safety",
+            "food chemistry",
+            "food microbiology"
+        ],
+        "somewhat_related": [
+            "chemistry",
+            "public health",
+            "culinary arts",
+            "packaging technology",
+            "quality assurance"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "economics",
+            "marketing"
+        ],
+        "unrelated": [
+            "law",
+            "performing arts",
+            "fashion design",
+            "music"
+        ]
+    },
+    "tourism travel management": {
+        "exact_match": [
+            "tourism & travel management",
+            "tourism",
+            "travel management",
+            "hospitality & tourism"
+        ],
+        "closely_related": [
+            "hospitality management",
+            "event management",
+            "hotel management",
+            "destination management",
+            "sustainable tourism",
+            "cultural tourism",
+            "adventure tourism"
+        ],
+        "somewhat_related": [
+            "business",
+            "public relations",
+            "geography",
+            "cultural studies",
+            "economics"
+        ],
+        "weak_connection": [
+            "journalism",
+            "marketing",
+            "sociology",
+            "anthropology"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "event management": {
+        "exact_match": [
+            "event management",
+            "event planning",
+            "conference management"
+        ],
+        "closely_related": [
+            "hospitality management",
+            "tourism & travel management",
+            "project management",
+            "wedding planning",
+            "corporate events",
+            "sports event management",
+            "exhibition management"
+        ],
+        "somewhat_related": [
+            "business",
+            "public relations",
+            "marketing",
+            "communications",
+            "logistics"
+        ],
+        "weak_connection": [
+            "psychology",
+            "marketing",
+            "sociology",
+            "journalism"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "culinary arts": {
+        "exact_match": [
+            "culinary arts",
+            "culinary science",
+            "gastronomy",
+            "chef training"
+        ],
+        "closely_related": [
+            "food science",
+            "hospitality management",
+            "nutrition",
+            "restaurant management",
+            "baking & pastry",
+            "food styling",
+            "culinary management"
+        ],
+        "somewhat_related": [
+            "business",
+            "tourism",
+            "event management",
+            "food technology",
+            "chemistry"
+        ],
+        "weak_connection": [
+            "journalism",
+            "marketing",
+            "psychology",
+            "sociology"
+        ],
+        "unrelated": [
+            "physics",
+            "engineering",
+            "mathematics",
+            "medicine"
+        ]
+    },
+    "gender studies": {
+        "exact_match": [
+            "gender studies",
+            "women's studies",
+            "feminist studies"
+        ],
+        "closely_related": [
+            "sociology",
+            "feminist studies",
+            "political science",
+            "women's history",
+            "queer studies",
+            "cultural studies",
+            "social justice studies"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "public policy",
+            "anthropology",
+            "law",
+            "social work",
+            "philosophy"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "economics",
+            "education"
+        ],
+        "unrelated": [
+            "engineering",
+            "medicine",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "visual arts": {
+        "exact_match": [
+            "visual arts",
+            "fine arts",
+            "studio arts",
+            "contemporary art"
+        ],
+        "closely_related": [
+            "fine arts",
+            "graphic design",
+            "digital media",
+            "painting",
+            "sculpture",
+            "photography",
+            "printmaking",
+            "ceramics",
+            "art history"
+        ],
+        "somewhat_related": [
+            "architecture",
+            "interior design",
+            "advertising",
+            "film studies",
+            "cultural studies"
+        ],
+        "weak_connection": [
+            "business",
+            "psychology",
+            "education",
+            "sociology"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "mathematics"
+        ]
+    },
+    "sports exercise sciences": {
+        "exact_match": [
+            "sports and exercise sciences",
+            "exercise science",
+            "sports science",
+            "kinesiology"
+        ],
+        "closely_related": [
+            "kinesiology",
+            "physiotherapy",
+            "nutrition",
+            "sports medicine",
+            "exercise physiology",
+            "biomechanics",
+            "sports psychology"
+        ],
+        "somewhat_related": [
+            "public health",
+            "psychology",
+            "education",
+            "recreation",
+            "athletic training"
+        ],
+        "weak_connection": [
+            "business",
+            "journalism",
+            "sociology",
+            "marketing"
+        ],
+        "unrelated": [
+            "law",
+            "performing arts",
+            "fashion design",
+            "mathematics"
+        ]
+    },
+    "media communication": {
+        "exact_match": [
+            "media & communication",
+            "mass communication",
+            "communication studies",
+            "media studies"
+        ],
+        "closely_related": [
+            "journalism",
+            "public relations",
+            "broadcasting",
+            "digital communication",
+            "organizational communication",
+            "intercultural communication",
+            "strategic communication"
+        ],
+        "somewhat_related": [
+            "advertising",
+            "marketing",
+            "political science",
+            "sociology",
+            "psychology"
+        ],
+        "weak_connection": [
             "Business",
             "Psychology"
         ],
-        "Unrelated": [
-            "Performing Arts",
-            "Law"
-        ]
-    },
-    "Astronomy": {
-        "Exact Match": [
-            "Astronomy"
-        ],
-        "Closely Related": [
-            "Astrophysics",
-            "Space Science",
-            "Physics"
-        ],
-        "Somewhat Related": [
-            "Mathematics",
-            "Computer Science",
-            "Engineering"
-        ],
-        "Weak Connection": [
-            "Economics",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Fine Arts",
-            "Culinary Arts"
-        ]
-    },
-    "Biotechnology": {
-        "Exact Match": [
-            "Biotechnology"
-        ],
-        "Closely Related": [
-            "Molecular Biology",
-            "Biochemistry",
-            "Genetics"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Pharmacology",
-            "Environmental Science"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Music",
-            "Interior Design"
-        ]
-    },
-    "Geology": {
-        "Exact Match": [
-            "Geology"
-        ],
-        "Closely Related": [
-            "Earth Sciences",
-            "Environmental Science",
-            "Oceanography"
-        ],
-        "Somewhat Related": [
-            "Civil Engineering",
-            "Physics",
-            "Geography"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Culinary Arts"
-        ]
-    },
-    "Oceanography": {
-        "Exact Match": [
-            "Oceanography"
-        ],
-        "Closely Related": [
-            "Marine Biology",
-            "Environmental Science",
-            "Geology"
-        ],
-        "Somewhat Related": [
-            "Climate Science",
-            "Physics"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Public Administration"
-        ],
-        "Unrelated": [
-            "Music",
-            "Law"
-        ]
-    },
-    "Computer Science": {
-        "Exact Match": [
-            "Computer Science"
-        ],
-        "Closely Related": [
-            "Software Engineering",
-            "Data Science",
-            "Artificial Intelligence"
-        ],
-        "Somewhat Related": [
-            "Cybersecurity",
-            "Mathematics",
-            "Robotics"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Economics"
-        ],
-        "Unrelated": [
-            "Culinary Arts",
-            "Theatre"
-        ]
-    },
-    "Information Technology": {
-        "Exact Match": [
-            "Information Technology"
-        ],
-        "Closely Related": [
-            "Cybersecurity",
-            "Computer Science",
-            "Data Science"
-        ],
-        "Somewhat Related": [
-            "Business Analytics",
-            "Software Development"
-        ],
-        "Weak Connection": [
-            "Journalism",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Law"
-        ]
-    },
-    "Artificial Intelligence (AI)": {
-        "Exact Match": [
-            "Artificial Intelligence"
-        ],
-        "Closely Related": [
-            "Machine Learning",
-            "Data Science",
-            "Robotics"
-        ],
-        "Somewhat Related": [
-            "Mathematics",
-            "Software Engineering"
-        ],
-        "Weak Connection": [
-            "Political Science",
-            "Public Relations"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Nursing"
-        ]
-    },
-    "Cybersecurity": {
-        "Exact Match": [
-            "Cybersecurity"
-        ],
-        "Closely Related": [
-            "Information Security",
-            "Computer Science",
-            "Networking"
-        ],
-        "Somewhat Related": [
-            "Data Science",
-            "IT Management"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Law"
-        ],
-        "Unrelated": [
-            "Culinary Arts",
-            "Music"
-        ]
-    },
-    "Data Science & Analytics": {
-        "Exact Match": [
-            "Data Science & Analytics"
-        ],
-        "Closely Related": [
-            "Business Analytics",
-            "Machine Learning",
-            "AI"
-        ],
-        "Somewhat Related": [
-            "Mathematics",
-            "Statistics",
-            "Economics"
-        ],
-        "Weak Connection": [
-            "Journalism",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Theatre",
-            "Fashion Design"
-        ]
-    },
-    "Software Engineering": {
-        "Exact Match": [
-            "Software Engineering"
-        ],
-        "Closely Related": [
-            "Computer Science",
-            "IT",
-            "Game Development"
-        ],
-        "Somewhat Related": [
-            "Data Science",
-            "Cybersecurity"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Culinary Arts"
-        ]
-    },
-    "Game Development": {
-        "Exact Match": [
-            "Game Development"
-        ],
-        "Closely Related": [
-            "Software Engineering",
-            "Digital Media",
-            "Computer Science"
-        ],
-        "Somewhat Related": [
-            "Animation",
-            "Graphic Design"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Nursing",
-            "Law"
-        ]
-    },
-    "Engineering": {
-        "Exact Match": [
-            "Engineering"
-        ],
-        "Closely Related": [
-            "Mechanical",
-            "Civil",
-            "Electrical Engineering"
-        ],
-        "Somewhat Related": [
-            "Computer Science",
-            "Mathematics",
-            "Physics"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Music"
-        ]
-    },
-    "Robotics & Automation": {
-        "Exact Match": [
-            "Robotics & Automation"
-        ],
-        "Closely Related": [
-            "Mechatronics",
-            "Electrical Engineering",
-            "AI"
-        ],
-        "Somewhat Related": [
-            "Physics",
-            "Computer Science"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Music"
-        ]
-    },
-    "Mathematics": {
-        "Exact Match": [
-            "Mathematics"
-        ],
-        "Closely Related": [
-            "Statistics",
-            "Actuarial Science",
-            "Data Science"
-        ],
-        "Somewhat Related": [
-            "Economics",
-            "Physics",
-            "Engineering"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Culinary Arts",
-            "Theatre"
-        ]
-    },
-    "Statistics": {
-        "Exact Match": [
-            "Statistics"
-        ],
-        "Closely Related": [
-            "Actuarial Science",
-            "Data Science",
-            "Mathematics"
-        ],
-        "Somewhat Related": [
-            "Economics",
-            "Business Analytics"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Fashion"
-        ]
-    },
-    "Actuarial Science": {
-        "Exact Match": [
-            "Actuarial Science"
-        ],
-        "Closely Related": [
-            "Statistics",
-            "Mathematics",
-            "Financial Analytics"
-        ],
-        "Somewhat Related": [
-            "Economics",
-            "Business",
-            "Finance"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Law"
-        ],
-        "Unrelated": [
-            "Culinary Arts",
-            "Music"
-        ]
-    },
-    "Medicine (MBBS, MD)": {
-        "Exact Match": [
-            "Medicine"
-        ],
-        "Closely Related": [
-            "Nursing",
-            "Dentistry",
-            "Pharmacy"
-        ],
-        "Somewhat Related": [
-            "Public Health",
-            "Biochemistry"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Law"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Fashion Design"
-        ]
-    },
-    "Dentistry": {
-        "Exact Match": [
-            "Dentistry"
-        ],
-        "Closely Related": [
-            "Medicine",
-            "Pharmacy",
-            "Biochemistry"
-        ],
-        "Somewhat Related": [
-            "Public Health",
-            "Nutrition"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Law"
-        ],
-        "Unrelated": [
-            "Theatre",
-            "Music"
-        ]
-    },
-    "Nursing": {
-        "Exact Match": [
-            "Nursing"
-        ],
-        "Closely Related": [
-            "Medicine",
-            "Physiotherapy",
-            "Public Health"
-        ],
-        "Somewhat Related": [
-            "Psychology",
-            "Occupational Therapy"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Fashion",
-            "Music"
-        ]
-    },
-    "Pharmacy": {
-        "Exact Match": [
-            "Pharmacy"
-        ],
-        "Closely Related": [
-            "Medicine",
-            "Chemistry",
-            "Biochemistry"
-        ],
-        "Somewhat Related": [
-            "Nutrition",
-            "Public Health"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Music",
-            "Interior Design"
-        ]
-    },
-    "Physiotherapy": {
-        "Exact Match": [
-            "Physiotherapy"
-        ],
-        "Closely Related": [
-            "Occupational Therapy",
-            "Medicine",
-            "Sports Science"
-        ],
-        "Somewhat Related": [
-            "Psychology",
-            "Public Health"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Law"
-        ],
-        "Unrelated": [
-            "Fashion",
-            "Journalism"
-        ]
-    },
-    "Public Health": {
-        "Exact Match": [
-            "Public Health"
-        ],
-        "Closely Related": [
-            "Medicine",
-            "Nursing",
-            "Epidemiology"
-        ],
-        "Somewhat Related": [
-            "Nutrition",
-            "Psychology"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Culinary Arts"
-        ]
-    },
-    "Veterinary Science": {
-        "Exact Match": [
-            "Veterinary Science"
-        ],
-        "Closely Related": [
-            "Medicine",
-            "Biology",
-            "Biochemistry"
-        ],
-        "Somewhat Related": [
-            "Public Health",
-            "Animal Science"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Law"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Journalism"
-        ]
-    },
-    "Biochemistry": {
-        "Exact Match": [
-            "Biochemistry"
-        ],
-        "Closely Related": [
-            "Molecular Biology",
-            "Biotechnology",
-            "Pharmacy",
-            "Genetics",
-            "Microbiology"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Environmental Science",
-            "Food Science",
-            "Chemical Engineering",
-            "Neuroscience"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Business",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Music",
-            "Theatre",
-            "Journalism"
-        ]
-    },
-    "Molecular Biology": {
-        "Exact Match": [
-            "Molecular Biology"
-        ],
-        "Closely Related": [
-            "Genetics",
-            "Biochemistry",
-            "Biotechnology",
-            "Microbiology",
-            "Immunology"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Pharmacology",
-            "Neuroscience",
-            "Environmental Science",
-            "Biomedical Engineering"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Public Health",
-            "Nutrition"
-        ],
-        "Unrelated": [
-            "Business",
-            "Law",
-            "Music",
-            "Fashion Design"
-        ]
-    },
-    "Neuroscience": {
-        "Exact Match": [
-            "Neuroscience"
-        ],
-        "Closely Related": [
-            "Psychology",
-            "Neurology",
-            "Biochemistry",
-            "Molecular Biology",
-            "Pharmacology"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Cognitive Science",
-            "AI & Robotics",
-            "Biomedical Engineering",
-            "Public Health"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science",
-            "Education"
-        ],
-        "Unrelated": [
-            "Music",
-            "Theatre",
-            "Journalism",
-            "Interior Design"
-        ]
-    },
-    "Genetics": {
-        "Exact Match": [
-            "Genetics"
-        ],
-        "Closely Related": [
-            "Molecular Biology",
-            "Biotechnology",
-            "Biochemistry",
-            "Genomics",
-            "Bioinformatics"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Pharmacology",
-            "Forensic Science",
-            "Agriculture",
-            "Environmental Science"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Performing Arts",
-            "Culinary Arts"
-        ]
-    },
-    "Microbiology": {
-        "Exact Match": [
-            "Microbiology"
-        ],
-        "Closely Related": [
-            "Biochemistry",
-            "Immunology",
-            "Molecular Biology",
-            "Biotechnology",
-            "Virology"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Public Health",
-            "Pharmacology",
-            "Environmental Science",
-            "Food Science"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Theatre",
-            "Music",
-            "Interior Design",
-            "Journalism"
-        ]
-    },
-    "Immunology": {
-        "Exact Match": [
-            "Immunology"
-        ],
-        "Closely Related": [
-            "Microbiology",
-            "Biochemistry",
-            "Molecular Biology",
-            "Virology",
-            "Pathology"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Public Health",
-            "Pharmacology",
-            "Epidemiology",
-            "Biomedical Research"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Music",
-            "Theatre",
-            "Journalism"
-        ]
-    },
-    "Radiology & Medical Imaging": {
-        "Exact Match": [
-            "Radiology & Medical Imaging"
-        ],
-        "Closely Related": [
-            "Medicine",
-            "Biomedical Engineering",
-            "Nuclear Medicine",
-            "Diagnostic Imaging",
-            "Anatomy"
-        ],
-        "Somewhat Related": [
-            "Physics",
-            "Computer Science",
-            "Neuroscience",
-            "Medical Technology",
-            "Public Health"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Music",
-            "Journalism",
-            "Performing Arts"
-        ]
-    },
-    "Nutrition & Dietetics": {
-        "Exact Match": [
-            "Nutrition & Dietetics"
-        ],
-        "Closely Related": [
-            "Food Science",
-            "Public Health",
-            "Biochemistry",
-            "Medicine",
-            "Sports Science"
-        ],
-        "Somewhat Related": [
-            "Psychology",
-            "Nursing",
-            "Occupational Therapy",
-            "Pharmacology",
-            "Environmental Science"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Political Science",
-            "Education"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Theatre",
-            "Music",
-            "Journalism"
-        ]
-    },
-    "Occupational Therapy": {
-        "Exact Match": [
-            "Occupational Therapy"
-        ],
-        "Closely Related": [
-            "Physiotherapy",
-            "Nursing",
-            "Public Health",
-            "Psychology",
-            "Rehabilitation Sciences"
-        ],
-        "Somewhat Related": [
-            "Medicine",
-            "Social Work",
-            "Special Education",
-            "Sports Science",
-            "Neuroscience"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Law",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Fashion Design",
-            "Journalism",
-            "Music",
-            "Theatre"
-        ]
-    },
-    "Speech & Language Therapy": {
-        "Exact Match": [
-            "Speech & Language Therapy"
-        ],
-        "Closely Related": [
-            "Audiology",
-            "Linguistics",
-            "Neuroscience"
-        ],
-        "Somewhat Related": [
-            "Psychology",
-            "Occupational Therapy",
-            "Special Education"
-        ],
-        "Weak Connection": [
-            "Public Health",
-            "Nursing"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Business",
-            "Law"
-        ]
-    },
-    "Business Administration": {
-        "Exact Match": [
-            "Business Administration"
-        ],
-        "Closely Related": [
-            "Marketing",
-            "HR",
-            "Finance"
-        ],
-        "Somewhat Related": [
-            "Economics",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Journalism",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Astronomy",
-            "Physics"
-        ]
-    },
-    "Marketing": {
-        "Exact Match": [
-            "Marketing"
-        ],
-        "Closely Related": [
-            "Digital Media",
-            "Advertising",
-            "Business"
-        ],
-        "Somewhat Related": [
-            "Psychology",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Political Science",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Chemistry",
-            "Physics"
-        ]
-    },
-    "Human Resource Management": {
-        "Exact Match": [
-            "Human Resource Management"
-        ],
-        "Closely Related": [
-            "Organizational Behavior",
-            "Business Administration",
-            "Psychology"
-        ],
-        "Somewhat Related": [
-            "Public Administration",
-            "Sociology",
-            "Industrial Relations"
-        ],
-        "Weak Connection": [
-            "Political Science",
-            "Law"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Medicine"
-        ]
-    },
-    "Operations Management": {
-        "Exact Match": [
-            "Operations Management"
-        ],
-        "Closely Related": [
-            "Business Administration",
-            "Supply Chain Management"
-        ],
-        "Somewhat Related": [
-            "Industrial Engineering",
-            "Data Analytics"
-        ],
-        "Weak Connection": [
-            "Public Administration",
-            "Economics"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Fashion Design"
-        ]
-    },
-    "Supply Chain Management": {
-        "Exact Match": [
-            "Supply Chain Management"
-        ],
-        "Closely Related": [
-            "Logistics",
-            "Operations Management",
-            "Business Administration"
-        ],
-        "Somewhat Related": [
-            "Industrial Engineering",
-            "Procurement"
-        ],
-        "Weak Connection": [
-            "Economics",
-            "Public Administration"
-        ],
-        "Unrelated": [
-            "Nursing",
-            "Music"
-        ]
-    },
-    "Financial Management": {
-        "Exact Match": [
-            "Financial Management"
-        ],
-        "Closely Related": [
-            "Corporate Finance",
-            "Investment Management",
-            "Accounting"
-        ],
-        "Somewhat Related": [
-            "Business Administration",
-            "Economics"
-        ],
-        "Weak Connection": [
-            "Public Administration",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Engineering"
-        ]
-    },
-    "Investment & Asset Management": {
-        "Exact Match": [
-            "Investment & Asset Management"
-        ],
-        "Closely Related": [
-            "Financial Management",
-            "Portfolio Management",
-            "Economics"
-        ],
-        "Somewhat Related": [
-            "Business Analytics",
-            "Banking",
-            "Accounting"
-        ],
-        "Weak Connection": [
-            "Political Science",
-            "Law"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Nursing"
-        ]
-    },
-    "Banking & Risk Management": {
-        "Exact Match": [
-            "Banking & Risk Management"
-        ],
-        "Closely Related": [
-            "Finance",
-            "Accounting",
-            "Economics"
-        ],
-        "Somewhat Related": [
-            "Actuarial Science",
-            "Investment Analysis"
-        ],
-        "Weak Connection": [
-            "Public Administration",
-            "Business Law"
-        ],
-        "Unrelated": [
-            "Music",
-            "Theatre"
-        ]
-    },
-    "Accounting & Auditing": {
-        "Exact Match": [
-            "Accounting & Auditing"
-        ],
-        "Closely Related": [
-            "Financial Management",
-            "Taxation",
-            "Corporate Law"
-        ],
-        "Somewhat Related": [
-            "Business Administration",
-            "Economics"
-        ],
-        "Weak Connection": [
-            "Public Administration",
-            "Statistics"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Engineering"
-        ]
-    },
-    "Economics": {
-        "Exact Match": [
-            "Economics"
-        ],
-        "Closely Related": [
-            "Finance",
-            "Business Analytics",
-            "Actuarial Science"
-        ],
-        "Somewhat Related": [
-            "Political Science",
-            "Public Policy",
-            "Data Science"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Performing Arts",
-            "Nursing"
-        ]
-    },
-    "Law": {
-        "Exact Match": [
-            "Law"
-        ],
-        "Closely Related": [
-            "International Law",
-            "Public Administration"
-        ],
-        "Somewhat Related": [
-            "Political Science",
-            "Business Law"
-        ],
-        "Weak Connection": [
-            "Journalism",
-            "Economics"
-        ],
-        "Unrelated": [
-            "Nursing",
-            "Astronomy"
-        ]
-    },
-    "International Law": {
-        "Exact Match": [
-            "International Law"
-        ],
-        "Closely Related": [
-            "Political Science",
-            "Human Rights Law",
-            "International Relations"
-        ],
-        "Somewhat Related": [
-            "Public Administration",
-            "Business Law",
-            "Economics"
-        ],
-        "Weak Connection": [
-            "Sociology",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Medicine"
-        ]
-    },
-    "Political Science": {
-        "Exact Match": [
-            "Political Science"
-        ],
-        "Closely Related": [
-            "International Relations",
-            "Public Administration"
-        ],
-        "Somewhat Related": [
-            "Law",
-            "Sociology",
-            "History"
-        ],
-        "Weak Connection": [
-            "Economics",
-            "Business Studies"
-        ],
-        "Unrelated": [
-            "Nursing",
-            "Computer Science"
-        ]
-    },
-    "Public Administration": {
-        "Exact Match": [
-            "Public Administration"
-        ],
-        "Closely Related": [
-            "Political Science",
-            "Governance",
-            "Public Policy"
-        ],
-        "Somewhat Related": [
-            "Economics",
-            "Law",
-            "Business Administration"
-        ],
-        "Weak Connection": [
-            "Sociology",
-            "International Law"
-        ],
-        "Unrelated": [
-            "Music",
-            "Engineering"
-        ]
-    },
-    "International Relations": {
-        "Exact Match": [
-            "International Relations"
-        ],
-        "Closely Related": [
-            "Political Science",
-            "Global Studies",
-            "International Law"
-        ],
-        "Somewhat Related": [
-            "Economics",
-            "Sociology",
-            "Public Administration"
-        ],
-        "Weak Connection": [
-            "Business Management",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Performing Arts"
-        ]
-    },
-    "Psychology": {
-        "Exact Match": [
-            "Psychology"
-        ],
-        "Closely Related": [
-            "Clinical Psychology",
-            "Neuroscience"
-        ],
-        "Somewhat Related": [
-            "Public Health",
-            "Sociology"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Education"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Music"
-        ]
-    },
-    "Social Work": {
-        "Exact Match": [
-            "Social Work"
-        ],
-        "Closely Related": [
-            "Psychology",
-            "Public Administration"
-        ],
-        "Somewhat Related": [
-            "Education",
-            "Sociology"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Law"
-        ],
-        "Unrelated": [
-            "Mathematics",
-            "Engineering"
-        ]
-    },
-    "Graphic Design": {
-        "Exact Match": [
-            "Graphic Design"
-        ],
-        "Closely Related": [
-            "Digital Media",
-            "Interior Design"
-        ],
-        "Somewhat Related": [
-            "Animation",
-            "Marketing"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Law"
-        ]
-    },
-    "Fashion Design": {
-        "Exact Match": [
-            "Fashion Design"
-        ],
-        "Closely Related": [
-            "Textile Design",
-            "Visual Arts"
-        ],
-        "Somewhat Related": [
-            "Marketing",
-            "Interior Design"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Engineering"
-        ]
-    },
-    "Interior Design": {
-        "Exact Match": [
-            "Interior Design"
-        ],
-        "Closely Related": [
-            "Architecture",
-            "Graphic Design",
-            "Visual Arts"
-        ],
-        "Somewhat Related": [
-            "Marketing",
-            "Digital Media"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Physics"
-        ]
-    },
-    "Architecture": {
-        "Exact Match": [
-            "Architecture"
-        ],
-        "Closely Related": [
-            "Interior Design",
-            "Civil Engineering"
-        ],
-        "Somewhat Related": [
-            "Urban Planning",
-            "Graphic Design"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Marketing"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Law"
-        ]
-    },
-    "Theatre & Drama": {
-        "Exact Match": [
-            "Theatre & Drama"
-        ],
-        "Closely Related": [
-            "Film & TV",
-            "Performing Arts"
-        ],
-        "Somewhat Related": [
-            "Journalism",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Mathematics",
-            "Medicine"
-        ]
-    },
-    "Film & Television": {
-        "Exact Match": [
-            "Film & Television"
-        ],
-        "Closely Related": [
-            "Digital Media",
-            "Performing Arts",
-            "Journalism"
-        ],
-        "Somewhat Related": [
-            "Advertising",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Engineering"
-        ]
-    },
-    "Music Performance & Production": {
-        "Exact Match": [
-            "Music Performance & Production"
-        ],
-        "Closely Related": [
-            "Performing Arts",
-            "Theatre & Drama",
-            "Digital Media"
-        ],
-        "Somewhat Related": [
-            "Journalism",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Law"
-        ]
-    },
-    "Dance": {
-        "Exact Match": [
-            "Dance"
-        ],
-        "Closely Related": [
-            "Performing Arts",
-            "Theatre & Drama",
-            "Music"
-        ],
-        "Somewhat Related": [
-            "Film & Television",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Medicine"
-        ]
-    },
-    "Journalism": {
-        "Exact Match": [
-            "Journalism"
-        ],
-        "Closely Related": [
-            "Media & Communication",
-            "Public Relations"
-        ],
-        "Somewhat Related": [
-            "Political Science",
-            "Digital Media"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Nursing",
-            "Physics"
-        ]
-    },
-    "Public Relations (PR)": {
-        "Exact Match": [
-            "Public Relations (PR)"
-        ],
-        "Closely Related": [
-            "Journalism",
-            "Media & Communication",
-            "Advertising"
-        ],
-        "Somewhat Related": [
-            "Business",
-            "Digital Media"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Medicine"
-        ]
-    },
-    "Digital Media": {
-        "Exact Match": [
-            "Digital Media"
-        ],
-        "Closely Related": [
-            "Graphic Design",
-            "Film & Television",
-            "Advertising"
-        ],
-        "Somewhat Related": [
-            "Journalism",
-            "Marketing"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Physics"
-        ]
-    },
-    "Advertising": {
-        "Exact Match": [
-            "Advertising"
-        ],
-        "Closely Related": [
-            "Marketing",
-            "Public Relations",
-            "Digital Media"
-        ],
-        "Somewhat Related": [
-            "Journalism",
-            "Business"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Political Science"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Engineering"
-        ]
-    },
-    "Education & Pedagogy": {
-        "Exact Match": [
-            "Education & Pedagogy"
-        ],
-        "Closely Related": [
-            "Early Childhood Education",
-            "Teaching",
-            "Psychology"
-        ],
-        "Somewhat Related": [
-            "Public Administration",
-            "Sociology"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Medicine"
-        ]
-    },
-    "Agricultural Sciences": {
-        "Exact Match": [
-            "Agricultural Sciences"
-        ],
-        "Closely Related": [
-            "Environmental Science",
-            "Food Science",
-            "Biology"
-        ],
-        "Somewhat Related": [
-            "Chemistry",
-            "Biotechnology"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Music",
-            "Performing Arts"
-        ]
-    },
-    "Food Science & Technology": {
-        "Exact Match": [
-            "Food Science & Technology"
-        ],
-        "Closely Related": [
-            "Nutrition",
-            "Biotechnology",
-            "Agricultural Sciences"
-        ],
-        "Somewhat Related": [
-            "Chemistry",
-            "Public Health"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Law",
-            "Performing Arts"
-        ]
-    },
-    "Tourism & Travel Management": {
-        "Exact Match": [
-            "Tourism & Travel Management"
-        ],
-        "Closely Related": [
-            "Hospitality Management",
-            "Event Management"
-        ],
-        "Somewhat Related": [
-            "Business",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Journalism",
-            "Marketing"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Engineering"
-        ]
-    },
-    "Event Management": {
-        "Exact Match": [
-            "Event Management"
-        ],
-        "Closely Related": [
-            "Hospitality Management",
-            "Tourism & Travel Management"
-        ],
-        "Somewhat Related": [
-            "Business",
-            "Public Relations"
-        ],
-        "Weak Connection": [
-            "Psychology",
-            "Marketing"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Engineering"
-        ]
-    },
-    "Culinary Arts": {
-        "Exact Match": [
-            "Culinary Arts"
-        ],
-        "Closely Related": [
-            "Food Science",
-            "Hospitality Management"
-        ],
-        "Somewhat Related": [
-            "Business",
-            "Tourism"
-        ],
-        "Weak Connection": [
-            "Journalism",
-            "Marketing"
-        ],
-        "Unrelated": [
-            "Physics",
-            "Engineering"
-        ]
-    },
-    "Gender Studies": {
-        "Exact Match": [
-            "Gender Studies"
-        ],
-        "Closely Related": [
-            "Sociology",
-            "Feminist Studies",
-            "Political Science"
-        ],
-        "Somewhat Related": [
-            "Psychology",
-            "Public Policy",
-            "Anthropology"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Engineering",
-            "Medicine"
-        ]
-    },
-    "Visual Arts": {
-        "Exact Match": [
-            "Visual Arts"
-        ],
-        "Closely Related": [
-            "Fine Arts",
-            "Graphic Design",
-            "Digital Media"
-        ],
-        "Somewhat Related": [
-            "Architecture",
-            "Interior Design",
-            "Advertising"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Medicine",
-            "Engineering"
-        ]
-    },
-    "Sports and Exercise Sciences": {
-        "Exact Match": [
-            "Sports and Exercise Sciences"
-        ],
-        "Closely Related": [
-            "Kinesiology",
-            "Physiotherapy",
-            "Nutrition"
-        ],
-        "Somewhat Related": [
-            "Public Health",
-            "Psychology",
-            "Education"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Journalism"
-        ],
-        "Unrelated": [
-            "Law",
-            "Performing Arts"
-        ]
-    },
-    "Media & Communication": {
-        "Exact Match": [
-            "Media & Communication"
-        ],
-        "Closely Related": [
-            "Journalism",
-            "Public Relations"
-        ],
-        "Somewhat Related": [
-            "Advertising",
-            "Marketing"
-        ],
-        "Weak Connection": [
-            "Business",
-            "Psychology"
-        ],
-        "Unrelated": [
-            "Chemistry",
-            "Nursing"
+        "unrelated": [
+            "chemistry",
+            "nursing"
         ]
     }
 }

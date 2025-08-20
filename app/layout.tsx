@@ -13,6 +13,7 @@ import SocketProvider from "@/context/socket-context"; // Use your unified conte
 
 // ✅ Toast component
 import { Toaster } from "react-hot-toast";
+import ExchangeRateLoader from "@/components/ExchangeRateLoader";
 
 // ✅ Fonts
 const geistSans = localFont({
@@ -83,12 +84,12 @@ export default function RootLayout({
             src="https://www.facebook.com/tr?id=3269037289920282&ev=PageView&noscript=1"
           />
         </noscript>
-
+        <ExchangeRateLoader />
         <AuthProvider>
           {/* ✅ Only use the unified SocketProvider */}
           <SocketProvider>
             <UserProvider />
-            
+
             {children}
             <WhatsAppWidget />
             <Toaster position="top-center" />
