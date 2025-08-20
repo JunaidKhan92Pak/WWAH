@@ -39,17 +39,16 @@ interface DynamicTableData {
   teaching_language: string[];
   university: string[];
   countries: string[];
-  // Add optional alternative field names
-  country?: string[];
-  host_country?: string[];
-  hostCountry?: string[];
-  location?: string[];
+  host_country?: string;
+  location?: string;
+  hostCountry?: string;
+  country?: string;
 }
 
 interface ApplicableCoursesProps {
-  hostCountry?: string;
-  banner?: string;
   tableData?: DynamicTableData;
+  hostCountry: string;
+  banner: string;
 }
 
 export default function ApplicableCourses({
@@ -67,10 +66,7 @@ export default function ApplicableCourses({
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
-
   console.log("Host country:", hostCountry);
-  console.log("Banner:", banner);
-
   // Transform dynamic data to Course objects
   useEffect(() => {
     // Debug: Log the incoming tableData
@@ -129,24 +125,24 @@ export default function ApplicableCourses({
       setApplyingCourseId(course.id);
 
       // Debug: Log the course object to see what data we have
-      console.log("Applying for course:", course);
-      console.log("Host country from props:", hostCountry);
-      console.log("Banner from props:", banner);
+      console.log("Course object:", course);
+      console.log("Countries field:", course.countries);
 
-      // Prepare application data with proper fallbacks
+      // Fixed: Make sure all required fields are provided and not empty
       const applicationData = {
-        scholarshipName: course.course || `${course.university} Scholarship`,
-        hostCountry: hostCountry || course.countries || "Not specified",
-        banner: banner || "",
+        scholarshipName: course.course || `${course.course} Scholarship`, // Use course name as scholarship name
+        hostCountry: hostCountry || "Not specified", // Make sure this is not empty
+        banner: banner,
         courseName: course.course || "Not specified",
         duration: course.duration || "Not specified",
-        language: course.teachingLanguage || "Not specified",
+        language: course.teachingLanguage || "Not specified", // This maps to 'language' field
         universityName: course.university || "Not specified",
         scholarshipType: course.scholarshipType || "Not specified",
         deadline: course.deadline || "Not specified",
       };
 
       console.log("Submitting application with data:", applicationData);
+      // console.log("Host country value:", applicationData.hostCountry);
 
       const result = await applyCourse(applicationData);
 
@@ -154,37 +150,30 @@ export default function ApplicableCourses({
 
       if (result.success) {
         toast.success("Application submitted successfully!");
+        // router.push("/dashboard/overview");
+        router.push("/dashboard/overview#applied-scholarships");
 
-        // Redirect to dashboard with a slight delay to allow the toast to show
-        // setTimeout(() => {
-        //   router.push("/dashboard/overview");
-        // }, 1000);
+        // Optionally redirect to dashboard
+        // router.push("/dashboard/overview");
       } else {
         throw new Error(result.message || "Application failed");
       }
     } catch (error: unknown) {
       console.error("Error applying for course:", error);
-
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
+    const errorMessage = error instanceof Error ? error.message : String(error);
 
       // Handle different types of errors
       if (
         errorMessage.includes("login") ||
-        errorMessage.includes("authentication") ||
-        errorMessage.includes("Please login")
+        errorMessage.includes("authentication")
       ) {
         toast.error("Please login to apply for courses");
-        setTimeout(() => {
-          router.push("/signin");
-        }, 1500);
+        router.push("/signin");
       } else if (errorMessage.includes("already applied")) {
         toast.error("You have already applied for this course");
       } else if (errorMessage.includes("User not found")) {
         toast.error("User session expired. Please login again.");
-        setTimeout(() => {
-          router.push("/signin");
-        }, 1500);
+        router.push("/signin");
       } else {
         toast.error(
           errorMessage || "Failed to submit application. Please try again."
@@ -269,9 +258,9 @@ export default function ApplicableCourses({
   const actualFirst = sortedCourses.length === 0 ? 0 : indexOfFirstCourse + 1;
   const actualLast = Math.min(indexOfLastCourse, sortedCourses.length);
 
-  const getPaginationItems = (): (number | string)[] => {
+  const getPaginationItems = () => {
     const maxVisible = 7;
-    const items: (number | string)[] = [];
+    const items = [];
 
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
