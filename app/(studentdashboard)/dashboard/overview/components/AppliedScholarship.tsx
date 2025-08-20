@@ -50,7 +50,6 @@ const AppliedScholarship = () => {
 
   if (appliedCoursesArray.length === 0) {
     return (
-    
       <div>
         <div className="relative w-full h-[250px] flex items-center justify-center border border-gray-200 rounded-xl">
           {/* Blurred Dummy Card in Background */}
@@ -205,7 +204,6 @@ const AppliedScholarship = () => {
           Applied Scholarships
         </h1>
 
-        
         <div className="flex w-full relative">
           {!appliedCoursesArray || appliedCoursesArray.length === 0 ? (
             // Empty state with blur effect

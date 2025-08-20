@@ -13,7 +13,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { applyCourse } from "@/lib/appliedScholarships"; // Make sure this path is correct
+// import { applyCourse } from "@/lib/appliedScholarships"; // Make sure this path is correct
+import { getAuthToken } from "@/utils/authHelper";
+import { useUserStore } from "@/store/useUserData";
 
 interface Course {
   id: string;
@@ -39,10 +41,11 @@ interface DynamicTableData {
   teaching_language: string[];
   university: string[];
   countries: string[];
-  host_country?: string;
-  location?: string;
-  hostCountry?: string;
-  country?: string;
+  // Add optional alternative field names
+  country?: string[];
+  host_country?: string[];
+  hostCountry?: string[];
+  location?: string[];
 }
 
 interface ApplicableCoursesProps {
@@ -57,6 +60,7 @@ export default function ApplicableCourses({
   tableData,
 }: ApplicableCoursesProps) {
   const router = useRouter();
+  const { user, fetchUserProfile } = useUserStore();
   const [courses, setCourses] = useState<Course[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -119,7 +123,94 @@ export default function ApplicableCourses({
     }
   }, [tableData]);
 
+  useEffect(() => {
+    if (!user) {
+      fetchUserProfile();
+    }
+  }, []);
+  const token = getAuthToken();
   // Function to handle course application using API service
+  console.log(user, "fetchuserProfile");
+
+  // const handleApplyCourse = async (course: Course) => {
+  //   try {
+  //     setApplyingCourseId(course.id);
+
+  //     // Debug: Log the course object to see what data we have
+  //     console.log("Course object:", course);
+  //     console.log("Countries field:", course.countries);
+
+  //     // Fixed: Make sure all required fields are provided and not empty
+  //     const applicationData = {
+  //       scholarshipName: course.course || `${course.course} Scholarship`, // Use course name as scholarship name
+  //       hostCountry: hostCountry || "Not specified", // Make sure this is not empty
+  //       userId: user?._id,
+  //       banner: banner,
+  //       courseName: course.course || "Not specified",
+  //       duration: course.duration || "Not specified",
+  //       language: course.teachingLanguage || "Not specified", // This maps to 'language' field
+  //       universityName: course.university || "Not specified",
+  //       scholarshipType: course.scholarshipType || "Not specified",
+  //       deadline: course.deadline || "Not specified",
+  //     };
+
+  //     console.log("Submitting application with data:", applicationData);
+  //     // console.log("Host country value:", applicationData.hostCountry);
+
+  //     // const result = await applyCourse(applicationData);
+  //     const result = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/apply`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         credentials: "include", // Required to send session cookie
+
+  //         body: JSON.stringify(applicationData),
+  //       }
+  //     );
+  //     const data = await result.json();
+
+  //     console.log("Application result:", result);
+
+  //     if (result.ok) {
+  //       toast.success("Application submitted successfully!");
+  //       // router.push("/dashboard/overview");
+  //       router.push("/dashboard/overview#applied-scholarships");
+
+  //       // Optionally redirect to dashboard
+  //       // router.push("/dashboard/overview");
+  //     } else {
+  //       // throw new Error(result.message || "Application failed");
+  //       throw new Error(data.message || "Application failed");
+  //     }
+  //   } catch (error instanceof Error) {
+  //     console.error("Error applying for course:", error);
+  //     alert(error);
+
+  //     // Handle different types of errors
+  //     if (
+  //       error.message?.includes("login") ||
+  //       error.message?.includes("authentication")
+  //     ) {
+  //       toast.error("Please login to apply for courses");
+  //       router.push("/signin");
+  //     } else if (error.message?.includes("already applied")) {
+  //       toast.error("You have already applied for this course");
+  //     } else if (error.message?.includes("User not found")) {
+  //       toast.error("User session expired. Please login again.");
+  //       router.push("/signin");
+  //     } else {
+  //       toast.error(
+  //         error.message || "Failed to submit application. Please try again."
+  //       );
+  //     }
+  //   } finally {
+  //     setApplyingCourseId(null);
+  //   }
+  // };
   const handleApplyCourse = async (course: Course) => {
     try {
       setApplyingCourseId(course.id);
@@ -132,6 +223,7 @@ export default function ApplicableCourses({
       const applicationData = {
         scholarshipName: course.course || `${course.course} Scholarship`, // Use course name as scholarship name
         hostCountry: hostCountry || "Not specified", // Make sure this is not empty
+        userId: user?._id,
         banner: banner,
         courseName: course.course || "Not specified",
         duration: course.duration || "Not specified",
@@ -144,11 +236,24 @@ export default function ApplicableCourses({
       console.log("Submitting application with data:", applicationData);
       // console.log("Host country value:", applicationData.hostCountry);
 
-      const result = await applyCourse(applicationData);
+      // const result = await applyCourse(applicationData);
+      const result = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/apply`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include", // Required to send session cookie
+          body: JSON.stringify(applicationData),
+        }
+      );
+      const data = await result.json();
 
       console.log("Application result:", result);
 
-      if (result.success) {
+      if (result.ok) {
         toast.success("Application submitted successfully!");
         // router.push("/dashboard/overview");
         router.push("/dashboard/overview#applied-scholarships");
@@ -156,34 +261,38 @@ export default function ApplicableCourses({
         // Optionally redirect to dashboard
         // router.push("/dashboard/overview");
       } else {
-        throw new Error(result.message || "Application failed");
+        // throw new Error(result.message || "Application failed");
+        throw new Error(data.message || "Application failed");
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error("Error applying for course:", error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
 
       // Handle different types of errors
-      if (
-        errorMessage.includes("login") ||
-        errorMessage.includes("authentication")
-      ) {
-        toast.error("Please login to apply for courses");
-        router.push("/signin");
-      } else if (errorMessage.includes("already applied")) {
-        toast.error("You have already applied for this course");
-      } else if (errorMessage.includes("User not found")) {
-        toast.error("User session expired. Please login again.");
-        router.push("/signin");
+      if (error instanceof Error) {
+        if (
+          error.message?.includes("login") ||
+          error.message?.includes("authentication")
+        ) {
+          toast.error("Please login to apply for courses");
+          router.push("/signin");
+        } else if (error.message?.includes("already applied")) {
+          toast.error("You have already applied for this course");
+        } else if (error.message?.includes("User not found")) {
+          toast.error("User session expired. Please login again.");
+          router.push("/signin");
+        } else {
+          toast.error(
+            error.message || "Failed to submit application. Please try again."
+          );
+        }
       } else {
-        toast.error(
-          errorMessage || "Failed to submit application. Please try again."
-        );
+        // Handle non-Error objects
+        toast.error("Failed to submit application. Please try again.");
       }
     } finally {
       setApplyingCourseId(null);
     }
   };
-
   const handleSearch = (value: string) => {
     setIsLoading(true);
     setSearchTerm(value);
