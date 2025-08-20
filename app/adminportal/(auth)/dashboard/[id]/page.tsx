@@ -1,3 +1,4 @@
+// /adminportal/dashboard/[id]/page.tsx - Updated to fetch student-specific applied courses
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -16,8 +17,14 @@ import {
   Clock,
   X,
 } from "lucide-react";
-import { StatusTracker } from "../components/StatusTracker";
 import { PaymentTracker } from "../components/PaymentTracker";
+import AdminApplicationTracker from "../components/StatusTracker";
+import ScholarshipStatus from "../components/ScholarshipStatus";
+
+// Define the interface for status update function
+// interface StatusUpdateFunction {
+//   (courseId: string, newStatus: number): Promise<boolean>;
+// }
 
 interface UserData {
   Users: Array<{
@@ -150,7 +157,50 @@ interface UserData {
     paymentMethod?: string;
   }>;
 }
-export default function Page({ params }: { params: Promise<{ id: string }> }) {
+interface AppliedCourseTracking {
+  courseId: string;
+  applicationStatus: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+interface UniversityData {
+  university_name?: string;
+  universityImages?: {
+    banner?: string;
+    logo?: string;
+  };
+}
+interface AppliedCourseWithDetails {
+  _id: string;
+  courseId: string;
+  applicationStatus: number;
+  createdAt?: string;
+  updatedAt?: string;
+  course_title?: string;
+  universityData?: UniversityData;
+  countryname?: string;
+  intake?: string;
+  duration?: string;
+  annual_tuition_fee?: {
+    amount: number;
+    currency: string;
+  };
+  application_deadline?: string;
+  course_level?: string;
+  universityname?: string;
+  countryOfStudy?: string;
+  userId: string;
+  applicantId: string;
+  user: {
+    _id: string;
+  };
+}
+
+export default function AdminDashboardPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const [data, setData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -164,7 +214,198 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     type: string;
   } | null>(null);
 
-  //get student data
+  // Student-specific applied courses state
+  const [studentAppliedCourses, setStudentAppliedCourses] = useState<
+    AppliedCourseWithDetails[]
+  >([]);
+  const [loadingAppliedCourses, setLoadingAppliedCourses] = useState(false);
+  const [appliedCoursesError, setAppliedCoursesError] = useState<string | null>(
+    null
+  );
+
+  // Fetch student-specific applied courses
+  const fetchStudentAppliedCourses = async (userId: string) => {
+    if (!userId) return;
+
+    try {
+      setLoadingAppliedCourses(true);
+      setAppliedCoursesError(null);
+
+      // Step 1: Fetch applied courses tracking data for this specific student
+      const appliedCoursesResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedcourses/user/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!appliedCoursesResponse.ok) {
+        throw new Error(
+          `Failed to fetch applied courses: ${appliedCoursesResponse.status}`
+        );
+      }
+
+      const appliedCoursesResult = await appliedCoursesResponse.json();
+
+      if (
+        !appliedCoursesResult.success ||
+        !appliedCoursesResult.data?.appliedCourses
+      ) {
+        console.log("No applied courses found for student");
+        setStudentAppliedCourses([]);
+        setLoadingAppliedCourses(false);
+        return;
+      }
+
+      const appliedCoursesData = appliedCoursesResult.data.appliedCourses;
+
+      if (appliedCoursesData.length === 0) {
+        setStudentAppliedCourses([]);
+        setLoadingAppliedCourses(false);
+        return;
+      }
+
+      // Step 2: Fetch detailed course information
+      const detailedCoursesResponse = await fetch(
+        `/api/getfavouritecourse?ids=${encodeURIComponent(
+          JSON.stringify(appliedCoursesData)
+        )}&type=applied&includeApplicationData=true`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!detailedCoursesResponse.ok) {
+        throw new Error(
+          `Failed to fetch course details: ${detailedCoursesResponse.status}`
+        );
+      }
+
+      const detailedCoursesResult = await detailedCoursesResponse.json();
+
+      if (
+        detailedCoursesResult.success &&
+        detailedCoursesResult.appliedCourses
+      ) {
+        // Create tracking data map
+        const trackingDataMap = new Map();
+        appliedCoursesData.forEach((course: AppliedCourseTracking) => {
+          trackingDataMap.set(course.courseId, {
+            applicationStatus: course.applicationStatus,
+            createdAt: course.createdAt,
+            updatedAt: course.updatedAt,
+          });
+        });
+
+        // Combine course details with tracking data
+        const combinedData: AppliedCourseWithDetails[] =
+          detailedCoursesResult.appliedCourses.map(
+            (course: AppliedCourseWithDetails) => {
+              const trackingData = trackingDataMap.get(course._id);
+
+              return {
+                _id: course._id,
+                courseId: course._id,
+                applicationStatus: trackingData?.applicationStatus || 1,
+                createdAt: trackingData?.createdAt,
+                updatedAt: trackingData?.updatedAt,
+                course_title: course.course_title,
+                universityData: course.universityData,
+                countryname: course.countryname,
+                intake: course.intake,
+                duration: course.duration,
+                annual_tuition_fee: course.annual_tuition_fee,
+                application_deadline: course.application_deadline,
+                course_level: course.course_level,
+                universityname: course.universityData?.university_name,
+                countryOfStudy: course.countryname,
+              };
+            }
+          );
+
+        setStudentAppliedCourses(combinedData);
+      } else {
+        console.log("No detailed course data found");
+        setStudentAppliedCourses([]);
+      }
+    } catch (error) {
+      console.error("Error fetching student applied courses:", error);
+      setAppliedCoursesError(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
+      setStudentAppliedCourses([]);
+    } finally {
+      setLoadingAppliedCourses(false);
+    }
+  };
+
+  // Handle status updates from admin - FIXED VERSION
+  const handleStatusUpdate = async (
+    courseId: string,
+    newStatus: number
+  ): Promise<boolean> => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses/tracking/${courseId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            courseId, // ✅ Send courseId in the request body
+            applicationStatus: newStatus,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update course status");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update local state using the correct state setter
+        setStudentAppliedCourses((prev) =>
+          prev.map((course) =>
+            course.courseId === courseId
+              ? {
+                  ...course,
+                  applicationStatus: newStatus,
+                  updatedAt: new Date().toISOString(),
+                }
+              : course
+          )
+        );
+
+        console.log(
+          `Successfully updated course ${courseId} to status ${newStatus}`
+        );
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Failed to update course status:", error);
+      return false;
+    }
+  };
+
+  // Wrapper function for onClick events that need to call handleStatusUpdate
+  // const handleStatusUpdateClick =
+  //   (courseId: string, newStatus: number) =>
+  //   (event: React.MouseEvent<HTMLButtonElement>) => {
+  //     event.preventDefault();
+  //     handleStatusUpdate(courseId, newStatus);
+  //   };
+
+  // Get student data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -191,11 +432,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   }, []);
 
   useEffect(() => {
-    params.then((resolvedParams) => setStudentId(resolvedParams.id));
+    params.then((resolvedParams) => {
+      setStudentId(resolvedParams.id);
+      // Fetch applied courses for this specific student
+      fetchStudentAppliedCourses(resolvedParams.id);
+    });
   }, [params]);
 
   // Function to get file type from URL or file name
-  const getFileType = (url: string, fileName: string) => {
+  const getFileType = (url: string, fileName: string): string => {
     const extension =
       fileName.split(".").pop()?.toLowerCase() ||
       url.split(".").pop()?.toLowerCase();
@@ -211,7 +456,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   // Function to handle image loading
-  const handleImageLoad = (index: number) => {
+  const handleImageLoad = (index: number): void => {
     setImageLoadingStates((prev) => ({
       ...prev,
       [index]: false,
@@ -219,7 +464,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   // Function to handle image loading start
-  const handleImageLoadStart = (index: number) => {
+  const handleImageLoadStart = (index: number): void => {
     setImageLoadingStates((prev) => ({
       ...prev,
       [index]: true,
@@ -227,7 +472,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   // Function to download file
-  const handleDownload = async (url: string, fileName: string) => {
+  const handleDownload = async (
+    url: string,
+    fileName: string
+  ): Promise<void> => {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
@@ -246,30 +494,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   // Function to preview file
-  const handlePreview = (url: string, fileName: string) => {
+  const handlePreview = (url: string, fileName: string): void => {
     const fileType = getFileType(url, fileName);
     setPreviewFile({ url, name: fileName, type: fileType });
   };
 
-  // const handlePaymentUpdate = (
-  //   paymentId: string,
-  //   updatedPayment: Partial<Payment>
-  // ) => {
-  //   setData((prevData) => {
-  //     if (!prevData) return prevData;
-
-  //     const updatedPayments = prevData.payments.map((payment) =>
-  //       payment._id === paymentId ? { ...payment, ...updatedPayment } : payment
-  //     );
-
-  //     return {
-  //       ...prevData,
-  //       payments: updatedPayments,
-  //     };
-  //   });
-  // };
-
-  const handlePaymentDelete = (paymentId: string) => {
+  const handlePaymentDelete = (paymentId: string): void => {
     setData((prevData) => {
       if (!prevData) return prevData;
 
@@ -285,7 +515,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   // Close preview
-  const closePreview = () => {
+  const closePreview = (): void => {
     setPreviewFile(null);
   };
 
@@ -380,36 +610,46 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           </div>
         </div>
       </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/*/ adminportal/dashboard/[id]/page.tsx */}
         {/* Application Status Tracker */}
-        <StatusTracker
-          studentId={studentId ?? ""}
-          params={{ id: studentId ?? "" }}
+        <AdminApplicationTracker
+          appliedCoursesData={studentAppliedCourses}
+          onStatusUpdate={handleStatusUpdate}
+          loading={loadingAppliedCourses}
+          error={appliedCoursesError}
+          userId={studentId} // ✅ Add this line
         />
+        <ScholarshipStatus
+          userId={studentId}
+          isAdmin={true}
+          extractUserIdFromUrl={true}
+          readOnly={false} // ✅ Make sure this is false for admin updates
+        />
+        {/* Payment Tracker */}
         <PaymentTracker
           studentId={studentId ?? ""}
           params={{ id: studentId ?? "" }}
           onPaymentDelete={handlePaymentDelete}
         />
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Personal Info */}
           <div className="lg:col-span-1 space-y-6">
             {/* Quick Info Card */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
-              {" "}
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <User className="w-5 h-5 text-red-500" />
-                Quick Info{" "}
-              </h2>{" "}
+                Quick Info
+              </h2>
               <div className="space-y-3">
-                {" "}
                 <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-gray-400" />{" "}
-                  <span className="text-sm text-gray-600">{user.phone} </span>{" "}
-                </div>{" "}
+                  <Phone className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-600">{user.phone}</span>
+                </div>
               </div>
             </div>
+
             {/* Documents Summary */}
             {fileData.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border p-6">

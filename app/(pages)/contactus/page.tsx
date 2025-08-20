@@ -85,7 +85,7 @@ export default function ContactUs() {
     }
     // Clear any previous error messages
     setResponseMessage("");
-    console.log(form, "Hi hello");
+    // console.log(form, "Hi hello");
     // Make API request to send data
     try {
       const response = await fetch(
@@ -101,7 +101,7 @@ export default function ContactUs() {
       );
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       if (response.ok) {
         setResponseMessage("Message sent successfully!");

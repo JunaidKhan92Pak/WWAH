@@ -171,15 +171,16 @@ export const ScholarshipSuccessChances = ({
 
   // Calculate overall percentages
   const { overallSuccess, academicOverall, financialOverall } = useMemo(() => {
-    console.warn(academicOverall, financialOverall);
     const academicSum = academicFactors.reduce((sum, factor) => sum + factor.value, 0);
     const financialSum = financialFactors.reduce((sum, factor) => sum + factor.value, 0);
+    
 
     return {
       academicOverall: Math.round(academicSum / academicFactors.length),
       financialOverall: Math.round(financialSum / financialFactors.length),
       overallSuccess: Math.round((academicSum + financialSum) / (academicFactors.length + financialFactors.length)),
     };
+    console.warn(academicOverall, financialOverall);
   }, [academicFactors, financialFactors]);
 
   // Reset state when success chances change

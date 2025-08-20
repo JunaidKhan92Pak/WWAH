@@ -14,8 +14,13 @@ interface FavoriteUniversity {
     banner: string;
   };
 }
-
-// Course interface
+type UniversityData = {
+  _id: string;
+  name: string;
+  country: string;
+  // Add other university properties as needed
+};
+// Course interface for favorites
 interface FavoriteCourse {
   _id: string;
   course_title: string;
@@ -34,6 +39,44 @@ interface FavoriteCourse {
     currency: string;
   };
 }
+
+// Applied Course interface - ALIGNED WITH YOUR SCHEMA
+export interface AppliedCourse {
+  courseId: string;
+  applicationStatus: number; // 1-7 numeric status (only field from your schema)
+  isConfirmed: boolean; // ✅ NEW: Added confirmation field
+
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Enhanced applied course with course details
+export interface AppliedCourseWithDetails extends AppliedCourse {
+  courseDetails: {
+    _id: string;
+    course_title: string;
+    universityData?: any;
+    countryname: string;
+    intake?: string;
+    duration?: string;
+    annual_tuition_fee?: any;
+    application_deadline?: string;
+  };
+}
+
+export const getApplicationProgress = (applicationStatus: number): number => {
+  return Math.round((applicationStatus / 7) * 100);
+};
+
+export const getApplicationSteps = () => [
+  { step: 1, label: "Application Started", key: "started" },
+  { step: 2, label: "Documents Prepared", key: "documentsReady" },
+  { step: 3, label: "Application Submitted", key: "submitted" },
+  { step: 4, label: "Under Review", key: "underReview" },
+  { step: 5, label: "Interview Scheduled", key: "interview" },
+  { step: 6, label: "Decision Pending", key: "pending" },
+  { step: 7, label: "Final Decision", key: "decided" },
+];
 
 // Scholarship interface
 interface FavoriteScholarship {
@@ -59,6 +102,7 @@ interface FavoriteScholarship {
 
 // Applied Scholarship Course interface
 interface AppliedScholarshipCourse {
+  applicationStatus: number;
   _id: string;
   scholarshipName: string;
   hostCountry: string;
@@ -69,17 +113,19 @@ interface AppliedScholarshipCourse {
   universityName: string;
   scholarshipType: string;
   deadline: string;
+  appliedDate?: string;
   status?: string;
-  appliedAt?: string;
   createdAt?: string;
   updatedAt?: string;
+  // applicationStatus:number;
 }
 
 // Basic user profile data
 export interface User {
   favouriteScholarship: string[];
-  favouriteCourse: FavoriteCourse[];
+  favouriteCourse: string[];
   favouriteUniversity: string[];
+  appliedCourses: AppliedCourse[]; // Only courseId and applicationStatus
   appliedScholarshipCourses: AppliedScholarshipCourse[];
   _id: string;
   firstName: string;
@@ -130,6 +176,16 @@ export interface UserStore {
   isAuthenticated: boolean;
   lastUpdated: string | null;
 
+  // Favorite courses state
+  favoriteCourses: Record<string, FavoriteCourse>;
+  favoriteCourseIds: string[];
+  loadingFavoriteCourses: boolean;
+
+  // Applied courses state
+  appliedCourses: Record<string, AppliedCourseWithDetails>;
+  appliedCourseIds: string[];
+  loadingAppliedCourses: boolean;
+
   // Favorite universities state
   favoriteUniversities: Record<string, FavoriteUniversity>;
   favoriteUniversityIds: string[];
@@ -153,6 +209,34 @@ export interface UserStore {
   logout: () => void;
   getLastUpdatedDate: () => string | null;
 
+  // Favorite courses actions
+  fetchFavoriteCourses: () => Promise<void>;
+  toggleCourseFavorite: (
+    courseId: string,
+    action: "add" | "remove"
+  ) => Promise<boolean>;
+  getCourseFavoriteStatus: (courseId: string) => boolean;
+
+  // Applied courses actions
+  fetchAppliedCourses: () => Promise<void>;
+  addAppliedCourse: (
+    courseId: string,
+    applicationStatus?: number
+  ) => Promise<boolean>;
+  updateAppliedCourse: (
+    courseId: string,
+    applicationStatus: number
+  ) => Promise<boolean>;
+  updateCourseConfirmation: (
+    courseId: string,
+    isConfirmed: boolean
+  ) => Promise<boolean>;
+  removeAppliedCourse: (courseId: string) => Promise<boolean>;
+  getAppliedCourseStatus: (courseId: string) => boolean;
+  getAppliedCourseDetails: (
+    courseId: string
+  ) => AppliedCourseWithDetails | null;
+
   // Favorite universities actions
   fetchFavoriteUniversities: () => Promise<void>;
   toggleUniversityFavorite: (
@@ -171,10 +255,12 @@ export interface UserStore {
 
   // Applied scholarship courses actions
   fetchAppliedScholarshipCourses: () => Promise<void>;
+  fetchAppliedScholarship: (id: string) => Promise<void>;
   addAppliedScholarshipCourse: (
     applicationData: AppliedScholarshipCourse
   ) => Promise<boolean>;
   refreshApplications: () => Promise<void>;
+  getApplicationProgress: (courseId: string) => number;
 }
 
 // Default empty detailed info
@@ -193,6 +279,29 @@ const defaultDetailedInfo: DetailedInfo = {
   updatedAt: "",
 };
 
+function normalizeAppliedCourses(appliedCourses: any[]): AppliedCourse[] {
+  if (!Array.isArray(appliedCourses)) return [];
+
+  return appliedCourses.map((item) => {
+    // Handle old string format (fallback)
+    if (typeof item === "string") {
+      return {
+        courseId: item,
+        applicationStatus: 1, // Default to first status
+        isConfirmed: false, // ✅ NEW: Default confirmation status
+      };
+    }
+
+    // Handle object format - ONLY use schema fields
+    return {
+      courseId: item.courseId,
+      applicationStatus: item.applicationStatus || 1,
+      isConfirmed: item.isConfirmed || false, // ✅ NEW: Added isConfirmed field
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    };
+  });
+}
 // Create the unified store
 export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
@@ -201,6 +310,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
   error: null,
   isAuthenticated: false,
   lastUpdated: null,
+
+  // Favorite courses state
+  favoriteCourses: {},
+  favoriteCourseIds: [],
+  loadingFavoriteCourses: false,
+
+  // Applied courses state
+  appliedCourses: {},
+  appliedCourseIds: [],
+  loadingAppliedCourses: false,
 
   // Favorite universities state
   favoriteUniversities: {},
@@ -255,6 +374,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
         throw new Error(apiData.message || "Failed to fetch user data");
       }
 
+      // Normalize applied courses from backend
+      const normalizedAppliedCourses = normalizeAppliedCourses(
+        apiData.user.appliedCourses || []
+      );
+
       const userData: User = {
         ...apiData.user,
         favouriteScholarship: Array.isArray(apiData.user.favouriteScholarship)
@@ -266,6 +390,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         favouriteUniversity: Array.isArray(apiData.user.favouriteUniversity)
           ? apiData.user.favouriteUniversity
           : [],
+        appliedCourses: normalizedAppliedCourses,
         appliedScholarshipCourses: Array.isArray(
           apiData.user.appliedScholarshipCourses
         )
@@ -273,7 +398,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
           : [],
       };
 
-      // Set user data and update favorite IDs
+      // Set user data and update IDs
       set({
         user: userData,
         detailedInfo: apiData.detailedInfo || { ...defaultDetailedInfo },
@@ -281,12 +406,26 @@ export const useUserStore = create<UserStore>((set, get) => ({
         isAuthenticated: true,
         error: null,
         lastUpdated: apiData.user.updatedAt || new Date().toISOString(),
+        favoriteCourseIds: userData.favouriteCourse,
+        appliedCourseIds: normalizedAppliedCourses.map(
+          (course) => course.courseId
+        ),
         favoriteUniversityIds: userData.favouriteUniversity,
         favoriteScholarshipIds: userData.favouriteScholarship,
         appliedScholarshipCourseIds: userData.appliedScholarshipCourses.map(
           (app: AppliedScholarshipCourse) => app._id
         ),
       });
+
+      // Fetch details for favorite courses if there are any
+      if (userData.favouriteCourse.length > 0) {
+        get().fetchFavoriteCourses();
+      }
+
+      // Fetch details for applied courses if there are any
+      if (normalizedAppliedCourses.length > 0) {
+        get().fetchAppliedCourses();
+      }
 
       // Fetch favorite universities details if there are any
       if (userData.favouriteUniversity.length > 0) {
@@ -298,7 +437,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         get().fetchFavoriteScholarships();
       }
 
-      // Convert applied courses array to Record for the appliedScholarshipCourses state
+      // Convert applied scholarship courses array to Record
       if (userData.appliedScholarshipCourses.length > 0) {
         const applicationsMap: Record<string, AppliedScholarshipCourse> = {};
         userData.appliedScholarshipCourses.forEach(
@@ -320,6 +459,735 @@ export const useUserStore = create<UserStore>((set, get) => ({
         isAuthenticated: false,
       });
     }
+  },
+
+  fetchFavoriteCourses: async () => {
+    const state = get();
+    const token = getAuthToken();
+
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    if (!state.favoriteCourseIds || state.favoriteCourseIds.length === 0) {
+      console.log("No favorite course IDs found, setting empty state");
+      set({ favoriteCourses: {}, loadingFavoriteCourses: false });
+      return;
+    }
+
+    try {
+      set({ loadingFavoriteCourses: true });
+
+      const idsString = state.favoriteCourseIds.join(",");
+      const response = await fetch(
+        `/api/courses?type=favourite&ids=${idsString}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch favorite courses: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success && result.favouriteCourses) {
+        const coursesMap: Record<string, FavoriteCourse> = {};
+
+        result.favouriteCourses.forEach((course: any) => {
+          coursesMap[course._id] = {
+            _id: course._id,
+            course_title: course.course_title,
+            universityData: course.universityData,
+            countryname: course.countryname,
+            intake: course.intake,
+            duration: course.duration,
+            annual_tuition_fee: course.annual_tuition_fee,
+          };
+        });
+
+        set({
+          favoriteCourses: coursesMap,
+          loadingFavoriteCourses: false,
+          error: null,
+        });
+      } else {
+        throw new Error(result.message || "Failed to fetch favorite courses");
+      }
+    } catch (error) {
+      console.error("Error fetching favorite courses:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loadingFavoriteCourses: false,
+      });
+    }
+  },
+
+  // Updated fetchAppliedCourses method in your Zustand store
+  fetchAppliedCourses: async () => {
+    console.log("Fetching applied courses...");
+    const state = get();
+    const token = getAuthToken();
+
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    try {
+      set({ loadingAppliedCourses: true, error: null });
+
+      // Step 1: Fetch applied courses with tracking data from your backend
+      const appliedCoursesResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!appliedCoursesResponse.ok) {
+        throw new Error(
+          `Failed to fetch applied courses: ${appliedCoursesResponse.status}`
+        );
+      }
+
+      const appliedCoursesResult = await appliedCoursesResponse.json();
+
+      if (
+        !appliedCoursesResult.success ||
+        !appliedCoursesResult.data?.appliedCourses
+      ) {
+        console.log("No applied courses found, setting empty state");
+        set({
+          appliedCourses: {},
+          appliedCourseIds: [],
+          loadingAppliedCourses: false,
+          user: state.user
+            ? {
+                ...state.user,
+                appliedCourses: [],
+              }
+            : null,
+        });
+        return;
+      }
+
+      const appliedCoursesData = appliedCoursesResult.data.appliedCourses;
+      console.log("Applied courses data:", appliedCoursesData);
+
+      // Step 2: Update user state with the fetched applied courses
+      set({
+        user: state.user
+          ? {
+              ...state.user,
+              appliedCourses: appliedCoursesData,
+            }
+          : null,
+      });
+
+      if (appliedCoursesData.length === 0) {
+        set({
+          appliedCourses: {},
+          appliedCourseIds: [],
+          loadingAppliedCourses: false,
+        });
+        return;
+      }
+
+      // Step 3: Prepare course IDs and tracking data for detailed course fetch
+      const courseIds = appliedCoursesData.map(
+        (course: any) => course.courseId
+      );
+
+      // Create tracking data map
+      const trackingDataMap = new Map();
+      appliedCoursesData.forEach((course: any) => {
+        trackingDataMap.set(course.courseId, {
+          applicationStatus: course.applicationStatus,
+          isConfirmed: course.isConfirmed || false, // ✅ NEW: Added isConfirmed
+
+          createdAt: course.createdAt,
+          updatedAt: course.updatedAt,
+        });
+      });
+
+      console.log("Course IDs to fetch details:", courseIds);
+
+      // Step 4: Fetch detailed course information using your API
+      const detailedCoursesResponse = await fetch(
+        `/api/getfavouritecourse?ids=${encodeURIComponent(
+          JSON.stringify(appliedCoursesData)
+        )}&type=applied&includeApplicationData=true`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!detailedCoursesResponse.ok) {
+        throw new Error(
+          `Failed to fetch course details: ${detailedCoursesResponse.status}`
+        );
+      }
+
+      const detailedCoursesResult = await detailedCoursesResponse.json();
+      console.log("Detailed courses result:", detailedCoursesResult);
+
+      if (
+        detailedCoursesResult.success &&
+        detailedCoursesResult.appliedCourses
+      ) {
+        // const coursesMap = {};
+        const coursesMap: Record<string, AppliedCourseWithDetails> = {};
+
+        const courseIdsList: string[] = [];
+detailedCoursesResult.appliedCourses.forEach((course: any) => {
+  const courseId = course._id;
+  courseIdsList.push(courseId);
+
+  const trackingData = trackingDataMap.get(courseId);
+
+  coursesMap[courseId] = {
+    courseId: courseId,
+    applicationStatus: trackingData?.applicationStatus || 1,
+    isConfirmed: trackingData?.isConfirmed || false, // ✅ NEW: Added isConfirmed
+
+    createdAt: trackingData?.createdAt,
+    updatedAt: trackingData?.updatedAt,
+    courseDetails: {
+      _id: course._id,
+      course_title: course.course_title,
+      universityData: course.universityData,
+      countryname: course.countryname,
+      intake: course.intake || "",
+      duration: course.duration || "",
+      annual_tuition_fee: course.annual_tuition_fee || {
+        amount: 0,
+        currency: "USD",
+      },
+      application_deadline: course.application_deadline,
+    },
+  };
+});
+
+        console.log("Processed courses map:", coursesMap);
+
+        set({
+          appliedCourses: coursesMap,
+          appliedCourseIds: courseIdsList,
+          loadingAppliedCourses: false,
+          error: null,
+        });
+      } else {
+        // If detailed course fetch fails, still set the course IDs
+        set({
+          appliedCourseIds: courseIds,
+          loadingAppliedCourses: false,
+          error:
+            "Failed to fetch detailed course information, but applied courses loaded",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching applied courses:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loadingAppliedCourses: false,
+      });
+    }
+  },
+
+  // ✅ FIXED: Updated fetchAppliedScholarship method in your Zustand store
+  fetchAppliedScholarship: async (id: string) => {
+    console.log("Fetching applied scholarship courses for userId:", id);
+    const token = getAuthToken();
+
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    if (!id) {
+      set({ error: "User ID is required" });
+      return;
+    }
+
+    try {
+      set({ loadingApplications: true, error: null });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/my-applications/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch applied scholarship courses: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const result = await response.json();
+      console.log("API Response Data:", result);
+
+      if (result.success && result.data) {
+        const applications = result.data.applications || [];
+        console.log("Applications received:", applications);
+
+        const applicationsMap: Record<string, AppliedScholarshipCourse> = {};
+        const applicationIds: string[] = [];
+
+        applications.forEach((application: any) => {
+          if (application._id) {
+            const transformedApplication: AppliedScholarshipCourse = {
+              _id: application._id,
+              banner: application.banner || "",
+              scholarshipName:
+                application.scholarshipName || "Unknown Scholarship",
+              hostCountry: application.hostCountry || "Not specified",
+              courseName: application.courseName || "Not specified",
+              duration: application.duration || "Not specified",
+              language: application.language || "Not specified",
+              universityName: application.universityName || "Not specified",
+              scholarshipType: application.scholarshipType || "Not specified",
+              deadline: application.deadline || "Not specified",
+              status: application.status || "pending",
+              applicationStatus: application.applicationStatus || 1, // ✅ CRITICAL: Include this field
+              appliedDate: application.appliedDate,
+              createdAt: application.createdAt,
+              updatedAt: application.updatedAt,
+            };
+
+            applicationsMap[application._id] = transformedApplication;
+            applicationIds.push(application._id);
+          }
+        });
+
+        console.log("✅ Processed applications with status:", {
+          applicationsById: Object.keys(applicationsMap).map((id) => ({
+            id,
+            applicationStatus: applicationsMap[id].applicationStatus,
+          })),
+          applicationIds,
+          count: applicationIds.length,
+        });
+
+        set({
+          appliedScholarshipCourses: applicationsMap,
+          appliedScholarshipCourseIds: applicationIds,
+          loadingApplications: false,
+          error: null,
+        });
+      } else {
+        throw new Error(result.message || "Failed to fetch applications");
+      }
+    } catch (error) {
+      console.error("Error fetching applied scholarship courses:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loadingApplications: false,
+        appliedScholarshipCourseIds: [],
+      });
+    }
+  },
+
+  toggleCourseFavorite: async (courseId: string, action: "add" | "remove") => {
+    const token = getAuthToken();
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return false;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}courses/favorite`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            courseId,
+            action,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update course favorites");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        set((state) => {
+          const newFavoriteIds = result.favouriteCourse || [];
+
+          return {
+            favoriteCourseIds: newFavoriteIds,
+            user: state.user
+              ? {
+                  ...state.user,
+                  favouriteCourse: newFavoriteIds,
+                }
+              : null,
+          };
+        });
+
+        if (action === "remove") {
+          get().fetchFavoriteCourses();
+        }
+
+        return true;
+      } else {
+        throw new Error(result.message || "Failed to update course favorites");
+      }
+    } catch (error) {
+      console.error("Error toggling course favorite:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
+      return false;
+    }
+  },
+
+  // Updated to only use schema fields
+  addAppliedCourse: async (courseId: string, applicationStatus: number = 1) => {
+    const token = getAuthToken();
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return false;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}courses/apply`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            courseId,
+            action: "add",
+            trackingData: {
+              applicationStatus: applicationStatus,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to apply to course");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        set((state) => {
+          const newAppliedCourse: AppliedCourse = {
+            courseId,
+            applicationStatus,
+            isConfirmed: false,
+          };
+
+          const updatedAppliedCourses = [
+            ...(state.user?.appliedCourses || []),
+            newAppliedCourse,
+          ];
+
+          return {
+            user: state.user
+              ? {
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
+              : null,
+            appliedCourseIds: [...state.appliedCourseIds, courseId],
+          };
+        });
+
+        // Refresh applied courses to get full details
+        get().fetchAppliedCourses();
+        return true;
+      } else {
+        throw new Error(result.message || "Failed to apply to course");
+      }
+    } catch (error) {
+      console.error("Error adding applied course:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
+      return false;
+    }
+  },
+
+  updateAppliedCourse: async (courseId, applicationStatus) => {
+    const token = getAuthToken();
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return false;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses/tracking/${courseId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            applicationStatus: applicationStatus,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update applied course");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        set((state) => {
+          // Update the user's appliedCourses array
+          const updatedAppliedCourses =
+            state.user?.appliedCourses.map((course) =>
+              course.courseId === courseId
+                ? {
+                    ...course,
+                    applicationStatus,
+                    isConfirmed: course.isConfirmed,
+
+                    updatedAt: new Date().toISOString(),
+                  }
+                : course
+            ) || [];
+
+          // Update the appliedCourses map with detailed information
+          const updatedAppliedCoursesMap = {
+            ...state.appliedCourses,
+            [courseId]: {
+              ...state.appliedCourses[courseId],
+              applicationStatus,
+              updatedAt: new Date().toISOString(),
+            },
+          };
+
+          return {
+            user: state.user
+              ? {
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
+              : null,
+            appliedCourses: updatedAppliedCoursesMap,
+            error: null,
+          };
+        });
+
+        return true;
+      } else {
+        throw new Error(result.message || "Failed to update applied course");
+      }
+    } catch (error) {
+      console.error("Error updating applied course:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
+      return false;
+    }
+  },
+  updateCourseConfirmation: async (courseId: string, isConfirmed: boolean) => {
+    const token = getAuthToken();
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return false;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses/confirm/${courseId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            isConfirmed: isConfirmed,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update course confirmation");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        set((state) => {
+          // Update the user's appliedCourses array
+          const updatedAppliedCourses =
+            state.user?.appliedCourses.map((course) =>
+              course.courseId === courseId
+                ? {
+                    ...course,
+                    isConfirmed,
+                    updatedAt: new Date().toISOString(),
+                  }
+                : course
+            ) || [];
+
+          // Update the appliedCourses map with detailed information
+          const updatedAppliedCoursesMap = {
+            ...state.appliedCourses,
+            [courseId]: {
+              ...state.appliedCourses[courseId],
+              isConfirmed,
+              updatedAt: new Date().toISOString(),
+            },
+          };
+
+          return {
+            user: state.user
+              ? {
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
+              : null,
+            appliedCourses: updatedAppliedCoursesMap,
+            error: null,
+          };
+        });
+
+        return true;
+      } else {
+        throw new Error(
+          result.message || "Failed to update course confirmation"
+        );
+      }
+    } catch (error) {
+      console.error("Error updating course confirmation:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
+      return false;
+    }
+  },
+  removeAppliedCourse: async (courseId) => {
+    const token = getAuthToken();
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return false;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses/remove`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            courseId: courseId,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to remove applied course");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        set((state) => {
+          const updatedAppliedCourses =
+            state.user?.appliedCourses.filter(
+              (course) => course.courseId !== courseId
+            ) || [];
+
+          return {
+            user: state.user
+              ? {
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
+              : null,
+            appliedCourseIds: state.appliedCourseIds.filter(
+              (id) => id !== courseId
+            ),
+            appliedCourses: Object.fromEntries(
+              Object.entries(state.appliedCourses).filter(
+                ([key]) => key !== courseId
+              )
+            ),
+          };
+        });
+
+        return true;
+      } else {
+        throw new Error(result.message || "Failed to remove applied course");
+      }
+    } catch (error) {
+      console.error("Error removing applied course:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
+      return false;
+    }
+  },
+
+  getCourseFavoriteStatus: (courseId: string) => {
+    const state = get();
+    return state.favoriteCourseIds.includes(courseId);
+  },
+
+  getAppliedCourseStatus: (courseId: string) => {
+    const state = get();
+    return state.appliedCourseIds.includes(courseId);
+  },
+
+  getAppliedCourseDetails: (courseId: string) => {
+    const state = get();
+    return state.appliedCourses[courseId] || null;
   },
 
   fetchFavoriteUniversities: async () => {
@@ -440,11 +1308,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           scholarshipsMap[scholarship._id] = transformedScholarship;
         });
 
-        console.log(
-          "Number of scholarships in map:",
-          Object.keys(scholarshipsMap).length
-        );
-
         set({
           favoriteScholarships: scholarshipsMap,
           loadingScholarships: false,
@@ -514,7 +1377,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             scholarshipType: application.scholarshipType || "Not specified",
             deadline: application.deadline || "Not specified",
             status: application.status || "pending",
-            appliedAt: application.appliedAt,
+            applicationStatus: application.applicationStatus || 1, // ✅ ADD THIS LINE
+
+            appliedDate: application.appliedDate,
             createdAt: application.createdAt,
             updatedAt: application.updatedAt,
           };
@@ -523,12 +1388,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           applicationIds.push(application._id);
         });
 
-        console.log(
-          "Number of applications in map:",
-          Object.keys(applicationsMap).length
-        );
-
-        // Update both the Record and the user's array
         set({
           appliedScholarshipCourses: applicationsMap,
           appliedScholarshipCourseIds: applicationIds,
@@ -556,60 +1415,47 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  // Add applied scholarship course after successful application
-  addAppliedScholarshipCourse: async (
-    applicationData: AppliedScholarshipCourse
-  ): Promise<boolean> => {
-    try {
-      if (applicationData._id) {
-        const newApplication: AppliedScholarshipCourse = {
-          _id: applicationData._id,
-          banner: applicationData.banner || "",
-          scholarshipName:
-            applicationData.scholarshipName || "Unknown Scholarship",
-          hostCountry: applicationData.hostCountry || "Not specified",
-          courseName: applicationData.courseName || "Not specified",
-          duration: applicationData.duration || "Not specified",
-          language: applicationData.language || "Not specified",
-          universityName: applicationData.universityName || "Not specified",
-          scholarshipType: applicationData.scholarshipType || "Not specified",
-          deadline: applicationData.deadline || "Not specified",
-          status: applicationData.status || "pending",
-          appliedAt: applicationData.appliedAt || new Date().toISOString(),
-          createdAt: applicationData.createdAt,
-          updatedAt: applicationData.updatedAt,
-        };
+  addAppliedScholarshipCourse: async (applicationData: any) => {
+    const state = get();
 
-        set((currentState) => ({
-          appliedScholarshipCourseIds: [
-            ...currentState.appliedScholarshipCourseIds,
-            applicationData._id,
-          ],
-          appliedScholarshipCourses: {
-            ...currentState.appliedScholarshipCourses,
-            [applicationData._id]: newApplication,
+    // Update the user's appliedScholarshipCourses array with the new application ID
+    if (applicationData._id) {
+      set((currentState) => ({
+        appliedScholarshipCourseIds: [
+          ...currentState.appliedScholarshipCourseIds,
+          applicationData._id,
+        ],
+        user: currentState.user
+          ? {
+              ...currentState.user,
+              appliedScholarshipCourses: [
+                ...currentState.user.appliedScholarshipCourses,
+                applicationData._id,
+              ],
+            }
+          : null,
+        appliedScholarshipCourses: {
+          ...currentState.appliedScholarshipCourses,
+          [applicationData._id]: {
+            _id: applicationData._id,
+            scholarshipName: applicationData.scholarshipName,
+            hostCountry: applicationData.hostCountry,
+            courseName: applicationData.courseName,
+            duration: applicationData.duration,
+            language: applicationData.language,
+            universityName: applicationData.universityName,
+            scholarshipType: applicationData.scholarshipType,
+            deadline: applicationData.deadline,
+            status: applicationData.status || "pending",
+            appliedAt: applicationData.appliedAt || new Date().toISOString(),
+            createdAt: applicationData.createdAt,
+            updatedAt: applicationData.updatedAt,
           },
-          user: currentState.user
-            ? {
-                ...currentState.user,
-                appliedScholarshipCourses: [
-                  ...currentState.user.appliedScholarshipCourses,
-                  newApplication,
-                ],
-              }
-            : null,
-        }));
-
-        console.log("Successfully added new application to store");
-        return true;
-      }
-
-      console.warn("Application data missing _id, cannot add to store");
-      return false;
-    } catch (error) {
-      console.error("Error adding application to store:", error);
-      return false;
+        },
+      }));
     }
+
+    return true;
   },
 
   refreshApplications: async () => {
@@ -943,6 +1789,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
       appliedScholarshipCourses: {},
       appliedScholarshipCourseIds: [],
       loadingApplications: false,
+      favoriteCourses: {},
+      favoriteCourseIds: [],
+      loadingFavoriteCourses: false,
+      appliedCourses: {},
+      appliedCourseIds: [],
+      loadingAppliedCourses: false,
     });
   },
 
@@ -957,5 +1809,13 @@ export const useUserStore = create<UserStore>((set, get) => ({
       console.error("Error formatting last updated date:", error);
       return null;
     }
+  },
+
+  getApplicationProgress: (courseId: string) => {
+    const state = get();
+    const course = state.appliedCourses[courseId];
+    if (!course) return 0;
+
+    return Math.round((course.applicationStatus / 7) * 100);
   },
 }));

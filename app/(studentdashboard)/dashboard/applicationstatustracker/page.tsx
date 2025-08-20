@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import ActiveApplication from "./components/ActiveApplication";
+// import ActiveApplication from "./components/CourseTracker";
 // import CompletedApplication from "./components/CompletedApplication";
-import { Button } from "@/components/ui/button";
-import CompletedApplication from "./components/CompletedApplication";
 
+import { Button } from "@/components/ui/button";
+// import CompletedApplication from "./components/ScholarshipTracker";
+import ScholarshipTracker from "./components/ScholarshipTracker";
+import CourseTracker from "./components/CourseTracker";
 
 type Tab = {
   label: string;
@@ -13,8 +15,8 @@ type Tab = {
 
 const Page = () => {
   const tabs: Tab[] = [
-    { label: "Active Application", id: "activeapplication" },
-    { label: "Completed Application", id: "completedapplication" },
+    { label: "Self Finance", id: "activeapplication" },
+    { label: "Scholarship", id: "completedapplication" },
 
   ];
 
@@ -30,17 +32,18 @@ const Page = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`transition font-semibold text-sm md:text-lg px-8 rounded-t-xl rounded-b-none bg-transparent hover:bg-transaprent
-                                ${activeTab === tab.id
-                  ? "bg-[#C7161E] text-white" : "text-gray-600"
-                }`}
+                                ${
+                                  activeTab === tab.id
+                                    ? "bg-[#C7161E] text-white"
+                                    : "text-gray-600"
+                                }`}
             >
               {tab.label}
             </Button>
           ))}
         </div>
-        {activeTab === "activeapplication" && <ActiveApplication />}
-        {activeTab === "completedapplication" && <CompletedApplication />}
-
+        {activeTab === "activeapplication" && <CourseTracker/>}
+        {activeTab === "completedapplication" && <ScholarshipTracker />}
       </div>
     </>
   );

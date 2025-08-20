@@ -36,7 +36,7 @@ const routes = [
 const PageTrack = () => {
   const pathname = usePathname();
   const currentRoute = routes.find((route) => route.href === pathname);
-  console.log(currentRoute);
+  // console.log(currentRoute);
   return (
     <div className="">
       Step:

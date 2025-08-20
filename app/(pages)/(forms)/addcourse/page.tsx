@@ -47,7 +47,7 @@ export default function Page() {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData.course);
+    // console.log(formData.course);
     try {
       const response = await fetch("/api/addCourse", {
         method: "POST",

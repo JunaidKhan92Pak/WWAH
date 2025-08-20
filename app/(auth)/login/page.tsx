@@ -38,7 +38,7 @@ const Page = () => {
 
     try {
       const loginres = await loginAction(userData);
-      console.log("Login Response:", loginres); // 🔍 Debugging
+      // console.log("Login Response:", loginres); // 🔍 Debugging
 
       if (!loginres) {
         setGeneralError("No response from server.");

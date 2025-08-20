@@ -61,7 +61,7 @@ export const VisaRequirements: React.FC<VisaRequirementsProps> = ({
       content: " Biometric Information",
     },
   ];
-  console.log("Visa Requirements: hab", visa);
+  // console.log("Visa Requirements: hab", visa);
   
   return (
     <>

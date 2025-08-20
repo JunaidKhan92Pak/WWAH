@@ -90,7 +90,7 @@ const PopularPrograms: React.FC<PopularProgramsProps> = ({
   ];
   // Inside your component:
   const scrollRef = useRef<HTMLDivElement>(null);
-  console.log("PopularPrograms rendered with countryName:", costOfLiving);
+  // console.log("PopularPrograms rendered with countryName:", costOfLiving);
 
   // const scroll = (direction: "left" | "right") => {
   //   if (scrollRef.current) {

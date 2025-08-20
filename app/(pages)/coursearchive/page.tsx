@@ -189,7 +189,7 @@ const CourseArchive = () => {
       }
 
       const result = await response.json();
-      console.log("Favorite updated successfully", result);
+      // console.log("Favorite updated successfully", result);
 
       // Refresh user profile to get updated favorites
       await fetchUserProfile();

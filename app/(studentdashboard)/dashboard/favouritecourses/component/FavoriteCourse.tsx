@@ -224,7 +224,7 @@ const FavoriteCourse = () => {
             Start exploring courses and add them to your favorites!
           </p>
           <Link
-            href="/courses"
+            href="/coursearchive"
             className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
           >
             Browse Courses

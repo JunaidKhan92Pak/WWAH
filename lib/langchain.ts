@@ -572,6 +572,7 @@ function createQuerySpecificUserData(
       favouriteUniversity: originalUserData?.user?.favouriteUniversity || [],
       appliedScholarshipCourses:
         originalUserData?.user?.appliedScholarshipCourses || [],
+      appliedCourses: originalUserData?.user?.appliedCourses || [],
       createdAt: originalUserData?.user?.createdAt || new Date().toISOString(),
       updatedAt: originalUserData?.user?.updatedAt || new Date().toISOString(),
     },
@@ -611,51 +612,97 @@ function createQuerySpecificUserData(
           "Canada",
       },
     },
-    loading: false,
-    error: null,
-    isAuthenticated: false,
-    lastUpdated: null,
+    loading: originalUserData?.loading || false,
+    error: originalUserData?.error || null,
+    isAuthenticated: originalUserData?.isAuthenticated || false,
+    lastUpdated: originalUserData?.lastUpdated || null,
+
+    // Favorite courses state
+    favoriteCourses: originalUserData?.favoriteCourses || {},
+    favoriteCourseIds: originalUserData?.favoriteCourseIds || [],
+    loadingFavoriteCourses: originalUserData?.loadingFavoriteCourses || false,
+
+    // Applied courses state
+    appliedCourses: originalUserData?.appliedCourses || {},
+    appliedCourseIds: originalUserData?.appliedCourseIds || [],
+    loadingAppliedCourses: originalUserData?.loadingAppliedCourses || false,
 
     // Favorite universities state
-    favoriteUniversities: {},
-    favoriteUniversityIds: originalUserData?.user?.favouriteUniversity || [],
-    loadingFavorites: false,
+    favoriteUniversities: originalUserData?.favoriteUniversities || {},
+    favoriteUniversityIds: originalUserData?.favoriteUniversityIds || [],
+    loadingFavorites: originalUserData?.loadingFavorites || false,
 
     // Favorite scholarships state
-    favoriteScholarships: {},
-    favoriteScholarshipIds: originalUserData?.user?.favouriteScholarship || [],
-    loadingScholarships: false,
+    favoriteScholarships: originalUserData?.favoriteScholarships || {},
+    favoriteScholarshipIds: originalUserData?.favoriteScholarshipIds || [],
+    loadingScholarships: originalUserData?.loadingScholarships || false,
 
     // Applied scholarship courses state
-    appliedScholarshipCourses: {},
+    appliedScholarshipCourses:
+      originalUserData?.appliedScholarshipCourses || {},
     appliedScholarshipCourseIds:
-      originalUserData?.user?.appliedScholarshipCourses?.map((course) =>
-        typeof course === "string" ? course : course._id || course.toString()
-      ) || [],
-    loadingApplications: false,
+      originalUserData?.appliedScholarshipCourseIds || [],
+    loadingApplications: originalUserData?.loadingApplications || false,
 
-    // Action methods - Fix the type signatures
-    fetchUserProfile: async () => {},
-    updateUserProfile: async () => false, // Fixed: Return boolean
-    updateDetailedInfo: async () => false, // Fixed: Return boolean instead of void
-    setUser: () => {},
-    logout: () => {},
-    getLastUpdatedDate: (): string | null => null,
+    // Action methods - Preserve existing functions or provide defaults
+    fetchUserProfile: originalUserData?.fetchUserProfile || (async () => {}),
+    updateUserProfile:
+      originalUserData?.updateUserProfile || (async () => false),
+    updateDetailedInfo:
+      originalUserData?.updateDetailedInfo || (async () => false),
+    setUser: originalUserData?.setUser || (() => {}),
+    logout: originalUserData?.logout || (() => {}),
+    getLastUpdatedDate: originalUserData?.getLastUpdatedDate || (() => null),
+
+    // Favorite courses actions
+    fetchFavoriteCourses:
+      originalUserData?.fetchFavoriteCourses || (async () => {}),
+    toggleCourseFavorite:
+      originalUserData?.toggleCourseFavorite || (async () => false),
+    getCourseFavoriteStatus:
+      originalUserData?.getCourseFavoriteStatus || (() => false),
+
+    // Applied courses actions
+    fetchAppliedCourses:
+      originalUserData?.fetchAppliedCourses || (async () => {}),
+    addAppliedCourse: originalUserData?.addAppliedCourse || (async () => false),
+    updateAppliedCourse:
+      originalUserData?.updateAppliedCourse || (async () => false),
+    updateCourseConfirmation:
+      originalUserData?.updateCourseConfirmation || (async () => false),
+    removeAppliedCourse:
+      originalUserData?.removeAppliedCourse || (async () => false),
+    getAppliedCourseStatus:
+      originalUserData?.getAppliedCourseStatus || (() => false),
+    getAppliedCourseDetails:
+      originalUserData?.getAppliedCourseDetails || (() => null),
 
     // Favorite universities actions
-    fetchFavoriteUniversities: async () => {},
-    toggleUniversityFavorite: async () => false,
-    getFavoriteStatus: () => false,
+    fetchFavoriteUniversities:
+      originalUserData?.fetchFavoriteUniversities || (async () => {}),
+    toggleUniversityFavorite:
+      originalUserData?.toggleUniversityFavorite || (async () => false),
+    getFavoriteStatus: originalUserData?.getFavoriteStatus || (() => false),
 
     // Favorite scholarships actions
-    fetchFavoriteScholarships: async () => {},
-    toggleScholarshipFavorite: async () => false,
-    getScholarshipFavoriteStatus: () => false,
+    fetchFavoriteScholarships:
+      originalUserData?.fetchFavoriteScholarships || (async () => {}),
+    toggleScholarshipFavorite:
+      originalUserData?.toggleScholarshipFavorite || (async () => false),
+    getScholarshipFavoriteStatus:
+      originalUserData?.getScholarshipFavoriteStatus || (() => false),
 
     // Applied scholarship courses actions
-    fetchAppliedScholarshipCourses: async () => {},
-    addAppliedScholarshipCourse: async () => false,
-    refreshApplications: async () => {},
+    fetchAppliedScholarshipCourses:
+      originalUserData?.fetchAppliedScholarshipCourses || (async () => {}),
+    fetchAppliedScholarship:
+      originalUserData?.fetchAppliedScholarship || (async () => {}),
+    addAppliedScholarshipCourse:
+      originalUserData?.addAppliedScholarshipCourse || (async () => false),
+    refreshApplications:
+      originalUserData?.refreshApplications || (async () => {}),
+    getApplicationProgress:
+      originalUserData?.getApplicationProgress || (() => 0),
   };
 
   return querySpecificData;
