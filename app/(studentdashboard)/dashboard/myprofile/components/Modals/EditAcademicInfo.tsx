@@ -85,7 +85,7 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Submitting:", values); // Debugging
+    // console.log("Submitting:", values); // Debugging
     const gradeScore = Number(values.grade);
     const apiData = {
       studyLevel: values.qualification,

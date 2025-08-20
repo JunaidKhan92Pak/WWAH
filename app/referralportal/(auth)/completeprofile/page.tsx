@@ -76,7 +76,7 @@ const Step1 = () => {
       console.log(`There Is SOme Error ${error}`);
     }
   };
-  console.log(personalInfo.countryCode, "country code");
+  // console.log(personalInfo.countryCode, "country code");
   return (
     <div className="w-full">
       <section className="w-full">

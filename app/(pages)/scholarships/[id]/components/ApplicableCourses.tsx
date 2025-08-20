@@ -156,9 +156,9 @@ export default function ApplicableCourses({
         toast.success("Application submitted successfully!");
 
         // Redirect to dashboard with a slight delay to allow the toast to show
-        setTimeout(() => {
-          router.push("/dashboard/overview#applied-scholarships");
-        }, 1000);
+        // setTimeout(() => {
+        //   router.push("/dashboard/overview");
+        // }, 1000);
       } else {
         throw new Error(result.message || "Application failed");
       }

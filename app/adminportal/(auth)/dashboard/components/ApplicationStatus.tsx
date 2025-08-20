@@ -1,18 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import CircularProgress from "./CircularProgress";
+// import CircularProgress from "./CircularProgress";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { useUserStore } from "@/store/useUserData";
+import CircularProgress from "@/app/(studentdashboard)/dashboard/overview/components/CircularProgress";
 
 interface Course {
   _id: string;
@@ -34,15 +28,12 @@ interface Course {
   };
 }
 
-const ApplyingSection: React.FC = () => {
+const ApplicationStatus: React.FC = () => {
   const [detailedAppliedCourses, setDetailedAppliedCourses] = useState<
     Course[]
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
-  // ✅ NEW: Modal state
-  const [showContactModal, setShowContactModal] = useState<boolean>(false);
 
   // Helper function to get application step label
   const getApplicationStepLabel = (applicationStatus: number): string => {
@@ -72,15 +63,14 @@ const ApplyingSection: React.FC = () => {
     loadingAppliedCourses,
     fetchAppliedCourses,
     removeAppliedCourse,
-    updateCourseConfirmation,
   } = useUserStore();
-
-  console.log("ApplyingSection component rendered", {
+  // console.log(user, "useris")
+  console.log("ApplicationStatus component rendered", {
     appliedCourseIds,
     appliedCoursesCount: Object.keys(appliedCourses).length,
     userAppliedCourses: user?.appliedCourses,
   });
-
+  console.log(appliedCourses, "applied courses");
   // Function to fetch detailed course information for applied courses
   const fetchDetailedAppliedCourses = async (courseIds: string[]) => {
     if (courseIds.length === 0) {
@@ -170,20 +160,6 @@ const ApplyingSection: React.FC = () => {
     }
   }, [appliedCourseIds]);
 
-  // ✅ UPDATED: Function to handle remove button click
-  const handleRemoveButtonClick = async (courseId: string) => {
-    const applicationDetails = getApplicationDetails(courseId);
-
-    // If course is confirmed, show modal instead of removing
-    if (applicationDetails?.isConfirmed) {
-      setShowContactModal(true);
-      return;
-    }
-
-    // If not confirmed, proceed with normal removal
-    await handleRemoveCourse(courseId);
-  };
-
   // Function to remove course from applied courses using the store
   const handleRemoveCourse = async (courseId: string) => {
     console.log("Removing course:", courseId);
@@ -222,51 +198,7 @@ const ApplyingSection: React.FC = () => {
     }
   };
 
-  // Function to handle course confirmation
-  const handleCourseConfirmation = async (
-    courseId: string,
-    isConfirmed: boolean
-  ) => {
-    console.log("Updating course confirmation:", { courseId, isConfirmed });
-
-    const loadingToast = toast.loading(
-      isConfirmed ? "Confirming course..." : "Updating course...",
-      {
-        position: "top-center",
-      }
-    );
-
-    try {
-      const success = await updateCourseConfirmation(courseId, isConfirmed);
-
-      if (success) {
-        toast.dismiss(loadingToast);
-        toast.success(
-          isConfirmed
-            ? "Course confirmed successfully!"
-            : "Course confirmation updated!",
-          {
-            duration: 2000,
-            position: "top-center",
-          }
-        );
-      } else {
-        throw new Error("Failed to update course confirmation");
-      }
-    } catch (error: unknown) {
-      console.error("Error updating course confirmation:", error);
-      toast.dismiss(loadingToast);
-
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      toast.error(`Failed to update confirmation: ${errorMessage}`, {
-        duration: 4000,
-        position: "top-center",
-      });
-    }
-  };
-
-  console.log("Detailed applied courses:", detailedAppliedCourses);
+  // console.log("Detailed applied courses:", detailedAppliedCourses);
 
   // Get application details for a specific course (only schema fields)
   const getApplicationDetails = (courseId: string) => {
@@ -307,122 +239,29 @@ const ApplyingSection: React.FC = () => {
   // No applied courses state
   if (!appliedCourseIds || appliedCourseIds.length === 0) {
     return (
-    
-      <div>
-        <div className="relative w-full h-[250px] flex items-center justify-center border border-gray-200 rounded-xl">
-          {/* Blurred Dummy Card in Background */}
-          <div className="absolute inset-0">
-            <div className=" opacity-80 blur-sm">
-              <div
-                className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 
-                 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200 opacity-80 pointer-events-none"
-              >
-                <div className="bg-white px-0 py-2 rounded-lg overflow-hidden mt-2">
-                  <div className="flex">
-                    <div className="relative md:w-[200px] h-[150px] rounded-xl overflow-hidden">
-                      <Image
-                        src="/bg-usa.png"
-                        alt="Dummy Banner"
-                        fill
-                        className="object-cover"
-                        sizes="192px"
-                      />
-                    </div>
+      <div className="relative">
+        {/* Blur Overlay */}
+        <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-xl flex flex-col items-center justify-center p-8">
+          <h3 className="text-lg font-semibold mb-4 text-center">
+            No Course Applications Yet
+          </h3>
+          <p className="text-gray-600 mb-6 text-center">
+            Start your journey by applying to your first course!
+          </p>
+          <Link href="/coursearchive">
+            <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
+              Browse Courses
+            </Button>
+          </Link>
+        </div>
 
-                    <div className="flex-1 p-2">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="text-[12px] font-semibold">
-                            Scholarship Name
-                          </p>
-                          <p className="text-[12px]">Course Name</p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-1 text-[12px]">
-                        <div className="flex items-center gap-2">
-                          <Image
-                            src="/location.svg"
-                            alt="Location Icon"
-                            width={16}
-                            height={16}
-                          />
-                          <span className="text-gray-600">Country</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Image
-                            src="/clock.svg"
-                            alt="Duration Icon"
-                            width={16}
-                            height={16}
-                          />
-                          <span className="text-gray-600">Duration</span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <Image
-                            src="/lang.svg"
-                            alt="Language Icon"
-                            width={16}
-                            height={16}
-                          />
-                          <span className="text-gray-600">Language</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 mb-1">
-                        <Image
-                          src="/ielts/Dollar.svg"
-                          alt="University Icon"
-                          width={16}
-                          height={16}
-                        />
-                        <span className="text-gray-600 text-[12px]">
-                          University
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Image
-                          src="/vectoruni.svg"
-                          alt="Scholarship Type Icon"
-                          width={16}
-                          height={16}
-                        />
-                        <span className="text-gray-600 text-[12px]">
-                          Scholarship Type
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Image
-                          src="/calender.svg"
-                          alt="Deadline Icon"
-                          width={16}
-                          height={16}
-                        />
-                        <span className="text-gray-600 text-[12px]">
-                          Deadline
-                        </span>
-                      </div>
-                    </div>
-                    <Button className=" bg-red-600 px-6">hello</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Overlay Message */}
-          <div className="flex flex-col items-center justify-center h-[250px] text-center relative z-10 w-full">
-            <p className="font-semibold text-lg md:text-xl mb-2">
-              No Course Applications Yet{" "}
-            </p>
-            <p className="text-gray-600 mb-4">
-              Start your journey by applying to your first course!{" "}
-            </p>
-            <Link href="/coursearchive">
-              <button className="px-5 py-2 bg-[#C7161E] text-white rounded-full hover:bg-red-700">
-                Browse Scholarships
-              </button>
-            </Link>
+        {/* Placeholder content */}
+        <div className="opacity-30">
+          <p className="font-semibold text-lg md:text-xl mb-4">
+            You are applying for:
+          </p>
+          <div className="bg-gray-100 p-4 rounded-2xl">
+            <div className="h-48 bg-gray-200 rounded-2xl"></div>
           </div>
         </div>
       </div>
@@ -456,27 +295,6 @@ const ApplyingSection: React.FC = () => {
 
   return (
     <div className="relative">
-      {/* ✅ NEW: Contact Advisor Modal */}
-      <Dialog open={showContactModal} onOpenChange={setShowContactModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center">Course Confirmed</DialogTitle>
-            <DialogDescription className="text-center pt-4">
-              This course has been confirmed and cannot be removed. Please
-              contact your WWAH advisor for any changes.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-center pt-4">
-            <Button
-              onClick={() => setShowContactModal(false)}
-              className="bg-[#C7161E] hover:bg-[#f03c45] text-white"
-            >
-              Understood
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       <p className="font-semibold text-lg md:text-xl mb-4">
         You are applying for ({appliedCourseIds.length} course
         {appliedCourseIds.length !== 1 ? "s" : ""}):
@@ -491,26 +309,17 @@ const ApplyingSection: React.FC = () => {
       >
         {detailedAppliedCourses.map((course, index) => {
           const applicationDetails = getApplicationDetails(course._id);
-          const isConfirmed = applicationDetails?.isConfirmed || false;
 
           return (
             <div
               key={course._id || index}
               className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200"
             >
-              {/* ✅ UPDATED: Remove Button with conditional styling and click handler */}
+              {/* Remove Button */}
               <button
-                onClick={() => handleRemoveButtonClick(course._id)}
-                className={`absolute top-2 right-1 z-10 border rounded-full w-4 h-4 flex items-center justify-center transition-colors ${
-                  isConfirmed
-                    ? "border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50"
-                    : "border-gray-400 bg-white text-gray-400 hover:bg-red-600 hover:text-white cursor-pointer"
-                }`}
-                title={
-                  isConfirmed
-                    ? "Cannot remove confirmed course"
-                    : "Remove from applications"
-                }
+                onClick={() => handleRemoveCourse(course._id)}
+                className="absolute top-2 right-1 z-10 border border-gray-400 bg-white text-gray-400 hover:bg-red-600 hover:text-white rounded-full w-4 h-4 flex items-center justify-center"
+                title="Remove from applications"
               >
                 ×
               </button>
@@ -548,23 +357,23 @@ const ApplyingSection: React.FC = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="absolute top-2 right-2">
+                      <Image
+                        src="/hearti.svg"
+                        alt="favorite"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
                   </div>
-
-                  {/* Course Confirmation Checkbox */}
                   <div className="flex items-center gap-2 pt-2">
                     <input
                       type="checkbox"
-                      checked={applicationDetails?.isConfirmed || false}
-                      onChange={(e) =>
-                        handleCourseConfirmation(course._id, e.target.checked)
-                      }
+                      defaultChecked
                       className="accent-[#C7161E]"
-                      disabled={applicationDetails?.isConfirmed === true}
                     />
                     <label className="text-sm">
-                      {applicationDetails?.isConfirmed
-                        ? " Course confirmed - Cannot be changed"
-                        : "Yes, I want to apply for this course."}
+                      Yes, I want to apply for this course.
                     </label>
                   </div>
                 </div>
@@ -632,20 +441,55 @@ const ApplyingSection: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Application Status with Confirmation Badge */}
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs text-gray-600">
-                      Status:{" "}
-                      {getApplicationStepLabel(
-                        applicationDetails?.applicationStatus || 1
-                      )}
-                    </span>
-                    {applicationDetails?.isConfirmed && (
-                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                        Confirmed
-                      </span>
-                    )}
-                  </div>
+                  {/* Application Status - Only using schema fields */}
+                  {applicationDetails && (
+                    <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+                      <p className="text-xs text-gray-600 mb-2">
+                        Application Progress:
+                      </p>
+
+                      {/* Progress bar based on applicationStatus (1-7) */}
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div
+                          className="bg-[#C7161E] h-2 rounded-full transition-all duration-300"
+                          style={{
+                            width: `${getApplicationProgress(
+                              applicationDetails.applicationStatus || 1
+                            )}%`,
+                          }}
+                        ></div>
+                      </div>
+
+                      {/* Status labels - Only using schema data */}
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+                          {getApplicationStepLabel(
+                            applicationDetails.applicationStatus || 1
+                          )}
+                        </span>
+                      </div>
+
+                      {/* Application dates from schema */}
+                      <div className="mt-2 text-xs text-gray-500">
+                        {applicationDetails.createdAt && (
+                          <div>
+                            Applied:{" "}
+                            {new Date(
+                              applicationDetails.createdAt
+                            ).toLocaleDateString()}
+                          </div>
+                        )}
+                        {applicationDetails.updatedAt && (
+                          <div>
+                            Last Updated:{" "}
+                            {new Date(
+                              applicationDetails.updatedAt
+                            ).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -666,14 +510,19 @@ const ApplyingSection: React.FC = () => {
                   }
                 />
 
-                {/* Confirmation Status Indicator */}
-                {/* {applicationDetails?.isConfirmed && (
+                {/* Show current step */}
+                {applicationDetails && (
                   <div className="mt-2 text-center">
-                    <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                      ✓ Confirmed
-                    </div>
+                    <p className="text-xs text-gray-600">
+                      Step {applicationDetails.applicationStatus || 1} of 7
+                    </p>
+                    <p className="text-xs font-medium">
+                      {getApplicationStepLabel(
+                        applicationDetails.applicationStatus || 1
+                      )}
+                    </p>
                   </div>
-                )} */}
+                )}
               </div>
             </div>
           );
@@ -695,4 +544,4 @@ const ApplyingSection: React.FC = () => {
   );
 };
 
-export default ApplyingSection;
+export default ApplicationStatus;

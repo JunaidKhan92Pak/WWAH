@@ -77,7 +77,7 @@ const VerifyOtp = () => {
 
       if (verifyRes?.success) {
         setSuccessMessage("OTP verified successfully!");
-        console.log("OTP verified successfully! Redirecting...");
+        // console.log("OTP verified successfully! Redirecting...");
 
         // Only redirect on successful verification
         setTimeout(() => {
@@ -100,7 +100,7 @@ const VerifyOtp = () => {
       });
 
       const data = await res.json();
-      console.log("Resending OTP...", data);
+      // console.log("Resending OTP...", data);
 
       if (res.ok) {
         setOtp(["", "", "", "", "", ""]);

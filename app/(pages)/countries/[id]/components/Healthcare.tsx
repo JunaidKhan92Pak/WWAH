@@ -9,7 +9,7 @@ interface HealthcareProps {
 const Healthcare: React.FC<HealthcareProps> = ({ health, countryName }) => {
   const [showMore, setShowMore] = useState(false);
 
-  console.log("Healthcare Data:", health);
+  // console.log("Healthcare Data:", health);
   return (
     <>
       <section className="bg-gray-50 py-4 lg:pt-6 w-full">

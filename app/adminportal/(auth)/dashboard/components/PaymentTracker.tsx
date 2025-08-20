@@ -311,7 +311,7 @@ export const PaymentTracker: React.FC<PaymentTrackerProps> = ({
         }
 
         const jsonData = await res.json();
-        console.log(jsonData, "res from payment update api");
+        // console.log(jsonData, "res from payment update api");
 
         // Handle the updated API response structure with better error handling
         if (jsonData.success && jsonData.data && Array.isArray(jsonData.data)) {

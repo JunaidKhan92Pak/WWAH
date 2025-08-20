@@ -47,16 +47,16 @@ const ApplicationInfo = () => {
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form submitted");
+    // console.log("Form submitted");
     form.handleSubmit(onSubmit)();
   };
 
   // ✅ Function to Handle Form Submission
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Form submission started");
+    // console.log("Form submission started");
     try {
       setIsSubmitting(true);
-      console.log("Form data:", data);
+      // console.log("Form data:", data);
       // Create a formatted data object to match the expected API structure
       const formattedData = {
         ...data,
@@ -108,7 +108,7 @@ const ApplicationInfo = () => {
       );
 
       const result = await response.json();
-      console.log("API Response:", result);
+      // console.log("API Response:", result);
 
       if (result.success) {
         toast.success("Basic information saved successfully!");
