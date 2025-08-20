@@ -62,15 +62,7 @@ const ApplyingSection: React.FC = () => {
     },
   ];
 
-  // Helper function to get application step label
-  // const getApplicationStepLabel = (applicationStatus: number): string => {
-  //   const step = applicationSteps.find((s) => s.step === applicationStatus);
-  //   return step ? step.label : "Unknown Step";
-  // };
-
-  // const getApplicationProgress = (applicationStatus: number): number => {
-  //   return Math.round((applicationStatus / 7) * 100);
-  // };
+ 
 
   // Get data from the store
   const {
@@ -82,12 +74,11 @@ const ApplyingSection: React.FC = () => {
     // removeAppliedCourse,
   } = useUserStore();
 
-  // console.log("ApplyingSection component rendered", {
-  //   appliedCourseIds,
-  //   appliedCoursesCount: Object.keys(appliedCourses).length,
-  //   userAppliedCourses: user?.appliedCourses,
-  // });
-
+ 
+// const confirmedAppliedCourseIds = appliedCourseIds.filter((courseId) => {
+//     const appliedCourse = appliedCourses[courseId];
+//     return appliedCourse?.isConfirmed === true;
+//   });
   // Function to fetch detailed course information for applied courses
   const fetchDetailedAppliedCourses = async (courseIds: string[]) => {
     if (courseIds.length === 0) {
