@@ -2,7 +2,7 @@ import { getAuthToken } from '@/utils/authHelper';
 import { create } from 'zustand';
 
 type LanguageProficiency = {
-    score: string;
+    score: string | number; // allow both string and number
     test: string;
 };
 
@@ -14,12 +14,18 @@ type StudyPreferenced = {
 type SuccessData = {
     studyLevel: string;
     gradetype: string;
-    grade: number;  
+    grade: number;
     dateOfBirth: string;
     nationality: string;
     majorSubject: string;
-    livingCosts: string;
-    tuitionFee: string;
+    costofliving?: {
+        amount: number;
+        currency: string;
+    };
+    tutionfee?: {
+        amount: number;
+        currency: string;
+    };
     languageProficiency: LanguageProficiency;
     workExperience: string;
     studyPreferenced: StudyPreferenced;
@@ -43,7 +49,7 @@ export const useUserInfo = create<Store>((set, get) => ({
     fetchedOnce: false,
 
     fetchUserSuccessInfo: async () => {
-        const token  = getAuthToken();
+        const token = getAuthToken();
         if (!token) {
             set({
                 isLoggedIn: false,
@@ -58,13 +64,13 @@ export const useUserInfo = create<Store>((set, get) => ({
         // Don't refetch if already fetched
         if (get().fetchedOnce) return;
         set({ loading: true, error: null, isLoggedIn: true });
-     
+
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}success-chance`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const result = await res.json();
-            console.log(result, "result from success chance api");
+            // console.log(result, "result from success chance api");
 
             if (result.success && result.data) {
                 set({

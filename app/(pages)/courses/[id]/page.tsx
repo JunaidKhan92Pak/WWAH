@@ -71,6 +71,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       embassyDocuments: [];
       universityDocuments: [];
     };
+    // courseEmbedding: {
+    //   text: string;
+    //   embedding: number[];
+    //   metadata: Record<string, any>;
+    // } | null;
+    costOfLiving?: {
+      amount: number;
+      currency: string;
+    };
   }
   const tabs = [
     { name: "Course Overview", id: "courseOverview" },
@@ -116,6 +125,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         const res = await fetch(`/api/course?id=${id}`);
         if (!res.ok) throw new Error("Failed to fetch course data");
         const jsonData = await res.json();
+        // console.log("Fetched Course Data:", jsonData);
         if (!jsonData.courseData) throw new Error("Course data not found");
         setData(jsonData);
       } catch (err) {
@@ -351,7 +361,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       {/* progress bar  */}
-      <ProgressSection data={data?.courseData} />
+      <ProgressSection data={data?.courseData} costOfLiving={data?.costOfLiving} />
 
       {/* English Requirnment Section      */}
       <EnglishRequirement data={data?.courseData} />

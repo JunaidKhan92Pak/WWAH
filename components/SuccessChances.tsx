@@ -9,7 +9,8 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { ArrowRight, GraduationCap, AlertCircle } from "lucide-react";
 import { Combobox } from "./ui/combobox";
-import { majorsAndDisciplines, studyDestinations } from "../lib/constant";
+import { studyDestinations } from "../lib/constant";
+import synonyms from "@/synonyms.json";
 import { getNames } from "country-list";
 import currency from "currency-codes";
 import {
@@ -101,7 +102,6 @@ const questions: Question[] = [
       "Master",
       "MPhil",
       "PhD",
-      "Any Other (Specify)",
     ],
   },
   {
@@ -706,7 +706,7 @@ const SuccessChances = () => {
                       {q.type === "major" && (
                         <div className={hasFieldError ? 'ring-2 ring-red-200 rounded-lg' : ''}>
                           <Combobox
-                            options={majorsAndDisciplines}
+                            options={Object.keys(synonyms)}
                             value={(answers[q.id] as string) || ""}
                             onChange={(val) => handleAnswer(val, q.id)}
                             placeholder={q.placeholder}
