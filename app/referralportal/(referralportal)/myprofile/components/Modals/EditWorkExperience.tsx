@@ -13,19 +13,23 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/store/useUserData";
 
 const workExperienceSchema = z.object({
   hasWorkExperience: z.boolean(),
-  workExperience: z.string().optional(),
+  workExperienceDetails: z.string().optional(),
+  hasBrandAmbassadorExperience: z.boolean(),
 });
 
 type WorkExperienceForm = z.infer<typeof workExperienceSchema>;
 
 interface WorkExperienceData {
   workExperience: number;
+  workExperienceDetails?: string;
+  hasBrandAmbassadorExperience?: boolean;
 }
 
 const EditWorkExperience = ({
@@ -38,12 +42,13 @@ const EditWorkExperience = ({
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const { updateDetailedInfo } = useUserStore();
-  console.log(`${data.workExperience} `, "workExperience");
+
   const form = useForm<WorkExperienceForm>({
     resolver: zodResolver(workExperienceSchema),
     defaultValues: {
-      hasWorkExperience: false,
-      workExperience: `${data.workExperience} `,
+      hasWorkExperience: data.workExperience > 0,
+      workExperienceDetails: data.workExperienceDetails || "",
+      hasBrandAmbassadorExperience: data.hasBrandAmbassadorExperience || false,
     },
   });
 
@@ -53,9 +58,11 @@ const EditWorkExperience = ({
     try {
       const transformedValues = {
         hasWorkExperience: values.hasWorkExperience,
-        workExperience: Number(values.workExperience),
+        workExperience: values.hasWorkExperience ? 1 : 0, // Simple conversion for API
+        workExperienceDetails: values.workExperienceDetails,
+        hasBrandAmbassadorExperience: values.hasBrandAmbassadorExperience,
       };
-      console.log(Number(values.workExperience), "values");
+
       const response = await updateDetailedInfo(transformedValues);
       if (response !== undefined) {
         setSuccessOpen(true);
@@ -95,7 +102,7 @@ const EditWorkExperience = ({
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="!rounded-2xl max-w-[300px] md:max-w-[500px]">
+        <DialogContent className="!rounded-2xl max-w-[90vw] md:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Work Experience</DialogTitle>
             <p className="text-sm text-gray-500">
@@ -105,6 +112,7 @@ const EditWorkExperience = ({
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Do you have any work experience? */}
               <FormField
                 control={form.control}
                 name="hasWorkExperience"
@@ -129,26 +137,52 @@ const EditWorkExperience = ({
                 )}
               />
 
+              {/* Work Experience Details - Show only if user has work experience */}
               {hasWorkExperience && (
-                <div className="grid gap-6">
-                  <FormField
-                    control={form.control}
-                    name="workExperience"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Years of Experience</FormLabel>
-                        <Input
-                          {...field}
-                          type="text"
-                          min="0"
-                          placeholder="Enter number of years"
-                          className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm mt-2"
-                        />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="workExperienceDetails"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Please describe your work experience
+                      </FormLabel>
+                      <Textarea
+                        {...field}
+                        placeholder="I have 1 year experience of teaching at Allied School"
+                        className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm min-h-[80px] resize-none"
+                      />
+                    </FormItem>
+                  )}
+                />
               )}
+
+              {/* Brand Ambassador Experience */}
+              <FormField
+                control={form.control}
+                name="hasBrandAmbassadorExperience"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Have you worked as a brand ambassador before?
+                    </FormLabel>
+                    <RadioGroup
+                      onValueChange={(value) => field.onChange(value === "yes")}
+                      value={field.value ? "yes" : "no"}
+                      className="flex space-x-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="brand-yes" />
+                        <FormLabel htmlFor="brand-yes">Yes</FormLabel>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="brand-no" />
+                        <FormLabel htmlFor="brand-no">No</FormLabel>
+                      </div>
+                    </RadioGroup>
+                  </FormItem>
+                )}
+              />
 
               <Button type="submit" className="w-full md:w-[40%] bg-[#C7161E]">
                 Update Work Experience

@@ -72,7 +72,7 @@ export function Sidebar() {
         </h2>
         <p className="text-xs text-gray-500">{user?.email}</p>
         <div className="w-full">
-          <Link href="/portal/myprofile">
+          <Link href="/referralportal/myprofile">
             <Button className="mt-1 bg-red-700 hover:bg-red-600 text-white w-full">
               My Profile
             </Button>

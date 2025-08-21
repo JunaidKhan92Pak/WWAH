@@ -38,12 +38,17 @@ const EditWorkExperience = ({
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const { updateDetailedInfo } = useUserStore();
+
   console.log(`${data.workExperience} `, "workExperience");
+
   const form = useForm<WorkExperienceForm>({
     resolver: zodResolver(workExperienceSchema),
     defaultValues: {
-      hasWorkExperience: false,
-      workExperience: `${data.workExperience} `,
+      // Fix: Set hasWorkExperience based on actual data
+      hasWorkExperience: data.workExperience > 0,
+      // Fix: Convert number to string properly
+      workExperience:
+        data.workExperience > 0 ? data.workExperience.toString() : "0",
     },
   });
 
@@ -51,13 +56,18 @@ const EditWorkExperience = ({
 
   async function onSubmit(values: WorkExperienceForm) {
     try {
+      // Fix: Send the correct field name and handle the boolean logic
       const transformedValues = {
-        hasWorkExperience: values.hasWorkExperience,
-        workExperience: Number(values.workExperience),
+        // Send 'years' instead of 'workExperience' to match backend expectation
+        years: values.hasWorkExperience
+          ? Number(values.workExperience || 0)
+          : 0,
       };
-      console.log(Number(values.workExperience), "values");
+
+      console.log("Sending to backend:", transformedValues);
+
       const response = await updateDetailedInfo(transformedValues);
-      if (response !== undefined) {
+      if (response !== undefined && response === true) {
         setSuccessOpen(true);
         setTimeout(() => {
           setSuccessOpen(false);
@@ -71,6 +81,14 @@ const EditWorkExperience = ({
     }
   }
 
+  // Fix: Reset workExperience field when hasWorkExperience changes
+  const handleWorkExperienceChange = (value: boolean) => {
+    form.setValue("hasWorkExperience", value);
+    if (!value) {
+      form.setValue("workExperience", "0");
+    }
+  };
+
   return (
     <div className="flex flex-col items-start space-y-2">
       <p className="text-gray-600 text-base">Work Experience:</p>
@@ -82,6 +100,12 @@ const EditWorkExperience = ({
           height={16}
         />
         <p className="text-sm">
+          {/* Fix: Show proper work experience text */}
+          {data.workExperience > 0
+            ? `${data.workExperience} year${
+                data.workExperience !== 1 ? "s" : ""
+              } - `
+            : "No work experience - "}
           last updated on {new Date(updatedAt).toLocaleDateString("en-GB")}
         </p>
         <Image
@@ -112,7 +136,9 @@ const EditWorkExperience = ({
                   <FormItem>
                     <FormLabel>Do you have any work experience?</FormLabel>
                     <RadioGroup
-                      onValueChange={(value) => field.onChange(value === "yes")}
+                      onValueChange={(value) =>
+                        handleWorkExperienceChange(value === "yes")
+                      }
                       value={field.value ? "yes" : "no"}
                       className="flex space-x-4"
                     >
@@ -139,8 +165,10 @@ const EditWorkExperience = ({
                         <FormLabel>Years of Experience</FormLabel>
                         <Input
                           {...field}
-                          type="text"
+                          type="number"
                           min="0"
+                          max="50"
+                          step="1"
                           placeholder="Enter number of years"
                           className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm mt-2"
                         />

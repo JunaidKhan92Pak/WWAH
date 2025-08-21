@@ -191,7 +191,7 @@ export default function EditPersonalInfo({ data }: { data: DetailedInfo }) {
   return (
     <>
       <div className="flex flex-col items-start space-y-2">
-        <p className="text-gray-600 text-base">Personal Information:</p>
+        <p className="text-gray-600 text-base">Basic Details:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
             src="/DashboardPage/User.svg"
@@ -220,7 +220,7 @@ export default function EditPersonalInfo({ data }: { data: DetailedInfo }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="!rounded-2xl max-w-[300px] md:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Edit Personal Info</DialogTitle>
+            <DialogTitle>Edit Basic Details</DialogTitle>
             <p className="text-sm text-gray-500">
               You can change this information once in 20 days.
             </p>
