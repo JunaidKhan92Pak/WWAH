@@ -19,11 +19,14 @@ export const AuthProvider = ({ children }) => {
 
   const loginAction = async (userData) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}signin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signin`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        }
+      );
 
       const loggedInUser = await res.json();
       if (!loggedInUser.success) {
@@ -50,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   const signupAction = async (userData) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}signup`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -228,7 +231,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log(`There was an error during logout: ${error}`);
     }
-  };
+  };  
 
   return (
     <AuthContext.Provider

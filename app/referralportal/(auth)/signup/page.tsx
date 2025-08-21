@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-// import { MdOutlineRepeat } from "react-icons/md";
+
 import {
   Mail,
   User,
@@ -13,17 +14,54 @@ import {
   AlertCircle,
   Loader,
 } from "lucide-react";
+// Declare Google API types
+interface GoogleConfig {
+  client_id: string;
+  callback: (response: GoogleResponse) => void;
+  auto_select: boolean;
+}
+
+interface GoogleButtonConfig {
+  theme: string;
+  size: string;
+  width: string;
+  text: string;
+}
+
+interface GoogleResponse {
+  credential: string;
+}
+
+declare global {
+  interface Window {
+    google: {
+      accounts: {
+        id: {
+          initialize: (config: GoogleConfig) => void;
+          renderButton: (
+            element: HTMLElement,
+            config: GoogleButtonConfig
+          ) => void;
+          disableAutoSelect: () => void;
+        };
+      };
+    };
+  }
+}
 
 const Page = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [currentStep, setCurrentStep] = useState("register"); // register, otp-verification, success
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [sessionId, setSessionId] = useState("");
   const [countdown, setCountdown] = useState(0);
-
-  // Form state
+  // Form state and validation errors
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -34,7 +72,110 @@ const Page = () => {
     referralCode: "",
   });
 
-  // OTP data
+  const [errors, setErrors] = useState({
+    genralError: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    referralCode: "",
+  });
+  console.log(errors);
+  // const [formSubmitted, setFormSubmitted] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  console.log(googleLoading);
+  // console.log(errors);
+
+  // Handle Google Sign-In response
+  const handleGoogleSignIn = useCallback(
+    async (response: GoogleResponse) => {
+      setGoogleLoading(true);
+      setErrors((prev) => ({ ...prev, genralError: "" }));
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ credential: response.credential }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+          // Set token in the same way as regular signup
+          const expireDate = new Date(
+            Date.now() + 24 * 60 * 60 * 1000
+          ).toUTCString();
+          document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
+
+          // Redirect to callback URL
+          router.push(callbackUrl);
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            genralError:
+              data.message || "Google sign-in failed. Please try again.",
+          }));
+        }
+      } catch (error) {
+        console.error("Google sign-in error:", error);
+        setErrors((prev) => ({
+          ...prev,
+          genralError:
+            "Network error. Please check your connection and try again.",
+        }));
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    [router, callbackUrl]
+  );
+
+  // Initialize Google Sign-In
+  useEffect(() => {
+    const initializeGoogleSignIn = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+          callback: handleGoogleSignIn,
+          auto_select: false,
+        });
+
+        // Render Google button
+        const googleButton = document.getElementById("google-signin-button");
+        if (googleButton) {
+          window.google.accounts.id.renderButton(googleButton, {
+            theme: "outline",
+            size: "large",
+            width: "100%",
+            text: "signup_with",
+          });
+        }
+      }
+    };
+
+    // Load Google Sign-In script
+    if (!window.google) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = initializeGoogleSignIn;
+      document.head.appendChild(script);
+    } else {
+      initializeGoogleSignIn();
+    }
+  }, [handleGoogleSignIn]);
+
+  // Handle form submission
   const [otpData, setOtpData] = useState({
     emailOtp: "",
     phoneOtp: "",
@@ -88,12 +229,12 @@ const Page = () => {
 
     // Validation
     if (!formData.firstName.trim()) {
-      setError("First name is required");
+      setError("first name is required");
       setLoading(false);
       return;
     }
     if (!formData.lastName.trim()) {
-      setError("Last name is required");
+      setError("last name is required");
       setLoading(false);
       return;
     }
@@ -122,14 +263,35 @@ const Page = () => {
       return;
     }
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Form submitted:", formData);
-      setCurrentStep("otp-verification");
-      setSuccess("OTP sent to your Email");
-      setCountdown(60);
+    try {
+      const response = await fetch(
+        `http://localhost:8080/refportal/signup/send-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSessionId(data.sessionId);
+        setCurrentStep("otp-verification");
+        setSuccess("OTP sent to your Email");
+        setCountdown(60); // 60 seconds countdown for resend
+      } else {
+        setError(data.message || "Failed to send OTP");
+      }
+    } catch (err) {
+      console.error("Network error", err);
+
+      setError("Network error. Please try again.");
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   const handleVerifyOtp = async (e: { preventDefault: () => void }) => {
@@ -149,39 +311,123 @@ const Page = () => {
       return;
     }
 
-    // Simulate OTP verification
-    setTimeout(() => {
-      console.log("OTP verified:", otpData);
-      setCurrentStep("success");
-      setSuccess("Account created successfully!");
-      setLoading(false);
-    }, 2000);
-  };
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signup/verify-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sessionId,
+            emailOtp: otpData.emailOtp,
+            phoneOtp: otpData.phoneOtp,
+          }),
+        }
+      );
 
+      const data = await response.json();
+
+      if (response.ok) {
+        // Complete registration
+        await completeRegistration();
+      } else {
+        setError(data.message || "Invalid OTP");
+      }
+    } catch (err) {
+      console.error("Network error", err);
+
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleResendOtp = async () => {
+    // console.log("Resend OTP clicked, sessionId:", sessionId);
+
+    // Check if sessionId exists
+    if (!sessionId) {
+      setError("Session expired. Please start registration again.");
+      return;
+    }
+
     setLoading(true);
     setError("");
     setSuccess("");
 
-    // Simulate resend OTP
-    setTimeout(() => {
-      console.log("OTP resent");
-      setSuccess("New OTP sent successfully to your email");
-      setCountdown(60);
-      setOtpData({ emailOtp: "", phoneOtp: "" });
+    try {
+      const requestBody = { sessionId };
+      // console.log("Sending request to resend OTP:", requestBody);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signup/resend-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      // console.log("Response status:", response.status);
+      // console.log("Response headers:", response.headers);
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // console.log("OTP resent successfully");
+        setSuccess("New OTP sent successfully to your email");
+        setCountdown(60);
+        setOtpData({ emailOtp: "", phoneOtp: "" });
+
+        // Clear success message after 5 seconds
+        setTimeout(() => {
+          setSuccess("");
+        }, 5000);
+      } else {
+        // console.error("Failed to resend OTP:", data.message);
+        setError(data.message || "Failed to resend OTP");
+      }
+    } catch (err) {
+      console.error("Network error during resend:", err);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
       setLoading(false);
-
-      // Clear success message after 5 seconds
-      setTimeout(() => {
-        setSuccess("");
-      }, 5000);
-    }, 1000);
+      // console.log("Resend OTP process completed");
+    }
   };
+  const completeRegistration = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signup/complete-signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sessionId,
+            password: formData.password,
+          }),
+        }
+      );
 
-  // const handleGoogleSignIn = () => {
-  //   console.log("Google sign-up clicked");
-  //   // Add your Google sign-in logic here
-  // };
+      const data = await response.json();
+
+      if (response.ok) {
+        setCurrentStep("success");
+        setSuccess("Account created successfully!");
+      } else {
+        setError(data.message || "Failed to create account");
+      }
+    } catch (err) {
+      console.error("Network error", err);
+
+      setError("Network error. Please try again.");
+    }
+  };
 
   const resetForm = () => {
     setCurrentStep("register");
@@ -197,6 +443,7 @@ const Page = () => {
     setOtpData({ emailOtp: "", phoneOtp: "" });
     setError("");
     setSuccess("");
+    setSessionId("");
     setCountdown(0);
   };
 
@@ -538,7 +785,9 @@ const Page = () => {
               </div>
 
               <button
-                onClick={() => (window.location.href = "/signin")}
+                onClick={() =>
+                  (window.location.href = "/referralportal/signin")
+                }
                 className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 Continue to Login

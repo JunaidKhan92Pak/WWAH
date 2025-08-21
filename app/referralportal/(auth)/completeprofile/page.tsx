@@ -38,11 +38,10 @@ const Step1 = () => {
     contactNo: "",
     dob: "",
     country: "",
-    nationality: "",
     city: "",
+    instagram: "",
     facebook: "",
     linkedin: "",
-    instagram: "",
   });
 
   const handleChange = (
@@ -58,7 +57,7 @@ const Step1 = () => {
     try {
       const token = getAuthToken();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}updateprofile/personal-Information`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refupdateprofile/personalInformation`,
         {
           method: "POST",
           headers: {
@@ -71,9 +70,9 @@ const Step1 = () => {
       );
       const res = await response.json();
       console.log(res);
-      router.push("/completeprofile/academicinformation");
+      router.push("/referralportal/completeprofile/academicinformation");
     } catch (error) {
-      console.log(`There Is SOme Error ${error}`);
+      console.log(`There Is Some Error ${error}`);
     }
   };
   // console.log(personalInfo.countryCode, "country code");
@@ -217,11 +216,11 @@ const Step1 = () => {
                 />
               </div>
               <div className="w-[95%]">
-                <label className="block text-gray-700 text-sm">LinkedIn</label>
+                <label className="block text-gray-700 text-sm">linkedin</label>
                 <input
                   type="url"
                   name="linkedin"
-                  placeholder="LinkedIn profile link"
+                  placeholder="linkedin profile link"
                   value={personalInfo.linkedin}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -240,17 +239,16 @@ const Step1 = () => {
               </div>
             </div>
           </div>
+          <div className="text-left">
+            <Button
+              type="submit"
+              size={"lg"}
+              className="py- mt-4 bg-[#C7161E] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-800"
+            >
+              Continue
+            </Button>
+          </div>
         </form>
-
-        <div className="text-left">
-          <Button
-            type="submit"
-            size={"lg"}
-            className="py- mt-4 bg-[#C7161E] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-800"
-          >
-            Continue
-          </Button>
-        </div>
       </section>
     </div>
   );
