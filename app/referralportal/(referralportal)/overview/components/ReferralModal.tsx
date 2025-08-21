@@ -7,7 +7,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Copy,
   Share,
-  X,
   Facebook,
   Linkedin,
   Instagram,
@@ -113,15 +112,7 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md w-full mx-auto bg-white rounded-3xl p-0 border-0 shadow-2xl">
         <div className="relative p-6 md:p-8">
-          {/* Close Button */}
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            size="sm"
-            className="absolute right-4 top-4 rounded-full h-8 w-8 p-0 hover:bg-gray-100"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          
 
           <div className="space-y-6">
             {/* Referral Code Section */}

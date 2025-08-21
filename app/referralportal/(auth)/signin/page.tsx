@@ -1,34 +1,335 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+
 import { IoMailOutline, IoKeyOutline } from "react-icons/io5";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
+// Declare Google API types
+interface GoogleConfig {
+  client_id: string;
+  callback: (response: GoogleResponse) => void;
+  auto_select: boolean;
+}
+
+interface GoogleButtonConfig {
+  theme: string;
+  size: string;
+  width: string;
+  text: string;
+}
+
+interface GoogleResponse {
+  credential: string;
+}
+
+// Facebook SDK types
+interface FacebookLoginResponse {
+  authResponse?: {
+    accessToken: string;
+    userID: string;
+  };
+  status: string;
+}
+
+interface FacebookInitParams {
+  appId: string | undefined;
+  cookie: boolean;
+  xfbml: boolean;
+  version: string;
+}
+
+interface FacebookLoginOptions {
+  scope: string;
+}
+
+interface FacebookUserInfo {
+  id: string;
+  name: string;
+  email: string;
+}
+
+declare global {
+  interface Window {
+    google: {
+      accounts: {
+        id: {
+          initialize: (config: GoogleConfig) => void;
+          renderButton: (
+            element: HTMLElement,
+            config: GoogleButtonConfig
+          ) => void;
+          disableAutoSelect: () => void;
+        };
+      };
+    };
+    FB: {
+      init: (params: FacebookInitParams) => void;
+      login: (
+        callback: (response: FacebookLoginResponse) => void,
+        options?: FacebookLoginOptions
+      ) => void;
+      api: (
+        path: string,
+        callback: (response: FacebookUserInfo) => void
+      ) => void;
+    };
+    fbAsyncInit: () => void;
+  }
+}
+
 const Page = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const [errors, setErrors] = useState({
-    generalError: "",
+    generalError: "", // Fixed typo: was "genralError"
     email: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [facebookLoading, setFacebookLoading] = useState(false);
+
+  // Handle Google Sign-In response
+  const handleGoogleSignIn = useCallback(
+    async (response: GoogleResponse) => {
+      setGoogleLoading(true);
+      setErrors((prev) => ({ ...prev, generalError: "" }));
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ credential: response.credential }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          // Set token in cookie
+          const expireDate = new Date(
+            Date.now() + 24 * 60 * 60 * 1000
+          ).toUTCString();
+          document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/; secure; samesite=strict`;
+
+          // Use router.push instead of window.location.href for better UX
+          router.push(callbackUrl);
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            generalError:
+              data.message || "Google sign-in failed. Please try again.",
+          }));
+        }
+      } catch (error) {
+        console.error("Google sign-in error:", error);
+        setErrors((prev) => ({
+          ...prev,
+          generalError:
+            "Network error. Please check your connection and try again.",
+        }));
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    [router, callbackUrl]
+  );
+
+  // Handle Facebook Sign-In
+  const handleFacebookSignIn = useCallback(async () => {
+    if (!window.FB) {
+      setErrors((prev) => ({
+        ...prev,
+        generalError: "Facebook SDK not loaded. Please try again.",
+      }));
+      return;
+    }
+
+    setFacebookLoading(true);
+    setErrors((prev) => ({ ...prev, generalError: "" }));
+
+    window.FB.login(
+      async (response: FacebookLoginResponse) => {
+        try {
+          if (response.status === "connected" && response.authResponse) {
+            // Get user data from Facebook
+            window.FB.api("/me?fields=email,name", async (userInfo) => {
+              try {
+                const res = await fetch(
+                  `${process.env.NEXT_PUBLIC_BACKEND_API}auth/facebook-login`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      accessToken: response.authResponse!.accessToken,
+                      userID: response.authResponse!.userID,
+                      email: userInfo.email,
+                      name: userInfo.name,
+                    }),
+                  }
+                );
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                  const expireDate = new Date(
+                    Date.now() + 24 * 60 * 60 * 1000
+                  ).toUTCString();
+                  document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/; secure; samesite=strict`;
+
+                  router.push(callbackUrl);
+                } else {
+                  setErrors((prev) => ({
+                    ...prev,
+                    generalError:
+                      data.message ||
+                      "Facebook sign-in failed. Please try again.",
+                  }));
+                }
+              } catch (error) {
+                console.error("Facebook sign-in error:", error);
+                setErrors((prev) => ({
+                  ...prev,
+                  generalError: "Network error. Please try again.",
+                }));
+              } finally {
+                setFacebookLoading(false);
+              }
+            });
+          } else {
+            setErrors((prev) => ({
+              ...prev,
+              generalError: "Facebook login was cancelled or failed.",
+            }));
+            setFacebookLoading(false);
+          }
+        } catch (error) {
+          console.error("Facebook login error:", error);
+          setErrors((prev) => ({
+            ...prev,
+            generalError: "Facebook login failed. Please try again.",
+          }));
+          setFacebookLoading(false);
+        }
+      },
+      { scope: "email" }
+    );
+  }, [router, callbackUrl]);
+
+  // Initialize Facebook SDK
+  useEffect(() => {
+    // Facebook SDK initialization
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID,
+        cookie: true,
+        xfbml: true,
+        version: "v18.0",
+      });
+    };
+
+    // Load Facebook SDK
+    if (!document.getElementById("facebook-jssdk")) {
+      const script = document.createElement("script");
+      script.id = "facebook-jssdk";
+      script.src = "https://connect.facebook.net/en_US/sdk.js";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  }, []);
+
+  // Initialize Google Sign-In
+  useEffect(() => {
+    const initializeGoogleSignIn = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+          callback: handleGoogleSignIn,
+          auto_select: false,
+        });
+
+        const googleButton = document.getElementById("google-signin-button");
+        if (googleButton) {
+          const containerWidth = googleButton.offsetWidth;
+
+          window.google.accounts.id.renderButton(googleButton, {
+            theme: "outline",
+            size: "large",
+            width: containerWidth.toString(),
+            text: "signin_with",
+          });
+
+          // Custom CSS for button styling
+          setTimeout(() => {
+            const style = document.createElement("style");
+            style.textContent = `
+              #google-signin-button iframe {
+                margin: 0 auto !important;
+                display: block !important;
+              }
+              #google-signin-button > div {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+              }
+              #google-signin-button button {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                margin: 0 auto !important;
+              }
+            `;
+            document.head.appendChild(style);
+          }, 100);
+        }
+      }
+    };
+
+    if (!window.google) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = initializeGoogleSignIn;
+      document.head.appendChild(script);
+    } else {
+      initializeGoogleSignIn();
+    }
+  }, [handleGoogleSignIn]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+      generalError: "",
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
+    setErrors((prev) => ({ ...prev, generalError: "" }));
 
     const newErrors = {
       generalError: "",
@@ -46,22 +347,43 @@ const Page = () => {
       return;
     }
 
-    // Simulate form submission
-    setTimeout(() => {
-      console.log("Form submitted:", formData);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signin`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        // Set token in cookie
+        const expireDate = new Date(
+          Date.now() + 24 * 60 * 60 * 1000
+        ).toUTCString();
+        document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/; secure; samesite=strict`;
+
+        router.push(callbackUrl);
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          generalError: data.message || "Sign in failed. Please try again.",
+        }));
+      }
+    } catch (err) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        generalError: "Sign in failed, please try again.",
+      }));
+      console.error("Sign in failed", err);
+    } finally {
       setFormSubmitted(false);
-      // Reset form or show success message as needed
-    }, 2000);
-  };
-
-  const handleGoogleSignIn = () => {
-    console.log("Google sign-in clicked");
-    // Add your Google sign-in logic here
-  };
-
-  const handleFacebookSignIn = () => {
-    console.log("Facebook sign-in clicked");
-    // Add your Facebook sign-in logic here
+    }
   };
 
   return (
@@ -79,24 +401,18 @@ const Page = () => {
             </Link>
           </div>
           <h6 className="text-center font-semibold mb-1 mt-4">Welcome Back!</h6>
-          <p className="text-gray-600 mb-4 text-center sm:px-8 md:mb-4 md:w-full  lg:mb-4  2xl:space-y-4">
+          <p className="text-gray-600 mb-4 text-center sm:px-8 md:mb-4 md:w-full lg:mb-4 2xl:space-y-4">
             Track referrals, unlock rewards, and stay ahead in the Status Board
           </p>
 
-          {/* Divider */}
-          <div className="flex items-center my-4">
-            <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-gray-500 text-sm">or</span>
-            <div className="flex-1 border-t border-gray-300"></div>
-          </div>
+          {/* Display general error */}
+          {errors.generalError && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {errors.generalError}
+            </div>
+          )}
 
           <form className="w-full" onSubmit={handleSubmit}>
-            {errors.generalError && (
-              <p className="text-red-500 text-center mb-4">
-                {errors.generalError}
-              </p>
-            )}
-
             {/* Email */}
             <div className="mb-3">
               <label className="block text-gray-800 font-normal">
@@ -150,7 +466,7 @@ const Page = () => {
               )}
             </div>
 
-            <div className="flex justify-between items-center text-gray-600">
+            <div className="flex justify-between items-center text-gray-600 mb-4">
               <div className="flex">
                 <input
                   type="checkbox"
@@ -165,7 +481,18 @@ const Page = () => {
               </Link>
             </div>
 
-            {/* "Or" Text */}
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={formSubmitted}
+              className={`w-full text-white p-2 rounded-xl mb-4 transition-opacity ${
+                formSubmitted ? "bg-red-400" : "bg-red-700 hover:bg-red-800"
+              } duration-200`}
+            >
+              {formSubmitted ? "Signing In..." : "Sign In"}
+            </button>
+
+            {/* Divider */}
             <div className="flex items-center my-4">
               <div className="flex-1 border-t border-gray-300"></div>
               <span className="px-4 text-gray-500 text-sm">or</span>
@@ -174,38 +501,47 @@ const Page = () => {
 
             {/* Social Media Login Buttons */}
             <div className="flex gap-3 mb-4">
-              {/* Google Sign-In Button */}
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  />
-                </svg>
-                <span className="text-sm">Google</span>
-              </button>
+              {/* Google Sign-In Button - Show custom button when loading */}
+              <div className="flex-1">
+                {googleLoading ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 opacity-50"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24">
+                      <path
+                        fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                      />
+                    </svg>
+                    <span className="text-sm">Loading...</span>
+                  </button>
+                ) : (
+                  <div id="google-signin-button">
+                    {/* Google button will be rendered here */}
+                  </div>
+                )}
+              </div>
 
               {/* Facebook Sign-In Button */}
               <button
                 type="button"
                 onClick={handleFacebookSignIn}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                disabled={facebookLoading}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24">
                   <path
@@ -213,20 +549,11 @@ const Page = () => {
                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
                   />
                 </svg>
-                <span className="text-sm">Facebook</span>
+                <span className="text-sm">
+                  {facebookLoading ? "Loading..." : "Facebook"}
+                </span>
               </button>
             </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={formSubmitted}
-              className={`w-full text-white p-2 rounded-xl mt-4 transition-opacity ${
-                formSubmitted ? "bg-red-400" : "bg-red-700 hover:bg-red-800"
-              } duration-200`}
-            >
-              {formSubmitted ? "Signing In..." : "Sign In"}
-            </button>
 
             <p className="text-center mt-4 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
               Don&apos;t have an account?{" "}
@@ -242,7 +569,7 @@ const Page = () => {
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:flex justify-center md:w-[50%]  ">
+      <div className="hidden md:flex justify-center md:w-[50%]">
         <div className="relative xl:w-[100%] xl:h-[100%] h-[95%] w-[100%]">
           <Image
             src="/Group.png"
