@@ -59,6 +59,10 @@ type ScholarshipData = {
     teaching_language: string[];
     university: string[];
     countries: string[];
+    location?: string[];
+    host_country?: string[];
+    country?: string[];
+    hostCountry?: string[];
   };
   successChances?: {
     academicBackground?: string;

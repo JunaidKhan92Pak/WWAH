@@ -131,17 +131,7 @@ const AppliedScholarship = () => {
     );
   }
 
-  // const getStatusColor = (status?: string): string => {
-  //   switch (status?.toLowerCase()) {
-  //     case "approved":
-  //       return "bg-green-100 text-green-800";
-  //     case "rejected":
-  //       return "bg-red-100 text-red-800";
-  //     case "pending":
-  //     default:
-  //       return "bg-orange-100 text-orange-800";
-  //   }
-  // };
+ 
 
   const formatDate = (dateString?: string): string => {
     if (!dateString) return "Not specified";
@@ -197,9 +187,9 @@ const AppliedScholarship = () => {
                   >
                     {/* Application Header */}
                     <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center">
-                      <h3 className="font-semibold text-gray-800">
+                      <h6 className="font-semibold text-gray-800">
                         Application No. {index + 1}
-                      </h3>
+                      </h6>
                       <button className="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                         View
                       </button>
