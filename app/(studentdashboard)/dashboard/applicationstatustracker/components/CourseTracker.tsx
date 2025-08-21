@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useUserStore } from "@/store/useUserData";
-// import CircularProgress from "../../overview/components/CircularProgress";
 import { motion } from "framer-motion";
 
 interface Course {
@@ -75,11 +74,7 @@ const ApplyingSection: React.FC = () => {
   } = useUserStore();
 
  
-// const confirmedAppliedCourseIds = appliedCourseIds.filter((courseId) => {
-//     const appliedCourse = appliedCourses[courseId];
-//     return appliedCourse?.isConfirmed === true;
-//   });
-  // Function to fetch detailed course information for applied courses
+
   const fetchDetailedAppliedCourses = async (courseIds: string[]) => {
     if (courseIds.length === 0) {
       setDetailedAppliedCourses([]);
@@ -280,7 +275,7 @@ const ApplyingSection: React.FC = () => {
                     Application No. {index + 1}
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <Button
                     variant="outline"
                     size="sm"
@@ -288,7 +283,7 @@ const ApplyingSection: React.FC = () => {
                   >
                     View
                   </Button>
-                </div>
+                </div> */}
               </div>
 
               {/* Course Content */}
