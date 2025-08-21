@@ -161,6 +161,10 @@ async function fetchAndCacheUserData(userId: string) {
     ),
     loadingApplications: false,
 
+    // ✅ FIX: Add missing embedding properties
+    embeddingUpdateStatus: "idle",
+    lastEmbeddingUpdate: null,
+
     // Core action methods
     fetchUserProfile: async () => {},
     updateUserProfile: async () => false,
@@ -215,6 +219,9 @@ async function fetchAndCacheUserData(userId: string) {
     addAppliedScholarshipCourse: async (_applicationData: any) => false,
     refreshApplications: async () => {},
     getApplicationProgress: (_courseId: string) => 0,
+
+    // ✅ FIX: Add missing refreshEmbeddings method
+    refreshEmbeddings: async () => false,
   };
 
   console.log("userData", userData);
