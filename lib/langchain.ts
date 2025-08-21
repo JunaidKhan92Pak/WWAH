@@ -598,7 +598,11 @@ function createQuerySpecificUserData(
       },
       updatedAt: originalUserData?.detailedInfo?.updatedAt || "",
       workExperience: originalUserData?.detailedInfo?.workExperience || 0,
+      // ✅ FIX: Explicitly handle the 'years' property
+      years: originalUserData?.detailedInfo?.years || 0,
+      // Spread the rest of detailedInfo properties AFTER handling years
       ...originalUserData?.detailedInfo,
+      // Override with query-specific preferences
       studyPreferenced: {
         subject:
           querySubjects[0].charAt(0).toUpperCase() + querySubjects[0].slice(1),
@@ -703,6 +707,12 @@ function createQuerySpecificUserData(
       originalUserData?.refreshApplications || (async () => {}),
     getApplicationProgress:
       originalUserData?.getApplicationProgress || (() => 0),
+
+    // ✅ ADD: Missing properties from UserStore interface
+    refreshEmbeddings:
+      originalUserData?.refreshEmbeddings || (async () => false),
+    embeddingUpdateStatus: originalUserData?.embeddingUpdateStatus || "idle",
+    lastEmbeddingUpdate: originalUserData?.lastEmbeddingUpdate || null,
   };
 
   return querySpecificData;

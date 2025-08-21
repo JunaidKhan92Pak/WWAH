@@ -3,8 +3,6 @@
 import Image from "next/image";
 import EditAcademicInfo from "./Modals/EditAcademicInfo";
 import EditWorkExperience from "./Modals/EditWorkExperience";
-import EditEnglishLanguageInfo from "./Modals/EditEnglishLanguageInfo";
-import EditStudentPreference from "./Modals/EditStudentPreference";
 import EditfirstandlastName from "./Modals/EditfirstandlastName";
 import Password from "./Modals/PasswordInput";
 import EditPhoneNo from "./Modals/EditPhoneNo";
@@ -125,11 +123,7 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
               data={{ workExperience: detailInfo.workExperience }}
               updatedAt={detailInfo.updatedAt}
             />
-            <EditEnglishLanguageInfo
-              data={detailInfo.languageProficiency}
-              updatedAt={detailInfo.updatedAt}
-            />
-            <EditStudentPreference data={detailInfo} />
+          
           </>
         )}
       </div>

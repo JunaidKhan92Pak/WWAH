@@ -93,22 +93,24 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
       grade: gradeScore, // This should be the correct field name
       gradeType: values.gradeType,
     };
-        try {
-          const response = await updateDetailedInfo(apiData);
-          
-          console.log(response, "response from updateUserProfile in EditAcademicInfo");
-          if (response !== undefined) {
-            setOpen(false);
-            setSuccessOpen(true);
-            setTimeout(() => {
-              setSuccessOpen(false);
-            }, 2000); // Close after 2 seconds
-          }
-          // Handle success response here (e.g., show a success message)  
+    try {
+      const response = await updateDetailedInfo(apiData);
 
-        } catch (error) {
-          console.error("Network error:", error);
-        }
+      console.log(
+        response,
+        "response from updateUserProfile in EditAcademicInfo"
+      );
+      if (response !== undefined) {
+        setOpen(false);
+        setSuccessOpen(true);
+        setTimeout(() => {
+          setSuccessOpen(false);
+        }, 2000); // Close after 2 seconds
+      }
+      // Handle success response here (e.g., show a success message)
+    } catch (error) {
+      console.error("Network error:", error);
+    }
   }
 
   const [selectedScale, setSelectedScale] = useState("");
