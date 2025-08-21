@@ -17,6 +17,7 @@ type Tab = {
   id: string;
 };
 type ScholarshipData = {
+  _id: string;
   applicationProcess: {
     details: string;
     step: string[];
@@ -185,6 +186,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           tableData={data?.table}
           hostCountry={data.hostCountry}
           banner={data.banner}
+          s_id={data._id}
         />
       </div>
 

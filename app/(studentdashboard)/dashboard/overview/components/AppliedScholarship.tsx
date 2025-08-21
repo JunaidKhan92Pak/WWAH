@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 // Type definitions for better TypeScript support
-interface AppliedScholarshipCourse {
+interface AppliedScholarshipCourseProps {
   _id: string;
   scholarshipName: string;
   hostCountry: string;
@@ -20,6 +20,8 @@ interface AppliedScholarshipCourse {
   appliedAt?: string;
   createdAt?: string;
   updatedAt?: string;
+  ScholarshipId: string;
+  
   banner?: string; // Added banner property like in backup
 }
 
@@ -32,10 +34,59 @@ const AppliedScholarship = () => {
   // Safely access the loading state - matching backup pattern
   const loadingApplications =
     (store as { loadingApplications?: boolean }).loadingApplications || false;
+  const handleDeleteApplication = async (applicationId: string) => {
+    if (!user?._id) {
+      alert("User not found. Please log in again.");
+      return;
+    }
 
+    // Confirm deletion
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this application? This action cannot be undone."
+    );
+
+    if (!isConfirmed) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/${applicationId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user._id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+
+        alert("Application deleted successfully!");
+
+        // Option 1: If you have a refresh method in your store
+        // store.refreshUserData();
+
+        // Option 2: Manual update (you might need to implement this in your store)
+        // store.removeApplication(applicationId);
+
+        // For now, you might want to reload the page or refetch user data
+        window.location.reload();
+      } else {
+        alert(data.message || "Failed to delete application");
+      }
+    } catch (error) {
+      console.error("Error deleting application:", error);
+      alert("An error occurred while deleting the application");
+    }
+  };
   // ✅ FIXED: Use user.appliedScholarshipCourses directly like in backup
-  const appliedCoursesArray: AppliedScholarshipCourse[] =
+  const appliedCoursesArray: AppliedScholarshipCourseProps[] =
     user?.appliedScholarshipCourses || [];
+  console.log("Debug - appliedCoursesArray:", appliedCoursesArray);
 
   if (loadingApplications) {
     return (
@@ -234,7 +285,7 @@ const AppliedScholarship = () => {
               }}
             >
               {appliedCoursesArray.map(
-                (application: AppliedScholarshipCourse) => (
+                (application: AppliedScholarshipCourseProps) => (
                   <div
                     key={application._id}
                     className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200"
@@ -346,11 +397,19 @@ const AppliedScholarship = () => {
                         <div className="flex flex-col items-center justify-evenly min-w-[140px]">
                           <div className="flex gap-1">
                             <button className="px-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-[14px] font-medium">
-                              <a href={`/scholarships/${application._id}`}>
+                              <a
+                                href={`/scholarships/${application.ScholarshipId}`}
+                              >
                                 View
                               </a>
                             </button>
-                            <button className="p-1 text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                            <button
+                              className="p-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                              onClick={() =>
+                                handleDeleteApplication(application._id)
+                              }
+                              title="Delete Application"
+                            >
                               <Image
                                 src="/delete.svg"
                                 alt="Delete Icon"
