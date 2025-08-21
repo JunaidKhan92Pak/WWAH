@@ -117,6 +117,7 @@ interface AppliedScholarshipCourse {
   status?: string;
   createdAt?: string;
   updatedAt?: string;
+  ScholarshipId: string; // Add ScholarshipId to link to the scholarship
   // applicationStatus:number;
 }
 
@@ -662,34 +663,34 @@ export const useUserStore = create<UserStore>((set, get) => ({
         const coursesMap: Record<string, AppliedCourseWithDetails> = {};
 
         const courseIdsList: string[] = [];
-detailedCoursesResult.appliedCourses.forEach((course: any) => {
-  const courseId = course._id;
-  courseIdsList.push(courseId);
+        detailedCoursesResult.appliedCourses.forEach((course: any) => {
+          const courseId = course._id;
+          courseIdsList.push(courseId);
 
-  const trackingData = trackingDataMap.get(courseId);
+          const trackingData = trackingDataMap.get(courseId);
 
-  coursesMap[courseId] = {
-    courseId: courseId,
-    applicationStatus: trackingData?.applicationStatus || 1,
-    isConfirmed: trackingData?.isConfirmed || false, // ✅ NEW: Added isConfirmed
+          coursesMap[courseId] = {
+            courseId: courseId,
+            applicationStatus: trackingData?.applicationStatus || 1,
+            isConfirmed: trackingData?.isConfirmed || false, // ✅ NEW: Added isConfirmed
 
-    createdAt: trackingData?.createdAt,
-    updatedAt: trackingData?.updatedAt,
-    courseDetails: {
-      _id: course._id,
-      course_title: course.course_title,
-      universityData: course.universityData,
-      countryname: course.countryname,
-      intake: course.intake || "",
-      duration: course.duration || "",
-      annual_tuition_fee: course.annual_tuition_fee || {
-        amount: 0,
-        currency: "USD",
-      },
-      application_deadline: course.application_deadline,
-    },
-  };
-});
+            createdAt: trackingData?.createdAt,
+            updatedAt: trackingData?.updatedAt,
+            courseDetails: {
+              _id: course._id,
+              course_title: course.course_title,
+              universityData: course.universityData,
+              countryname: course.countryname,
+              intake: course.intake || "",
+              duration: course.duration || "",
+              annual_tuition_fee: course.annual_tuition_fee || {
+                amount: 0,
+                currency: "USD",
+              },
+              application_deadline: course.application_deadline,
+            },
+          };
+        });
 
         console.log("Processed courses map:", coursesMap);
 
@@ -771,6 +772,7 @@ detailedCoursesResult.appliedCourses.forEach((course: any) => {
               banner: application.banner || "",
               scholarshipName:
                 application.scholarshipName || "Unknown Scholarship",
+                ScholarshipId: application.scholarshipId || "", // ✅ CRITICAL: Include this field
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
               duration: application.duration || "Not specified",
@@ -1385,7 +1387,7 @@ detailedCoursesResult.appliedCourses.forEach((course: any) => {
             deadline: application.deadline || "Not specified",
             status: application.status || "pending",
             applicationStatus: application.applicationStatus || 1, // ✅ ADD THIS LINE
-
+            ScholarshipId: application.scholarshipId || "",
             appliedDate: application.appliedDate,
             createdAt: application.createdAt,
             updatedAt: application.updatedAt,
