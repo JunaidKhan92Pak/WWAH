@@ -190,9 +190,9 @@ const AppliedScholarship = () => {
                       <h6 className="font-semibold text-gray-800">
                         Application No. {index + 1}
                       </h6>
-                      <button className="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                      {/* <button className="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                         View
-                      </button>
+                      </button> */}
                     </div>
 
                     {/* Main Content */}
