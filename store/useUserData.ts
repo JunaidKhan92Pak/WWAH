@@ -61,6 +61,7 @@ export interface AppliedCourseWithDetails extends AppliedCourse {
     duration?: string;
     annual_tuition_fee?: any;
     application_deadline?: string;
+    application_fee:string;
   };
 }
 
@@ -679,6 +680,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
             courseDetails: {
               _id: course._id,
               course_title: course.course_title,
+              application_fee:course.application_fee,
               universityData: course.universityData,
               countryname: course.countryname,
               intake: course.intake || "",

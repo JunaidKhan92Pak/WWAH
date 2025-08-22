@@ -207,6 +207,7 @@ export async function GET(req: NextRequest) {
           course_description: 1,
           entry_requirements: 1,
           language_requirements: 1,
+          application_fee: 1,
           "universityData.universityImages.banner": 1,
           "universityData.universityImages.logo": 1,
           "universityData.university_name": 1,
