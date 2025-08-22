@@ -689,13 +689,26 @@ const AppliedScholarship = () => {
                               </div>
                             </div>
 
-                            <div className="flex flex-col items-center justify-evenly min-w-[140px]">
+                            {/* <div className="flex flex-col items-center justify-evenly min-w-[140px]">
                               <div className="flex flex-col items-center mt-4">
                                 <p className="text-[12px] font-semibold mb-2 text-center w-4/5">
                                   Application Success Chances
                                 </p>
+                              </div>
+                            </div> */}
+                            <div className="relative flex flex-col items-end justify-center min-w-[140px]">
+                              {/* Blurred content */}
+                              <div className="blur-sm opacity-40 pointer-events-none flex flex-col justify-center items-center">
+                                <p className="text-sm font-semibold mb-2 text-center w-4/5">
+                                  Application Success Chances
+                                </p>
                                 <CircularProgress progress={75} />
                               </div>
+
+                              {/* Overlay Button */}
+                              <button className="absolute mr-2 px-2 py-1 text-[12px] bg-red-600 text-white rounded-full shadow-md hover:bg-red-700">
+                                Generate Success Chances
+                              </button>
                             </div>
                           </div>
 
