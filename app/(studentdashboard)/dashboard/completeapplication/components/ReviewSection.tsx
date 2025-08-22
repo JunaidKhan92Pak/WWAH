@@ -207,6 +207,10 @@ export default function ReviewPage() {
   const wdataMap = studentData?.workExperience;
   const edataMap = studentData?.educationalBackground;
 
+  if (!data1 || !data2) {
+    return <div className="text-center py-10">Loading your application...</div>;
+  }
+
   return (
     <div className="mx-auto p-4">
       {/* Personal Information Section */}
@@ -476,7 +480,7 @@ export default function ReviewPage() {
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
           onClick={() =>
-            router.push("/dashboard/completeapplication?tab=appinfo&step=3")
+            router.push("/dashboard/completeapplication?tab=appinfo&step=4")
           }
         >
           Edit <MdModeEditOutline />

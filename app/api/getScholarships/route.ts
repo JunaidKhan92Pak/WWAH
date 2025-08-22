@@ -7,8 +7,8 @@ export async function GET(req: Request) {
         await connectToDatabase();
         const { searchParams } = new URL(req.url);
 
-        const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
-        const limit = Math.max(1, Math.min(100, parseInt(searchParams.get('limit') || '9', 10) || 9));
+        const page = Math.max(1, parseInt(searchParams.get('page') || '1', 12) || 1);
+        const limit = Math.max(1, Math.min(100, parseInt(searchParams.get('limit') || '12', 12) || 12));
 
         const search = searchParams.get("search")?.trim() || "";
         const minimumRequirements = searchParams.get("minimumRequirements")?.trim() || "";
