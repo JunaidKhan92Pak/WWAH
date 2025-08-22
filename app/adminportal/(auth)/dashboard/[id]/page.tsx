@@ -625,6 +625,7 @@ export default function AdminDashboardPage({
           isAdmin={true}
           extractUserIdFromUrl={true}
           readOnly={false} // ✅ Make sure this is false for admin updates
+          showOnlyConfirmed={true}
         />
         {/* Payment Tracker */}
         <PaymentTracker

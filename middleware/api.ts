@@ -161,6 +161,11 @@ async function fetchAndCacheUserData(userId: string) {
     ),
     loadingApplications: false,
 
+    // ✅ FIX: Add missing confirmed scholarships properties
+    confirmedScholarshipCourses: {},
+    confirmedScholarshipCourseIds: [],
+    loadingConfirmedApplications: false,
+
     // ✅ FIX: Add missing embedding properties
     embeddingUpdateStatus: "idle",
     lastEmbeddingUpdate: null,
@@ -219,6 +224,9 @@ async function fetchAndCacheUserData(userId: string) {
     addAppliedScholarshipCourse: async (_applicationData: any) => false,
     refreshApplications: async () => {},
     getApplicationProgress: (_courseId: string) => 0,
+
+    // ✅ FIX: Add missing confirmed scholarships action
+    fetchConfirmedScholarshipCourses: async (_userId: string) => {},
 
     // ✅ FIX: Add missing refreshEmbeddings method
     refreshEmbeddings: async () => false,

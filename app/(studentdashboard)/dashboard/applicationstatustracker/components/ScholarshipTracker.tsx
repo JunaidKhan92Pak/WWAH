@@ -1,8 +1,6 @@
-import React from "react";
 import { useUserStore } from "@/store/useUserData";
 import Image from "next/image";
-// import CircularProgress from "../../overview/components/CircularProgress";
-// import CircularProgress from "./CircularProgress";
+import { useEffect } from "react";
 
 // Type definitions for better TypeScript support
 interface AppliedScholarshipCourse {
@@ -16,11 +14,12 @@ interface AppliedScholarshipCourse {
   scholarshipType: string;
   deadline: string;
   status?: string;
-  applicationStatus?: number; // Added this field
+  applicationStatus?: number;
   appliedAt?: string;
   createdAt?: string;
   updatedAt?: string;
   banner?: string;
+  ScholarshipId: string;
 }
 
 // Status mapping based on your schema (1-7)
@@ -42,8 +41,8 @@ const StatusTracker = ({ currentStatus }: { currentStatus: number }) => {
       <div
         className="absolute top-4 left-0 h-1 bg-gray-300 z-0"
         style={{
-          left: "calc(50% / " + statusSteps.length + ")", // start from first step center
-          right: "calc(50% / " + statusSteps.length + ")", // end at last step center
+          left: "calc(50% / " + statusSteps.length + ")",
+          right: "calc(50% / " + statusSteps.length + ")",
         }}
       ></div>
 
@@ -51,7 +50,7 @@ const StatusTracker = ({ currentStatus }: { currentStatus: number }) => {
       <div
         className="absolute top-4 left-0 h-1 bg-red-600 z-0"
         style={{
-          left: "calc(50% / " + statusSteps.length + ")", // start at first step center
+          left: "calc(50% / " + statusSteps.length + ")",
           width: `calc((((${currentStatus - 1}) / (${
             statusSteps.length - 1
           })) * 100%) - (50% / ${statusSteps.length}))`,
@@ -92,44 +91,33 @@ const StatusTracker = ({ currentStatus }: { currentStatus: number }) => {
 };
 
 const AppliedScholarship = () => {
-  // Using the store with proper destructuring - matching backup pattern
+  // Using the store with proper destructuring
   const store = useUserStore();
   const { user } = store;
+
   console.log("Debug - user:", user);
 
-  // Safely access the loading state - matching backup pattern
-  const loadingApplications =
-    (store as { loadingApplications?: boolean }).loadingApplications || false;
+  // Access loading state for confirmed applications
+  const loadingConfirmedApplications =
+    store.loadingConfirmedApplications || false;
 
-  // ✅ FIXED: Use user.appliedScholarshipCourses directly like in backup
-  const appliedCoursesArray: AppliedScholarshipCourse[] =
-    user?.appliedScholarshipCourses || [];
+  // Access only confirmed scholarships from the store's confirmed state
+  const confirmedScholarshipsMap = store.confirmedScholarshipCourses || {};
+  const confirmedCoursesArray: AppliedScholarshipCourse[] = Object.values(
+    confirmedScholarshipsMap
+  );
 
-  if (loadingApplications) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your applied scholarships...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (appliedCoursesArray.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-600 mb-2">
-            No Applied Scholarships
-          </h3>
-          <p className="text-gray-500">
-            You haven&apos;t applied for any scholarships yet.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // Fetch confirmed scholarships when component mounts
+  useEffect(() => {
+    if (
+      user?._id &&
+      !loadingConfirmedApplications &&
+      confirmedCoursesArray.length === 0
+    ) {
+      console.log("Fetching confirmed scholarships for user:", user._id);
+      store.fetchConfirmedScholarshipCourses(user._id);
+    }
+  }, [user?._id]); // Remove store from dependencies to prevent infinite loop
 
   const formatDate = (dateString?: string): string => {
     if (!dateString) return "Not specified";
@@ -145,170 +133,186 @@ const AppliedScholarship = () => {
     }
   };
 
-  console.log(appliedCoursesArray, "show sch data");
+  console.log("Debug - Confirmed courses array:", confirmedCoursesArray);
+  console.log("Debug - Confirmed scholarships map:", confirmedScholarshipsMap);
+  console.log(
+    "Debug - Loading confirmed applications:",
+    loadingConfirmedApplications
+  );
+
+  if (loadingConfirmedApplications) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">
+            Loading your confirmed scholarships...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (confirmedCoursesArray.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">
+            No Confirmed Scholarships
+          </h3>
+          <p className="text-gray-500">
+            Your confirmed scholarships will appear here once approved.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className=" bg-gray-50">
-      <div className=" mx-auto">
-        {/* <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          Applied Scholarships
-        </h1> */}
+    <div className="p-3 bg-gray-50">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          Confirmed Scholarships ({confirmedCoursesArray.length})
+        </h1>
 
         <div className="flex w-full relative">
-          {!appliedCoursesArray || appliedCoursesArray.length === 0 ? (
-            // Empty state with blur effect
-            <div className="relative w-full">
-              {/* Blurred background */}
-              <div className="absolute inset-0 backdrop-blur-sm bg-white/60 z-0"></div>
-
-              {/* Centered message */}
-              <div className="flex flex-col items-center justify-center h-[250px] text-center relative z-10 w-full">
-                <p className="font-semibold text-lg md:text-xl mb-2">
-                  No Applied Scholarships Yet
-                </p>
-                <p className="text-gray-600 mb-4">
-                  Start your journey by applying to your first scholarship!
-                </p>
-                <button className="px-5 py-2 bg-[#C7161E] text-white rounded-full hover:bg-red-700">
-                  Browse Scholarships
-                </button>
-              </div>
-            </div>
-          ) : (
-            // Mapped scholarship cards when data exists
-            <div className="space-y-4 w-full">
-              {appliedCoursesArray.map(
-                (application: AppliedScholarshipCourse, index: number) => (
-                  <div
-                    key={application._id}
-                    className="bg-[#FCE7D2] rounded-xl border border-gray-200 overflow-hidden"
-                  >
-                    {/* Application Header */}
-                    <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+          {/* Confirmed Scholarship cards */}
+          <div className="space-y-4 w-full">
+            {confirmedCoursesArray.map(
+              (application: AppliedScholarshipCourse, index: number) => (
+                <div
+                  key={application._id}
+                  className="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                >
+                  {/* Application Header */}
+                  <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
                       <h6 className="font-semibold text-gray-800">
-                        Application No. {index + 1}
+                        Confirmed Application No. {index + 1}
                       </h6>
-                     
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                        Confirmed
+                      </span>
                     </div>
+                  </div>
 
-                    {/* Main Content */}
-                    <div className="p-4">
-                      <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Image */}
-                        <div className="relative w-full lg:w-[300px] h-[200px] rounded-xl overflow-hidden flex-shrink-0">
-                          <Image
-                            src={
-                              application.banner ||
-                              "https://via.placeholder.com/300x200?text=No+Image"
-                            }
-                            alt={`${application.scholarshipName} banner`}
-                            fill
-                            className="object-cover"
-                            sizes="300px"
-                          />
-                        </div>
+                  {/* Main Content */}
+                  <div className="p-4">
+                    <div className="flex flex-col lg:flex-row gap-4">
+                      {/* Image */}
+                      <div className="relative w-full lg:w-[300px] h-[200px] rounded-xl overflow-hidden flex-shrink-0">
+                        <Image
+                          src={
+                            application.banner ||
+                            "https://via.placeholder.com/300x200?text=No+Image"
+                          }
+                          alt={`${application.scholarshipName} banner`}
+                          fill
+                          className="object-cover"
+                          sizes="300px"
+                        />
+                      </div>
 
-                        {/* Content */}
-                        <div className="flex-1">
-                          <h2 className="text-xl font-bold text-gray-800 mb-2">
-                            {application.scholarshipName}
-                          </h2>
-                          {/* <p className="text-lg text-gray-700 mb-4">
-                            {application.courseName}
-                          </p> */}
+                      {/* Content */}
+                      <div className="flex-1">
+                        <h2 className="text-xl font-bold text-gray-800 mb-2">
+                          {application.scholarshipName}
+                        </h2>
+                        <p className="text-lg text-gray-700 mb-4">
+                          {application.courseName}
+                        </p>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2  gap-3 text-sm">
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/location.svg"
-                                alt="Location Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                {application.hostCountry || "Not specified"}
-                              </span>
-                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/location.svg"
+                              alt="Location Icon"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-gray-600">
+                              {application.hostCountry || "Not specified"}
+                            </span>
+                          </div>
 
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/clock.svg"
-                                alt="Duration Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                {application.duration || "Not specified"}
-                              </span>
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/clock.svg"
+                              alt="Duration Icon"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-gray-600">
+                              {application.duration || "Not specified"}
+                            </span>
+                          </div>
 
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/lang.svg"
-                                alt="Language Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                {application.language || "Not specified"}
-                              </span>
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/lang.svg"
+                              alt="Language Icon"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-gray-600">
+                              {application.language || "Not specified"}
+                            </span>
+                          </div>
 
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/ielts/Dollar.svg"
-                                alt="University Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                {application.universityName || "Not specified"}
-                              </span>
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/ielts/Dollar.svg"
+                              alt="University Icon"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-gray-600">
+                              {application.universityName || "Not specified"}
+                            </span>
+                          </div>
 
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/vectoruni.svg"
-                                alt="Scholarship Type Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                {application.scholarshipType || "Not specified"}
-                              </span>
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/vectoruni.svg"
+                              alt="Scholarship Type Icon"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-gray-600">
+                              {application.scholarshipType || "Not specified"}
+                            </span>
+                          </div>
 
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/calender.svg"
-                                alt="Deadline Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                Deadline: {formatDate(application.deadline)}
-                              </span>
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/calender.svg"
+                              alt="Deadline Icon"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-gray-600">
+                              Deadline: {formatDate(application.deadline)}
+                            </span>
                           </div>
                         </div>
                       </div>
-
-                      {/* Status Tracker */}
-                      <StatusTracker
-                        currentStatus={application.applicationStatus || 1}
-                      />
                     </div>
+
+                    {/* Status Tracker */}
+                    <StatusTracker
+                      currentStatus={application.applicationStatus || 1}
+                    />
                   </div>
-                )
-              )}
-            </div>
-          )}
+                </div>
+              )
+            )}
+          </div>
         </div>
       </div>
     </div>

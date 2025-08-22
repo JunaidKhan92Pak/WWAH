@@ -598,9 +598,9 @@ function createQuerySpecificUserData(
       },
       updatedAt: originalUserData?.detailedInfo?.updatedAt || "",
       workExperience: originalUserData?.detailedInfo?.workExperience || 0,
-      // ✅ FIX: Explicitly handle the 'years' property
+      // Fixed: Only define years once
       years: originalUserData?.detailedInfo?.years || 0,
-      // Spread the rest of detailedInfo properties AFTER handling years
+      // Spread the rest of detailedInfo properties AFTER handling specific ones
       ...originalUserData?.detailedInfo,
       // Override with query-specific preferences
       studyPreferenced: {
@@ -647,6 +647,14 @@ function createQuerySpecificUserData(
     appliedScholarshipCourseIds:
       originalUserData?.appliedScholarshipCourseIds || [],
     loadingApplications: originalUserData?.loadingApplications || false,
+
+    // MISSING: Confirmed scholarship courses state (newly added to interface)
+    confirmedScholarshipCourses:
+      originalUserData?.confirmedScholarshipCourses || {},
+    confirmedScholarshipCourseIds:
+      originalUserData?.confirmedScholarshipCourseIds || [],
+    loadingConfirmedApplications:
+      originalUserData?.loadingConfirmedApplications || false,
 
     // Action methods - Preserve existing functions or provide defaults
     fetchUserProfile: originalUserData?.fetchUserProfile || (async () => {}),
@@ -708,7 +716,11 @@ function createQuerySpecificUserData(
     getApplicationProgress:
       originalUserData?.getApplicationProgress || (() => 0),
 
-    // ✅ ADD: Missing properties from UserStore interface
+    // MISSING: Confirmed scholarship courses action (newly added to interface)
+    fetchConfirmedScholarshipCourses:
+      originalUserData?.fetchConfirmedScholarshipCourses || (async () => {}),
+
+    // Embedding refresh functionality
     refreshEmbeddings:
       originalUserData?.refreshEmbeddings || (async () => false),
     embeddingUpdateStatus: originalUserData?.embeddingUpdateStatus || "idle",
