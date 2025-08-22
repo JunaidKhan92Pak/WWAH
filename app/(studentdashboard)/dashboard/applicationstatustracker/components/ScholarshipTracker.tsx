@@ -106,7 +106,7 @@ const AppliedScholarship = () => {
   const confirmedCoursesArray: AppliedScholarshipCourse[] = Object.values(
     confirmedScholarshipsMap
   );
-
+  console.log("confirmedScholarshipsMap daata", confirmedScholarshipsMap);
   // Fetch confirmed scholarships when component mounts
   useEffect(() => {
     if (
@@ -169,12 +169,8 @@ const AppliedScholarship = () => {
   }
 
   return (
-    <div className="p-3 bg-gray-50">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          Confirmed Scholarships ({confirmedCoursesArray.length})
-        </h1>
-
+    <div className="bg-white">
+      <div className="mx-auto">
         <div className="flex w-full relative">
           {/* Confirmed Scholarship cards */}
           <div className="space-y-4 w-full">
@@ -182,22 +178,22 @@ const AppliedScholarship = () => {
               (application: AppliedScholarshipCourse, index: number) => (
                 <div
                   key={application._id}
-                  className="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                  className="bg-[#FDF3E8] rounded-xl border border-gray-200 overflow-hidden pb-4"
                 >
                   {/* Application Header */}
-                  <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <h6 className="font-semibold text-gray-800">
-                        Confirmed Application No. {index + 1}
-                      </h6>
-                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
-                        Confirmed
+                  <div className="px-4 py-3 flex justify-between items-center">
+                    <div className="flex items-center gap-3 bg-white rounded-md px-3 py-1">
+                      <span className="text-sm font-medium text-gray-600">
+                        Application No. {index + 1}
                       </span>
+                      {/* <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                        Confirmed
+                      </span> */}
                     </div>
                   </div>
 
                   {/* Main Content */}
-                  <div className="p-4">
+                  <div className="px-4">
                     <div className="flex flex-col lg:flex-row gap-4">
                       {/* Image */}
                       <div className="relative w-full lg:w-[300px] h-[200px] rounded-xl overflow-hidden flex-shrink-0">
@@ -222,7 +218,7 @@ const AppliedScholarship = () => {
                           {application.courseName}
                         </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2  gap-3 text-sm">
                           <div className="flex items-center gap-2">
                             <Image
                               src="/location.svg"

@@ -50,6 +50,7 @@ type ScholarshipData = {
   info_link: string;
   officialLink: string;
   table?: {
+    scholarshipName: string;
     course: string[];
     create_application: string[];
     deadline: string[];
@@ -187,6 +188,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           hostCountry={data.hostCountry}
           banner={data.banner}
           s_id={data._id}
+          scholarshipName={data.name}
         />
       </div>
 
