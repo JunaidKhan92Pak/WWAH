@@ -42,6 +42,8 @@ interface DynamicTableData {
   teaching_language: string[];
   university: string[];
   countries: string[];
+  scholarshipName: string;
+
   // Add optional alternative field names
   country?: string[];
   host_country?: string[];
@@ -53,6 +55,7 @@ interface ApplicableCoursesProps {
   tableData?: DynamicTableData;
   hostCountry: string;
   banner: string;
+  scholarshipName: string;
   s_id: string; // Add id prop to pass scholarship ID
 }
 
@@ -60,6 +63,7 @@ export default function ApplicableCourses({
   hostCountry,
   banner,
   tableData,
+  // scholarshipName,
   s_id,
 }: ApplicableCoursesProps) {
   const router = useRouter();
@@ -106,6 +110,7 @@ export default function ApplicableCourses({
             tableData.host_country?.[index] ||
             tableData.hostCountry?.[index] ||
             tableData.location?.[index] ||
+            tableData.scholarshipName ||
             "",
         };
 
@@ -158,6 +163,7 @@ export default function ApplicableCourses({
         scholarshipType: course.scholarshipType || "Not specified",
         deadline: course.deadline || "Not specified",
         ScholarshipId: s_id || "Not specified", // Use the scholarship ID from props
+        
       };
 
       console.log("Submitting application with data:", applicationData);

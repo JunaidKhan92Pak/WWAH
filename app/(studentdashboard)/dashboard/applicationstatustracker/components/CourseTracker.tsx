@@ -267,7 +267,7 @@ const ApplyingSection: React.FC = () => {
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2 bg-white p-1 rounded-md">
+                <div className="flex items-center gap-2 bg-white py-1 px-3 rounded-md">
                   <span className="text-sm font-medium text-gray-600">
                     Application No. {index + 1}
                   </span>

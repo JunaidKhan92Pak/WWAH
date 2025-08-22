@@ -61,6 +61,7 @@ export interface AppliedCourseWithDetails extends AppliedCourse {
     duration?: string;
     annual_tuition_fee?: any;
     application_deadline?: string;
+    
     application_fee:string;
   };
 }
