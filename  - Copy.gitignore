@@ -1,0 +1,45 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log
+pnpm-lock.yaml
+package-lock.json
+
+# Build and output files
+.next/
+out/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs and debug files
+logs/
+*.log
+yarn-debug.log*
+yarn-error.log*
+debug.log
+
+# VS Code settings
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# TypeScript build artifacts
+*.tsbuildinfo
+
+# IDE-specific files
+.idea/
+*.swp
+
+# Next.js cache
+.next/cache/
+
+# Cloudinary (or other services) credentials (if any)
+.cloudinary/

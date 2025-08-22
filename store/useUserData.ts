@@ -14,12 +14,12 @@ interface FavoriteUniversity {
     banner: string;
   };
 }
-type UniversityData = {
-  _id: string;
-  name: string;
-  country: string;
-  // Add other university properties as needed
-};
+// type UniversityData = {
+//   _id: string;
+//   name: string;
+//   country: string;
+//   // Add other university properties as needed
+// };
 // Course interface for favorites
 interface FavoriteCourse {
   _id: string;
@@ -204,6 +204,11 @@ export interface UserStore {
   appliedScholarshipCourseIds: string[];
   loadingApplications: boolean;
 
+  // displaying confirmed scholarships on admin side and student side
+  confirmedScholarshipCourses: Record<string, AppliedScholarshipCourse>;
+  confirmedScholarshipCourseIds: string[];
+  loadingConfirmedApplications: boolean;
+
   // Actions
   fetchUserProfile: () => Promise<void>;
   updateUserProfile: (updateData: Partial<User>) => Promise<boolean>;
@@ -259,6 +264,8 @@ export interface UserStore {
   // Applied scholarship courses actions
   fetchAppliedScholarshipCourses: () => Promise<void>;
   fetchAppliedScholarship: (id: string) => Promise<void>;
+  // New action for confirmed scholarships only
+  fetchConfirmedScholarshipCourses: (userId: string) => Promise<void>;
   addAppliedScholarshipCourse: (
     applicationData: AppliedScholarshipCourse
   ) => Promise<boolean>;
@@ -344,6 +351,13 @@ export const useUserStore = create<UserStore>((set, get) => ({
   loadingApplications: false,
   embeddingUpdateStatus: "idle",
   lastEmbeddingUpdate: null,
+  // embeddingUpdateStatus: "idle",
+  // lastEmbeddingUpdate: null,
+
+  // New state for confirmed scholarships
+  confirmedScholarshipCourses: {},
+  confirmedScholarshipCourseIds: [],
+  loadingConfirmedApplications: false,
 
   fetchUserProfile: async () => {
     const token = getAuthToken();
@@ -774,7 +788,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
               banner: application.banner || "",
               scholarshipName:
                 application.scholarshipName || "Unknown Scholarship",
-                ScholarshipId: application.scholarshipId || "", // ✅ CRITICAL: Include this field
+              ScholarshipId: application.scholarshipId || "", // ✅ CRITICAL: Include this field
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
               duration: application.duration || "Not specified",
@@ -1885,5 +1899,112 @@ export const useUserStore = create<UserStore>((set, get) => ({
     if (!course) return 0;
 
     return Math.round((course.applicationStatus / 7) * 100);
+  },
+  fetchConfirmedScholarshipCourses: async (id: string) => {
+    console.log("Fetching confirmed scholarship courses for id:", id);
+    const token = getAuthToken();
+
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    if (!id) {
+      set({ error: "User ID is required" });
+      return;
+    }
+
+    try {
+      set({ loadingConfirmedApplications: true, error: null });
+
+      // Use the new confirmed-applications endpoint
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/confirmed-applications/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch confirmed scholarship courses: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const result = await response.json();
+      console.log("Confirmed Applications API Response:", result);
+
+      if (result.success && result.data) {
+        const applications = result.data.applications || [];
+        console.log("Confirmed applications received:", applications);
+
+        const confirmedApplicationsMap: Record<
+          string,
+          AppliedScholarshipCourse
+        > = {};
+        const confirmedApplicationIds: string[] = [];
+
+        applications.forEach((application: any) => {
+          if (application._id) {
+            const transformedApplication: AppliedScholarshipCourse = {
+              _id: application._id,
+              banner: application.banner || "",
+              scholarshipName:
+                application.scholarshipName || "Unknown Scholarship",
+              ScholarshipId: application.scholarshipId || "",
+              hostCountry: application.hostCountry || "Not specified",
+              courseName: application.courseName || "Not specified",
+              duration: application.duration || "Not specified",
+              language: application.language || "Not specified",
+              universityName: application.universityName || "Not specified",
+              scholarshipType: application.scholarshipType || "Not specified",
+              deadline: application.deadline || "Not specified",
+              status: application.status || "pending",
+              applicationStatus: application.applicationStatus || 1,
+              appliedDate: application.appliedDate,
+              createdAt: application.createdAt,
+              updatedAt: application.updatedAt,
+            };
+
+            confirmedApplicationsMap[application._id] = transformedApplication;
+            confirmedApplicationIds.push(application._id);
+          }
+        });
+
+        console.log("✅ Processed confirmed applications (server-filtered):", {
+          confirmedById: Object.keys(confirmedApplicationsMap).map((id) => ({
+            id,
+            scholarshipName: confirmedApplicationsMap[id].scholarshipName,
+            applicationStatus: confirmedApplicationsMap[id].applicationStatus,
+          })),
+          confirmedIds: confirmedApplicationIds,
+          count: confirmedApplicationIds.length,
+        });
+
+        set({
+          confirmedScholarshipCourses: confirmedApplicationsMap,
+          confirmedScholarshipCourseIds: confirmedApplicationIds,
+          loadingConfirmedApplications: false,
+          error: null,
+        });
+      } else {
+        throw new Error(
+          result.message || "Failed to fetch confirmed applications"
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching confirmed scholarship courses:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loadingConfirmedApplications: false,
+        confirmedScholarshipCourseIds: [],
+      });
+    }
   },
 }));

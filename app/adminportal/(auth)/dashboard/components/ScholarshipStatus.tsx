@@ -2,8 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserData";
 import Image from "next/image";
-import CircularProgress from "@/app/(studentdashboard)/dashboard/overview/components/CircularProgress";
-import { Save, CheckCircle, AlertCircle, X } from "lucide-react";
+import {
+  Save,
+  CheckCircle,
+  AlertCircle,
+  X,
+  ChevronDown,
+  GraduationCap,
+} from "lucide-react";
 
 // Import cookie parser
 import { parse as cookieParse } from "cookie";
@@ -51,9 +57,7 @@ interface AppliedScholarshipCourse {
 }
 
 interface ScholarshipStatusProps {
-  //   userId: string;
   userId: string | null;
-
   isAdmin?: boolean;
   onStatusUpdate?: (
     applicationId: string,
@@ -62,20 +66,48 @@ interface ScholarshipStatusProps {
   readOnly?: boolean;
   extractUserIdFromUrl?: boolean;
   userIdFromData?: string;
+  showOnlyConfirmed?: boolean; // New prop to control behavior
 }
 
-// Application steps configuration
+// Application steps configuration (for progress tracking)
 const APPLICATION_STEPS = [
-  { id: 1, label: "Application Started", key: "started" },
-  { id: 2, label: "Documents Prepared", key: "documentsReady" },
-  { id: 3, label: "Application Submitted", key: "submitted" },
-  { id: 4, label: "Under Review", key: "underReview" },
-  { id: 5, label: "Interview Scheduled", key: "interview" },
-  { id: 6, label: "Decision Pending", key: "pending" },
-  { id: 7, label: "Final Decision", key: "decided" },
+  { id: 1, label: "Complete Application", key: "complete-application" },
+  { id: 2, label: "In Process", key: "in-process" },
+  { id: 3, label: "Applied", key: "applied" },
+  { id: 4, label: "Offer Letter Received", key: "offer-letter-received" },
+  { id: 5, label: "Visa Granted", key: "visa-granted" },
+  { id: 6, label: "Accommodation Booked", key: "accommodation-booked" },
+  { id: 7, label: "Airport Pickup Booked", key: "Airport-pickup-booked" },
 ];
 
-// Individual Scholarship Application Tracker Component
+// Application status configuration (for status dropdown)
+const APPLICATION_STATUS = [
+  { id: 1, label: "Incomplete Application", key: "incomplete-application" },
+  {
+    id: 2,
+    label: "Complete application and confirm course",
+    key: "complete-application",
+  },
+  {
+    id: 3,
+    label: "Awaiting Course Confirmation",
+    key: "awaiting-course-confirmation",
+  },
+  { id: 4, label: "Pay Application Fee", key: "pay-application-fee" },
+  { id: 5, label: "In Process", key: "in-process" },
+  {
+    id: 6,
+    label: "Application withdrawn by student",
+    key: "application-withdrawn",
+  },
+  { id: 7, label: "Application Successful", key: "application-successful" },
+  { id: 8, label: "Application Unsuccessful", key: "application-unsuccessful" },
+  { id: 9, label: "Visa in process", key: "visa-in-process" },
+  { id: 10, label: "Visa Rejected", key: "visa-rejected" },
+  { id: 11, label: "Ready to Fly", key: "ready-to-fly" },
+];
+
+// Individual Scholarship Application Tracker Component - HORIZONTAL CARD VERSION
 interface ScholarshipApplicationTrackerProps {
   application: AppliedScholarshipCourse;
   isAdmin?: boolean;
@@ -96,7 +128,10 @@ const ScholarshipApplicationTracker: React.FC<
   onStatusUpdate,
   readOnly = false,
 }) => {
-  const [localStatus, setLocalStatus] = useState<number>(
+  const [localTrackStep, setLocalTrackStep] = useState<number>(
+    application.applicationStatus || 1
+  );
+  const [localApplicationStatus, setLocalApplicationStatus] = useState<number>(
     application.applicationStatus || 1
   );
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<boolean>(false);
@@ -105,23 +140,34 @@ const ScholarshipApplicationTracker: React.FC<
   const [statusUpdateError, setStatusUpdateError] = useState<string | null>(
     null
   );
+  const [showStatusDropdown, setShowStatusDropdown] = useState<boolean>(false);
 
-  const currentStatus = application.applicationStatus || 1;
+  const currentTrackStep = application.applicationStatus || 1;
   const applicationId = application._id;
 
+  // Handle track step click
   const handleStepClick = (stepId: number): void => {
     if (readOnly || !isAdmin) return;
 
-    if (stepId === localStatus) {
-      setLocalStatus(Math.max(1, stepId - 1));
+    if (stepId === localTrackStep) {
+      setLocalTrackStep(Math.max(1, stepId - 1));
     } else {
-      setLocalStatus(stepId);
+      setLocalTrackStep(stepId);
     }
 
-    // Clear any previous errors when user interacts
     setStatusUpdateError(null);
   };
 
+  // Handle status dropdown change
+  const handleStatusChange = (statusId: number): void => {
+    if (readOnly || !isAdmin) return;
+
+    setLocalApplicationStatus(statusId);
+    setShowStatusDropdown(false);
+    setStatusUpdateError(null);
+  };
+
+  // Updated status update handler
   const handleStatusUpdate = async (): Promise<void> => {
     if (!applicationId) {
       setStatusUpdateError("Application ID is missing");
@@ -133,7 +179,10 @@ const ScholarshipApplicationTracker: React.FC<
       return;
     }
 
-    if (localStatus === currentStatus) {
+    if (
+      localTrackStep === currentTrackStep &&
+      localApplicationStatus === currentTrackStep
+    ) {
       setStatusUpdateError("No changes to save");
       return;
     }
@@ -145,7 +194,8 @@ const ScholarshipApplicationTracker: React.FC<
 
       console.log("🔄 Sending scholarship status update request:", {
         applicationId,
-        applicationStatus: localStatus,
+        trackStep: localTrackStep,
+        applicationStatus: localApplicationStatus,
         userId,
         endpoint: `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/tracking/${applicationId}`,
       });
@@ -156,8 +206,9 @@ const ScholarshipApplicationTracker: React.FC<
           method: "PUT",
           headers: getAuthHeaders(),
           body: JSON.stringify({
-            applicationStatus: localStatus,
-            userId: userId, // Include userId for admin updates
+            applicationStatus: localTrackStep,
+            statusId: localApplicationStatus,
+            userId: userId,
           }),
         }
       );
@@ -179,21 +230,18 @@ const ScholarshipApplicationTracker: React.FC<
       console.log("✅ Update response:", result);
 
       if (result.success) {
-        // Call parent component's status update handler if provided
         if (onStatusUpdate) {
-          await onStatusUpdate(applicationId, localStatus);
+          await onStatusUpdate(applicationId, localTrackStep);
         }
 
-        // Show success message
         setStatusUpdateSuccess(true);
 
-        // Hide success message after 3 seconds
         setTimeout(() => {
           setStatusUpdateSuccess(false);
         }, 3000);
 
         console.log(
-          `✅ Successfully updated scholarship ${applicationId} to status ${localStatus}`
+          `✅ Successfully updated scholarship ${applicationId} to track step ${localTrackStep} and status ${localApplicationStatus}`
         );
       } else {
         throw new Error(
@@ -210,9 +258,10 @@ const ScholarshipApplicationTracker: React.FC<
     }
   };
 
-  // Update local status when application data changes
+  // Update local states when application data changes
   useEffect(() => {
-    setLocalStatus(application.applicationStatus || 1);
+    setLocalTrackStep(application.applicationStatus || 1);
+    setLocalApplicationStatus(application.applicationStatus || 1);
   }, [application.applicationStatus]);
 
   // Helper functions
@@ -223,24 +272,36 @@ const ScholarshipApplicationTracker: React.FC<
     return step ? step.label : "Application Started";
   };
 
-  const getApplicationProgress = (applicationStatus?: number): number => {
-    return Math.round(
-      ((applicationStatus || 1) / APPLICATION_STEPS.length) * 100
-    );
+  const getApplicationStatusLabel = (statusId?: number): string => {
+    const status = APPLICATION_STATUS.find((s) => s.id === (statusId || 1));
+    return status ? status.label : "Incomplete Application";
   };
+
+  // const getApplicationProgress = (applicationStatus?: number): number => {
+  //   return Math.round(
+  //     ((applicationStatus || 1) / APPLICATION_STEPS.length) * 100
+  //   );
+  // };
 
   const getStatusColor = (status?: string): string => {
     switch (status?.toLowerCase()) {
       case "approved":
+      case "application successful":
         return "bg-green-100 text-green-800";
       case "rejected":
+      case "application unsuccessful":
+      case "visa rejected":
         return "bg-red-100 text-red-800";
       case "shortlisted":
+      case "ready to fly":
         return "bg-blue-100 text-blue-800";
       case "under review":
+      case "in process":
+      case "visa in process":
         return "bg-yellow-100 text-yellow-800";
       case "pending":
       case "submitted":
+      case "incomplete application":
       default:
         return "bg-orange-100 text-orange-800";
     }
@@ -251,7 +312,7 @@ const ScholarshipApplicationTracker: React.FC<
     try {
       return new Date(dateString).toLocaleDateString("en-US", {
         year: "numeric",
-        month: "long",
+        month: "short",
         day: "numeric",
       });
     } catch (error) {
@@ -260,261 +321,159 @@ const ScholarshipApplicationTracker: React.FC<
     }
   };
 
+  const hasChanges =
+    localTrackStep !== currentTrackStep ||
+    localApplicationStatus !== currentTrackStep;
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div className="relative min-w-[450px] max-w-[500px] sm:min-w-[500px] sm:max-w-[550px] lg:min-w-[600px] lg:max-w-[650px] flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       {/* Success/Error Indicators */}
       {statusUpdateSuccess && (
-        <div className="absolute top-4 right-4 flex items-center gap-2 text-green-600 text-sm animate-pulse bg-green-50 px-3 py-2 rounded-full z-10">
+        <div className="absolute top-4 right-4 flex items-center gap-2 text-green-600 text-sm animate-pulse bg-green-50 px-3 py-2 rounded-full z-20">
           <CheckCircle className="w-4 h-4" />
           Status Updated!
         </div>
       )}
 
       {statusUpdateError && (
-        <div className="absolute top-4 right-4 flex items-center gap-2 text-red-600 text-sm bg-red-50 px-3 py-2 rounded-full z-10 max-w-xs">
+        <div className="absolute top-4 right-4 flex items-center gap-2 text-red-600 text-sm bg-red-50 px-3 py-2 rounded-full z-20 max-w-xs">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span className="truncate">Update Failed</span>
         </div>
       )}
 
-      <div className="relative flex flex-col lg:flex-row gap-6 p-6">
-        {/* Left Section: Scholarship Image and Info */}
-        <div className="flex flex-col items-start gap-4 min-w-[250px]">
-          <div className="relative w-full h-[200px] rounded-xl overflow-hidden">
+      {/* Card Content */}
+      <div className="p-6 space-y-6">
+        {/* Header Section with Scholarship Image and Basic Info */}
+        <div className="flex gap-4">
+          {/* Scholarship Image */}
+          <div className="relative w-32 h-24 rounded-lg overflow-hidden flex-shrink-0">
             <Image
               src={
                 application.banner ||
-                "https://via.placeholder.com/200x150?text=No+Image"
+                "https://via.placeholder.com/200x150?text=Scholarship"
               }
               alt={`${application.scholarshipName} banner`}
-              width={250}
-              height={200}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
-            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute bottom-2 left-2 right-2">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#C7161E] rounded-full flex items-center justify-center">
+                <div className="w-5 h-5 bg-[#C7161E] rounded-full flex items-center justify-center">
                   <span className="text-white text-xs font-bold">S</span>
                 </div>
-                <div>
-                  <p className="text-sm font-medium leading-tight">
-                    {application.scholarshipName || "Scholarship"}
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    {application.hostCountry || "Country"}
-                  </p>
-                </div>
+                <p className="text-xs text-white font-medium truncate">
+                  {application.hostCountry || "Country"}
+                </p>
               </div>
-            </div>
-            <div className="absolute top-2 right-2">
-              <Image src="/hearti.svg" alt="favorite" width={20} height={20} />
             </div>
           </div>
 
-          {/* Application Info */}
-          <div className="w-full space-y-2">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium text-gray-600">Applied:</span>
-              <span>
-                {application.createdAt || application.appliedDate
-                  ? new Date(
-                      application.createdAt || application.appliedDate || ""
-                    ).toLocaleDateString()
-                  : "Not available"}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium text-gray-600">Current Status:</span>
-              <span className="px-2 py-1 rounded-full text-xs bg-red-100 text-red-800">
-                Step {currentStatus} of {APPLICATION_STEPS.length}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium text-gray-600">Application ID:</span>
-              <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
-                {applicationId || "Missing"}
-              </span>
-            </div>
-            {isAdmin && userId && (
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-medium text-gray-600">User ID:</span>
-                <span className="text-xs font-mono bg-blue-100 px-2 py-1 rounded">
-                  {userId}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Middle Section: Scholarship Details */}
-        <div className="flex-1 space-y-4">
-          {/* Scholarship Title */}
-          <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          {/* Scholarship Title and Progress */}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
               {application.scholarshipName || "Scholarship Name"}
             </h3>
-            <p className="text-lg text-gray-700 mb-4">
+            <p className="text-sm text-gray-600 mb-3 line-clamp-1">
               {application.courseName || "Course Name Not Available"}
             </p>
 
-            {/* Scholarship Info Grid */}
-            <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm text-gray-700">
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/location.svg"
-                  width={16}
-                  height={16}
-                  alt="Location"
-                />
-                <span>
-                  {application.hostCountry || "Country not specified"}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Image src="/clock.svg" width={16} height={16} alt="Duration" />
-                <span>{application.duration || "Not specified"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Image src="/lang.svg" width={16} height={16} alt="Language" />
-                <span>{application.language || "Not specified"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/vectoruni.svg"
-                  width={16}
-                  height={16}
-                  alt="University"
-                />
-                <span>{application.universityName || "N/A"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/calender.svg"
-                  width={14}
-                  height={14}
-                  alt="Deadline"
-                />
-                <span className="font-medium">Deadline:</span>
-              </div>
-              <span>{formatDate(application.deadline)}</span>
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-gray-600">Type:</span>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs ${getStatusColor(
-                    application.scholarshipType
-                  )}`}
+            {/* Progress Circle - Compact */}
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12">
+                <svg
+                  className="w-12 h-12 transform -rotate-90"
+                  viewBox="0 0 36 36"
                 >
-                  {application.scholarshipType || "Not specified"}
-                </span>
+                  <path
+                    className="text-gray-200"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path
+                    className="text-red-500"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeDasharray={`${
+                      (currentTrackStep / APPLICATION_STEPS.length) * 100
+                    }, 100`}
+                    strokeLinecap="round"
+                    fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xs font-semibold text-gray-900">
+                    {Math.round(
+                      (currentTrackStep / APPLICATION_STEPS.length) * 100
+                    )}
+                    %
+                  </span>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">
+                  Step {currentTrackStep} of {APPLICATION_STEPS.length}
+                </p>
+                <p className="text-xs text-gray-600">
+                  {getApplicationStepLabel(currentTrackStep)}
+                </p>
               </div>
             </div>
           </div>
-
-          {/* Current Step Info */}
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">
-              Current Step Details:
-            </h4>
-            <p className="text-sm text-gray-700">
-              {getApplicationStepLabel(currentStatus)}
-            </p>
-            {application.updatedAt && (
-              <p className="text-xs text-gray-500 mt-1">
-                Last updated:{" "}
-                {new Date(application.updatedAt).toLocaleDateString()}
-              </p>
-            )}
-          </div>
-
-          {/* Error Message Display */}
-          {statusUpdateError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600 flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span className="break-words">{statusUpdateError}</span>
-              </p>
-              {statusUpdateError.includes("Authentication") && (
-                <div className="mt-2 text-xs text-red-500">
-                  Try refreshing the page and logging in again.
-                </div>
-              )}
-              {statusUpdateError.includes("User ID") && (
-                <div className="mt-2 text-xs text-red-500">
-                  Admin access required. Please ensure you&apos;re logged in as an
-                  admin.
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
-        {/* Right Section: Progress Circle */}
-        <div className="flex flex-col items-center justify-center min-w-[150px] space-y-3">
-          <p className="text-sm font-semibold text-center w-4/5">
-            Application Progress
-          </p>
-
-          {/* Circular Progress */}
-          <CircularProgress progress={getApplicationProgress(currentStatus)} />
-
-          <div className="text-center">
-            <p className="text-xs text-gray-500 mb-2">
-              Step {currentStatus} of {APPLICATION_STEPS.length}
-            </p>
-            <div className="w-24 bg-gray-200 rounded-full h-1.5">
-              <div
-                className="bg-red-500 h-1.5 rounded-full transition-all duration-300"
-                style={{
-                  width: `${(currentStatus / APPLICATION_STEPS.length) * 100}%`,
-                }}
-              />
-            </div>
+        {/* Scholarship Details Grid */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700">
+          <div className="flex items-center gap-2">
+            <Image src="/location.svg" width={14} height={14} alt="Location" />
+            <span className="truncate">
+              {application.hostCountry || "Country not specified"}
+            </span>
           </div>
-
-          {/* Action buttons */}
-          <div className="flex gap-2 mt-4">
-            <button className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium">
-              View
-            </button>
-            {!isAdmin && (
-              <button
-                onClick={() => {
-                  /* Add remove functionality here */
-                }}
-                className="p-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                title="Remove scholarship application"
-              >
-                <Image
-                  src="/delete.svg"
-                  alt="Delete Icon"
-                  width={16}
-                  height={16}
-                  className="w-5 h-5"
-                />
-              </button>
-            )}
+          <div className="flex items-center gap-2">
+            <Image src="/clock.svg" width={14} height={14} alt="Duration" />
+            <span className="truncate">
+              {application.duration || "Not specified"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image src="/lang.svg" width={14} height={14} alt="Language" />
+            <span className="truncate">
+              {application.language || "Not specified"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/vectoruni.svg"
+              width={14}
+              height={14}
+              alt="University"
+            />
+            <span className="truncate">
+              {application.universityName || "N/A"}
+            </span>
           </div>
         </div>
-      </div>
 
-      {/* Application Progress Tracker Section */}
-      <div className="border-t border-gray-100 p-6 bg-gray-50">
-        <h4 className="text-lg font-medium text-gray-900 mb-6">
-          Application Status Timeline
-        </h4>
+        {/* Application Timeline - Compact Horizontal */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-900">Status Timeline</h4>
 
-        {/* Progress Steps - Updated to match AdminApplicationTracker pattern */}
-        <div className="mb-6">
+          {/* Compact Step Indicators */}
           <div className="flex items-center justify-between relative">
             {/* Background Progress Line */}
-            <div className="absolute top-4 left-4 right-4 h-0.5 bg-gray-200 rounded-full" />
+            <div className="absolute top-3 left-3 right-3 h-0.5 bg-gray-200 rounded-full" />
 
-            {/* Animated Progress Line */}
+            {/* Active Progress Line */}
             <div
-              className="absolute top-4 left-4 h-0.5 bg-[#C7161E] rounded-full transition-all duration-500 ease-out"
+              className="absolute top-3 left-3 h-0.5 bg-red-500 rounded-full transition-all duration-500"
               style={{
                 width: `${
-                  ((Math.min(localStatus, currentStatus) - 1) /
+                  ((Math.min(localTrackStep, currentTrackStep) - 1) /
                     (APPLICATION_STEPS.length - 1)) *
                   100
                 }%`,
@@ -522,44 +481,37 @@ const ScholarshipApplicationTracker: React.FC<
             />
 
             {APPLICATION_STEPS.map((step) => {
-              const isCompleted = currentStatus >= step.id;
-              const isCurrent = currentStatus === step.id;
-              const isLocalSelected = localStatus >= step.id;
+              const isCompleted = currentTrackStep >= step.id;
+              const isCurrent = currentTrackStep === step.id;
+              const isLocalSelected = localTrackStep >= step.id;
 
               return (
                 <div
                   key={step.id}
                   className="flex flex-col items-center relative"
                 >
-                  {/* Step Circle */}
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium z-10 transition-all duration-300 ease-out transform ${
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium z-10 transition-all duration-300 ${
                       isAdmin && !readOnly ? "cursor-pointer" : "cursor-default"
                     } ${
                       isCompleted
-                        ? "bg-[#C7161E] text-white scale-110 shadow-lg"
+                        ? "bg-red-500 text-white"
                         : isCurrent
-                        ? "bg-[#C7161E] text-white scale-110 shadow-lg animate-pulse ring-4 ring-red-200"
+                        ? "bg-red-500 text-white animate-pulse ring-2 ring-red-200"
                         : isLocalSelected && isAdmin && !readOnly
-                        ? "bg-red-400 text-white scale-105 hover:bg-red-500"
-                        : isAdmin && !readOnly
-                        ? "bg-gray-400 text-white scale-100 hover:bg-gray-500"
-                        : "bg-gray-400 text-white scale-100"
+                        ? "bg-red-400 text-white hover:bg-red-500"
+                        : "bg-gray-400 text-white hover:bg-gray-500"
                     }`}
                     onClick={
                       isAdmin && !readOnly
                         ? () => handleStepClick(step.id)
                         : undefined
                     }
-                    title={
-                      isAdmin && !readOnly
-                        ? `Click to set status to step ${step.id}`
-                        : undefined
-                    }
+                    title={step.label}
                   >
-                    {isCompleted && step.id < currentStatus ? (
+                    {isCompleted && step.id < currentTrackStep ? (
                       <svg
-                        className="w-4 h-4"
+                        className="w-3 h-3"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -573,16 +525,8 @@ const ScholarshipApplicationTracker: React.FC<
                       <span>{step.id}</span>
                     )}
                   </div>
-
-                  {/* Step Label */}
-                  <p
-                    className={`text-xs text-center mt-3 max-w-20 leading-tight transition-all duration-300 ${
-                      isCompleted || isCurrent
-                        ? "text-red-600 font-medium"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    {step.label}
+                  <p className="text-xs text-center mt-2 max-w-16 leading-tight text-gray-600">
+                    {step.label.split(" ")[0]}
                   </p>
                 </div>
               );
@@ -590,95 +534,215 @@ const ScholarshipApplicationTracker: React.FC<
           </div>
         </div>
 
-        {/* Progress Summary */}
-        <div className="mt-4 pt-3 border-t border-gray-200">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
-              Step {currentStatus} of {APPLICATION_STEPS.length}
-            </span>
-            <span
-              className={`
-              px-2 py-1 rounded-full text-xs font-medium
-              ${
-                currentStatus === APPLICATION_STEPS.length
-                  ? "bg-green-100 text-green-800"
-                  : "bg-blue-100 text-blue-800"
-              }
-            `}
-            >
-              {getApplicationStepLabel(currentStatus)}
-            </span>
+        {/* Application Info */}
+        <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+          <div className="grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <span className="font-medium text-gray-600">Applied:</span>
+              <div className="text-gray-800">
+                {application.createdAt || application.appliedDate
+                  ? formatDate(application.createdAt || application.appliedDate)
+                  : "Not available"}
+              </div>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Deadline:</span>
+              <div className="text-gray-800 font-medium">
+                {formatDate(application.deadline)}
+              </div>
+            </div>
+          </div>
+
+          {/* Status Info */}
+          <div className="flex items-center justify-between text-xs">
+            <div>
+              <span className="font-medium text-gray-600">Type:</span>
+              <span
+                className={`ml-2 px-2 py-0.5 rounded-full text-xs ${getStatusColor(
+                  application.scholarshipType
+                )}`}
+              >
+                {application.scholarshipType || "Not specified"}
+              </span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Status:</span>
+              <span
+                className={`ml-2 px-2 py-0.5 rounded-full text-xs ${getStatusColor(
+                  getApplicationStatusLabel(currentTrackStep)
+                )}`}
+              >
+                {getApplicationStatusLabel(currentTrackStep)}
+              </span>
+            </div>
+          </div>
+
+          {/* ID Info */}
+          <div className="space-y-1 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-600">Application ID:</span>
+              <span className="font-mono bg-gray-200 px-2 py-0.5 rounded text-xs">
+                {applicationId || "Missing"}
+              </span>
+            </div>
+            {isAdmin && userId && (
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-gray-600">User ID:</span>
+                <span className="font-mono bg-blue-100 px-2 py-0.5 rounded text-xs">
+                  {userId}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Admin Controls - Updated to match AdminApplicationTracker */}
+        {/* Admin Status Dropdown */}
         {isAdmin && !readOnly && (
-          <div className="flex justify-between items-center pt-4 border-t border-gray-200 mt-4">
-            <div className="text-sm text-gray-600">
-              Click on steps above to update progress
-              {localStatus !== currentStatus && (
-                <span className="block text-xs text-orange-600 mt-1">
-                  Pending changes: Step {localStatus} selected
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <h5 className="text-xs font-medium text-blue-900 mb-2">
+              Admin Controls
+            </h5>
+            <div className="space-y-2">
+              <div>
+                <label className="text-xs font-medium text-blue-800 block mb-1">
+                  Application Status:
+                </label>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowStatusDropdown(!showStatusDropdown)}
+                    className="w-full bg-white border border-blue-300 rounded px-2 py-1 text-xs text-left flex items-center justify-between hover:border-blue-400"
+                  >
+                    <span className="truncate">
+                      {getApplicationStatusLabel(localApplicationStatus)}
+                    </span>
+                    <ChevronDown
+                      className={`w-3 h-3 transition-transform ${
+                        showStatusDropdown ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {showStatusDropdown && (
+                    <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-blue-300 rounded shadow-lg z-50 max-h-32 overflow-y-auto">
+                      {APPLICATION_STATUS.map((status) => (
+                        <button
+                          key={status.id}
+                          onClick={() => handleStatusChange(status.id)}
+                          className={`w-full text-left px-2 py-1 text-xs hover:bg-blue-50 ${
+                            localApplicationStatus === status.id
+                              ? "bg-blue-100 text-blue-900 font-medium"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {status.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {hasChanges && (
+                <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
+                  Pending: Track Step {localTrackStep}, Status:{" "}
+                  {getApplicationStatusLabel(localApplicationStatus)}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Error Display */}
+        {statusUpdateError && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-600 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span className="break-words">{statusUpdateError}</span>
+            </p>
+          </div>
+        )}
+
+        {/* Admin Controls */}
+        {isAdmin && !readOnly && (
+          <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+            <div className="text-xs text-gray-600">
+              {hasChanges ? (
+                <span className="text-orange-600 font-medium">
+                  Pending changes ready to save
                 </span>
+              ) : (
+                "Click steps above to update"
               )}
             </div>
             <button
               onClick={handleStatusUpdate}
               disabled={
-                isUpdatingStatus ||
-                localStatus === currentStatus ||
-                !applicationId ||
-                !userId
+                isUpdatingStatus || !hasChanges || !applicationId || !userId
               }
-              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:shadow-md transform hover:scale-105 disabled:hover:scale-100"
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 flex items-center gap-2 text-xs font-medium transition-all duration-200"
             >
               {isUpdatingStatus ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                  <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
                   Updating...
                 </>
-              ) : localStatus === currentStatus ? (
+              ) : !hasChanges ? (
                 <>
-                  <CheckCircle className="w-4 h-4" />
-                  Up to date
+                  <CheckCircle className="w-3 h-3" />
+                  Updated
                 </>
               ) : !applicationId || !userId ? (
                 <>
-                  <X className="w-4 h-4" />
+                  <X className="w-3 h-3" />
                   Missing Info
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4" />
-                  Update Status to Step {localStatus}
+                  <Save className="w-3 h-3" />
+                  Save Changes
                 </>
               )}
             </button>
           </div>
         )}
       </div>
+
+      {/* Click outside to close dropdown */}
+      {showStatusDropdown && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowStatusDropdown(false)}
+        />
+      )}
     </div>
   );
 };
 
-// Main Scholarship Status Component with Admin Support
+// Main Scholarship Status Component with Horizontal Scrolling
 const ScholarshipStatus: React.FC<ScholarshipStatusProps> = ({
   userId,
   isAdmin = false,
   readOnly = false,
   extractUserIdFromUrl = false,
   userIdFromData = undefined,
+  showOnlyConfirmed = false, // New prop with default false
 }) => {
-  // Using the store to get applied scholarship courses
+  // Choose which data source to use based on showOnlyConfirmed prop
   const {
+    // For all scholarships (existing behavior)
     appliedScholarshipCourses,
     appliedScholarshipCourseIds,
     loadingApplications,
-    error,
     fetchAppliedScholarship,
+
+    // For confirmed scholarships only (new)
+    confirmedScholarshipCourses,
+    confirmedScholarshipCourseIds,
+    loadingConfirmedApplications,
+    fetchConfirmedScholarshipCourses,
   } = useUserStore();
 
-  // Smart userId detection (similar to AdminApplicationTracker)
+  // Smart userId detection (keep existing logic)
   const [detectedUserId, setDetectedUserId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -694,7 +758,7 @@ const ScholarshipStatus: React.FC<ScholarshipStatusProps> = ({
       return;
     }
 
-    // Method 3: Extract from URL parameters (for admin pages like /admin/user/[userId])
+    // Method 3: Extract from URL parameters
     if (extractUserIdFromUrl && typeof window !== "undefined") {
       const pathSegments = window.location.pathname.split("/");
       const userIndex = pathSegments.findIndex((segment) => segment === "user");
@@ -703,7 +767,6 @@ const ScholarshipStatus: React.FC<ScholarshipStatusProps> = ({
         return;
       }
 
-      // Try to get from dashboard route pattern
       const dashboardIndex = pathSegments.findIndex(
         (segment) => segment === "dashboard"
       );
@@ -731,33 +794,39 @@ const ScholarshipStatus: React.FC<ScholarshipStatusProps> = ({
 
   const finalUserId = detectedUserId || userId;
 
-  console.log("ScholarshipStatus Debug Info:", {
-    userId,
-    finalUserId,
-    appliedScholarshipCourseIds,
-    loadingApplications,
-    error,
-    isAdmin,
-    readOnly,
-  });
+  // Choose data source based on showOnlyConfirmed prop
+  const scholarshipCourses = showOnlyConfirmed
+    ? confirmedScholarshipCourses
+    : appliedScholarshipCourses;
+  const scholarshipCourseIds = showOnlyConfirmed
+    ? confirmedScholarshipCourseIds
+    : appliedScholarshipCourseIds;
+  const loading = showOnlyConfirmed
+    ? loadingConfirmedApplications
+    : loadingApplications;
+  const fetchFunction = showOnlyConfirmed
+    ? fetchConfirmedScholarshipCourses
+    : fetchAppliedScholarship;
 
   // Fetch scholarship data when component mounts or userId changes
   useEffect(() => {
     if (finalUserId) {
-      console.log("Fetching scholarship data for userId:", finalUserId);
-      fetchAppliedScholarship(finalUserId);
+      console.log(
+        `Fetching ${
+          showOnlyConfirmed ? "confirmed" : "all"
+        } scholarship data for userId:`,
+        finalUserId
+      );
+      fetchFunction(finalUserId);
     }
-  }, [finalUserId, fetchAppliedScholarship]);
+  }, [finalUserId, fetchFunction, showOnlyConfirmed]);
 
   // Admin status update handler
-  const handleStatusUpdate = async (
-    // applicationId: string,
-    // newStatus: number
-  ): Promise<boolean> => {
+  const handleStatusUpdate = async (): Promise<boolean> => {
     try {
-      // Refresh the data after successful update
       if (finalUserId) {
-        await fetchAppliedScholarship(finalUserId);
+        // Refresh the appropriate data source
+        await fetchFunction(finalUserId);
       }
       return true;
     } catch (error) {
@@ -766,111 +835,42 @@ const ScholarshipStatus: React.FC<ScholarshipStatusProps> = ({
     }
   };
 
-  // Helper functions
-  // const getApplicationStepLabel = (applicationStatus?: number): string => {
-  //   const step = APPLICATION_STEPS.find(
-  //     (s) => s.id === (applicationStatus || 1)
-  //   );
-  //   return step ? step.label : "Application Started";
-  // };
-
-  // const getApplicationProgress = (applicationStatus?: number): number => {
-  //   return Math.round(
-  //     ((applicationStatus || 1) / APPLICATION_STEPS.length) * 100
-  //   );
-  // };
-
-  // const getStatusColor = (status?: string): string => {
-  //   switch (status?.toLowerCase()) {
-  //     case "approved":
-  //       return "bg-green-100 text-green-800";
-  //     case "rejected":
-  //       return "bg-red-100 text-red-800";
-  //     case "shortlisted":
-  //       return "bg-blue-100 text-blue-800";
-  //     case "under review":
-  //       return "bg-yellow-100 text-yellow-800";
-  //     case "pending":
-  //     case "submitted":
-  //     default:
-  //       return "bg-orange-100 text-orange-800";
-  //   }
-  // };
-
-  // const formatDate = (dateString?: string): string => {
-  //   if (!dateString) return "Not specified";
-  //   try {
-  //     return new Date(dateString).toLocaleDateString("en-US", {
-  //       year: "numeric",
-  //       month: "long",
-  //       day: "numeric",
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     return "Invalid date";
-  //   }
-  // };
-
   // Loading state
-  if (loadingApplications) {
+  if (loading) {
     return (
       <div className="bg-white rounded-xl shadow-sm border p-8">
         <div className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600" />
           <span className="ml-3 text-gray-600">
-            Loading scholarship applications...
+            Loading {showOnlyConfirmed ? "confirmed" : ""} scholarship
+            applications...
           </span>
         </div>
       </div>
     );
   }
 
-  // Error state
-  if (error) {
-    return (
-      <div className="bg-white rounded-xl shadow-sm border p-8">
-        <div className="text-center text-red-600">
-          <X className="w-12 h-12 mx-auto mb-4" />
-          <p className="text-lg font-semibold mb-2">
-            Error Loading Applications
-          </p>
-          <p className="break-words">{error}</p>
-          <button
-            onClick={() => {
-              console.log("Retry button clicked");
-              if (finalUserId) {
-                fetchAppliedScholarship(finalUserId);
-              }
-            }}
-            className="mt-4 bg-[#C7161E] hover:bg-[#f03c45] text-white px-4 py-2 rounded"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // No applied scholarships state
-  if (
-    !appliedScholarshipCourseIds ||
-    appliedScholarshipCourseIds.length === 0
-  ) {
+  // No scholarships state
+  if (!scholarshipCourseIds || scholarshipCourseIds.length === 0) {
     return (
       <div className="bg-white rounded-xl shadow-sm border p-8">
         <div className="text-center">
-          <div className="w-12 h-12 text-gray-400 mx-auto mb-4">
-            <span className="text-4xl">🎓</span>
-          </div>
+          <GraduationCap className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            No Scholarship Applications
+            {showOnlyConfirmed
+              ? "No Confirmed Scholarship Applications"
+              : "No Scholarship Applications"}
           </h3>
           <p className="text-gray-600">
-            {isAdmin
+            {showOnlyConfirmed
+              ? isAdmin
+                ? "This student hasn't confirmed any scholarship applications yet."
+                : "You haven't confirmed any scholarship applications yet."
+              : isAdmin
               ? "This student hasn't applied to any scholarships yet."
               : "Start your journey by applying to your first scholarship!"}
           </p>
-          {!isAdmin && (
+          {!isAdmin && !showOnlyConfirmed && (
             <button className="mt-4 bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
               Browse Scholarships
             </button>
@@ -885,63 +885,84 @@ const ScholarshipStatus: React.FC<ScholarshipStatusProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-          <span className="text-3xl">🎓</span>
-          {isAdmin
+          <GraduationCap className="w-8 h-8 text-red-600" />
+          {showOnlyConfirmed
+            ? isAdmin
+              ? "Confirmed Scholarship Applications"
+              : "Your Confirmed Scholarship Applications"
+            : isAdmin
             ? "Scholarship Applications"
-            : "You are applying for scholarships"}
+            : "Your Scholarship Applications"}
         </h2>
         <div className="text-right">
           <p className="text-lg font-semibold text-gray-900">
-            {appliedScholarshipCourseIds.length}
+            {scholarshipCourseIds.length}
           </p>
           <p className="text-sm text-gray-600">
-            Application{appliedScholarshipCourseIds.length !== 1 ? "s" : ""}
+            {showOnlyConfirmed ? "Confirmed " : ""}Application
+            {scholarshipCourseIds.length !== 1 ? "s" : ""}
           </p>
         </div>
       </div>
 
-      {/* Debug Info for Admins */}
-      {isAdmin && process.env.NODE_ENV === "development" && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-blue-900 mb-2">
-            Debug Info (Dev Mode)
-          </h4>
-          <div className="text-xs text-blue-700 space-y-1">
-            <p>Final User ID: {finalUserId || "Not detected"}</p>
-            <p>
-              Applications Count: {appliedScholarshipCourseIds?.length || 0}
-            </p>
-            <p>Admin Mode: {isAdmin ? "Enabled" : "Disabled"}</p>
-            <p>Read Only: {readOnly ? "Yes" : "No"}</p>
+      {/* Horizontal Scrollable Container */}
+      <div className="relative">
+        {/* Scroll Indicator */}
+        {scholarshipCourseIds.length > 1 && (
+          <div className="absolute top-4 right-4 z-20 text-xs text-gray-400 bg-white/80 px-2 py-1 rounded-full">
+            Scroll →
           </div>
+        )}
+
+        <div
+          className="flex overflow-x-auto gap-6 pb-4 scroll-smooth"
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "#C7161E #f1f1f1",
+          }}
+        >
+          {scholarshipCourseIds.map((applicationId: string) => {
+            const application = scholarshipCourses[applicationId];
+
+            if (!application) {
+              console.warn(`Application ${applicationId} not found in store`);
+              return null;
+            }
+
+            return (
+              <ScholarshipApplicationTracker
+                key={application._id}
+                application={application}
+                isAdmin={isAdmin}
+                userId={finalUserId || ""}
+                onStatusUpdate={isAdmin ? handleStatusUpdate : undefined}
+                readOnly={readOnly}
+              />
+            );
+          })}
         </div>
-      )}
-
-      {/* Applications List */}
-      <div className="space-y-4">
-        {appliedScholarshipCourseIds.map((applicationId: string) => {
-          const application = appliedScholarshipCourses[applicationId];
-
-          if (!application) {
-            console.warn(`Application ${applicationId} not found in store`);
-            return null;
-          }
-
-          return (
-            <ScholarshipApplicationTracker
-              key={application._id}
-              application={application}
-              isAdmin={isAdmin}
-              userId={finalUserId || ""}
-              onStatusUpdate={isAdmin ? handleStatusUpdate : undefined}
-              readOnly={readOnly}
-            />
-          );
-        })}
       </div>
 
+      {/* Custom Scrollbar Styles */}
+      <style jsx>{`
+        .overflow-x-auto::-webkit-scrollbar {
+          height: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+          background: #c7161e;
+          border-radius: 10px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+          background: #f03c45;
+        }
+      `}</style>
+
       {/* Admin Instructions */}
-      {isAdmin && !readOnly && appliedScholarshipCourseIds.length > 0 && (
+      {isAdmin && !readOnly && scholarshipCourseIds.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
           <h4 className="text-sm font-medium text-blue-900 mb-2 flex items-center gap-2">
             <AlertCircle className="w-4 h-4" />
@@ -949,16 +970,33 @@ const ScholarshipStatus: React.FC<ScholarshipStatusProps> = ({
           </h4>
           <div className="text-sm text-blue-700 space-y-1">
             <p>
-              • Click on any step in the timeline to update the application
-              status
+              •{" "}
+              {showOnlyConfirmed
+                ? "Viewing only confirmed scholarship applications"
+                : "Viewing all scholarship applications"}
             </p>
             <p>
-              • Changes are highlighted in orange until you click &quot;Update
-              Status&quot;
+              • Click on timeline steps in each card to update the application
+              progress
             </p>
-            <p>• All status updates are saved immediately to the database</p>
+            <p>
+              • Use the &quot;Admin Controls&quot; section in each card to
+              change status
+            </p>
+            <p>• Scroll horizontally to view all applications</p>
+            <p>
+              • Changes are highlighted until you click &quot;Save Changes&quot;
+            </p>
+            <p>• All updates are saved immediately to the database</p>
             <p>• Students will see the updated progress in their dashboard</p>
           </div>
+        </div>
+      )}
+
+      {/* Mobile scroll hint */}
+      {scholarshipCourseIds.length > 1 && (
+        <div className="text-center text-sm text-gray-500 md:hidden">
+          <p>Swipe left or right to view all applications</p>
         </div>
       )}
     </div>
