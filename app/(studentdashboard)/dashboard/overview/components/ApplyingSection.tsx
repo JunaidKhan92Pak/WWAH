@@ -517,7 +517,7 @@ const ApplyingSection: React.FC = () => {
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-center gap-6">
               <Image src="/spark.png" alt="Spark Icon" width={80} height={80} />
-              <p>Are you sure you want to Confirm this course?</p>
+             <p className="text-[12px]">Are you sure you want to Confirm this course?</p>
             </DialogTitle>
           </DialogHeader>
           <div className="flex justify-center gap-4 pt-4">
@@ -638,7 +638,7 @@ const ApplyingSection: React.FC = () => {
 
                   <div className="flex-1 space-y-2">
                     {/* Course title */}
-                    <p className="text-sm font-semibold">
+                    <p className="text-[14px] font-semibold">
                       {course.course_title || "Course Title Not Available"}
                     </p>
 
@@ -651,9 +651,7 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Location"
                         />
-                        <span>
-                          {course.countryname || "Country not specified"}
-                        </span>
+                        <p className="text-[12px]">{course.countryname || "Country not specified"}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Image
@@ -662,7 +660,7 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Intake"
                         />
-                        <span>{course.intake || "Not specified"}</span>
+                       <p className="text-[12px]">{course.intake || "Not specified"}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Image
@@ -671,7 +669,7 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Duration"
                         />
-                        <span>{course.duration || "Not specified"}</span>
+                       <p className="text-[12px]">{course.duration || "Not specified"}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Image
@@ -680,10 +678,10 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Fee"
                         />
-                        <span>
+                       <p className="text-[12px]">
                           {course.annual_tuition_fee?.currency || "$"}{" "}
                           {course.annual_tuition_fee?.amount || "N/A"}
-                        </span>
+                        </p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Image
@@ -692,9 +690,17 @@ const ApplyingSection: React.FC = () => {
                           height={18}
                           alt="dollar"
                         />
-                        <span>Application fee:</span>
+                       <p className="text-[12px]">Application fee:</p>
                       </div>
-                      <span>{course.application_fee || "Not specified"}</span>
+                      <p
+                        className="truncate text-[12px] max-w-[100px]"
+                        title={course.application_fee || "Not specified"}
+                      >
+                        {course.application_fee || "Not specified"}
+                      </p>
+                      {/* <p className="truncate">
+                        {course.application_fee || "Not specified"}
+                      </p> */}
                       <div className="flex items-center gap-1">
                         <Image
                           src="/DashboardPage/deadline.svg"
@@ -702,11 +708,9 @@ const ApplyingSection: React.FC = () => {
                           height={13}
                           alt="Deadline"
                         />
-                        <span>Deadline:</span>
+                       <p className="text-[12px]">Deadline:</p>
                       </div>
-                      <span>
-                        {course.application_deadline || "Not specified"}
-                      </span>
+                     <p className="text-[12px]">{course.application_deadline || "Not specified"}</p>
                     </div>
                   </div>
                 </div>
