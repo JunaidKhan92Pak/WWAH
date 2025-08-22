@@ -1,9 +1,20 @@
-import React from "react";
+
+
+import React, { useState } from "react";
 import { useUserStore } from "@/store/useUserData";
 import Image from "next/image";
 import CircularProgress from "./CircularProgress";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import toast from "react-hot-toast";
+import { getAuthToken } from "@/utils/authHelper";
 
 // Type definitions for better TypeScript support
 interface AppliedScholarshipCourseProps {
@@ -21,7 +32,8 @@ interface AppliedScholarshipCourseProps {
   createdAt?: string;
   updatedAt?: string;
   ScholarshipId: string;
-  
+  isConfirmed?: boolean; // ✅ NEW: Added confirmation field
+
   banner?: string; // Added banner property like in backup
 }
 
@@ -31,12 +43,29 @@ const AppliedScholarship = () => {
   const { user } = store;
   console.log("Debug - user:", user);
 
+  // ✅ NEW: Modal states
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [showContactModal, setShowContactModal] = useState<boolean>(false);
+  const [scholarshipToConfirm, setScholarshipToConfirm] = useState<
+    string | null
+  >(null);
+
   // Safely access the loading state - matching backup pattern
   const loadingApplications =
     (store as { loadingApplications?: boolean }).loadingApplications || false;
+
   const handleDeleteApplication = async (applicationId: string) => {
     if (!user?._id) {
       alert("User not found. Please log in again.");
+      return;
+    }
+
+    // Check if scholarship is confirmed
+    const scholarship = appliedCoursesArray.find(
+      (app) => app._id === applicationId
+    );
+    if (scholarship?.isConfirmed) {
+      setShowContactModal(true);
       return;
     }
 
@@ -64,16 +93,7 @@ const AppliedScholarship = () => {
       const data = await response.json();
 
       if (data.success) {
-
         alert("Application deleted successfully!");
-
-        // Option 1: If you have a refresh method in your store
-        // store.refreshUserData();
-
-        // Option 2: Manual update (you might need to implement this in your store)
-        // store.removeApplication(applicationId);
-
-        // For now, you might want to reload the page or refetch user data
         window.location.reload();
       } else {
         alert(data.message || "Failed to delete application");
@@ -83,6 +103,98 @@ const AppliedScholarship = () => {
       alert("An error occurred while deleting the application");
     }
   };
+
+  // ✅ NEW: Handle confirm button click - show modal
+  const handleConfirmButtonClick = (scholarshipId: string) => {
+    console.log("Confirm button clicked for scholarship:", scholarshipId);
+    setScholarshipToConfirm(scholarshipId);
+    setShowConfirmModal(true);
+    console.log("Modal should be open now");
+  };
+
+  // ✅ NEW: Handle confirmation modal Yes click
+  const handleConfirmYes = async () => {
+    if (scholarshipToConfirm) {
+      await handleScholarshipConfirmation(scholarshipToConfirm, true);
+    }
+    setShowConfirmModal(false);
+    setScholarshipToConfirm(null);
+  };
+
+  // ✅ NEW: Handle confirmation modal No click
+  const handleConfirmNo = () => {
+    setShowConfirmModal(false);
+    setScholarshipToConfirm(null);
+  };
+
+  // ✅ NEW: Function to handle scholarship confirmation
+  const handleScholarshipConfirmation = async (
+    scholarshipId: string,
+    isConfirmed: boolean
+  ) => {
+    console.log("Updating scholarship confirmation:", {
+      scholarshipId,
+      isConfirmed,
+    });
+
+    const loadingToast = toast.loading(
+      isConfirmed ? "Confirming scholarship..." : "Updating scholarship...",
+      {
+        position: "top-center",
+      }
+    );
+
+    try {
+      const token = getAuthToken();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/confirm/${scholarshipId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add auth token
+          },
+          body: JSON.stringify({
+            isConfirmed,
+            userId: user?._id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.dismiss(loadingToast);
+        toast.success(
+          isConfirmed
+            ? "Scholarship confirmed successfully!"
+            : "Scholarship confirmation updated!",
+          {
+            duration: 2000,
+            position: "top-center",
+          }
+        );
+
+        // Refresh the page or update local state
+        window.location.reload();
+      } else {
+        throw new Error(
+          data.message || "Failed to update scholarship confirmation"
+        );
+      }
+    } catch (error: unknown) {
+      console.error("Error updating scholarship confirmation:", error);
+      toast.dismiss(loadingToast);
+
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to update confirmation: ${errorMessage}`, {
+        duration: 4000,
+        position: "top-center",
+      });
+    }
+  };
+
   // ✅ FIXED: Use user.appliedScholarshipCourses directly like in backup
   const appliedCoursesArray: AppliedScholarshipCourseProps[] =
     user?.appliedScholarshipCourses || [];
@@ -250,6 +362,55 @@ const AppliedScholarship = () => {
 
   return (
     <div className="p-3 bg-gray-50">
+      {/* ✅ NEW: Contact Advisor Modal */}
+      <Dialog open={showContactModal} onOpenChange={setShowContactModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              Scholarship Confirmed
+            </DialogTitle>
+            <DialogDescription className="text-center pt-4">
+              This scholarship has been confirmed and cannot be removed. Please
+              contact your WWAH advisor for any changes.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center pt-4">
+            <Button
+              onClick={() => setShowContactModal(false)}
+              className="bg-[#C7161E] hover:bg-[#f03c45] text-white"
+            >
+              Understood
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ✅ NEW: Confirmation Modal */}
+      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              Are you sure you want to confirm this scholarship?
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center gap-4 pt-4">
+            <Button
+              onClick={handleConfirmYes}
+              className="bg-[#C7161E] hover:bg-[#f03c45] text-white px-8"
+            >
+              Yes
+            </Button>
+            <Button
+              onClick={handleConfirmNo}
+              variant="outline"
+              className="px-8"
+            >
+              No
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Applied Scholarships
@@ -285,173 +446,213 @@ const AppliedScholarship = () => {
               }}
             >
               {appliedCoursesArray.map(
-                (application: AppliedScholarshipCourseProps) => (
-                  <div
-                    key={application._id}
-                    className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200"
-                  >
-                    <div className="bg-white px-0 py-2 rounded-lg overflow-hidden mt-2">
-                      <div className="flex">
-                        <div className="relative md:w-[200px] h-[150px] rounded-xl overflow-hidden">
-                          <Image
-                            src={
-                              application.banner ||
-                              "https://via.placeholder.com/200x150?text=No+Image"
-                            }
-                            alt={`${application.scholarshipName} banner`}
-                            fill
-                            className="object-cover"
-                            sizes="192px"
-                          />
-                        </div>
+                (application: AppliedScholarshipCourseProps) => {
+                  const isConfirmed = application.isConfirmed || false;
 
-                        <div className="flex-1 p-2">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="text-[12px] font-semibold">
-                                {application.scholarshipName}
-                              </p>
-                              <p className="text-[12px]">
-                                {application.courseName}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-1 text-[12px]">
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/location.svg"
-                                alt="Location Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                {application.hostCountry || "Not specified"}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src="/clock.svg"
-                                alt="Duration Icon"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-gray-600">
-                                {application.duration || "Not specified"}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <Image
-                                src="/lang.svg"
-                                alt="Language Icon"
-                                width={16}
-                                height={16}
-                                className="w-3 h-3"
-                              />
-                              <span className="text-gray-600">
-                                {application.language || "Not specified"}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <Image
-                              src="/ielts/Dollar.svg"
-                              alt="University Icon"
-                              width={16}
-                              height={16}
-                              className="w-4 h-4"
-                            />
-                            <span className="text-gray-600 text-[12px]">
-                              {application.universityName || "Not specified"}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <Image
-                              src="/vectoruni.svg"
-                              alt="Scholarship Type Icon"
-                              width={16}
-                              height={16}
-                              className="w-3 h-3"
-                            />
-                            <span className="text-gray-600 text-[12px]">
-                              Scholarship Type:{" "}
-                              {application.scholarshipType || "Not specified"}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src="/calender.svg"
-                              alt="Deadline Icon"
-                              width={16}
-                              height={16}
-                              className="w-3 h-3"
-                            />
-                            <span className="text-gray-600 text-[12px]">
-                              Deadline: {formatDate(application.deadline)}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-center justify-evenly min-w-[140px]">
-                          <div className="flex gap-1">
-                            <button className="px-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-[14px] font-medium">
-                              <a
-                                href={`/scholarships/${application.ScholarshipId}`}
-                              >
-                                View
-                              </a>
-                            </button>
-                            <button
-                              className="p-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                              onClick={() =>
-                                handleDeleteApplication(application._id)
-                              }
-                              title="Delete Application"
-                            >
-                              <Image
-                                src="/delete.svg"
-                                alt="Delete Icon"
-                                width={16}
-                                height={16}
-                                className="w-5 h-5"
-                              />
-                            </button>
-                          </div>
-                          <div className="flex flex-col items-center mt-4">
-                            <p className="text-[12px] font-semibold mb-2 text-center w-4/5">
-                              Application Success Chances
-                            </p>
-                            <CircularProgress progress={75} />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-gray-200 flex justify-between items-center">
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="text-[12px] font-medium px-2 py-1 rounded-lg text-white bg-red-600">
-                            Current Status:
-                          </span>
-                          <span
-                            className={`inline-flex items-center px-3 py-1 rounded-xl text-xs font-medium ${getStatusColor(
-                              application.status
-                            )}`}
+                  return (
+                    <div
+                      key={application._id}
+                      className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-col items-end gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200"
+                    >
+                      <div className="flex gap-0 pr-8">
+                        <button className="px-2 bg-[#FCE7D2] text-gray-700 rounded-md hover:bg-red-700 transition-colors text-[14px] font-medium">
+                          <a
+                            href={`/scholarships/${application.ScholarshipId}`}
                           >
-                            ●{" "}
-                            {application.status ||
-                              "Awaiting Course Confirmation"}
-                          </span>
-                        </div>
-                        {application.appliedAt && (
-                          <div className="text-[12px] text-gray-500">
-                            Applied: {formatDate(application.appliedAt)}
+                            View
+                          </a>
+                        </button>
+                        {/* ✅ UPDATED: Delete button with confirmation check */}
+                        <button
+                          className={`py-1 px-4 rounded-md transition-colors ${
+                            isConfirmed
+                              ? "text-black-400 bg-[#FCE7D2] cursor-not-allowed opacity-50"
+                              : "text-black-600 hover:bg-red-50 cursor-pointer"
+                          }`}
+                          onClick={() =>
+                            handleDeleteApplication(application._id)
+                          }
+                          title={
+                            isConfirmed
+                              ? "Cannot delete confirmed scholarship"
+                              : "Delete Application"
+                          }
+                          disabled={isConfirmed}
+                        >
+                          <Image
+                            src="/delete.svg"
+                            alt="Delete Icon"
+                            width={16}
+                            height={16}
+                            className="w-5 h-5"
+                          />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between w-full">
+                        <div className="bg-white px-0 py-0 rounded-lg overflow-hidden mt-0">
+                          <div className="flex items-center">
+                            <div className="relative md:w-[200px] h-[150px] rounded-xl overflow-hidden">
+                              <Image
+                                src={
+                                  application.banner ||
+                                  "https://via.placeholder.com/200x150?text=No+Image"
+                                }
+                                alt={`${application.scholarshipName} banner`}
+                                fill
+                                className="object-cover"
+                                sizes="192px"
+                              />
+                            </div>
+
+                            <div className="flex-1 p-2">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <p className="text-[12px] font-semibold">
+                                    {application.scholarshipName}
+                                  </p>
+                                  <p className="text-[12px]">
+                                    {application.courseName}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-1 text-[12px]">
+                                <div className="flex items-center gap-2">
+                                  <Image
+                                    src="/location.svg"
+                                    alt="Location Icon"
+                                    width={16}
+                                    height={16}
+                                    className="w-4 h-4"
+                                  />
+                                  <span className="text-gray-600">
+                                    {application.hostCountry || "Not specified"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Image
+                                    src="/clock.svg"
+                                    alt="Duration Icon"
+                                    width={16}
+                                    height={16}
+                                    className="w-4 h-4"
+                                  />
+                                  <span className="text-gray-600">
+                                    {application.duration || "Not specified"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Image
+                                    src="/lang.svg"
+                                    alt="Language Icon"
+                                    width={16}
+                                    height={16}
+                                    className="w-3 h-3"
+                                  />
+                                  <span className="text-gray-600">
+                                    {application.language || "Not specified"}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <Image
+                                  src="/ielts/Dollar.svg"
+                                  alt="University Icon"
+                                  width={16}
+                                  height={16}
+                                  className="w-4 h-4"
+                                />
+                                <span className="text-gray-600 text-[12px]">
+                                  {application.universityName ||
+                                    "Not specified"}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <Image
+                                  src="/vectoruni.svg"
+                                  alt="Scholarship Type Icon"
+                                  width={16}
+                                  height={16}
+                                  className="w-3 h-3"
+                                />
+                                <span className="text-gray-600 text-[12px]">
+                                  Scholarship Type:{" "}
+                                  {application.scholarshipType ||
+                                    "Not specified"}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  src="/calender.svg"
+                                  alt="Deadline Icon"
+                                  width={16}
+                                  height={16}
+                                  className="w-3 h-3"
+                                />
+                                <span className="text-gray-600 text-[12px]">
+                                  Deadline: {formatDate(application.deadline)}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col items-center justify-evenly min-w-[140px]">
+                              <div className="flex flex-col items-center mt-4">
+                                <p className="text-[12px] font-semibold mb-2 text-center w-4/5">
+                                  Application Success Chances
+                                </p>
+                                <CircularProgress progress={75} />
+                              </div>
+                            </div>
                           </div>
-                        )}
+
+                          <div className="border-t border-gray-200 flex justify-between items-center">
+                            <div className="flex items-center gap-3 mt-1">
+                              <span className="text-[12px] font-medium px-2 py-1 rounded-lg text-white bg-red-600">
+                                Current Status:
+                              </span>
+                              <span
+                                className={`inline-flex items-center px-3 py-1 rounded-xl text-xs font-medium ${getStatusColor(
+                                  application.status
+                                )}`}
+                              >
+                                ●{" "}
+                                {application.status ||
+                                  "Awaiting Scholarship Confirmation"}
+                              </span>
+                              {/* ✅ NEW: Confirmation indicator */}
+                              {/* {isConfirmed && (
+                              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                ✓ Confirmed
+                              </span>
+                            )} */}
+                            </div>
+                            {/* ✅ NEW: Confirm Scholarship Button */}
+                            <button
+                              onClick={() =>
+                                handleConfirmButtonClick(application._id)
+                              }
+                              disabled={isConfirmed}
+                              className={`px-6 py-2 rounded mr-4 text-white font-medium text-sm mt-2 ${
+                                isConfirmed
+                                  ? "bg-red-600 cursor-not-allowed"
+                                  : "bg-[#C7161E] hover:bg-[#A01419] cursor-pointer"
+                              }`}
+                            >
+                              {isConfirmed
+                                ? "Confirmed"
+                                : "Confirm Scholarship"}
+                            </button>
+                            {application.appliedAt && (
+                              <div className="text-[12px] text-gray-500">
+                                Applied: {formatDate(application.appliedAt)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
+                  );
+                }
               )}
             </div>
           )}

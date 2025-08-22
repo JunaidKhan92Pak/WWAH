@@ -44,6 +44,10 @@ const ApplyingSection: React.FC = () => {
   // ✅ NEW: Modal state
   const [showContactModal, setShowContactModal] = useState<boolean>(false);
 
+  // ✅ NEW: Confirmation modal state
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [courseToConfirm, setCourseToConfirm] = useState<string | null>(null);
+
   // Helper function to get application step label
   const getApplicationStepLabel = (applicationStatus: number): string => {
     const steps = [
@@ -222,6 +226,29 @@ const ApplyingSection: React.FC = () => {
     }
   };
 
+  // ✅ NEW: Handle confirm button click - show modal
+  const handleConfirmButtonClick = (courseId: string) => {
+    console.log("Confirm button clicked for course:", courseId);
+    setCourseToConfirm(courseId);
+    setShowConfirmModal(true);
+    console.log("Modal should be open now");
+  };
+
+  // ✅ NEW: Handle confirmation modal Yes click
+  const handleConfirmYes = async () => {
+    if (courseToConfirm) {
+      await handleCourseConfirmation(courseToConfirm, true);
+    }
+    setShowConfirmModal(false);
+    setCourseToConfirm(null);
+  };
+
+  // ✅ NEW: Handle confirmation modal No click
+  const handleConfirmNo = () => {
+    setShowConfirmModal(false);
+    setCourseToConfirm(null);
+  };
+
   // Function to handle course confirmation
   const handleCourseConfirmation = async (
     courseId: string,
@@ -307,7 +334,6 @@ const ApplyingSection: React.FC = () => {
   // No applied courses state
   if (!appliedCourseIds || appliedCourseIds.length === 0) {
     return (
-    
       <div>
         <div className="relative w-full h-[250px] flex items-center justify-center border border-gray-200 rounded-xl">
           {/* Blurred Dummy Card in Background */}
@@ -456,7 +482,7 @@ const ApplyingSection: React.FC = () => {
 
   return (
     <div className="relative">
-      {/* ✅ NEW: Contact Advisor Modal */}
+      {/* Contact Advisor Modal */}
       <Dialog open={showContactModal} onOpenChange={setShowContactModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -472,6 +498,33 @@ const ApplyingSection: React.FC = () => {
               className="bg-[#C7161E] hover:bg-[#f03c45] text-white"
             >
               Understood
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ✅ NEW: Confirmation Modal */}
+      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex flex-col items-center text-center gap-6">
+              <Image src="/spark.png" alt="Spark Icon" width={80} height={80} />
+              <p> you sure you want to delete this course?</p>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center gap-4 pt-4">
+            <Button
+              onClick={handleConfirmYes}
+              className="bg-[#C7161E] hover:bg-[#f03c45] text-white px-8"
+            >
+              Yes
+            </Button>
+            <Button
+              onClick={handleConfirmNo}
+              variant="outline"
+              className="px-8"
+            >
+              No
             </Button>
           </div>
         </DialogContent>
@@ -498,10 +551,10 @@ const ApplyingSection: React.FC = () => {
               key={course._id || index}
               className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200"
             >
-              {/* ✅ UPDATED: Remove Button with conditional styling and click handler */}
+              {/* Remove Button with conditional styling and click handler */}
               <button
                 onClick={() => handleRemoveButtonClick(course._id)}
-                className={`absolute top-2 right-1 z-10 border rounded-full w-4 h-4 flex items-center justify-center transition-colors ${
+                className={`absolute top-2 right-1 z-10 border rounded-full w-4 h-4 flex items-center justify-center transition-colors  ${
                   isConfirmed
                     ? "border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50"
                     : "border-gray-400 bg-white text-gray-400 hover:bg-red-600 hover:text-white cursor-pointer"
@@ -519,7 +572,7 @@ const ApplyingSection: React.FC = () => {
               <div className="flex flex-col md:flex-row items-start gap-4 flex-1">
                 {/* Course Image and University Info */}
                 <div>
-                  <div className="relative md:w-[200px] h-[150px] rounded-xl overflow-hidden">
+                  <div className="relative md:w-[230px] h-[150px] rounded-xl overflow-hidden">
                     <Image
                       src={
                         course.universityData?.universityImages?.banner ||
@@ -528,7 +581,7 @@ const ApplyingSection: React.FC = () => {
                       alt="Course Banner"
                       width={200}
                       height={150}
-                      className="w-[200px] h-[150px] object-cover"
+                      className="w-[230px] h-[150px] object-cover"
                     />
                     <div className="absolute top-4 left-0">
                       <div className="bg-gradient-to-t from-white to-transparent opacity-100 w-[70%]">
@@ -551,21 +604,13 @@ const ApplyingSection: React.FC = () => {
                   </div>
 
                   {/* Course Confirmation Checkbox */}
-                  <div className="flex items-center gap-2 pt-2">
-                    <input
-                      type="checkbox"
-                      checked={applicationDetails?.isConfirmed || false}
-                      onChange={(e) =>
-                        handleCourseConfirmation(course._id, e.target.checked)
-                      }
-                      className="accent-[#C7161E]"
-                      disabled={applicationDetails?.isConfirmed === true}
-                    />
-                    <label className="text-sm">
-                      {applicationDetails?.isConfirmed
-                        ? " Course confirmed - Cannot be changed"
-                        : "Yes, I want to apply for this course."}
-                    </label>
+                  <div className="flex items-center gap-2 pt-6">
+                    <Button className="bg-red-600">Current Status :</Button>
+                    <span className="text-sm ml-2">
+                      {getApplicationStepLabel(
+                        applicationDetails?.applicationStatus || 1
+                      )}
+                    </span>
                   </div>
                 </div>
 
@@ -631,49 +676,41 @@ const ApplyingSection: React.FC = () => {
                       {course.application_deadline || "Not specified"}
                     </span>
                   </div>
-
-                  {/* Application Status with Confirmation Badge */}
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs text-gray-600">
-                      Status:{" "}
-                      {getApplicationStepLabel(
-                        applicationDetails?.applicationStatus || 1
-                      )}
-                    </span>
-                    {applicationDetails?.isConfirmed && (
-                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                        Confirmed
-                      </span>
-                    )}
-                  </div>
                 </div>
               </div>
 
               {/* Right Section: Progress Circle */}
-              <div className="flex flex-col items-center justify-center min-w-[140px]">
-                <p className="text-sm font-semibold mb-2 text-center w-4/5">
-                  Application Progress
-                </p>
+              <div className="flex flex-col items-center justify-between mt-4 md:mt-0 md:ml-4">
+                <div className="flex flex-col items-center justify-center min-w-[140px]">
+                  <p className="text-sm font-semibold mb-2 text-center w-4/5">
+                    Application Progress
+                  </p>
 
-                {/* Use applicationStatus for progress */}
-                <CircularProgress
-                  progress={
-                    applicationDetails
-                      ? getApplicationProgress(
-                          applicationDetails.applicationStatus || 1
-                        )
-                      : 0
-                  }
-                />
-
-                {/* Confirmation Status Indicator */}
-                {/* {applicationDetails?.isConfirmed && (
-                  <div className="mt-2 text-center">
-                    <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                      ✓ Confirmed
-                    </div>
-                  </div>
-                )} */}
+                  {/* Use applicationStatus for progress */}
+                  <CircularProgress
+                    progress={
+                      applicationDetails
+                        ? getApplicationProgress(
+                            applicationDetails.applicationStatus || 1
+                          )
+                        : 0
+                    }
+                  />
+                </div>
+                {/* ✅ UPDATED: Confirm button now calls handleConfirmButtonClick */}
+                <button
+                  onClick={() => handleConfirmButtonClick(course._id)}
+                  disabled={applicationDetails?.isConfirmed === true}
+                  className={` py-2 rounded text-white font-medium text-sm mt-2 ${
+                    applicationDetails?.isConfirmed
+                      ? "bg-red-600 cursor-not-allowed px-8"
+                      : "bg-[#C7161E] hover:bg-[#A01419] cursor-pointer px-2"
+                  }`}
+                >
+                  {applicationDetails?.isConfirmed
+                    ? "Confirmed"
+                    : "Confirm Course Selection"}
+                </button>
               </div>
             </div>
           );
