@@ -324,7 +324,7 @@ const ImprovedExcelUploader = () => {
       const enhancedScholarship = {
         ...scholarship,
         table: {
-          course: columnData["Courses"] || ["Course"] || [],
+          course: columnData["Course"] || ["Courses"] || [],
           create_application: columnData["Create Your Application"] || [],
           deadline: columnData["Deadline"] || [],
           duration: columnData["Duration"] || [],
@@ -332,7 +332,7 @@ const ImprovedExcelUploader = () => {
           faculty_department: columnData["Faculty/Department"] || [],
           scholarship_type: columnData["Scholarship Type"] || [],
           teaching_language: columnData["Teaching Language"] || [],
-          university: columnData["Host University"] || ["University"] || [],
+          university: columnData["University"] || ["Host University"] || [],
           countries: columnData["Eligible Countries"] || ["Country"] || [],
         } // Full table for each (memory intensive!)
       };
@@ -573,19 +573,19 @@ const ImprovedExcelUploader = () => {
       setProcessedData(processedData);
 
       // Send to API
-      const res = await fetch("/api/addScholarship", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(processedData),
-        credentials: "include",
-      });
+      // const res = await fetch("/api/addScholarship", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(processedData),
+      //   credentials: "include",
+      // });
 
-      if (!res.ok) {
-        throw new Error(`API returned status: ${res.status}`);
-      }
+      // if (!res.ok) {
+      //   throw new Error(`API returned status: ${res.status}`);
+      // }
 
-      const json = await res.json();
-      console.log(`API response:`, json);
+      // const json = await res.json();
+      // console.log(`API response:`, json);
 
       setResult(`Successfully processed ${processedData.length} scholarship(s)${file2 ? ' with merged data from both files' : ''}`);
 
