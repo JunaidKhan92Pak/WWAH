@@ -39,7 +39,7 @@ import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/store/useUserData";
 import toast from "react-hot-toast";
 import { getAuthToken } from "@/utils/authHelper";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Course {
   _id: string;
@@ -78,7 +78,7 @@ const CourseArchive = () => {
   const [favoriteCourses, setFavoriteCourses] = useState<
     Record<string, (typeof courses)[0]>
   >({});
-
+const router = useRouter();
   const { user, fetchUserProfile } = useUserStore();
   const [loadingFavorites, setLoadingFavorites] = useState<
     Record<string, boolean>
@@ -249,6 +249,8 @@ const CourseArchive = () => {
         duration: 2000,
         position: "top-center",
       });
+      router.push("/dashboard/overview");
+
       return data;
     } catch (error) {
       console.error("Error adding course to applied courses:", error);

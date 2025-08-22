@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { useUserStore } from "@/store/useUserData";
+import { useRouter } from "next/navigation";
 
 interface Course {
   _id: string;
@@ -24,7 +25,9 @@ interface Course {
     currency?: string;
     amount?: number;
   };
+
   application_deadline?: string;
+  application_fee: string;
   universityData?: {
     university_name?: string;
     universityImages?: {
@@ -47,6 +50,9 @@ const ApplyingSection: React.FC = () => {
   // ✅ NEW: Confirmation modal state
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [courseToConfirm, setCourseToConfirm] = useState<string | null>(null);
+
+  // ✅ NEW: Router for navigation
+  const router = useRouter();
 
   // Helper function to get application step label
   const getApplicationStepLabel = (applicationStatus: number): string => {
@@ -234,10 +240,12 @@ const ApplyingSection: React.FC = () => {
     console.log("Modal should be open now");
   };
 
-  // ✅ NEW: Handle confirmation modal Yes click
+  // ✅ UPDATED: Handle confirmation modal Yes click with redirect
   const handleConfirmYes = async () => {
     if (courseToConfirm) {
       await handleCourseConfirmation(courseToConfirm, true);
+      // Redirect to complete application page after successful confirmation
+      router.push("/dashboard/completeapplication");
     }
     setShowConfirmModal(false);
     setCourseToConfirm(null);
@@ -509,7 +517,7 @@ const ApplyingSection: React.FC = () => {
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-center gap-6">
               <Image src="/spark.png" alt="Spark Icon" width={80} height={80} />
-              <p> you sure you want to delete this course?</p>
+              <p>Are you sure you want to Confirm this course?</p>
             </DialogTitle>
           </DialogHeader>
           <div className="flex justify-center gap-4 pt-4">
@@ -531,7 +539,8 @@ const ApplyingSection: React.FC = () => {
       </Dialog>
 
       <p className="font-semibold text-lg md:text-xl mb-4">
-        You are applying for ({appliedCourseIds.length} course
+        You are applying for Self-Financed admission ({appliedCourseIds.length}{" "}
+        course
         {appliedCourseIds.length !== 1 ? "s" : ""}):
       </p>
 
@@ -549,168 +558,200 @@ const ApplyingSection: React.FC = () => {
           return (
             <div
               key={course._id || index}
-              className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200"
+              className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-col gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-2 overflow-hidden border border-gray-200"
             >
               {/* Remove Button with conditional styling and click handler */}
-              <button
-                onClick={() => handleRemoveButtonClick(course._id)}
-                className={`absolute top-2 right-1 z-10 border rounded-full w-4 h-4 flex items-center justify-center transition-colors  ${
-                  isConfirmed
-                    ? "border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50"
-                    : "border-gray-400 bg-white text-gray-400 hover:bg-red-600 hover:text-white cursor-pointer"
-                }`}
-                title={
-                  isConfirmed
-                    ? "Cannot remove confirmed course"
-                    : "Remove from applications"
-                }
-              >
-                ×
-              </button>
-
-              {/* Left Section: Course Info */}
-              <div className="flex flex-col md:flex-row items-start gap-4 flex-1">
-                {/* Course Image and University Info */}
-                <div>
-                  <div className="relative md:w-[230px] h-[150px] rounded-xl overflow-hidden">
-                    <Image
-                      src={
-                        course.universityData?.universityImages?.banner ||
-                        `/course-${index + 1}.png`
-                      }
-                      alt="Course Banner"
-                      width={200}
-                      height={150}
-                      className="w-[230px] h-[150px] object-cover"
-                    />
-                    <div className="absolute top-4 left-0">
-                      <div className="bg-gradient-to-t from-white to-transparent opacity-100 w-[70%]">
-                        <div className="flex items-center gap-2">
-                          <img
-                            src={
-                              course.universityData?.universityImages?.logo ||
-                              "/logo.png"
-                            }
-                            alt="University Logo"
-                            className="w-6 h-6 object-cover object-center rounded-full aspect-square"
-                          />
-                          <p className="text-sm leading-tight pr-1">
-                            {course.universityData?.university_name ||
-                              "University"}
-                          </p>
+              <div className="flex justify-end gap-2">
+                <button className="px-2 bg-[#FCE7D2] text-gray-700 rounded-md hover:text-white hover:bg-red-700 transition-colors text-[12px] font-medium">
+                  <Link href={`/courses/${course._id}`}>View</Link>
+                </button>
+                <button
+                  onClick={() => handleRemoveButtonClick(course._id)}
+                  className={` border py-1 px-4 rounded-md flex items-center justify-center transition-colors  ${
+                    isConfirmed
+                      ? "text-black-400 bg-[#FCE7D2] cursor-not-allowed opacity-50"
+                      : "text-black-600 hover:bg-red-50 cursor-pointer"
+                  }`}
+                  title={
+                    isConfirmed
+                      ? "Cannot remove confirmed course"
+                      : "Remove from applications"
+                  }
+                >
+                  <Image
+                    src="/delete.svg"
+                    alt="Delete Icon"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />{" "}
+                </button>
+              </div>
+              <div className="flex flex-col md:flex-row justify-between gap-4">
+                {/* Left Section: Course Info */}
+                <div className="flex flex-col md:flex-row items-start gap-4 flex-1">
+                  {/* Course Image and University Info */}
+                  <div>
+                    <div className="relative md:w-[230px] h-[180px] rounded-xl overflow-hidden">
+                      <Image
+                        src={
+                          course.universityData?.universityImages?.banner ||
+                          `/course-${index + 1}.png`
+                        }
+                        alt="Course Banner"
+                        width={200}
+                        height={150}
+                        className="w-[230px] h-[180px] object-cover"
+                      />
+                      <div className="absolute top-4 left-0">
+                        <div className="bg-gradient-to-t from-white to-transparent opacity-100 w-[70%]">
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={
+                                course.universityData?.universityImages?.logo ||
+                                "/logo.png"
+                              }
+                              alt="University Logo"
+                              className="w-6 h-6 object-cover object-center rounded-full aspect-square"
+                            />
+                            <p className="text-sm leading-tight pr-1">
+                              {course.universityData?.university_name ||
+                                "University"}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Course Confirmation Checkbox */}
-                  <div className="flex items-center gap-2 pt-6">
-                    <Button className="bg-red-600">Current Status :</Button>
-                    <span className="text-sm ml-2">
-                      {getApplicationStepLabel(
-                        applicationDetails?.applicationStatus || 1
-                      )}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex-1 space-y-2">
-                  {/* Course title */}
-                  <p className="text-sm font-semibold">
-                    {course.course_title || "Course Title Not Available"}
-                  </p>
-
-                  {/* Info grid */}
-                  <div className="grid grid-cols-2 gap-y-1 gap-x-4 space-y-1 text-sm text-gray-700">
-                    <div className="flex items-center gap-1">
-                      <Image
-                        src="/location.svg"
-                        width={16}
-                        height={16}
-                        alt="Location"
-                      />
-                      <span>
-                        {course.countryname || "Country not specified"}
+                    {/* Course Confirmation Checkbox */}
+                    <div className="flex items-center gap-0 pt-4">
+                      <Button className="bg-red-600 py-1">
+                        Current Status :
+                      </Button>
+                      <span className="text-sm ml-2">
+                        {getApplicationStepLabel(
+                          applicationDetails?.applicationStatus || 1
+                        )}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Image
-                        src="/DashboardPage/intake.svg"
-                        width={16}
-                        height={16}
-                        alt="Intake"
-                      />
-                      <span>{course.intake || "Not specified"}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Image
-                        src="/clock.svg"
-                        width={16}
-                        height={16}
-                        alt="Duration"
-                      />
-                      <span>{course.duration || "Not specified"}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Image
-                        src="/money.svg"
-                        width={16}
-                        height={16}
-                        alt="Fee"
-                      />
+                  </div>
+
+                  <div className="flex-1 space-y-2">
+                    {/* Course title */}
+                    <p className="text-sm font-semibold">
+                      {course.course_title || "Course Title Not Available"}
+                    </p>
+
+                    {/* Info grid */}
+                    <div className="grid grid-cols-2 gap-y-1 gap-x-4 space-y-1 text-sm text-gray-700">
+                      <div className="flex items-center gap-1">
+                        <Image
+                          src="/location.svg"
+                          width={16}
+                          height={16}
+                          alt="Location"
+                        />
+                        <span>
+                          {course.countryname || "Country not specified"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Image
+                          src="/DashboardPage/intake.svg"
+                          width={16}
+                          height={16}
+                          alt="Intake"
+                        />
+                        <span>{course.intake || "Not specified"}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Image
+                          src="/clock.svg"
+                          width={16}
+                          height={16}
+                          alt="Duration"
+                        />
+                        <span>{course.duration || "Not specified"}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Image
+                          src="/money.svg"
+                          width={16}
+                          height={16}
+                          alt="Fee"
+                        />
+                        <span>
+                          {course.annual_tuition_fee?.currency || "$"}{" "}
+                          {course.annual_tuition_fee?.amount || "N/A"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Image
+                          src="/dollar.png"
+                          width={18}
+                          height={18}
+                          alt="dollar"
+                        />
+                        <span>Application fee:</span>
+                      </div>
+                      <span>{course.application_fee || "Not specified"}</span>
+                      <div className="flex items-center gap-1">
+                        <Image
+                          src="/DashboardPage/deadline.svg"
+                          width={13}
+                          height={13}
+                          alt="Deadline"
+                        />
+                        <span>Deadline:</span>
+                      </div>
                       <span>
-                        {course.annual_tuition_fee?.currency || "$"}{" "}
-                        {course.annual_tuition_fee?.amount || "N/A"}
+                        {course.application_deadline || "Not specified"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Image
-                        src="/DashboardPage/deadline.svg"
-                        width={14}
-                        height={14}
-                        alt="Deadline"
-                      />
-                      <span>Deadline:</span>
-                    </div>
-                    <span>
-                      {course.application_deadline || "Not specified"}
-                    </span>
                   </div>
                 </div>
-              </div>
 
-              {/* Right Section: Progress Circle */}
-              <div className="flex flex-col items-center justify-between mt-4 md:mt-0 md:ml-4">
-                <div className="flex flex-col items-center justify-center min-w-[140px]">
-                  <p className="text-sm font-semibold mb-2 text-center w-4/5">
-                    Application Progress
-                  </p>
+                {/* Right Section: Progress Circle */}
+                <div className="flex flex-col items-center justify-between mt-4 md:mt-0 md:ml-4">
+                  <div className="relative flex flex-col items-end justify-center min-w-[140px]">
+                    {/* Blurred content */}
+                    <div className="blur-sm opacity-40 pointer-events-none flex flex-col justify-center items-center">
+                      <p className="text-sm font-semibold mb-2 text-center w-4/5">
+                        Application Success Chances
+                      </p>
 
-                  {/* Use applicationStatus for progress */}
-                  <CircularProgress
-                    progress={
-                      applicationDetails
-                        ? getApplicationProgress(
-                            applicationDetails.applicationStatus || 1
-                          )
-                        : 0
-                    }
-                  />
+                      <CircularProgress
+                        progress={
+                          applicationDetails
+                            ? getApplicationProgress(
+                                applicationDetails.applicationStatus || 1
+                              )
+                            : 0
+                        }
+                      />
+                    </div>
+
+                    {/* Overlay Button */}
+                    <button className="absolute mr-2 px-2 py-1 text-[12px] bg-red-600 text-white rounded-full shadow-md hover:bg-red-700">
+                      Generate Success Chances
+                    </button>
+                  </div>
+
+                  {/* ✅ UPDATED: Confirm button now calls handleConfirmButtonClick */}
+                  <button
+                    onClick={() => handleConfirmButtonClick(course._id)}
+                    disabled={applicationDetails?.isConfirmed === true}
+                    className={` py-1 rounded text-white font-medium text-sm mt-2 ${
+                      applicationDetails?.isConfirmed
+                        ? "bg-red-600 cursor-not-allowed px-8"
+                        : "bg-[#C7161E] hover:bg-[#A01419] cursor-pointer px-2"
+                    }`}
+                  >
+                    {applicationDetails?.isConfirmed
+                      ? "Confirmed"
+                      : "Confirm Course Selection"}
+                  </button>
                 </div>
-                {/* ✅ UPDATED: Confirm button now calls handleConfirmButtonClick */}
-                <button
-                  onClick={() => handleConfirmButtonClick(course._id)}
-                  disabled={applicationDetails?.isConfirmed === true}
-                  className={` py-2 rounded text-white font-medium text-sm mt-2 ${
-                    applicationDetails?.isConfirmed
-                      ? "bg-red-600 cursor-not-allowed px-8"
-                      : "bg-[#C7161E] hover:bg-[#A01419] cursor-pointer px-2"
-                  }`}
-                >
-                  {applicationDetails?.isConfirmed
-                    ? "Confirmed"
-                    : "Confirm Course Selection"}
-                </button>
               </div>
             </div>
           );

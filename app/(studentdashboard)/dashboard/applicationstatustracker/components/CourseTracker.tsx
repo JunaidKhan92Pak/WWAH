@@ -17,6 +17,7 @@ interface Course {
     currency?: string;
     amount?: number;
   };
+  application_fee: string;
   application_deadline?: string;
   universityData?: {
     university_name?: string;
@@ -61,8 +62,6 @@ const ApplyingSection: React.FC = () => {
     },
   ];
 
- 
-
   // Get data from the store
   const {
     user,
@@ -72,8 +71,6 @@ const ApplyingSection: React.FC = () => {
     fetchAppliedCourses,
     // removeAppliedCourse,
   } = useUserStore();
-
- 
 
   const fetchDetailedAppliedCourses = async (courseIds: string[]) => {
     if (courseIds.length === 0) {
@@ -270,20 +267,20 @@ const ApplyingSection: React.FC = () => {
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 bg-white p-1 rounded-md">
                   <span className="text-sm font-medium text-gray-600">
                     Application No. {index + 1}
                   </span>
                 </div>
-                {/* <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3">
                   <Button
                     variant="outline"
                     size="sm"
                     className="text-sm border-gray-300"
                   >
-                    View
+                    <Link href={`/courses/${course._id}`}>View</Link>{" "}
                   </Button>
-                </div> */}
+                </div>
               </div>
 
               {/* Course Content */}
@@ -291,7 +288,7 @@ const ApplyingSection: React.FC = () => {
                 {/* Left Section: Course Image and Info */}
                 <div className="flex">
                   <div className="flex gap-4">
-                    <div className="relative">
+                    {/* <div className="relative">
                       <div className="md:w-[250px] h-[200px] rounded-xl overflow-hidden bg-gray-200 flex-shrink-0">
                         <Image
                           src={
@@ -304,8 +301,37 @@ const ApplyingSection: React.FC = () => {
                           className="w-[250px] h-[200px] object-cover"
                         />
                       </div>
+                    </div> */}
+                    <div className="relative md:w-[230px] h-[180px] rounded-xl overflow-hidden">
+                      <Image
+                        src={
+                          course.universityData?.universityImages?.banner ||
+                          `/course-${index + 1}.png`
+                        }
+                        alt="Course Banner"
+                        width={200}
+                        height={150}
+                        className="w-[230px] h-[180px] object-cover"
+                      />
+                      <div className="absolute top-4 left-0">
+                        <div className="bg-gradient-to-t from-white to-transparent opacity-100 w-[70%]">
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={
+                                course.universityData?.universityImages?.logo ||
+                                "/logo.png"
+                              }
+                              alt="University Logo"
+                              className="w-6 h-6 object-cover object-center rounded-full aspect-square"
+                            />
+                            <p className="text-sm leading-tight pr-1">
+                              {course.universityData?.university_name ||
+                                "University"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
                     <div className=" space-y-3">
                       <div className="w-[80%]">
                         <h3 className="font-semibold text-lg leading-tight mb-1">
@@ -348,6 +374,7 @@ const ApplyingSection: React.FC = () => {
                           <span className="text-gray-600">
                             {course.annual_tuition_fee?.currency || "$"}{" "}
                             {course.annual_tuition_fee?.amount || "83,122"}
+                            <span></span>
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -369,10 +396,9 @@ const ApplyingSection: React.FC = () => {
                         </span>
                         <div>
                           {" "}
-                          <p className="text-gray-600">
-                            {course.annual_tuition_fee?.currency || "$"}{" "}
-                            {course.annual_tuition_fee?.amount || "N/A"}
-                          </p>
+                          <span className="text-gray-600">
+                            {course.application_fee || "Not specified"}
+                          </span>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-y-2 text-sm">
