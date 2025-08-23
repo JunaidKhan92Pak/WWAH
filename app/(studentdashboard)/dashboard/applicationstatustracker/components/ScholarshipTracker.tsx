@@ -1,5 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserData";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 
 // Type definitions for better TypeScript support
@@ -156,13 +158,21 @@ const AppliedScholarship = () => {
   if (confirmedCoursesArray.length === 0) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-center">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <Image
+            src="/frame.png"
+            alt="No Applications"
+            width={70}
+            height={70}
+          />{" "}
           <h3 className="text-lg font-semibold text-gray-600 mb-2">
-            No Confirmed Scholarships
+            Apply to a scholarship to see your application status here{" "}
           </h3>
-          <p className="text-gray-500">
-            Your confirmed scholarships will appear here once approved.
-          </p>
+          <Link href="/scholarships">
+            <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
+              Browse Scholarships
+            </Button>
+          </Link>
         </div>
       </div>
     );

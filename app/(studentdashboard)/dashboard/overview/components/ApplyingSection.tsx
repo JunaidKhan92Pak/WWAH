@@ -237,6 +237,7 @@ const ApplyingSection: React.FC = () => {
     console.log("Confirm button clicked for course:", courseId);
     setCourseToConfirm(courseId);
     setShowConfirmModal(true);
+    
     console.log("Modal should be open now");
   };
 
@@ -446,15 +447,15 @@ const ApplyingSection: React.FC = () => {
 
           {/* Overlay Message */}
           <div className="flex flex-col items-center justify-center h-[250px] text-center relative z-10 w-full">
-            <p className="font-semibold text-lg md:text-xl mb-2">
+            <p className="font-semibold text-lg md:text-lg mb-2">
               No Course Applications Yet{" "}
             </p>
             <p className="text-gray-600 mb-4">
               Start your journey by applying to your first course!{" "}
             </p>
             <Link href="/coursearchive">
-              <button className="px-5 py-2 bg-[#C7161E] text-white rounded-full hover:bg-red-700">
-                Browse Scholarships
+              <button className="px-4 py-2 text-[14px] bg-[#C7161E] text-white rounded-full hover:bg-red-700">
+                Browse Courses
               </button>
             </Link>
           </div>
@@ -516,11 +517,18 @@ const ApplyingSection: React.FC = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-center gap-6">
-              <Image src="/spark.png" alt="Spark Icon" width={80} height={80} />
-             <p className="text-[12px]">Are you sure you want to Confirm this course?</p>
+              <div className="flex flex-col items-center gap-2">
+                <Image
+                  src="/spark.png"
+                  alt="Spark Icon"
+                  width={100}
+                  height={100}
+                />
+                <p> Are you sure you want to confirm this scholarship?</p>
+              </div>
             </DialogTitle>
           </DialogHeader>
-          <div className="flex justify-center gap-4 pt-4">
+          <div className="flex justify-center gap-4 pt-2">
             <Button
               onClick={handleConfirmYes}
               className="bg-[#C7161E] hover:bg-[#f03c45] text-white px-8"
@@ -535,6 +543,9 @@ const ApplyingSection: React.FC = () => {
               No
             </Button>
           </div>
+          <DialogDescription className="text-center pt-0">
+            *This will be the course we prepare your application for. You will
+            not be able to delete or change it later.</DialogDescription>
         </DialogContent>
       </Dialog>
 
@@ -587,9 +598,9 @@ const ApplyingSection: React.FC = () => {
                   />{" "}
                 </button>
               </div>
-              <div className="flex flex-col md:flex-row justify-between gap-4">
+              <div className="flex flex-col md:flex-row justify-between gap-2">
                 {/* Left Section: Course Info */}
-                <div className="flex flex-col md:flex-row items-start gap-4 flex-1">
+                <div className="flex flex-col md:flex-row items-start gap-2 flex-1">
                   {/* Course Image and University Info */}
                   <div>
                     <div className="relative md:w-[230px] h-[180px] rounded-xl overflow-hidden">
@@ -625,9 +636,9 @@ const ApplyingSection: React.FC = () => {
 
                     {/* Course Confirmation Checkbox */}
                     <div className="flex items-center gap-0 pt-4">
-                      <Button className="bg-red-600 py-1">
+                      <span className="text-[13px] font-medium px-4 py-1 rounded-md text-white bg-red-600">
                         Current Status :
-                      </Button>
+                      </span>
                       <span className="text-sm ml-2">
                         {getApplicationStepLabel(
                           applicationDetails?.applicationStatus || 1
@@ -638,12 +649,12 @@ const ApplyingSection: React.FC = () => {
 
                   <div className="flex-1 space-y-2">
                     {/* Course title */}
-                    <p className="text-[14px] font-semibold">
+                    <p className="text-[13px] font-semibold leading-snug">
                       {course.course_title || "Course Title Not Available"}
                     </p>
 
                     {/* Info grid */}
-                    <div className="grid grid-cols-2 gap-y-1 gap-x-4 space-y-1 text-sm text-gray-700">
+                    <div className="grid grid-cols-2 gap-y-1 gap-x-4 space-y-0 text-sm text-gray-700">
                       <div className="flex items-center gap-1">
                         <Image
                           src="/location.svg"
@@ -651,7 +662,9 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Location"
                         />
-                        <p className="text-[12px]">{course.countryname || "Country not specified"}</p>
+                        <p className="text-[12px]">
+                          {course.countryname || "Country not specified"}
+                        </p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Image
@@ -660,7 +673,9 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Intake"
                         />
-                       <p className="text-[12px]">{course.intake || "Not specified"}</p>
+                        <p className="text-[12px]">
+                          {course.intake || "Not specified"}
+                        </p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Image
@@ -669,7 +684,9 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Duration"
                         />
-                       <p className="text-[12px]">{course.duration || "Not specified"}</p>
+                        <p className="text-[12px]">
+                          {course.duration || "Not specified"}
+                        </p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Image
@@ -678,7 +695,7 @@ const ApplyingSection: React.FC = () => {
                           height={16}
                           alt="Fee"
                         />
-                       <p className="text-[12px]">
+                        <p className="text-[12px]">
                           {course.annual_tuition_fee?.currency || "$"}{" "}
                           {course.annual_tuition_fee?.amount || "N/A"}
                         </p>
@@ -686,11 +703,11 @@ const ApplyingSection: React.FC = () => {
                       <div className="flex items-center gap-1">
                         <Image
                           src="/dollar.png"
-                          width={18}
-                          height={18}
+                          width={16}
+                          height={16}
                           alt="dollar"
                         />
-                       <p className="text-[12px]">Application fee:</p>
+                        <p className="text-[12px]">Application fee:</p>
                       </div>
                       <p
                         className="truncate text-[12px] max-w-[100px]"
@@ -708,15 +725,17 @@ const ApplyingSection: React.FC = () => {
                           height={13}
                           alt="Deadline"
                         />
-                       <p className="text-[12px]">Deadline:</p>
+                        <p className="text-[12px]">Deadline:</p>
                       </div>
-                     <p className="text-[12px]">{course.application_deadline || "Not specified"}</p>
+                      <p className="text-[12px]">
+                        {course.application_deadline || "Not specified"}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Right Section: Progress Circle */}
-                <div className="flex flex-col items-center justify-between mt-4 md:mt-0 md:ml-4">
+                <div className="flex flex-col items-center justify-between mt-4 md:mt-0">
                   <div className="relative flex flex-col items-end justify-center min-w-[140px]">
                     {/* Blurred content */}
                     <div className="blur-sm opacity-40 pointer-events-none flex flex-col justify-center items-center">
@@ -745,10 +764,10 @@ const ApplyingSection: React.FC = () => {
                   <button
                     onClick={() => handleConfirmButtonClick(course._id)}
                     disabled={applicationDetails?.isConfirmed === true}
-                    className={` py-1 rounded text-white font-medium text-sm mt-2 ${
+                    className={` py-1 rounded text-white font-medium text-[13px] mt-2 ${
                       applicationDetails?.isConfirmed
                         ? "bg-red-600 cursor-not-allowed px-8"
-                        : "bg-[#C7161E] hover:bg-[#A01419] cursor-pointer px-2"
+                        : "bg-red-600 hover:bg-[#A01419] cursor-pointer px-2"
                     }`}
                   >
                     {applicationDetails?.isConfirmed
