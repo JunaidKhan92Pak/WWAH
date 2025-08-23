@@ -201,13 +201,17 @@ const ApplyingSection: React.FC = () => {
     return (
       <div className="relative">
         {/* Blur Overlay */}
-        <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-xl flex flex-col items-center justify-center p-8">
-          <h3 className="text-lg font-semibold mb-4 text-center">
-            No Course Applications Yet
+        <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/70 rounded-xl flex flex-col items-center justify-center p-8 space-y-4">
+          <Image
+            src="/frame.png"
+            alt="No Applications"
+            width={70}
+            height={70}
+          />
+                    <h3 className="text-lg font-semibold text-gray-600 mb-2">
+            Apply to a course to see your application status here{" "}
           </h3>
-          <p className="text-gray-600 mb-6 text-center">
-            Start your journey by applying to your first course!
-          </p>
+          
           <Link href="/coursearchive">
             <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
               Browse Courses

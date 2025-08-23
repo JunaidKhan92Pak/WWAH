@@ -1,8 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import { useUserStore } from "@/store/useUserData";
 import Image from "next/image";
 import CircularProgress from "./CircularProgress";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -39,6 +41,7 @@ const AppliedScholarship = () => {
   // Using the store with proper destructuring - matching backup pattern
   const store = useUserStore();
   const { user } = store;
+
   console.log("Debug - user:", user);
 
   // ✅ NEW: Modal states
@@ -47,7 +50,7 @@ const AppliedScholarship = () => {
   const [scholarshipToConfirm, setScholarshipToConfirm] = useState<
     string | null
   >(null);
-
+  const router = useRouter();
   // Safely access the loading state - matching backup pattern
   const loadingApplications =
     (store as { loadingApplications?: boolean }).loadingApplications || false;
@@ -210,6 +213,7 @@ const AppliedScholarship = () => {
   const handleConfirmYes = async () => {
     if (scholarshipToConfirm) {
       await handleScholarshipConfirmation(scholarshipToConfirm, true);
+      router.push("/dashboard/completeapplication");
     }
     setShowConfirmModal(false);
     setScholarshipToConfirm(null);
@@ -292,7 +296,8 @@ const AppliedScholarship = () => {
   // ✅ FIXED: Use user.appliedScholarshipCourses directly like in backup
   const appliedCoursesArray: AppliedScholarshipCourseProps[] =
     user?.appliedScholarshipCourses || [];
-  console.log("Debug - appliedCoursesArray:", appliedCoursesArray);
+  console.log("Debug - appliedSchCoursesArray:", appliedCoursesArray);
+  const scholarshipCount = appliedCoursesArray.length;
 
   if (loadingApplications) {
     return (
@@ -411,14 +416,14 @@ const AppliedScholarship = () => {
 
           {/* Overlay Message */}
           <div className="flex flex-col items-center justify-center h-[250px] text-center relative z-10 w-full">
-            <p className="font-semibold text-lg md:text-xl mb-2">
+            <p className="font-semibold text-lg md:text-lg mb-2">
               No Applied Scholarships Yet
             </p>
             <p className="text-gray-600 mb-4">
               Start your journey by applying to your first scholarship!
             </p>
             <Link href="/scholarships">
-              <button className="px-5 py-2 bg-[#C7161E] text-white rounded-full hover:bg-red-700">
+              <button className="px-4 py-2 text-[14px] bg-[#C7161E] text-white rounded-full hover:bg-red-700">
                 Browse Scholarships
               </button>
             </Link>
@@ -484,10 +489,18 @@ const AppliedScholarship = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
-              Are you sure you want to confirm this scholarship?
+              <div className="flex flex-col items-center gap-2">
+                <Image
+                  src="/spark.png"
+                  alt="Spark Icon"
+                  width={100}
+                  height={100}
+                />
+                Are you sure you want to confirm this scholarship?
+              </div>
             </DialogTitle>
           </DialogHeader>
-          <div className="flex justify-center gap-4 pt-4">
+          <div className="flex justify-center gap-4 pt-2">
             <Button
               onClick={handleConfirmYes}
               className="bg-[#C7161E] hover:bg-[#f03c45] text-white px-8"
@@ -502,13 +515,23 @@ const AppliedScholarship = () => {
               No
             </Button>
           </div>
+          <DialogDescription className="text-center pt-2">
+            *This will be the course we prepare your application for. You will
+            not be able to delete or change it later.
+          </DialogDescription>
         </DialogContent>
       </Dialog>
 
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          Applied Scholarships
-        </h1>
+        <p className="font-semibold text-lg md:text-xl mb-4">
+          You are applying for scholarship{" "}
+          {scholarshipCount > 0 && (
+            <span>
+              ({scholarshipCount}{" "}
+              {scholarshipCount === 1 ? "course" : "courses"})
+            </span>
+          )}
+        </p>
 
         <div className="flex w-full relative">
           {!appliedCoursesArray || appliedCoursesArray.length === 0 ? (
@@ -546,10 +569,10 @@ const AppliedScholarship = () => {
                   return (
                     <div
                       key={application._id}
-                      className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-col items-end gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200"
+                      className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-col items-end gap-0 flex-shrink-0 bg-white rounded-xl px-2 py-2 overflow-hidden border border-gray-200"
                     >
-                      <div className="flex gap-2 pr-8">
-                        <button className="px-2 bg-[#FCE7D2] text-black hover:text-white rounded-md hover:bg-red-700 transition-colors text-[14px] font-medium">
+                      <div className="flex gap-2 pr-0">
+                        <button className="px-2 bg-[#FCE7D2] text-black hover:text-white rounded-md hover:bg-red-700 transition-colors text-[12px] font-medium">
                           <a
                             href={`/scholarships/${application.ScholarshipId}`}
                           >
@@ -578,23 +601,23 @@ const AppliedScholarship = () => {
                             alt="Delete Icon"
                             width={16}
                             height={16}
-                            className="w-5 h-5"
+                            className="w-4 h-4"
                           />
                         </button>
                       </div>
                       <div className="flex items-center justify-between w-full">
                         <div className="bg-white px-0 py-0 rounded-lg overflow-hidden mt-0">
                           <div className="flex items-center">
-                            <div className="relative md:w-[200px] h-[150px] rounded-xl overflow-hidden">
+                            <div className="relative md:w-[230px] h-[180px] rounded-xl overflow-hidden">
                               <Image
                                 src={
                                   application.banner ||
                                   "https://via.placeholder.com/200x150?text=No+Image"
                                 }
                                 alt={`${application.scholarshipName} banner`}
-                                fill
-                                className="object-cover"
-                                sizes="192px"
+                                width={200}
+                                height={150}
+                                className="w-[230px] h-[180px] object-cover"
                               />
                             </div>
 
@@ -648,19 +671,19 @@ const AppliedScholarship = () => {
                                   </span>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2 mb-1">
+                              {/* <div className="flex items-center gap-2 mb-1">
                                 <Image
-                                  src="/ielts/Dollar.svg"
-                                  alt="University Icon"
+                                  src="/vectoruni.svg"
+                                  alt="Scholarship Type Icon"
                                   width={16}
                                   height={16}
-                                  className="w-4 h-4"
+                                  className="w-3 h-3"
                                 />
                                 <span className="text-gray-600 text-[12px]">
                                   {application.universityName ||
                                     "Not specified"}
                                 </span>
-                              </div>
+                              </div> */}
                               <div className="flex items-center gap-2 mb-1">
                                 <Image
                                   src="/vectoruni.svg"
@@ -668,6 +691,26 @@ const AppliedScholarship = () => {
                                   width={16}
                                   height={16}
                                   className="w-3 h-3"
+                                />
+                                <span
+                                  className="text-gray-600 text-[12px] truncate max-w-[200px] cursor-pointer"
+                                  title={
+                                    application.universityName ||
+                                    "Not specified"
+                                  }
+                                >
+                                  {application.universityName ||
+                                    "Not specified"}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-2 mb-1">
+                                <Image
+                                  src="/ielts/Dollar.svg"
+                                  alt="University Icon"
+                                  width={16}
+                                  height={16}
+                                  className="w-4 h-4"
                                 />
                                 <span className="text-gray-600 text-[12px]">
                                   Scholarship Type:{" "}
@@ -714,8 +757,8 @@ const AppliedScholarship = () => {
 
                           <div className=" border-gray-200 flex justify-between items-center">
                             <div className="flex items-center gap-3 mt-1">
-                              <span className="text-[12px] font-medium px-2 py-1 rounded-lg text-white bg-red-600">
-                                Current Status:
+                              <span className="text-[13px] font-medium px-4 py-1 rounded-md text-white bg-red-600">
+                                Current Status :
                               </span>
                               {/* ✅ UPDATED: Status with colored dot */}
                               <div className="flex items-center gap-2">
@@ -729,7 +772,7 @@ const AppliedScholarship = () => {
                                     application.statusId
                                   )}`}
                                 />
-                                <span className="text-xs font-medium text-gray-700">
+                                <span className="text-[13px] font-medium text-gray-700">
                                   {getStatusLabel(
                                     application.status,
                                     application.statusId
@@ -743,10 +786,10 @@ const AppliedScholarship = () => {
                                 handleConfirmButtonClick(application._id)
                               }
                               disabled={isConfirmed}
-                              className={`px-6 py-2 rounded mr-4 text-white font-medium text-sm mt-2 ${
+                              className={` py-1 rounded mr-4 text-white font-medium text-[13px] mt-2 ${
                                 isConfirmed
-                                  ? "bg-red-600 cursor-not-allowed"
-                                  : "bg-[#C7161E] hover:bg-[#A01419] cursor-pointer"
+                                  ? "bg-red-600 cursor-not-allowed px-8"
+                                  : "bg-red-600 hover:bg-[#A01419] cursor-pointer px-2"
                               }`}
                             >
                               {isConfirmed
@@ -767,6 +810,16 @@ const AppliedScholarship = () => {
               )}
             </div>
           )}
+        </div>
+        <div className="mt-6 text-center">
+          <Link href="/scholarships">
+            <Button
+              variant="outline"
+              className="border-[#C7161E] text-[#C7161E] hover:bg-[#C7161E] hover:text-white"
+            >
+              + Apply to More Scholarships
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

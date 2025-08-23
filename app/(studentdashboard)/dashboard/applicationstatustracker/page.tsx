@@ -16,8 +16,7 @@ type Tab = {
 const Page = () => {
   const tabs: Tab[] = [
     { label: "Self Finance", id: "activeapplication" },
-    { label: "Scholarship", id: "completedapplication" },
-
+    { label: "Scholarships", id: "completedapplication" },
   ];
 
   const [activeTab, setActiveTab] = useState<string>("activeapplication");
@@ -25,7 +24,7 @@ const Page = () => {
   return (
     <>
       <div className="border rounded-xl w-[97%] mx-auto p-2 md:p-8 h-auto  ">
-        <h4 className="text-center mb-4">Application Status Tracker</h4>
+        <h5 className="text-center mb-4">Application Status Tracker</h5>
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-start w-full mb-4">
           {tabs.map((tab) => (
             <Button
@@ -42,7 +41,7 @@ const Page = () => {
             </Button>
           ))}
         </div>
-        {activeTab === "activeapplication" && <CourseTracker/>}
+        {activeTab === "activeapplication" && <CourseTracker />}
         {activeTab === "completedapplication" && <ScholarshipTracker />}
       </div>
     </>
