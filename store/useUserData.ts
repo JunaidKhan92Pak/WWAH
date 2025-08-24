@@ -131,6 +131,7 @@ export interface User {
   gender: string;
   createdAt: string;
   updatedAt: string;
+  totalFavourites: string;
 }
 
 // Detailed profile information
@@ -172,7 +173,7 @@ export interface UserStore {
   error: string | null;
   isAuthenticated: boolean;
   lastUpdated: string | null;
-
+  totalFavourites: number;
   // Favorite courses state
   favoriteCourses: Record<string, FavoriteCourse>;
   favoriteCourseIds: string[];
@@ -330,7 +331,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
   error: null,
   isAuthenticated: false,
   lastUpdated: null,
-
+  totalFavourites: 0,
   // Favorite courses state
   favoriteCourses: {},
   favoriteCourseIds: [],
@@ -430,10 +431,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
           ? apiData.user.appliedScholarshipCourses
           : [],
       };
+      const total_favourites = userData.favouriteCourse.length + userData.favouriteScholarship.length + userData.favouriteUniversity.length
 
       // Set user data and update IDs
       set({
         user: userData,
+        totalFavourites: total_favourites,
         detailedInfo: apiData.detailedInfo || { ...defaultDetailedInfo },
         loading: false,
         isAuthenticated: true,
@@ -809,9 +812,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           loadingAppliedCourses: false,
           user: state.user
             ? {
-                ...state.user,
-                appliedCourses: [],
-              }
+              ...state.user,
+              appliedCourses: [],
+            }
             : null,
         });
         return;
@@ -834,9 +837,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set({
         user: state.user
           ? {
-              ...state.user,
-              appliedCourses: appliedCoursesData,
-            }
+            ...state.user,
+            appliedCourses: appliedCoursesData,
+          }
           : null,
       });
 
@@ -1104,9 +1107,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             favoriteCourseIds: newFavoriteIds,
             user: state.user
               ? {
-                  ...state.user,
-                  favouriteCourse: newFavoriteIds,
-                }
+                ...state.user,
+                favouriteCourse: newFavoriteIds,
+              }
               : null,
           };
         });
@@ -1164,12 +1167,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
       if (result.success) {
         set((state) => {
-      const newAppliedCourse: AppliedCourse = {
-        courseId,
-        applicationStatus,
-        statusId: applicationStatus, // ✅ Add missing statusId
-        isConfirmed: false,
-      };
+          const newAppliedCourse: AppliedCourse = {
+            courseId,
+            applicationStatus,
+            statusId: applicationStatus, // ✅ Add missing statusId
+            isConfirmed: false,
+          };
 
           const updatedAppliedCourses = [
             ...(state.user?.appliedCourses || []),
@@ -1179,9 +1182,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                  ...state.user,
-                  appliedCourses: updatedAppliedCourses,
-                }
+                ...state.user,
+                appliedCourses: updatedAppliedCourses,
+              }
               : null,
             appliedCourseIds: [...state.appliedCourseIds, courseId],
           };
@@ -1252,16 +1255,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
             state.user?.appliedCourses.map((course) =>
               course.courseId === courseId
                 ? {
-                    ...course,
-                    applicationStatus:
-                      applicationStatus !== undefined
-                        ? applicationStatus
-                        : course.applicationStatus,
-                    statusId:
-                      statusId !== undefined ? statusId : course.statusId, // ✅ CRITICAL: Update statusId
-                    isConfirmed: course.isConfirmed,
-                    updatedAt: new Date().toISOString(),
-                  }
+                  ...course,
+                  applicationStatus:
+                    applicationStatus !== undefined
+                      ? applicationStatus
+                      : course.applicationStatus,
+                  statusId:
+                    statusId !== undefined ? statusId : course.statusId, // ✅ CRITICAL: Update statusId
+                  isConfirmed: course.isConfirmed,
+                  updatedAt: new Date().toISOString(),
+                }
                 : course
             ) || [];
 
@@ -1292,9 +1295,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                  ...state.user,
-                  appliedCourses: updatedAppliedCourses,
-                }
+                ...state.user,
+                appliedCourses: updatedAppliedCourses,
+              }
               : null,
             appliedCourses: updatedAppliedCoursesMap,
             error: null,
@@ -1350,10 +1353,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
             state.user?.appliedCourses.map((course) =>
               course.courseId === courseId
                 ? {
-                    ...course,
-                    isConfirmed,
-                    updatedAt: new Date().toISOString(),
-                  }
+                  ...course,
+                  isConfirmed,
+                  updatedAt: new Date().toISOString(),
+                }
                 : course
             ) || [];
 
@@ -1370,9 +1373,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                  ...state.user,
-                  appliedCourses: updatedAppliedCourses,
-                }
+                ...state.user,
+                appliedCourses: updatedAppliedCourses,
+              }
               : null,
             appliedCourses: updatedAppliedCoursesMap,
             error: null,
@@ -1433,9 +1436,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                  ...state.user,
-                  appliedCourses: updatedAppliedCourses,
-                }
+                ...state.user,
+                appliedCourses: updatedAppliedCourses,
+              }
               : null,
             appliedCourseIds: state.appliedCourseIds.filter(
               (id) => id !== courseId
@@ -1681,9 +1684,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           error: null,
           user: state.user
             ? {
-                ...state.user,
-                appliedScholarshipCourses: Object.values(applicationsMap),
-              }
+              ...state.user,
+              appliedScholarshipCourses: Object.values(applicationsMap),
+            }
             : null,
         });
       } else {
@@ -1713,12 +1716,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
         ],
         user: currentState.user
           ? {
-              ...currentState.user,
-              appliedScholarshipCourses: [
-                ...currentState.user.appliedScholarshipCourses,
-                applicationData._id,
-              ],
-            }
+            ...currentState.user,
+            appliedScholarshipCourses: [
+              ...currentState.user.appliedScholarshipCourses,
+              applicationData._id,
+            ],
+          }
           : null,
         appliedScholarshipCourses: {
           ...currentState.appliedScholarshipCourses,
@@ -1788,9 +1791,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             favoriteUniversityIds: newFavoriteIds,
             user: state.user
               ? {
-                  ...state.user,
-                  favouriteUniversity: newFavoriteIds,
-                }
+                ...state.user,
+                favouriteUniversity: newFavoriteIds,
+              }
               : null,
           };
         });
@@ -1853,9 +1856,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             favoriteScholarshipIds: newFavoriteIds,
             user: state.user
               ? {
-                  ...state.user,
-                  favouriteScholarship: newFavoriteIds,
-                }
+                ...state.user,
+                favouriteScholarship: newFavoriteIds,
+              }
               : null,
           };
         });
@@ -1937,11 +1940,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set((state) => ({
         user: state.user
           ? {
-              ...state.user,
-              ...updateData,
+            ...state.user,
+            ...updateData,
 
-              updatedAt: currentTimestamp,
-            }
+            updatedAt: currentTimestamp,
+          }
           : null,
         loading: false,
         lastUpdated: currentTimestamp,
@@ -1997,7 +2000,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
           errorData.message ||
-            `Failed to update detailed info: ${response.status} ${response.statusText}`
+          `Failed to update detailed info: ${response.status} ${response.statusText}`
         );
       }
 
@@ -2012,16 +2015,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set((state) => ({
         detailedInfo: state.detailedInfo
           ? {
-              ...state.detailedInfo,
-              ...updateData,
+            ...state.detailedInfo,
+            ...updateData,
 
-              updatedAt: currentTimestamp,
-            }
+            updatedAt: currentTimestamp,
+          }
           : {
-              ...defaultDetailedInfo,
-              ...updateData,
-              updatedAt: currentTimestamp,
-            },
+            ...defaultDetailedInfo,
+            ...updateData,
+            updatedAt: currentTimestamp,
+          },
         loading: false,
         lastUpdated: currentTimestamp,
         error: null,

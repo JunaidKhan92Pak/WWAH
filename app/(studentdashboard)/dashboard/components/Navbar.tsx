@@ -8,15 +8,16 @@ import { useNotification } from "@/context/socket-context";
 import { useRouter } from "next/navigation"; // or "next/router" depending on your Next.js version
 
 import { useState, useRef, useEffect } from "react";
-import { X, MessageCircle } from "lucide-react";
+import { X, MessageCircle, Heart } from "lucide-react";
 import { useChatStore } from "@/store/chatStore";
+import { useUserStore } from "@/store/useUserData";
 
 export function Navbar() {
-  const { unreadCount, clearNotifications, isConnected, notifications } =
-    useNotification();
+  const { unreadCount, clearNotifications, isConnected, notifications } = useNotification();
   const [showNotificationMenu, setShowNotificationMenu] = useState(false);
   const notificationMenuRef = useRef<HTMLDivElement>(null);
   const setIsChatOpen = useChatStore((state) => state.setIsChatOpen);
+  const { totalFavourites } = useUserStore()
 
   // console.log("🔔 Navbar - unreadCount:", unreadCount);
   // console.log("🔌 Navbar - isConnected:", isConnected);
@@ -111,21 +112,23 @@ export function Navbar() {
 
       {/* Right Side: Action Buttons */}
       <div className="flex items-center space-x-2 sm:space-x-4">
-        <Link href="/dashboard/favouritecourses">
-          <Button
-            className="flex items-center bg-[#F4D0D2] text-[#C7161E] border border-[#C7161E] rounded-lg hover:bg-red-50"
-            aria-label="Favourites"
-          >
-            <Image
-              src="/DashboardPage/usericon.svg"
-              alt="User Icon"
-              width={20}
-              height={20}
-              className="w-[24px] sm:w-[20px] h-[28px] sm:h-[20px]"
-            />
-            <span className="hidden lg:inline">Favourites</span>
-          </Button>
-        </Link>
+        <div className="space-y-2">
+          <Link href="/dashboard/favouritecourses">
+            <Button
+              variant="ghost"
+              className="bg-[#F1F1F1] text-gray-800 border border-gray-300 rounded-lg  relative flex items-center gap-2 px-4 py-2 hover:bg-red-50 hover:text-red-700 transition-colors group"
+              aria-label={`View ${totalFavourites} favourite courses`}
+            >
+              <Heart className="w-5 h-5 group-hover:fill-current transition-all" />
+              <span className="font-medium">Favourites</span>
+              {totalFavourites > 0 && (
+                <div className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                  {totalFavourites > 99 ? "99+" : totalFavourites}
+                </div>
+              )}
+            </Button>
+          </Link>
+        </div>
         <div className="relative" ref={notificationMenuRef}>
           <Button
             onClick={handleNotificationClick}
