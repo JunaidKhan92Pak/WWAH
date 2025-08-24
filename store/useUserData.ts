@@ -131,7 +131,7 @@ export interface User {
   gender: string;
   createdAt: string;
   updatedAt: string;
-  totalFavourites: string;
+  totalFavourites: number;
 }
 
 // Detailed profile information
