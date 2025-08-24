@@ -130,6 +130,9 @@ async function fetchAndCacheUserData(userId: string) {
     isAuthenticated: !!user,
     lastUpdated: user?.updatedAt || null,
 
+    // Add totalFavourites property (default to 0 or appropriate value)
+    totalFavourites: 0,
+
     // Favorite courses state
     favoriteCourses: {},
     favoriteCourseIds: (user as any)?.favouriteCourse || [],
@@ -176,15 +179,15 @@ async function fetchAndCacheUserData(userId: string) {
     lastEmbeddingUpdate: null,
 
     // Core action methods
-    fetchUserProfile: async () => {},
+    fetchUserProfile: async () => { },
     updateUserProfile: async () => false,
     updateDetailedInfo: async () => false,
-    setUser: () => {},
-    logout: () => {},
+    setUser: () => { },
+    logout: () => { },
     getLastUpdatedDate: () => null,
 
     // Favorite courses actions
-    fetchFavoriteCourses: async () => {},
+    fetchFavoriteCourses: async () => { },
     toggleCourseFavorite: async (
       _courseId: string,
       _action: "add" | "remove"
@@ -192,7 +195,7 @@ async function fetchAndCacheUserData(userId: string) {
     getCourseFavoriteStatus: (_courseId: string) => false,
 
     // Applied courses actions
-    fetchAppliedCourses: async () => {},
+    fetchAppliedCourses: async () => { },
     addAppliedCourse: async (_courseId: string, _applicationStatus?: number) =>
       false,
     updateAppliedCourse: async (
@@ -208,12 +211,12 @@ async function fetchAndCacheUserData(userId: string) {
     getAppliedCourseDetails: (_courseId: string) => null,
 
     // MISSING: Confirmed courses actions (NEW - ADDED)
-    fetchConfirmedCourses: async (_userId?: string) => {},
+    fetchConfirmedCourses: async (_userId?: string) => { },
     getConfirmedCourseStatus: (_courseId: string) => false,
     getConfirmedCourseDetails: (_courseId: string) => null,
 
     // Favorite universities actions
-    fetchFavoriteUniversities: async () => {},
+    fetchFavoriteUniversities: async () => { },
     toggleUniversityFavorite: async (
       _universityId: string,
       _action: "add" | "remove"
@@ -221,7 +224,7 @@ async function fetchAndCacheUserData(userId: string) {
     getFavoriteStatus: (_universityId: string) => false,
 
     // Favorite scholarships actions
-    fetchFavoriteScholarships: async () => {},
+    fetchFavoriteScholarships: async () => { },
     toggleScholarshipFavorite: async (
       _scholarshipId: string,
       _action: "add" | "remove"
@@ -229,14 +232,14 @@ async function fetchAndCacheUserData(userId: string) {
     getScholarshipFavoriteStatus: (_scholarshipId: string) => false,
 
     // Applied scholarship courses actions
-    fetchAppliedScholarshipCourses: async () => {},
-    fetchAppliedScholarship: async (_id: string) => {},
+    fetchAppliedScholarshipCourses: async () => { },
+    fetchAppliedScholarship: async (_id: string) => { },
     addAppliedScholarshipCourse: async (_applicationData: any) => false,
-    refreshApplications: async () => {},
+    refreshApplications: async () => { },
     getApplicationProgress: (_courseId: string) => 0,
 
     // Confirmed scholarships action
-    fetchConfirmedScholarshipCourses: async (_userId: string) => {},
+    fetchConfirmedScholarshipCourses: async (_userId: string) => { },
 
     // Embedding refresh method
     refreshEmbeddings: async () => false,

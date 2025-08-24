@@ -32,8 +32,8 @@ const COLLECTION_CONFIG = {
   courses: {
     name: "course_embeddings",
     indexName: "course_vector_index",
-    priority: 0.6, 
-    k: 8, 
+    priority: 0.6,
+    k: 8,
   },
   universities: {
     name: "university_embeddings",
@@ -254,9 +254,8 @@ function buildOptimizedContext(
       break;
     }
 
-    context += `\n--- ${
-      doc.metadata?.domain || "info"
-    } ---\n${truncatedContent}\n`;
+    context += `\n--- ${doc.metadata?.domain || "info"
+      } ---\n${truncatedContent}\n`;
     currentLength += truncatedContent.length;
   }
 
@@ -273,9 +272,8 @@ export async function optimizedQuery(
     const isGreeting = /^(hi|hello|hey|thanks|thank you)$/i.test(query.trim());
     if (isGreeting) {
       const name = userData?.user?.firstName || "";
-      return `Hello${
-        name ? ` ${name}` : ""
-      }! 👋 How can I help you with your study abroad journey today?`;
+      return `Hello${name ? ` ${name}` : ""
+        }! 👋 How can I help you with your study abroad journey today?`;
     }
 
     // Step 2: Get relevant domains (reduced scope)
@@ -299,13 +297,12 @@ export async function optimizedQuery(
       inputVariables: ["query", "context", "userInfo"],
       template: `You are ZEUS, a study abroad assistant. Be concise and helpful.
 
-${
-  userData?.detailedInfo?.studyPreferenced
-    ? `
+${userData?.detailedInfo?.studyPreferenced
+          ? `
 User Preferences: ${userData.detailedInfo.studyPreferenced.degree} in ${userData.detailedInfo.studyPreferenced.subject} in ${userData.detailedInfo.studyPreferenced.country}
 `
-    : ""
-}
+          : ""
+        }
 ${`
 🗣️ CONVERSATION HISTORY:
 {conversationHistory}
@@ -570,12 +567,13 @@ function createQuerySpecificUserData(
       favouriteCourse: originalUserData?.user?.favouriteCourse || [],
       favouriteScholarship: originalUserData?.user?.favouriteScholarship || [],
       favouriteUniversity: originalUserData?.user?.favouriteUniversity || [],
-      appliedScholarshipCourses:
-        originalUserData?.user?.appliedScholarshipCourses || [],
+      totalFavourites: originalUserData?.user?.totalFavourites || 0,
+      appliedScholarshipCourses: originalUserData?.user?.appliedScholarshipCourses || [],
       appliedCourses: originalUserData?.user?.appliedCourses || [],
       createdAt: originalUserData?.user?.createdAt || new Date().toISOString(),
       updatedAt: originalUserData?.user?.updatedAt || new Date().toISOString(),
     },
+    totalFavourites: originalUserData?.user?.totalFavourites || 0,
     detailedInfo: {
       dateOfBirth: originalUserData?.detailedInfo?.dateOfBirth || "",
       grade: originalUserData?.detailedInfo?.grade || 0,
@@ -663,18 +661,18 @@ function createQuerySpecificUserData(
     lastEmbeddingUpdate: originalUserData?.lastEmbeddingUpdate || null,
 
     // Action methods - Preserve existing functions or provide defaults
-    fetchUserProfile: originalUserData?.fetchUserProfile || (async () => {}),
+    fetchUserProfile: originalUserData?.fetchUserProfile || (async () => { }),
     updateUserProfile:
       originalUserData?.updateUserProfile || (async () => false),
     updateDetailedInfo:
       originalUserData?.updateDetailedInfo || (async () => false),
-    setUser: originalUserData?.setUser || (() => {}),
-    logout: originalUserData?.logout || (() => {}),
+    setUser: originalUserData?.setUser || (() => { }),
+    logout: originalUserData?.logout || (() => { }),
     getLastUpdatedDate: originalUserData?.getLastUpdatedDate || (() => null),
 
     // Favorite courses actions
     fetchFavoriteCourses:
-      originalUserData?.fetchFavoriteCourses || (async () => {}),
+      originalUserData?.fetchFavoriteCourses || (async () => { }),
     toggleCourseFavorite:
       originalUserData?.toggleCourseFavorite || (async () => false),
     getCourseFavoriteStatus:
@@ -682,7 +680,7 @@ function createQuerySpecificUserData(
 
     // Applied courses actions
     fetchAppliedCourses:
-      originalUserData?.fetchAppliedCourses || (async () => {}),
+      originalUserData?.fetchAppliedCourses || (async () => { }),
     addAppliedCourse: originalUserData?.addAppliedCourse || (async () => false),
     updateAppliedCourse:
       originalUserData?.updateAppliedCourse || (async () => false),
@@ -697,7 +695,7 @@ function createQuerySpecificUserData(
 
     // MISSING: Confirmed courses actions (NEW - ADDED)
     fetchConfirmedCourses:
-      originalUserData?.fetchConfirmedCourses || (async () => {}),
+      originalUserData?.fetchConfirmedCourses || (async () => { }),
     getConfirmedCourseStatus:
       originalUserData?.getConfirmedCourseStatus || (() => false),
     getConfirmedCourseDetails:
@@ -705,14 +703,14 @@ function createQuerySpecificUserData(
 
     // Favorite universities actions
     fetchFavoriteUniversities:
-      originalUserData?.fetchFavoriteUniversities || (async () => {}),
+      originalUserData?.fetchFavoriteUniversities || (async () => { }),
     toggleUniversityFavorite:
       originalUserData?.toggleUniversityFavorite || (async () => false),
     getFavoriteStatus: originalUserData?.getFavoriteStatus || (() => false),
 
     // Favorite scholarships actions
     fetchFavoriteScholarships:
-      originalUserData?.fetchFavoriteScholarships || (async () => {}),
+      originalUserData?.fetchFavoriteScholarships || (async () => { }),
     toggleScholarshipFavorite:
       originalUserData?.toggleScholarshipFavorite || (async () => false),
     getScholarshipFavoriteStatus:
@@ -720,19 +718,19 @@ function createQuerySpecificUserData(
 
     // Applied scholarship courses actions
     fetchAppliedScholarshipCourses:
-      originalUserData?.fetchAppliedScholarshipCourses || (async () => {}),
+      originalUserData?.fetchAppliedScholarshipCourses || (async () => { }),
     fetchAppliedScholarship:
-      originalUserData?.fetchAppliedScholarship || (async () => {}),
+      originalUserData?.fetchAppliedScholarship || (async () => { }),
     addAppliedScholarshipCourse:
       originalUserData?.addAppliedScholarshipCourse || (async () => false),
     refreshApplications:
-      originalUserData?.refreshApplications || (async () => {}),
+      originalUserData?.refreshApplications || (async () => { }),
     getApplicationProgress:
       originalUserData?.getApplicationProgress || (() => 0),
 
     // Confirmed scholarship courses action
     fetchConfirmedScholarshipCourses:
-      originalUserData?.fetchConfirmedScholarshipCourses || (async () => {}),
+      originalUserData?.fetchConfirmedScholarshipCourses || (async () => { }),
 
     // Embedding refresh functionality
     refreshEmbeddings:
@@ -893,16 +891,15 @@ async function handleGeneralQuery(params: {
     inputVariables: ["query", "userName", "conversationContext"],
     template: `You are ZEUS, a helpful AI assistant. You specialize in university and study abroad information, but you can also help with general questions.
 
-${
-  conversationHistory.length > 0
-    ? `
+${conversationHistory.length > 0
+        ? `
 Recent Conversation Context:
 {conversationContext}
 
 Consider this context when responding to maintain conversation flow.
 `
-    : ""
-}
+        : ""
+      }
 
 User Query: {query}
 ${userName ? `User Name: ${userName}` : ""}
@@ -952,8 +949,7 @@ Please provide a helpful response with relevant archive links:`,
     console.error("❌ Error in general query handler:", error);
 
     return (
-      `I'd be happy to help, but I'm having trouble processing that right now. ${
-        userName ? `${userName}, ` : ""
+      `I'd be happy to help, but I'm having trouble processing that right now. ${userName ? `${userName}, ` : ""
       } I specialize in university applications and study abroad information. Is there anything about studying abroad or universities I can help you with instead? 🎓\n\n` +
       `**🔍 Explore Options:**\n` +
       `[All Courses](${ARCHIVE_LINKS.courses}) • ` +
@@ -1479,9 +1475,9 @@ export async function queryDocumentsWithUserContext(
   const conversationHistoryString =
     conversationHistory.length > 0
       ? conversationHistory
-          .slice(-5)
-          .map((msg) => `${msg.role}: ${msg.content}`)
-          .join("\n")
+        .slice(-5)
+        .map((msg) => `${msg.role}: ${msg.content}`)
+        .join("\n")
       : "No previous conversation.";
 
   // FIXED: Properly configure PromptTemplate with all required input variables
@@ -1499,9 +1495,8 @@ export async function queryDocumentsWithUserContext(
 
 This conversation history should inform your response to maintain context and avoid repetition.
 
-${
-  hasUserData
-    ? `
+${hasUserData
+        ? `
 🎯 USER PREFERENCES (PRIORITIZE THESE):
 - Preferred Country: ${userData.detailedInfo?.studyPreferenced.country}
 - Preferred Degree Level: ${userData.detailedInfo?.studyPreferenced.degree}
@@ -1514,14 +1509,14 @@ CRITICAL INSTRUCTIONS:
 3. **If you find matching courses in the context, mention them first and prominently**
 4. **Be specific about course names, universities, and exact details from the context**
 `
-    : `
+        : `
 CRITICAL INSTRUCTIONS:
 **When a user whose data is not available asks about studying abroad, ALWAYS ask them about their preferences first:**
 - What country are they interested in?
 - What degree level (Bachelor's, Master's, PhD)?
 - What subject/field of study?
 `
-}
+      }
 
 IMPORTANT INSTRUCTIONS:
 1. **Use the provided context extensively** - mention specific courses, universities, and details
@@ -1532,13 +1527,11 @@ IMPORTANT INSTRUCTIONS:
 6. Never provide the user any links other than the ones provided here and never tell the user to visit any official website keep them engaged to our website
 
 📚 ARCHIVE LINKS - Use these strategically in your responses:
-- For university recommendations: [Explore All Universities](${
-      ARCHIVE_LINKS.universities
-    })
+- For university recommendations: [Explore All Universities](${ARCHIVE_LINKS.universities
+      })
 - For course suggestions: [Browse All Courses](${ARCHIVE_LINKS.courses})
-- For scholarship information: [View All Scholarships](${
-      ARCHIVE_LINKS.scholarships
-    })
+- For scholarship information: [View All Scholarships](${ARCHIVE_LINKS.scholarships
+      })
 - For application processes: [Visit Dashboard](${ARCHIVE_LINKS.dashboard})
 
 ARCHIVE LINK GUIDELINES:
