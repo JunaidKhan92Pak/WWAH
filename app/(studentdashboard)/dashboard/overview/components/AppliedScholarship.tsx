@@ -296,7 +296,10 @@ const AppliedScholarship = () => {
   // ✅ FIXED: Use user.appliedScholarshipCourses directly like in backup
   const appliedCoursesArray: AppliedScholarshipCourseProps[] =
     user?.appliedScholarshipCourses || [];
-  console.log("Debug - appliedSchCoursesArray:", appliedCoursesArray);
+  console.log(
+    "Debug - appliedSchCoursesArray:",
+    user?.appliedScholarshipCourses
+  );
   const scholarshipCount = appliedCoursesArray.length;
 
   if (loadingApplications) {
@@ -432,18 +435,6 @@ const AppliedScholarship = () => {
       </div>
     );
   }
-
-  // const getStatusColor = (status?: string): string => {
-  //   switch (status?.toLowerCase()) {
-  //     case "approved":
-  //       return "bg-green-100 text-green-800";
-  //     case "rejected":
-  //       return "bg-red-100 text-red-800";
-  //     case "pending":
-  //     default:
-  //       return "bg-orange-100 text-orange-800";
-  //   }
-  // };
 
   const formatDate = (dateString?: string): string => {
     if (!dateString) return "Not specified";

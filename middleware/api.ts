@@ -142,6 +142,11 @@ async function fetchAndCacheUserData(userId: string) {
     ),
     loadingAppliedCourses: false,
 
+    // MISSING: Confirmed courses state (NEW - ADDED)
+    confirmedCourses: {},
+    confirmedCourseIds: [],
+    loadingConfirmedCourses: false,
+
     // Favorite universities state
     favoriteUniversities: {},
     favoriteUniversityIds: (user as any)?.favouriteUniversity || [],
@@ -161,13 +166,13 @@ async function fetchAndCacheUserData(userId: string) {
     ),
     loadingApplications: false,
 
-    // ✅ FIX: Add missing confirmed scholarships properties
+    // Confirmed scholarships properties
     confirmedScholarshipCourses: {},
     confirmedScholarshipCourseIds: [],
     loadingConfirmedApplications: false,
 
-    // ✅ FIX: Add missing embedding properties
-    embeddingUpdateStatus: "idle",
+    // Embedding properties
+    embeddingUpdateStatus: "idle" as const,
     lastEmbeddingUpdate: null,
 
     // Core action methods
@@ -202,6 +207,11 @@ async function fetchAndCacheUserData(userId: string) {
     getAppliedCourseStatus: (_courseId: string) => false,
     getAppliedCourseDetails: (_courseId: string) => null,
 
+    // MISSING: Confirmed courses actions (NEW - ADDED)
+    fetchConfirmedCourses: async (_userId?: string) => {},
+    getConfirmedCourseStatus: (_courseId: string) => false,
+    getConfirmedCourseDetails: (_courseId: string) => null,
+
     // Favorite universities actions
     fetchFavoriteUniversities: async () => {},
     toggleUniversityFavorite: async (
@@ -225,10 +235,10 @@ async function fetchAndCacheUserData(userId: string) {
     refreshApplications: async () => {},
     getApplicationProgress: (_courseId: string) => 0,
 
-    // ✅ FIX: Add missing confirmed scholarships action
+    // Confirmed scholarships action
     fetchConfirmedScholarshipCourses: async (_userId: string) => {},
 
-    // ✅ FIX: Add missing refreshEmbeddings method
+    // Embedding refresh method
     refreshEmbeddings: async () => false,
   };
 

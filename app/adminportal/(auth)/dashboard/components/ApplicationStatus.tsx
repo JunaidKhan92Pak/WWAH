@@ -548,7 +548,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-// import CircularProgress from "./CircularProgress";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";

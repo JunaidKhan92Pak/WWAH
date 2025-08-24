@@ -20,6 +20,7 @@ import {
 import { PaymentTracker } from "../components/PaymentTracker";
 import AdminApplicationTracker from "../components/StatusTracker";
 import ScholarshipStatus from "../components/ScholarshipStatus";
+import { useUserStore } from "@/store/useUserData";
 
 // Define the interface for status update function
 // interface StatusUpdateFunction {
@@ -222,7 +223,44 @@ export default function AdminDashboardPage({
   const [appliedCoursesError, setAppliedCoursesError] = useState<string | null>(
     null
   );
+  console.log(
+    studentAppliedCourses,
+    loadingAppliedCourses,
+    appliedCoursesError
+  );
 
+  // Global store for confirmed courses
+  const {
+    fetchConfirmedCourses,
+    confirmedCourses,
+    loadingConfirmedCourses,
+    updateAppliedCourse,
+    error: storeError,
+  } = useUserStore();
+  const confirmedCoursesArray = Object.values(confirmedCourses).map(
+    (course) => ({
+      _id: course.courseId,
+      courseId: course.courseId,
+      applicationStatus: course.applicationStatus,
+      statusId: course.statusId, // ✅ CRITICAL: Include statusId
+      createdAt: course.createdAt,
+      updatedAt: course.updatedAt,
+      course_title: course.courseDetails.course_title,
+      universityData: course.courseDetails.universityData,
+      countryname: course.courseDetails.countryname,
+      intake: course.courseDetails.intake,
+      duration: course.courseDetails.duration,
+      annual_tuition_fee: course.courseDetails.annual_tuition_fee,
+      application_deadline: course.courseDetails.application_deadline,
+      universityname: course.courseDetails.universityData?.university_name,
+      countryOfStudy: course.courseDetails.countryname,
+      userId: studentId || "",
+      applicantId: studentId || "",
+      user: {
+        _id: studentId || "",
+      },
+    })
+  );
   // Fetch student-specific applied courses
   const fetchStudentAppliedCourses = async (userId: string) => {
     if (!userId) return;
@@ -348,62 +386,37 @@ export default function AdminDashboardPage({
   // Handle status updates from admin - FIXED VERSION
   const handleStatusUpdate = async (
     courseId: string,
-    newStatus: number
+    newApplicationStatus: number,
+    newStatusId?: number
   ): Promise<boolean> => {
+    console.log("🔄 Status update for confirmed course:", {
+      courseId,
+      newApplicationStatus,
+      newStatusId,
+    });
+
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses/tracking/${courseId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            courseId, // ✅ Send courseId in the request body
-            applicationStatus: newStatus,
-          }),
-        }
-      );
+      // Update using existing store method
+      const success = await updateAppliedCourse(courseId, newApplicationStatus);
 
-      if (!response.ok) {
-        throw new Error("Failed to update course status");
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        // Update local state using the correct state setter
-        setStudentAppliedCourses((prev) =>
-          prev.map((course) =>
-            course.courseId === courseId
-              ? {
-                  ...course,
-                  applicationStatus: newStatus,
-                  updatedAt: new Date().toISOString(),
-                }
-              : course
-          )
-        );
-
+      if (success && studentId) {
         console.log(
-          `Successfully updated course ${courseId} to status ${newStatus}`
+          "✅ Status updated successfully, refreshing confirmed courses"
         );
+
+        // Refresh confirmed courses to get updated data
+        await fetchConfirmedCourses(studentId);
+
         return true;
+      } else {
+        console.error("❌ Failed to update status");
+        return false;
       }
-      return false;
     } catch (error) {
-      console.error("Failed to update course status:", error);
+      console.error("❌ Error in status update callback:", error);
       return false;
     }
   };
-
-  // Wrapper function for onClick events that need to call handleStatusUpdate
-  // const handleStatusUpdateClick =
-  //   (courseId: string, newStatus: number) =>
-  //   (event: React.MouseEvent<HTMLButtonElement>) => {
-  //     event.preventDefault();
-  //     handleStatusUpdate(courseId, newStatus);
-  //   };
 
   // Get student data
   useEffect(() => {
@@ -430,7 +443,12 @@ export default function AdminDashboardPage({
     };
     fetchData();
   }, []);
-
+  useEffect(() => {
+    if (studentId) {
+      console.log("🔄 Fetching confirmed courses for student:", studentId);
+      fetchConfirmedCourses(studentId);
+    }
+  }, [studentId, fetchConfirmedCourses]);
   useEffect(() => {
     params.then((resolvedParams) => {
       setStudentId(resolvedParams.id);
@@ -614,11 +632,11 @@ export default function AdminDashboardPage({
         {/*/ adminportal/dashboard/[id]/page.tsx */}
         {/* Application Status Tracker */}
         <AdminApplicationTracker
-          appliedCoursesData={studentAppliedCourses}
+          appliedCoursesData={confirmedCoursesArray}
           onStatusUpdate={handleStatusUpdate}
-          loading={loadingAppliedCourses}
-          error={appliedCoursesError}
-          userId={studentId} // ✅ Add this line
+          loading={loadingConfirmedCourses}
+          error={storeError}
+          userId={studentId}
         />
         <ScholarshipStatus
           userId={studentId}

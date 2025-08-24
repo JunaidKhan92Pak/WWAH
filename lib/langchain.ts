@@ -598,10 +598,7 @@ function createQuerySpecificUserData(
       },
       updatedAt: originalUserData?.detailedInfo?.updatedAt || "",
       workExperience: originalUserData?.detailedInfo?.workExperience || 0,
-      // Fixed: Only define years once
       years: originalUserData?.detailedInfo?.years || 0,
-      // Spread the rest of detailedInfo properties AFTER handling specific ones
-      ...originalUserData?.detailedInfo,
       // Override with query-specific preferences
       studyPreferenced: {
         subject:
@@ -631,6 +628,11 @@ function createQuerySpecificUserData(
     appliedCourseIds: originalUserData?.appliedCourseIds || [],
     loadingAppliedCourses: originalUserData?.loadingAppliedCourses || false,
 
+    // MISSING: Confirmed courses state (NEW - ADDED)
+    confirmedCourses: originalUserData?.confirmedCourses || {},
+    confirmedCourseIds: originalUserData?.confirmedCourseIds || [],
+    loadingConfirmedCourses: originalUserData?.loadingConfirmedCourses || false,
+
     // Favorite universities state
     favoriteUniversities: originalUserData?.favoriteUniversities || {},
     favoriteUniversityIds: originalUserData?.favoriteUniversityIds || [],
@@ -648,13 +650,17 @@ function createQuerySpecificUserData(
       originalUserData?.appliedScholarshipCourseIds || [],
     loadingApplications: originalUserData?.loadingApplications || false,
 
-    // MISSING: Confirmed scholarship courses state (newly added to interface)
+    // Confirmed scholarship courses state
     confirmedScholarshipCourses:
       originalUserData?.confirmedScholarshipCourses || {},
     confirmedScholarshipCourseIds:
       originalUserData?.confirmedScholarshipCourseIds || [],
     loadingConfirmedApplications:
       originalUserData?.loadingConfirmedApplications || false,
+
+    // Embedding functionality
+    embeddingUpdateStatus: originalUserData?.embeddingUpdateStatus || "idle",
+    lastEmbeddingUpdate: originalUserData?.lastEmbeddingUpdate || null,
 
     // Action methods - Preserve existing functions or provide defaults
     fetchUserProfile: originalUserData?.fetchUserProfile || (async () => {}),
@@ -689,6 +695,14 @@ function createQuerySpecificUserData(
     getAppliedCourseDetails:
       originalUserData?.getAppliedCourseDetails || (() => null),
 
+    // MISSING: Confirmed courses actions (NEW - ADDED)
+    fetchConfirmedCourses:
+      originalUserData?.fetchConfirmedCourses || (async () => {}),
+    getConfirmedCourseStatus:
+      originalUserData?.getConfirmedCourseStatus || (() => false),
+    getConfirmedCourseDetails:
+      originalUserData?.getConfirmedCourseDetails || (() => null),
+
     // Favorite universities actions
     fetchFavoriteUniversities:
       originalUserData?.fetchFavoriteUniversities || (async () => {}),
@@ -716,15 +730,13 @@ function createQuerySpecificUserData(
     getApplicationProgress:
       originalUserData?.getApplicationProgress || (() => 0),
 
-    // MISSING: Confirmed scholarship courses action (newly added to interface)
+    // Confirmed scholarship courses action
     fetchConfirmedScholarshipCourses:
       originalUserData?.fetchConfirmedScholarshipCourses || (async () => {}),
 
     // Embedding refresh functionality
     refreshEmbeddings:
       originalUserData?.refreshEmbeddings || (async () => false),
-    embeddingUpdateStatus: originalUserData?.embeddingUpdateStatus || "idle",
-    lastEmbeddingUpdate: originalUserData?.lastEmbeddingUpdate || null,
   };
 
   return querySpecificData;

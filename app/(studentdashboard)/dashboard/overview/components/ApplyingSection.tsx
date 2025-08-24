@@ -1,3 +1,4 @@
+// export default ApplyingSection;
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -54,21 +55,48 @@ const ApplyingSection: React.FC = () => {
   // ✅ NEW: Router for navigation
   const router = useRouter();
 
-  // Helper function to get application step label
-  const getApplicationStepLabel = (applicationStatus: number): string => {
-    const steps = [
-      { step: 1, label: "Application Started" },
-      { step: 2, label: "Documents Prepared" },
-      { step: 3, label: "Application Submitted" },
-      { step: 4, label: "Under Review" },
-      { step: 5, label: "Interview Scheduled" },
-      { step: 6, label: "Decision Pending" },
-      { step: 7, label: "Final Decision" },
-    ];
+  // ✅ NEW: Status configuration with colors
+  const getStatusConfig = (statusId: number) => {
+    const statusConfigs: Record<number, { label: string; color: string }> = {
+      1: { label: "Incomplete Application", color: "bg-red-500" },
+      2: {
+        label: "Complete application and confirm course",
+        color: "bg-red-500",
+      },
+      3: { label: "Awaiting Course Confirmation", color: "bg-orange-500" },
+      4: { label: "Pay Application Fee", color: "bg-yellow-500" },
+      5: { label: "In Process", color: "bg-yellow-500" },
+      6: { label: "Application withdrawn by student", color: "bg-black" },
+      7: { label: "Application Successful", color: "bg-green-500" },
+      8: { label: "Application Unsuccessful", color: "bg-red-500" },
+      9: { label: "Visa in process", color: "bg-yellow-500" },
+      10: { label: "Visa Rejected", color: "bg-red-500" },
+      11: { label: "Ready to Fly", color: "bg-green-500" },
+    };
 
-    const step = steps.find((s) => s.step === applicationStatus);
-    return step ? step.label : "Unknown Step";
+    return (
+      statusConfigs[statusId] || {
+        label: "Unknown Status",
+        color: "bg-gray-500",
+      }
+    );
   };
+
+  // Helper function to get application step label (keeping for backward compatibility)
+  // const getApplicationStepLabel = (applicationStatus: number): string => {
+  //   const steps = [
+  //     { step: 1, label: "Application Started" },
+  //     { step: 2, label: "Documents Prepared" },
+  //     { step: 3, label: "Application Submitted" },
+  //     { step: 4, label: "Under Review" },
+  //     { step: 5, label: "Interview Scheduled" },
+  //     { step: 6, label: "Decision Pending" },
+  //     { step: 7, label: "Final Decision" },
+  //   ];
+
+  //   const step = steps.find((s) => s.step === applicationStatus);
+  //   return step ? step.label : "Unknown Step";
+  // };
 
   const getApplicationProgress = (applicationStatus: number): number => {
     return Math.round((applicationStatus / 7) * 100);
@@ -237,7 +265,7 @@ const ApplyingSection: React.FC = () => {
     console.log("Confirm button clicked for course:", courseId);
     setCourseToConfirm(courseId);
     setShowConfirmModal(true);
-    
+
     console.log("Modal should be open now");
   };
 
@@ -545,7 +573,8 @@ const ApplyingSection: React.FC = () => {
           </div>
           <DialogDescription className="text-center pt-0">
             *This will be the course we prepare your application for. You will
-            not be able to delete or change it later.</DialogDescription>
+            not be able to delete or change it later.
+          </DialogDescription>
         </DialogContent>
       </Dialog>
 
@@ -566,6 +595,20 @@ const ApplyingSection: React.FC = () => {
           const applicationDetails = getApplicationDetails(course._id);
           const isConfirmed = applicationDetails?.isConfirmed || false;
 
+          // ✅ CRITICAL: Use statusId for status display (priority) or fallback to applicationStatus
+          const statusId =
+            applicationDetails?.statusId ||
+            applicationDetails?.applicationStatus ||
+            1;
+          const statusConfig = getStatusConfig(statusId);
+
+          console.log(`Course ${course._id} status debug:`, {
+            statusId: applicationDetails?.statusId,
+            applicationStatus: applicationDetails?.applicationStatus,
+            finalStatusId: statusId,
+            statusConfig,
+          });
+
           return (
             <div
               key={course._id || index}
@@ -578,7 +621,7 @@ const ApplyingSection: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleRemoveButtonClick(course._id)}
-                  className={` border py-1 px-4 rounded-md flex items-center justify-center transition-colors  ${
+                  className={`border py-1 px-4 rounded-md flex items-center justify-center transition-colors ${
                     isConfirmed
                       ? "text-black-400 bg-[#FCE7D2] cursor-not-allowed opacity-50"
                       : "text-black-600 hover:bg-red-50 cursor-pointer"
@@ -595,9 +638,10 @@ const ApplyingSection: React.FC = () => {
                     width={16}
                     height={16}
                     className="w-4 h-4"
-                  />{" "}
+                  />
                 </button>
               </div>
+
               <div className="flex flex-col md:flex-row justify-between gap-2">
                 {/* Left Section: Course Info */}
                 <div className="flex flex-col md:flex-row items-start gap-2 flex-1">
@@ -634,17 +678,20 @@ const ApplyingSection: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Course Confirmation Checkbox */}
-                    <div className="flex items-center gap-0 pt-4">
+                    {/* ✅ CRITICAL: Course Status with colored dot using statusId */}
+                    <div className="flex items-center gap-2 pt-4">
                       <span className="text-[13px] font-medium px-4 py-1 rounded-md text-white bg-red-600">
-                        Current Status :
+                        Current Status:
                       </span>
-                      <span className="text-sm ml-2">
-                        {getApplicationStepLabel(
-                          applicationDetails?.applicationStatus || 1
-                        )}
-                      </span>
+                      <div className="flex items-center gap-2 ml-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${statusConfig.color}`}
+                        ></div>
+                        <span className="text-sm">{statusConfig.label}</span>
+                      </div>
                     </div>
+
+                    {/* ✅ DEBUG: Show status IDs for debugging */}
                   </div>
 
                   <div className="flex-1 space-y-2">
@@ -715,9 +762,6 @@ const ApplyingSection: React.FC = () => {
                       >
                         {course.application_fee || "Not specified"}
                       </p>
-                      {/* <p className="truncate">
-                        {course.application_fee || "Not specified"}
-                      </p> */}
                       <div className="flex items-center gap-1">
                         <Image
                           src="/DashboardPage/deadline.svg"
@@ -760,11 +804,11 @@ const ApplyingSection: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* ✅ UPDATED: Confirm button now calls handleConfirmButtonClick */}
+                  {/* Confirm button */}
                   <button
                     onClick={() => handleConfirmButtonClick(course._id)}
                     disabled={applicationDetails?.isConfirmed === true}
-                    className={` py-1 rounded text-white font-medium text-[13px] mt-2 ${
+                    className={`py-1 rounded text-white font-medium text-[13px] mt-2 ${
                       applicationDetails?.isConfirmed
                         ? "bg-red-600 cursor-not-allowed px-8"
                         : "bg-red-600 hover:bg-[#A01419] cursor-pointer px-2"
