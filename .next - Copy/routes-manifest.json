@@ -1,0 +1,596 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "dynamicRoutes": [
+    {
+      "page": "/Universities/[id]",
+      "regex": "^/Universities/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/Universities/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/adminportal/dashboard/[id]",
+      "regex": "^/adminportal/dashboard/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/adminportal/dashboard/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/countries/[id]",
+      "regex": "^/countries/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/countries/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/courses/[id]",
+      "regex": "^/courses/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/courses/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/scholarships/[id]",
+      "regex": "^/scholarships/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/scholarships/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/visaguide/[id]",
+      "regex": "^/visaguide/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/visaguide/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal",
+      "regex": "^/PartnerUsPortal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/accommodation",
+      "regex": "^/PartnerUsPortal/accommodation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/accommodation(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/application",
+      "regex": "^/PartnerUsPortal/application(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/application(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/comissionAndPayment",
+      "regex": "^/PartnerUsPortal/comissionAndPayment(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/comissionAndPayment(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/dashboardoverview",
+      "regex": "^/PartnerUsPortal/dashboardoverview(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/dashboardoverview(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/ApplicationInformation",
+      "regex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/ApplicationInformation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/ApplicationInformation(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/BasicInformation",
+      "regex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/BasicInformation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/BasicInformation(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/ReviewandSubmit",
+      "regex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/ReviewandSubmit(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/ReviewandSubmit(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/Uploaddocuments",
+      "regex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/Uploaddocuments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/dashboardoverview/components/AddApplicationForms/components/Uploaddocuments(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/search",
+      "regex": "^/PartnerUsPortal/search(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/search(?:/)?$"
+    },
+    {
+      "page": "/PartnerUsPortal/students",
+      "regex": "^/PartnerUsPortal/students(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/PartnerUsPortal/students(?:/)?$"
+    },
+    {
+      "page": "/Universities",
+      "regex": "^/Universities(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/Universities(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/aboutUs",
+      "regex": "^/aboutUs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/aboutUs(?:/)?$"
+    },
+    {
+      "page": "/addcountry",
+      "regex": "^/addcountry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/addcountry(?:/)?$"
+    },
+    {
+      "page": "/addcourse",
+      "regex": "^/addcourse(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/addcourse(?:/)?$"
+    },
+    {
+      "page": "/adduni",
+      "regex": "^/adduni(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adduni(?:/)?$"
+    },
+    {
+      "page": "/adminportal",
+      "regex": "^/adminportal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal(?:/)?$"
+    },
+    {
+      "page": "/adminportal/chatPage",
+      "regex": "^/adminportal/chatPage(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/chatPage(?:/)?$"
+    },
+    {
+      "page": "/adminportal/createadmin",
+      "regex": "^/adminportal/createadmin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/createadmin(?:/)?$"
+    },
+    {
+      "page": "/adminportal/dashboard",
+      "regex": "^/adminportal/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/dashboard(?:/)?$"
+    },
+    {
+      "page": "/adminportal/forgetpassword",
+      "regex": "^/adminportal/forgetpassword(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/forgetpassword(?:/)?$"
+    },
+    {
+      "page": "/adminportal/login",
+      "regex": "^/adminportal/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/login(?:/)?$"
+    },
+    {
+      "page": "/adminportal/resetpassword",
+      "regex": "^/adminportal/resetpassword(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/resetpassword(?:/)?$"
+    },
+    {
+      "page": "/adminportal/uploadCourses",
+      "regex": "^/adminportal/uploadCourses(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/uploadCourses(?:/)?$"
+    },
+    {
+      "page": "/adminportal/uploadScholarships",
+      "regex": "^/adminportal/uploadScholarships(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/uploadScholarships(?:/)?$"
+    },
+    {
+      "page": "/adminportal/uploadUniversity",
+      "regex": "^/adminportal/uploadUniversity(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/uploadUniversity(?:/)?$"
+    },
+    {
+      "page": "/adminportal/verifyotp",
+      "regex": "^/adminportal/verifyotp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminportal/verifyotp(?:/)?$"
+    },
+    {
+      "page": "/chatmodel",
+      "regex": "^/chatmodel(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/chatmodel(?:/)?$"
+    },
+    {
+      "page": "/contactus",
+      "regex": "^/contactus(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contactus(?:/)?$"
+    },
+    {
+      "page": "/countries",
+      "regex": "^/countries(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/countries(?:/)?$"
+    },
+    {
+      "page": "/countryform",
+      "regex": "^/countryform(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/countryform(?:/)?$"
+    },
+    {
+      "page": "/coursearchive",
+      "regex": "^/coursearchive(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/coursearchive(?:/)?$"
+    },
+    {
+      "page": "/courses",
+      "regex": "^/courses(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/courses(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/dashboard/AccomodationBooking",
+      "regex": "^/dashboard/AccomodationBooking(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/AccomodationBooking(?:/)?$"
+    },
+    {
+      "page": "/dashboard/Payment",
+      "regex": "^/dashboard/Payment(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/Payment(?:/)?$"
+    },
+    {
+      "page": "/dashboard/airportPickup",
+      "regex": "^/dashboard/airportPickup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/airportPickup(?:/)?$"
+    },
+    {
+      "page": "/dashboard/applicationstatustracker",
+      "regex": "^/dashboard/applicationstatustracker(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/applicationstatustracker(?:/)?$"
+    },
+    {
+      "page": "/dashboard/completeapplication",
+      "regex": "^/dashboard/completeapplication(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/completeapplication(?:/)?$"
+    },
+    {
+      "page": "/dashboard/completeapplication/components/ApplicationInfo",
+      "regex": "^/dashboard/completeapplication/components/ApplicationInfo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/completeapplication/components/ApplicationInfo(?:/)?$"
+    },
+    {
+      "page": "/dashboard/completeapplication/components/BasicInfo",
+      "regex": "^/dashboard/completeapplication/components/BasicInfo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/completeapplication/components/BasicInfo(?:/)?$"
+    },
+    {
+      "page": "/dashboard/favouritecourses",
+      "regex": "^/dashboard/favouritecourses(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/favouritecourses(?:/)?$"
+    },
+    {
+      "page": "/dashboard/myprofile",
+      "regex": "^/dashboard/myprofile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/myprofile(?:/)?$"
+    },
+    {
+      "page": "/dashboard/overview",
+      "regex": "^/dashboard/overview(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/overview(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/forget",
+      "regex": "^/forget(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/forget(?:/)?$"
+    },
+    {
+      "page": "/form",
+      "regex": "^/form(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/form(?:/)?$"
+    },
+    {
+      "page": "/ielts",
+      "regex": "^/ielts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ielts(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/otp",
+      "regex": "^/otp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/otp(?:/)?$"
+    },
+    {
+      "page": "/partnerUS",
+      "regex": "^/partnerUS(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/partnerUS(?:/)?$"
+    },
+    {
+      "page": "/profilepage",
+      "regex": "^/profilepage(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/profilepage(?:/)?$"
+    },
+    {
+      "page": "/pte",
+      "regex": "^/pte(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pte(?:/)?$"
+    },
+    {
+      "page": "/referralportal",
+      "regex": "^/referralportal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal(?:/)?$"
+    },
+    {
+      "page": "/referralportal/commissiontracker",
+      "regex": "^/referralportal/commissiontracker(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/commissiontracker(?:/)?$"
+    },
+    {
+      "page": "/referralportal/completeprofile",
+      "regex": "^/referralportal/completeprofile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/completeprofile(?:/)?$"
+    },
+    {
+      "page": "/referralportal/completeprofile/academicinformation",
+      "regex": "^/referralportal/completeprofile/academicinformation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/completeprofile/academicinformation(?:/)?$"
+    },
+    {
+      "page": "/referralportal/completeprofile/paymentinformation",
+      "regex": "^/referralportal/completeprofile/paymentinformation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/completeprofile/paymentinformation(?:/)?$"
+    },
+    {
+      "page": "/referralportal/completeprofile/termsagreement",
+      "regex": "^/referralportal/completeprofile/termsagreement(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/completeprofile/termsagreement(?:/)?$"
+    },
+    {
+      "page": "/referralportal/completeprofile/workexperience",
+      "regex": "^/referralportal/completeprofile/workexperience(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/completeprofile/workexperience(?:/)?$"
+    },
+    {
+      "page": "/referralportal/contactandsupport",
+      "regex": "^/referralportal/contactandsupport(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/contactandsupport(?:/)?$"
+    },
+    {
+      "page": "/referralportal/forget",
+      "regex": "^/referralportal/forget(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/forget(?:/)?$"
+    },
+    {
+      "page": "/referralportal/myprofile",
+      "regex": "^/referralportal/myprofile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/myprofile(?:/)?$"
+    },
+    {
+      "page": "/referralportal/otp",
+      "regex": "^/referralportal/otp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/otp(?:/)?$"
+    },
+    {
+      "page": "/referralportal/overview",
+      "regex": "^/referralportal/overview(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/overview(?:/)?$"
+    },
+    {
+      "page": "/referralportal/referralcontest",
+      "regex": "^/referralportal/referralcontest(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/referralcontest(?:/)?$"
+    },
+    {
+      "page": "/referralportal/signin",
+      "regex": "^/referralportal/signin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/signin(?:/)?$"
+    },
+    {
+      "page": "/referralportal/signup",
+      "regex": "^/referralportal/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/referralportal/signup(?:/)?$"
+    },
+    {
+      "page": "/resetpassword",
+      "regex": "^/resetpassword(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/resetpassword(?:/)?$"
+    },
+    {
+      "page": "/schedulesession",
+      "regex": "^/schedulesession(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/schedulesession(?:/)?$"
+    },
+    {
+      "page": "/scholarshipPricing",
+      "regex": "^/scholarshipPricing(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/scholarshipPricing(?:/)?$"
+    },
+    {
+      "page": "/scholarships",
+      "regex": "^/scholarships(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/scholarships(?:/)?$"
+    },
+    {
+      "page": "/signin",
+      "regex": "^/signin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/signin(?:/)?$"
+    },
+    {
+      "page": "/signup",
+      "regex": "^/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/signup(?:/)?$"
+    },
+    {
+      "page": "/successratioform",
+      "regex": "^/successratioform(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/successratioform(?:/)?$"
+    },
+    {
+      "page": "/toefl",
+      "regex": "^/toefl(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/toefl(?:/)?$"
+    },
+    {
+      "page": "/trackexpense",
+      "regex": "^/trackexpense(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/trackexpense(?:/)?$"
+    },
+    {
+      "page": "/universityform",
+      "regex": "^/universityform(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/universityform(?:/)?$"
+    },
+    {
+      "page": "/uploadCourse",
+      "regex": "^/uploadCourse(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/uploadCourse(?:/)?$"
+    },
+    {
+      "page": "/uploadScholarships",
+      "regex": "^/uploadScholarships(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/uploadScholarships(?:/)?$"
+    },
+    {
+      "page": "/uploadUniversity",
+      "regex": "^/uploadUniversity(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/uploadUniversity(?:/)?$"
+    },
+    {
+      "page": "/verifyotp",
+      "regex": "^/verifyotp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/verifyotp(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "RSC",
+    "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+    "prefetchHeader": "Next-Router-Prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "Next-Router-Segment-Prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://your-backend.vercel.app/api/:path*",
+      "regex": "^/api(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    }
+  ]
+}

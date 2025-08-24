@@ -14,12 +14,6 @@ interface FavoriteUniversity {
     banner: string;
   };
 }
-// type UniversityData = {
-//   _id: string;
-//   name: string;
-//   country: string;
-//   // Add other university properties as needed
-// };
 // Course interface for favorites
 interface FavoriteCourse {
   _id: string;
@@ -43,9 +37,9 @@ interface FavoriteCourse {
 // Applied Course interface - ALIGNED WITH YOUR SCHEMA
 export interface AppliedCourse {
   courseId: string;
-  applicationStatus: number; // 1-7 numeric status (only field from your schema)
-  isConfirmed: boolean; // ✅ NEW: Added confirmation field
-
+  applicationStatus: number;
+  statusId: number;
+  isConfirmed: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -61,8 +55,7 @@ export interface AppliedCourseWithDetails extends AppliedCourse {
     duration?: string;
     annual_tuition_fee?: any;
     application_deadline?: string;
-    
-    application_fee:string;
+    application_fee: string;
   };
 }
 
@@ -210,6 +203,10 @@ export interface UserStore {
   confirmedScholarshipCourseIds: string[];
   loadingConfirmedApplications: boolean;
 
+  confirmedCourses: Record<string, AppliedCourseWithDetails>;
+  confirmedCourseIds: string[];
+  loadingConfirmedCourses: boolean;
+
   // Actions
   fetchUserProfile: () => Promise<void>;
   updateUserProfile: (updateData: Partial<User>) => Promise<boolean>;
@@ -261,12 +258,18 @@ export interface UserStore {
     action: "add" | "remove"
   ) => Promise<boolean>;
   getScholarshipFavoriteStatus: (scholarshipId: string) => boolean;
+  fetchConfirmedCourses: (userId?: string) => Promise<void>;
+  getConfirmedCourseStatus: (courseId: string) => boolean;
+  getConfirmedCourseDetails: (
+    courseId: string
+  ) => AppliedCourseWithDetails | null;
 
   // Applied scholarship courses actions
   fetchAppliedScholarshipCourses: () => Promise<void>;
   fetchAppliedScholarship: (id: string) => Promise<void>;
   // New action for confirmed scholarships only
   fetchConfirmedScholarshipCourses: (userId: string) => Promise<void>;
+
   addAppliedScholarshipCourse: (
     applicationData: AppliedScholarshipCourse
   ) => Promise<boolean>;
@@ -303,15 +306,17 @@ function normalizeAppliedCourses(appliedCourses: any[]): AppliedCourse[] {
       return {
         courseId: item,
         applicationStatus: 1, // Default to first status
-        isConfirmed: false, // ✅ NEW: Default confirmation status
+        statusId: 1, // ✅ CRITICAL: Default statusId
+        isConfirmed: false, // Default confirmation status
       };
     }
 
-    // Handle object format - ONLY use schema fields
+    // Handle object format - ONLY use schema fields and ENSURE statusId is included
     return {
       courseId: item.courseId,
       applicationStatus: item.applicationStatus || 1,
-      isConfirmed: item.isConfirmed || false, // ✅ NEW: Added isConfirmed field
+      statusId: item.statusId || 1, // ✅ CRITICAL: Always include statusId
+      isConfirmed: item.isConfirmed || false,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     };
@@ -359,6 +364,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
   confirmedScholarshipCourses: {},
   confirmedScholarshipCourseIds: [],
   loadingConfirmedApplications: false,
+
+  confirmedCourses: {},
+  confirmedCourseIds: [],
+  loadingConfirmedCourses: false,
 
   fetchUserProfile: async () => {
     const token = getAuthToken();
@@ -483,6 +492,206 @@ export const useUserStore = create<UserStore>((set, get) => ({
         isAuthenticated: false,
       });
     }
+  },
+  fetchConfirmedCourses: async (userId?: string) => {
+    console.log("Fetching confirmed courses...");
+    const state = get();
+    const token = getAuthToken();
+
+    if (!token) {
+      set({ error: "No authentication token found" });
+      return;
+    }
+
+    // Use provided userId or try to get from current user
+    const targetUserId = userId || state.user?._id;
+
+    if (!targetUserId) {
+      set({ error: "User ID is required to fetch confirmed courses" });
+      return;
+    }
+
+    try {
+      set({ loadingConfirmedCourses: true, error: null });
+
+      // Step 1: Fetch applied courses for specific user (admin endpoint)
+      const appliedCoursesResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses/user/${targetUserId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!appliedCoursesResponse.ok) {
+        throw new Error(
+          `Failed to fetch applied courses: ${appliedCoursesResponse.status}`
+        );
+      }
+
+      const appliedCoursesResult = await appliedCoursesResponse.json();
+
+      if (
+        !appliedCoursesResult.success ||
+        !appliedCoursesResult.data?.appliedCourses
+      ) {
+        console.log(
+          "No applied courses found, setting empty confirmed courses"
+        );
+        set({
+          confirmedCourses: {},
+          confirmedCourseIds: [],
+          loadingConfirmedCourses: false,
+        });
+        return;
+      }
+
+      const appliedCoursesData = appliedCoursesResult.data.appliedCourses;
+      console.log("✅ Applied courses data from API:", appliedCoursesData);
+
+      // Step 2: Filter only confirmed courses
+      const confirmedCoursesData = appliedCoursesData.filter(
+        (course: any) => course.isConfirmed === true
+      );
+
+      console.log("🔍 Filtered confirmed courses:", confirmedCoursesData);
+
+      if (confirmedCoursesData.length === 0) {
+        set({
+          confirmedCourses: {},
+          confirmedCourseIds: [],
+          loadingConfirmedCourses: false,
+        });
+        return;
+      }
+
+      // Step 3: Create tracking data map with statusId for confirmed courses
+      const trackingDataMap = new Map();
+      confirmedCoursesData.forEach((course: any) => {
+        trackingDataMap.set(course.courseId, {
+          applicationStatus: course.applicationStatus,
+          statusId: course.statusId || 1, // ✅ CRITICAL: Ensure statusId is included
+          isConfirmed: course.isConfirmed || false,
+          createdAt: course.createdAt,
+          updatedAt: course.updatedAt,
+        });
+      });
+
+      console.log(
+        "✅ Confirmed courses tracking data map with statusId:",
+        Array.from(trackingDataMap.entries())
+      );
+
+      // Step 4: Fetch detailed course information
+      const detailedCoursesResponse = await fetch(
+        `/api/getfavouritecourse?ids=${encodeURIComponent(
+          JSON.stringify(confirmedCoursesData)
+        )}&type=applied&includeApplicationData=true`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!detailedCoursesResponse.ok) {
+        throw new Error(
+          `Failed to fetch course details: ${detailedCoursesResponse.status}`
+        );
+      }
+
+      const detailedCoursesResult = await detailedCoursesResponse.json();
+      console.log("Detailed confirmed courses result:", detailedCoursesResult);
+
+      if (
+        detailedCoursesResult.success &&
+        detailedCoursesResult.appliedCourses
+      ) {
+        const coursesMap: Record<string, AppliedCourseWithDetails> = {};
+        const courseIdsList: string[] = [];
+
+        detailedCoursesResult.appliedCourses.forEach((course: any) => {
+          const courseId = course._id;
+          courseIdsList.push(courseId);
+
+          const trackingData = trackingDataMap.get(courseId);
+
+          // ✅ CRITICAL: Ensure statusId is properly included for confirmed courses
+          coursesMap[courseId] = {
+            courseId: courseId,
+            applicationStatus: trackingData?.applicationStatus || 1,
+            statusId: trackingData?.statusId || 1, // ✅ CRITICAL: Include statusId
+            isConfirmed: trackingData?.isConfirmed || false,
+            createdAt: trackingData?.createdAt,
+            updatedAt: trackingData?.updatedAt,
+            courseDetails: {
+              _id: course._id,
+              course_title: course.course_title,
+              application_fee: course.application_fee,
+              universityData: course.universityData,
+              countryname: course.countryname,
+              intake: course.intake || "",
+              duration: course.duration || "",
+              annual_tuition_fee: course.annual_tuition_fee || {
+                amount: 0,
+                currency: "USD",
+              },
+              application_deadline: course.application_deadline,
+            },
+          };
+        });
+
+        console.log(
+          "✅ Final confirmed courses map with statusId:",
+          Object.entries(coursesMap).map(([id, course]) => ({
+            courseId: id,
+            statusId: course.statusId,
+            applicationStatus: course.applicationStatus,
+            isConfirmed: course.isConfirmed,
+          }))
+        );
+
+        set({
+          confirmedCourses: coursesMap,
+          confirmedCourseIds: courseIdsList,
+          loadingConfirmedCourses: false,
+          error: null,
+        });
+      } else {
+        // If detailed course fetch fails, still set the course IDs
+        set({
+          confirmedCourseIds: confirmedCoursesData.map(
+            (course: any) => course.courseId
+          ),
+          loadingConfirmedCourses: false,
+          error:
+            "Failed to fetch detailed course information, but confirmed courses loaded",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching confirmed courses:", error);
+      set({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        loadingConfirmedCourses: false,
+      });
+    }
+  },
+
+  // NEW: Helper methods for confirmed courses
+  getConfirmedCourseStatus: (courseId: string) => {
+    const state = get();
+    return state.confirmedCourseIds.includes(courseId);
+  },
+
+  getConfirmedCourseDetails: (courseId: string) => {
+    const state = get();
+    return state.confirmedCourses[courseId] || null;
   },
 
   fetchFavoriteCourses: async () => {
@@ -609,7 +818,17 @@ export const useUserStore = create<UserStore>((set, get) => ({
       }
 
       const appliedCoursesData = appliedCoursesResult.data.appliedCourses;
-      console.log("Applied courses data:", appliedCoursesData);
+      console.log(
+        "✅ Applied courses data from API (with statusId):",
+        appliedCoursesData
+      );
+
+      // ✅ CRITICAL: Validate that statusId is present in the data
+      appliedCoursesData.forEach((course: any) => {
+        console.log(
+          `Course ${course.courseId} - statusId: ${course.statusId}, applicationStatus: ${course.applicationStatus}`
+        );
+      });
 
       // Step 2: Update user state with the fetched applied courses
       set({
@@ -635,19 +854,22 @@ export const useUserStore = create<UserStore>((set, get) => ({
         (course: any) => course.courseId
       );
 
-      // Create tracking data map
+      // ✅ CRITICAL: Create tracking data map with statusId
       const trackingDataMap = new Map();
       appliedCoursesData.forEach((course: any) => {
         trackingDataMap.set(course.courseId, {
           applicationStatus: course.applicationStatus,
-          isConfirmed: course.isConfirmed || false, // ✅ NEW: Added isConfirmed
-
+          statusId: course.statusId || 1, // ✅ CRITICAL: Ensure statusId is included
+          isConfirmed: course.isConfirmed || false,
           createdAt: course.createdAt,
           updatedAt: course.updatedAt,
         });
       });
 
-      console.log("Course IDs to fetch details:", courseIds);
+      console.log(
+        "✅ Tracking data map with statusId:",
+        Array.from(trackingDataMap.entries())
+      );
 
       // Step 4: Fetch detailed course information using your API
       const detailedCoursesResponse = await fetch(
@@ -675,27 +897,27 @@ export const useUserStore = create<UserStore>((set, get) => ({
         detailedCoursesResult.success &&
         detailedCoursesResult.appliedCourses
       ) {
-        // const coursesMap = {};
         const coursesMap: Record<string, AppliedCourseWithDetails> = {};
-
         const courseIdsList: string[] = [];
+
         detailedCoursesResult.appliedCourses.forEach((course: any) => {
           const courseId = course._id;
           courseIdsList.push(courseId);
 
           const trackingData = trackingDataMap.get(courseId);
 
+          // ✅ CRITICAL: Ensure statusId is properly included
           coursesMap[courseId] = {
             courseId: courseId,
             applicationStatus: trackingData?.applicationStatus || 1,
-            isConfirmed: trackingData?.isConfirmed || false, // ✅ NEW: Added isConfirmed
-
+            statusId: trackingData?.statusId || 1, // ✅ CRITICAL: Include statusId
+            isConfirmed: trackingData?.isConfirmed || false,
             createdAt: trackingData?.createdAt,
             updatedAt: trackingData?.updatedAt,
             courseDetails: {
               _id: course._id,
               course_title: course.course_title,
-              application_fee:course.application_fee,
+              application_fee: course.application_fee,
               universityData: course.universityData,
               countryname: course.countryname,
               intake: course.intake || "",
@@ -709,7 +931,14 @@ export const useUserStore = create<UserStore>((set, get) => ({
           };
         });
 
-        console.log("Processed courses map:", coursesMap);
+        console.log(
+          "✅ Final processed courses map with statusId:",
+          Object.entries(coursesMap).map(([id, course]) => ({
+            courseId: id,
+            statusId: course.statusId,
+            applicationStatus: course.applicationStatus,
+          }))
+        );
 
         set({
           appliedCourses: coursesMap,
@@ -783,12 +1012,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
         const applicationIds: string[] = [];
 
         applications.forEach((application: any) => {
+          console.log(application, "aqpplication data from store");
           if (application._id) {
             const transformedApplication: AppliedScholarshipCourse = {
               _id: application._id,
               banner: application.banner || "",
-              scholarshipName:
-                application.scholarshipName || "Unknown Scholarship",
+              scholarshipName: application.name || "Unknown Scholarship",
               ScholarshipId: application.scholarshipId || "", // ✅ CRITICAL: Include this field
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
@@ -935,11 +1164,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
       if (result.success) {
         set((state) => {
-          const newAppliedCourse: AppliedCourse = {
-            courseId,
-            applicationStatus,
-            isConfirmed: false,
-          };
+      const newAppliedCourse: AppliedCourse = {
+        courseId,
+        applicationStatus,
+        statusId: applicationStatus, // ✅ Add missing statusId
+        isConfirmed: false,
+      };
 
           const updatedAppliedCourses = [
             ...(state.user?.appliedCourses || []),
@@ -973,7 +1203,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  updateAppliedCourse: async (courseId, applicationStatus) => {
+  updateAppliedCourse: async (
+    courseId: string,
+    applicationStatus?: number,
+    statusId?: number
+  ) => {
     const token = getAuthToken();
     if (!token) {
       set({ error: "No authentication token found" });
@@ -981,6 +1215,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
 
     try {
+      const requestBody: any = {};
+      if (applicationStatus !== undefined) {
+        requestBody.applicationStatus = applicationStatus;
+      }
+      if (statusId !== undefined) {
+        requestBody.statusId = statusId;
+      }
+
+      console.log("🔄 Updating course with:", { courseId, ...requestBody });
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}appliedCourses/tracking/${courseId}`,
         {
@@ -990,9 +1234,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({
-            applicationStatus: applicationStatus,
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
@@ -1001,32 +1243,51 @@ export const useUserStore = create<UserStore>((set, get) => ({
       }
 
       const result = await response.json();
+      console.log("✅ Update response:", result);
 
       if (result.success) {
         set((state) => {
-          // Update the user's appliedCourses array
+          // ✅ CRITICAL: Update the user's appliedCourses array with statusId
           const updatedAppliedCourses =
             state.user?.appliedCourses.map((course) =>
               course.courseId === courseId
                 ? {
                     ...course,
-                    applicationStatus,
+                    applicationStatus:
+                      applicationStatus !== undefined
+                        ? applicationStatus
+                        : course.applicationStatus,
+                    statusId:
+                      statusId !== undefined ? statusId : course.statusId, // ✅ CRITICAL: Update statusId
                     isConfirmed: course.isConfirmed,
-
                     updatedAt: new Date().toISOString(),
                   }
                 : course
             ) || [];
 
-          // Update the appliedCourses map with detailed information
+          // ✅ CRITICAL: Update the appliedCourses map with statusId
           const updatedAppliedCoursesMap = {
             ...state.appliedCourses,
             [courseId]: {
               ...state.appliedCourses[courseId],
-              applicationStatus,
+              applicationStatus:
+                applicationStatus !== undefined
+                  ? applicationStatus
+                  : state.appliedCourses[courseId]?.applicationStatus,
+              statusId:
+                statusId !== undefined
+                  ? statusId
+                  : state.appliedCourses[courseId]?.statusId, // ✅ CRITICAL: Update statusId
               updatedAt: new Date().toISOString(),
             },
           };
+
+          console.log("📊 Updated state with statusId:", {
+            courseId,
+            newApplicationStatus: applicationStatus,
+            newStatusId: statusId,
+            updatedCourse: updatedAppliedCoursesMap[courseId],
+          });
 
           return {
             user: state.user
@@ -1393,8 +1654,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
           const transformedApplication: AppliedScholarshipCourse = {
             _id: application._id,
             banner: application.banner || "",
-            scholarshipName:
-              application.scholarshipName || "Unknown Scholarship",
+            scholarshipName: application.name || "Unknown Scholarship",
             hostCountry: application.hostCountry || "Not specified",
             courseName: application.courseName || "Not specified",
             duration: application.duration || "Not specified",
@@ -1464,7 +1724,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
           ...currentState.appliedScholarshipCourses,
           [applicationData._id]: {
             _id: applicationData._id,
-            scholarshipName: applicationData.scholarshipName,
+            scholarshipName: applicationData.name,
             hostCountry: applicationData.hostCountry,
             courseName: applicationData.courseName,
             duration: applicationData.duration,
@@ -1955,8 +2215,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
             const transformedApplication: AppliedScholarshipCourse = {
               _id: application._id,
               banner: application.banner || "",
-              scholarshipName:
-                application.scholarshipName || "Unknown Scholarship",
+              scholarshipName: application.name || "Unknown Scholarship",
               ScholarshipId: application.scholarshipId || "",
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
