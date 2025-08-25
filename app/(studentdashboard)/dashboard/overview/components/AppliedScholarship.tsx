@@ -6,12 +6,21 @@ import CircularProgress from "./CircularProgress";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Copy } from "lucide-react";
+import { BsWhatsapp } from "react-icons/bs";
+import { AiOutlineMail } from "react-icons/ai";
+import { FaFacebook } from "react-icons/fa";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { getAuthToken } from "@/utils/authHelper";
@@ -34,6 +43,7 @@ interface AppliedScholarshipCourseProps {
   ScholarshipId: string;
   isConfirmed?: boolean;
   banner?: string;
+  logo?: string;
   statusId?: number; // Added for the new status system
 }
 
@@ -50,6 +60,16 @@ const AppliedScholarship = () => {
   const [scholarshipToConfirm, setScholarshipToConfirm] = useState<
     string | null
   >(null);
+
+  // ✅ NEW: Delete confirmation modal state
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [scholarshipToDelete, setScholarshipToDelete] = useState<string | null>(
+    null
+  );
+
+  // ✅ NEW: Share functionality state
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
+
   const router = useRouter();
   // Safely access the loading state - matching backup pattern
   const loadingApplications =
@@ -151,7 +171,8 @@ const AppliedScholarship = () => {
     return status || "Awaiting Scholarship Confirmation";
   };
 
-  const handleDeleteApplication = async (applicationId: string) => {
+  // ✅ FIXED: Handle delete button click - now properly checks isConfirmed
+  const handleDeleteButtonClick = (applicationId: string) => {
     if (!user?._id) {
       alert("User not found. Please log in again.");
       return;
@@ -161,18 +182,41 @@ const AppliedScholarship = () => {
     const scholarship = appliedCoursesArray.find(
       (app) => app._id === applicationId
     );
+
+    console.log(
+      "Delete button clicked for:",
+      applicationId,
+      "isConfirmed:",
+      scholarship?.isConfirmed
+    );
+
     if (scholarship?.isConfirmed) {
+      console.log("Showing contact modal because scholarship is confirmed");
       setShowContactModal(true);
       return;
     }
 
-    // Confirm deletion
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete this application? This action cannot be undone."
-    );
+    // If not confirmed, show delete confirmation modal
+    setScholarshipToDelete(applicationId);
+    setShowDeleteModal(true);
+  };
 
-    if (!isConfirmed) return;
+  // ✅ NEW: Handle delete modal Yes click
+  const handleDeleteYes = async () => {
+    if (scholarshipToDelete) {
+      await handleDeleteApplication(scholarshipToDelete);
+    }
+    setShowDeleteModal(false);
+    setScholarshipToDelete(null);
+  };
 
+  // ✅ NEW: Handle delete modal No click
+  const handleDeleteNo = () => {
+    setShowDeleteModal(false);
+    setScholarshipToDelete(null);
+  };
+
+  const handleDeleteApplication = async (applicationId: string) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/${applicationId}`,
@@ -182,7 +226,7 @@ const AppliedScholarship = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: user._id,
+            userId: user?._id,
           }),
         }
       );
@@ -209,11 +253,17 @@ const AppliedScholarship = () => {
     console.log("Modal should be open now");
   };
 
-  // ✅ NEW: Handle confirmation modal Yes click
+  // ✅ FIXED: Handle confirmation modal Yes click - now redirects to complete application
   const handleConfirmYes = async () => {
     if (scholarshipToConfirm) {
-      await handleScholarshipConfirmation(scholarshipToConfirm, true);
-      router.push("/dashboard/completeapplication");
+      const success = await handleScholarshipConfirmation(
+        scholarshipToConfirm,
+        true
+      );
+      if (success) {
+        // Redirect to complete application page after successful confirmation
+        router.push("/dashboard/completeapplication");
+      }
     }
     setShowConfirmModal(false);
     setScholarshipToConfirm(null);
@@ -229,7 +279,7 @@ const AppliedScholarship = () => {
   const handleScholarshipConfirmation = async (
     scholarshipId: string,
     isConfirmed: boolean
-  ) => {
+  ): Promise<boolean> => {
     console.log("Updating scholarship confirmation:", {
       scholarshipId,
       isConfirmed,
@@ -273,8 +323,7 @@ const AppliedScholarship = () => {
           }
         );
 
-        // Refresh the page or update local state
-        window.location.reload();
+        return true; // Return success
       } else {
         throw new Error(
           data.message || "Failed to update scholarship confirmation"
@@ -290,6 +339,7 @@ const AppliedScholarship = () => {
         duration: 4000,
         position: "top-center",
       });
+      return false; // Return failure
     }
   };
 
@@ -452,16 +502,24 @@ const AppliedScholarship = () => {
 
   return (
     <div className="p-3 bg-gray-50">
-      {/* ✅ NEW: Contact Advisor Modal */}
+      {/* ✅ FIXED: Contact Advisor Modal - now shows correct message */}
       <Dialog open={showContactModal} onOpenChange={setShowContactModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
               Scholarship Confirmed
             </DialogTitle>
-            <DialogDescription className="text-center pt-4">
-              This scholarship has been confirmed and cannot be removed. Please
-              contact your WWAH advisor for any changes.
+            <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
+              <Image
+                src="/spark.png"
+                alt="Spark Icon"
+                width={100}
+                height={100}
+              />
+              <p className="pt-2">
+                This scholarship has been confirmed and cannot be removed.
+                Please contact your WWAH advisor for any changes.
+              </p>
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-center pt-4">
@@ -475,7 +533,37 @@ const AppliedScholarship = () => {
         </DialogContent>
       </Dialog>
 
-      {/* ✅ NEW: Confirmation Modal */}
+      {/* ✅ NEW: Delete Confirmation Modal */}
+      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-center mx-auto">
+              <Image
+                src="/spark.png"
+                alt="Spark Icon"
+                width={100}
+                height={100}
+              />
+            </DialogTitle>
+            <DialogDescription className="text-center text-black font-semibold text-[16px] pt-4">
+              Are you sure you want to delete this course?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center gap-4 pt-4">
+            <Button
+              onClick={handleDeleteYes}
+              className="bg-[#C7161E] hover:bg-[#f03c45] text-white px-8"
+            >
+              Yes
+            </Button>
+            <Button onClick={handleDeleteNo} variant="outline" className="px-8">
+              No
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ✅ Scholarship Confirmation Modal */}
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -508,7 +596,7 @@ const AppliedScholarship = () => {
           </div>
           <DialogDescription className="text-center pt-2">
             *This will be the course we prepare your application for. You will
-            not be able to delete or change it later.
+            not be able to delete or change it later.
           </DialogDescription>
         </DialogContent>
       </Dialog>
@@ -570,22 +658,13 @@ const AppliedScholarship = () => {
                             View
                           </a>
                         </button>
-                        {/* ✅ UPDATED: Delete button with confirmation check */}
+                        {/* ✅ FIXED: Delete button with proper confirmation check */}
                         <button
-                          className={`py-1 px-4 rounded-md transition-colors ${
-                            isConfirmed
-                              ? "text-black-400 bg-[#FCE7D2] cursor-not-allowed opacity-50"
-                              : "text-black-600 hover:bg-red-50 cursor-pointer"
-                          }`}
+                          className="py-1 px-4 rounded-md transition-colors text-black-600 hover:bg-red-50 cursor-pointer"
                           onClick={() =>
-                            handleDeleteApplication(application._id)
+                            handleDeleteButtonClick(application._id)
                           }
-                          title={
-                            isConfirmed
-                              ? "Cannot delete confirmed scholarship"
-                              : "Delete Application"
-                          }
-                          disabled={isConfirmed}
+                          title="Delete Application"
                         >
                           <Image
                             src="/delete.svg"
@@ -610,6 +689,134 @@ const AppliedScholarship = () => {
                                 height={150}
                                 className="w-[230px] h-[180px] object-cover"
                               />
+
+                              {/* Logo Overlay - NEW ADDITION */}
+                              <div className="absolute bottom-3 left-4 z-10 w-12 h-12 rounded-full bg-white border border-gray-300 p-1 shadow-md">
+                                <Image
+                                  unoptimized
+                                  src={application.logo || "/default-logo.png"}
+                                  alt="University Logo"
+                                  width={44}
+                                  height={44}
+                                  className="rounded-full object-contain w-full h-full"
+                                />
+                              </div>
+
+                              {/* Share Button - NEW ADDITION */}
+                              <div className="absolute z-10 top-4 right-4 flex space-x-1 py-1 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <button>
+                                      <Image
+                                        src="/university/Share.svg"
+                                        width={16}
+                                        height={16}
+                                        alt="Share"
+                                      />
+                                    </button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-md">
+                                    <DialogHeader>
+                                      <DialogTitle>Share link</DialogTitle>
+                                      <DialogDescription>
+                                        Anyone who has this link will be able to
+                                        view this.
+                                      </DialogDescription>
+                                    </DialogHeader>
+
+                                    <div className="flex items-center space-x-2">
+                                      <div className="grid flex-1 gap-2">
+                                        <Label
+                                          htmlFor={`link-${application._id}`}
+                                          className="sr-only"
+                                        >
+                                          Link
+                                        </Label>
+                                        <Input
+                                          id={`link-${application._id}`}
+                                          value={`${
+                                            typeof window !== "undefined"
+                                              ? window.location.origin
+                                              : ""
+                                          }/scholarships/${
+                                            application.ScholarshipId
+                                          }`}
+                                          readOnly
+                                        />
+                                      </div>
+                                      <Button
+                                        type="button"
+                                        size="sm"
+                                        className="px-3"
+                                        onClick={() => {
+                                          const link = `${window.location.origin}/scholarships/${application.ScholarshipId}`;
+                                          navigator.clipboard
+                                            .writeText(link)
+                                            .then(() => {
+                                              setCopiedLinkId(application._id);
+                                              setTimeout(
+                                                () => setCopiedLinkId(null),
+                                                2000
+                                              );
+                                            });
+                                        }}
+                                      >
+                                        <span className="sr-only">Copy</span>
+                                        <Copy />
+                                      </Button>
+                                    </div>
+
+                                    {copiedLinkId === application._id && (
+                                      <p className="text-black text-sm mt-2">
+                                        Link copied to clipboard!
+                                      </p>
+                                    )}
+
+                                    {/* Share buttons */}
+                                    <div className="mt-2 flex gap-4 justify-left">
+                                      <a
+                                        href={`https://wa.me/?text=${encodeURIComponent(
+                                          `${window.location.origin}/scholarships/${application.ScholarshipId}`
+                                        )}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-green-600 hover:underline"
+                                      >
+                                        <BsWhatsapp className="text-2xl" />
+                                      </a>
+                                      <a
+                                        href={`mailto:?subject=Check this out&body=${encodeURIComponent(
+                                          `${window.location.origin}/scholarships/${application.ScholarshipId}`
+                                        )}`}
+                                        className="text-blue-600 hover:underline"
+                                      >
+                                        <AiOutlineMail className="text-2xl text-red-600" />
+                                      </a>
+                                      <a
+                                        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                                          `${window.location.origin}/scholarships/${application.ScholarshipId}`
+                                        )}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-[#1877F2] hover:underline"
+                                      >
+                                        <FaFacebook className="text-blue-600 text-2xl" />
+                                      </a>
+                                    </div>
+
+                                    <DialogFooter className="sm:justify-start">
+                                      <DialogClose asChild>
+                                        <Button
+                                          type="button"
+                                          variant="secondary"
+                                        >
+                                          Close
+                                        </Button>
+                                      </DialogClose>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                              </div>
                             </div>
 
                             <div className="flex-1 p-2">
@@ -662,19 +869,6 @@ const AppliedScholarship = () => {
                                   </span>
                                 </div>
                               </div>
-                              {/* <div className="flex items-center gap-2 mb-1">
-                                <Image
-                                  src="/vectoruni.svg"
-                                  alt="Scholarship Type Icon"
-                                  width={16}
-                                  height={16}
-                                  className="w-3 h-3"
-                                />
-                                <span className="text-gray-600 text-[12px]">
-                                  {application.universityName ||
-                                    "Not specified"}
-                                </span>
-                              </div> */}
                               <div className="flex items-center gap-2 mb-1">
                                 <Image
                                   src="/vectoruni.svg"
@@ -723,13 +917,6 @@ const AppliedScholarship = () => {
                               </div>
                             </div>
 
-                            {/* <div className="flex flex-col items-center justify-evenly min-w-[140px]">
-                              <div className="flex flex-col items-center mt-4">
-                                <p className="text-[12px] font-semibold mb-2 text-center w-4/5">
-                                  Application Success Chances
-                                </p>
-                              </div>
-                            </div> */}
                             <div className="relative flex flex-col items-end justify-center min-w-[140px]">
                               {/* Blurred content */}
                               <div className="blur-sm opacity-40 pointer-events-none flex flex-col justify-center items-center">

@@ -13,11 +13,12 @@ import { useChatStore } from "@/store/chatStore";
 import { useUserStore } from "@/store/useUserData";
 
 export function Navbar() {
-  const { unreadCount, clearNotifications, isConnected, notifications } = useNotification();
+  const { unreadCount, clearNotifications, isConnected, notifications } =
+    useNotification();
   const [showNotificationMenu, setShowNotificationMenu] = useState(false);
   const notificationMenuRef = useRef<HTMLDivElement>(null);
   const setIsChatOpen = useChatStore((state) => state.setIsChatOpen);
-  const { totalFavourites } = useUserStore()
+  const { totalFavourites } = useUserStore();
 
   // console.log("🔔 Navbar - unreadCount:", unreadCount);
   // console.log("🔌 Navbar - isConnected:", isConnected);
@@ -113,7 +114,7 @@ export function Navbar() {
       {/* Right Side: Action Buttons */}
       <div className="flex items-center space-x-2 sm:space-x-4">
         <div className="space-y-2">
-          <Link href="/dashboard/favouritecourses">
+          <Link href="/dashboard/favourites">
             <Button
               variant="ghost"
               className="bg-[#F1F1F1] text-gray-800 border border-gray-300 rounded-lg  relative flex items-center gap-2 px-4 py-2 hover:bg-red-50 hover:text-red-700 transition-colors group"
