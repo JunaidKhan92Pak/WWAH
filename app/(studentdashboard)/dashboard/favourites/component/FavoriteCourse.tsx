@@ -99,7 +99,7 @@ const FavoriteCourse = () => {
       }
 
       const data = await response.json();
-      console.log("Course added to applied courses:", data);
+      // console.log("Course added to applied courses:", data);
       toast.success("Course added to applied courses!", {
         duration: 2000,
         position: "top-center",
@@ -388,11 +388,10 @@ const FavoriteCourse = () => {
                           </Label>
                           <Input
                             id={`link-${item._id}`}
-                            value={`${
-                              typeof window !== "undefined"
-                                ? window.location.origin
-                                : ""
-                            }/courses/${item._id}`}
+                            value={`${typeof window !== "undefined"
+                              ? window.location.origin
+                              : ""
+                              }/courses/${item._id}`}
                             readOnly
                           />
                         </div>
@@ -464,8 +463,8 @@ const FavoriteCourse = () => {
                     onClick={() => removeFavorite(item._id)}
                     disabled={removingId === item._id}
                     className={`transition-opacity ${removingId === item._id
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:opacity-80"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:opacity-80"
                       }`}
                     title="Remove from favorites"
                   >
@@ -485,9 +484,9 @@ const FavoriteCourse = () => {
 
               <div className="p-4 flex-grow">
                 <Link
-                  target="_blank"
+                  // target="_blank"
                   href={`/courses/${item._id}`}
-                  rel="noopener noreferrer"
+                // rel="noopener noreferrer"
                 >
                   <h3
                     className="text-base md:text-lg font-bold text-gray-800 hover:underline underline-offset-4 cursor-pointer line-clamp-2"
