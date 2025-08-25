@@ -322,9 +322,9 @@ const FavoriteCourse = () => {
             >
               <div className="relative h-52 p-2">
                 <Link
-                  target="_blank"
+                  // target="_blank"
                   href={`/courses/${item._id}`}
-                  rel="noopener noreferrer"
+                  // rel="noopener noreferrer"
                   className="w-full block"
                 >
                   <ImageWithLoader
@@ -463,11 +463,10 @@ const FavoriteCourse = () => {
                   <button
                     onClick={() => removeFavorite(item._id)}
                     disabled={removingId === item._id}
-                    className={`transition-opacity ${
-                      removingId === item._id
+                    className={`transition-opacity ${removingId === item._id
                         ? "opacity-50 cursor-not-allowed"
                         : "hover:opacity-80"
-                    }`}
+                      }`}
                     title="Remove from favorites"
                   >
                     {removingId === item._id ? (
@@ -557,7 +556,7 @@ const FavoriteCourse = () => {
                     />
                     <p className="text-sm text-gray-600 truncate">
                       {item.annual_tuition_fee?.currency &&
-                      item.annual_tuition_fee?.amount
+                        item.annual_tuition_fee?.amount
                         ? `${item.annual_tuition_fee.currency} ${item.annual_tuition_fee.amount}`
                         : "Contact University"}
                     </p>
