@@ -514,7 +514,7 @@ const AppliedScholarship = () => {
             <DialogTitle className="text-center">
               Scholarship Confirmed
             </DialogTitle>
-            <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
+            {/* <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
               <Image
                 src="/spark.png"
                 alt="Spark Icon"
@@ -524,6 +524,27 @@ const AppliedScholarship = () => {
               <p className="pt-2">
                 This scholarship has been confirmed and cannot be removed.
                 Please contact your WWAH advisor for any changes.
+              </p>
+            </DialogDescription> */}
+            <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
+              <Image
+                src="/spark.png"
+                alt="Spark Icon"
+                width={100}
+                height={100}
+              />{" "}
+              <p className="pt-2">
+                {" "}
+                Your application is already in process for this course. Please{" "}
+                <a
+                  href="https://wa.me/923279541070"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#C7161E] underline hover:text-[#f03c45] transition-colors"
+                >
+                  contact a WWAH advisor
+                </a>{" "}
+                if you need to make changes.
               </p>
             </DialogDescription>
           </DialogHeader>
