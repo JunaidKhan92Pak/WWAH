@@ -565,9 +565,9 @@ const FavoriteCourse = () => {
 
               <div className="flex justify-between items-center mb-4 mt-auto gap-2">
                 <Link
-                  target="_blank"
+                  // target="_blank"
                   href={`/courses/${item._id}`}
-                  rel="noopener noreferrer"
+                  // rel="noopener noreferrer"
                   className="w-1/2"
                 >
                   <button className="w-full bg-red-500 text-white text-sm p-2 rounded-lg hover:bg-red-600 transition-colors">
