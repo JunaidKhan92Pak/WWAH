@@ -192,11 +192,18 @@ const AppliedScholarship = () => {
                   className="bg-[#FDF3E8] rounded-xl border border-gray-200 overflow-hidden pb-4"
                 >
                   {/* Application Header */}
-                  <div className="px-4 py-3 flex justify-between items-center">
-                    <div className="flex items-center gap-3 bg-white rounded-md px-3 py-1">
-                      <span className="text-sm font-medium text-gray-600">
+                  <div className="px-4 py-3 ">
+                    <div className="flex items-center gap-3 justify-between rounded-md px-3 py-1">
+                      <span className="text-sm font-medium text-gray-600 bg-white px-3 py-1 rounded-sm">
                         Application No. {index + 1}
                       </span>
+                      <button className="bg-white px-3 py-1 rounded-sm">
+                        <Link
+                          href={`/scholarships/${application.ScholarshipId}`}
+                        >
+                          View
+                        </Link>
+                      </button>
                       {/* <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
                         Confirmed
                       </span> */}

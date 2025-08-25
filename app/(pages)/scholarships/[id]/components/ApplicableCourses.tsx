@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 // import { applyCourse } from "@/lib/appliedScholarships"; // Make sure this path is correct
 import { getAuthToken } from "@/utils/authHelper";
 import { useUserStore } from "@/store/useUserData";
@@ -79,6 +79,7 @@ export default function ApplicableCourses({
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
+
   // console.log(logo,"fhjhgg");
   // console.log(s_id, "Scholarship ID from ApplicableCourses");
   // console.log("Host country:", hostCountry);
@@ -147,35 +148,50 @@ export default function ApplicableCourses({
   const token = getAuthToken();
   // Function to handle course application using API service
   console.log(user, "fetchuserProfile");
+  const showLoginPrompt = () => {
+    toast.error("Please login to apply for courses.", {
+      duration: 6000,
+      position: "top-center",
+      style: {
+        background: "#fee2e2",
+        color: "#dc2626",
+        padding: "16px",
+        borderRadius: "8px",
+        border: "1px solid #fecaca",
+      },
+    });
+  };
+
+  // Updated handleApplyCourse function
   const handleApplyCourse = async (course: Course) => {
+    console.log("gjjfjfj");
     console.log(course, "Applying for course");
+
+    // Check if user is logged in
+    if (!token) {
+      console.log("User not logged in");
+      showLoginPrompt();
+      return;
+    }
+
     try {
       setApplyingCourseId(course.id);
 
-      // Debug: Log the course object to see what data we have
-      console.log("Course object:", course);
-      console.log("Countries field:", course.countries);
-
-      // Fixed: Make sure all required fields are provided and not empty
       const applicationData = {
         banner: banner,
         userId: user?._id,
         logo: logo,
-        scholarshipName: scholarshipName || ` Scholarship`, // Use course name as scholarship name
-        hostCountry: hostCountry || "Not specified", // Make sure this is not empty
+        scholarshipName: scholarshipName || ` Scholarship`,
+        hostCountry: hostCountry || "Not specified",
         courseName: course.course || "Not specified",
         duration: course.duration || "Not specified",
-        language: course.teachingLanguage || "Not specified", // This maps to 'language' field
+        language: course.teachingLanguage || "Not specified",
         universityName: course.university || "Not specified",
         scholarshipType: course.scholarshipType || "Not specified",
         deadline: course.deadline || "Not specified",
-        ScholarshipId: s_id || "Not specified", // Use the scholarship ID from props
+        ScholarshipId: s_id || "Not specified",
       };
 
-      console.log("Submitting application with data:", applicationData);
-      // console.log("Host country value:", applicationData.hostCountry);
-
-      // const result = await applyCourse(applicationData);
       const result = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/apply`,
         {
@@ -184,49 +200,76 @@ export default function ApplicableCourses({
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          credentials: "include", // Required to send session cookie
+          credentials: "include",
           body: JSON.stringify(applicationData),
         }
       );
       const data = await result.json();
 
-      console.log("Application result:", result);
-
       if (result.ok) {
-        toast.success("Application submitted successfully!");
-        // router.push("/dashboard/overview");
+        toast.success("Application submitted successfully!", {
+          duration: 2000,
+          position: "top-center",
+        });
         router.push("/dashboard/overview#applied-scholarships");
-
-        // Optionally redirect to dashboard
-        // router.push("/dashboard/overview");
       } else {
-        // throw new Error(result.message || "Application failed");
+        if (result.status === 401 || result.status === 403) {
+          toast.error("Session expired. Please login again.", {
+            duration: 4000,
+            position: "top-center",
+            style: {
+              background: "#fee2e2",
+              color: "#dc2626",
+              padding: "16px",
+              borderRadius: "8px",
+              border: "1px solid #fecaca",
+            },
+          });
+          router.push("/signin");
+          return;
+        }
         throw new Error(data.message || "Application failed");
       }
     } catch (error) {
       console.error("Error applying for course:", error);
 
-      // Handle different types of errors
       if (error instanceof Error) {
         if (
           error.message?.includes("login") ||
-          error.message?.includes("authentication")
+          error.message?.includes("authentication") ||
+          error.message?.includes("unauthorized")
         ) {
-          toast.error("Please login to apply for courses");
+          toast.error("Please login to apply for courses.", {
+            duration: 4000,
+            position: "top-center",
+            style: {
+              background: "#fee2e2",
+              color: "#dc2626",
+              padding: "16px",
+              borderRadius: "8px",
+              border: "1px solid #fecaca",
+            },
+          });
           router.push("/signin");
         } else if (error.message?.includes("already applied")) {
-          toast.error("You have already applied for this course");
-        } else if (error.message?.includes("User not found")) {
-          toast.error("User session expired. Please login again.");
-          router.push("/signin");
+          toast.error("You have already applied for this course", {
+            duration: 3000,
+            position: "top-center",
+          });
         } else {
           toast.error(
-            error.message || "Failed to submit application. Please try again."
+            error.message || "Failed to submit application. Please try again.",
+            {
+              duration: 3000,
+              position: "top-center",
+            }
           );
         }
       } else {
-        // Handle non-Error objects
-        toast.error("Failed to submit application. Please try again.");
+        toast.error("Failed to submit application. Please try again.", {
+          duration: 3000,
+          position: "top-center",
+        });
       }
     } finally {
       setApplyingCourseId(null);

@@ -2225,9 +2225,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
               _id: application._id,
               banner: application.banner || "",
               logo: application.logo || "",
-              scholarshipName:
-                application.scholarshipName || "Unknown Scholarship",
-              ScholarshipId: application.scholarshipId || "",
+              scholarshipName: application.scholarshipName || "Unknown Scholarship",
+              ScholarshipId: application.ScholarshipId || "",
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
               duration: application.duration || "Not specified",
