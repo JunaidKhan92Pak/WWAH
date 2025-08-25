@@ -103,11 +103,26 @@ const Page = () => {
     debouncedSetSearch(value);
   };
 
+  const showLoginPrompt = () => {
+    toast.error("Please login to add scholarships to your favorites!", {
+      duration: 4000,
+      position: "top-center",
+      style: {
+        background: "#fee2e2",
+        color: "#dc2626",
+        padding: "16px",
+        borderRadius: "8px",
+        border: "1px solid #fecaca",
+      },
+    });
+  };
+
   // Updated toggle function using store
   const toggleFavoriteInDB = async (id: string) => {
     const token = getAuthToken();
+
     if (!token) {
-      // Handle login prompt if needed
+      showLoginPrompt();
       return;
     }
 
@@ -415,23 +430,21 @@ const Page = () => {
                         {/* Content Section */}
                         <div className=" flex-grow">
                           <Link
-                          target="blank"
-                          href={`/scholarships/${item._id}`}
-                          rel="noopener noreferrer"
-                        >
-<div className="relative group">
-  <p
-  className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1 line-clamp-2"
-
->
-    {item.name}
-  </p>
-  <span className="absolute left-0 bottom-full mb-1 hidden group-hover:block 
-                    bg-gray-200 text-black text-xs px-2 py-1 rounded shadow-lg z-10 w-[200px]">
-    {item.name}
-  </span>
-</div>
-
+                            target="blank"
+                            href={`/scholarships/${item._id}`}
+                            rel="noopener noreferrer"
+                          >
+                            <div className="relative group">
+                              <p className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1 line-clamp-2">
+                                {item.name}
+                              </p>
+                              <span
+                                className="absolute left-0 bottom-full mb-1 hidden group-hover:block 
+                    bg-gray-200 text-black text-xs px-2 py-1 rounded shadow-lg z-10 w-[200px]"
+                              >
+                                {item.name}
+                              </span>
+                            </div>
                           </Link>
                           <p className="text-sm text-gray-600">
                             <span className="font-semibold">
@@ -458,16 +471,19 @@ const Page = () => {
                                 width={10}
                                 height={10}
                               />
-                            <div className="relative group w-24"> {/* Width small so first word fits */}
-  <p className="text-sm text-gray-600 truncate">
-    {item.type}
-  </p>
-  <span className="absolute right-2 bottom-full mb-1 hidden group-hover:block text-center
-    bg-gray-200  text-xs px-2 py-1 rounded shadow-lg z-10 ">
-    {item.type}
-  </span>
-</div>
-
+                              <div className="relative group w-24">
+                                {" "}
+                                {/* Width small so first word fits */}
+                                <p className="text-sm text-gray-600 truncate">
+                                  {item.type}
+                                </p>
+                                <span
+                                  className="absolute right-2 bottom-full mb-1 hidden group-hover:block text-center
+    bg-gray-200  text-xs px-2 py-1 rounded shadow-lg z-10 "
+                                >
+                                  {item.type}
+                                </span>
+                              </div>
                             </div>
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">

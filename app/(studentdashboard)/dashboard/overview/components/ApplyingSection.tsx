@@ -11,7 +11,16 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogClose,
+  DialogFooter,
+  DialogTrigger,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Copy } from "lucide-react";
+import { BsWhatsapp } from "react-icons/bs";
+import { AiOutlineMail } from "react-icons/ai";
+import { FaFacebook } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useUserStore } from "@/store/useUserData";
 import { useRouter } from "next/navigation";
@@ -51,6 +60,13 @@ const ApplyingSection: React.FC = () => {
   // ✅ NEW: Confirmation modal state
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [courseToConfirm, setCourseToConfirm] = useState<string | null>(null);
+
+  // ✅ NEW: Delete confirmation modal state
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
+
+  // ✅ NEW: Share functionality state
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
 
   // ✅ NEW: Router for navigation
   const router = useRouter();
@@ -212,14 +228,30 @@ const ApplyingSection: React.FC = () => {
   const handleRemoveButtonClick = async (courseId: string) => {
     const applicationDetails = getApplicationDetails(courseId);
 
-    // If course is confirmed, show modal instead of removing
+    // If course is confirmed, show contact modal instead of removing
     if (applicationDetails?.isConfirmed) {
       setShowContactModal(true);
       return;
     }
 
-    // If not confirmed, proceed with normal removal
-    await handleRemoveCourse(courseId);
+    // If not confirmed, show delete confirmation modal
+    setCourseToDelete(courseId);
+    setShowDeleteModal(true);
+  };
+
+  // ✅ NEW: Handle delete modal Yes click
+  const handleDeleteYes = async () => {
+    if (courseToDelete) {
+      await handleRemoveCourse(courseToDelete);
+    }
+    setShowDeleteModal(false);
+    setCourseToDelete(null);
+  };
+
+  // ✅ NEW: Handle delete modal No click
+  const handleDeleteNo = () => {
+    setShowDeleteModal(false);
+    setCourseToDelete(null);
   };
 
   // Function to remove course from applied courses using the store
@@ -524,9 +556,26 @@ const ApplyingSection: React.FC = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">Course Confirmed</DialogTitle>
-            <DialogDescription className="text-center pt-4">
-              This course has been confirmed and cannot be removed. Please
-              contact your WWAH advisor for any changes.
+            <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
+              <Image
+                src="/spark.png"
+                alt="Spark Icon"
+                width={100}
+                height={100}
+              />{" "}
+              <p className="pt-2">
+                {" "}
+                Your application is already in process for this course. Please{" "}
+                <a
+                  href="https://wa.me/923279541070"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#C7161E] underline hover:text-[#f03c45] transition-colors"
+                >
+                  contact a WWAH advisor
+                </a>{" "}
+                if you need to make changes.
+              </p>
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-center pt-4">
@@ -540,7 +589,37 @@ const ApplyingSection: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* ✅ NEW: Confirmation Modal */}
+      {/* ✅ NEW: Delete Confirmation Modal */}
+      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-center mx-auto">
+              <Image
+                src="/spark.png"
+                alt="Spark Icon"
+                width={100}
+                height={100}
+              />
+            </DialogTitle>
+            <DialogDescription className="text-center text-black font-semibold text-[16px] pt-4">
+              Are you sure you want to delete this course?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center gap-4 pt-4">
+            <Button
+              onClick={handleDeleteYes}
+              className="bg-[#C7161E] hover:bg-[#f03c45] text-white px-8"
+            >
+              Yes
+            </Button>
+            <Button onClick={handleDeleteNo} variant="outline" className="px-8">
+              No
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ✅ Course Confirmation Modal */}
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -644,7 +723,7 @@ const ApplyingSection: React.FC = () => {
 
               <div className="flex flex-col md:flex-row justify-between gap-2">
                 {/* Left Section: Course Info */}
-                <div className="flex flex-col md:flex-row items-start gap-2 flex-1">
+                <div className="flex flex-col md:flex-row items-center gap-2 flex-1">
                   {/* Course Image and University Info */}
                   <div>
                     <div className="relative md:w-[230px] h-[180px] rounded-xl overflow-hidden">
@@ -676,10 +755,120 @@ const ApplyingSection: React.FC = () => {
                           </div>
                         </div>
                       </div>
+
+                      {/* ✅ NEW: Share Icon on Banner Image */}
+                      <div className="absolute z-10 top-4 right-4 flex space-x-1 py-1 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <button>
+                              <Image
+                                src="/university/Share.svg"
+                                width={16}
+                                height={16}
+                                alt="Share"
+                              />
+                            </button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                              <DialogTitle>Share link</DialogTitle>
+                              <DialogDescription>
+                                Anyone who has this link will be able to view
+                                this.
+                              </DialogDescription>
+                            </DialogHeader>
+
+                            <div className="flex items-center space-x-2">
+                              <div className="grid flex-1 gap-2">
+                                <Label
+                                  htmlFor={`link-${course._id}`}
+                                  className="sr-only"
+                                >
+                                  Link
+                                </Label>
+                                <Input
+                                  id={`link-${course._id}`}
+                                  value={`${
+                                    typeof window !== "undefined"
+                                      ? window.location.origin
+                                      : ""
+                                  }/courses/${course._id}`}
+                                  readOnly
+                                />
+                              </div>
+                              <Button
+                                type="button"
+                                size="sm"
+                                className="px-3"
+                                onClick={() => {
+                                  const link = `${window.location.origin}/courses/${course._id}`;
+                                  navigator.clipboard
+                                    .writeText(link)
+                                    .then(() => {
+                                      setCopiedLinkId(course._id);
+                                      setTimeout(
+                                        () => setCopiedLinkId(null),
+                                        2000
+                                      );
+                                    });
+                                }}
+                              >
+                                <span className="sr-only">Copy</span>
+                                <Copy />
+                              </Button>
+                            </div>
+
+                            {copiedLinkId === course._id && (
+                              <p className="text-black text-sm mt-2">
+                                Link copied to clipboard!
+                              </p>
+                            )}
+
+                            <div className="mt-2 flex gap-4 justify-left">
+                              <a
+                                href={`https://wa.me/?text=${encodeURIComponent(
+                                  `${window.location.origin}/courses/${course._id}`
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-green-600 hover:underline"
+                              >
+                                <BsWhatsapp className="text-2xl" />{" "}
+                              </a>
+                              <a
+                                href={`mailto:?subject=Check this out&body=${encodeURIComponent(
+                                  `${window.location.origin}/courses/${course._id}`
+                                )}`}
+                                className="text-blue-600 hover:underline"
+                              >
+                                <AiOutlineMail className="text-2xl text-red-600" />{" "}
+                              </a>
+                              <a
+                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                                  `${window.location.origin}/courses/${course._id}`
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#1877F2] hover:underline"
+                              >
+                                <FaFacebook className="text-blue-600 text-2xl" />
+                              </a>
+                            </div>
+
+                            <DialogFooter className="sm:justify-start">
+                              <DialogClose asChild>
+                                <Button type="button" variant="secondary">
+                                  Close
+                                </Button>
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
 
                     {/* ✅ CRITICAL: Course Status with colored dot using statusId */}
-                    <div className="flex items-center gap-2 pt-4">
+                    {/* <div className="flex items-center gap-2 pt-4">
                       <span className="text-[13px] font-medium px-4 py-1 rounded-md text-white bg-red-600">
                         Current Status:
                       </span>
@@ -689,7 +878,7 @@ const ApplyingSection: React.FC = () => {
                         ></div>
                         <span className="text-sm">{statusConfig.label}</span>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* ✅ DEBUG: Show status IDs for debugging */}
                   </div>
@@ -805,20 +994,46 @@ const ApplyingSection: React.FC = () => {
                   </div>
 
                   {/* Confirm button */}
-                  <button
+                  {/* <button
                     onClick={() => handleConfirmButtonClick(course._id)}
                     disabled={applicationDetails?.isConfirmed === true}
                     className={`py-1 rounded text-white font-medium text-[13px] mt-2 ${
                       applicationDetails?.isConfirmed
                         ? "bg-red-600 cursor-not-allowed px-8"
-                        : "bg-red-600 hover:bg-[#A01419] cursor-pointer px-2"
+                        : "bg-red-600 hover:bg-red-700 cursor-pointer px-2"
                     }`}
                   >
                     {applicationDetails?.isConfirmed
                       ? "Confirmed"
                       : "Confirm Course Selection"}
-                  </button>
+                  </button> */}
                 </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2 pt-4">
+                  <span className="text-[13px] font-medium px-4 py-1 rounded-md text-white bg-red-600">
+                    Current Status:
+                  </span>
+                  <div className="flex items-center gap-2 ml-2">
+                    <div
+                      className={`w-2 h-2 rounded-full ${statusConfig.color}`}
+                    ></div>
+                    <span className="text-sm">{statusConfig.label}</span>
+                  </div>
+                </div>{" "}
+                <Button
+                  onClick={() => handleConfirmButtonClick(course._id)}
+                  disabled={applicationDetails?.isConfirmed === true}
+                  className={`py-1 rounded text-white font-medium text-[13px] mr-3  ${
+                    applicationDetails?.isConfirmed
+                      ? "bg-red-600 cursor-not-allowed px-8"
+                      : "bg-red-600 hover:bg-red-700 cursor-pointer px-2"
+                  }`}
+                >
+                  {applicationDetails?.isConfirmed
+                    ? "Confirmed"
+                    : "Confirm Course Selection"}
+                </Button>{" "}
               </div>
             </div>
           );

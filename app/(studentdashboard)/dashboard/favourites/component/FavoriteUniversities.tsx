@@ -7,6 +7,24 @@ import { SkeletonCard } from "@/components/skeleton";
 import toast from "react-hot-toast";
 import { useUserStore } from "@/store/useUserData";
 import { getAuthToken } from "@/utils/authHelper";
+import { BsWhatsapp } from "react-icons/bs";
+import { AiOutlineMail } from "react-icons/ai";
+import { FaFacebook } from "react-icons/fa";
+import { Copy } from "lucide-react";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface University {
   _id: string;
@@ -30,6 +48,7 @@ const FavoriteUniversities = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const { user, fetchUserProfile } = useUserStore();
 
   // Remove favorite with proper backend integration
@@ -247,8 +266,109 @@ const FavoriteUniversities = () => {
                   </p>
                 </div>
 
-                {/* Remove favorite button */}
+                {/* Share and Remove favorite buttons */}
                 <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button>
+                        <Image
+                          src="/university/Share.svg"
+                          width={21}
+                          height={21}
+                          alt="Share"
+                        />
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Share link</DialogTitle>
+                        <DialogDescription>
+                          Anyone who has this link will be able to view this.
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <div className="flex items-center space-x-2">
+                        <div className="grid flex-1 gap-2">
+                          <Label
+                            htmlFor={`link-${item._id}`}
+                            className="sr-only"
+                          >
+                            Link
+                          </Label>
+                          <Input
+                            id={`link-${item._id}`}
+                            value={`${
+                              typeof window !== "undefined"
+                                ? window.location.origin
+                                : ""
+                            }/Universities/${item._id}`}
+                            readOnly
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="px-3"
+                          onClick={() => {
+                            const link = `${window.location.origin}/Universities/${item._id}`;
+                            navigator.clipboard.writeText(link).then(() => {
+                              setCopiedLinkId(item._id);
+                              setTimeout(() => setCopiedLinkId(null), 2000);
+                            });
+                          }}
+                        >
+                          <span className="sr-only">Copy</span>
+                          <Copy />
+                        </Button>
+                      </div>
+
+                      {copiedLinkId === item._id && (
+                        <p className="text-black text-sm mt-2">
+                          Link copied to clipboard!
+                        </p>
+                      )}
+
+                      <div className="mt-2 flex gap-4 justify-left">
+                        <a
+                          href={`https://wa.me/?text=${encodeURIComponent(
+                            `${window.location.origin}/Universities/${item._id}`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 hover:underline"
+                        >
+                          <BsWhatsapp className="text-2xl" />{" "}
+                        </a>
+                        <a
+                          href={`mailto:?subject=Check this out&body=${encodeURIComponent(
+                            `${window.location.origin}/Universities/${item._id}`
+                          )}`}
+                          className="text-blue-600 hover:underline"
+                        >
+                          <AiOutlineMail className="text-2xl text-red-600" />{" "}
+                        </a>
+                        <a
+                          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                            `${window.location.origin}/Universities/${item._id}`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#1877F2] hover:underline"
+                        >
+                          <FaFacebook className="text-blue-600 text-2xl" />
+                        </a>
+                      </div>
+
+                      <DialogFooter className="sm:justify-start">
+                        <DialogClose asChild>
+                          <Button type="button" variant="secondary">
+                            Close
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
                   <button
                     onClick={() => removeFavorite(item._id)}
                     disabled={removingId === item._id}

@@ -152,14 +152,12 @@ export default function Home() {
   return (
     <div className="p-4">
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-2">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Accommodation Booking Form
-          </h1>
-          <p className="mt-2 text-sm text-gray-600">
+        <div className="md:w-[70%] mx-auto mb-2">
+          <h6 className=" text-gray-900 text-center font-semibold leading-snug">
             Complete the form to secure your housing before arrival. Ensure all
-            details are accurate to avoid delays
-          </p>
+            details are accurate to avoid delays{" "}
+          </h6>
+         
         </div>
 
         <Form {...form}>

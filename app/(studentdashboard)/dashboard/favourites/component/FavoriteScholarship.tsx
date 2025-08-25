@@ -6,6 +6,23 @@ import Link from "next/link";
 import { useUserStore } from "@/store/useUserData";
 import toast from "react-hot-toast";
 import { getAuthToken } from "@/utils/authHelper";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Copy } from "lucide-react";
+import { BsWhatsapp } from "react-icons/bs";
+import { AiOutlineMail } from "react-icons/ai";
+import { FaFacebook } from "react-icons/fa";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Enhanced scholarship type definition matching your API response
 type Scholarship = {
@@ -54,6 +71,7 @@ export default function FavoriteScholarship() {
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
 
   // Helper function to get proper image URL
   const getImageUrl = (imageUrl?: string, defaultImage?: string) => {
@@ -527,26 +545,26 @@ export default function FavoriteScholarship() {
         //   </div>
         // </div>
         <div className="text-center py-20">
-                  <Image
-                    src="/hearti.svg"
-                    width={60}
-                    height={60}
-                    alt="No favorites"
-                    className="mx-auto mb-4 opacity-50"
-                  />
-                  <p className="text-xl font-semibold text-gray-500">
-                    No favorite Scholarship yet
-                  </p>
-                  <p className="text-gray-400 mt-2 mb-4">
-                    Start exploring Scholarship and add them to your favorites!
-                  </p>
-                  <Link
-                    href="/scholarships"
-                    className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
-                  >
-                    Browse Courses
-                  </Link>
-                </div>
+          <Image
+            src="/hearti.svg"
+            width={60}
+            height={60}
+            alt="No favorites"
+            className="mx-auto mb-4 opacity-50"
+          />
+          <p className="text-xl font-semibold text-gray-500">
+            No favorite Scholarship yet
+          </p>
+          <p className="text-gray-400 mt-2 mb-4">
+            Start exploring Scholarship and add them to your favorites!
+          </p>
+          <Link
+            href="/scholarships"
+            className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
+          >
+            Browse Courses
+          </Link>
+        </div>
       ) : (
         /* Scholarships Grid */
         <>
@@ -619,14 +637,120 @@ export default function FavoriteScholarship() {
                         />
                       </div>
                     )}
-                    {/* Remove Favorite Button */}
-                    <div className="absolute z-10 top-4 right-4 flex space-x-1">
+
+                    {/* Share & Remove Favorite Buttons */}
+                    <div className="absolute z-10 top-4 right-4 flex space-x-1 py-2 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
+                      {/* Share Button */}
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button>
+                            <Image
+                              src="/university/Share.svg"
+                              width={21}
+                              height={21}
+                              alt="Share"
+                            />
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Share link</DialogTitle>
+                            <DialogDescription>
+                              Anyone who has this link will be able to view
+                              this.
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          <div className="flex items-center space-x-2">
+                            <div className="grid flex-1 gap-2">
+                              <Label
+                                htmlFor={`link-${scholarship._id}`}
+                                className="sr-only"
+                              >
+                                Link
+                              </Label>
+                              <Input
+                                id={`link-${scholarship._id}`}
+                                value={`${
+                                  typeof window !== "undefined"
+                                    ? window.location.origin
+                                    : ""
+                                }/scholarships/${scholarship._id}`}
+                                readOnly
+                              />
+                            </div>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="px-3"
+                              onClick={() => {
+                                const link = `${window.location.origin}/scholarships/${scholarship._id}`;
+                                navigator.clipboard.writeText(link).then(() => {
+                                  setCopiedLinkId(scholarship._id);
+                                  setTimeout(() => setCopiedLinkId(null), 2000);
+                                });
+                              }}
+                            >
+                              <span className="sr-only">Copy</span>
+                              <Copy />
+                            </Button>
+                          </div>
+
+                          {copiedLinkId === scholarship._id && (
+                            <p className="text-black text-sm mt-2">
+                              Link copied to clipboard!
+                            </p>
+                          )}
+
+                          {/* Share buttons */}
+                          <div className="mt-2 flex gap-4 justify-left">
+                            <a
+                              href={`https://wa.me/?text=${encodeURIComponent(
+                                `${window.location.origin}/scholarships/${scholarship._id}`
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-600 hover:underline"
+                            >
+                              <BsWhatsapp className="text-2xl" />
+                            </a>
+                            <a
+                              href={`mailto:?subject=Check this out&body=${encodeURIComponent(
+                                `${window.location.origin}/scholarships/${scholarship._id}`
+                              )}`}
+                              className="text-blue-600 hover:underline"
+                            >
+                              <AiOutlineMail className="text-2xl text-red-600" />
+                            </a>
+                            <a
+                              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                                `${window.location.origin}/scholarships/${scholarship._id}`
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#1877F2] hover:underline"
+                            >
+                              <FaFacebook className="text-blue-600 text-2xl" />
+                            </a>
+                          </div>
+
+                          <DialogFooter className="sm:justify-start">
+                            <DialogClose asChild>
+                              <Button type="button" variant="secondary">
+                                Close
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+
+                      {/* Remove Favorite Button */}
                       <button
                         onClick={() =>
                           removeFavorite(scholarship._id, scholarship.name)
                         }
                         disabled={loadingMap[scholarship._id]}
-                        className={`p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-200 ${
+                        className={`transition-colors duration-200 ${
                           loadingMap[scholarship._id]
                             ? "opacity-50 cursor-not-allowed"
                             : ""
@@ -635,13 +759,13 @@ export default function FavoriteScholarship() {
                         {loadingMap[scholarship._id] ? (
                           <div className="animate-spin rounded-full h-1 w-1 border-b-2 border-white"></div>
                         ) : (
-                          <svg
-                            className="w-3 h-3"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
-                          </svg>
+                          <Image
+                            src="/redheart.svg"
+                            alt="heart"
+                            width={20}
+                            height={20}
+                            className="w-5 h-5"
+                          />
                         )}
                       </button>
                     </div>
@@ -657,12 +781,12 @@ export default function FavoriteScholarship() {
                   </div>
 
                   {/* Content Section */}
-                  <div className="p-4 flex-grow">
+                  <div className="p-2 flex-grow">
                     <Link
                       href={`/scholarships/${scholarship._id}`}
                       className="block"
                     >
-                      <h3 className="font-bold text-lg leading-tight hover:underline underline-offset-4 cursor-pointer mb-2">
+                      <h3 className="font-bold text-[15px] leading-tight hover:underline underline-offset-4 cursor-pointer mb-2">
                         {scholarship.name}
                       </h3>
                     </Link>
@@ -753,15 +877,15 @@ export default function FavoriteScholarship() {
                     </div>
 
                     {/* Description */}
-                    {scholarship.description && (
+                    {/* {scholarship.description && (
                       <p className="text-sm text-gray-600 mt-3 line-clamp-3">
                         {scholarship.description}
                       </p>
-                    )}
+                    )} */}
                   </div>
 
                   {/* Action Button */}
-                  <div className="p-4 pt-0">
+                  <div className="p-2 pt-0">
                     <Link
                       href={`/scholarships/${scholarship._id}`}
                       className="block w-full bg-red-600 hover:bg-red-600 text-white text-center py-2 px-4 rounded-lg transition-colors duration-200"
