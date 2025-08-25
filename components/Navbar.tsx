@@ -135,7 +135,8 @@ const Navbar = () => {
                   >
                     <span className="sr-only">Open user menu</span>
                     <Image
-                      src="/icons/userred.svg"
+                      src={user?.profilePicture || "/default-profile.png"}
+                      // src="/icons/userred.svg"
                       alt="user"
                       width={32}
                       height={32}

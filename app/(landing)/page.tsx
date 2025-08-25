@@ -197,7 +197,7 @@ function Page() {
                 >
                   <span className="sr-only">Open user menu</span>
                   <Image
-                    src="/icons/userred.svg"
+                    src={user?.profilePicture || "/default-profile.png"}
                     alt="user"
                     width={40}
                     height={40}
@@ -288,7 +288,6 @@ function Page() {
                         "Smart scholarship search starts here.",
                         "Know your success chances first.",
                       ]}
-
                       loop={true}
                       cursor
                       cursorStyle="|"

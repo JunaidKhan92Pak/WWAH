@@ -133,6 +133,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   totalFavourites: number;
+  profilePicture?: string;
 }
 
 // Detailed profile information
@@ -169,6 +170,7 @@ export interface DetailedInfo {
 export interface UserStore {
   // State
   user: User | null;
+  
   detailedInfo: DetailedInfo | null;
   loading: boolean;
   error: string | null;
@@ -404,7 +406,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       }
 
       const apiData = await response.json();
-
+      console.log("User profile API data from useeeeer:", apiData);
       if (!apiData.success) {
         throw new Error(apiData.message || "Failed to fetch user data");
       }
@@ -2225,7 +2227,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
               _id: application._id,
               banner: application.banner || "",
               logo: application.logo || "",
-              scholarshipName: application.scholarshipName || "Unknown Scholarship",
+              scholarshipName:
+                application.scholarshipName || "Unknown Scholarship",
               ScholarshipId: application.ScholarshipId || "",
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
