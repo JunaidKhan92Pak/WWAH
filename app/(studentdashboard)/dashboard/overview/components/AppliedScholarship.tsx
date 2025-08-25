@@ -620,21 +620,9 @@ const AppliedScholarship = () => {
               No
             </Button>
           </div>
-          <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
-            <Image src="/spark.png" alt="Spark Icon" width={100} height={100} />{" "}
-            <p className="pt-2">
-              {" "}
-              Your application is already in process for this course. Please{" "}
-              <a
-                href="https://wa.me/923279541070"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#C7161E] underline hover:text-[#f03c45] transition-colors"
-              >
-                contact a WWAH advisor
-              </a>{" "}
-              if you need to make changes.
-            </p>
+          <DialogDescription className="text-center pt-0">
+            *This will be the course we prepare your application for. You will
+            not be able to delete or change it later.
           </DialogDescription>
         </DialogContent>
       </Dialog>
