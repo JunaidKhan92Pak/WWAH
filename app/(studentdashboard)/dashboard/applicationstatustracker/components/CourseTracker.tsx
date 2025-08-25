@@ -71,7 +71,8 @@ const ApplyingSection: React.FC = () => {
     fetchAppliedCourses,
     // removeAppliedCourse,
   } = useUserStore();
-
+console.log(appliedCourses, "appliedCourses from store");
+  // Function to fetch detailed course information from the API
   const fetchDetailedAppliedCourses = async (courseIds: string[]) => {
     if (courseIds.length === 0) {
       setDetailedAppliedCourses([]);
@@ -208,10 +209,10 @@ const ApplyingSection: React.FC = () => {
             width={70}
             height={70}
           />
-                    <h3 className="text-lg font-semibold text-gray-600 mb-2">
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">
             Apply to a course to see your application status here{" "}
           </h3>
-          
+
           <Link href="/coursearchive">
             <Button className="bg-[#C7161E] hover:bg-[#f03c45] text-white font-medium py-2 px-8 rounded-full transition-colors duration-300 shadow-lg">
               Browse Courses
@@ -292,20 +293,6 @@ const ApplyingSection: React.FC = () => {
                 {/* Left Section: Course Image and Info */}
                 <div className="flex">
                   <div className="flex gap-4">
-                    {/* <div className="relative">
-                      <div className="md:w-[250px] h-[200px] rounded-xl overflow-hidden bg-gray-200 flex-shrink-0">
-                        <Image
-                          src={
-                            course.universityData?.universityImages?.banner ||
-                            `/course-${index + 1}.png`
-                          }
-                          alt="Course Banner"
-                          width={200}
-                          height={150}
-                          className="w-[250px] h-[200px] object-cover"
-                        />
-                      </div>
-                    </div> */}
                     <div className="relative md:w-[230px] h-[180px] rounded-xl overflow-hidden">
                       <Image
                         src={

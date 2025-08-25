@@ -57,14 +57,16 @@ interface ApplicableCoursesProps {
   banner: string;
   scholarshipName: string;
   s_id: string; // Add id prop to pass scholarship ID
+  logo: string;
 }
 
 export default function ApplicableCourses({
   hostCountry,
   banner,
   tableData,
-  // scholarshipName,
+  scholarshipName,
   s_id,
+  logo,
 }: ApplicableCoursesProps) {
   const router = useRouter();
   const { user, fetchUserProfile } = useUserStore();
@@ -77,25 +79,28 @@ export default function ApplicableCourses({
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
-  console.log("fhjhgg");
-  console.log(s_id, "Scholarship ID from ApplicableCourses");
-  console.log("Host country:", hostCountry);
+  // console.log(logo,"fhjhgg");
+  // console.log(s_id, "Scholarship ID from ApplicableCourses");
+  // console.log("Host country:", hostCountry);
+  // console.log(scholarshipName, "Scholarship Name");
   // Transform dynamic data to Course objects
   useEffect(() => {
     // Debug: Log the incoming tableData
-    console.log("Raw tableData:", tableData);
-    console.log("Countries array:", tableData?.countries);
-    console.log(
-      "All tableData keys:",
-      tableData ? Object.keys(tableData) : "No tableData"
-    );
+    // console.log("Raw tableData:", tableData);
+    // console.log("Countries array:", tableData?.countries);
+    // console.log(
+    //   "All tableData keys:",
+    //   tableData ? Object.keys(tableData) : "No tableData"
+    // );
 
     if (tableData && Array.isArray(tableData.course)) {
       const transformedCourses: Course[] = tableData.course.map((_, index) => {
         const courseObj = {
           id: (index + 1).toString(),
-          department: tableData.faculty_department?.[index] || "",
+          // logo: logo || logo,
           ScholarshipId: s_id,
+          scholarshipName: scholarshipName || scholarshipName,
+          department: tableData.faculty_department?.[index] || "",
           course: tableData.course?.[index] || "",
           university: tableData.university?.[index] || "",
           duration: tableData.duration?.[index] || "",
@@ -143,6 +148,7 @@ export default function ApplicableCourses({
   // Function to handle course application using API service
   console.log(user, "fetchuserProfile");
   const handleApplyCourse = async (course: Course) => {
+    console.log(course, "Applying for course");
     try {
       setApplyingCourseId(course.id);
 
@@ -152,10 +158,11 @@ export default function ApplicableCourses({
 
       // Fixed: Make sure all required fields are provided and not empty
       const applicationData = {
-        scholarshipName: course.course || `${course.course} Scholarship`, // Use course name as scholarship name
-        hostCountry: hostCountry || "Not specified", // Make sure this is not empty
-        userId: user?._id,
         banner: banner,
+        userId: user?._id,
+        logo: logo,
+        scholarshipName: scholarshipName || ` Scholarship`, // Use course name as scholarship name
+        hostCountry: hostCountry || "Not specified", // Make sure this is not empty
         courseName: course.course || "Not specified",
         duration: course.duration || "Not specified",
         language: course.teachingLanguage || "Not specified", // This maps to 'language' field
@@ -163,7 +170,6 @@ export default function ApplicableCourses({
         scholarshipType: course.scholarshipType || "Not specified",
         deadline: course.deadline || "Not specified",
         ScholarshipId: s_id || "Not specified", // Use the scholarship ID from props
-        
       };
 
       console.log("Submitting application with data:", applicationData);

@@ -189,6 +189,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           banner={data.banner}
           s_id={data._id}
           scholarshipName={data.name}
+          logo={data.logo}
         />
       </div>
 

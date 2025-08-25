@@ -102,6 +102,7 @@ interface AppliedScholarshipCourse {
   scholarshipName: string;
   hostCountry: string;
   banner?: string;
+  logo?: string;
   courseName: string;
   duration: string;
   language: string;
@@ -431,7 +432,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
           ? apiData.user.appliedScholarshipCourses
           : [],
       };
-      const total_favourites = userData.favouriteCourse.length + userData.favouriteScholarship.length + userData.favouriteUniversity.length
+      const total_favourites =
+        userData.favouriteCourse.length +
+        userData.favouriteScholarship.length +
+        userData.favouriteUniversity.length;
 
       // Set user data and update IDs
       set({
@@ -812,9 +816,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           loadingAppliedCourses: false,
           user: state.user
             ? {
-              ...state.user,
-              appliedCourses: [],
-            }
+                ...state.user,
+                appliedCourses: [],
+              }
             : null,
         });
         return;
@@ -837,9 +841,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set({
         user: state.user
           ? {
-            ...state.user,
-            appliedCourses: appliedCoursesData,
-          }
+              ...state.user,
+              appliedCourses: appliedCoursesData,
+            }
           : null,
       });
 
@@ -1020,7 +1024,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             const transformedApplication: AppliedScholarshipCourse = {
               _id: application._id,
               banner: application.banner || "",
-              scholarshipName: application.name || "Unknown Scholarship",
+              logo: application.logo || "",
+              scholarshipName:
+                application.scholarshipName || "Unknown Scholarship",
               ScholarshipId: application.scholarshipId || "", // ✅ CRITICAL: Include this field
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
@@ -1107,9 +1113,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             favoriteCourseIds: newFavoriteIds,
             user: state.user
               ? {
-                ...state.user,
-                favouriteCourse: newFavoriteIds,
-              }
+                  ...state.user,
+                  favouriteCourse: newFavoriteIds,
+                }
               : null,
           };
         });
@@ -1182,9 +1188,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                ...state.user,
-                appliedCourses: updatedAppliedCourses,
-              }
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
               : null,
             appliedCourseIds: [...state.appliedCourseIds, courseId],
           };
@@ -1255,16 +1261,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
             state.user?.appliedCourses.map((course) =>
               course.courseId === courseId
                 ? {
-                  ...course,
-                  applicationStatus:
-                    applicationStatus !== undefined
-                      ? applicationStatus
-                      : course.applicationStatus,
-                  statusId:
-                    statusId !== undefined ? statusId : course.statusId, // ✅ CRITICAL: Update statusId
-                  isConfirmed: course.isConfirmed,
-                  updatedAt: new Date().toISOString(),
-                }
+                    ...course,
+                    applicationStatus:
+                      applicationStatus !== undefined
+                        ? applicationStatus
+                        : course.applicationStatus,
+                    statusId:
+                      statusId !== undefined ? statusId : course.statusId, // ✅ CRITICAL: Update statusId
+                    isConfirmed: course.isConfirmed,
+                    updatedAt: new Date().toISOString(),
+                  }
                 : course
             ) || [];
 
@@ -1295,9 +1301,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                ...state.user,
-                appliedCourses: updatedAppliedCourses,
-              }
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
               : null,
             appliedCourses: updatedAppliedCoursesMap,
             error: null,
@@ -1353,10 +1359,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
             state.user?.appliedCourses.map((course) =>
               course.courseId === courseId
                 ? {
-                  ...course,
-                  isConfirmed,
-                  updatedAt: new Date().toISOString(),
-                }
+                    ...course,
+                    isConfirmed,
+                    updatedAt: new Date().toISOString(),
+                  }
                 : course
             ) || [];
 
@@ -1373,9 +1379,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                ...state.user,
-                appliedCourses: updatedAppliedCourses,
-              }
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
               : null,
             appliedCourses: updatedAppliedCoursesMap,
             error: null,
@@ -1436,9 +1442,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           return {
             user: state.user
               ? {
-                ...state.user,
-                appliedCourses: updatedAppliedCourses,
-              }
+                  ...state.user,
+                  appliedCourses: updatedAppliedCourses,
+                }
               : null,
             appliedCourseIds: state.appliedCourseIds.filter(
               (id) => id !== courseId
@@ -1657,7 +1663,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           const transformedApplication: AppliedScholarshipCourse = {
             _id: application._id,
             banner: application.banner || "",
-            scholarshipName: application.name || "Unknown Scholarship",
+            logo: application.logo || "",
+            scholarshipName:
+              application.scholarshipName || "Unknown Scholarship",
             hostCountry: application.hostCountry || "Not specified",
             courseName: application.courseName || "Not specified",
             duration: application.duration || "Not specified",
@@ -1684,9 +1692,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
           error: null,
           user: state.user
             ? {
-              ...state.user,
-              appliedScholarshipCourses: Object.values(applicationsMap),
-            }
+                ...state.user,
+                appliedScholarshipCourses: Object.values(applicationsMap),
+              }
             : null,
         });
       } else {
@@ -1705,8 +1713,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
   },
 
   addAppliedScholarshipCourse: async (applicationData: any) => {
-    const state = get();
-
     // Update the user's appliedScholarshipCourses array with the new application ID
     if (applicationData._id) {
       set((currentState) => ({
@@ -1716,18 +1722,18 @@ export const useUserStore = create<UserStore>((set, get) => ({
         ],
         user: currentState.user
           ? {
-            ...currentState.user,
-            appliedScholarshipCourses: [
-              ...currentState.user.appliedScholarshipCourses,
-              applicationData._id,
-            ],
-          }
+              ...currentState.user,
+              appliedScholarshipCourses: [
+                ...currentState.user.appliedScholarshipCourses,
+                applicationData._id,
+              ],
+            }
           : null,
         appliedScholarshipCourses: {
           ...currentState.appliedScholarshipCourses,
           [applicationData._id]: {
             _id: applicationData._id,
-            scholarshipName: applicationData.name,
+            scholarshipName: applicationData.scholarshipName,
             hostCountry: applicationData.hostCountry,
             courseName: applicationData.courseName,
             duration: applicationData.duration,
@@ -1791,9 +1797,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             favoriteUniversityIds: newFavoriteIds,
             user: state.user
               ? {
-                ...state.user,
-                favouriteUniversity: newFavoriteIds,
-              }
+                  ...state.user,
+                  favouriteUniversity: newFavoriteIds,
+                }
               : null,
           };
         });
@@ -1856,9 +1862,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             favoriteScholarshipIds: newFavoriteIds,
             user: state.user
               ? {
-                ...state.user,
-                favouriteScholarship: newFavoriteIds,
-              }
+                  ...state.user,
+                  favouriteScholarship: newFavoriteIds,
+                }
               : null,
           };
         });
@@ -1940,11 +1946,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set((state) => ({
         user: state.user
           ? {
-            ...state.user,
-            ...updateData,
+              ...state.user,
+              ...updateData,
 
-            updatedAt: currentTimestamp,
-          }
+              updatedAt: currentTimestamp,
+            }
           : null,
         loading: false,
         lastUpdated: currentTimestamp,
@@ -2000,7 +2006,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
           errorData.message ||
-          `Failed to update detailed info: ${response.status} ${response.statusText}`
+            `Failed to update detailed info: ${response.status} ${response.statusText}`
         );
       }
 
@@ -2015,16 +2021,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set((state) => ({
         detailedInfo: state.detailedInfo
           ? {
-            ...state.detailedInfo,
-            ...updateData,
+              ...state.detailedInfo,
+              ...updateData,
 
-            updatedAt: currentTimestamp,
-          }
+              updatedAt: currentTimestamp,
+            }
           : {
-            ...defaultDetailedInfo,
-            ...updateData,
-            updatedAt: currentTimestamp,
-          },
+              ...defaultDetailedInfo,
+              ...updateData,
+              updatedAt: currentTimestamp,
+            },
         loading: false,
         lastUpdated: currentTimestamp,
         error: null,
@@ -2218,7 +2224,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             const transformedApplication: AppliedScholarshipCourse = {
               _id: application._id,
               banner: application.banner || "",
-              scholarshipName: application.name || "Unknown Scholarship",
+              logo: application.logo || "",
+              scholarshipName:
+                application.scholarshipName || "Unknown Scholarship",
               ScholarshipId: application.scholarshipId || "",
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
