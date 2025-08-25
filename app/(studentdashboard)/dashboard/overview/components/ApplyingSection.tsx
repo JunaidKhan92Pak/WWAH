@@ -738,7 +738,7 @@ const ApplyingSection: React.FC = () => {
                         className="w-[230px] h-[180px] object-cover"
                       />
                       <div className="absolute top-4 left-0">
-                        <div className="bg-gradient-to-t from-white to-transparent opacity-100 w-[70%]">
+                        <div className="bg-gradient-to-r from-white to-transparent opacity-100 w-[70%]">
                           <div className="flex items-center gap-2">
                             <img
                               src={
@@ -748,7 +748,7 @@ const ApplyingSection: React.FC = () => {
                               alt="University Logo"
                               className="w-6 h-6 object-cover object-center rounded-full aspect-square"
                             />
-                            <p className="text-sm leading-tight pr-1">
+                            <p className="text-[12px] leading-tight pr-1">
                               {course.universityData?.university_name ||
                                 "University"}
                             </p>

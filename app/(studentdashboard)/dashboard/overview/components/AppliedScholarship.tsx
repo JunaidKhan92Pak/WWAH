@@ -25,7 +25,6 @@ import {
 import toast from "react-hot-toast";
 import { getAuthToken } from "@/utils/authHelper";
 
-// Type definitions for better TypeScript support
 interface AppliedScholarshipCourseProps {
   _id: string;
   scholarshipName: string;
@@ -217,6 +216,9 @@ const AppliedScholarship = () => {
   };
 
   const handleDeleteApplication = async (applicationId: string) => {
+    const loadingToast = toast.loading("Removing sholarship...", {
+      position: "top-center",
+    });
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}appliedScholarshipCourses/${applicationId}`,
@@ -234,8 +236,11 @@ const AppliedScholarship = () => {
       const data = await response.json();
 
       if (data.success) {
-        alert("Application deleted successfully!");
-        window.location.reload();
+        toast.dismiss(loadingToast);
+        toast.success("Scholarship removed from applications!", {
+          duration: 2000,
+          position: "top-center",
+        });
       } else {
         alert(data.message || "Failed to delete application");
       }
@@ -371,7 +376,7 @@ const AppliedScholarship = () => {
           <div className="absolute inset-0">
             <div className=" opacity-80 blur-sm">
               <div
-                className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 
+                className="relative w-[90%] md:w-[100%] lg:w-[100%] flex flex-col md:flex-row gap-2 flex-shrink-0 
            bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200 opacity-80 pointer-events-none"
               >
                 <div className="bg-white px-0 py-2 rounded-lg overflow-hidden mt-2">
@@ -594,9 +599,21 @@ const AppliedScholarship = () => {
               No
             </Button>
           </div>
-          <DialogDescription className="text-center pt-2">
-            *This will be the course we prepare your application for. You will
-            not be able to delete or change it later.
+          <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
+            <Image src="/spark.png" alt="Spark Icon" width={100} height={100} />{" "}
+            <p className="pt-2">
+              {" "}
+              Your application is already in process for this course. Please{" "}
+              <a
+                href="https://wa.me/923279541070"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#C7161E] underline hover:text-[#f03c45] transition-colors"
+              >
+                contact a WWAH advisor
+              </a>{" "}
+              if you need to make changes.
+            </p>
           </DialogDescription>
         </DialogContent>
       </Dialog>
@@ -691,15 +708,24 @@ const AppliedScholarship = () => {
                               />
 
                               {/* Logo Overlay - NEW ADDITION */}
-                              <div className="absolute bottom-3 left-4 z-10 w-12 h-12 rounded-full bg-white border border-gray-300 p-1 shadow-md">
-                                <Image
-                                  unoptimized
-                                  src={application.logo || "/default-logo.png"}
-                                  alt="University Logo"
-                                  width={44}
-                                  height={44}
-                                  className="rounded-full object-contain w-full h-full"
-                                />
+                              <div className="absolute top-4 left-0 z-10   shadow-md justify-center gap-1 w-[70%] h-[60%]">
+                                <div className="bg-gradient-to-r from-white to-transparent opacity-100  flex items-center gap-2 h-[30%]">
+                                  {" "}
+                                  <Image
+                                    unoptimized
+                                    src={
+                                      application.logo || "/default-logo.png"
+                                    }
+                                    alt="University Logo"
+                                    width={30}
+                                    height={30}
+                                    className="rounded-full object-cover w-7 h-7"
+                                  />
+                                  <p className=" text-[12px]">
+                                    {application.universityName ||
+                                      "Not specified"}
+                                  </p>
+                                </div>
                               </div>
 
                               {/* Share Button - NEW ADDITION */}
@@ -941,7 +967,7 @@ const AppliedScholarship = () => {
                               {/* ✅ UPDATED: Status with colored dot */}
                               <div className="flex items-center gap-2">
                                 <div
-                                  className={`w-3 h-3 rounded-full ${getStatusDotColor(
+                                  className={`w-2 h-2 rounded-full ${getStatusDotColor(
                                     application.status,
                                     application.statusId
                                   )}`}

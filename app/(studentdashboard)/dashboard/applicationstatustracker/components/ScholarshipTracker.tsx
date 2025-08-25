@@ -21,6 +21,7 @@ interface AppliedScholarshipCourse {
   createdAt?: string;
   updatedAt?: string;
   banner?: string;
+  logo?: string;
   ScholarshipId: string;
 }
 
@@ -217,6 +218,17 @@ const AppliedScholarship = () => {
                           className="object-cover"
                           sizes="300px"
                         />
+                        {/* Logo Overlay - NEW ADDITION */}
+                        <div className="absolute bottom-3 left-4 z-10 w-12 h-12 rounded-full bg-white border border-gray-300 p-1 shadow-md">
+                          <Image
+                            unoptimized
+                            src={application.logo || "/default-logo.png"}
+                            alt="University Logo"
+                            width={44}
+                            height={44}
+                            className="rounded-full object-contain w-full h-full"
+                          />
+                        </div>
                       </div>
 
                       {/* Content */}
