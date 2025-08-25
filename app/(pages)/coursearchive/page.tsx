@@ -229,7 +229,7 @@ const CourseArchive = () => {
   }
 
   const showLoginPrompt = () => {
-    toast.error("Please login to add courses to your favorites!", {
+    toast.error("Please login to add courses.", {
       duration: 4000,
       position: "top-center",
       style: {
