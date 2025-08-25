@@ -75,13 +75,13 @@ const CourseArchive = () => {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    console.log("[v0] Processing URL parameters:", {
-      country: searchParams.get("country"),
-      university: searchParams.get("university"),
-      studyLevel: searchParams.get("studyLevel"),
-      subject: searchParams.get("subject"),
-      search: searchParams.get("search"),
-    })
+    // console.log("[v0] Processing URL parameters:", {
+    //   country: searchParams.get("country"),
+    //   university: searchParams.get("university"),
+    //   studyLevel: searchParams.get("studyLevel"),
+    //   subject: searchParams.get("subject"),
+    //   search: searchParams.get("search"),
+    // })
 
     const countryFromURL = searchParams.get("country")
     const universityFromURL = searchParams.get("university")
@@ -89,26 +89,26 @@ const CourseArchive = () => {
     const subjectFromURL = searchParams.get("subject")
     const searchFromURL = searchParams.get("search")
 
-    const filters: any = {}
+    const filters: Record<string, string[]> = {}
 
     if (countryFromURL) {
       filters.countryFilter = [countryFromURL]
     }
     if (universityFromURL) {
-      filters.selectedUniversity = universityFromURL
+      filters.selectedUniversity = [universityFromURL]
     }
     if (studyLevelFromURL) {
-      filters.studyLevel = studyLevelFromURL
+      filters.studyLevel = [studyLevelFromURL]
     }
     if (subjectFromURL) {
       filters.subjectAreaFilter = [subjectFromURL]
     }
     if (searchFromURL) {
-      filters.search = searchFromURL
+      filters.search = [searchFromURL]
       setLocalSearch(searchFromURL)
     }
 
-    console.log("[v0] Applying filters via batchUpdateFilters:", filters)
+    // console.log("[v0] Applying filters via batchUpdateFilters:", filters)
 
     if (Object.keys(filters).length > 0) {
       batchUpdateFilters(filters)
@@ -121,7 +121,7 @@ const CourseArchive = () => {
   useEffect(() => {
     console.log("[v0] urlParamsProcessed effect triggered:", { urlParamsProcessed })
     if (urlParamsProcessed) {
-      console.log("[v0] Calling fetchCourses from urlParamsProcessed effect")
+      // console.log("[v0] Calling fetchCourses from urlParamsProcessed effect")
       fetchCourses()
     }
   }, [urlParamsProcessed, fetchCourses])
@@ -129,7 +129,7 @@ const CourseArchive = () => {
   useEffect(() => {
     const initializeFavorites = () => {
       if (user?.favouriteCourse && Array.isArray(user.favouriteCourse)) {
-        console.log("User favorite courses:", user.favouriteCourse)
+        // console.log("User favorite courses:", user.favouriteCourse)
 
         const favoriteMap: Record<string, boolean> = {}
         const favoriteCoursesMap: Record<string, Course> = {}
@@ -194,10 +194,10 @@ const CourseArchive = () => {
     }
   }, [courses, favorites])
 
-  console.log("Current user:", user)
-  console.log("User favorite courses:", user?.favouriteCourse)
-  console.log("Favorites state:", favorites)
-  console.log("Favorites count:", favoritesCount)
+  // console.log("Current user:", user)
+  // console.log("User favorite courses:", user?.favouriteCourse)
+  // console.log("Favorites state:", favorites)
+  // console.log("Favorites count:", favoritesCount)
 
   const toggleFavorite = async (courseId: string, action: "add" | "remove") => {
     try {
@@ -268,7 +268,7 @@ const CourseArchive = () => {
       }
 
       const data = await response.json()
-      console.log("Course added to applied courses:", data)
+      // console.log("Course added to applied courses:", data)
       toast.success("Course added to applied courses!", {
         duration: 2000,
         position: "top-center",
@@ -277,7 +277,7 @@ const CourseArchive = () => {
 
       return data
     } catch (error) {
-      console.error("Error adding course to applied courses:", error)
+      // console.error("Error adding course to applied courses:", error)
       toast.error("Failed to add course. Please try again.", {
         duration: 3000,
         position: "top-center",
@@ -684,8 +684,8 @@ const CourseArchive = () => {
                     key={i}
                     onClick={() => setPage(i)}
                     className={`rounded-lg px-4 py-2 font-medium transition-colors duration-200 ${currentPage === i
-                        ? "bg-red-700 text-white shadow-md"
-                        : "bg-gray-100 text-gray-700 hover:bg-red-100"
+                      ? "bg-red-700 text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-red-100"
                       }`}
                     aria-current={currentPage === i ? "page" : undefined}
                   >
