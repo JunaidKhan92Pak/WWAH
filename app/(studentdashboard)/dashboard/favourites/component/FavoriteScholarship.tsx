@@ -221,8 +221,7 @@ export default function FavoriteScholarship() {
           );
 
           toast(
-            `${count} favorite scholarship${
-              count > 1 ? "s" : ""
+            `${count} favorite scholarship${count > 1 ? "s" : ""
             } no longer exist`,
             {
               icon: "⚠️",
@@ -320,8 +319,8 @@ export default function FavoriteScholarship() {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(
           errorData.message ||
-            errorData.error ||
-            `Failed to remove favorite (${res.status})`
+          errorData.error ||
+          `Failed to remove favorite (${res.status})`
         );
       }
 
@@ -671,11 +670,10 @@ export default function FavoriteScholarship() {
                               </Label>
                               <Input
                                 id={`link-${scholarship._id}`}
-                                value={`${
-                                  typeof window !== "undefined"
+                                value={`${typeof window !== "undefined"
                                     ? window.location.origin
                                     : ""
-                                }/scholarships/${scholarship._id}`}
+                                  }/scholarships/${scholarship._id}`}
                                 readOnly
                               />
                             </div>
@@ -750,11 +748,10 @@ export default function FavoriteScholarship() {
                           removeFavorite(scholarship._id, scholarship.name)
                         }
                         disabled={loadingMap[scholarship._id]}
-                        className={`transition-colors duration-200 ${
-                          loadingMap[scholarship._id]
+                        className={`transition-colors duration-200 ${loadingMap[scholarship._id]
                             ? "opacity-50 cursor-not-allowed"
                             : ""
-                        }`}
+                          }`}
                       >
                         {loadingMap[scholarship._id] ? (
                           <div className="animate-spin rounded-full h-1 w-1 border-b-2 border-white"></div>

@@ -372,11 +372,10 @@ const FavoriteUniversities = () => {
                   <button
                     onClick={() => removeFavorite(item._id)}
                     disabled={removingId === item._id}
-                    className={`transition-opacity ${
-                      removingId === item._id
+                    className={`transition-opacity ${removingId === item._id
                         ? "opacity-50 cursor-not-allowed"
                         : "hover:opacity-80"
-                    }`}
+                      }`}
                     title="Remove from favorites"
                   >
                     {removingId === item._id ? (
@@ -413,8 +412,8 @@ const FavoriteUniversities = () => {
 
               <div className="p-2 h-[80px] flex flex-col justify-between">
                 <Link
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  // target="_blank"
+                  // rel="noopener noreferrer"
                   href={`/Universities/${item._id}`}
                   key={item._id}
                 >
