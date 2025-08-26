@@ -15,7 +15,7 @@ export const ApplicationProcess: React.FC<ApplicationProcessProps> = ({
   };
   return (
     <section className="w-full flex flex-col items-center">
-      <div className="w-[90%] flex flex-col justify-center mb-5 sm:mb-10">
+      <div className="w-[90%] flex flex-col justify-center mb-5 sm:my-6">
         <h2 className="mb-2">Application Process!</h2>
         <div className="flex flex-col lg:flex-row gap-0 lg:gap-4">
           <div className="space-y-4 xl:space-y-5">

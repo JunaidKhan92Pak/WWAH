@@ -311,7 +311,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         Get a glimpse of your future at{" "}
                         {data?.courseData?.universityname}!
                       </p>
-                      <Link target="blank" href="/universityarchievepage">
+                      <Link target="blank" href="/Universities">
                         <Button className="bg-white text-[#C7161E] font-normal px-4 md:px-8 py-0 sm:py-3 rounded-md hover:bg-gray-300 transition">
                           Discover More
                         </Button>
