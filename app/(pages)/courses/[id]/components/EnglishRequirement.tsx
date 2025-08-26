@@ -16,7 +16,7 @@ export const EnglishRequirement: React.FC<EnglishRequirementProps> = ({
   const requirements = [
     {
       name: "IELTS",
-      link: "ilets",
+      link: "ielts",
       description: `${data.required_ielts_score}`,
     },
     {
