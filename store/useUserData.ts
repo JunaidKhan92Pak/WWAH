@@ -170,7 +170,7 @@ export interface DetailedInfo {
 export interface UserStore {
   // State
   user: User | null;
-  
+
   detailedInfo: DetailedInfo | null;
   loading: boolean;
   error: string | null;

@@ -39,35 +39,18 @@ const formSchema = z.object({
   linkedin: z.string().optional(),
 });
 
-interface ApiLanguageProficiency {
-  test: string;
-  score: string;
-}
 
-interface ApiStudyPreference {
-  country: string;
-  degree: string;
-  subject: string;
-}
+
 
 interface DetailedInfo {
   studyLevel: string;
-  gradeType: string;
-  grade: number;
+ 
   dateOfBirth: string;
   nationality: string;
-  majorSubject: string;
-  livingCosts: {
-    amount: number;
-    currency: string;
-  };
-  tuitionFee: {
-    amount: number;
-    currency: string;
-  };
-  languageProficiency: ApiLanguageProficiency;
+ 
+
   workExperience: number;
-  studyPreferenced: ApiStudyPreference;
+
   updatedAt: string;
   contactNo?: string;
   country?: string;

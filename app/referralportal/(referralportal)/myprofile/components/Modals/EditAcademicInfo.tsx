@@ -74,6 +74,7 @@ const EditAcademicInfo = ({ data }: { data: detailedInfo }) => {
       program: values.program,
       universityName: values.universityName,
       currentSemester: values.currentSemester,
+      
  
     
     };

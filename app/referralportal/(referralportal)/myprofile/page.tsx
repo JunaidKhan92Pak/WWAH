@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import HeroSection from "./components/HeroSection";
-import MyProfileInfo from "./components/MyProfileInfo";
+// import MyProfileInfo from "./components/MyProfileInfo";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserData";
 import Loading from "@/app/loading";
@@ -46,7 +46,7 @@ const Page = () => {
       ) : (
         <>
           <HeroSection user={user} />
-          <MyProfileInfo user={user} detailInfo={detailedInfo} />
+          {/* <MyProfileInfo user={user} detailInfo={detailedInfo} /> */}
         </>
       )}
     </div>

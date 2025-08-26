@@ -1,42 +1,47 @@
 "use client";
 
 import Image from "next/image";
-import EditAcademicInfo from "./Modals/EditAcademicInfo";
+// import EditAcademicInfo from "./Modals/EditAcademicInfo";
 import EditWorkExperience from "./Modals/EditWorkExperience";
 import EditfirstandlastName from "./Modals/EditfirstandlastName";
 import Password from "./Modals/PasswordInput";
 import EditPhoneNo from "./Modals/EditPhoneNo";
 import EditPersonalInfo from "./Modals/EditPersonalInfo";
 
-interface LanguageProficiency {
-  test: string;
-  score: string;
+// -----  NEW  -----
+export interface AcademicInformation {
+  currentDegree: string;
+  program: string;
+  uniName: string;
+  currentSemester: string;
 }
-interface StudyPreference {
-  country: string;
-  degree: string;
-  subject: string;
+// -----------------
+// ----- NEW ------------------------------
+export interface PaymentInformation {
+  preferredPaymentMethod: string;
+  bankAccountTitle: string | null;
+  bankName: string | null;
+  accountNumberIban: string | null;
+  mobileWalletNumber: string | null;
+  accountHolderName: string | null;
+  termsAndAgreement: boolean;
 }
-
+export interface WorkExperienceDetails {
+  hasWorkExperience: boolean;
+  hasBrandAmbassador: boolean;
+  jobDescription: string | null;
+}
 interface DetailedInfo {
   studyLevel: string;
-  gradeType: string;
-  grade: number;
+
   dateOfBirth: string;
   nationality: string;
   majorSubject: string;
-  livingCosts: {
-    amount: number;
-    currency: string;
-  };
-  tuitionFee: {
-    amount: number;
-    currency: string;
-  };
-  languageProficiency: LanguageProficiency;
-  studyPreferenced: StudyPreference;
+
+
   workExperience: number;
-  updatedAt: string;
+    updatedAt: string;
+  AcademicInformation: AcademicInformation;
 }
 
 interface UserProps {
@@ -51,45 +56,54 @@ interface UserProps {
     updatedAt: string;
   };
   detailInfo: DetailedInfo | null;
+  paymentInfo: PaymentInformation | null;
+  workExpDetails: WorkExperienceDetails | null;
 }
 
-// Helper function to format the updatedAt timestamp
 const formatLastUpdated = (updatedAt: string): string => {
   if (!updatedAt) return "Never updated";
-
   try {
     const date = new Date(updatedAt);
-    const options: Intl.DateTimeFormatOptions = {
+    return `Last updated on ${date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-    };
-    return `Last updated on ${date.toLocaleDateString("en-US", options)}`;
-  } catch (error) {
-    console.log("Error formatting date:", error);
+    })}`;
+  } catch {
     return "Invalid date";
   }
 };
 
+
 const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
-  // Use the most recent updatedAt from either user or detailInfo
   const lastUpdated = detailInfo?.updatedAt || user?.updatedAt;
+
+  const emptyDetails: DetailedInfo = {
+    studyLevel: "",
+  
+ 
+    dateOfBirth: "",
+    nationality: "",
+    majorSubject: "",
+    workExperience: 0,
+    updatedAt: "",
+    AcademicInformation: {
+      currentDegree: "",
+      program: "",
+      uniName: "",
+      currentSemester: "",
+    },
+  };
 
   return (
     <div className="w-[100%] md:w-[60%] ml-4 md:ml-8 xl:ml-72 mt-24 md:mt-56 xl:mt-10 mb-6 xl:mb-10">
-      {/* Last Updated Information */}
       {lastUpdated && (
         <div className="mb-6 p-3 bg-gray-50 rounded-lg border">
           <p className="text-sm text-gray-600 flex items-center gap-2">
-            <Image
-              src="/clock.svg"
-              alt="Clock Icon"
-              width={16}
-              height={16}
-            />
+            <Image src="/clock.svg" alt="Clock Icon" width={16} height={16} />
             {formatLastUpdated(lastUpdated)}
           </p>
         </div>
@@ -100,7 +114,6 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
           firstName={user?.firstName}
           lastName={user?.lastName}
         />
-        {/* Email Address */}
         <div className="flex flex-col items-start space-y-2">
           <p className="text-gray-600 text-base">Email Address:</p>
           <div className="flex flex-row items-center gap-x-2">
@@ -114,21 +127,26 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
           </div>
         </div>
         <Password data={user} />
-        {detailInfo && (
-          <>
-            <EditPhoneNo phone={user?.phone} updatedAt={detailInfo.updatedAt} />
-            <EditPersonalInfo data={detailInfo} />
-            <EditAcademicInfo data={detailInfo} />
-            <EditWorkExperience
-              data={{ workExperience: detailInfo.workExperience }}
-              updatedAt={detailInfo.updatedAt}
-            />
-          
-          </>
-        )}
+
+        <EditPhoneNo
+          phone={user?.phone}
+          updatedAt={detailInfo?.updatedAt ?? ""}
+        />
+        <EditPersonalInfo data={detailInfo ?? emptyDetails} />
+  
+        {/* <EditAcademicInfo
+          data={
+            detailInfo?.AcademicInformation ?? emptyDetails.AcademicInformation
+          }
+        /> */}
+        <EditWorkExperience
+          data={{ workExperience: detailInfo?.workExperience ?? 0 }}
+          updatedAt={detailInfo?.updatedAt ?? ""}
+        />
       </div>
     </div>
   );
 };
 
 export default MyProfileInfo;
+
