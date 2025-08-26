@@ -1,6 +1,6 @@
 // export default ApplyingSection;
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import CircularProgress from "./CircularProgress";
 import Link from "next/link";
@@ -51,8 +51,9 @@ const ApplyingSection: React.FC = () => {
   const [detailedAppliedCourses, setDetailedAppliedCourses] = useState<
     Course[]
   >([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasInitialized, setHasInitialized] = useState<boolean>(false);
 
   // ✅ NEW: Modal state
   const [showContactModal, setShowContactModal] = useState<boolean>(false);
@@ -98,22 +99,6 @@ const ApplyingSection: React.FC = () => {
     );
   };
 
-  // Helper function to get application step label (keeping for backward compatibility)
-  // const getApplicationStepLabel = (applicationStatus: number): string => {
-  //   const steps = [
-  //     { step: 1, label: "Application Started" },
-  //     { step: 2, label: "Documents Prepared" },
-  //     { step: 3, label: "Application Submitted" },
-  //     { step: 4, label: "Under Review" },
-  //     { step: 5, label: "Interview Scheduled" },
-  //     { step: 6, label: "Decision Pending" },
-  //     { step: 7, label: "Final Decision" },
-  //   ];
-
-  //   const step = steps.find((s) => s.step === applicationStatus);
-  //   return step ? step.label : "Unknown Step";
-  // };
-
   const getApplicationProgress = (applicationStatus: number): number => {
     return Math.round((applicationStatus / 7) * 100);
   };
@@ -129,100 +114,115 @@ const ApplyingSection: React.FC = () => {
     updateCourseConfirmation,
   } = useUserStore();
 
-  console.log("ApplyingSection component rendered", {
-    appliedCourseIds,
-    appliedCoursesCount: Object.keys(appliedCourses).length,
-    userAppliedCourses: user?.appliedCourses,
-  });
-
   // Function to fetch detailed course information for applied courses
-  const fetchDetailedAppliedCourses = async (courseIds: string[]) => {
-    if (courseIds.length === 0) {
-      setDetailedAppliedCourses([]);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      // Get application data from the store
-      const coursesDataForAPI = courseIds.map((courseId) => {
-        const appliedCourse = appliedCourses[courseId];
-        return {
-          courseId,
-          applicationStatus: appliedCourse?.applicationStatus || 1,
-          createdAt: appliedCourse?.createdAt,
-          updatedAt: appliedCourse?.updatedAt,
-        };
-      });
-
-      const apiUrl = `/api/getfavouritecourse?ids=${encodeURIComponent(
-        JSON.stringify(coursesDataForAPI)
-      )}&type=applied`;
-
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      console.log(response, "Response from API coursesDta");
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Response error text:", errorText);
-        throw new Error(
-          `HTTP error! status: ${response.status} - ${errorText}`
-        );
+  const fetchDetailedAppliedCourses = useCallback(
+    async (courseIds: string[]) => {
+      if (courseIds.length === 0) {
+        setDetailedAppliedCourses([]);
+        return;
       }
 
-      const data = await response.json();
+      try {
+        setLoading(true);
 
-      if (data.success) {
-        const detailedCourses = data.appliedCourses || [];
-        setDetailedAppliedCourses(detailedCourses);
-      } else {
-        console.error("API returned success: false", data);
-        setError(data.message || "Failed to load detailed course information");
-        toast.error("Failed to load detailed course information", {
+        // Get application data from the store
+        const coursesDataForAPI = courseIds.map((courseId) => {
+          const appliedCourse = appliedCourses[courseId];
+          return {
+            courseId,
+            applicationStatus: appliedCourse?.applicationStatus || 1,
+            createdAt: appliedCourse?.createdAt,
+            updatedAt: appliedCourse?.updatedAt,
+          };
+        });
+
+        const apiUrl = `/api/getfavouritecourse?ids=${encodeURIComponent(
+          JSON.stringify(coursesDataForAPI)
+        )}&type=applied`;
+
+        const response = await fetch(apiUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Response error text:", errorText);
+          throw new Error(
+            `HTTP error! status: ${response.status} - ${errorText}`
+          );
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          const detailedCourses = data.appliedCourses || [];
+          setDetailedAppliedCourses(detailedCourses);
+        } else {
+          console.error("API returned success: false", data);
+          setError(
+            data.message || "Failed to load detailed course information"
+          );
+          toast.error("Failed to load detailed course information", {
+            duration: 3000,
+            position: "top-center",
+          });
+        }
+      } catch (error: unknown) {
+        console.error("Error fetching detailed courses:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        setError(errorMessage);
+        toast.error("Failed to load course details", {
           duration: 3000,
           position: "top-center",
         });
+      } finally {
+        setLoading(false);
       }
-    } catch (error: unknown) {
-      console.error("Error fetching detailed courses:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      setError(errorMessage);
-      toast.error("Failed to load course details", {
-        duration: 3000,
-        position: "top-center",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [appliedCourses]
+  );
 
-  // Fetch user profile and applied courses on component mount
+  // Single useEffect for initialization
   useEffect(() => {
-    if (!user?.appliedCourses || appliedCourseIds.length === 0) {
-      fetchAppliedCourses();
-    }
-  }, []);
+    let isMounted = true;
 
-  // Fetch detailed course information when applied course IDs change
+    const initializeComponent = async () => {
+      if (hasInitialized) return;
+
+      try {
+        // First, ensure we have applied courses data
+        if (!user?.appliedCourses || appliedCourseIds.length === 0) {
+          await fetchAppliedCourses();
+        }
+
+        if (isMounted) {
+          setHasInitialized(true);
+        }
+      } catch (error) {
+        console.error("Error initializing component:", error);
+        if (isMounted) {
+          setError("Failed to initialize applied courses");
+        }
+      }
+    };
+
+    initializeComponent();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, appliedCourseIds.length, fetchAppliedCourses, hasInitialized]);
+
+  // Separate useEffect for fetching detailed courses when IDs are available
   useEffect(() => {
-    console.log("Applied course IDs changed:", appliedCourseIds);
-
-    if (appliedCourseIds.length > 0) {
+    if (hasInitialized && appliedCourseIds.length > 0) {
       fetchDetailedAppliedCourses(appliedCourseIds);
-    } else {
-      setDetailedAppliedCourses([]);
-      setLoading(false);
     }
-  }, [appliedCourseIds]);
+  }, [appliedCourseIds, hasInitialized, fetchDetailedAppliedCourses]);
 
   // ✅ UPDATED: Function to handle remove button click
   const handleRemoveButtonClick = async (courseId: string) => {
@@ -369,8 +369,8 @@ const ApplyingSection: React.FC = () => {
     return appliedCourses[courseId] || null;
   };
 
-  // Loading state
-  if (loading || loadingAppliedCourses) {
+  // Loading state - only show when actually loading
+  if ((loading || loadingAppliedCourses) && !hasInitialized) {
     return (
       <div className="relative">
         <div className="flex items-center justify-center p-8">
@@ -389,7 +389,11 @@ const ApplyingSection: React.FC = () => {
           <div className="text-red-500 text-center">
             <p className="mb-4">Error: {error}</p>
             <Button
-              onClick={() => fetchAppliedCourses()}
+              onClick={() => {
+                setError(null);
+                setHasInitialized(false);
+                fetchAppliedCourses();
+              }}
               className="bg-[#C7161E] hover:bg-[#f03c45] text-white"
             >
               Try Again
@@ -401,7 +405,7 @@ const ApplyingSection: React.FC = () => {
   }
 
   // No applied courses state
-  if (!appliedCourseIds || appliedCourseIds.length === 0) {
+  if (hasInitialized && (!appliedCourseIds || appliedCourseIds.length === 0)) {
     return (
       <div>
         <div className="relative w-full h-[250px] flex items-center justify-center border border-gray-200 rounded-xl">
@@ -524,8 +528,9 @@ const ApplyingSection: React.FC = () => {
     );
   }
 
-  // Show loading state if we have IDs but no detailed courses yet
+  // Show loading state if we have IDs but no detailed courses yet and currently loading
   if (
+    hasInitialized &&
     appliedCourseIds.length > 0 &&
     detailedAppliedCourses.length === 0 &&
     loading
@@ -738,7 +743,7 @@ const ApplyingSection: React.FC = () => {
                         className="w-[230px] h-[180px] object-cover"
                       />
                       <div className="absolute top-4 left-0">
-                        <div className="bg-gradient-to-r from-white to-transparent opacity-100 w-[70%]">
+                        <div className="bg-gradient-to-t from-white to-transparent opacity-100 w-[70%]">
                           <div className="flex items-center gap-2">
                             <img
                               src={
@@ -748,7 +753,7 @@ const ApplyingSection: React.FC = () => {
                               alt="University Logo"
                               className="w-6 h-6 object-cover object-center rounded-full aspect-square"
                             />
-                            <p className="text-[12px] leading-tight pr-1">
+                            <p className="text-sm leading-tight pr-1">
                               {course.universityData?.university_name ||
                                 "University"}
                             </p>
@@ -866,21 +871,6 @@ const ApplyingSection: React.FC = () => {
                         </Dialog>
                       </div>
                     </div>
-
-                    {/* ✅ CRITICAL: Course Status with colored dot using statusId */}
-                    {/* <div className="flex items-center gap-2 pt-4">
-                      <span className="text-[13px] font-medium px-4 py-1 rounded-md text-white bg-red-600">
-                        Current Status:
-                      </span>
-                      <div className="flex items-center gap-2 ml-2">
-                        <div
-                          className={`w-2 h-2 rounded-full ${statusConfig.color}`}
-                        ></div>
-                        <span className="text-sm">{statusConfig.label}</span>
-                      </div>
-                    </div> */}
-
-                    {/* ✅ DEBUG: Show status IDs for debugging */}
                   </div>
 
                   <div className="flex-1 space-y-2">
@@ -992,21 +982,6 @@ const ApplyingSection: React.FC = () => {
                       Generate Success Chances
                     </button>
                   </div>
-
-                  {/* Confirm button */}
-                  {/* <button
-                    onClick={() => handleConfirmButtonClick(course._id)}
-                    disabled={applicationDetails?.isConfirmed === true}
-                    className={`py-1 rounded text-white font-medium text-[13px] mt-2 ${
-                      applicationDetails?.isConfirmed
-                        ? "bg-red-600 cursor-not-allowed px-8"
-                        : "bg-red-600 hover:bg-red-700 cursor-pointer px-2"
-                    }`}
-                  >
-                    {applicationDetails?.isConfirmed
-                      ? "Confirmed"
-                      : "Confirm Course Selection"}
-                  </button> */}
                 </div>
               </div>
               <div className="flex justify-between items-center">
