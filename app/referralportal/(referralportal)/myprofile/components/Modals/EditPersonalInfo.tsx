@@ -40,30 +40,17 @@ const formSchema = z.object({
 });
 
 
-interface ApiStudyPreference {
-  country: string;
-  degree: string;
-  subject: string;
-}
+
 
 interface DetailedInfo {
   studyLevel: string;
-  gradeType: string;
-  grade: number;
+ 
   dateOfBirth: string;
   nationality: string;
-  majorSubject: string;
-  livingCosts: {
-    amount: number;
-    currency: string;
-  };
-  tuitionFee: {
-    amount: number;
-    currency: string;
-  };
+ 
 
   workExperience: number;
-  studyPreferenced: ApiStudyPreference;
+
   updatedAt: string;
   contactNo?: string;
   country?: string;

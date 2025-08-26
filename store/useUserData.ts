@@ -59,32 +59,6 @@ export interface AppliedCourseWithDetails extends AppliedCourse {
   };
 }
 
-// NEW: Payment Information interface
-export interface PaymentInformation {
-  preferredPaymentMethod: string;
-  bankAccountTitle: string | null;
-  bankName: string | null;
-  accountNumberIban: string | null;
-  mobileWalletNumber: string | null;
-  accountHolderName: string | null;
-  termsAndAgreement: boolean;
-}
-
-// NEW: Work Experience interface
-export interface WorkExperience {
-  hasWorkExperience: boolean;
-  hasBrandAmbassador: boolean;
-  jobDescription: string | null;
-}
-
-// NEW: Academic Information interface (enhanced)
-export interface AcademicInformation {
-  currentDegree: string;
-  program: string;
-  uniName: string;
-  currentSemester: string;
-}
-
 export const getApplicationProgress = (applicationStatus: number): number => {
   return Math.round((applicationStatus / 7) * 100);
 };
@@ -190,15 +164,13 @@ export interface DetailedInfo {
     subject: string;
   };
   updatedAt: string;
-  // NEW: Added references to new data structures
-  AcademicInformation?: AcademicInformation;
 }
 
 // Complete user store interface
 export interface UserStore {
   // State
   user: User | null;
-  
+
   detailedInfo: DetailedInfo | null;
   loading: boolean;
   error: string | null;
@@ -246,20 +218,6 @@ export interface UserStore {
   setUser: (userData: User) => void;
   logout: () => void;
   getLastUpdatedDate: () => string | null;
-
-  // NEW: Additional data actions
-  fetchPaymentInformation: () => Promise<void>;
-  fetchWorkExperience: () => Promise<void>;
-  fetchAcademicInformation: () => Promise<void>;
-  updatePaymentInformation: (
-    updateData: Partial<PaymentInformation>
-  ) => Promise<boolean>;
-  updateWorkExperience: (
-    updateData: Partial<WorkExperience>
-  ) => Promise<boolean>;
-  updateAcademicInformation: (
-    updateData: Partial<AcademicInformation>
-  ) => Promise<boolean>;
 
   // Favorite courses actions
   fetchFavoriteCourses: () => Promise<void>;
@@ -341,38 +299,6 @@ const defaultDetailedInfo: DetailedInfo = {
   majorSubject: "",
   workExperience: 0,
   updatedAt: "",
-  AcademicInformation: {
-    currentDegree: "",
-    program: "",
-    uniName: "",
-    currentSemester: "",
-  },
-};
-
-// NEW: Default payment information
-const defaultPaymentInformation: PaymentInformation = {
-  preferredPaymentMethod: "none",
-  bankAccountTitle: null,
-  bankName: null,
-  accountNumberIban: null,
-  mobileWalletNumber: null,
-  accountHolderName: null,
-  termsAndAgreement: false,
-};
-
-// NEW: Default work experience
-const defaultWorkExperience: WorkExperience = {
-  hasWorkExperience: false,
-  hasBrandAmbassador: false,
-  jobDescription: null,
-};
-
-// NEW: Default academic information
-const defaultAcademicInformation: AcademicInformation = {
-  currentDegree: "",
-  program: "",
-  uniName: "",
-  currentSemester: "",
 };
 
 function normalizeAppliedCourses(appliedCourses: any[]): AppliedCourse[] {
@@ -400,7 +326,6 @@ function normalizeAppliedCourses(appliedCourses: any[]): AppliedCourse[] {
     };
   });
 }
-
 // Create the unified store
 export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
@@ -534,33 +459,25 @@ export const useUserStore = create<UserStore>((set, get) => ({
         ),
       });
 
-      // Fetch additional data in parallel
-      const additionalDataPromises = [];
-
       // Fetch details for favorite courses if there are any
       if (userData.favouriteCourse.length > 0) {
-        additionalDataPromises.push(get().fetchFavoriteCourses());
+        get().fetchFavoriteCourses();
       }
 
       // Fetch details for applied courses if there are any
       if (normalizedAppliedCourses.length > 0) {
-        additionalDataPromises.push(get().fetchAppliedCourses());
+        get().fetchAppliedCourses();
       }
 
       // Fetch favorite universities details if there are any
       if (userData.favouriteUniversity.length > 0) {
-        additionalDataPromises.push(get().fetchFavoriteUniversities());
+        get().fetchFavoriteUniversities();
       }
 
       // Fetch favorite scholarships details if there are any
       if (userData.favouriteScholarship.length > 0) {
-        additionalDataPromises.push(get().fetchFavoriteScholarships());
+        get().fetchFavoriteScholarships();
       }
-
-      // NEW: Fetch additional profile data
-      additionalDataPromises.push(get().fetchPaymentInformation());
-      additionalDataPromises.push(get().fetchWorkExperience());
-      additionalDataPromises.push(get().fetchAcademicInformation());
 
       // Convert applied scholarship courses array to Record
       if (userData.appliedScholarshipCourses.length > 0) {
@@ -575,9 +492,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           appliedScholarshipCourses: applicationsMap,
         });
       }
-
-      // Wait for all additional data to be fetched
-      await Promise.allSettled(additionalDataPromises);
     } catch (error) {
       console.error("Error fetching profile:", error);
       set({
@@ -999,7 +913,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           const courseId = course._id;
           courseIdsList.push(courseId);
 
-          const trackingData = trackingDataMap.get(courseId);
           const trackingData = trackingDataMap.get(courseId);
 
           // ✅ CRITICAL: Ensure statusId is properly included

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import EditAcademicInfo from "./Modals/EditAcademicInfo";
+// import EditAcademicInfo from "./Modals/EditAcademicInfo";
 import EditWorkExperience from "./Modals/EditWorkExperience";
 import EditfirstandlastName from "./Modals/EditfirstandlastName";
 import Password from "./Modals/PasswordInput";
@@ -134,11 +134,11 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
         />
         <EditPersonalInfo data={detailInfo ?? emptyDetails} />
   
-        <EditAcademicInfo
+        {/* <EditAcademicInfo
           data={
             detailInfo?.AcademicInformation ?? emptyDetails.AcademicInformation
           }
-        />
+        /> */}
         <EditWorkExperience
           data={{ workExperience: detailInfo?.workExperience ?? 0 }}
           updatedAt={detailInfo?.updatedAt ?? ""}
