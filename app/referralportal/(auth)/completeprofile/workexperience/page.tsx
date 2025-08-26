@@ -14,6 +14,11 @@ const Step3 = () => {
     jobDescription: "",
   });
 
+  // State for validation errors
+  const [errors, setErrors] = useState({
+    jobDescription: "",
+  });
+
   // Handler for work experience radio buttons
   const handleWorkExperienceChange = (value: boolean) => {
     setWorkExperience({
@@ -22,6 +27,11 @@ const Step3 = () => {
       // Clear jobDescription if work experience is set to false
       jobDescription: value ? workExperience.jobDescription : "",
     });
+
+    // Clear validation error when switching to "No"
+    if (!value) {
+      setErrors({ ...errors, jobDescription: "" });
+    }
   };
 
   // Handler for brand ambassador radio buttons
@@ -32,23 +42,72 @@ const Step3 = () => {
     });
   };
 
-  // Handler for text input changes
+  // Validation function for job description
+  const validateJobDescription = (value: string) => {
+    if (!workExperience.hasWorkExperience) return "";
+
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) {
+      return "Please describe your work experience.";
+    }
+
+    if (trimmedValue.length < 10) {
+      return "Please provide a more detailed description (at least 10 characters).";
+    }
+
+    if (trimmedValue.length > 500) {
+      return "Description is too long. Please keep it under 500 characters.";
+    }
+
+    return "";
+  };
+
+  // Handler for text input changes with real-time validation
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setWorkExperience({ ...workExperience, [name]: value });
+
+    // Real-time validation for job description
+    if (name === "jobDescription") {
+      const error = validateJobDescription(value);
+      setErrors({ ...errors, jobDescription: error });
+    }
+  };
+
+  // Handler for blur event (when user leaves the field)
+  const handleBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (name === "jobDescription") {
+      const error = validateJobDescription(value);
+      setErrors({ ...errors, jobDescription: error });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validation
+    // Comprehensive validation before submission
+    const jobDescriptionError = validateJobDescription(
+      workExperience.jobDescription
+    );
+
+    if (jobDescriptionError) {
+      setErrors({ ...errors, jobDescription: jobDescriptionError });
+      return;
+    }
+
+    // Additional validation check
     if (
       workExperience.hasWorkExperience &&
       !workExperience.jobDescription.trim()
     ) {
-      alert("Please describe your work experience.");
+      setErrors({
+        ...errors,
+        jobDescription: "Please describe your work experience.",
+      });
       return;
     }
 
@@ -143,11 +202,29 @@ const Step3 = () => {
                 name="jobDescription"
                 value={workExperience.jobDescription}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 rows={4}
-                className="w-full bg-gray-100 px-4 py-2 placeholder:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className={`w-full bg-gray-100 px-4 py-2 placeholder:text-sm border rounded-lg focus:outline-none focus:ring-2 resize-none ${
+                  errors.jobDescription
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-500"
+                }`}
                 placeholder="Please describe your work experience in detail..."
                 required={workExperience.hasWorkExperience}
               />
+              {/* Character count */}
+              <div className="flex justify-between items-center mt-1">
+                <div>
+                  {errors.jobDescription && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.jobDescription}
+                    </p>
+                  )}
+                </div>
+                <p className="text-gray-500 text-xs">
+                  {workExperience.jobDescription.length}/500
+                </p>
+              </div>
             </div>
           )}
 
@@ -187,6 +264,9 @@ const Step3 = () => {
               type="submit"
               size={"lg"}
               className="py- mt-4 bg-[#C7161E] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-800"
+              disabled={
+                workExperience.hasWorkExperience && !!errors.jobDescription
+              }
             >
               Continue
             </Button>

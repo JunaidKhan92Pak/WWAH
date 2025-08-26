@@ -107,9 +107,9 @@ const HeroSection = ({ user }: HeroSectionProps) => {
           />
         </div>
         <div>
-          <p className="font-semibold text-lg">
-            {user?.firstName} {user?.lastName}
-          </p>
+            <p className="font-semibold text-lg">
+              {user?.firstName} {user?.lastName}
+            </p>
 
           <div className="flex flex-col  gap-2 ">
             <div className="md:block hidden">
@@ -119,7 +119,7 @@ const HeroSection = ({ user }: HeroSectionProps) => {
               <div className="w-44 h-[1px] bg-[#F4D0D2]"></div>
 
               <p className="text-base text-gray-600">
-                {/* Member since: {profile.membershipDate} */}
+             
                 Member since:
                 {new Date(user?.createdAt).toLocaleDateString("en-GB")}
               </p>

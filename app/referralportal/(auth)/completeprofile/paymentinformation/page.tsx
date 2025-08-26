@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
 import {
   Select,
   SelectContent,
@@ -14,9 +15,59 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { getAuthToken } from "@/utils/authHelper";
 
+// Zod validation schemas
+const bankTransferSchema = z.object({
+  preferredPaymentMethod: z.literal("bank_transfer"),
+  bankAccountTitle: z.string().min(1, "Bank account title is required").trim(),
+  bankName: z.string().min(1, "Bank name is required").trim(),
+  accountNumberIban: z
+    .string()
+    .min(1, "Account number/IBAN is required")
+    .trim(),
+  mobileWalletNumber: z.null().optional(),
+  accountHolderName: z.null().optional(),
+});
+
+const mobileWalletSchema = z.object({
+  preferredPaymentMethod: z.enum([
+    "jazzcash",
+    "easypaisa",
+    "sadapay",
+    "nayapay",
+  ]),
+  mobileWalletNumber: z
+    .string()
+    .min(11, "Mobile number must be at least 11 digits")
+    .trim(),
+  accountHolderName: z
+    .string()
+    .min(1, "Account holder name is required")
+    .trim(),
+  bankAccountTitle: z.null().optional(),
+  bankName: z.null().optional(),
+  accountNumberIban: z.null().optional(),
+});
+
+const noneSchema = z.object({
+  preferredPaymentMethod: z.literal("none"),
+  bankAccountTitle: z.null().optional(),
+  bankName: z.null().optional(),
+  accountNumberIban: z.null().optional(),
+  mobileWalletNumber: z.null().optional(),
+  accountHolderName: z.null().optional(),
+});
+
+// Union schema for all payment methods
+const paymentSchema = z.discriminatedUnion("preferredPaymentMethod", [
+  bankTransferSchema,
+  mobileWalletSchema,
+  noneSchema,
+]);
+
 const Step4 = () => {
   const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<string>("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const paymentOptions = [
     { value: "bank_transfer", label: "Bank Transfer" },
@@ -42,6 +93,7 @@ const Step4 = () => {
   // Handler for payment method selection
   const handlePaymentMethodChange = (value: string) => {
     setSelectedMethod(value);
+    setErrors({}); // Clear errors when method changes
     setPaymentInformation({
       ...paymentInformation,
       preferredPaymentMethod: value,
@@ -60,42 +112,120 @@ const Step4 = () => {
   ) => {
     const { name, value } = e.target;
     setPaymentInformation({ ...paymentInformation, [name]: value });
+
+    // Clear specific field error when user starts typing
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
-  // Get auth token function (assuming it exists in your app)
-  // const getAuthToken = () => {
-  //   // Your token retrieval logic here
-  //   return localStorage.getItem("token") || "";
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("test");
     e.preventDefault();
+    setErrors({}); // Clear previous errors
 
-    // Validation
-    if (selectedMethod === "bank_transfer") {
-      if (
-        !paymentInformation.bankAccountTitle.trim() ||
-        !paymentInformation.bankName.trim() ||
-        !paymentInformation.accountNumberIban.trim()
-      ) {
-        alert("Please fill in all bank transfer details.");
+    console.log("Selected Method:", selectedMethod);
+    console.log("Payment Information:", paymentInformation);
+
+    // Skip validation entirely if "none" is selected
+    if (selectedMethod === "none") {
+      try {
+        const token = getAuthToken();
+
+        const requestData = {
+          preferredPaymentMethod: "none",
+          bankAccountTitle: null,
+          bankName: null,
+          accountNumberIban: null,
+          mobileWalletNumber: null,
+          accountHolderName: null,
+        };
+
+        console.log("Frontend - Sending payment data (none):", requestData);
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}refupdateprofile/paymentInformation`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(requestData),
+          }
+        );
+
+        const res = await response.json();
+        console.log("Frontend - Received response:", res);
+
+        if (res.success) {
+          router.push("/referralportal/completeprofile/termsagreement ");
+        } else {
+          console.error("Error:", res.message);
+          alert(res.message || "Failed to save payment information");
+        }
         return;
-      }
-    } else if (selectedMethod && selectedMethod !== "none") {
-      if (
-        !paymentInformation.mobileWalletNumber.trim() ||
-        !paymentInformation.accountHolderName.trim()
-      ) {
-        alert("Please fill in all mobile wallet details.");
+      } catch (error) {
+        console.error("Frontend - Submission error:", error);
+        alert("There was an error submitting the form. Please try again.");
         return;
       }
     }
 
     try {
+      // Prepare data for validation
+      const validationData = {
+        preferredPaymentMethod: paymentInformation.preferredPaymentMethod,
+        bankAccountTitle:
+          selectedMethod === "bank_transfer" &&
+          paymentInformation.bankAccountTitle.trim()
+            ? paymentInformation.bankAccountTitle.trim()
+            : null,
+        bankName:
+          selectedMethod === "bank_transfer" &&
+          paymentInformation.bankName.trim()
+            ? paymentInformation.bankName.trim()
+            : null,
+        accountNumberIban:
+          selectedMethod === "bank_transfer" &&
+          paymentInformation.accountNumberIban.trim()
+            ? paymentInformation.accountNumberIban.trim()
+            : null,
+        mobileWalletNumber:
+          selectedMethod !== "bank_transfer" &&
+          selectedMethod !== "none" &&
+          paymentInformation.mobileWalletNumber.trim()
+            ? paymentInformation.mobileWalletNumber.trim()
+            : null,
+        accountHolderName:
+          selectedMethod !== "bank_transfer" &&
+          selectedMethod !== "none" &&
+          paymentInformation.accountHolderName.trim()
+            ? paymentInformation.accountHolderName.trim()
+            : null,
+      };
+
+      console.log("Validation Data:", validationData);
+
+      // Validate the data with Zod
+      paymentSchema.parse(validationData);
+      console.log("Frontend - Validation passed!");
+
       const token = getAuthToken();
 
-      // Prepare data according to backend expectations
+      // Debug: Check token details
+      console.log("Raw token:", token);
+      console.log("Token length:", token?.length);
+      console.log("Token type:", typeof token);
+
+      // Debug: Check API URL
+      console.log(
+        "API URL:",
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refupdateprofile/paymentInformation`
+      );
+      console.log("Token:", token ? "Present" : "Missing");
+
+      // Keep the original requestData structure for backend compatibility
       const requestData = {
         preferredPaymentMethod: paymentInformation.preferredPaymentMethod,
         bankAccountTitle:
@@ -142,6 +272,10 @@ const Step4 = () => {
         }
       );
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const res = await response.json();
       console.log("Frontend - Received response:", res);
 
@@ -153,8 +287,19 @@ const Step4 = () => {
         alert(res.message || "Failed to save payment information");
       }
     } catch (error) {
-      console.error("Frontend - Submission error:", error);
-      alert("There was an error submitting the form. Please try again.");
+      if (error instanceof z.ZodError) {
+        // Handle Zod validation errors
+        const fieldErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          const fieldName = err.path.join(".");
+          fieldErrors[fieldName] = err.message;
+        });
+        setErrors(fieldErrors);
+        console.log("Validation errors:", fieldErrors);
+      } else {
+        console.error("Frontend - Submission error:", error);
+        alert("There was an error submitting the form. Please try again.");
+      }
     }
   };
 
@@ -174,6 +319,11 @@ const Step4 = () => {
             ))}
           </SelectContent>
         </Select>
+        {errors.preferredPaymentMethod && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.preferredPaymentMethod}
+          </p>
+        )}
       </div>
 
       {/* Bank Transfer Fields */}
@@ -187,8 +337,13 @@ const Step4 = () => {
                 value={paymentInformation.bankAccountTitle}
                 onChange={handleChange}
                 placeholder="Enter account title..."
-                required
+                className={errors.bankAccountTitle ? "border-red-500" : ""}
               />
+              {errors.bankAccountTitle && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.bankAccountTitle}
+                </p>
+              )}
             </div>
             <div>
               <Label>Bank Name *</Label>
@@ -197,8 +352,11 @@ const Step4 = () => {
                 value={paymentInformation.bankName}
                 onChange={handleChange}
                 placeholder="Enter bank name..."
-                required
+                className={errors.bankName ? "border-red-500" : ""}
               />
+              {errors.bankName && (
+                <p className="text-red-500 text-sm mt-1">{errors.bankName}</p>
+              )}
             </div>
             <div>
               <Label>Account Number / IBAN *</Label>
@@ -207,8 +365,13 @@ const Step4 = () => {
                 value={paymentInformation.accountNumberIban}
                 onChange={handleChange}
                 placeholder="Enter account number or IBAN..."
-                required
+                className={errors.accountNumberIban ? "border-red-500" : ""}
               />
+              {errors.accountNumberIban && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.accountNumberIban}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -225,9 +388,14 @@ const Step4 = () => {
                 name="mobileWalletNumber"
                 value={paymentInformation.mobileWalletNumber}
                 onChange={handleChange}
-                placeholder="Enter wallet number..."
-                required
+                placeholder="Enter wallet number (e.g., 03xxxxxxxxx)..."
+                className={errors.mobileWalletNumber ? "border-red-500" : ""}
               />
+              {errors.mobileWalletNumber && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.mobileWalletNumber}
+                </p>
+              )}
             </div>
             <div>
               <Label>Account Holder Name *</Label>
@@ -236,8 +404,13 @@ const Step4 = () => {
                 value={paymentInformation.accountHolderName}
                 onChange={handleChange}
                 placeholder="Enter account holder name..."
-                required
+                className={errors.accountHolderName ? "border-red-500" : ""}
               />
+              {errors.accountHolderName && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.accountHolderName}
+                </p>
+              )}
             </div>
           </div>
         )}
