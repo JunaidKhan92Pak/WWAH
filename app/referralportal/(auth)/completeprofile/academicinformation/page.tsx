@@ -332,9 +332,6 @@ const Step2 = () => {
               onChange={handleChange}
               value={academicInfo.uniName}
             />
-            {errors.uniName && (
-              <span className="text-red-500 text-xs">{errors.uniName}</span>
-            )}
           </div>
 
           {/* Current Semester */}

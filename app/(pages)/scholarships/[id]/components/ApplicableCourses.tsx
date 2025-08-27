@@ -93,6 +93,12 @@ export default function ApplicableCourses({
     //   "All tableData keys:",
     //   tableData ? Object.keys(tableData) : "No tableData"
     // );
+    // console.log("Raw tableData:", tableData);
+    // console.log("Countries array:", tableData?.countries);
+    // console.log(
+    //   "All tableData keys:",
+    //   tableData ? Object.keys(tableData) : "No tableData"
+    // );
 
     if (tableData && Array.isArray(tableData.course)) {
       const transformedCourses: Course[] = tableData.course.map((_, index) => {
