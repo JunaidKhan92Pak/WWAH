@@ -2,21 +2,16 @@
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
- 
-  ArrowLeftToLine,
-} from "lucide-react";
+import { LayoutDashboard, ArrowLeftToLine } from "lucide-react";
 import { TbCurrentLocation } from "react-icons/tb";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { getAuthToken } from "@/utils/authHelper";
-import { useUserStore } from "@/store/useUserData";
 import { IoPodiumOutline } from "react-icons/io5";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
-
+import { useRefUserStore } from "@/store/useRefDataStore";
 const sidebarItems = [
   {
     href: "/referralportal/overview",
@@ -28,36 +23,33 @@ const sidebarItems = [
     icon: TbCurrentLocation,
     title: "Commission Tracker",
   },
-   {
+  {
     href: "/referralportal/referralcontest",
-    icon: IoPodiumOutline ,
+    icon: IoPodiumOutline,
     title: "Referral Contest",
   },
-    {
+  {
     href: "/referralportal/contactandsupport",
     icon: TfiHeadphoneAlt,
     title: "Contact & Support",
   },
 ];
 export function Sidebar() {
-  const { user, fetchUserProfile, logout } = useUserStore();
+  const { user, fetchUserProfile, logout } = useRefUserStore();
   const pathname = usePathname();
-  
   useEffect(() => {
     const token = getAuthToken();
     if (token) {
-      fetchUserProfile();
+      fetchUserProfile(token);
     }
   }, []);
-
   const handlelogout = () => {
     logout();
     // Use window.location.href for a full page reload instead of client-side navigation
-    window.location.href = "/";
-  }
-
+    window.location.href = "/referralportal/signin";
+  };
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col h-[93%] ">
       {/* Profile Section */}
       <Card className="p-2 m-2 flex flex-col items-center text-center bg-white rounded-lg">
         <Image
@@ -95,20 +87,17 @@ export function Sidebar() {
             {item.title}
           </Link>
         ))}
-        {/* Logout Button */}
-        <div className="w-full pt-4">
-          <Button
-            className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center"
-            onClick={handlelogout}
-          >
-            <ArrowLeftToLine size={16} className="mr-2" />
-            Logout
-          </Button>
-        </div>
-       
       </div>
-
-     
+      {/* Logout Button */}
+      <div className="w-5/6 pt-4 mx-auto">
+        <Button
+          className="bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center"
+          onClick={handlelogout}
+        >
+          <ArrowLeftToLine size={16} className="mr-2" />
+          Logout
+        </Button>
+      </div>
     </div>
   );
 }

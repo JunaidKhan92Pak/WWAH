@@ -122,7 +122,7 @@ export interface User {
   favouriteScholarship: string[];
   favouriteCourse: string[];
   favouriteUniversity: string[];
-  appliedCourses: AppliedCourse[]; // Only courseId and applicationStatus
+  appliedCourses: AppliedCourse[];
   appliedScholarshipCourses: AppliedScholarshipCourse[];
   _id: string;
   firstName: string;
