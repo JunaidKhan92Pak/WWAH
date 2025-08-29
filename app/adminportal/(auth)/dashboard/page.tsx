@@ -158,7 +158,6 @@ export default function AdminDashboard() {
   };
 
   // Get application status summary
-
   const getApplicationSummary = (): ApplicationSummary => {
     if (!data) return { total: 0, stages: {} };
 
@@ -273,22 +272,32 @@ export default function AdminDashboard() {
             <div className="flex gap-3">
               <div>
                 <button
-                  className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${showTracker
-                    ? "bg-yellow-600 text-white hover:bg-red-700"
-                    : "bg-white text-red-600   hover:bg-red-50"
-                    }`}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${
+                    showTracker
+                      ? "bg-yellow-600 text-white hover:bg-red-700"
+                      : "bg-white text-red-600   hover:bg-red-50"
+                  }`}
                 >
                   <Link href={"/adminportal/chatPage"}>
                     <MessageCircle />
                   </Link>
                 </button>
               </div>
+              <Link href={"/adminportal/referralControl"}>
+                <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-5 h-5" />
+                    <span className="font-semibold">Referral Portals</span>
+                  </div>
+                </div>
+              </Link>
               <button
                 onClick={() => setShowTracker(!showTracker)}
-                className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${showTracker
-                  ? "bg-yellow-600 text-white hover:bg-red-700"
-                  : "bg-white text-red-600 border-2 border-red-600 hover:bg-red-50"
-                  }`}
+                className={`px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 ${
+                  showTracker
+                    ? "bg-yellow-600 text-white hover:bg-red-700"
+                    : "bg-white text-red-600 border-2 border-red-600 hover:bg-red-50"
+                }`}
               >
                 <TrendingUp className="w-5 h-5" />
                 {showTracker ? "Hide Tracker" : "Show Tracker"}
@@ -363,10 +372,11 @@ export default function AdminDashboard() {
                   >
                     <div className="flex flex-col items-center text-center">
                       <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${count > 0
-                          ? "bg-yellow-100 text-yellow-600"
-                          : "bg-gray-100 text-gray-400"
-                          }`}
+                        className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${
+                          count > 0
+                            ? "bg-yellow-100 text-yellow-600"
+                            : "bg-gray-100 text-gray-400"
+                        }`}
                       >
                         <Icon className="w-6 h-6" />
                       </div>
@@ -548,8 +558,9 @@ export default function AdminDashboard() {
                             <div
                               className="bg-gradient-to-r from-yellow-500 to-red-500 h-2 rounded-full transition-all"
                               style={{
-                                width: `${(applicationStage /
-                                  APPLICATION_STAGES.length) *
+                                width: `${
+                                  (applicationStage /
+                                    APPLICATION_STAGES.length) *
                                   100
                                 }%`,
                               }}
