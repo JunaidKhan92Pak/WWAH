@@ -4,11 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { IoMailOutline } from "react-icons/io5";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,20 +33,54 @@ const Page = () => {
 
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Forgot password request for:", email);
+    try {
+      console.log("Sending request to backend..."); // Debug log
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/forgotpassword`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+          credentials: "include",
+        }
+      );
+
+      console.log("Response status:", response.status); // Debug log
+
+      const result = await response.json();
+      console.log("Response data:", result); // Debug log
+
+      if (!response.ok) {
+        setMessage({
+          type: "error",
+          text: result.message || "Failed to process request.",
+        });
+        return;
+      }
+
       setMessage({
         type: "success",
-        text: "OTP has been sent to your email address. Please check your inbox.",
+        text:
+          result.message ||
+          "OTP has been sent to your email address. Please check your inbox.",
       });
-      setLoading(false);
 
-      // Clear success message after 5 seconds
+      // Redirect to OTP verification page after 2 seconds
       setTimeout(() => {
-        setMessage({ type: "", text: "" });
-      }, 5000);
-    }, 2000);
+        router.push(
+          `/referralportal/verifyotp?email=${encodeURIComponent(email)}`
+        );
+      }, 2000);
+    } catch (error) {
+      console.error("Network error:", error);
+      setMessage({
+        type: "error",
+        text: "Network error. Please check your connection and try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -61,7 +97,7 @@ const Page = () => {
               />
             </Link>
           </div>
-          <h3 className=" font-bold text-center text-gray-900 mb-2">
+          <h3 className="font-bold text-center text-gray-900 mb-2">
             Forgot Password!
           </h3>
           <p className="text-center text-gray-600 mb-8">
@@ -103,16 +139,25 @@ const Page = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-red-600 text-white py-2 rounded-lg font-medium hover:bg-red-700 transition-colors disabled:bg-red-400"
+              className="w-full bg-red-600 text-white py-2 rounded-lg font-medium hover:bg-red-700 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
             >
               {loading ? "Sending OTP..." : "Send OTP!"}
             </button>
           </form>
+
+          <div className="text-center mt-6">
+            <Link
+              href="/signin"
+              className="text-red-600 hover:text-red-700 text-sm font-medium"
+            >
+              ← Back to Sign In
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:flex justify-center md:w-[50%]  ">
+      <div className="hidden md:flex justify-center md:w-[50%]">
         <div className="relative xl:w-[100%] xl:h-[100%] h-[95%] w-[100%]">
           <Image
             src="/Group.png"
