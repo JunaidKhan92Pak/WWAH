@@ -1,11 +1,9 @@
-import { User,AcademicInfo, PaymentInfo, WorkExp } from "@/types/reffertypes";
+import { User, AcademicInfo, PaymentInfo, WorkExp } from "@/types/reffertypes";
 import { deleteAuthToken, getAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
 
-
-
 export interface DetailedInfo {
-  AcademicInformation: AcademicInfo; 
+  AcademicInformation: AcademicInfo;
   paymentInformation: PaymentInfo;
   workExperience: WorkExp;
 }
@@ -28,6 +26,11 @@ export interface UserStore {
   logout: () => void;
   clearError: () => void;
   getLastUpdatedDate: () => string | null;
+  // Add new method for updating user images
+  updateUserImages: (imageData: {
+    profilePicture?: string;
+    coverPhoto?: string;
+  }) => void;
 }
 
 const defaultDetailedInfo: DetailedInfo = {
@@ -70,7 +73,11 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
   lastEmbeddingUpdate: null,
 
   fetchUserProfile: async (token) => {
+    console.log("=== ZUSTAND: FETCHING USER PROFILE ===");
+    console.log("Token provided:", token ? "Yes" : "No");
+
     if (!token) {
+      console.log("No token provided, setting unauthorized");
       set({ error: "No authentication token provided", isAuthenticate: false });
       return;
     }
@@ -78,17 +85,19 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
     try {
       set({ loading: true, error: null });
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}refProfile`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}refProfile`;
+      console.log("Making request to:", apiUrl);
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      console.log("Profile fetch response status:", response.status);
 
       if (!response.ok) {
         throw new Error(
@@ -97,6 +106,7 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
       }
 
       const userData = await response.json();
+      console.log("Raw user data from API:", userData);
 
       // Validate response structure
       if (!userData || typeof userData !== "object") {
@@ -151,7 +161,18 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         createdAt: userData.user?.createdAt || "",
         updatedAt: userData.user?.updatedAt || "",
         countryCode: userData.user?.countryCode || "",
+        // Fixed field names to match database
+        profilePicture: userData.user?.profilePicture || "",
+        coverPhoto: userData.user?.coverPhoto || "",
       };
+
+      console.log("Transformed user data:", {
+        id: user._id,
+        profilePicture: user.profilePicture,
+        coverPhoto: user.coverPhoto,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
 
       set({
         user,
@@ -160,8 +181,11 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         isAuthenticate: true,
         error: null,
       });
+
+      console.log("User profile set in store successfully");
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("=== ZUSTAND: PROFILE FETCH ERROR ===");
+      console.error("Error details:", error);
       set({
         error:
           error instanceof Error
@@ -178,8 +202,12 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
   updateDetailedInfo: async (
     updateData: Partial<DetailedInfo>
   ): Promise<boolean> => {
+    console.log("=== ZUSTAND: UPDATING DETAILED INFO ===");
+    console.log("Update data:", updateData);
+
     const token = getAuthToken();
     if (!token) {
+      console.log("No auth token found");
       set({ error: "No authentication token found" });
       return false;
     }
@@ -271,8 +299,12 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
   },
 
   updateUserProfile: async (userData: Partial<User>): Promise<boolean> => {
+    console.log("=== ZUSTAND: UPDATING USER PROFILE ===");
+    console.log("User data to update:", userData);
+
     const token = getAuthToken();
     if (!token) {
+      console.log("No auth token found");
       set({ error: "No authentication token found" });
       return false;
     }
@@ -313,13 +345,8 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         user: state.user
           ? {
               ...state.user,
-              firstName: userData.firstName || state.user.firstName,
-              lastName: userData.lastName || state.user.lastName,
-              user: {
-                ...state.user,
-                ...userData,
-                updatedAt: currentTimestamp,
-              },
+              ...userData,
+              updatedAt: currentTimestamp,
             }
           : null,
         loading: false,
@@ -327,6 +354,7 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         error: null,
       }));
 
+      console.log("User profile updated successfully in store");
       return true;
     } catch (error) {
       console.error("Error updating user profile:", error);
@@ -337,6 +365,25 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
       });
       return false;
     }
+  },
+
+  // New method to update user images in store
+  updateUserImages: (imageData: {
+    profilePicture?: string;
+    coverPhoto?: string;
+  }) => {
+    console.log("=== ZUSTAND: UPDATING USER IMAGES IN STORE ===");
+    console.log("Image data:", imageData);
+
+    set((state) => ({
+      user: state.user
+        ? {
+            ...state.user,
+            ...imageData,
+            updatedAt: new Date().toISOString(),
+          }
+        : null,
+    }));
   },
 
   getLastUpdatedDate: () => {
@@ -352,14 +399,24 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
     }
     return null;
   },
-  setUser: (user) =>
+
+  setUser: (user) => {
+    console.log("=== ZUSTAND: SETTING USER ===");
+    console.log("User data:", {
+      id: user?._id,
+      profilePicture: user?.profilePicture,
+      coverPhoto: user?.coverPhoto,
+    });
+
     set({
       user,
       isAuthenticate: !!user,
       error: null,
-    }),
+    });
+  },
 
   logout: () => {
+    console.log("=== ZUSTAND: LOGGING OUT ===");
     deleteAuthToken();
     set({
       user: null,

@@ -57,4 +57,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   countryCode: string;
+  profilePicture?: string;
+  coverPhoto?: string;
+  // detailedInfo: DetailedInfo;
 }

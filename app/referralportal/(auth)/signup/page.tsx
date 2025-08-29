@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Loader,
 } from "lucide-react";
+
 // Declare Google API types
 interface GoogleConfig {
   client_id: string;
@@ -52,8 +53,9 @@ declare global {
 const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const [currentStep, setCurrentStep] = useState("register"); // register, otp-verification, success
+  const callbackUrl =
+    searchParams.get("callbackUrl") || "/referralportal/overview";
+  const [currentStep, setCurrentStep] = useState("register");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,6 +63,8 @@ const Page = () => {
   const [success, setSuccess] = useState("");
   const [sessionId, setSessionId] = useState("");
   const [countdown, setCountdown] = useState(0);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
   // Form state and validation errors
   const [formData, setFormData] = useState({
     firstName: "",
@@ -73,7 +77,7 @@ const Page = () => {
   });
 
   const [errors, setErrors] = useState({
-    genralError: "",
+    generalError: "", // Fixed typo
     firstName: "",
     lastName: "",
     email: "",
@@ -82,54 +86,71 @@ const Page = () => {
     phone: "",
     referralCode: "",
   });
-  console.log(errors);
-  // const [formSubmitted, setFormSubmitted] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
-  console.log(googleLoading);
-  // console.log(errors);
+console.log(errors, "error state");
+  const [otpData, setOtpData] = useState({
+    emailOtp: "",
+    phoneOtp: "",
+  });
 
   // Handle Google Sign-In response
   const handleGoogleSignIn = useCallback(
     async (response: GoogleResponse) => {
       setGoogleLoading(true);
-      setErrors((prev) => ({ ...prev, genralError: "" }));
+      setErrors((prev) => ({ ...prev, generalError: "" }));
 
       try {
+        console.log("Attempting Google sign-in...");
+
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`,
+          `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/google-login`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Accept: "application/json",
             },
-            credentials: "include",
+            credentials: "include", // Important for CORS
             body: JSON.stringify({ credential: response.credential }),
           }
         );
 
+        console.log("Google sign-in response status:", res.status);
+
         const data = await res.json();
+        console.log("Google sign-in response data:", data);
 
-        if (data.success) {
-          // Set token in the same way as regular signup
-          const expireDate = new Date(
-            Date.now() + 24 * 60 * 60 * 1000
-          ).toUTCString();
-          document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
+        if (res.ok && data.success) {
+          // The token is already set as a cookie by the backend
+          // But also set it manually for immediate use
+          const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-          // Redirect to callback URL
-          router.push(callbackUrl);
+          // Set cookie with same settings as backend
+          const isProduction = process.env.NODE_ENV === "production";
+          document.cookie = `authToken=${
+            data.token
+          }; expires=${expireDate.toUTCString()}; path=/; ${
+            isProduction ? "secure; samesite=none" : "samesite=lax"
+          }`;
+
+          console.log("Redirecting to:", callbackUrl);
+
+          // Small delay to ensure cookie is set
+          setTimeout(() => {
+            router.push(callbackUrl);
+          }, 100);
         } else {
+          console.error("Google sign-in failed:", data);
           setErrors((prev) => ({
             ...prev,
-            genralError:
+            generalError:
               data.message || "Google sign-in failed. Please try again.",
           }));
         }
       } catch (error) {
-        console.error("Google sign-in error:", error);
+        console.error("Google sign-in network error:", error);
         setErrors((prev) => ({
           ...prev,
-          genralError:
+          generalError:
             "Network error. Please check your connection and try again.",
         }));
       } finally {
@@ -143,43 +164,45 @@ const Page = () => {
   useEffect(() => {
     const initializeGoogleSignIn = () => {
       if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
-          callback: handleGoogleSignIn,
-          auto_select: false,
-        });
-
-        // Render Google button
-        const googleButton = document.getElementById("google-signin-button");
-        if (googleButton) {
-          window.google.accounts.id.renderButton(googleButton, {
-            theme: "outline",
-            size: "large",
-            width: "100%",
-            text: "signup_with",
+        try {
+          window.google.accounts.id.initialize({
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+            callback: handleGoogleSignIn,
+            auto_select: false,
           });
+
+          // Render Google button
+          const googleButton = document.getElementById("google-signin-button");
+          if (googleButton) {
+            googleButton.innerHTML = ""; // Clear existing content
+            window.google.accounts.id.renderButton(googleButton, {
+              theme: "outline",
+              size: "large",
+              width: "384",
+              text: "signup_with",
+            });
+          }
+        } catch (error) {
+          console.error("Google Sign-In initialization error:", error);
         }
       }
     };
 
-    // Load Google Sign-In script
+    // Load Google Sign-In script if not already loaded
     if (!window.google) {
       const script = document.createElement("script");
       script.src = "https://accounts.google.com/gsi/client";
       script.async = true;
       script.defer = true;
       script.onload = initializeGoogleSignIn;
+      script.onerror = (error) => {
+        console.error("Failed to load Google Sign-In script:", error);
+      };
       document.head.appendChild(script);
     } else {
       initializeGoogleSignIn();
     }
   }, [handleGoogleSignIn]);
-
-  // Handle form submission
-  const [otpData, setOtpData] = useState({
-    emailOtp: "",
-    phoneOtp: "",
-  });
 
   // Countdown timer for resend OTP
   useEffect(() => {
@@ -203,7 +226,6 @@ const Page = () => {
 
   const handleOtpChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    // Allow only numbers and limit to 6 digits
     if (/^\d{0,6}$/.test(value)) {
       setOtpData((prev) => ({
         ...prev,
@@ -229,12 +251,12 @@ const Page = () => {
 
     // Validation
     if (!formData.firstName.trim()) {
-      setError("first name is required");
+      setError("First name is required");
       setLoading(false);
       return;
     }
     if (!formData.lastName.trim()) {
-      setError("last name is required");
+      setError("Last name is required");
       setLoading(false);
       return;
     }
@@ -265,12 +287,13 @@ const Page = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/refportal/signup/send-otp`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signup/send-otp`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(formData),
         }
       );
@@ -281,13 +304,12 @@ const Page = () => {
         setSessionId(data.sessionId);
         setCurrentStep("otp-verification");
         setSuccess("OTP sent to your Email");
-        setCountdown(60); // 60 seconds countdown for resend
+        setCountdown(60);
       } else {
         setError(data.message || "Failed to send OTP");
       }
     } catch (err) {
       console.error("Network error", err);
-
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -319,6 +341,7 @@ const Page = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             sessionId,
             emailOtp: otpData.emailOtp,
@@ -330,23 +353,19 @@ const Page = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Complete registration
         await completeRegistration();
       } else {
         setError(data.message || "Invalid OTP");
       }
     } catch (err) {
       console.error("Network error", err);
-
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-  const handleResendOtp = async () => {
-    // console.log("Resend OTP clicked, sessionId:", sessionId);
 
-    // Check if sessionId exists
+  const handleResendOtp = async () => {
     if (!sessionId) {
       setError("Session expired. Please start registration again.");
       return;
@@ -358,7 +377,6 @@ const Page = () => {
 
     try {
       const requestBody = { sessionId };
-      // console.log("Sending request to resend OTP:", requestBody);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/signup/resend-otp`,
@@ -367,27 +385,22 @@ const Page = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(requestBody),
         }
       );
 
-      // console.log("Response status:", response.status);
-      // console.log("Response headers:", response.headers);
-
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // console.log("OTP resent successfully");
         setSuccess("New OTP sent successfully to your email");
         setCountdown(60);
         setOtpData({ emailOtp: "", phoneOtp: "" });
 
-        // Clear success message after 5 seconds
         setTimeout(() => {
           setSuccess("");
         }, 5000);
       } else {
-        // console.error("Failed to resend OTP:", data.message);
         setError(data.message || "Failed to resend OTP");
       }
     } catch (err) {
@@ -395,9 +408,9 @@ const Page = () => {
       setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
-      // console.log("Resend OTP process completed");
     }
   };
+
   const completeRegistration = async () => {
     try {
       const response = await fetch(
@@ -407,6 +420,7 @@ const Page = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             sessionId,
             password: formData.password,
@@ -424,7 +438,6 @@ const Page = () => {
       }
     } catch (err) {
       console.error("Network error", err);
-
       setError("Network error. Please try again.");
     }
   };
@@ -450,8 +463,8 @@ const Page = () => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
       {/* Sign-up Form Section */}
-      <div className="w-full lg:w-1/2 pt-5 md:pt-0 px-4 sm:px-8 flex flex-col items-center justify-center lg:w-[60%] 2xl:px-20  my-2">
-        <div className="w-full sm:w-[85%]">
+      <div className="w-full lg:w-1/2 pt-5 md:pt-0 px-4 sm:px-8 flex flex-col items-center justify-center lg:w-[60%] 2xl:px-20 my-2">
+        <div className="w-full lg:w-2/3">
           <div className="flex justify-center items-center">
             <Link href="/">
               <Image
@@ -480,39 +493,30 @@ const Page = () => {
           </div>
 
           {/* Google Sign-In Button */}
-          {/* <div className="w-full mb-4">
-            <button
-              onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                />
-              </svg>
-              <span>Sign up with Google</span>
-            </button>
-          </div> */}
+          {currentStep === "register" && (
+            <div className="w-full mb-4">
+              {googleLoading && (
+                <div className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
+                  <Loader className="animate-spin w-5 h-5" />
+                  <span>Signing in with Google...</span>
+                </div>
+              )}
+              <div
+                id="google-signin-button"
+                className={`w-full ${googleLoading ? "hidden" : ""}`}
+                style={{ minHeight: "44px" }}
+              />
+            </div>
+          )}
 
-          {/* Divider */}
-          <div className="flex items-center my-2">
-            <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-gray-500 text-sm">or</span>
-            <div className="flex-1 border-t border-gray-300"></div>
-          </div>
+          {/* Divider - only show during registration */}
+          {currentStep === "register" && (
+            <div className="flex items-center my-2">
+              <div className="flex-1 border-t border-gray-300"></div>
+              <span className="px-4 text-gray-500 text-sm">or</span>
+              <div className="flex-1 border-t border-gray-300"></div>
+            </div>
+          )}
 
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center">

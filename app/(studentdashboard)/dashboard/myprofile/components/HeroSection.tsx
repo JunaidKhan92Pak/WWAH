@@ -4,20 +4,38 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { getAuthToken } from "@/utils/authHelper";
 
+// interface HeroSectionProps {
+//   user: {
+//     _id: string;
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//     phone: number;
+//     gender: string;
+//     // ONLY CHANGE: Updated field names to match database schema
+//     profilePicture?: string;
+//     coverPhoto?: string;
+//     createdAt: string;
+//     updatedAt: string;
+//     onUserUpdate?: (updatedUser: any) => void; // New prop for user updates
+//   };
+// }
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: number;
+  gender: string;
+  profilePicture?: string;
+  coverPhoto?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface HeroSectionProps {
-  user: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: number;
-    gender: string;
-    // ONLY CHANGE: Updated field names to match database schema
-    profilePicture?: string;
-    coverPhoto?: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  user: User;
+  onUserUpdate?: (updatedUser: User) => void; // Typed instead of `any`
 }
 
 const HeroSection = ({ user }: HeroSectionProps) => {
