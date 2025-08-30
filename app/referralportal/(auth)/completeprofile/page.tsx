@@ -1,6 +1,5 @@
-
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/authHelper";
 import { Button } from "@/components/ui/button";
@@ -11,47 +10,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { z } from "zod";
+import { countries } from "@/lib/countries";
+import { getCitiesByCountry } from "@/lib/cities";
 
-const countries = [
-  { value: "USA", label: "United States" },
-  { value: "India", label: "India" },
-  { value: "Australia", label: "Australia" },
-  { value: "Italy", label: "Italy" },
-  { value: "Pakistan", label: "Pakistan" },
-  { value: "Canada", label: "Canada" },
-  { value: "UK", label: "United Kingdom" },
-  { value: "China", label: "China" },
-  { value: "Ireland", label: "Ireland" },
-  { value: "New Zealand", label: "New Zealand" },
-  { value: "Germany", label: "Germany" },
-  { value: "Malaysia", label: "Malaysia" },
-  { value: "France", label: "France" },
-  { value: "Denmark", label: "Denmark" },
-];
-
-const cities = [
-  { value: "Lahore", label: "Lahore" },
-  { value: "Okara", label: "Okara" },
-  { value: "Islamabad", label: "Islamabad" },
-  { value: "Karachi", label: "Karachi" },
-  { value: "Nepal", label: "Nepal" },
-];
-
-const countryCodes = [
-  { value: "+44", label: "🇬🇧 +44 (UK)" },
-  { value: "+86", label: "🇨🇳 +86 (China)" },
-  { value: "+61", label: "🇦🇺 +61 (Australia)" },
-  { value: "+1", label: "🇨🇦 +1 (Canada)" },
-  { value: "+1", label: "🇺🇸 +1 (USA)" },
-  { value: "+353", label: "🇮🇪 +353 (Ireland)" },
-  { value: "+64", label: "🇳🇿 +64 (New Zealand)" },
-  { value: "+49", label: "🇩🇪 +49 (Germany)" },
-  { value: "+39", label: "🇮🇹 +39 (Italy)" },
-  { value: "+60", label: "🇲🇾 +60 (Malaysia)" },
-  { value: "+33", label: "🇫🇷 +33 (France)" },
-  { value: "+45", label: "🇩🇰 +45 (Denmark)" },
-];
+const countryCodes = countries
+  .filter((c) => c.code)
+  .map((c) => ({
+    value: `${c.code}-${c.iso2}`, // unique value for React key
+    code: c.code, // ✅ keep the dialing code
+    iso2: c.iso2,
+    flag: c.flag,
+    name: c.name,
+  }));
 
 // Zod validation schema for specific fields
 const validationSchema = z.object({
@@ -59,6 +45,78 @@ const validationSchema = z.object({
   country: z.string().min(1, "Country is required"),
   city: z.string().min(1, "City is required"),
 });
+
+// Props interface for CityComboBox
+interface CityComboBoxProps {
+  personalInfo: {
+    country: string;
+    city: string;
+  };
+  availableCities: Array<{ id: string; name: string }>;
+  handleSelectChange: (name: string, value: string) => void;
+  errors: {
+    city?: string;
+  };
+}
+
+// Separate CityComboBox component
+function CityComboBox({
+  personalInfo,
+  availableCities,
+  handleSelectChange,
+  errors,
+}: CityComboBoxProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className={cn(
+            "w-full justify-between px-4 py-2 h-10 text-sm bg-[#F1F1F1] border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+            errors.city ? "border-red-500" : "border-gray-300",
+            !personalInfo.country ? "opacity-50 cursor-not-allowed" : ""
+          )}
+          disabled={!personalInfo.country || availableCities.length === 0}
+        >
+          {personalInfo.city
+            ? personalInfo.city
+            : !personalInfo.country
+            ? "Select country first"
+            : availableCities.length === 0
+            ? "No cities available"
+            : "Select a city"}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandInput placeholder="Search city..." />
+          <CommandList>
+            <CommandEmpty>No city found.</CommandEmpty>
+            <CommandGroup>
+              {availableCities.map((city) => (
+                <CommandItem
+                  key={city.id}
+                  value={city.name}
+                  onSelect={() => {
+                    handleSelectChange("city", city.name);
+                    setOpen(false);
+                  }}
+                >
+                  {city.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 const Step1 = () => {
   const router = useRouter();
@@ -80,6 +138,41 @@ const Step1 = () => {
     country?: string;
     city?: string;
   }>({});
+
+  const [availableCities, setAvailableCities] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+
+  // Update available cities when country changes
+  useEffect(() => {
+    if (personalInfo.country) {
+      const cities = getCitiesByCountry(personalInfo.country);
+      setAvailableCities(
+        cities.map((c, idx) => ({
+          id: `${personalInfo.country}-${c.name}-${idx}`,
+          name: c.name,
+        }))
+      );
+
+      // Clear city selection if the previously selected city is not available in the new country
+      if (
+        personalInfo.city &&
+        !cities.find((city) => city.name === personalInfo.city)
+      ) {
+        setPersonalInfo((prev) => ({ ...prev, city: "" }));
+        // Clear city error when country changes
+        if (errors.city) {
+          setErrors((prev) => ({ ...prev, city: undefined }));
+        }
+      }
+    } else {
+      setAvailableCities([]);
+      // Clear city when no country is selected
+      if (personalInfo.city) {
+        setPersonalInfo((prev) => ({ ...prev, city: "" }));
+      }
+    }
+  }, [personalInfo.country, personalInfo.city, errors.city]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -203,16 +296,16 @@ const Step1 = () => {
                     handleSelectChange("countryCode", value)
                   }
                 >
-                  <SelectTrigger className="py-2 w-2/5 md:w-1/2 xl:w-1/4 bg-[#F1F1F1] text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <SelectTrigger className="py-2 w-2/5 md:w-1/2  bg-[#F1F1F1] text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <SelectValue placeholder="Code" />
                   </SelectTrigger>
                   <SelectContent>
-                    {countryCodes.map((code, index) => (
-                      <SelectItem
-                        key={`${code.value}-${index}`}
-                        value={code.value}
-                      >
-                        {code.label}
+                    {countryCodes.map((cc) => (
+                      <SelectItem key={cc.value} value={cc.value}>
+                        <span className="flex items-center gap-2">
+                          <img src={cc.flag} alt="" className="w-5 h-4" />
+                          {cc.code} ({cc.name})
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -264,8 +357,11 @@ const Step1 = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {countries.map((country) => (
-                    <SelectItem key={country.value} value={country.value}>
-                      {country.label}
+                    <SelectItem key={country.id} value={country.name}>
+                      <span className="flex items-center gap-2">
+                        <img src={country.flag} alt="" className="w-5 h-4" />
+                        {country.name}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -274,27 +370,14 @@ const Step1 = () => {
                 <span className="text-red-500 text-xs">{errors.country}</span>
               )}
             </div>
-            <div className="md:w-1/2">
+            <div className="md:w-1/2 ">
               <label className="block text-gray-700 text-sm">City</label>
-              <Select
-                value={personalInfo.city}
-                onValueChange={(value) => handleSelectChange("city", value)}
-              >
-                <SelectTrigger
-                  className={`w-full px-4 py-2 text-sm bg-[#F1F1F1] border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.city ? "border-red-500" : "border-gray-300"
-                  }`}
-                >
-                  <SelectValue placeholder="Select a city" />
-                </SelectTrigger>
-                <SelectContent>
-                  {cities.map((city) => (
-                    <SelectItem key={city.value} value={city.value}>
-                      {city.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <CityComboBox
+                personalInfo={personalInfo}
+                availableCities={availableCities}
+                handleSelectChange={handleSelectChange}
+                errors={errors}
+              />
               {errors.city && (
                 <span className="text-red-500 text-xs">{errors.city}</span>
               )}
