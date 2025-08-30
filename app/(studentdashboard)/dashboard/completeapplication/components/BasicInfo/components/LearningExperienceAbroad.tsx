@@ -13,16 +13,26 @@ import {
 import { z } from "zod";
 import { formSchema } from "./Schema";
 import { UseFormReturn } from "react-hook-form";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 type FormValues = z.infer<typeof formSchema>;
-
+import countries from "world-countries";
 const LearningExperienceAbroad = ({
   form,
 }: {
   form: UseFormReturn<FormValues>;
 }) => {
   const hasStudiedAbroad = form.watch("hasStudiedAbroad");
-
+  const countryOptions = countries.map((c) => ({
+    label: c.name.common,
+    value: c.cca2,
+    id: c.cca3,
+  }));
   return (
     <div className="my-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -78,6 +88,30 @@ const LearningExperienceAbroad = ({
             name="visitedCountry"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Country of Residence:</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+                      <SelectValue placeholder="Select Country" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-[300px] overflow-y-auto">
+                    {countryOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.label}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* <FormField
+            control={form.control}
+            name="visitedCountry"
+            render={({ field }) => (
+              <FormItem>
                 <FormLabel>Country Name</FormLabel>
                 <FormControl>
                   <Input
@@ -91,7 +125,7 @@ const LearningExperienceAbroad = ({
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <FormField
             control={form.control}
@@ -160,7 +194,6 @@ const LearningExperienceAbroad = ({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="durationOfStudyAbroad"
@@ -168,18 +201,24 @@ const LearningExperienceAbroad = ({
               <FormItem>
                 <FormLabel>Duration of Studying Abroad</FormLabel>
                 <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Write..."
-                    className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm"
+                  <select
                     {...field}
-                    value={field.value || ""}
-                  />
+                    className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm rounded-lg border px-3 py-2 w-full"
+                  >
+                    <option value="" disabled>
+                      Select duration
+                    </option>
+                    <option value="1">1 Year</option>
+                    <option value="2">2 Years</option>
+                    <option value="3">3 Years</option>
+                    <option value="4">4 Years</option>
+                  </select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
         </div>
       )}
     </div>

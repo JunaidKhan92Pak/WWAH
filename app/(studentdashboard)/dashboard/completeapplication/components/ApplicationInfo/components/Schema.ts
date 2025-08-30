@@ -1,131 +1,1010 @@
-import { z } from "zod";
+// import { z } from "zod"
 
-// ✅ Zod Schema (Validation)
-const proficiencyMap = {
-  beginner: "Beginner",
-  intermediate: "Intermediate",
-  advanced: "Advanced",
-  fluent: "Fluent",
-  native: "Native Speaker",
-} as const;
-const proficiencyTestMap = {
-  ielts: "IELTS",
-  toefl: "TOEFL",
-  pte: "PTE",
-  duolingo: "Duolingo",
-  other: "Other"
-} as const;
+// // ✅ Zod Schema (Validation)
+// // const proficiencyMap = {
+// //   beginner: "Beginner",
+// //   intermediate: "Intermediate",
+// //   advanced: "Advanced",
+// //   fluent: "Fluent",
+// //   native: "Native Speaker",
+// // } as const
 
+// // const proficiencyTestMap = {
+// //   ielts: "IELTS",
+// //   toefl: "TOEFL",
+// //   pte: "PTE",
+// //   duolingo: "Duolingo",
+// //   cambridge: "Cambridge",
+// //   planning: "Planning",
+// // } as const
+
+// export const degreeTypes = [
+//   "Matriculation/SSC",
+//   "Intermediate/A-Level",
+//   "Diploma",
+//   "Bachelor's Degree",
+//   "Master's Degree",
+//   "Ph.D.",
+//   "Certificate",
+// ] as const
+
+// export const subjectsByDegree = {
+//   "Matriculation/SSC": [
+//     "Mathematics",
+//     "Physics",
+//     "Chemistry",
+//     "Biology",
+//     "Computer Science",
+//     "English",
+//     "Urdu",
+//     "Islamiat",
+//     "Pakistan Studies",
+//     "Economics",
+//     "Geography",
+//     "History",
+//   ],
+//   "Intermediate/A-Level": [
+//     "Mathematics",
+//     "Physics",
+//     "Chemistry",
+//     "Biology",
+//     "Computer Science",
+//     "Economics",
+//     "English",
+//     "Accounting",
+//     "Business Studies",
+//     "Psychology",
+//     "Statistics",
+//     "Further Mathematics",
+//   ],
+//   Diploma: [
+//     "Engineering",
+//     "Computer Science",
+//     "Business Administration",
+//     "Medical Technology",
+//     "Graphic Design",
+//     "Electrical Technology",
+//     "Mechanical Technology",
+//     "Civil Technology",
+//     "Information Technology",
+//   ],
+//   "Bachelor's Degree": [
+//     "Computer Science",
+//     "Engineering",
+//     "Business Administration",
+//     "Medicine",
+//     "Law",
+//     "Economics",
+//     "Mathematics",
+//     "Physics",
+//     "Chemistry",
+//     "Biology",
+//     "English Literature",
+//     "Psychology",
+//     "Accounting",
+//     "Finance",
+//     "Marketing",
+//   ],
+//   "Master's Degree": [
+//     "Computer Science",
+//     "Engineering",
+//     "Business Administration",
+//     "Medicine",
+//     "Law",
+//     "Economics",
+//     "Mathematics",
+//     "Physics",
+//     "Chemistry",
+//     "Biology",
+//     "English Literature",
+//     "Psychology",
+//     "Accounting",
+//     "Finance",
+//     "Marketing",
+//     "Data Science",
+//     "Artificial Intelligence",
+//   ],
+//   "Ph.D.": [
+//     "Computer Science",
+//     "Engineering",
+//     "Medicine",
+//     "Physics",
+//     "Chemistry",
+//     "Biology",
+//     "Mathematics",
+//     "Economics",
+//     "Psychology",
+//     "Literature",
+//     "Philosophy",
+//     "Education",
+//     "Business Administration",
+//   ],
+//   Certificate: [
+//     "Information Technology",
+//     "Digital Marketing",
+//     "Project Management",
+//     "Data Analysis",
+//     "Web Development",
+//     "Graphic Design",
+//     "Language Proficiency",
+//     "Professional Skills",
+//   ],
+// } as const
+
+// // const createMarksValidation = (degreeType: string) => {
+// //   if (degreeType === "Matriculation/SSC" || degreeType === "Intermediate/A-Level") {
+// //     return z
+// //       .string()
+// //       .min(1, "Percentage is required")
+// //       .regex(/^(100|[1-9]?[0-9])(\.[0-9]{1,2})?%?$/, "Enter valid percentage (0-100)")
+// //   } else {
+// //     return z
+// //       .string()
+// //       .min(1, "CGPA/Marks is required")
+// //       .regex(/^([0-4](\.[0-9]{1,2})?|[0-9]{1,3}(\.[0-9]{1,2})?)$/, "Enter valid CGPA (0-4.0) or marks")
+// //   }
+// // }
+
+// export const formSchema = z.object({
+//   proficiencyTest: z
+//     .string()
+//     .toLowerCase()
+//     .refine((val) => ["ielts", "toefl", "pte", "duolingo", "cambridge", "planning"].includes(val), {
+//       message: "Invalid proficiency test",
+//     })
+//     .optional(),
+
+//   overAllScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+
+//   listeningScore: z
+//     .string()
+//     .refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+//   writingScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+//   readingScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+//   speakingScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+
+//   standardizedTest: z.string().min(1, "Required"),
+//   standardizedOverallScore: z
+//     .string()
+//     .refine((val) => !val || /^\d{1,3}$/.test(val), "Overall score must be a number between 0 and 999"),
+//   standardizedSubScore: z
+//     .array(z.string().refine((val) => !val || /^\d{1,3}$/.test(val), "Sub-score must be a number between 0 and 999"))
+//     .optional(),
+
+//   educationalBackground: z
+//     .array(
+//       z.object({
+//         highestDegree: z.string().min(1, "Please select a degree"),
+//         subjectName: z.union([
+//           z.string().min(1, "Please select a subject"),
+//           z.array(z.string())
+//             .min(1, "Please select at least one subject")
+//             .max(3, "Maximum 3 subjects allowed for A-levels"),
+//         ]),
+//         customSubjects: z.array(z.string()).optional(), // For "Any Other (Specify)" option
+//         streamCategory: z.string().optional(), // For categorizing custom subjects
+//         institutionAttended: z.string().min(1, "Institution name is required"),
+//         gradingType: z.string().min(1, "Please select grading type"),
+//         marks: z.string().min(1, "Marks/CGPA is required"),
+//         cgpaOutOf: z.string().optional(), // For CGPA scale (e.g., 4.0, 5.0, 10.0)
+//         degreeStartDate: z
+//           .date({
+//             required_error: "Start date is required",
+//           })
+//           .optional()
+//           .nullable(),
+//         degreeEndDate: z
+//           .date({
+//             required_error: "End date is required",
+//           })
+//           .optional()
+//           .nullable(),
+//       })
+
+//     )
+//     .min(1, "At least one educational qualification is required"),
+
+//   workExperience: z
+//     .array(
+//       z.object({
+//         jobTitle: z
+//           .string()
+//           .min(2, "Job title must be at least 2 characters")
+//           .max(100, "Job title must not exceed 100 characters")
+//           .optional(),
+//         organizationName: z
+//           .string()
+//           .min(2, "Organization name must be at least 2 characters")
+//           .max(100, "Organization name must not exceed 100 characters")
+//           .optional(),
+//         isFullTime: z.boolean().optional(),
+//         isPartTime: z.boolean().optional(),
+//         employmentType: z.enum(["fullTime", "partTime"]).optional(),
+//         from: z.coerce
+//           .date()
+//           .refine((date) => date <= new Date(), "Start date cannot be in the future")
+//           .optional(),
+//         to: z.coerce
+//           .date()
+//           .refine((date) => date <= new Date(), "End date cannot be in the future")
+//           .optional(),
+//       }),
+//     )
+//     .optional(),
+// })
+
+// // Type for use in components
+// export type FormValues = z.infer<typeof formSchema>
+import { z } from "zod"
+
+// ✅ Degree types and subjects from education-schema.ts
+export const degreeTypes = {
+  Matric: {
+    subjects: ["Biology", "Computer Science", "Arts and Humanities", "Commerce"],
+    gradingLabel: "Percentage",
+    gradingPlaceholder: "e.g., 85%",
+    gradingOptions: [
+      { value: "percentage", label: "Percentage Grade Scale", placeholder: "Enter your percentage (e.g., 85%)" },
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A+)" },
+      { value: "pass_fail", label: "Pass/Fail Scale", placeholder: "Pass or Fail" },
+    ],
+  },
+  "O Levels": {
+    subjects: ["Medical Science", "Engineering", "Computer Science", "Business", "Arts & Humanities"],
+    gradingLabel: "Grade",
+    gradingPlaceholder: "e.g., A*, A, B",
+    gradingOptions: [
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A*)" },
+      { value: "percentage", label: "Percentage Grade Scale", placeholder: "Enter your percentage (e.g., 85%)" },
+    ],
+  },
+  Intermediate: {
+    subjects: [
+      "FSc Pre-Medical",
+      "FSc-Pre Engineering",
+      "ICS (Physics)",
+      "ICS (Economics)",
+      "ICS (Statistics)",
+      "FA (Humanities)",
+      "I.COM",
+    ],
+    gradingLabel: "Percentage",
+    gradingPlaceholder: "e.g., 80%",
+    gradingOptions: [
+      { value: "percentage", label: "Percentage Grade Scale", placeholder: "Enter your percentage (e.g., 80%)" },
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A+)" },
+    ],
+  },
+  "A Levels": {
+    subjects: [
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Mathematics",
+      "Further Mathematics",
+      "Computer Science",
+      "Economics",
+      "Psychology",
+      "Sociology",
+      "English Language",
+      "History",
+      "Global Perspectives & Research",
+      "Media Studies",
+      "Urdu",
+      "Information Technology",
+      "English Literature",
+      "Business",
+      "Politics",
+      "Law",
+      "Design and Technology",
+      "Electronics",
+      "Health and Social Care",
+      "Accounting",
+      "Art and Design",
+      "Philosophy",
+      "Religious Studies",
+      "Classics",
+      "History of Art",
+      "French",
+      "Spanish",
+      "Classical Civilization",
+      "Geography",
+      "Fashion & Textiles",
+      "Photography",
+      "German",
+      "Latin",
+      "Environmental Management",
+      "Marine Science",
+      "Travel and Tourism",
+      "Physical Education / Sports Science",
+      "Music",
+      "Drama / Theatre Studies",
+      "Development Studies",
+      "Foreign Language (Other)",
+      "Any Other (Specify)",
+    ],
+    gradingLabel: "Grade",
+    gradingPlaceholder: "e.g., A*, A, B",
+    gradingOptions: [
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A*)" },
+      { value: "percentage", label: "Percentage Grade Scale", placeholder: "Enter your percentage (e.g., 85%)" },
+    ],
+    maxSubjects: 3,
+  },
+  "Bachelor's (2 Years)": {
+    subjects: [
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Earth & Environmental Sciences",
+      "Astronomy",
+      "Biotechnology",
+      "Geology",
+      "Oceanography",
+      "Computer Science",
+      "Information Technology",
+      "Artificial Intelligence (AI)",
+      "Cybersecurity",
+      "Data Science & Analytics",
+      "Software Engineering",
+      "Game Development",
+      "Engineering",
+      "Robotics & Automation",
+      "Mathematics",
+      "Statistics",
+      "Actuarial Science",
+      "Medicine (MBBS, MD)",
+      "Dentistry",
+      "Nursing",
+      "Pharmacy",
+      "Physiotherapy",
+      "Public Health",
+      "Veterinary Science",
+      "Biochemistry",
+      "Molecular Biology",
+      "Neuroscience",
+      "Genetics",
+      "Microbiology",
+      "Immunology",
+      "Radiology & Medical Imaging",
+      "Nutrition & Dietetics",
+      "Occupational Therapy",
+      "Speech & Language Therapy",
+      "Business Administration",
+      "Marketing",
+      "Human Resource Management",
+      "Operations Management",
+      "Supply Chain Management",
+      "Financial Management",
+      "Investment & Asset Management",
+      "Banking & Risk Management",
+      "Accounting & Auditing",
+      "Economics",
+      "Law",
+      "International Law",
+      "Political Science",
+      "Public Administration",
+      "International Relations",
+      "Psychology",
+      "Social Work",
+      "Graphic Design",
+      "Fashion Design",
+      "Interior Design",
+      "Architecture",
+      "Theatre & Drama",
+      "Film & Television",
+      "Music Performance & Production",
+      "Dance",
+      "Journalism",
+      "Public Relations (PR)",
+      "Digital Media",
+      "Advertising",
+      "Education & Pedagogy",
+      "Agricultural Sciences",
+      "Food Science & Technology",
+      "Tourism & Travel Management",
+      "Event Management",
+      "Culinary Arts",
+      "Gender Studies",
+      "Visual Arts",
+      "Sports and Exercise Sciences",
+      "Media & Communication",
+      "Marine Science",
+      "Forestry",
+      "Horticulture and Crop Science",
+      "Aviation Studies",
+      "Film Studies",
+      "Fine Arts",
+      "Project Management",
+      "Finance",
+      "Commerce",
+      "Taxation",
+      "Animation",
+      "Teaching",
+      "Ecology",
+      "Hospitality Management",
+      "History",
+      "Literature",
+      "Creative Writing",
+      "Clinical Psychology",
+      "Botany",
+      "Anatomy",
+      "Zoology",
+      "Archaeology",
+      "Sociology",
+      "Criminology",
+      "Modern Languages & Linguistics",
+      "Other (My exact major is not listed)",
+    ],
+    gradingLabel: "CGPA",
+    gradingPlaceholder: "e.g., 3.5/4.0",
+    gradingOptions: [
+      { value: "cgpa", label: "CGPA Grade Scale", placeholder: "CGPA obtained (e.g., 3.5) / Out of (e.g., 4.0)" },
+      { value: "percentage", label: "Percentage Grade Scale", placeholder: "Enter your percentage (e.g., 85%)" },
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A+)" },
+    ],
+  },
+  "Bachelor's (4 Years)": {
+    subjects: [
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Earth & Environmental Sciences",
+      "Astronomy",
+      "Biotechnology",
+      "Geology",
+      "Oceanography",
+      "Computer Science",
+      "Information Technology",
+      "Artificial Intelligence (AI)",
+      "Cybersecurity",
+      "Data Science & Analytics",
+      "Software Engineering",
+      "Game Development",
+      "Engineering",
+      "Robotics & Automation",
+      "Mathematics",
+      "Statistics",
+      "Actuarial Science",
+      "Medicine (MBBS, MD)",
+      "Dentistry",
+      "Nursing",
+      "Pharmacy",
+      "Physiotherapy",
+      "Public Health",
+      "Veterinary Science",
+      "Biochemistry",
+      "Molecular Biology",
+      "Neuroscience",
+      "Genetics",
+      "Microbiology",
+      "Immunology",
+      "Radiology & Medical Imaging",
+      "Nutrition & Dietetics",
+      "Occupational Therapy",
+      "Speech & Language Therapy",
+      "Business Administration",
+      "Marketing",
+      "Human Resource Management",
+      "Operations Management",
+      "Supply Chain Management",
+      "Financial Management",
+      "Investment & Asset Management",
+      "Banking & Risk Management",
+      "Accounting & Auditing",
+      "Economics",
+      "Law",
+      "International Law",
+      "Political Science",
+      "Public Administration",
+      "International Relations",
+      "Psychology",
+      "Social Work",
+      "Graphic Design",
+      "Fashion Design",
+      "Interior Design",
+      "Architecture",
+      "Theatre & Drama",
+      "Film & Television",
+      "Music Performance & Production",
+      "Dance",
+      "Journalism",
+      "Public Relations (PR)",
+      "Digital Media",
+      "Advertising",
+      "Education & Pedagogy",
+      "Agricultural Sciences",
+      "Food Science & Technology",
+      "Tourism & Travel Management",
+      "Event Management",
+      "Culinary Arts",
+      "Gender Studies",
+      "Visual Arts",
+      "Sports and Exercise Sciences",
+      "Media & Communication",
+      "Marine Science",
+      "Forestry",
+      "Horticulture and Crop Science",
+      "Aviation Studies",
+      "Film Studies",
+      "Fine Arts",
+      "Project Management",
+      "Finance",
+      "Commerce",
+      "Taxation",
+      "Animation",
+      "Teaching",
+      "Ecology",
+      "Hospitality Management",
+      "History",
+      "Literature",
+      "Creative Writing",
+      "Clinical Psychology",
+      "Botany",
+      "Anatomy",
+      "Zoology",
+      "Archaeology",
+      "Sociology",
+      "Criminology",
+      "Modern Languages & Linguistics",
+      "Other (My exact major is not listed)",
+    ],
+    gradingLabel: "CGPA",
+    gradingPlaceholder: "e.g., 3.5/4.0",
+    gradingOptions: [
+      { value: "cgpa", label: "CGPA Grade Scale", placeholder: "CGPA obtained (e.g., 3.5) / Out of (e.g., 4.0)" },
+      { value: "percentage", label: "Percentage Grade Scale", placeholder: "Enter your percentage (e.g., 85%)" },
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A+)" },
+    ],
+  },
+  "Master's": {
+    subjects: [
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Earth & Environmental Sciences",
+      "Astronomy",
+      "Biotechnology",
+      "Geology",
+      "Oceanography",
+      "Computer Science",
+      "Information Technology",
+      "Artificial Intelligence (AI)",
+      "Cybersecurity",
+      "Data Science & Analytics",
+      "Software Engineering",
+      "Game Development",
+      "Engineering",
+      "Robotics & Automation",
+      "Mathematics",
+      "Statistics",
+      "Actuarial Science",
+      "Medicine (MBBS, MD)",
+      "Dentistry",
+      "Nursing",
+      "Pharmacy",
+      "Physiotherapy",
+      "Public Health",
+      "Veterinary Science",
+      "Biochemistry",
+      "Molecular Biology",
+      "Neuroscience",
+      "Genetics",
+      "Microbiology",
+      "Immunology",
+      "Radiology & Medical Imaging",
+      "Nutrition & Dietetics",
+      "Occupational Therapy",
+      "Speech & Language Therapy",
+      "Business Administration",
+      "Marketing",
+      "Human Resource Management",
+      "Operations Management",
+      "Supply Chain Management",
+      "Financial Management",
+      "Investment & Asset Management",
+      "Banking & Risk Management",
+      "Accounting & Auditing",
+      "Economics",
+      "Law",
+      "International Law",
+      "Political Science",
+      "Public Administration",
+      "International Relations",
+      "Psychology",
+      "Social Work",
+      "Graphic Design",
+      "Fashion Design",
+      "Interior Design",
+      "Architecture",
+      "Theatre & Drama",
+      "Film & Television",
+      "Music Performance & Production",
+      "Dance",
+      "Journalism",
+      "Public Relations (PR)",
+      "Digital Media",
+      "Advertising",
+      "Education & Pedagogy",
+      "Agricultural Sciences",
+      "Food Science & Technology",
+      "Tourism & Travel Management",
+      "Event Management",
+      "Culinary Arts",
+      "Gender Studies",
+      "Visual Arts",
+      "Sports and Exercise Sciences",
+      "Media & Communication",
+      "Marine Science",
+      "Forestry",
+      "Horticulture and Crop Science",
+      "Aviation Studies",
+      "Film Studies",
+      "Fine Arts",
+      "Project Management",
+      "Finance",
+      "Commerce",
+      "Taxation",
+      "Animation",
+      "Teaching",
+      "Ecology",
+      "Hospitality Management",
+      "History",
+      "Literature",
+      "Creative Writing",
+      "Clinical Psychology",
+      "Botany",
+      "Anatomy",
+      "Zoology",
+      "Archaeology",
+      "Sociology",
+      "Criminology",
+      "Modern Languages & Linguistics",
+      "Other (My exact major is not listed)",
+    ],
+    gradingLabel: "CGPA",
+    gradingPlaceholder: "e.g., 3.7/4.0",
+    gradingOptions: [
+      { value: "cgpa", label: "CGPA Grade Scale", placeholder: "CGPA obtained (e.g., 3.7) / Out of (e.g., 4.0)" },
+      { value: "percentage", label: "Percentage Grade Scale", placeholder: "Enter your percentage (e.g., 88%)" },
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A+)" },
+    ],
+  },
+  MPhil: {
+    subjects: [
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Earth & Environmental Sciences",
+      "Astronomy",
+      "Biotechnology",
+      "Geology",
+      "Oceanography",
+      "Computer Science",
+      "Information Technology",
+      "Artificial Intelligence (AI)",
+      "Cybersecurity",
+      "Data Science & Analytics",
+      "Software Engineering",
+      "Game Development",
+      "Engineering",
+      "Robotics & Automation",
+      "Mathematics",
+      "Statistics",
+      "Actuarial Science",
+      "Medicine (MBBS, MD)",
+      "Dentistry",
+      "Nursing",
+      "Pharmacy",
+      "Physiotherapy",
+      "Public Health",
+      "Veterinary Science",
+      "Biochemistry",
+      "Molecular Biology",
+      "Neuroscience",
+      "Genetics",
+      "Microbiology",
+      "Immunology",
+      "Radiology & Medical Imaging",
+      "Nutrition & Dietetics",
+      "Occupational Therapy",
+      "Speech & Language Therapy",
+      "Business Administration",
+      "Marketing",
+      "Human Resource Management",
+      "Operations Management",
+      "Supply Chain Management",
+      "Financial Management",
+      "Investment & Asset Management",
+      "Banking & Risk Management",
+      "Accounting & Auditing",
+      "Economics",
+      "Law",
+      "International Law",
+      "Political Science",
+      "Public Administration",
+      "International Relations",
+      "Psychology",
+      "Social Work",
+      "Graphic Design",
+      "Fashion Design",
+      "Interior Design",
+      "Architecture",
+      "Theatre & Drama",
+      "Film & Television",
+      "Music Performance & Production",
+      "Dance",
+      "Journalism",
+      "Public Relations (PR)",
+      "Digital Media",
+      "Advertising",
+      "Education & Pedagogy",
+      "Agricultural Sciences",
+      "Food Science & Technology",
+      "Tourism & Travel Management",
+      "Event Management",
+      "Culinary Arts",
+      "Gender Studies",
+      "Visual Arts",
+      "Sports and Exercise Sciences",
+      "Media & Communication",
+      "Marine Science",
+      "Forestry",
+      "Horticulture and Crop Science",
+      "Aviation Studies",
+      "Film Studies",
+      "Fine Arts",
+      "Project Management",
+      "Finance",
+      "Commerce",
+      "Taxation",
+      "Animation",
+      "Teaching",
+      "Ecology",
+      "Hospitality Management",
+      "History",
+      "Literature",
+      "Creative Writing",
+      "Clinical Psychology",
+      "Botany",
+      "Anatomy",
+      "Zoology",
+      "Archaeology",
+      "Sociology",
+      "Criminology",
+      "Modern Languages & Linguistics",
+      "Other (My exact major is not listed)",
+    ],
+    gradingLabel: "CGPA",
+    gradingPlaceholder: "e.g., 3.8/4.0",
+    gradingOptions: [
+      { value: "cgpa", label: "CGPA Grade Scale", placeholder: "CGPA obtained (e.g., 3.8) / Out of (e.g., 4.0)" },
+      { value: "pass_fail", label: "Pass/Fail Scale", placeholder: "Pass or Fail" },
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A+)" },
+    ],
+  },
+  PhD: {
+    subjects: [
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Earth & Environmental Sciences",
+      "Astronomy",
+      "Biotechnology",
+      "Geology",
+      "Oceanography",
+      "Computer Science",
+      "Information Technology",
+      "Artificial Intelligence (AI)",
+      "Cybersecurity",
+      "Data Science & Analytics",
+      "Software Engineering",
+      "Game Development",
+      "Engineering",
+      "Robotics & Automation",
+      "Mathematics",
+      "Statistics",
+      "Actuarial Science",
+      "Medicine (MBBS, MD)",
+      "Dentistry",
+      "Nursing",
+      "Pharmacy",
+      "Physiotherapy",
+      "Public Health",
+      "Veterinary Science",
+      "Biochemistry",
+      "Molecular Biology",
+      "Neuroscience",
+      "Genetics",
+      "Microbiology",
+      "Immunology",
+      "Radiology & Medical Imaging",
+      "Nutrition & Dietetics",
+      "Occupational Therapy",
+      "Speech & Language Therapy",
+      "Business Administration",
+      "Marketing",
+      "Human Resource Management",
+      "Operations Management",
+      "Supply Chain Management",
+      "Financial Management",
+      "Investment & Asset Management",
+      "Banking & Risk Management",
+      "Accounting & Auditing",
+      "Economics",
+      "Law",
+      "International Law",
+      "Political Science",
+      "Public Administration",
+      "International Relations",
+      "Psychology",
+      "Social Work",
+      "Graphic Design",
+      "Fashion Design",
+      "Interior Design",
+      "Architecture",
+      "Theatre & Drama",
+      "Film & Television",
+      "Music Performance & Production",
+      "Dance",
+      "Journalism",
+      "Public Relations (PR)",
+      "Digital Media",
+      "Advertising",
+      "Education & Pedagogy",
+      "Agricultural Sciences",
+      "Food Science & Technology",
+      "Tourism & Travel Management",
+      "Event Management",
+      "Culinary Arts",
+      "Gender Studies",
+      "Visual Arts",
+      "Sports and Exercise Sciences",
+      "Media & Communication",
+      "Marine Science",
+      "Forestry",
+      "Horticulture and Crop Science",
+      "Aviation Studies",
+      "Film Studies",
+      "Fine Arts",
+      "Project Management",
+      "Finance",
+      "Commerce",
+      "Taxation",
+      "Animation",
+      "Teaching",
+      "Ecology",
+      "Hospitality Management",
+      "History",
+      "Literature",
+      "Creative Writing",
+      "Clinical Psychology",
+      "Botany",
+      "Anatomy",
+      "Zoology",
+      "Archaeology",
+      "Sociology",
+      "Criminology",
+      "Modern Languages & Linguistics",
+      "Other (My exact major is not listed)",
+    ],
+    gradingLabel: "CGPA",
+    gradingPlaceholder: "e.g., 3.8/4.0",
+    gradingOptions: [
+      { value: "cgpa", label: "CGPA Grade Scale", placeholder: "CGPA obtained (e.g., 3.8) / Out of (e.g., 4.0)" },
+      { value: "pass_fail", label: "Pass/Fail Scale", placeholder: "Pass or Fail" },
+      { value: "letter", label: "Letter Grade Scale", placeholder: "Enter your Letter Grade (e.g., A+)" },
+    ],
+  },
+} as const
+
+export type DegreeType = keyof typeof degreeTypes
+
+// ✅ Enhanced education schema with all the functionality from education-schema.ts
+export const educationSchema = z
+  .object({
+    highestDegree: z.string().min(1, "Please select a degree"),
+    subjectName: z.union([
+      z.string().min(1, "Please select a subject"),
+      z.array(z.string())
+        .min(1, "Please select at least one subject")
+        .max(3, "Maximum 3 subjects allowed for A-levels"),
+    ]),
+    customSubjects: z.array(z.string()).optional(),
+    streamCategory: z.string().optional(),
+    institutionAttended: z.string().min(1, "Institution name is required"),
+    gradingType: z.string().min(1, "Please select grading type"),
+    marks: z.string().min(1, "Marks/CGPA is required"),
+    cgpaOutOf: z.string().optional(),
+    degreeStartDate: z
+      .date({
+        required_error: "Start date is required",
+      })
+      .optional()
+      .nullable(),
+    degreeEndDate: z
+      .date({
+        required_error: "End date is required",
+      })
+      .optional()
+      .nullable(),
+  })
+  .refine(
+    (data) => {
+      if (data.degreeStartDate && data.degreeEndDate) {
+        return data.degreeEndDate > data.degreeStartDate
+      }
+      return true
+    },
+    {
+      message: "End date must be after start date",
+      path: ["degreeEndDate"],
+    },
+  )
+
+// ✅ Unified form schema that combines both original schemas
 export const formSchema = z.object({
-  countryOfStudy: z.string().optional(),
-  proficiencyLevel: z
-    .string()
-    .toLowerCase()
-    .refine(val => val in proficiencyMap, {
-      message: "Invalid proficiency level",
-    })
-    .transform(val => proficiencyMap[val as keyof typeof proficiencyMap])
-    .optional(),
-
+  // Language proficiency fields from original Schema.ts
   proficiencyTest: z
     .string()
     .toLowerCase()
-    .refine(val => val in proficiencyTestMap, {
+    .refine((val) => ["ielts", "toefl", "pte", "duolingo", "cambridge", "planning"].includes(val), {
       message: "Invalid proficiency test",
     })
-    .transform(val => proficiencyTestMap[val as keyof typeof proficiencyTestMap])
     .optional(),
-  overAllScore: z.string()
 
-    .refine(
-      val => !val || /^\d{1,3}$/.test(val),
-      "Overall score must be a number between 0 and 999"
-    ),
-  // proficiencyTest: z.enum(["IELTS", "TOEFL", "PTE", "Duolingo", "Other"]).optional(),
+  overAllScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+  listeningScore: z
+    .string()
+    .refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+  writingScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+  readingScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
+  speakingScore: z.string().refine((val) => !val || /^(\d{1,3}(\.\d)?|\d{1,2}\.\d)$/.test(val), "Invalid score format"),
 
-  listeningScore: z.string()
-    .refine(
-      val => !val || /^\d{1,3}$/.test(val),
-      "Listening score must be a number between 0 and 999"
-    ),
-  writingScore: z.string()
-
-    .refine(
-      val => !val || /^\d{1,3}$/.test(val),
-      "Writing score must be a number between 0 and 999"
-    ),
-  readingScore: z.string()
-
-    .refine(
-      val => !val || /^\d{1,3}$/.test(val),
-      "Reading score must be a number between 0 and 999"
-    ),
-  speakingScore: z.string()
-
-    .refine(
-      val => !val || /^\d{1,3}$/.test(val),
-      "Speaking score must be a number between 0 and 999"
-    ),
+  // Standardized test fields from original Schema.ts
   standardizedTest: z.string().min(1, "Required"),
-  standardizedOverallScore: z.string()
-
-    .refine(
-      val => !val || /^\d{1,3}$/.test(val),
-      "Overall score must be a number between 0 and 999"
-    ),
-  standardizedSubScore: z.array(
-    z.string().refine(
-      val => !val || /^\d{1,3}$/.test(val),
-      "Sub-score must be a number between 0 and 999"
-    )
-  ).optional(),
-  educationalBackground: z
-    .array(
-      z.object({
-        highestDegree: z.string().min(1, "Required").optional(),
-        subjectName: z
-          .string()
-          .min(3, {
-            message: `Subject name is required & must be at least 3 characters.`,
-          }),
-        institutionAttended: z
-          .string()
-          .min(2, { message: `Institution name is required.` }),
-        marks: z
-          .string()
-          .min(1, { message: "Marks/grade is required." })
-          .regex(/^\d{1,3}(\.\d{1,2})?$|^A*B*C*D*E*F*$/i, {
-            message: "Enter valid marks (number 0-100, or letter A-F).",
-          }),
-        degreeStartDate: z.coerce.date().optional().nullable(),
-        degreeEndDate: z.coerce.date().optional().nullable(),
-      })
-    )
+  standardizedOverallScore: z
+    .string()
+    .refine((val) => !val || /^\d{1,3}$/.test(val), "Overall score must be a number between 0 and 999"),
+  standardizedSubScore: z
+    .array(z.string().refine((val) => !val || /^\d{1,3}$/.test(val), "Sub-score must be a number between 0 and 999"))
     .optional(),
+
+  // Enhanced educational background with full functionality from education-schema.ts
+  educationalBackground: z
+    .array(educationSchema)
+    .min(1, "At least one educational qualification is required"),
+
+  // Work experience from original Schema.ts
   workExperience: z
     .array(
       z.object({
-        jobTitle: z.string()
+        jobTitle: z
+          .string()
           .min(2, "Job title must be at least 2 characters")
           .max(100, "Job title must not exceed 100 characters")
           .optional(),
-        organizationName: z.string()
+        organizationName: z
+          .string()
           .min(2, "Organization name must be at least 2 characters")
           .max(100, "Organization name must not exceed 100 characters")
           .optional(),
         isFullTime: z.boolean().optional(),
         isPartTime: z.boolean().optional(),
         employmentType: z.enum(["fullTime", "partTime"]).optional(),
-        from: z.coerce.date()
-          .refine(date => date <= new Date(), "Start date cannot be in the future")
+        from: z.coerce
+          .date()
+          .refine((date) => date <= new Date(), "Start date cannot be in the future")
           .optional(),
-        to: z.coerce.date()
-          .refine(date => date <= new Date(), "End date cannot be in the future")
+        to: z.coerce
+          .date()
+          .refine((date) => date <= new Date(), "End date cannot be in the future")
           .optional(),
-      })
+      }),
     )
     .optional(),
-});
+})
 
-// Type for use in components
-export type FormValues = z.infer<typeof formSchema>;
+// Type exports
+export type FormValues = z.infer<typeof formSchema>
+export type EducationData = z.infer<typeof educationSchema>

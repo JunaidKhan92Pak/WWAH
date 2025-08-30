@@ -1,50 +1,3 @@
-"use client";
-// import { useEffect, useState } from "react";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { useForm } from "react-hook-form";
-// import * as z from "zod";
-// import { format } from "date-fns";
-import { Checkbox } from "@/components/ui/checkbox";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-// import { useSearchParams } from "next/navigation";
-import { startCase } from "lodash";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-// import { toast } from "sonner";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-// import CurrentAddress from "./components/CurrentAddress";
-import PassportAndVisaForm from "./components/PassportandVisaform";
-import LearningExperienceAbroad from "./components/LearningExperienceAbroad";
-import FinancialSponsorInformation from "./components/FinancialSponsorInformation";
-import FamilyMembers from "./components/FamilyMembers";
-import { useRouter } from "next/navigation";
-import ContactDetailForm from "./components/ContactDetailform";
-// import { formSchema } from "./components/Schema";
-import countries from "world-countries";
-// import { getAuthToken } from "@/utils/authHelper";
-import CompleteApplicationModal from "../CompleteApplicationModal";
-import SubmissionSuccessModal from "../SubmissionSuccessModal";
 
 // const BasicInfo = () => {
 //   const [currentPage, setCurrentPage] = useState(1);
@@ -901,55 +854,51 @@ import SubmissionSuccessModal from "../SubmissionSuccessModal";
 // Enhanced BasicInfo component with persistence
 // SIMPLIFIED BasicInfo Component - ONLY LOCAL PERSISTENCE
 
-
+"use client";
+import { Checkbox } from "@/components/ui/checkbox";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { startCase } from "lodash";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import PassportAndVisaForm from "./components/PassportandVisaform";
+import LearningExperienceAbroad from "./components/LearningExperienceAbroad";
+import FinancialSponsorInformation from "./components/FinancialSponsorInformation";
+import FamilyMembers from "./components/FamilyMembers";
+import { useRouter } from "next/navigation";
+import ContactDetailForm from "./components/ContactDetailform";
+import countries from "world-countries";
+import CompleteApplicationModal from "../CompleteApplicationModal";
+import SubmissionSuccessModal from "../SubmissionSuccessModal";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-// import { Checkbox } from "@/components/ui/checkbox";
-// import Image from "next/image";
-// import { Button } from "@/components/ui/button";
-// import { useSearchParams } from "next/navigation";
-// import { startCase } from "lodash";
-// import {
-//   Form,
-//   FormControl,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { Input } from "@/components/ui/input";
-// import { toast } from "sonner";
-// import {
-//   Pagination,
-//   PaginationContent,
-//   PaginationItem,
-//   PaginationNext,
-//   PaginationPrevious,
-// } from "@/components/ui/pagination";
-// import PassportAndVisaForm from "./components/PassportandVisaform";
-// import LearningExperienceAbroad from "./components/LearningExperienceAbroad";
-// import FinancialSponsorInformation from "./components/FinancialSponsorInformation";
-// import FamilyMembers from "./components/FamilyMembers";
-// import { useRouter } from "next/navigation";
-// import ContactDetailForm from "./components/ContactDetailform";
 import { formSchema } from "./components/Schema";
-// import countries from "world-countries";
-// import { getAuthToken } from "@/utils/authHelper";
-// import CompleteApplicationModal from "../CompleteApplicationModal";
-// import SubmissionSuccessModal from "../SubmissionSuccessModal";
 import { useSimpleFormPersistence } from "@/hooks/useFormPersistence";
 import { useSearchParams } from "next/navigation";
-// import { useRouter } from "next/router";
 import { getAuthToken } from "@/utils/authHelper";
 import toast from "react-hot-toast";
 
@@ -1262,7 +1211,6 @@ const BasicInfo = () => {
         return await form.trigger([
           "currentAddress",
           "permanentAddress",
-          "country",
           "city",
           "zipCode",
           "email",
@@ -1311,14 +1259,14 @@ const BasicInfo = () => {
       return;
     }
 
-    console.log("Save and Continue clicked, checking form validity...");
+    // console.log("Save and Continue clicked, checking form validity...");
     const isValid = await form.trigger();
 
     if (isValid) {
       const formData = form.getValues();
       await onSubmit(formData);
     } else {
-      console.log("Form validation failed");
+      // console.log("Form validation failed");
       toast.error("Please fix the form errors before submitting", {
         duration: 4000,
       });
@@ -1381,7 +1329,7 @@ const BasicInfo = () => {
       {validationErrors.length > 0 && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
           <h4 className="text-red-800 font-semibold mb-2">
-            Please fix the following errors:
+            Please fill the following Info:
           </h4>
           <ul className="text-red-700 text-sm space-y-1">
             {validationErrors.map((error, index) => (

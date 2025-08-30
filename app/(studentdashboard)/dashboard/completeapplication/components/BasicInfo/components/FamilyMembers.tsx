@@ -24,6 +24,7 @@ import Image from "next/image";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "./Schema";
+import countrie from "world-countries";
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -34,21 +35,24 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
   });
 
   // ✅ Ensure at least one family member field exists on initial load
-useEffect(() => {
-  const members = form.getValues("familyMembers");
-  if (!members || members.length === 0) {
-    append({
-      name: "",
-      relationship: "",
-      nationality: "",
-      occupation: "",
-      email: "",
-      countryCode: "",
-      phoneNo: "",
-    });
-  }
-}, [append, form]);
-
+  useEffect(() => {
+    const members = form.getValues("familyMembers");
+    if (!members || members.length === 0) {
+      append({
+        name: "",
+        relationship: "",
+        nationality: "",
+        occupation: "",
+        email: "",
+        countryCode: "",
+        phoneNo: "",
+      });
+    }
+  }, [append, form]);
+  const nationalityOptions = countrie.map((c) => ({
+    label: c.demonyms?.eng?.m || c.name.common,
+    value: c.demonyms?.eng?.m || c.name.common,
+  }));
   return (
     <div className="my-4">
       {fields.map((field, index) => (
@@ -114,40 +118,28 @@ useEffect(() => {
             <FormField
               control={form.control}
               name={`familyMembers.${index}.nationality`}
-              render={({ field }) => {
-                const selected = countries.find(
-                  (c) => `${c.code}-${c.name}` === field.value
-                );
-                return (
-                  <FormItem>
-                    <FormLabel>Nationality</FormLabel>
-                    <Select
-                      value={field.value ?? ""}
-                      onValueChange={field.onChange}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="bg-[#f1f1f1]">
-                          <SelectValue placeholder="Select Nationality">
-                            {selected ? selected.name : "Select Nationality"}
-                          </SelectValue>
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {countries.map((country) => {
-                          const fullValue = `${country.code}-${country.name}`;
-                          return (
-                            <SelectItem key={fullValue} value={fullValue}>
-                              {country.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nationality</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+                        <SelectValue placeholder="Select Nationality" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="max-h-[300px] overflow-y-auto">
+                      {nationalityOptions.map((option, key) => (
+                        <SelectItem key={key} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
+
 
             {/* Occupation */}
             <FormField
@@ -209,19 +201,14 @@ useEffect(() => {
                                 <div className="flex items-center gap-2">
                                   <Image
                                     src={
-
-                                              (countries.find(
+                                      (countries.find(
                                         (c) =>
-
-
-
-
-                                                  `${c.code}-${c.name}` === countryCodeField.value
-                                              ) ||
-                                                countries.find(
-                                                  (c) => `${c.code}-${c.name}` === "+92-Pakistan"
-                                                )
-                                              )?.flag || "/default-flag.png"
+                                          `${c.code}-${c.name}` === countryCodeField.value
+                                      ) ||
+                                        countries.find(
+                                          (c) => `${c.code}-${c.name}` === "+92-Pakistan"
+                                        )
+                                      )?.flag || "/default-flag.png"
                                     }
                                     alt="Country Flag"
                                     width={20}
@@ -240,14 +227,14 @@ useEffect(() => {
 
 
 
-                                            {(countryCodeField.value || "+92-Pakistan").split("-")[0]}
-                                          </span>
-                                        </div>
-                                      </SelectValue>
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {countries.map((country) => {
+                                    {(countryCodeField.value || "+92-Pakistan").split("-")[0]}
+                                  </span>
+                                </div>
+                              </SelectValue>
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {countries.map((country) => {
                               const fullValue = `${country.code}-${country.name}`;
                               return (
                                 <SelectItem key={fullValue} value={fullValue}>

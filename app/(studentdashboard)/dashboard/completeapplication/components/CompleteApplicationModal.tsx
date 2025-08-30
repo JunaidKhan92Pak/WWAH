@@ -1,11 +1,6 @@
 "use client";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 
@@ -40,11 +35,7 @@ export default function CompleteApplicationModal({
       <DialogContent className="max-w-[300px] md:max-w-[550px] max-h-[80vh] overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-         <style>{`
-          [data-state="open"] button.absolute {
-            display: none !important;
-          }
-        `}</style> 
+        <style>{` [data-state="open"] button.absolute {   display: none !important; } `}</style>
 
         <DialogHeader>
           <DialogTitle className="justify-center flex">
@@ -93,8 +84,7 @@ export default function CompleteApplicationModal({
           disabled={!isChecked}
           onClick={handleSubmit}
           className="w-full bg-[#C7161E] hover:bg-[#C7161E]"
-        >
-          Submit
+        > Submit
         </Button>
       </DialogContent>
     </Dialog>

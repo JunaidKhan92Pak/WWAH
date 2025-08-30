@@ -26,10 +26,10 @@ export async function GET(req: NextRequest) {
     const includeApplicationData =
       searchParams.get("includeApplicationData") === "true";
 
-    console.log("=== REQUEST PARAMETERS ===");
-    console.log("Course IDs parameter:", courseIdsParam);
-    console.log("Request type:", type);
-    console.log("Include application data:", includeApplicationData);
+    // console.log("=== REQUEST PARAMETERS ===");
+    // console.log("Course IDs parameter:", courseIdsParam);
+    // console.log("Request type:", type);
+    // console.log("Include application data:", includeApplicationData);
 
     // Early return if no course IDs provided
     if (!courseIdsParam) {
@@ -149,9 +149,9 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    console.log("=== OBJECTID VALIDATION ===");
-    console.log(`Valid ObjectIds: ${validObjectIds.length}`);
-    console.log(`Invalid IDs: ${invalidIds.length}`);
+    // console.log("=== OBJECTID VALIDATION ===");
+    // console.log(`Valid ObjectIds: ${validObjectIds.length}`);
+    // console.log(`Invalid IDs: ${invalidIds.length}`);
 
     // Return error if no valid ObjectIds found
     if (validObjectIds.length === 0) {
@@ -294,24 +294,24 @@ export async function GET(req: NextRequest) {
     const finalCourses =
       type === "applied"
         ? enhancedCourses.sort((a, b) => {
-            // First sort by applicationStatus (higher status first)
-            const aStatus = a.applicationStatus || 1;
-            const bStatus = b.applicationStatus || 1;
+          // First sort by applicationStatus (higher status first)
+          const aStatus = a.applicationStatus || 1;
+          const bStatus = b.applicationStatus || 1;
 
-            if (aStatus !== bStatus) {
-              return bStatus - aStatus;
-            }
+          if (aStatus !== bStatus) {
+            return bStatus - aStatus;
+          }
 
-            // Then sort by creation date (most recent first) if available
-            const aDate = a.applicationData?.createdAt
-              ? new Date(a.applicationData.createdAt)
-              : new Date(0);
-            const bDate = b.applicationData?.createdAt
-              ? new Date(b.applicationData.createdAt)
-              : new Date(0);
+          // Then sort by creation date (most recent first) if available
+          const aDate = a.applicationData?.createdAt
+            ? new Date(a.applicationData.createdAt)
+            : new Date(0);
+          const bDate = b.applicationData?.createdAt
+            ? new Date(b.applicationData.createdAt)
+            : new Date(0);
 
-            return bDate.getTime() - aDate.getTime();
-          })
+          return bDate.getTime() - aDate.getTime();
+        })
         : enhancedCourses;
 
     console.log("=== FINAL RESPONSE ===");

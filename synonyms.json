@@ -139,6 +139,79 @@
             "journalism"
         ]
     },
+    "computer science": {
+        "exact_match": [
+            "computer science",
+            "software engineering",
+            "data science",
+            "artificial intelligence",
+            "ai",
+            "information technology",
+            "information technologies",
+            "computer programming",
+            "software development",
+            "web development",
+            "mobile app development",
+            "machine learning",
+            "deep learning"
+        ],
+        "closely_related": [
+            "cybersecurity",
+            "graphic design",
+            "information security",
+            "database management",
+            "network engineering",
+            "systems administration",
+            "cloud computing",
+            "devops",
+            "blockchain technology",
+            "computer graphics",
+            "human-computer interaction",
+            "algorithms",
+            "data structures",
+            "web design",
+            "game development"
+        ],
+        "somewhat_related": [
+            "physics",
+            "mathematics",
+            "robotics",
+            "electrical engineering",
+            "statistics",
+            "bioinformatics",
+            "digital media"
+        ],
+        "weak_connection": [
+            "business",
+            "economics",
+            "psychology",
+            "journalism",
+            "computing",
+            "public relations",
+            "geography"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "theatre",
+            "fashion design",
+            "music",
+            "fine arts",
+            "performing arts",
+            "nursing",
+            "medicine",
+            "law",
+            "education",
+            "political science",
+            "history",
+            "sociology",
+            "anthropology",
+            "linguistics",
+            "philosophy",
+            "religious studies",
+            "archaeology",
+            "agriculture"
+        ]
+    },
     "biology": {
         "exact_match": [
             "biology",
@@ -184,6 +257,87 @@
             "digital media",
             "music",
             "theatre"
+        ]
+    },
+    "mathematics": {
+        "exact_match": [
+            "mathematics",
+            "pure mathematics",
+            "applied mathematics",
+            "algebra",
+            "calculus",
+            "geometry",
+            "number theory",
+            "discrete mathematics"
+        ],
+        "closely_related": [
+            "statistics",
+            "actuarial science",
+            "data science",
+            "mathematical modeling",
+            "operations research",
+            "cryptography",
+            "mathematical physics",
+            "computational mathematics",
+            "mathematical analysis"
+        ],
+        "somewhat_related": [
+            "economics",
+            "physics",
+            "engineering",
+            "computer science",
+            "finance",
+            "business analytics",
+            "psychology"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "biology",
+            "chemistry"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "theatre",
+            "fashion design",
+            "music"
+        ]
+    },
+    "statistics": {
+        "exact_match": [
+            "statistics",
+            "statistical analysis",
+            "biostatistics",
+            "mathematical statistics"
+        ],
+        "closely_related": [
+            "actuarial science",
+            "data science",
+            "mathematics",
+            "econometrics",
+            "survey methodology",
+            "statistical modeling",
+            "probability theory"
+        ],
+        "somewhat_related": [
+            "economics",
+            "business analytics",
+            "psychology",
+            "sociology",
+            "epidemiology",
+            "market research"
+        ],
+        "weak_connection": [
+            "psychology",
+            "journalism",
+            "political science",
+            "public health"
+        ],
+        "unrelated": [
+            "performing arts",
+            "fashion",
+            "culinary arts",
+            "music"
         ]
     },
     "earth environmental sciences": {
@@ -383,64 +537,6 @@
             "psychology",
             "journalism",
             "computing"
-        ],
-        "unrelated": [
-            "culinary arts",
-            "theatre",
-            "fashion design",
-            "music"
-        ]
-    },
-    "computer science": {
-        "exact_match": [
-            "computer science",
-            "software engineering",
-            "data science",
-            "artificial intelligence",
-            "ai",
-            "information technology",
-            "information technologies",
-            "computer programming",
-            "software development",
-            "web development",
-            "mobile app development",
-            "machine learning",
-            "deep learning"
-        ],
-        "closely_related": [
-            "cybersecurity",
-            "graphic design",
-            "information security",
-            "database management",
-            "network engineering",
-            "systems administration",
-            "cloud computing",
-            "devops",
-            "blockchain technology",
-            "computer graphics",
-            "human-computer interaction",
-            "algorithms",
-            "data structures",
-            "web design"
-        ],
-        "somewhat_related": [
-            "physics",
-            "mathematics",
-            "robotics",
-            "electrical engineering",
-            "statistics",
-            "bioinformatics",
-            "digital media",
-            "game development"
-        ],
-        "weak_connection": [
-            "business",
-            "economics",
-            "psychology",
-            "journalism",
-            "computing",
-            "public relations",
-            "geography"
         ],
         "unrelated": [
             "culinary arts",
@@ -754,87 +850,6 @@
             "music",
             "culinary arts",
             "theatre"
-        ]
-    },
-    "mathematics": {
-        "exact_match": [
-            "mathematics",
-            "pure mathematics",
-            "applied mathematics",
-            "algebra",
-            "calculus",
-            "geometry",
-            "number theory",
-            "discrete mathematics"
-        ],
-        "closely_related": [
-            "statistics",
-            "actuarial science",
-            "data science",
-            "mathematical modeling",
-            "operations research",
-            "cryptography",
-            "mathematical physics",
-            "computational mathematics",
-            "mathematical analysis"
-        ],
-        "somewhat_related": [
-            "economics",
-            "physics",
-            "engineering",
-            "computer science",
-            "finance",
-            "business analytics",
-            "psychology"
-        ],
-        "weak_connection": [
-            "business",
-            "political science",
-            "biology",
-            "chemistry"
-        ],
-        "unrelated": [
-            "culinary arts",
-            "theatre",
-            "fashion design",
-            "music"
-        ]
-    },
-    "statistics": {
-        "exact_match": [
-            "statistics",
-            "statistical analysis",
-            "biostatistics",
-            "mathematical statistics"
-        ],
-        "closely_related": [
-            "actuarial science",
-            "data science",
-            "mathematics",
-            "econometrics",
-            "survey methodology",
-            "statistical modeling",
-            "probability theory"
-        ],
-        "somewhat_related": [
-            "economics",
-            "business analytics",
-            "psychology",
-            "sociology",
-            "epidemiology",
-            "market research"
-        ],
-        "weak_connection": [
-            "psychology",
-            "journalism",
-            "political science",
-            "public health"
-        ],
-        "unrelated": [
-            "performing arts",
-            "fashion",
-            "culinary arts",
-            "music"
         ]
     },
     "actuarial science": {
