@@ -1,16 +1,16 @@
-"use client";
-import { ChangeEvent, useCallback, useState, useEffect } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import Link from "next/link";
-import { SkeletonCard } from "@/components/skeleton";
-import { BsWhatsapp } from "react-icons/bs";
-import { AiOutlineMail } from "react-icons/ai";
-import { FaFacebook } from "react-icons/fa";
-import { useScholarships } from "@/store/useScholarships";
-import { debounce } from "lodash";
+"use client"
+import { type ChangeEvent, useCallback, useState, useEffect } from "react"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import Link from "next/link"
+import { SkeletonCard } from "@/components/skeleton"
+import { BsWhatsapp } from "react-icons/bs"
+import { AiOutlineMail } from "react-icons/ai"
+import { FaFacebook } from "react-icons/fa"
+import { useScholarships } from "@/store/useScholarships"
+import { debounce } from "lodash"
 
 import {
   Dialog,
@@ -21,20 +21,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Copy } from "lucide-react";
+} from "@/components/ui/dialog"
+import { Copy } from "lucide-react"
 
-import { Label } from "@/components/ui/label";
-import FilterSection from "./Components/FilterSection";
-import { getAuthToken } from "@/utils/authHelper";
-import { useUserStore } from "@/store/useUserData";
-import toast from "react-hot-toast";
+import { Label } from "@/components/ui/label"
+import FilterSection from "./Components/FilterSection"
+import { getAuthToken } from "@/utils/authHelper"
+import { useUserStore } from "@/store/useUserData"
+import toast from "react-hot-toast"
 
 const Page = () => {
-  const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
-  const [localSearch, setLocalSearch] = useState("");
-  const [showFavorites, setShowFavorites] = useState(false);
-  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
+  const [heartAnimation, setHeartAnimation] = useState<string | null>(null)
+  const [localSearch, setLocalSearch] = useState("")
+  const [showFavorites, setShowFavorites] = useState(false)
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null)
 
   // User store hooks
   const {
@@ -46,62 +46,59 @@ const Page = () => {
     toggleScholarshipFavorite,
     getScholarshipFavoriteStatus,
     fetchFavoriteScholarships,
-  } = useUserStore();
+  } = useUserStore()
 
   // Scholarship store hooks
-  const { scholarships, loading, page, totalPages, setPage, setSearch } =
-    useScholarships();
+  const { scholarships, loading, page, totalPages, setPage, setSearch } = useScholarships()
 
   // Initialize favorites from user store
   useEffect(() => {
     if (user && user.favouriteScholarship?.length > 0) {
-      fetchFavoriteScholarships();
+      fetchFavoriteScholarships()
     }
-  }, [user]);
+  }, [user])
   // console.log("favoriteScholarships object:", favoriteScholarships);
 
   // Fetch user profile on component mount
   useEffect(() => {
-    const token = getAuthToken();
+    const token = getAuthToken()
     if (token && !user) {
-      fetchUserProfile();
+      fetchUserProfile()
     }
-  }, [fetchUserProfile, user]);
+  }, [fetchUserProfile, user])
 
   // console.log("User favorite scholarships:", user?.favouriteScholarship);
   // console.log("Favorite scholarships data:", favoriteScholarships);
 
   const handlePrev = () => {
     if (page > 1) {
-      setPage(page - 1);
+      setPage(page - 1)
     }
-  };
+  }
 
   const debouncedSetSearch = useCallback(
     debounce((value: string) => {
-      setSearch(value);
+      setSearch(value)
     }, 500),
-    [setSearch]
-  );
+    [setSearch],
+  )
 
   // Updated to use store data
-  const displayedScholarships = showFavorites
-    ? Object.values(favoriteScholarships)
-    : scholarships;
+  const displayedScholarships = showFavorites ? Object.values(favoriteScholarships) : scholarships
 
-  const favoritesCount = favoriteScholarshipIds.length;
+  const favoritesCount = favoriteScholarshipIds.length
   // console.log(displayedScholarships, "displayedScholarships");
   const handleNext = () => {
     if (page < totalPages) {
-      setPage(page + 1);
+      setPage(page + 1)
     }
-  };
+  }
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocalSearch(value);
-    debouncedSetSearch(value);
-  };
+    const value = e.target.value
+    setLocalSearch(value)
+    debouncedSetSearch(value)
+  }
 
   const showLoginPrompt = () => {
     toast.error("Please login to add scholarships to your favorites!", {
@@ -114,50 +111,45 @@ const Page = () => {
         borderRadius: "8px",
         border: "1px solid #fecaca",
       },
-    });
-  };
+    })
+  }
 
   // Updated toggle function using store
   const toggleFavoriteInDB = async (id: string) => {
-    const token = getAuthToken();
+    const token = getAuthToken()
 
     if (!token) {
-      showLoginPrompt();
-      return;
+      showLoginPrompt()
+      return
     }
 
     try {
-      const isCurrentlyFavorited = getScholarshipFavoriteStatus(id);
-      const action = isCurrentlyFavorited ? "remove" : "add";
+      const isCurrentlyFavorited = getScholarshipFavoriteStatus(id)
+      const action = isCurrentlyFavorited ? "remove" : "add"
 
       // Animate heart
-      setHeartAnimation(id);
-      setTimeout(() => setHeartAnimation(null), 1000);
+      setHeartAnimation(id)
+      setTimeout(() => setHeartAnimation(null), 1000)
 
       // Call store function
-      const success = await toggleScholarshipFavorite(id, action);
+      const success = await toggleScholarshipFavorite(id, action)
 
       if (success) {
-        toast.success(
-          action === "add"
-            ? "Scholarship added to favorites!"
-            : "Scholarship removed from favorites!",
-          {
-            duration: 2000,
-            position: "top-center",
-          }
-        );
+        toast.success(action === "add" ? "Scholarship added to favorites!" : "Scholarship removed from favorites!", {
+          duration: 2000,
+          position: "top-center",
+        })
       } else {
-        throw new Error("Failed to update favorites");
+        throw new Error("Failed to update favorites")
       }
     } catch (error) {
-      console.error("Failed to update favorites:", error);
+      console.error("Failed to update favorites:", error)
       toast.error("Failed to update favorites. Please try again.", {
         duration: 3000,
         position: "top-center",
-      });
+      })
     }
-  };
+  }
 
   return (
     <>
@@ -172,20 +164,10 @@ const Page = () => {
             >
               <div className="flex items-center w-[100px] justify-between">
                 <div className="flex gap-2">
-                  <Image
-                    src="/filterr.svg"
-                    width={12}
-                    height={12}
-                    alt="filter"
-                  />
+                  <Image src="/filterr.svg" width={12} height={12} alt="filter" />
                   <p className="font-bold">Filters</p>
                 </div>
-                <Image
-                  src="/right-arrow.png"
-                  alt="arrow"
-                  width={10}
-                  height={10}
-                />
+                <Image src="/right-arrow.png" alt="arrow" width={10} height={10} />
               </div>
             </Button>
           </SheetTrigger>
@@ -204,12 +186,7 @@ const Page = () => {
               </div>
               <div className="flex justify-center">
                 <div className="flex justify-evenly bg-white rounded-lg px-3 w-[85%]">
-                  <Image
-                    src="/search.svg"
-                    width={16}
-                    height={16}
-                    alt="search"
-                  />
+                  <Image src="/search.svg" width={16} height={16} alt="search" />
                   <input
                     placeholder="Search Scholarships..."
                     name="search"
@@ -235,9 +212,8 @@ const Page = () => {
               <div className="mt-4 md:mt-0">
                 <button
                   onClick={() => setShowFavorites((prev) => !prev)}
-                  className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4 whitespace-nowrap h-10 ${
-                    showFavorites ? "text-red-500 font-bold" : "text-gray-600"
-                  }`}
+                  className={`text-sm flex items-center justify-center gap-1 xl:gap-2 bg-[#F1F1F1] rounded-lg p-2 px-4 md:px-6 xl:px-4 whitespace-nowrap h-10 ${showFavorites ? "text-red-500 font-bold" : "text-gray-600"
+                    }`}
                 >
                   <Image
                     src={favoritesCount > 0 ? "/redheart.svg" : "/hearti.svg"}
@@ -259,16 +235,11 @@ const Page = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-2">
                   {displayedScholarships.length === 0 ? (
                     <p className="text-[20px] font-semibold col-span-4 text-center p-4">
-                      {showFavorites
-                        ? "No Favorite Scholarships Found"
-                        : "No Scholarships Found"}
+                      {showFavorites ? "No Favorite Scholarships Found" : "No Scholarships Found"}
                     </p>
                   ) : (
                     displayedScholarships.map((item) => (
-                      <div
-                        key={item._id}
-                        className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3"
-                      >
+                      <div key={item._id} className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col p-3">
                         <div className="relative w-full">
                           {/* Background Image */}
                           <Image
@@ -296,38 +267,26 @@ const Page = () => {
                             <Dialog>
                               <DialogTrigger asChild>
                                 <button>
-                                  <Image
-                                    src="/university/Share.svg"
-                                    width={21}
-                                    height={21}
-                                    alt="Share"
-                                  />
+                                  <Image src="/university/Share.svg" width={21} height={21} alt="Share" />
                                 </button>
                               </DialogTrigger>
                               <DialogContent className="sm:max-w-md">
                                 <DialogHeader>
                                   <DialogTitle>Share link</DialogTitle>
                                   <DialogDescription>
-                                    Anyone who has this link will be able to
-                                    view this.
+                                    Anyone who has this link will be able to view this.
                                   </DialogDescription>
                                 </DialogHeader>
 
                                 <div className="flex items-center space-x-2">
                                   <div className="grid flex-1 gap-2">
-                                    <Label
-                                      htmlFor={`link-${item._id}`}
-                                      className="sr-only"
-                                    >
+                                    <Label htmlFor={`link-${item._id}`} className="sr-only">
                                       Link
                                     </Label>
                                     <Input
                                       id={`link-${item._id}`}
-                                      value={`${
-                                        typeof window !== "undefined"
-                                          ? window.location.origin
-                                          : ""
-                                      }/scholarships/${item._id}`}
+                                      value={`${typeof window !== "undefined" ? window.location.origin : ""
+                                        }/scholarships/${item._id}`}
                                       readOnly
                                     />
                                   </div>
@@ -336,16 +295,11 @@ const Page = () => {
                                     size="sm"
                                     className="px-3"
                                     onClick={() => {
-                                      const link = `${window.location.origin}/scholarships/${item._id}`;
-                                      navigator.clipboard
-                                        .writeText(link)
-                                        .then(() => {
-                                          setCopiedLinkId(item._id);
-                                          setTimeout(
-                                            () => setCopiedLinkId(null),
-                                            2000
-                                          );
-                                        });
+                                      const link = `${window.location.origin}/scholarships/${item._id}`
+                                      navigator.clipboard.writeText(link).then(() => {
+                                        setCopiedLinkId(item._id)
+                                        setTimeout(() => setCopiedLinkId(null), 2000)
+                                      })
                                     }}
                                   >
                                     <span className="sr-only">Copy</span>
@@ -354,16 +308,14 @@ const Page = () => {
                                 </div>
 
                                 {copiedLinkId === item._id && (
-                                  <p className="text-black text-sm mt-2">
-                                    Link copied to clipboard!
-                                  </p>
+                                  <p className="text-black text-sm mt-2">Link copied to clipboard!</p>
                                 )}
 
                                 {/* Share buttons */}
                                 <div className="mt-2 flex gap-4 justify-left">
                                   <a
                                     href={`https://wa.me/?text=${encodeURIComponent(
-                                      `${window.location.origin}/scholarships/${item._id}`
+                                      `${window.location.origin}/scholarships/${item._id}`,
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -373,7 +325,7 @@ const Page = () => {
                                   </a>
                                   <a
                                     href={`mailto:?subject=Check this out&body=${encodeURIComponent(
-                                      `${window.location.origin}/scholarships/${item._id}`
+                                      `${window.location.origin}/scholarships/${item._id}`,
                                     )}`}
                                     className="text-blue-600 hover:underline"
                                   >
@@ -381,7 +333,7 @@ const Page = () => {
                                   </a>
                                   <a
                                     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                                      `${window.location.origin}/scholarships/${item._id}`
+                                      `${window.location.origin}/scholarships/${item._id}`,
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -404,24 +356,13 @@ const Page = () => {
                             <button
                               onClick={() => toggleFavoriteInDB(item._id)}
                               disabled={loadingScholarships}
-                              className={`relative ${
-                                heartAnimation === item._id ? "animate-pop" : ""
-                              } ${loadingScholarships ? "opacity-50" : ""}`}
+                              className={`relative ${heartAnimation === item._id ? "animate-pop" : ""
+                                } ${loadingScholarships ? "opacity-50" : ""}`}
                             >
                               {getScholarshipFavoriteStatus(item._id) ? (
-                                <Image
-                                  src="/redheart.svg"
-                                  width={20}
-                                  height={20}
-                                  alt="Favorite"
-                                />
+                                <Image src="/redheart.svg" width={20} height={20} alt="Favorite" />
                               ) : (
-                                <Image
-                                  src="/hearti.svg"
-                                  width={20}
-                                  height={20}
-                                  alt="Favorite"
-                                />
+                                <Image src="/hearti.svg" width={20} height={20} alt="Favorite" />
                               )}
                             </button>
                           </div>
@@ -429,11 +370,7 @@ const Page = () => {
 
                         {/* Content Section */}
                         <div className=" flex-grow">
-                          <Link
-                            target="blank"
-                            href={`/scholarships/${item._id}`}
-                            rel="noopener noreferrer"
-                          >
+                          <Link target="blank" href={`/scholarships/${item._id}`} rel="noopener noreferrer">
                             <div className="relative group">
                               <p className="font-bold leading-tight hover:underline underline-offset-4 cursor-pointer py-1 line-clamp-2">
                                 {item.name}
@@ -447,22 +384,12 @@ const Page = () => {
                             </div>
                           </Link>
                           <p className="text-sm text-gray-600">
-                            <span className="font-semibold">
-                              Min Requirements: 75%
-                            </span>{" "}
-                            {item.minRequirements}
+                            <span className="font-semibold">Min Requirements :</span> {item.minimumRequirements}
                           </p>
                           <div className="flex flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
-                              <Image
-                                src={"/location.svg"}
-                                alt="location"
-                                width={17}
-                                height={17}
-                              />
-                              <p className="text-sm text-gray-600 truncate">
-                                {item.hostCountry || item.country}
-                              </p>
+                              <Image src={"/location.svg"} alt="location" width={17} height={17} />
+                              <p className="text-sm text-gray-600 truncate">{item.hostCountry || item.country}</p>
                             </div>
                             <div className="flex items-center gap-2 mt-2 md:w-1/2">
                               <Image
@@ -474,9 +401,7 @@ const Page = () => {
                               <div className="relative group w-24">
                                 {" "}
                                 {/* Width small so first word fits */}
-                                <p className="text-sm text-gray-600 truncate">
-                                  {item.type}
-                                </p>
+                                <p className="text-sm text-gray-600 truncate">{item.type}</p>
                                 <span
                                   className="absolute right-2 bottom-full mb-1 hidden group-hover:block text-center
     bg-gray-200  text-xs px-2 py-1 rounded shadow-lg z-10 "
@@ -488,55 +413,32 @@ const Page = () => {
                           </div>
                           <div className="flex flex-col md:flex-row justify-between flex-wrap">
                             <div className="flex items-center gap-2 mt-2 md:w-1/2 group relative">
-                              <Image
-                                src={"/degree-icon.svg"}
-                                alt="degree level"
-                                width={16}
-                                height={16}
-                              />
+                              <Image src={"/degree-icon.svg"} alt="degree level" width={16} height={16} />
 
                               {/* Text with responsive truncate on large screens */}
                               <p className="text-sm text-gray-600 lg:truncate lg:max-w-[180px]">
-                                {item.programs
-                                  ? item.programs
-                                  : "Not Specified"}
+                                {item.provider ? item.provider : "Not Specified"}
                               </p>
 
                               {/* Tooltip (only appears on large screens and above) */}
-                              {item.programs && (
+                              {item.provider && (
                                 <span className="hidden lg:group-hover:block absolute bottom-full left-0 mt-1 z-10 bg-gray-200 text-black text-xs p-2 rounded-md shadow-lg w-max max-w-xs whitespace-normal">
-                                  {item.programs}
+                                  {item.provider}
                                 </span>
                               )}
                             </div>
 
                             <div className="flex items-center gap-2 mt-2 md:w-1/2 group relative">
-                              <Image
-                                src="/clock.svg"
-                                alt="deadline"
-                                width={16}
-                                height={16}
-                                className="flex-shrink-0"
-                              />
+                              <Image src="/clock.svg" alt="deadline" width={16} height={16} className="flex-shrink-0" />
                               <p
-                                className="
-      text-sm text-gray-600 
-      lg:truncate
-      max-w-full
-    "
+                                className=" text-sm text-gray-600  lg:truncate max-w-full"
                               >
                                 {item.deadline}
                               </p>
 
                               {/* Tooltip only for lg and above */}
                               <span
-                                className="
-      hidden lg:group-hover:block
-      absolute bottom-full left-8 -translate-x-1/2 
-      bg-gray-200 text-black text-xs p-2 rounded-md shadow-md 
-      w-max max-w-[200px] z-10 
-      text-center
-    "
+                                className="hidden lg:group-hover:blockabsolute bottom-full left-8 -translate-x-1/2  bg-gray-200 text-black text-xs p-2 rounded-md shadow-md  w-max max-w-[200px] z-10  text-center "
                               >
                                 {item.deadline}
                               </span>
@@ -584,7 +486,7 @@ const Page = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

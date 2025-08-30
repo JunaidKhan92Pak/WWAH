@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+const today = new Date(new Date().setHours(0, 0, 0, 0));
 export const formSchema = z
   .object({
     // Personal Information
@@ -62,12 +62,6 @@ export const formSchema = z
       .min(5, { message: "Detailed address must be at least 5 characters." })
       .max(200, { message: "Detailed address must be under 200 characters." }),
 
-    country: z
-      .string()
-      .nonempty({ message: "Country is required." })
-      .min(2, { message: "Country must be at least 2 characters." })
-      .max(100, { message: "Country must be under 100 characters." }),
-
     city: z
       .string()
       .nonempty({ message: "City is required." })
@@ -109,7 +103,13 @@ export const formSchema = z
         message: "Passport number can only contain letters and numbers.",
       })
       .optional(),
-    passportExpiryDate: z.date().optional(),
+
+    passportExpiryDate: z
+      .date()
+      .refine((date) => date >= today, {
+        message: "Passport expiry date must be today or a future date.",
+      })
+      .optional(),
     oldPassportNumber: z.string().optional(),
     oldPassportExpiryDate: z.any().optional(),
 

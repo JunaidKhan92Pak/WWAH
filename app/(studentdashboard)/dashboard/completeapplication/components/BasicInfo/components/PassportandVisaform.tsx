@@ -120,15 +120,12 @@ const PassportAndVisaForm = ({ form }: { form: UseFormReturn<FormValues> }) => {
                   <Input
                     type="date"
                     className="bg-[#f1f1f1]"
+                    min={format(new Date(), "yyyy-MM-dd")}   // 👈 disables past dates
                     value={
-                      field.value
-                        ? format(new Date(field.value), "yyyy-MM-dd")
-                        : ""
+                      field.value ? format(new Date(field.value), "yyyy-MM-dd") : ""
                     }
                     onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? new Date(e.target.value) : null
-                      )
+                      field.onChange(e.target.value ? new Date(e.target.value) : null)
                     }
                     onBlur={field.onBlur}
                     name={field.name}
