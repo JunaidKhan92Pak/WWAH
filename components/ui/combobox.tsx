@@ -69,7 +69,7 @@ export function Combobox({
                     value === option ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {option}
+                {option.toUpperCase()}
               </CommandItem>
             ))}
           </CommandGroup>
