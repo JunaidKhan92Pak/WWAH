@@ -26,14 +26,6 @@ interface User {
   otpVerified: boolean;
   createdAt: string;
   updatedAt: string;
-  referrals: [
-    firstName: string,
-    lastName: string,
-    id: string,
-    profilePicture: string,
-    status: string
-  ];
-  refId: string;
 }
 
 interface ApiResponse {
@@ -84,7 +76,7 @@ const ReferralControl: React.FC = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-console.log(users,"all users");
+
   // Filter users based on search term, provider, and verification status
   const filteredUsers = users.filter((user) => {
     const matchesSearch =

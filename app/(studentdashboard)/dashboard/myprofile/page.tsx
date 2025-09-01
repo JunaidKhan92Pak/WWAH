@@ -45,7 +45,7 @@ const Page = () => {
         </div>
       ) : (
         <>
-          <HeroSection user={user} />
+          <HeroSection user={user}  />
           <MyProfileInfo user={user} detailInfo={detailedInfo} />
         </>
       )}

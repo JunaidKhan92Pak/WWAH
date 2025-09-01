@@ -27,14 +27,15 @@ export const AuthProvider = ({ children }) => {
           body: JSON.stringify(userData),
         }
       );
-
       const loggedInUser = await res.json();
+      console.log("Login successful:", loggedInUser);
       if (!loggedInUser.success) {
         return {
           success: false,
           message: loggedInUser.message || "Login failed.",
         };
       }
+      
       // Compute an expiration date 24 hours from now:
       const expireDate = new Date(
         Date.now() + 24 * 60 * 60 * 1000
@@ -119,7 +120,7 @@ export const AuthProvider = ({ children }) => {
   const forgetAction = async (email) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}forgotpassword`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/forgotpassword`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -231,7 +232,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log(`There was an error during logout: ${error}`);
     }
-  };  
+  };
 
   return (
     <AuthContext.Provider

@@ -293,6 +293,7 @@ const Step2 = () => {
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="bachelors">Intermediate</SelectItem>
                 <SelectItem value="bachelors">Bachelors</SelectItem>
                 <SelectItem value="masters">Masters</SelectItem>
                 <SelectItem value="phd">PhD</SelectItem>
@@ -352,7 +353,7 @@ const Step2 = () => {
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((sem) => (
                   <SelectItem key={sem} value={`semester-${sem}`}>
                     {sem}
                   </SelectItem>

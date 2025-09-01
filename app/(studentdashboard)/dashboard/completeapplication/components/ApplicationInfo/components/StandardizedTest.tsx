@@ -43,12 +43,12 @@ const StandardizedTest = ({ form }: { form: UseFormReturn<FormValues> }) => {
                       <SelectValue placeholder="Select a test" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ielts">IELTS</SelectItem>
-                      <SelectItem value="toefl">TOEFL</SelectItem>
+                      {/* <SelectItem value="ielts">IELTS</SelectItem> */}
+                      {/* <SelectItem value="toefl">TOEFL</SelectItem> */}
                       <SelectItem value="sat">SAT</SelectItem>
                       <SelectItem value="gre">GRE</SelectItem>
                       <SelectItem value="gmat">GMAT</SelectItem>
-                      <SelectItem value="pte">PTE</SelectItem>
+                      {/* <SelectItem value="pte">PTE</SelectItem> */}
                       <SelectItem value="none">None</SelectItem>
                     </SelectContent>
                   </Select>

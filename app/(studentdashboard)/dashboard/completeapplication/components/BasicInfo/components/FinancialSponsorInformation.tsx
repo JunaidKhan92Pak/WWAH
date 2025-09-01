@@ -1,5 +1,4 @@
 "use client";
-
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -20,6 +19,7 @@ import { countries } from "@/lib/countries";
 import { z } from "zod";
 import { formSchema } from "./Schema";
 import { UseFormReturn } from "react-hook-form";
+import countrie from "world-countries";
 type FormValues = z.infer<typeof formSchema>;
 
 const FinancialSponsorInformation = ({
@@ -27,6 +27,11 @@ const FinancialSponsorInformation = ({
 }: {
   form: UseFormReturn<FormValues>;
 }) => {
+
+  const nationalityOptions = countrie.map((c) => ({
+    label: c.demonyms?.eng?.m || c.name.common,
+    value: c.demonyms?.eng?.m || c.name.common,
+  }));
   return (
     <div className=" my-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -73,7 +78,7 @@ const FinancialSponsorInformation = ({
         />
 
         {/* Nationality */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="sponsorsNationality"
           render={({ field }) => (
@@ -102,6 +107,30 @@ const FinancialSponsorInformation = ({
                   ].map((nation) => (
                     <SelectItem key={nation} value={nation}>
                       {nation}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+        <FormField
+          control={form.control}
+          name="sponsorsNationality"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nationality</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm">
+                    <SelectValue placeholder="Select Nationality" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="max-h-[300px] overflow-y-auto">
+                  {nationalityOptions.map((option, key) => (
+                    <SelectItem key={key} value={option.value}>
+                      {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

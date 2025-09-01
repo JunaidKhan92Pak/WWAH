@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 // import { useState } from "react";
 import Image from "next/image";
 import { useState } from "react";
@@ -18,6 +19,7 @@ const Page = () => {
 
   // Calculate percentage of progress
   const progressPercent = Math.min((currentPoints / maxPoints) * 100, 100);
+  const [open, setOpen] = useState(false);
 
   const tiers = [
     {
@@ -92,6 +94,8 @@ const Page = () => {
       ],
     },
   ];
+
+ 
 
   return (
     <div className="p-4 space-y-4">
@@ -256,7 +260,7 @@ const Page = () => {
                 {/* Reward Button*/}
                 {i !== 0 && (
                   <button
-                    //  onClick={() => setOpen(true)}
+                     onClick={() => setOpen(true)}
                     disabled={!tier}
                     className={`mt-3 w-[85%] py-1.5 rounded-md text-sm font-medium transition ${
                       tier
@@ -272,7 +276,7 @@ const Page = () => {
           </div>
         </div>
         {/* Success Modal */}
-        {/* <Dialog open={open} onOpenChange={setOpen}>
+                <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
         <DialogContent className="flex flex-col justify-center items-center max-w-72 md:max-w-96 !rounded-3xl">
           <Image
             src="/DashboardPage/success.svg"
@@ -287,7 +291,7 @@ const Page = () => {
             </DialogTitle>
           </DialogHeader>
         </DialogContent>
-      </Dialog> */}
+      </Dialog>
       </div>
     </div>
   );

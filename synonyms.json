@@ -139,6 +139,79 @@
             "journalism"
         ]
     },
+    "computer science": {
+        "exact_match": [
+            "computer science",
+            "software engineering",
+            "data science",
+            "artificial intelligence",
+            "ai",
+            "information technology",
+            "information technologies",
+            "computer programming",
+            "software development",
+            "web development",
+            "mobile app development",
+            "machine learning",
+            "deep learning"
+        ],
+        "closely_related": [
+            "cybersecurity",
+            "graphic design",
+            "information security",
+            "database management",
+            "network engineering",
+            "systems administration",
+            "cloud computing",
+            "devops",
+            "blockchain technology",
+            "computer graphics",
+            "human-computer interaction",
+            "algorithms",
+            "data structures",
+            "web design",
+            "game development"
+        ],
+        "somewhat_related": [
+            "physics",
+            "mathematics",
+            "robotics",
+            "electrical engineering",
+            "statistics",
+            "bioinformatics",
+            "digital media"
+        ],
+        "weak_connection": [
+            "business",
+            "economics",
+            "psychology",
+            "journalism",
+            "computing",
+            "public relations",
+            "geography"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "theatre",
+            "fashion design",
+            "music",
+            "fine arts",
+            "performing arts",
+            "nursing",
+            "medicine",
+            "law",
+            "education",
+            "political science",
+            "history",
+            "sociology",
+            "anthropology",
+            "linguistics",
+            "philosophy",
+            "religious studies",
+            "archaeology",
+            "agriculture"
+        ]
+    },
     "biology": {
         "exact_match": [
             "biology",
@@ -184,6 +257,87 @@
             "digital media",
             "music",
             "theatre"
+        ]
+    },
+    "mathematics": {
+        "exact_match": [
+            "mathematics",
+            "pure mathematics",
+            "applied mathematics",
+            "algebra",
+            "calculus",
+            "geometry",
+            "number theory",
+            "discrete mathematics"
+        ],
+        "closely_related": [
+            "statistics",
+            "actuarial science",
+            "data science",
+            "mathematical modeling",
+            "operations research",
+            "cryptography",
+            "mathematical physics",
+            "computational mathematics",
+            "mathematical analysis"
+        ],
+        "somewhat_related": [
+            "economics",
+            "physics",
+            "engineering",
+            "computer science",
+            "finance",
+            "business analytics",
+            "psychology"
+        ],
+        "weak_connection": [
+            "business",
+            "political science",
+            "biology",
+            "chemistry"
+        ],
+        "unrelated": [
+            "culinary arts",
+            "theatre",
+            "fashion design",
+            "music"
+        ]
+    },
+    "statistics": {
+        "exact_match": [
+            "statistics",
+            "statistical analysis",
+            "biostatistics",
+            "mathematical statistics"
+        ],
+        "closely_related": [
+            "actuarial science",
+            "data science",
+            "mathematics",
+            "econometrics",
+            "survey methodology",
+            "statistical modeling",
+            "probability theory"
+        ],
+        "somewhat_related": [
+            "economics",
+            "business analytics",
+            "psychology",
+            "sociology",
+            "epidemiology",
+            "market research"
+        ],
+        "weak_connection": [
+            "psychology",
+            "journalism",
+            "political science",
+            "public health"
+        ],
+        "unrelated": [
+            "performing arts",
+            "fashion",
+            "culinary arts",
+            "music"
         ]
     },
     "earth environmental sciences": {
@@ -383,64 +537,6 @@
             "psychology",
             "journalism",
             "computing"
-        ],
-        "unrelated": [
-            "culinary arts",
-            "theatre",
-            "fashion design",
-            "music"
-        ]
-    },
-    "computer science": {
-        "exact_match": [
-            "computer science",
-            "software engineering",
-            "data science",
-            "artificial intelligence",
-            "ai",
-            "information technology",
-            "information technologies",
-            "computer programming",
-            "software development",
-            "web development",
-            "mobile app development",
-            "machine learning",
-            "deep learning"
-        ],
-        "closely_related": [
-            "cybersecurity",
-            "graphic design",
-            "information security",
-            "database management",
-            "network engineering",
-            "systems administration",
-            "cloud computing",
-            "devops",
-            "blockchain technology",
-            "computer graphics",
-            "human-computer interaction",
-            "algorithms",
-            "data structures",
-            "web design"
-        ],
-        "somewhat_related": [
-            "physics",
-            "mathematics",
-            "robotics",
-            "electrical engineering",
-            "statistics",
-            "bioinformatics",
-            "digital media",
-            "game development"
-        ],
-        "weak_connection": [
-            "business",
-            "economics",
-            "psychology",
-            "journalism",
-            "computing",
-            "public relations",
-            "geography"
         ],
         "unrelated": [
             "culinary arts",
@@ -756,87 +852,6 @@
             "theatre"
         ]
     },
-    "mathematics": {
-        "exact_match": [
-            "mathematics",
-            "pure mathematics",
-            "applied mathematics",
-            "algebra",
-            "calculus",
-            "geometry",
-            "number theory",
-            "discrete mathematics"
-        ],
-        "closely_related": [
-            "statistics",
-            "actuarial science",
-            "data science",
-            "mathematical modeling",
-            "operations research",
-            "cryptography",
-            "mathematical physics",
-            "computational mathematics",
-            "mathematical analysis"
-        ],
-        "somewhat_related": [
-            "economics",
-            "physics",
-            "engineering",
-            "computer science",
-            "finance",
-            "business analytics",
-            "psychology"
-        ],
-        "weak_connection": [
-            "business",
-            "political science",
-            "biology",
-            "chemistry"
-        ],
-        "unrelated": [
-            "culinary arts",
-            "theatre",
-            "fashion design",
-            "music"
-        ]
-    },
-    "statistics": {
-        "exact_match": [
-            "statistics",
-            "statistical analysis",
-            "biostatistics",
-            "mathematical statistics"
-        ],
-        "closely_related": [
-            "actuarial science",
-            "data science",
-            "mathematics",
-            "econometrics",
-            "survey methodology",
-            "statistical modeling",
-            "probability theory"
-        ],
-        "somewhat_related": [
-            "economics",
-            "business analytics",
-            "psychology",
-            "sociology",
-            "epidemiology",
-            "market research"
-        ],
-        "weak_connection": [
-            "psychology",
-            "journalism",
-            "political science",
-            "public health"
-        ],
-        "unrelated": [
-            "performing arts",
-            "fashion",
-            "culinary arts",
-            "music"
-        ]
-    },
     "actuarial science": {
         "exact_match": [
             "actuarial science",
@@ -896,7 +911,10 @@
             "pathology",
             "anesthesiology",
             "oncology",
-            "dermatology"
+            "dermatology",
+            "medical sciences",
+            "medical science",
+            "medical science"
         ],
         "somewhat_related": [
             "public health",
@@ -942,7 +960,8 @@
             "nutrition",
             "anatomy",
             "physiology",
-            "medical technology"
+            "medical technology",
+            "medical science"
         ],
         "weak_connection": [
             "business",
@@ -978,7 +997,8 @@
             "occupational therapy",
             "nutrition",
             "social work",
-            "health administration"
+            "health administration",
+            "medical science"
         ],
         "weak_connection": [
             "business",
@@ -1014,7 +1034,8 @@
             "public health",
             "biotechnology",
             "chemical engineering",
-            "microbiology"
+            "microbiology",
+            "medical science"
         ],
         "weak_connection": [
             "business",
@@ -1161,7 +1182,8 @@
             "food science",
             "chemical engineering",
             "neuroscience",
-            "immunology"
+            "immunology",
+            "medical science"
         ],
         "weak_connection": [
             "psychology",
@@ -1190,7 +1212,8 @@
             "immunology",
             "cell biology",
             "developmental biology",
-            "structural biology"
+            "structural biology",
+            "medical science"
         ],
         "somewhat_related": [
             "medicine",
@@ -1312,7 +1335,8 @@
             "pharmacology",
             "environmental science",
             "food science",
-            "agriculture"
+            "agriculture",
+            "medical science"
         ],
         "weak_connection": [
             "business",
@@ -2924,6 +2948,806 @@
         "unrelated": [
             "chemistry",
             "nursing"
+        ]
+    },
+    "fsc pre medical": {
+        "exact_match": [
+            "fsc pre-medical",
+            "pre-medical",
+            "fsc medical",
+            "intermediate pre-medical",
+            "intermediate biology",
+            "intermediate chemistry",
+            "intermediate physics",
+            "fsc bio group",
+            "medical group",
+            "bio-medical sciences",
+            "pre-health sciences",
+            "fsc biological sciences"
+        ],
+        "closely_related": [
+            "biology",
+            "chemistry",
+            "physics",
+            "medicine",
+            "biochemistry",
+            "life sciences",
+            "pre-health studies",
+            "molecular biology",
+            "organic chemistry",
+            "human biology",
+            "cell biology",
+            "anatomy",
+            "physiology",
+            "genetics",
+            "microbiology",
+            "zoology",
+            "botany",
+            "medical sciences",
+            "medical science",
+            "health sciences",
+            "biomedical sciences",
+            "clinical medicine",
+            "pathology",
+            "pharmacology"
+        ],
+        "somewhat_related": [
+            "pharmacy",
+            "dentistry",
+            "nursing",
+            "veterinary science",
+            "biotechnology",
+            "microbiology",
+            "immunology",
+            "pathology",
+            "toxicology",
+            "neuroscience",
+            "environmental science",
+            "food science",
+            "agricultural sciences",
+            "forensic science",
+            "clinical research",
+            "biomedical engineering",
+            "radiography",
+            "laboratory technology",
+            "nutrition",
+            "public health"
+        ],
+        "weak_connection": [
+            "public health",
+            "nutrition",
+            "psychology",
+            "statistics",
+            "mathematics",
+            "epidemiology",
+            "occupational therapy",
+            "physiotherapy",
+            "social work",
+            "health administration",
+            "sports science",
+            "kinesiology"
+        ],
+        "unrelated": [
+            "business",
+            "engineering",
+            "computer science",
+            "law",
+            "journalism",
+            "fashion design",
+            "music",
+            "theatre",
+            "economics",
+            "political science"
+        ]
+    },
+    "medical science": {
+        "exact_match": [
+            "fsc pre-medical",
+            "pre-medical",
+            "fsc medical",
+            "intermediate pre-medical",
+            "intermediate biology",
+            "intermediate chemistry",
+            "intermediate physics",
+            "fsc bio group",
+            "medical group",
+            "bio-medical sciences",
+            "pre-health sciences",
+            "fsc biological sciences"
+        ],
+        "closely_related": [
+            "biology",
+            "chemistry",
+            "physics",
+            "medicine",
+            "biochemistry",
+            "life sciences",
+            "pre-health studies",
+            "molecular biology",
+            "organic chemistry",
+            "human biology",
+            "cell biology",
+            "anatomy",
+            "physiology",
+            "genetics",
+            "microbiology",
+            "zoology",
+            "botany",
+            "medical sciences",
+            "medical science",
+            "health sciences",
+            "biomedical sciences",
+            "clinical medicine",
+            "pathology",
+            "pharmacology"
+        ],
+        "somewhat_related": [
+            "pharmacy",
+            "dentistry",
+            "nursing",
+            "veterinary science",
+            "biotechnology",
+            "microbiology",
+            "immunology",
+            "pathology",
+            "toxicology",
+            "neuroscience",
+            "environmental science",
+            "food science",
+            "agricultural sciences",
+            "forensic science",
+            "clinical research",
+            "biomedical engineering",
+            "radiography",
+            "laboratory technology",
+            "nutrition",
+            "public health"
+        ],
+        "weak_connection": [
+            "public health",
+            "nutrition",
+            "psychology",
+            "statistics",
+            "mathematics",
+            "epidemiology",
+            "occupational therapy",
+            "physiotherapy",
+            "social work",
+            "health administration",
+            "sports science",
+            "kinesiology"
+        ],
+        "unrelated": [
+            "business",
+            "engineering",
+            "computer science",
+            "law",
+            "journalism",
+            "fashion design",
+            "music",
+            "theatre",
+            "economics",
+            "political science"
+        ]
+    },
+    "fsc pre engineering": {
+        "exact_match": [
+            "fsc pre-engineering",
+            "pre-engineering",
+            "fsc engineering",
+            "intermediate pre-engineering",
+            "intermediate mathematics",
+            "intermediate physics",
+            "intermediate chemistry",
+            "fsc math group",
+            "engineering group",
+            "technical sciences",
+            "applied sciences",
+            "fsc physical sciences"
+        ],
+        "closely_related": [
+            "physics",
+            "mathematics",
+            "chemistry",
+            "engineering",
+            "applied physics",
+            "mathematical physics",
+            "technical sciences",
+            "mechanical engineering",
+            "electrical engineering",
+            "civil engineering",
+            "chemical engineering",
+            "aerospace engineering",
+            "materials science",
+            "calculus",
+            "algebra",
+            "geometry",
+            "trigonometry",
+            "analytical geometry",
+            "thermodynamics",
+            "mechanics",
+            "electromagnetism",
+            "quantum physics",
+            "nuclear physics",
+            "solid mechanics",
+            "fluid mechanics"
+        ],
+        "somewhat_related": [
+            "computer science",
+            "robotics",
+            "materials science",
+            "statistics",
+            "architecture",
+            "biomedical engineering",
+            "industrial engineering",
+            "petroleum engineering",
+            "environmental engineering",
+            "structural engineering",
+            "automotive engineering",
+            "manufacturing engineering",
+            "systems engineering",
+            "control systems",
+            "instrumentation",
+            "telecommunications",
+            "ai",
+            "data science",
+            "software engineering",
+            "information technology",
+            "web development",
+            "mobile development",
+            "cloud computing",
+            "blockchain technology"
+        ],
+        "weak_connection": [
+            "business",
+            "economics",
+            "data science",
+            "artificial intelligence",
+            "information technology",
+            "cybersecurity",
+            "operations research",
+            "project management"
+        ],
+        "unrelated": [
+            "medicine",
+            "biology",
+            "arts and humanities",
+            "social sciences",
+            "journalism",
+            "fashion design",
+            "music",
+            "theatre"
+        ]
+    },
+    "ics physics": {
+        "exact_match": [
+            "ics (physics)",
+            "ics physics",
+            "intermediate computer science with physics",
+            "computer science physics",
+            "ics physical sciences",
+            "computer physics",
+            "computational sciences"
+        ],
+        "closely_related": [
+            "physics",
+            "computer science",
+            "mathematics",
+            "engineering",
+            "applied physics",
+            "computational physics",
+            "software engineering",
+            "mathematical physics",
+            "theoretical physics",
+            "quantum physics",
+            "nuclear physics",
+            "astrophysics",
+            "data science",
+            "artificial intelligence",
+            "machine learning",
+            "programming",
+            "algorithms",
+            "software development",
+            "web development",
+            "information technology",
+            "calculus",
+            "linear algebra",
+            "discrete mathematics"
+        ],
+        "somewhat_related": [
+            "data science",
+            "artificial intelligence",
+            "robotics",
+            "statistics",
+            "materials science",
+            "electrical engineering",
+            "mechanical engineering",
+            "aerospace engineering",
+            "biomedical engineering",
+            "cybersecurity",
+            "database management",
+            "network engineering",
+            "systems analysis",
+            "game development",
+            "mobile development",
+            "cloud computing",
+            "blockchain technology"
+        ],
+        "weak_connection": [
+            "business",
+            "economics",
+            "cybersecurity",
+            "information technology",
+            "business analytics",
+            "digital marketing",
+            "project management",
+            "operations research"
+        ],
+        "unrelated": [
+            "medicine",
+            "biology",
+            "arts and humanities",
+            "social work",
+            "journalism",
+            "fashion design",
+            "music",
+            "theatre"
+        ]
+    },
+    "ics economics": {
+        "exact_match": [
+            "ics (economics)",
+            "ics economics",
+            "intermediate computer science with economics",
+            "computer science economics",
+            "computational economics",
+            "digital economics",
+            "economic informatics",
+            "business computing"
+        ],
+        "closely_related": [
+            "computer science",
+            "economics",
+            "mathematics",
+            "business administration",
+            "data science",
+            "business analytics",
+            "econometrics",
+            "software engineering",
+            "programming",
+            "microeconomics",
+            "macroeconomics",
+            "financial economics",
+            "quantitative economics",
+            "economic modeling",
+            "statistical analysis",
+            "market research",
+            "business intelligence",
+            "financial analysis",
+            "investment analysis",
+            "risk analysis",
+            "operations research"
+        ],
+        "somewhat_related": [
+            "statistics",
+            "finance",
+            "artificial intelligence",
+            "political science",
+            "accounting",
+            "banking",
+            "marketing",
+            "management",
+            "entrepreneurship",
+            "international business",
+            "supply chain management",
+            "human resources",
+            "public administration",
+            "policy analysis",
+            "game theory",
+            "behavioral economics"
+        ],
+        "weak_connection": [
+            "psychology",
+            "sociology",
+            "public administration",
+            "law",
+            "journalism",
+            "communications",
+            "international relations",
+            "development studies"
+        ],
+        "unrelated": [
+            "medicine",
+            "biology",
+            "engineering",
+            "physics",
+            "chemistry",
+            "nursing",
+            "fashion design",
+            "music",
+            "theatre"
+        ]
+    },
+    "ics statistics": {
+        "exact_match": [
+            "ics (statistics)",
+            "ics statistics",
+            "intermediate computer science with statistics",
+            "computer science statistics",
+            "computational statistics",
+            "statistical computing",
+            "data analytics",
+            "statistical analysis"
+        ],
+        "closely_related": [
+            "computer science",
+            "statistics",
+            "mathematics",
+            "data science",
+            "business analytics",
+            "actuarial science",
+            "econometrics",
+            "software engineering",
+            "programming",
+            "machine learning",
+            "artificial intelligence",
+            "statistical modeling",
+            "probability theory",
+            "mathematical statistics",
+            "biostatistics",
+            "statistical software",
+            "data mining",
+            "predictive analytics",
+            "quantitative analysis",
+            "research methodology",
+            "survey methodology"
+        ],
+        "somewhat_related": [
+            "economics",
+            "finance",
+            "artificial intelligence",
+            "operations research",
+            "business administration",
+            "market research",
+            "quality control",
+            "risk management",
+            "financial modeling",
+            "investment analysis",
+            "database management",
+            "business intelligence",
+            "scientific computing",
+            "bioinformatics",
+            "epidemiology",
+            "social research"
+        ],
+        "weak_connection": [
+            "psychology",
+            "sociology",
+            "public health",
+            "political science",
+            "journalism",
+            "education",
+            "public administration",
+            "law"
+        ],
+        "unrelated": [
+            "medicine",
+            "biology",
+            "engineering",
+            "arts and humanities",
+            "fashion design",
+            "music",
+            "theatre",
+            "nursing"
+        ]
+    },
+    "fa humanities": {
+        "exact_match": [
+            "fa humanities",
+            "faculty of arts",
+            "intermediate humanities",
+            "arts and humanities",
+            "liberal arts",
+            "humanities studies",
+            "social sciences and humanities",
+            "classical studies",
+            "cultural studies"
+        ],
+        "closely_related": [
+            "arts and humanities",
+            "english literature",
+            "history",
+            "philosophy",
+            "sociology",
+            "political science",
+            "cultural studies",
+            "comparative literature",
+            "world literature",
+            "creative writing",
+            "linguistics",
+            "anthropology",
+            "religious studies",
+            "islamic studies",
+            "urdu literature",
+            "persian literature",
+            "arabic literature",
+            "social studies",
+            "human geography",
+            "archaeology",
+            "art history",
+            "ethics",
+            "critical theory"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "journalism",
+            "education",
+            "anthropology",
+            "linguistics",
+            "social work",
+            "international relations",
+            "public administration",
+            "law",
+            "communications",
+            "media studies",
+            "gender studies",
+            "environmental studies",
+            "development studies",
+            "peace studies",
+            "human rights",
+            "library science"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "public administration",
+            "economics",
+            "marketing",
+            "public relations",
+            "tourism",
+            "event management"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "computer science",
+            "physics",
+            "chemistry",
+            "mathematics",
+            "biology",
+            "statistics"
+        ]
+    },
+    "icom": {
+        "exact_match": [
+            "i.com",
+            "icom",
+            "intermediate commerce",
+            "commerce",
+            "commercial studies",
+            "business studies",
+            "commercial education",
+            "intermediate business",
+            "pre-commerce"
+        ],
+        "closely_related": [
+            "business administration",
+            "accounting",
+            "finance",
+            "economics",
+            "banking",
+            "commerce",
+            "business studies",
+            "commercial law",
+            "business law",
+            "financial accounting",
+            "cost accounting",
+            "management accounting",
+            "corporate finance",
+            "business mathematics",
+            "commercial geography",
+            "business economics",
+            "principles of accounting",
+            "principles of economics",
+            "business communication",
+            "office management",
+            "secretarial practice",
+            "typing and shorthand"
+        ],
+        "somewhat_related": [
+            "marketing",
+            "statistics",
+            "public administration",
+            "business analytics",
+            "entrepreneurship",
+            "supply chain management",
+            "human resources",
+            "operations management",
+            "international business",
+            "insurance",
+            "real estate",
+            "taxation",
+            "auditing",
+            "investment management",
+            "risk management",
+            "project management",
+            "quality management"
+        ],
+        "weak_connection": [
+            "law",
+            "mathematics",
+            "computer science",
+            "psychology",
+            "political science",
+            "journalism",
+            "public relations",
+            "sociology"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "biology",
+            "chemistry",
+            "nursing",
+            "fashion design",
+            "music",
+            "theatre"
+        ]
+    },
+    "commerce": {
+        "exact_match": [
+            "i.com",
+            "icom",
+            "intermediate commerce",
+            "commerce",
+            "commercial studies",
+            "business studies",
+            "commercial education",
+            "intermediate business",
+            "pre-commerce"
+        ],
+        "closely_related": [
+            "business administration",
+            "accounting",
+            "finance",
+            "economics",
+            "banking",
+            "commerce",
+            "business studies",
+            "commercial law",
+            "business law",
+            "financial accounting",
+            "cost accounting",
+            "management accounting",
+            "corporate finance",
+            "business mathematics",
+            "commercial geography",
+            "business economics",
+            "principles of accounting",
+            "principles of economics",
+            "business communication",
+            "office management",
+            "secretarial practice",
+            "typing and shorthand"
+        ],
+        "somewhat_related": [
+            "marketing",
+            "statistics",
+            "public administration",
+            "business analytics",
+            "entrepreneurship",
+            "supply chain management",
+            "human resources",
+            "operations management",
+            "international business",
+            "insurance",
+            "real estate",
+            "taxation",
+            "auditing",
+            "investment management",
+            "risk management",
+            "project management",
+            "quality management"
+        ],
+        "weak_connection": [
+            "law",
+            "mathematics",
+            "computer science",
+            "psychology",
+            "political science",
+            "journalism",
+            "public relations",
+            "sociology"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "physics",
+            "biology",
+            "chemistry",
+            "nursing",
+            "fashion design",
+            "music",
+            "theatre"
+        ]
+    },
+    "arts and humanities": {
+        "exact_match": [
+            "fa (humanities)",
+            "fa humanities",
+            "faculty of arts",
+            "intermediate humanities",
+            "arts and humanities",
+            "liberal arts",
+            "humanities studies",
+            "social sciences and humanities",
+            "classical studies",
+            "cultural studies"
+        ],
+        "closely_related": [
+            "arts and humanities",
+            "english literature",
+            "history",
+            "philosophy",
+            "sociology",
+            "political science",
+            "cultural studies",
+            "comparative literature",
+            "world literature",
+            "creative writing",
+            "linguistics",
+            "anthropology",
+            "religious studies",
+            "islamic studies",
+            "urdu literature",
+            "persian literature",
+            "arabic literature",
+            "social studies",
+            "human geography",
+            "archaeology",
+            "art history",
+            "ethics",
+            "critical theory"
+        ],
+        "somewhat_related": [
+            "psychology",
+            "journalism",
+            "education",
+            "anthropology",
+            "linguistics",
+            "social work",
+            "international relations",
+            "public administration",
+            "law",
+            "communications",
+            "media studies",
+            "gender studies",
+            "environmental studies",
+            "development studies",
+            "peace studies",
+            "human rights",
+            "library science"
+        ],
+        "weak_connection": [
+            "business",
+            "law",
+            "public administration",
+            "economics",
+            "marketing",
+            "public relations",
+            "tourism",
+            "event management"
+        ],
+        "unrelated": [
+            "medicine",
+            "engineering",
+            "computer science",
+            "physics",
+            "chemistry",
+            "mathematics",
+            "biology",
+            "statistics"
         ]
     }
 }

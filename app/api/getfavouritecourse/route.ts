@@ -4,6 +4,7 @@ import { connectToDatabase } from "@/lib/db";
 import { Courses } from "@/models/courses";
 import { ObjectId } from "mongodb";
 import type { PipelineStage } from "mongoose";
+import { Country } from "@/models/countries";
 
 interface ApplicationData {
   applicationStatus: number;
@@ -11,9 +12,65 @@ interface ApplicationData {
   createdAt?: string;
   updatedAt?: string;
 }
-export async function GET(req: NextRequest) {
-  console.log("=== API ROUTE DEBUG START ===");
 
+// --- Utility for parsing min values ---
+function parseMinValue(value: string): { min: number; currency: string } | null {
+    if (!value) return null;
+
+    // Clean value (remove Annually, extra spaces)
+    const cleaned = value.replace(/Annually/i, "").trim();
+
+    // Regex: capture symbol/code + min/max numbers
+    const match = cleaned.match(/(£|\$|€|[A-Z]{3})(?:\s*-?\s*[A-Za-z]*)?\s*([\d,]+)(?:-([\d,]+))?/);
+
+    if (!match) return null;
+
+    let currency = match[1]; // currency symbol or code
+    let min = parseFloat(match[2].replace(/,/g, ""));
+
+    // Convert annual → monthly
+    if (/annually/i.test(value)) {
+        min = min / 12;
+    }
+
+    // Map symbols → ISO codes
+    const currencyMap: Record<string, string> = {
+        "£": "GBP",
+        "$": "USD",
+        "€": "EUR",
+        "USD": "USD",
+        "GBP": "GBP",
+        "EUR": "EUR",
+        "CAD": "CAD",
+    };
+    if (currencyMap[currency]) {
+        currency = currencyMap[currency];
+    }
+
+    return { min, currency };
+}
+
+function calculateMinCostOfLiving(costData: { [key: string]: string }) {
+    const categories = ["rent", "groceries", "transportation", "healthcare", "eating_out", "household_bills"];
+
+    let amount = 0;
+    let currency = "";
+
+    categories.forEach((cat) => {
+        const parsed = parseMinValue(costData?.[cat]);
+        if (parsed) {
+            amount += parsed.min;
+            currency = parsed.currency; // assume same currency across all fields
+        }
+    });
+
+    return {
+        amount,
+        currency,
+    };
+}
+
+export async function GET(req: NextRequest) {
   try {
     // Connect to database first
     await connectToDatabase();
@@ -25,11 +82,6 @@ export async function GET(req: NextRequest) {
     const type = searchParams.get("type") || "favourite";
     const includeApplicationData =
       searchParams.get("includeApplicationData") === "true";
-
-    console.log("=== REQUEST PARAMETERS ===");
-    console.log("Course IDs parameter:", courseIdsParam);
-    console.log("Request type:", type);
-    console.log("Include application data:", includeApplicationData);
 
     // Early return if no course IDs provided
     if (!courseIdsParam) {
@@ -63,12 +115,10 @@ export async function GET(req: NextRequest) {
 
       if (Array.isArray(parsed)) {
         parsed.forEach((item, index) => {
-          console.log(`Processing item ${index}:`, item);
-
           if (typeof item === "string") {
             // Handle old string format or favourites
-            courseIds.push(item);
-            console.log(`Added string course ID: ${item}`);
+            courseIds.push(item );
+            console.log(`Added string course ID: ${index}`);
           } else if (typeof item === "object" && item.courseId) {
             // Handle new applied course object format (SCHEMA ALIGNED)
             courseIds.push(item.courseId);
@@ -79,7 +129,6 @@ export async function GET(req: NextRequest) {
               const applicationData = {
                 applicationStatus: item.applicationStatus || 1, // Main tracking field (1-7)
                 isConfirmed: item.isConfirmed || false, // ✅ NEW: Added isConfirmed field
-
                 createdAt: item.createdAt,
                 updatedAt: item.updatedAt,
               };
@@ -103,11 +152,6 @@ export async function GET(req: NextRequest) {
         .map((id) => id.trim())
         .filter((id) => id.length > 0);
     }
-
-    // console.log("=== PARSED DATA ===");
-    // console.log("Parsed course IDs:", courseIds);
-    // console.log("Number of course IDs:", courseIds.length);
-    // console.log("Application data entries:", applicationDataMap.size);
 
     // Early return if no valid course IDs found after parsing
     if (courseIds.length === 0) {
@@ -148,10 +192,6 @@ export async function GET(req: NextRequest) {
         console.warn(`✗ Error creating ObjectId for ${id}:`, error);
       }
     }
-
-    console.log("=== OBJECTID VALIDATION ===");
-    console.log(`Valid ObjectIds: ${validObjectIds.length}`);
-    console.log(`Invalid IDs: ${invalidIds.length}`);
 
     // Return error if no valid ObjectIds found
     if (validObjectIds.length === 0) {
@@ -206,8 +246,10 @@ export async function GET(req: NextRequest) {
           application_deadline: 1,
           course_description: 1,
           entry_requirements: 1,
+          required_ielts_score: 1,
+          required_toefl_score: 1,
+          required_pte_score: 1,
           language_requirements: 1,
-          application_fee: 1,
           "universityData.universityImages.banner": 1,
           "universityData.universityImages.logo": 1,
           "universityData.university_name": 1,
@@ -223,54 +265,95 @@ export async function GET(req: NextRequest) {
       },
     ];
 
-    console.log("=== EXECUTING AGGREGATION ===");
-
     // Execute the aggregation pipeline with error handling
     const courses = await Courses.aggregate(pipeline).exec();
 
-    console.log("=== AGGREGATION RESULTS ===");
-    console.log(`Found ${courses.length} courses from aggregation`);
+    // Get unique country names from the courses
+    const uniqueCountries = [...new Set(courses.map(course => course.countryname?.trim()).filter(Boolean))];
+    
+    // Fetch cost of living data for all countries at once
+    const costOfLivingData = await Country.find(
+      {
+        $or: [
+          { country_name: { $in: uniqueCountries } },
+          { short_name: { $in: uniqueCountries.map(c => c.toLowerCase()) } }
+        ]
+      },
+      { 
+        country_name: 1, 
+        short_name: 1,
+        rent: 1, 
+        groceries: 1, 
+        transportation: 1, 
+        healthcare: 1, 
+        eating_out: 1, 
+        household_bills: 1, 
+        country_id: 1 
+      }
+    ).lean();
 
-    // Enhance courses with application data if available (SCHEMA ALIGNED)
+    // Create a map for quick country lookup
+    const countryToCostMap = new Map();
+    costOfLivingData.forEach(countryData => {
+      const costOfLiving = calculateMinCostOfLiving(countryData);
+      // Map by both country_name and short_name for flexible matching
+      if (countryData.country_name) {
+        countryToCostMap.set(countryData.country_name.trim(), costOfLiving);
+      }
+      if (countryData.short_name) {
+        countryToCostMap.set(countryData.short_name.trim().toLowerCase(), costOfLiving);
+      }
+    });
+
+    // Enhance courses with application data and cost of living
     const enhancedCourses = courses.map((course) => {
       const courseId = course._id.toString();
       const applicationData = applicationDataMap.get(courseId);
 
+      // Get cost of living for this course's country
+      const countryName = course.countryname?.trim();
+      let costOfLiving = null;
+      
+      if (countryName) {
+        // Try exact match first, then lowercase match
+        costOfLiving = countryToCostMap.get(countryName) || 
+                      countryToCostMap.get(countryName.toLowerCase()) || 
+                      null;
+      }
+
       console.log(`Processing course ${courseId}:`, {
         hasApplicationData: !!applicationData,
         applicationData: applicationData,
+        countryName: countryName,
+        hasCostOfLiving: !!costOfLiving,
       });
+
+      const enhancedCourse = {
+        ...course,
+        costOfLiving, // Add cost of living to each course
+      };
 
       if (applicationData && (type === "applied" || includeApplicationData)) {
         return {
-          ...course,
+          ...enhancedCourse,
           // Include ONLY schema fields in the course object
           applicationStatus: applicationData.applicationStatus,
-          isConfirmed: applicationData.isConfirmed, // ✅ NEW: Added isConfirmed to course object
-
+          isConfirmed: applicationData.isConfirmed,
           applicationData: {
             applicationStatus: applicationData.applicationStatus,
-            isConfirmed: applicationData.isConfirmed, // ✅ NEW: Added isConfirmed to applicationData
-
+            isConfirmed: applicationData.isConfirmed,
             createdAt: applicationData.createdAt,
             updatedAt: applicationData.updatedAt,
           },
         };
       }
 
-      return course;
+      return enhancedCourse;
     });
 
     // Log details about each found course
     enhancedCourses.forEach((course, index) => {
-      console.log(`=== COURSE ${index + 1} ===`);
-      console.log(`ID: ${course._id}`);
-      console.log(`Title: ${course.course_title}`);
-      console.log(`University: ${course.universityname}`);
-      if (course.applicationData) {
-        console.log(`Application Status: ${course.applicationStatus}`);
-        console.log(`Is Confirmed: ${course.isConfirmed}`); // ✅ NEW: Added logging for isConfirmed
-      }
+      console.log(`Course ${index + 1}: ${course.course_title} - Cost of Living:`, course.costOfLiving);
     });
 
     // Check for missing courses
@@ -294,29 +377,25 @@ export async function GET(req: NextRequest) {
     const finalCourses =
       type === "applied"
         ? enhancedCourses.sort((a, b) => {
-            // First sort by applicationStatus (higher status first)
-            const aStatus = a.applicationStatus || 1;
-            const bStatus = b.applicationStatus || 1;
+          // First sort by applicationStatus (higher status first)
+          const aStatus = a.applicationStatus || 1;
+          const bStatus = b.applicationStatus || 1;
 
-            if (aStatus !== bStatus) {
-              return bStatus - aStatus;
-            }
+          if (aStatus !== bStatus) {
+            return bStatus - aStatus;
+          }
 
-            // Then sort by creation date (most recent first) if available
-            const aDate = a.applicationData?.createdAt
-              ? new Date(a.applicationData.createdAt)
-              : new Date(0);
-            const bDate = b.applicationData?.createdAt
-              ? new Date(b.applicationData.createdAt)
-              : new Date(0);
+          // Then sort by creation date (most recent first) if available
+          const aDate = a.applicationData?.createdAt
+            ? new Date(a.applicationData.createdAt)
+            : new Date(0);
+          const bDate = b.applicationData?.createdAt
+            ? new Date(b.applicationData.createdAt)
+            : new Date(0);
 
-            return bDate.getTime() - aDate.getTime();
-          })
+          return bDate.getTime() - aDate.getTime();
+        })
         : enhancedCourses;
-
-    console.log("=== FINAL RESPONSE ===");
-    console.log(`Returning ${finalCourses.length} courses`);
-    console.log("Response key:", responseKey);
 
     // Prepare warnings array
     const warnings: string[] = [];
@@ -339,18 +418,18 @@ export async function GET(req: NextRequest) {
           hasApplicationData: applicationDataMap.size > 0,
           type: type,
           includedApplicationData: includeApplicationData || type === "applied",
-          schemaAligned: true, // Indicate this response only uses schema fields
+          schemaAligned: true,
           requestedCount: courseIds.length,
           foundCount: courses.length,
           invalidCount: invalidIds.length,
           missingCount: missingIds.length,
+          hasCostOfLiving: true, // Indicate cost of living is included
         },
         ...(warnings.length > 0 && { warnings }),
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("=== API ERROR ===");
     console.error("Error fetching courses:", error);
 
     let errorMessage = "Failed to fetch courses";
@@ -400,7 +479,6 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
 // Handle unsupported HTTP methods
 export async function POST() {
   return NextResponse.json(

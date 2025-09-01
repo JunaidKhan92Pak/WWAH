@@ -83,7 +83,8 @@ declare global {
 const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl =
+    searchParams.get("callbackUrl") || "/referralportal/overview";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -91,7 +92,7 @@ const Page = () => {
   });
 
   const [errors, setErrors] = useState({
-    generalError: "", // Fixed typo: was "genralError"
+    generalError: "",
     email: "",
     password: "",
   });
@@ -108,29 +109,45 @@ const Page = () => {
       setErrors((prev) => ({ ...prev, generalError: "" }));
 
       try {
+        console.log("Attempting Google sign-in...");
+
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}auth/google-login`,
+          `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/google-login`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Accept: "application/json",
             },
+            credentials: "include", // Important for CORS
             body: JSON.stringify({ credential: response.credential }),
           }
         );
 
+        console.log("Google sign-in response status:", res.status);
+
         const data = await res.json();
+        console.log("Google sign-in response:", data);
 
         if (res.ok && data.success) {
-          // Set token in cookie
-          const expireDate = new Date(
-            Date.now() + 24 * 60 * 60 * 1000
-          ).toUTCString();
-          document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/; secure; samesite=strict`;
+          // Set token in cookie with same settings as backend
+          const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+          const isProduction = process.env.NODE_ENV === "production";
 
-          // Use router.push instead of window.location.href for better UX
-          router.push(callbackUrl);
+          document.cookie = `authToken=${
+            data.token
+          }; expires=${expireDate.toUTCString()}; path=/; ${
+            isProduction ? "secure; samesite=none" : "samesite=lax"
+          }`;
+
+          console.log("Redirecting to:", callbackUrl);
+
+          // Small delay to ensure cookie is set
+          setTimeout(() => {
+            router.push(callbackUrl);
+          }, 100);
         } else {
+          console.error("Google sign-in failed:", data);
           setErrors((prev) => ({
             ...prev,
             generalError:
@@ -138,7 +155,7 @@ const Page = () => {
           }));
         }
       } catch (error) {
-        console.error("Google sign-in error:", error);
+        console.error("Google sign-in network error:", error);
         setErrors((prev) => ({
           ...prev,
           generalError:
@@ -172,12 +189,13 @@ const Page = () => {
             window.FB.api("/me?fields=email,name", async (userInfo) => {
               try {
                 const res = await fetch(
-                  `${process.env.NEXT_PUBLIC_BACKEND_API}auth/facebook-login`,
+                  `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/facebook-login`,
                   {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
                     },
+                    credentials: "include",
                     body: JSON.stringify({
                       accessToken: response.authResponse!.accessToken,
                       userID: response.authResponse!.userID,
@@ -190,10 +208,14 @@ const Page = () => {
                 const data = await res.json();
 
                 if (res.ok && data.success) {
-                  const expireDate = new Date(
-                    Date.now() + 24 * 60 * 60 * 1000
-                  ).toUTCString();
-                  document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/; secure; samesite=strict`;
+                  const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+                  const isProduction = process.env.NODE_ENV === "production";
+
+                  document.cookie = `authToken=${
+                    data.token
+                  }; expires=${expireDate.toUTCString()}; path=/; ${
+                    isProduction ? "secure; samesite=none" : "samesite=lax"
+                  }`;
 
                   router.push(callbackUrl);
                 } else {
@@ -261,45 +283,49 @@ const Page = () => {
   useEffect(() => {
     const initializeGoogleSignIn = () => {
       if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
-          callback: handleGoogleSignIn,
-          auto_select: false,
-        });
-
-        const googleButton = document.getElementById("google-signin-button");
-        if (googleButton) {
-          const containerWidth = googleButton.offsetWidth;
-
-          window.google.accounts.id.renderButton(googleButton, {
-            theme: "outline",
-            size: "large",
-            width: containerWidth.toString(),
-            text: "signin_with",
+        try {
+          window.google.accounts.id.initialize({
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+            callback: handleGoogleSignIn,
+            auto_select: false,
           });
 
-          // Custom CSS for button styling
-          setTimeout(() => {
-            const style = document.createElement("style");
-            style.textContent = `
-              #google-signin-button iframe {
-                margin: 0 auto !important;
-                display: block !important;
-              }
-              #google-signin-button > div {
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-              }
-              #google-signin-button button {
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                margin: 0 auto !important;
-              }
-            `;
-            document.head.appendChild(style);
-          }, 100);
+          const googleButton = document.getElementById("google-signin-button");
+          if (googleButton) {
+            googleButton.innerHTML = ""; // Clear existing content
+
+            window.google.accounts.id.renderButton(googleButton, {
+              theme: "outline",
+              size: "large",
+              width: googleButton.offsetWidth.toString(),
+              text: "signin_with",
+            });
+
+            // Custom CSS for button styling
+            setTimeout(() => {
+              const style = document.createElement("style");
+              style.textContent = `
+                #google-signin-button iframe {
+                  margin: 0 auto !important;
+                  display: block !important;
+                }
+                #google-signin-button > div {
+                  display: flex !important;
+                  justify-content: center !important;
+                  align-items: center !important;
+                }
+                #google-signin-button button {
+                  display: flex !important;
+                  justify-content: center !important;
+                  align-items: center !important;
+                  margin: 0 auto !important;
+                }
+              `;
+              document.head.appendChild(style);
+            }, 100);
+          }
+        } catch (error) {
+          console.error("Google Sign-In initialization error:", error);
         }
       }
     };
@@ -310,6 +336,9 @@ const Page = () => {
       script.async = true;
       script.defer = true;
       script.onload = initializeGoogleSignIn;
+      script.onerror = (error) => {
+        console.error("Failed to load Google Sign-In script:", error);
+      };
       document.head.appendChild(script);
     } else {
       initializeGoogleSignIn();
@@ -355,6 +384,7 @@ const Page = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(formData),
         }
       );
@@ -362,12 +392,16 @@ const Page = () => {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        console.log(`Sign-in response:`, data.token);
         // Set token in cookie
         const expireDate = new Date(
           Date.now() + 24 * 60 * 60 * 1000
         ).toUTCString();
-        document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/; secure; samesite=strict`;
-
+        // Set the authToken cookie to expire in one day:
+        // const isProduction = process.env.NODE_ENV === "production";
+// document.cookie = `authToken=${data.token}; path=/; samesite=lax`;
+      document.cookie = `authToken=${data.token}; expires=${expireDate}; path=/`;
+      
         router.push(callbackUrl);
       } else {
         setErrors((prevErrors) => ({
@@ -389,7 +423,7 @@ const Page = () => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
       <div className="w-full md:w-1/2 pt-5 md:pt-0 px-8 flex flex-col items-center justify-center lg:w-[50%]">
-        <div>
+        <div className="w-full md:w-2/3">
           <div className="flex justify-center items-center">
             <Link href="/">
               <Image
@@ -474,7 +508,7 @@ const Page = () => {
                 />
                 <span className="text-[12px] 2xl:text-[24px]">Remember me</span>
               </div>
-              <Link href="/forget" className="text-red-400">
+              <Link href="/referralportal/forget" className="text-red-400">
                 <span className="text-[12px] 2xl:text-[24px]">
                   Forget password?
                 </span>
@@ -501,7 +535,7 @@ const Page = () => {
 
             {/* Social Media Login Buttons */}
             <div className="flex gap-3 mb-4">
-              {/* Google Sign-In Button - Show custom button when loading */}
+              {/* Google Sign-In Button */}
               <div className="flex-1">
                 {googleLoading ? (
                   <button
