@@ -21,7 +21,7 @@ export const useSimpleFormPersistence = ({
             try {
                 // Transform complex data for storage
                 const transformedData = transformDataForStorage(data);
-                sessionStorage.setItem(key, JSON.stringify(transformedData));
+                localStorage.setItem(key, JSON.stringify(transformedData));
                 console.log(`Form data saved locally for key: ${key}`);
             } catch (error) {
                 console.error('Failed to save form data locally:', error);
@@ -35,7 +35,7 @@ export const useSimpleFormPersistence = ({
             if (isInitialized.current) return;
 
             try {
-                const savedData = sessionStorage.getItem(key);
+                const savedData = localStorage.getItem(key);
                 if (savedData) {
                     const parsedData = JSON.parse(savedData);
                     const transformedData = transformDataFromStorage(parsedData);
@@ -47,7 +47,7 @@ export const useSimpleFormPersistence = ({
             } catch (error) {
                 console.error('Failed to load saved form data:', error);
                 // Clear corrupted data
-                sessionStorage.removeItem(key);
+                localStorage.removeItem(key);
             } finally {
                 isInitialized.current = true;
             }
@@ -83,7 +83,7 @@ export const useSimpleFormPersistence = ({
 
     // Clear saved data
     const clearSavedData = () => {
-        sessionStorage.removeItem(key);
+        localStorage.removeItem(key);
         console.log(`Form data cleared for key: ${key}`);
     };
 
