@@ -25,9 +25,10 @@ export function calculateMajorSuccess(
     courseTitle: string,
     synonyms: any
 ) {
+    // console.log(`[RESULT] userMajor: ${userMajor}, courseTitle: ${courseTitle},`);
     const normalizedUser = userMajor.toLowerCase().trim();
     const categoryData = synonyms[normalizedUser];
-
+    console.log(`[RESULT] userMajor: ${normalizedUser} ,  categoryData: ${JSON.stringify(categoryData, null, 2)}}`);
     if (!categoryData) {
         console.log("[LOG] User major not found in synonyms.json");
         return 10;
@@ -35,7 +36,8 @@ export function calculateMajorSuccess(
 
     const title = courseTitle.toLowerCase();
     const fuseOptions = { includeScore: true, threshold: 0.4 };
-
+    // console.log(`[RESULT] title: ${title}`);
+    // console.log(`[RESULT] fuseOptions: ${fuseOptions}`);
     let matchedScore = 10;
     let matchCount = 0;
 
@@ -82,6 +84,6 @@ export function calculateMajorSuccess(
 
 
 
-    // console.log(`[RESULT] matchedScore: ${matchedScore}, matchCount: ${matchCount}`);
+    //  console.log(`[RESULT] matchedScore: ${matchedScore}, matchCount: ${matchCount}`);
     return matchedScore;
 }

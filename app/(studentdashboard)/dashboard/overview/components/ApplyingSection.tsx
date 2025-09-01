@@ -1,6 +1,6 @@
-// export default ApplyingSection;
+// Enhanced ApplyingSection Component with Success Chances
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef, } from "react";
 import Image from "next/image";
 import CircularProgress from "./CircularProgress";
 import Link from "next/link";
@@ -24,6 +24,8 @@ import { FaFacebook } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useUserStore } from "@/store/useUserData";
 import { useRouter } from "next/navigation";
+import { useUserInfo } from "@/store/userStore/userSuccessInfo";
+import { calculateAllSuccessMetrics } from "@/utils/successChance/courseSuccess";
 
 interface Course {
   _id: string;
@@ -35,7 +37,6 @@ interface Course {
     currency?: string;
     amount?: number;
   };
-
   application_deadline?: string;
   application_fee: string;
   universityData?: {
@@ -45,41 +46,253 @@ interface Course {
       logo?: string;
     };
   };
+  required_ielts_score?: string;
+  required_pte_score?: string;
+  required_toefl_score?: string;
+  entry_requirement?: string;
+  entry_requirements?: string;
+  course_level?: string;
+    costOfLiving?: {
+    currency?: string;
+    amount?: number;
+  };
 }
-
+interface User {
+    languageProficiency?: {
+      test?: string;
+      score?: number;
+    };
+    grade?: number;
+    gradetype?: string;
+    studyLevel?: string;
+    workExperience?: string;
+    majorSubject?: string;
+    tuitionFee?: {
+      amount: number;
+      currency: string;
+    };
+    livingCosts?: {
+      amount: number;
+      currency: string;
+    };
+  }
 const ApplyingSection: React.FC = () => {
-  const [detailedAppliedCourses, setDetailedAppliedCourses] = useState<
-    Course[]
-  >([]);
+  const [detailedAppliedCourses, setDetailedAppliedCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasInitialized, setHasInitialized] = useState<boolean>(false);
+  
+  // Success chance states
+  const [courseSuccessChances, setCourseSuccessChances] = useState<Record<string, number>>({});
+  const [generatingSuccess, setGeneratingSuccess] = useState<Record<string, boolean>>({});
+  const [showSuccessPromptModal, setShowSuccessPromptModal] = useState<boolean>(false);
 
-  // ✅ NEW: Modal state
+  // Existing states
+  const [initializationState, setInitializationState] = useState<"idle" | "initializing" | "completed">("idle");
+  const initializationRef = useRef(false);
   const [showContactModal, setShowContactModal] = useState<boolean>(false);
-
-  // ✅ NEW: Confirmation modal state
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [courseToConfirm, setCourseToConfirm] = useState<string | null>(null);
-
-  // ✅ NEW: Delete confirmation modal state
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
-
-  // ✅ NEW: Share functionality state
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
-
-  // ✅ NEW: Router for navigation
+  
   const router = useRouter();
+  const { userSuccessInfo, isLoggedIn, hasData, fetchUserSuccessInfo } = useUserInfo();
+  
+  useEffect(() => {
+    fetchUserSuccessInfo();
+  }, [fetchUserSuccessInfo]);
 
-  // ✅ NEW: Status configuration with colors
+  interface UserLanguageProficiency {
+    test: string;
+    score: number;
+  }
+
+  interface UserTuitionFee {
+    amount: number;
+    currency: string;
+  }
+
+  interface UserLivingCosts {
+    amount: number;
+    currency: string;
+  }
+
+  interface UserDataForCalculation {
+    languageProficiency: UserLanguageProficiency;
+    grade: number;
+    gradeType: string;
+    studyLevel: string;
+    workExperience: string;
+    majorSubject: string;
+    tuitionFee: UserTuitionFee;
+    livingCosts: UserLivingCosts;
+  }
+
+  // The userData parameter is any, as the shape is not strictly defined in the codebase.
+  const transformUserDataForCalculation = useCallback(
+    (userData: User): UserDataForCalculation => {
+      return {
+        languageProficiency: {
+          test: userData?.languageProficiency?.test || "IELTS",
+          score: userData?.languageProficiency?.score || 0,
+        },
+        grade: userData?.grade || 0,
+        gradeType: userData?.gradetype || "percentage",
+        studyLevel: userData?.studyLevel || "",
+        workExperience: userData?.workExperience || "0",
+        majorSubject: userData?.majorSubject || "",
+        tuitionFee: userData?.tuitionFee || { amount: 0, currency: "USD" },
+        livingCosts: userData?.livingCosts || { amount: 0, currency: "USD" },
+      };
+    },
+    []
+  );
+
+  // Transform course data for success calculation
+  const transformCourseDataForCalculation = useCallback((course: Course) => {
+    console.log("Transforming course data:", course);
+    
+    return {
+      requiredWorkExp: 2,
+      requiredDegree: course?.course_level || "",
+      requiredSubject: course?.course_title || "",
+      englishProficiency: {
+        ielts: course?.required_ielts_score || "",
+        pte: course?.required_pte_score || "",
+        tofel: course?.required_toefl_score || "",
+      },
+      requiredGrade: course?.entry_requirement || course?.entry_requirements || "",
+      tutionfee: {
+        amount: course?.annual_tuition_fee?.amount || 0,
+        currency: course?.annual_tuition_fee?.currency || "",
+      },
+      costofliving: {
+        amount: course?.costOfLiving?.amount || 0, // You can add cost of living data here if available
+        currency: course?.costOfLiving?.currency || ""
+      }
+    };
+  }, []);
+
+  // Calculate overall success chance from metrics
+  interface SuccessMetrics {
+    degreeSuccess: number;
+    gradeSuccess: number;
+    majorSubject: number;
+    englishSuccess: number;
+    tuitionFeeSuccess: number;
+    costofliving: number;
+  }
+
+  const calculateOverallSuccess = useCallback(
+    (metrics: SuccessMetrics): number => {
+      const weightedScore =
+        (metrics.degreeSuccess * 0.25) +
+        (metrics.gradeSuccess * 0.25) +
+        (metrics.majorSubject * 0.20) +
+        (metrics.englishSuccess * 0.15) +
+        (metrics.tuitionFeeSuccess * 0.075) +
+        (metrics.costofliving * 0.075);
+
+      return Math.round(weightedScore);
+    },
+    []
+  );
+
+  // Generate success chance for a specific course
+  const generateCourseSuccessChance = useCallback(async (course: Course) => {
+    // Check if user is logged in and has data
+    if (!isLoggedIn) {
+      toast.error("Please log in to generate success chances", {
+        duration: 3000,
+        position: "top-center",
+      });
+      return;
+    }
+
+    if (!hasData || !userSuccessInfo) {
+      setShowSuccessPromptModal(true);
+      return;
+    }
+
+    setGeneratingSuccess(prev => ({ ...prev, [course._id]: true }));
+
+    try {
+      // Simulate analysis delay like in ProgressSection
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      const transformedUserData = transformUserDataForCalculation(userSuccessInfo as User);
+      const transformedCourseData = transformCourseDataForCalculation(course);
+      
+      const metrics = calculateAllSuccessMetrics(transformedUserData, transformedCourseData);
+      const safeMetrics: SuccessMetrics = {
+        degreeSuccess: metrics.degreeSuccess ?? 0,
+        gradeSuccess: metrics.gradeSuccess ?? 0,
+        majorSubject: metrics.majorSubject ?? 0,
+        englishSuccess: metrics.englishSuccess ?? 0,
+        tuitionFeeSuccess: metrics.tuitionFeeSuccess ?? 0,
+        costofliving: metrics.costofliving ?? 0,
+      };
+      const overallChance = calculateOverallSuccess(safeMetrics);
+
+      setCourseSuccessChances(prev => ({
+        ...prev,
+        [course._id]: overallChance
+      }));
+
+      toast.success("Success chance calculated!", {
+        duration: 2000,
+        position: "top-center",
+      });
+
+    } catch (error) {
+      console.error("Error calculating success chance:", error);
+      toast.error("Failed to calculate success chance", {
+        duration: 3000,
+        position: "top-center",
+      });
+    } finally {
+      setGeneratingSuccess(prev => ({ ...prev, [course._id]: false }));
+    }
+  }, [isLoggedIn, hasData, userSuccessInfo, transformUserDataForCalculation, transformCourseDataForCalculation, calculateOverallSuccess]);
+
+  // Generate all success chances when user data is available
+  const generateAllSuccessChances = useCallback(async () => {
+    if (!isLoggedIn || !hasData || !userSuccessInfo || detailedAppliedCourses.length === 0) {
+      return;
+    }
+
+    const transformedUserData = transformUserDataForCalculation(userSuccessInfo as User);
+    const newSuccessChances: Record<string, number> = {};
+    detailedAppliedCourses.forEach(course => {
+      const transformedCourseData = transformCourseDataForCalculation(course);
+      const metrics = calculateAllSuccessMetrics(transformedUserData, transformedCourseData);
+      const safeMetrics: SuccessMetrics = {
+        degreeSuccess: metrics.degreeSuccess ?? 0,
+        gradeSuccess: metrics.gradeSuccess ?? 0,
+        majorSubject: metrics.majorSubject ?? 0,
+        englishSuccess: metrics.englishSuccess ?? 0,
+        tuitionFeeSuccess: metrics.tuitionFeeSuccess ?? 0,
+        costofliving: metrics.costofliving ?? 0,
+      };
+      const overallChance = calculateOverallSuccess(safeMetrics);
+      newSuccessChances[course._id] = overallChance;
+    });
+
+    setCourseSuccessChances(newSuccessChances);
+  }, [isLoggedIn, hasData, userSuccessInfo, detailedAppliedCourses, transformUserDataForCalculation, transformCourseDataForCalculation, calculateOverallSuccess]);
+
+  // Auto-generate success chances when user data and courses are available
+  useEffect(() => {
+    if (detailedAppliedCourses.length > 0 && userSuccessInfo && hasData) {
+      generateAllSuccessChances();
+    }
+  }, [detailedAppliedCourses, userSuccessInfo, hasData, generateAllSuccessChances]);
+
   const getStatusConfig = (statusId: number) => {
     const statusConfigs: Record<number, { label: string; color: string }> = {
       1: { label: "Incomplete Application", color: "bg-red-500" },
-      2: {
-        label: "Complete application and confirm course",
-        color: "bg-red-500",
-      },
+      2: { label: "Complete application and confirm course", color: "bg-red-500" },
       3: { label: "Awaiting Course Confirmation", color: "bg-orange-500" },
       4: { label: "Pay Application Fee", color: "bg-yellow-500" },
       5: { label: "In Process", color: "bg-yellow-500" },
@@ -91,16 +304,7 @@ const ApplyingSection: React.FC = () => {
       11: { label: "Ready to Fly", color: "bg-green-500" },
     };
 
-    return (
-      statusConfigs[statusId] || {
-        label: "Unknown Status",
-        color: "bg-gray-500",
-      }
-    );
-  };
-
-  const getApplicationProgress = (applicationStatus: number): number => {
-    return Math.round((applicationStatus / 7) * 100);
+    return statusConfigs[statusId] || { label: "Unknown Status", color: "bg-gray-500" };
   };
 
   // Get data from the store
@@ -125,7 +329,6 @@ const ApplyingSection: React.FC = () => {
       try {
         setLoading(true);
 
-        // Get application data from the store
         const coursesDataForAPI = courseIds.map((courseId) => {
           const appliedCourse = appliedCourses[courseId];
           return {
@@ -150,9 +353,7 @@ const ApplyingSection: React.FC = () => {
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Response error text:", errorText);
-          throw new Error(
-            `HTTP error! status: ${response.status} - ${errorText}`
-          );
+          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
         }
 
         const data = await response.json();
@@ -162,9 +363,7 @@ const ApplyingSection: React.FC = () => {
           setDetailedAppliedCourses(detailedCourses);
         } else {
           console.error("API returned success: false", data);
-          setError(
-            data.message || "Failed to load detailed course information"
-          );
+          setError(data.message || "Failed to load detailed course information");
           toast.error("Failed to load detailed course information", {
             duration: 3000,
             position: "top-center",
@@ -172,8 +371,7 @@ const ApplyingSection: React.FC = () => {
         }
       } catch (error: unknown) {
         console.error("Error fetching detailed courses:", error);
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
         setError(errorMessage);
         toast.error("Failed to load course details", {
           duration: 3000,
@@ -186,60 +384,52 @@ const ApplyingSection: React.FC = () => {
     [appliedCourses]
   );
 
-  // Single useEffect for initialization
+  // Single initialization effect
   useEffect(() => {
-    let isMounted = true;
-
     const initializeComponent = async () => {
-      if (hasInitialized) return;
+      if (initializationRef.current || initializationState !== "idle") {
+        return;
+      }
+
+      initializationRef.current = true;
+      setInitializationState("initializing");
 
       try {
-        // First, ensure we have applied courses data
-        if (!user?.appliedCourses || appliedCourseIds.length === 0) {
+        if (!user?.appliedCourses && !loadingAppliedCourses) {
           await fetchAppliedCourses();
-        }
-
-        if (isMounted) {
-          setHasInitialized(true);
         }
       } catch (error) {
         console.error("Error initializing component:", error);
-        if (isMounted) {
-          setError("Failed to initialize applied courses");
-        }
+        setError("Failed to initialize applied courses");
+      } finally {
+        setInitializationState("completed");
       }
     };
 
     initializeComponent();
+  }, []);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [user, appliedCourseIds.length, fetchAppliedCourses, hasInitialized]);
-
-  // Separate useEffect for fetching detailed courses when IDs are available
+  // Separate effect for fetching detailed courses when IDs change
   useEffect(() => {
-    if (hasInitialized && appliedCourseIds.length > 0) {
+    if (initializationState === "completed" && appliedCourseIds.length > 0) {
       fetchDetailedAppliedCourses(appliedCourseIds);
+    } else if (initializationState === "completed" && appliedCourseIds.length === 0) {
+      setDetailedAppliedCourses([]);
     }
-  }, [appliedCourseIds, hasInitialized, fetchDetailedAppliedCourses]);
+  }, [appliedCourseIds, initializationState, fetchDetailedAppliedCourses]);
 
-  // ✅ UPDATED: Function to handle remove button click
   const handleRemoveButtonClick = async (courseId: string) => {
     const applicationDetails = getApplicationDetails(courseId);
 
-    // If course is confirmed, show contact modal instead of removing
     if (applicationDetails?.isConfirmed) {
       setShowContactModal(true);
       return;
     }
 
-    // If not confirmed, show delete confirmation modal
     setCourseToDelete(courseId);
     setShowDeleteModal(true);
   };
 
-  // ✅ NEW: Handle delete modal Yes click
   const handleDeleteYes = async () => {
     if (courseToDelete) {
       await handleRemoveCourse(courseToDelete);
@@ -248,13 +438,11 @@ const ApplyingSection: React.FC = () => {
     setCourseToDelete(null);
   };
 
-  // ✅ NEW: Handle delete modal No click
   const handleDeleteNo = () => {
     setShowDeleteModal(false);
     setCourseToDelete(null);
   };
 
-  // Function to remove course from applied courses using the store
   const handleRemoveCourse = async (courseId: string) => {
     console.log("Removing course:", courseId);
 
@@ -266,10 +454,16 @@ const ApplyingSection: React.FC = () => {
       const success = await removeAppliedCourse(courseId);
 
       if (success) {
-        // Remove from local state immediately for better UX
         setDetailedAppliedCourses((prev) =>
           prev.filter((course) => course._id !== courseId)
         );
+
+        // Also remove from success chances
+        setCourseSuccessChances(prev => {
+          const newChances = { ...prev };
+          delete newChances[courseId];
+          return newChances;
+        });
 
         toast.dismiss(loadingToast);
         toast.success("Course removed from applications!", {
@@ -283,8 +477,7 @@ const ApplyingSection: React.FC = () => {
       console.error("Error removing course:", error);
       toast.dismiss(loadingToast);
 
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       toast.error(`Failed to remove course: ${errorMessage}`, {
         duration: 4000,
         position: "top-center",
@@ -292,44 +485,32 @@ const ApplyingSection: React.FC = () => {
     }
   };
 
-  // ✅ NEW: Handle confirm button click - show modal
   const handleConfirmButtonClick = (courseId: string) => {
     console.log("Confirm button clicked for course:", courseId);
     setCourseToConfirm(courseId);
     setShowConfirmModal(true);
-
-    console.log("Modal should be open now");
   };
 
-  // ✅ UPDATED: Handle confirmation modal Yes click with redirect
   const handleConfirmYes = async () => {
     if (courseToConfirm) {
       await handleCourseConfirmation(courseToConfirm, true);
-      // Redirect to complete application page after successful confirmation
       router.push("/dashboard/completeapplication");
     }
     setShowConfirmModal(false);
     setCourseToConfirm(null);
   };
 
-  // ✅ NEW: Handle confirmation modal No click
   const handleConfirmNo = () => {
     setShowConfirmModal(false);
     setCourseToConfirm(null);
   };
 
-  // Function to handle course confirmation
-  const handleCourseConfirmation = async (
-    courseId: string,
-    isConfirmed: boolean
-  ) => {
+  const handleCourseConfirmation = async (courseId: string, isConfirmed: boolean) => {
     console.log("Updating course confirmation:", { courseId, isConfirmed });
 
     const loadingToast = toast.loading(
       isConfirmed ? "Confirming course..." : "Updating course...",
-      {
-        position: "top-center",
-      }
+      { position: "top-center" }
     );
 
     try {
@@ -341,10 +522,7 @@ const ApplyingSection: React.FC = () => {
           isConfirmed
             ? "Course confirmed successfully!"
             : "Course confirmation updated!",
-          {
-            duration: 2000,
-            position: "top-center",
-          }
+          { duration: 2000, position: "top-center" }
         );
       } else {
         throw new Error("Failed to update course confirmation");
@@ -353,8 +531,7 @@ const ApplyingSection: React.FC = () => {
       console.error("Error updating course confirmation:", error);
       toast.dismiss(loadingToast);
 
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       toast.error(`Failed to update confirmation: ${errorMessage}`, {
         duration: 4000,
         position: "top-center",
@@ -362,15 +539,73 @@ const ApplyingSection: React.FC = () => {
     }
   };
 
-  console.log("Detailed applied courses:", detailedAppliedCourses);
-
-  // Get application details for a specific course (only schema fields)
   const getApplicationDetails = (courseId: string) => {
     return appliedCourses[courseId] || null;
   };
 
-  // Loading state - only show when actually loading
-  if ((loading || loadingAppliedCourses) && !hasInitialized) {
+  // Handle generate success chance button click
+  const handleGenerateSuccessChance = (course: Course) => {
+    if (!isLoggedIn) {
+      toast.error("Please log in to generate success chances", {
+        duration: 3000,
+        position: "top-center",
+      });
+      return;
+    }
+
+    if (!hasData || !userSuccessInfo) {
+      setShowSuccessPromptModal(true);
+      return;
+    }
+
+    generateCourseSuccessChance(course);
+  };
+
+  // Success Prompt Modal component
+  const SuccessPromptModal = () => (
+    <Dialog open={showSuccessPromptModal} onOpenChange={setShowSuccessPromptModal}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-center flex flex-col items-center gap-4">
+            <Image
+              src="/spark.png"
+              alt="Spark Icon"
+              width={80}
+              height={80}
+            />
+            <span>Complete Your Profile</span>
+          </DialogTitle>
+          <DialogDescription className="text-center pt-2">
+            To generate accurate success chances, we need your academic and personal information.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="flex flex-col gap-3 sm:flex-row">
+          <Button
+            onClick={() => setShowSuccessPromptModal(false)}
+            variant="outline"
+            className="flex-1"
+          >
+            Maybe Later
+          </Button>
+          <Button
+            onClick={() => {
+              setShowSuccessPromptModal(false);
+              router.push("/successratioform");
+            }}
+            className="bg-[#C7161E] hover:bg-[#f03c45] text-white flex-1"
+          >
+            Complete Profile
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Loading state
+  if (
+    (initializationState === "initializing" || loadingAppliedCourses) &&
+    !initializationRef.current
+  ) {
     return (
       <div className="relative">
         <div className="flex items-center justify-center p-8">
@@ -391,7 +626,8 @@ const ApplyingSection: React.FC = () => {
             <Button
               onClick={() => {
                 setError(null);
-                setHasInitialized(false);
+                setInitializationState("idle");
+                initializationRef.current = false;
                 fetchAppliedCourses();
               }}
               className="bg-[#C7161E] hover:bg-[#f03c45] text-white"
@@ -405,17 +641,14 @@ const ApplyingSection: React.FC = () => {
   }
 
   // No applied courses state
-  if (hasInitialized && (!appliedCourseIds || appliedCourseIds.length === 0)) {
+  if (initializationState === "completed" && appliedCourseIds.length === 0) {
     return (
       <div>
         <div className="relative w-full h-[250px] flex items-center justify-center border border-gray-200 rounded-xl">
           {/* Blurred Dummy Card in Background */}
           <div className="absolute inset-0">
             <div className=" opacity-80 blur-sm">
-              <div
-                className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 
-                 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200 opacity-80 pointer-events-none"
-              >
+              <div className="relative w-[90%] md:w-[100%] lg:w-[95%] flex flex-col md:flex-row gap-2 flex-shrink-0 bg-white rounded-xl p-2 md:p-4 overflow-hidden border border-gray-200 opacity-80 pointer-events-none">
                 <div className="bg-white px-0 py-2 rounded-lg overflow-hidden mt-2">
                   <div className="flex">
                     <div className="relative md:w-[200px] h-[150px] rounded-xl overflow-hidden">
@@ -431,75 +664,37 @@ const ApplyingSection: React.FC = () => {
                     <div className="flex-1 p-2">
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="text-[12px] font-semibold">
-                            Scholarship Name
-                          </p>
+                          <p className="text-[12px] font-semibold">Scholarship Name</p>
                           <p className="text-[12px]">Course Name</p>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-1 text-[12px]">
                         <div className="flex items-center gap-2">
-                          <Image
-                            src="/location.svg"
-                            alt="Location Icon"
-                            width={16}
-                            height={16}
-                          />
+                          <Image src="/location.svg" alt="Location Icon" width={16} height={16} />
                           <span className="text-gray-600">Country</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Image
-                            src="/clock.svg"
-                            alt="Duration Icon"
-                            width={16}
-                            height={16}
-                          />
+                          <Image src="/clock.svg" alt="Duration Icon" width={16} height={16} />
                           <span className="text-gray-600">Duration</span>
                         </div>
                         <div className="flex items-center gap-2 mb-1">
-                          <Image
-                            src="/lang.svg"
-                            alt="Language Icon"
-                            width={16}
-                            height={16}
-                          />
+                          <Image src="/lang.svg" alt="Language Icon" width={16} height={16} />
                           <span className="text-gray-600">Language</span>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2 mb-1">
-                        <Image
-                          src="/ielts/Dollar.svg"
-                          alt="University Icon"
-                          width={16}
-                          height={16}
-                        />
-                        <span className="text-gray-600 text-[12px]">
-                          University
-                        </span>
+                        <Image src="/ielts/Dollar.svg" alt="University Icon" width={16} height={16} />
+                        <span className="text-gray-600 text-[12px]">University</span>
                       </div>
                       <div className="flex items-center gap-2 mb-1">
-                        <Image
-                          src="/vectoruni.svg"
-                          alt="Scholarship Type Icon"
-                          width={16}
-                          height={16}
-                        />
-                        <span className="text-gray-600 text-[12px]">
-                          Scholarship Type
-                        </span>
+                        <Image src="/vectoruni.svg" alt="Scholarship Type Icon" width={16} height={16} />
+                        <span className="text-gray-600 text-[12px]">Scholarship Type</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Image
-                          src="/calender.svg"
-                          alt="Deadline Icon"
-                          width={16}
-                          height={16}
-                        />
-                        <span className="text-gray-600 text-[12px]">
-                          Deadline
-                        </span>
+                        <Image src="/calender.svg" alt="Deadline Icon" width={16} height={16} />
+                        <span className="text-gray-600 text-[12px]">Deadline</span>
                       </div>
                     </div>
                     <Button className=" bg-red-600 px-6">hello</Button>
@@ -511,12 +706,8 @@ const ApplyingSection: React.FC = () => {
 
           {/* Overlay Message */}
           <div className="flex flex-col items-center justify-center h-[250px] text-center relative z-10 w-full">
-            <p className="font-semibold text-lg md:text-lg mb-2">
-              No Course Applications Yet{" "}
-            </p>
-            <p className="text-gray-600 mb-4">
-              Start your journey by applying to your first course!{" "}
-            </p>
+            <p className="font-semibold text-lg md:text-lg mb-2">No Course Applications Yet</p>
+            <p className="text-gray-600 mb-4">Start your journey by applying to your first course!</p>
             <Link href="/coursearchive">
               <button className="px-4 py-2 text-[14px] bg-[#C7161E] text-white rounded-full hover:bg-red-700">
                 Browse Courses
@@ -528,26 +719,19 @@ const ApplyingSection: React.FC = () => {
     );
   }
 
-  // Show loading state if we have IDs but no detailed courses yet and currently loading
+  // Show loading state when fetching detailed courses
   if (
-    hasInitialized &&
+    initializationState === "completed" &&
     appliedCourseIds.length > 0 &&
     detailedAppliedCourses.length === 0 &&
     loading
   ) {
     return (
       <div className="relative">
-        {/* Blurred background */}
         <div className="absolute inset-0 backdrop-blur-2xl bg-gray-100 z-0" />
-
-        {/* Centered content */}
         <div className="flex flex-col items-center justify-center h-[250px] p-8 z-10 relative text-center">
-          <p className="font-semibold text-lg md:text-xl mb-2">
-            Loading Course Details...
-          </p>
-          <p className="text-gray-600 mb-4">
-            Please wait while we fetch your application details.
-          </p>
+          <p className="font-semibold text-lg md:text-xl mb-2">Loading Course Details...</p>
+          <p className="text-gray-600 mb-4">Please wait while we fetch your application details.</p>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#C7161E] mb-4"></div>
         </div>
       </div>
@@ -556,20 +740,17 @@ const ApplyingSection: React.FC = () => {
 
   return (
     <div className="relative">
+      {/* Success Prompt Modal */}
+      <SuccessPromptModal />
+
       {/* Contact Advisor Modal */}
       <Dialog open={showContactModal} onOpenChange={setShowContactModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">Course Confirmed</DialogTitle>
             <DialogDescription className="text-center pt-4 flex flex-col items-center text-black font-semibold text-[15px]">
-              <Image
-                src="/spark.png"
-                alt="Spark Icon"
-                width={100}
-                height={100}
-              />{" "}
+              <Image src="/spark.png" alt="Spark Icon" width={100} height={100} />
               <p className="pt-2">
-                {" "}
                 Your application is already in process for this course. Please{" "}
                 <a
                   href="https://wa.me/923279541070"
@@ -594,17 +775,12 @@ const ApplyingSection: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* ✅ NEW: Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal */}
       <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
             <DialogTitle className="text-center mx-auto">
-              <Image
-                src="/spark.png"
-                alt="Spark Icon"
-                width={100}
-                height={100}
-              />
+              <Image src="/spark.png" alt="Spark Icon" width={100} height={100} />
             </DialogTitle>
             <DialogDescription className="text-center text-black font-semibold text-[16px] pt-4">
               Are you sure you want to delete this course?
@@ -624,19 +800,14 @@ const ApplyingSection: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* ✅ Course Confirmation Modal */}
+      {/* Course Confirmation Modal */}
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-center gap-6">
               <div className="flex flex-col items-center gap-2">
-                <Image
-                  src="/spark.png"
-                  alt="Spark Icon"
-                  width={100}
-                  height={100}
-                />
-                <p> Are you sure you want to confirm this scholarship?</p>
+                <Image src="/spark.png" alt="Spark Icon" width={100} height={100} />
+                <p>Are you sure you want to confirm this scholarship?</p>
               </div>
             </DialogTitle>
           </DialogHeader>
@@ -647,24 +818,18 @@ const ApplyingSection: React.FC = () => {
             >
               Yes
             </Button>
-            <Button
-              onClick={handleConfirmNo}
-              variant="outline"
-              className="px-8"
-            >
+            <Button onClick={handleConfirmNo} variant="outline" className="px-8">
               No
             </Button>
           </div>
           <DialogDescription className="text-center pt-0">
-            *This will be the course we prepare your application for. You will
-            not be able to delete or change it later.
+            *This will be the course we prepare your application for. You will not be able to delete or change it later.
           </DialogDescription>
         </DialogContent>
       </Dialog>
 
       <p className="font-semibold text-lg md:text-xl mb-4">
-        You are applying for Self-Financed admission ({appliedCourseIds.length}{" "}
-        course
+        You are applying for Self-Financed admission ({appliedCourseIds.length} course
         {appliedCourseIds.length !== 1 ? "s" : ""}):
       </p>
 
@@ -678,20 +843,13 @@ const ApplyingSection: React.FC = () => {
         {detailedAppliedCourses.map((course, index) => {
           const applicationDetails = getApplicationDetails(course._id);
           const isConfirmed = applicationDetails?.isConfirmed || false;
-
-          // ✅ CRITICAL: Use statusId for status display (priority) or fallback to applicationStatus
-          const statusId =
-            applicationDetails?.statusId ||
-            applicationDetails?.applicationStatus ||
-            1;
+          const statusId = applicationDetails?.statusId || applicationDetails?.applicationStatus || 1;
           const statusConfig = getStatusConfig(statusId);
-
-          console.log(`Course ${course._id} status debug:`, {
-            statusId: applicationDetails?.statusId,
-            applicationStatus: applicationDetails?.applicationStatus,
-            finalStatusId: statusId,
-            statusConfig,
-          });
+          
+          // Get success chance for this course
+          const successChance = courseSuccessChances[course._id];
+          const isGenerating = generatingSuccess[course._id];
+          const hasSuccessChance = successChance !== undefined;
 
           return (
             <div
@@ -761,7 +919,7 @@ const ApplyingSection: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* ✅ NEW: Share Icon on Banner Image */}
+                      {/* Share Icon on Banner Image */}
                       <div className="absolute z-10 top-4 right-4 flex space-x-1 py-1 px-3 bg-gray-200 bg-opacity-40 backdrop-blur-sm rounded-md">
                         <Dialog>
                           <DialogTrigger asChild>
@@ -838,7 +996,7 @@ const ApplyingSection: React.FC = () => {
                                 rel="noopener noreferrer"
                                 className="text-green-600 hover:underline"
                               >
-                                <BsWhatsapp className="text-2xl" />{" "}
+                                <BsWhatsapp className="text-2xl" />
                               </a>
                               <a
                                 href={`mailto:?subject=Check this out&body=${encodeURIComponent(
@@ -846,7 +1004,7 @@ const ApplyingSection: React.FC = () => {
                                 )}`}
                                 className="text-blue-600 hover:underline"
                               >
-                                <AiOutlineMail className="text-2xl text-red-600" />{" "}
+                                <AiOutlineMail className="text-2xl text-red-600" />
                               </a>
                               <a
                                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -957,49 +1115,79 @@ const ApplyingSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right Section: Progress Circle */}
+                {/* Right Section: Success Chance Display */}
                 <div className="flex flex-col items-center justify-between mt-4 md:mt-0">
                   <div className="relative flex flex-col items-end justify-center min-w-[140px]">
-                    {/* Blurred content */}
-                    <div className="blur-sm opacity-40 pointer-events-none flex flex-col justify-center items-center">
-                      <p className="text-sm font-semibold mb-2 text-center w-4/5">
-                        Application Success Chances
-                      </p>
-
-                      <CircularProgress
-                        progress={
-                          applicationDetails
-                            ? getApplicationProgress(
-                                applicationDetails.applicationStatus || 1
-                              )
-                            : 0
-                        }
-                      />
-                    </div>
-
-                    {/* Overlay Button */}
-                    <button className="absolute mr-2 px-2 py-1 text-[12px] bg-red-600 text-white rounded-full shadow-md hover:bg-red-700">
-                      Generate Success Chances
-                    </button>
+                    {hasSuccessChance && !isGenerating ? (
+                      // Show success chance when available
+                      <div className="flex flex-col justify-center items-center">
+                        <p className="text-sm font-semibold mb-2 text-center">
+                          Application Success Chances
+                        </p>
+                        <CircularProgress progress={successChance} />
+                        <p className="text-xs text-gray-600 mt-1 text-center">
+                          {successChance >= 75 ? "High Success Chance" :
+                           successChance >= 50 ? "Moderate Success Chance" :
+                           "Low Success Chance"}
+                        </p>
+                      </div>
+                    ) : isGenerating ? (
+                      // Show loading state when generating
+                      <div className="flex flex-col justify-center items-center">
+                        <p className="text-sm font-semibold mb-2 text-center">
+                          Application Success Chances
+                        </p>
+                        <div className="relative w-20 h-20 flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#C7161E]"></div>
+                          <span className="absolute text-xs text-gray-600">AI</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1 text-center">
+                          Analyzing...
+                        </p>
+                      </div>
+                    ) : (
+                      // Show blurred content with generate button
+                      <>
+                        <div className="blur-sm opacity-40 pointer-events-none flex flex-col justify-center items-center">
+                          <p className="text-sm font-semibold mb-2 text-center w-4/5">
+                            Application Success Chances
+                          </p>
+                          <CircularProgress progress={75} />
+                        </div>
+                        
+                        {/* Overlay Generate Button */}
+                        <button
+                          onClick={() => handleGenerateSuccessChance(course)}
+                          className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:bg-white/90 transition-all duration-200"
+                        >
+                          <div className="text-center">
+                            <div className="px-3 py-2 text-[12px] bg-[#C7161E] text-white rounded-full shadow-md hover:bg-red-700 transition-colors">
+                              Generate Success Chances
+                            </div>
+                          </div>
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
+
+              {/* Bottom Section: Status and Confirm Button */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2 pt-4">
                   <span className="text-[13px] font-medium px-4 py-1 rounded-md text-white bg-red-600">
                     Current Status:
                   </span>
                   <div className="flex items-center gap-2 ml-2">
-                    <div
-                      className={`w-2 h-2 rounded-full ${statusConfig.color}`}
-                    ></div>
+                    <div className={`w-2 h-2 rounded-full ${statusConfig.color}`}></div>
                     <span className="text-sm">{statusConfig.label}</span>
                   </div>
-                </div>{" "}
+                </div>
+                
                 <Button
                   onClick={() => handleConfirmButtonClick(course._id)}
                   disabled={applicationDetails?.isConfirmed === true}
-                  className={`py-1 rounded text-white font-medium text-[13px] mr-3  ${
+                  className={`py-1 rounded text-white font-medium text-[13px] mr-3 ${
                     applicationDetails?.isConfirmed
                       ? "bg-red-600 cursor-not-allowed px-8"
                       : "bg-red-600 hover:bg-red-700 cursor-pointer px-2"
@@ -1008,7 +1196,7 @@ const ApplyingSection: React.FC = () => {
                   {applicationDetails?.isConfirmed
                     ? "Confirmed"
                     : "Confirm Course Selection"}
-                </Button>{" "}
+                </Button>
               </div>
             </div>
           );
