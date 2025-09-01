@@ -2,6 +2,17 @@ import { User, AcademicInfo, PaymentInfo, WorkExp } from "@/types/reffertypes";
 import { deleteAuthToken, getAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
 
+export interface Commission {
+  _id: string;
+  user: string;
+  month: string;
+  referrals: number;
+  amount: number;
+  status: "Paid" | "Pending" | "Requested";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface DetailedInfo {
   AcademicInformation: AcademicInfo;
   paymentInformation: PaymentInfo;
@@ -11,6 +22,7 @@ export interface DetailedInfo {
 export interface UserStore {
   user: User | null;
   detailedInfo: DetailedInfo | null;
+  commissions: Commission[];
   loading: boolean;
   error: string | null;
   isAuthenticate: boolean;
@@ -26,11 +38,19 @@ export interface UserStore {
   logout: () => void;
   clearError: () => void;
   getLastUpdatedDate: () => string | null;
-  // Add new method for updating user images
-  updateUserImages: (imageData: {
-    profilePicture?: string;
-    coverPhoto?: string;
-  }) => void;
+
+  // Commission actions
+  fetchCommissions: (userId: string) => Promise<void>;
+  createCommission: (
+    userId: string,
+    commissionData: Omit<Commission, "_id" | "user" | "createdAt" | "updatedAt">
+  ) => Promise<boolean>;
+  updateCommission: (
+    userId: string,
+    commissionId: string,
+    updateData: Partial<Commission>
+  ) => Promise<boolean>;
+  deleteCommission: (userId: string, commissionId: string) => Promise<boolean>;
 }
 
 const defaultDetailedInfo: DetailedInfo = {
@@ -65,6 +85,7 @@ const defaultDetailedInfo: DetailedInfo = {
 export const useRefUserStore = create<UserStore>((set, get) => ({
   user: null,
   detailedInfo: null,
+  commissions: [],
   loading: false,
   isAuthenticate: false,
   error: null,
@@ -73,11 +94,8 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
   lastEmbeddingUpdate: null,
 
   fetchUserProfile: async (token) => {
-    console.log("=== ZUSTAND: FETCHING USER PROFILE ===");
-    console.log("Token provided:", token ? "Yes" : "No");
-
+    console.log("Fetching user profile with token:", token);
     if (!token) {
-      console.log("No token provided, setting unauthorized");
       set({ error: "No authentication token provided", isAuthenticate: false });
       return;
     }
@@ -85,19 +103,17 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
     try {
       set({ loading: true, error: null });
 
-      const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}refProfile`;
-      console.log("Making request to:", apiUrl);
-
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      console.log("Profile fetch response status:", response.status);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refProfile`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
@@ -106,7 +122,6 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
       }
 
       const userData = await response.json();
-      console.log("Raw user data from API:", userData);
 
       // Validate response structure
       if (!userData || typeof userData !== "object") {
@@ -161,19 +176,10 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         createdAt: userData.user?.createdAt || "",
         updatedAt: userData.user?.updatedAt || "",
         countryCode: userData.user?.countryCode || "",
-        // Fixed field names to match database
-        profilePicture: userData.user?.profilePicture || "",
-        coverPhoto: userData.user?.coverPhoto || "",
+        Commission: userData.user?.Commissions || [],
       };
 
-      console.log("Transformed user data:", {
-        id: user._id,
-        profilePicture: user.profilePicture,
-        coverPhoto: user.coverPhoto,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      });
-
+      console.log(user, "user from store");
       set({
         user,
         loading: false,
@@ -181,11 +187,8 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         isAuthenticate: true,
         error: null,
       });
-
-      console.log("User profile set in store successfully");
     } catch (error) {
-      console.error("=== ZUSTAND: PROFILE FETCH ERROR ===");
-      console.error("Error details:", error);
+      console.error("Error fetching profile:", error);
       set({
         error:
           error instanceof Error
@@ -199,15 +202,224 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
     }
   },
 
+  fetchCommissions: async (userId: string) => {
+    if (!userId) {
+      set({ error: "User ID is required to fetch commissions" });
+      return;
+    }
+
+    try {
+      set({ loading: true, error: null });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/commission/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch commissions: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success && Array.isArray(result.data)) {
+        set({ commissions: result.data, loading: false });
+      } else {
+        set({ commissions: [], loading: false });
+      }
+    } catch (error) {
+      console.error("Error fetching commissions:", error);
+      set({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch commissions",
+        loading: false,
+        commissions: [],
+      });
+    }
+  },
+
+  createCommission: async (
+    userId: string,
+    commissionData: Omit<Commission, "_id" | "user" | "createdAt" | "updatedAt">
+  ): Promise<boolean> => {
+    if (!userId) {
+      set({ error: "User ID is required to create commission" });
+      return false;
+    }
+
+    try {
+      set({ loading: true, error: null });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/commission/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(commissionData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to create commission");
+      }
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        set((state) => ({
+          commissions: [result.data, ...state.commissions],
+          loading: false,
+        }));
+        return true;
+      } else {
+        throw new Error(result.message || "Failed to create commission");
+      }
+    } catch (error) {
+      console.error("Error creating commission:", error);
+      set({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to create commission",
+        loading: false,
+      });
+      return false;
+    }
+  },
+
+  updateCommission: async (
+    userId: string,
+    commissionId: string,
+    updateData: Partial<Commission>
+  ): Promise<boolean> => {
+    if (!userId || !commissionId) {
+      set({ error: "User ID and Commission ID are required" });
+      return false;
+    }
+
+    try {
+      set({ loading: true, error: null });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/commission/${userId}/${commissionId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to update commission");
+      }
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        set((state) => ({
+          commissions: state.commissions.map((commission) =>
+            commission._id === commissionId
+              ? {
+                  ...commission,
+                  ...updateData,
+                  updatedAt: new Date().toISOString(),
+                }
+              : commission
+          ),
+          loading: false,
+        }));
+        return true;
+      } else {
+        throw new Error(result.message || "Failed to update commission");
+      }
+    } catch (error) {
+      console.error("Error updating commission:", error);
+      set({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to update commission",
+        loading: false,
+      });
+      return false;
+    }
+  },
+
+  deleteCommission: async (
+    userId: string,
+    commissionId: string
+  ): Promise<boolean> => {
+    if (!userId || !commissionId) {
+      set({ error: "User ID and Commission ID are required" });
+      return false;
+    }
+
+    try {
+      set({ loading: true, error: null });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/commission/${userId}/${commissionId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to delete commission");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        set((state) => ({
+          commissions: state.commissions.filter(
+            (commission) => commission._id !== commissionId
+          ),
+          loading: false,
+        }));
+        return true;
+      } else {
+        throw new Error(result.message || "Failed to delete commission");
+      }
+    } catch (error) {
+      console.error("Error deleting commission:", error);
+      set({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to delete commission",
+        loading: false,
+      });
+      return false;
+    }
+  },
+
   updateDetailedInfo: async (
     updateData: Partial<DetailedInfo>
   ): Promise<boolean> => {
-    console.log("=== ZUSTAND: UPDATING DETAILED INFO ===");
-    console.log("Update data:", updateData);
-
     const token = getAuthToken();
     if (!token) {
-      console.log("No auth token found");
       set({ error: "No authentication token found" });
       return false;
     }
@@ -299,12 +511,8 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
   },
 
   updateUserProfile: async (userData: Partial<User>): Promise<boolean> => {
-    console.log("=== ZUSTAND: UPDATING USER PROFILE ===");
-    console.log("User data to update:", userData);
-
     const token = getAuthToken();
     if (!token) {
-      console.log("No auth token found");
       set({ error: "No authentication token found" });
       return false;
     }
@@ -354,7 +562,6 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         error: null,
       }));
 
-      console.log("User profile updated successfully in store");
       return true;
     } catch (error) {
       console.error("Error updating user profile:", error);
@@ -365,25 +572,6 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
       });
       return false;
     }
-  },
-
-  // New method to update user images in store
-  updateUserImages: (imageData: {
-    profilePicture?: string;
-    coverPhoto?: string;
-  }) => {
-    console.log("=== ZUSTAND: UPDATING USER IMAGES IN STORE ===");
-    console.log("Image data:", imageData);
-
-    set((state) => ({
-      user: state.user
-        ? {
-            ...state.user,
-            ...imageData,
-            updatedAt: new Date().toISOString(),
-          }
-        : null,
-    }));
   },
 
   getLastUpdatedDate: () => {
@@ -400,27 +588,19 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
     return null;
   },
 
-  setUser: (user) => {
-    console.log("=== ZUSTAND: SETTING USER ===");
-    console.log("User data:", {
-      id: user?._id,
-      profilePicture: user?.profilePicture,
-      coverPhoto: user?.coverPhoto,
-    });
-
+  setUser: (user) =>
     set({
       user,
       isAuthenticate: !!user,
       error: null,
-    });
-  },
+    }),
 
   logout: () => {
-    console.log("=== ZUSTAND: LOGGING OUT ===");
     deleteAuthToken();
     set({
       user: null,
       detailedInfo: null,
+      commissions: [],
       isAuthenticate: false,
       loading: false,
       error: null,
