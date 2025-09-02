@@ -188,7 +188,7 @@ const Page = () => {
                 <div className="flex justify-evenly bg-white rounded-lg px-3 w-[85%]">
                   <Image src="/search.svg" width={16} height={16} alt="search" />
                   <input
-                    placeholder="Search Scholarships..."
+                    placeholder="Search Scholarships and Courses..."
                     name="search"
                     value={localSearch}
                     onChange={handleSearchChange}

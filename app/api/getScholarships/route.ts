@@ -23,9 +23,7 @@ export async function GET(req: Request) {
             .map((req) => req.trim())
             .filter((req) => req !== "")
 
-        const countryFilter =
-            searchParams
-                .get("countryFilter")
+        const countryFilter =searchParams.get("countryFilter")
                 ?.split(",")
                 .map((c) => c.trim().toLowerCase())
                 .filter((c) => c !== "") || []
@@ -44,9 +42,7 @@ export async function GET(req: Request) {
                 .map((t) => t.trim().toLowerCase())
                 .filter((t) => t !== "") || []
 
-        const provider =
-            searchParams
-                .get("scholarshipProviders")
+        const provider = searchParams.get("scholarshipProviders")
                 ?.split(",")
                 .map((t) => t.trim().toLowerCase())
                 .filter((t) => t !== "") || []
@@ -58,18 +54,22 @@ export async function GET(req: Request) {
                 .map((d) => d.trim().toLowerCase())
                 .filter((d) => d !== "") || []
 
-        const textSearchSupported = await Scholarship.collection.indexExists("name_text")
+        // const textSearchSupported = await Scholarship.collection.indexExists("name_text")
         const query: Record<string, unknown> = {}
-
+       
         // Text search
         if (search) {
-            if (textSearchSupported) {
-                query.$text = { $search: search }
-            } else {
-                const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*")
-                query.name = { $regex: new RegExp(escapeRegex(search), "i") }
-            }
-        }
+            const escapeRegex = (text: string) =>
+              text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, ".*")
+          
+            const regex = new RegExp(escapeRegex(search), "i")
+          
+            query.$or = [
+              { name: { $regex: regex } },          // search by scholarship name
+              { "table.course": { $regex: regex } } // search inside table.courses array
+            ]
+          }
+          
         // Country filter
         function escapeRegex(text: string) {
             return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -146,9 +146,7 @@ export async function GET(req: Request) {
         if (deadlineFilter.length > 0) {
             query.deadline = { $in: deadlineFilter.map((d) => new RegExp(d, "i")) }
         }
-
         // console.log("MongoDB Query:", JSON.stringify(query, null, 2)) // Debug log
-
         const scholarships = await Scholarship.find(query)
             .skip((page - 1) * limit)
             .limit(limit)

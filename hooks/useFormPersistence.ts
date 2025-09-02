@@ -1,4 +1,4 @@
-// hooks/useSimpleFormPersistence.ts - SIMPLIFIED VERSION
+// hooks/useSimpleFormPersistence.ts - UPDATED VERSION WITH localStorage
 import { useEffect, useRef } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { debounce } from 'lodash';
@@ -15,13 +15,14 @@ export const useSimpleFormPersistence = ({
     debounceMs = 1000,
 }: UseSimpleFormPersistenceOptions) => {
     const isInitialized = useRef(false);
-    // Debounced save to localStorage
+    
+    // Debounced save to localStorage (CHANGED FROM sessionStorage)
     const debouncedSave = useRef(
         debounce((data: any) => {
             try {
                 // Transform dates for storage
                 const transformedData = transformDatesForStorage(data);
-                sessionStorage.setItem(key, JSON.stringify(transformedData));
+                localStorage.setItem(key, JSON.stringify(transformedData)); // CHANGED HERE
                 console.log('Form data saved locally');
             } catch (error) {
                 console.error('Failed to save form data locally:', error);
@@ -35,7 +36,7 @@ export const useSimpleFormPersistence = ({
             if (isInitialized.current) return;
 
             try {
-                const savedData = sessionStorage.getItem(key);
+                const savedData = localStorage.getItem(key); // CHANGED HERE
                 if (savedData) {
                     const parsedData = JSON.parse(savedData);
                     const transformedData = transformDatesFromStorage(parsedData);
@@ -67,7 +68,7 @@ export const useSimpleFormPersistence = ({
 
     // Clear saved data
     const clearSavedData = () => {
-        sessionStorage.removeItem(key);
+        localStorage.removeItem(key); // CHANGED HERE
         console.log('Form data cleared');
     };
 
@@ -108,4 +109,4 @@ const transformDatesFromStorage = (data: any): any => {
     });
 
     return transformed;
-}
+};

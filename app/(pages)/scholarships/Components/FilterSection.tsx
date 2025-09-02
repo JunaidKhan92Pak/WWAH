@@ -139,7 +139,7 @@ const FilterSection = ({ isMobile = false }) => {
             <>
               <div className="flex bg-[#F1F1F1] mx-2 mb-3 md:mb-2 w-[80%] px-2 rounded-lg">
                 <Input
-                  placeholder="Search Scholarships..."
+                  placeholder="Search Scholarships and Courses..."
                   name="search"
                   value={localSearch}
                   onChange={handleSearchChange}
