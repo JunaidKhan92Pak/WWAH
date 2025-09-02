@@ -1,77 +1,240 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
 import ReferralModal from "./components/ReferralModal";
 import totalSignups from "../../../../public/refferalportal/Overview/totalSignups.svg";
 import pendingSignups from "../../../../public/refferalportal/Overview/pendingSignups.svg";
 import approvedSignups from "../../../../public/refferalportal/Overview/approvedSignups.svg";
 import rejectedSignups from "../../../../public/refferalportal/Overview/rejectedSignups.svg";
 import profits from "../../../../public/refferalportal/Overview/profits.svg";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import refer from "../../../../public/refferalportal/Overview/refer.svg";
+import { getAuthToken } from "@/utils/authHelper";
 
-const statsData = [
-  {
-    title: "Total Sign-ups",
-    value: "11",
-    icon: totalSignups,
-    bgColor: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
-    title: "Pending Sign-ups",
-    value: "1",
-    icon: pendingSignups,
-    bgColor: "bg-yellow-50",
-    iconColor: "text-yellow-600",
-  },
-  {
-    title: "Approved Sign-ups",
-    value: "1",
-    icon: approvedSignups,
-    bgColor: "bg-pink-50",
-    iconColor: "text-pink-600",
-  },
-  {
-    title: "Rejected Sign-ups",
-    value: "1",
-    icon: rejectedSignups,
-    bgColor: "bg-gray-50",
-    iconColor: "text-gray-600",
-  },
-  {
-    title: "Total Commission Earned",
-    value: "1",
-    icon: profits,
-    bgColor: "bg-green-50",
-    iconColor: "text-green-600",
-  },
-];
+// Define proper TypeScript interfaces
+interface StatData {
+  title: string;
+  value: string;
+  icon: StaticImageData; // You might want to import StaticImageData from 'next/image' for better typing
+  bgColor: string;
+  iconColor: string;
+}
 
-const referralsData = [
-  {
-    name: "Fatima Khan",
-    initials: "FK",
-    status: "Approved",
-    date: "June 8",
-    statusColor: "bg-green-100 text-green-800",
-  },
-  {
-    name: "Zakria Tariq",
-    initials: "ZT",
-    status: "Rejected",
-    date: "June 7",
-    statusColor: "bg-red-100 text-red-800",
-  },
-];
+interface ReferralData {
+  name: string;
+  initials: string;
+  status: string;
+  date: string;
+  statusColor: string;
+  referralId: string;
+  profilePicture?: string | null;
+  commissionEarned: number;
+}
+
+interface CommissionData {
+  commissionPerReferral: number;
+  totalCommissionEarned: number;
+  currency: string;
+}
+
+interface APIStatsResponse {
+  data: {
+    totalReferrals: number;
+    pending: number;
+    approved: number;
+    rejected: number;
+    totalCommissionEarned: number;
+  };
+}
+
+interface APIReferral {
+  referral: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    status: string;
+    createdAt: string;
+    profilePicture?: string;
+  };
+}
+
+interface APIReferralsResponse {
+  data: {
+    referrerName?: string;
+    commissionData?: CommissionData;
+    referrals: APIReferral[];
+  };
+}
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [statsData, setStatsData] = useState<StatData[]>([]);
+  const [referralsData, setReferralsData] = useState<ReferralData[]>([]);
+  const [referrerName, setReferrerName] = useState<string>("");
+  const [commissionData, setCommissionData] = useState<CommissionData>({
+    commissionPerReferral: 0,
+    totalCommissionEarned: 0,
+    currency: "PKR",
+  });
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch statistics and referrals data
+  useEffect(() => {
+    const fetchData = async (): Promise<void> => {
+      try {
+        setLoading(true);
+
+        const token = getAuthToken();
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        // Fetch current user's statistics
+        const statsResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/referrals/my-statistics`,
+          {
+            headers,
+          }
+        );
+
+        if (!statsResponse.ok) {
+          throw new Error("Failed to fetch statistics");
+        }
+
+        const statsResult: APIStatsResponse = await statsResponse.json();
+
+        // Fetch current user's referrals only
+        const referralsResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/referrals/my-referrals?page=1&limit=50`,
+          {
+            headers,
+          }
+        );
+
+        if (!referralsResponse.ok) {
+          throw new Error("Failed to fetch referrals");
+        }
+
+        const referralsResult: APIReferralsResponse =
+          await referralsResponse.json();
+        console.log(referralsResult, "referral result from ");
+
+        // Extract referrer name and commission data
+        if (referralsResult.data && referralsResult.data.referrerName) {
+          setReferrerName(referralsResult.data.referrerName);
+        }
+
+        // Set commission data from the response
+        if (referralsResult.data && referralsResult.data.commissionData) {
+          setCommissionData({
+            commissionPerReferral:
+              referralsResult.data.commissionData.commissionPerReferral,
+            totalCommissionEarned:
+              referralsResult.data.commissionData.totalCommissionEarned,
+            currency: referralsResult.data.commissionData.currency,
+          });
+        }
+
+        // Update stats data with real data from current user
+        const updatedStatsData: StatData[] = [
+          {
+            title: "Total Sign-ups",
+            value: statsResult.data.totalReferrals.toString(),
+            icon: totalSignups,
+            bgColor: "bg-blue-50",
+            iconColor: "text-blue-600",
+          },
+          {
+            title: "Pending Sign-ups",
+            value: statsResult.data.pending.toString(),
+            icon: pendingSignups,
+            bgColor: "bg-yellow-50",
+            iconColor: "text-yellow-600",
+          },
+          {
+            title: "Approved Sign-ups",
+            value: statsResult.data.approved.toString(),
+            icon: approvedSignups,
+            bgColor: "bg-pink-50",
+            iconColor: "text-pink-600",
+          },
+          {
+            title: "Rejected Sign-ups",
+            value: statsResult.data.rejected.toString(),
+            icon: rejectedSignups,
+            bgColor: "bg-gray-50",
+            iconColor: "text-gray-600",
+          },
+          {
+            title: "Total Commission Earned",
+            value: `Rs: ${statsResult.data.totalCommissionEarned.toLocaleString()} `,
+            icon: profits,
+            bgColor: "bg-green-50",
+            iconColor: "text-green-600",
+          },
+        ];
+
+        // Transform referrals data to match your component structure
+        const transformedReferralsData: ReferralData[] =
+          referralsResult.data.referrals.map((item: APIReferral) => ({
+            name: `${item.referral.firstName} ${item.referral.lastName}`,
+            initials: `${item.referral.firstName.charAt(
+              0
+            )}${item.referral.lastName.charAt(0)}`,
+            status:
+              item.referral.status.charAt(0).toUpperCase() +
+              item.referral.status.slice(1),
+            date: new Date(item.referral.createdAt).toLocaleDateString(
+              "en-US",
+              {
+                month: "long",
+                day: "numeric",
+              }
+            ),
+            statusColor: getStatusColor(item.referral.status),
+            referralId: item.referral.id,
+            profilePicture: item.referral.profilePicture,
+            commissionEarned:
+              item.referral.status === "accepted"
+                ? commissionData.commissionPerReferral
+                : 0,
+          }));
+
+        setStatsData(updatedStatsData);
+        setReferralsData(transformedReferralsData);
+      } catch (err: unknown) {
+        console.error("Error fetching data:", err);
+        const errorMessage =
+          err instanceof Error ? err.message : "An unknown error occurred";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Helper function to get status color
+  const getStatusColor = (status: string): string => {
+    switch (status.toLowerCase()) {
+      case "accepted":
+        return "bg-green-100 text-green-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   function getDarkerBgColor(lightColor: string): string {
     const shadeMap: Record<string, string> = {
       "bg-blue-50": "bg-blue-200",
@@ -79,13 +242,38 @@ export default function Home() {
       "bg-pink-50": "bg-pink-200",
       "bg-gray-50": "bg-gray-200",
       "bg-green-50": "bg-green-200",
+      "bg-purple-50": "bg-purple-200",
     };
     return shadeMap[lightColor] || lightColor;
   }
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen p-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen p-4 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error loading data: {error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen p-4 ">
-      <div className="mx-auto space-y-8">
+    <div className="min-h-screen p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
         {/* Welcome Section */}
         <Card
           className="shadow-sm overflow-hidden relative"
@@ -93,50 +281,54 @@ export default function Home() {
             background: "linear-gradient(90deg, #FFFFFF 0%, #FCE7D2 100%)",
           }}
         >
-          <CardContent className="p-6 md:p-8">
+          <CardContent className="p-4 sm:p-6 lg:p-8">
             <div className="flex items-center gap-3 mb-2">
-              <div className="text-2xl">👋</div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                Welcome, ZAKRIA TARIQ!
+              <div className="text-xl sm:text-2xl">👋</div>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">
+                Welcome, {referrerName || "MBA"}!
               </h1>
             </div>
-            <p className="text-gray-600 text-sm md:text-base">
+            <p className="text-gray-600 text-sm sm:text-base">
               Track your performance, rewards and upcoming goals at a glance.
             </p>
           </CardContent>
         </Card>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6">
           {statsData.map((stat, index) => (
             <Card
               key={index}
-              className={`${stat.bgColor} border-0 shadow-sm  hover:shadow-md transition-shadow`}
+              className={`${stat.bgColor} border-0 shadow-sm hover:shadow-md transition-shadow`}
             >
-              <CardContent className="p-4 ">
-                <div className="flex items-center justify-between gap-4">
-                  {/* Icon */}
-                  <Image
-                    src={stat.icon}
-                    alt="icon"
-                    width={5}
-                    height={5}
-                    className={`h-8 w-8 ${stat.iconColor}`}
-                  />
-
-                  {/* Title */}
-                  <p className="text-sm font-medium text-gray-700">
-                    {stat.title}
-                  </p>
+              <CardContent className="p-4 lg:p-6">
+                <div className="space-y-3">
+                  {/* Icon and Title Row */}
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`p-2 rounded-lg ${getDarkerBgColor(
+                        stat.bgColor
+                      )}`}
+                    >
+                      <Image
+                        src={stat.icon}
+                        alt="icon"
+                        width={20}
+                        height={20}
+                        className={`h-5 w-5 ${stat.iconColor}`}
+                      />
+                    </div>
+                    <p className="text-xs sm:text-sm font-medium text-gray-700 leading-tight">
+                      {stat.title}
+                    </p>
+                  </div>
 
                   {/* Value */}
-                  <span
-                    className={`text-2xl font-bold text-gray-900 px-3 py-1 rounded ${getDarkerBgColor(
-                      stat.bgColor
-                    )}`}
-                  >
-                    {stat.value}
-                  </span>
+                  <div className="text-right">
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                      {stat.value}
+                    </span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -150,76 +342,102 @@ export default function Home() {
             background: "linear-gradient(90deg, #FFFFFF 0%, #FCE7D2 100%)",
           }}
         >
-          <CardContent className="p-6 md:p-8 flex items-center justify-between">
-            <div className="flex flex-col items-start justify-between gap-6 flex-1">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+          <CardContent className="p-4 sm:p-6 lg:p-8">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
+              {/* Content */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
                   Refer & Make Money
                 </h2>
-                <p className="text-gray-600 text-sm md:text-base mb-6 lg:mb-0">
+                <p className="text-gray-600 text-sm sm:text-base mb-6">
                   Help students join WWAH and earn up to 1,000/- per referral.
                 </p>
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 text-sm sm:text-base font-medium rounded-full transition-colors w-full sm:w-auto"
+                >
+                  Generate your Referral Link
+                </Button>
               </div>
-              <Button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 text-base font-medium rounded-full transition-colors"
-              >
-                Generate your Referral Link
-              </Button>
-            </div>
 
-            {/* Decorative Element */}
-            <div className="flex-shrink-0 hidden md:flex ">
-              <Image
-                src={refer}
-                alt="Refer illustration"
-                width={150}
-                height={150}
-                className="object-contain"
-              />
+              {/* Decorative Element */}
+              <div className="flex-shrink-0 hidden lg:block">
+                <Image
+                  src={refer}
+                  alt="Refer illustration"
+                  width={120}
+                  height={120}
+                  className="object-contain xl:w-[150px] xl:h-[150px]"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* My Referrals Section */}
         <Card className="bg-white shadow-sm">
-          <CardContent className="p-6 md:p-8">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">
-              My Referrals
+          <CardContent className="p-4 sm:p-6 lg:p-8">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-4 lg:mb-6">
+              My Referrals ({referralsData.length})
             </h3>
 
-            <div className="space-y-4">
-              {referralsData.map((referral, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-red-600 text-white font-medium">
-                        {referral.initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className=" font-bold text-gray-900">
-                        {referral.name}
-                      </p>
+            {referralsData.length === 0 ? (
+              <div className="text-center py-8 lg:py-12">
+                <p className="text-gray-500 text-sm sm:text-base">
+                  No referrals found
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3 lg:space-y-4">
+                {referralsData.map((referral, index) => (
+                  <div
+                    key={referral.referralId || index}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
+                  >
+                    {/* User Info */}
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
+                        {referral.profilePicture ? (
+                          <img
+                            src={referral.profilePicture}
+                            alt={referral.name}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <AvatarFallback className="bg-red-600 text-white font-medium text-xs sm:text-sm">
+                            {referral.initials}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-gray-900 text-sm sm:text-base truncate">
+                          {referral.name}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Status and Info */}
+                    <div className="flex flex-row sm:flex-row items-start sm:items-center gap-2 sm:gap-3 flex-wrap">
+                      <Badge
+                        className={`${referral.statusColor} border-0 font-medium px-2 sm:px-3 py-1 text-xs sm:text-sm flex-shrink-0`}
+                      >
+                        {referral.status}
+                      </Badge>
+
+                      {referral.commissionEarned > 0 && (
+                        <span className="text-xs sm:text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded flex-shrink-0">
+                          +{referral.commissionEarned.toLocaleString()}
+                        </span>
+                      )}
+
+                      <span className="text-xs sm:text-sm text-gray-500 flex-shrink-0">
+                        {referral.date}
+                      </span>
                     </div>
                   </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                    <Badge
-                      className={`${referral.statusColor} border-0 font-medium px-3 py-1`}
-                    >
-                      {referral.status}
-                    </Badge>
-                    <span className="text-sm text-gray-500 whitespace-nowrap">
-                      {referral.date}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

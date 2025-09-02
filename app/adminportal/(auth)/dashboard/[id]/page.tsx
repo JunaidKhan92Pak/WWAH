@@ -37,7 +37,7 @@ interface UserData {
     countryCode: string;
     contactNo: string;
     city: string;
-    phone: string;
+    phone: number;
   }>;
   applications: Array<{
     _id: string;

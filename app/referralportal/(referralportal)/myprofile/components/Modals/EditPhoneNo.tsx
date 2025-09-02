@@ -34,7 +34,7 @@ export default function EditPhone({
   phone,
   updatedAt,
 }: {
-  phone: number;
+  phone: string;
   updatedAt: string;
 }) {
   console.log("Updated At:", updatedAt);
@@ -56,7 +56,7 @@ export default function EditPhone({
     console.log(values, "values");
     try {
       setIsSubmitting(true);
-      const phoneNumber = Number(values.phone);
+      const phoneNumber = values.phone;
       const response = await updateUserProfile({ phone: phoneNumber });
       console.log(response, "response from updateUserProfile");
       setSuccessOpen(true);

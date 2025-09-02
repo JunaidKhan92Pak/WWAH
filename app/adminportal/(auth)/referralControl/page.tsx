@@ -9,7 +9,7 @@ interface User {
   lastName: string;
   fullName?: string;
   email: string;
-  phone?: string;
+  phone?: number;
   provider: "local" | "google" | "email" | "facebook";
   googleId?: string;
   profilePicture?: string;
@@ -26,6 +26,15 @@ interface User {
   otpVerified: boolean;
   createdAt: string;
   updatedAt: string;
+  referrals: [
+    firstName: string,
+    lastName: string,
+    id: string,
+    profilePicture: string,
+    status: string,
+    createdAt: Date
+  ];
+  refId: string;
 }
 
 interface ApiResponse {
@@ -76,7 +85,7 @@ const ReferralControl: React.FC = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
+  console.log(users, "all users");
   // Filter users based on search term, provider, and verification status
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
