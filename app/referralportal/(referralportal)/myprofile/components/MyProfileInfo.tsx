@@ -5,11 +5,10 @@ import EditAcademicInfo from "./Modals/EditAcademicInfo";
 import EditWorkExperience from "./Modals/EditWorkExperience";
 import EditfirstandlastName from "./Modals/EditfirstandlastName";
 import Password from "./Modals/PasswordInput";
-// import EditPhoneNo from "./Modals/EditPhoneNo";
 import EditPersonalInfo from "./Modals/EditPersonalInfo";
 import EditPaymentDetails from "./Modals/EditPaymentDetails";
-import { DetailedInfo } from "@/store/useRefDataStore";
-import { User } from "@/types/reffertypes";
+// import { DetailedInfo } from "@/store/useRefDataStore";
+import { DetailedInfo, User } from "@/types/reffertypes";
 
 interface UserProps {
   user: User;
@@ -41,7 +40,6 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
           </div>
         </div>
         <Password data={user} />
-        {/* <EditPhoneNo phone={user?.phone} updatedAt={user.updatedAt} /> */}
         <EditPersonalInfo data={user} />
         {detailInfo && (
           <>

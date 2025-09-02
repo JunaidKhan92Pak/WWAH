@@ -174,7 +174,6 @@ const Page = () => {
     }
   }, [handleGoogleSignIn]);
 
-
   // Handle form submission
   const [otpData, setOtpData] = useState({
     emailOtp: "",
@@ -221,20 +220,41 @@ const Page = () => {
     const phoneRegex = /^\+?[\d\s-()]{10,}$/;
     return phoneRegex.test(phone);
   };
+  interface ReferralCodeValidation {
+    (code: string): boolean;
+  }
 
-  const handleSendOtp = async (e: { preventDefault: () => void }) => {
+  const validateReferralCode: ReferralCodeValidation = (code) => {
+    if (!code || code.trim() === "") {
+      return true;
+    }
+
+    const referralRegex = /^REF[a-z]{3}\d{3}$/;
+    return referralRegex.test(code.trim());
+  };
+  interface HandleSendOtpEvent {
+    preventDefault: () => void;
+  }
+
+  interface SendOtpResponse {
+    sessionId?: string;
+    message?: string;
+    [key: string]: unknown;
+  }
+
+  const handleSendOtp = async (e: HandleSendOtpEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     // Validation
     if (!formData.firstName.trim()) {
-      setError("first name is required");
+      setError("First name is required");
       setLoading(false);
       return;
     }
     if (!formData.lastName.trim()) {
-      setError("last name is required");
+      setError("Last name is required");
       setLoading(false);
       return;
     }
@@ -251,14 +271,23 @@ const Page = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters long");
       setLoading(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    // 🆕 Validate referral code format if provided
+    if (formData.referralCode && !validateReferralCode(formData.referralCode)) {
+      setError(
+        "Invalid referral code format. Expected format: REFxxx000 (e.g., REFsal001)"
+      );
       setLoading(false);
       return;
     }
@@ -275,24 +304,94 @@ const Page = () => {
         }
       );
 
-      const data = await response.json();
+      const data: SendOtpResponse = await response.json();
 
       if (response.ok) {
-        setSessionId(data.sessionId);
+        setSessionId(data.sessionId as string);
         setCurrentStep("otp-verification");
         setSuccess("OTP sent to your Email");
-        setCountdown(60); // 60 seconds countdown for resend
+        setCountdown(60);
       } else {
         setError(data.message || "Failed to send OTP");
       }
     } catch (err) {
       console.error("Network error", err);
-
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+  // const handleSendOtp = async (e: { preventDefault: () => void }) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   setLoading(true);
+
+  //   // Validation
+  //   if (!formData.firstName.trim()) {
+  //     setError("first name is required");
+  //     setLoading(false);
+  //     return;
+  //   }
+  //   if (!formData.lastName.trim()) {
+  //     setError("last name is required");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   if (!validateEmail(formData.email)) {
+  //     setError("Please enter a valid email address");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   if (!validatePhone(formData.phone)) {
+  //     setError("Please enter a valid phone number");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   if (formData.password.length < 6) {
+  //     setError("Password must be at least 6 characters long");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   if (formData.password !== formData.confirmPassword) {
+  //     setError("Passwords do not match");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}signup/send-otp`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(formData),
+  //       }
+  //     );
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       setSessionId(data.sessionId);
+  //       setCurrentStep("otp-verification");
+  //       setSuccess("OTP sent to your Email");
+  //       setCountdown(60); // 60 seconds countdown for resend
+  //     } else {
+  //       setError(data.message || "Failed to send OTP");
+  //     }
+  //   } catch (err) {
+  //     console.error("Network error", err);
+
+  //     setError("Network error. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleVerifyOtp = async (e: { preventDefault: () => void }) => {
     e.preventDefault();

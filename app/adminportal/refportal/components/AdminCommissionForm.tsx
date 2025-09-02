@@ -25,7 +25,8 @@ import {
   Download,
   Loader2,
 } from "lucide-react";
-import { useRefUserStore, Commission } from "@/store/useRefDataStore";
+import { useRefUserStore } from "@/store/useRefDataStore";
+import { Commission } from "@/types/reffertypes";
 
 interface AdminCommissionFormProps {
   userId: string;

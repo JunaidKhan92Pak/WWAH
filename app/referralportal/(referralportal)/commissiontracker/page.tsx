@@ -13,9 +13,10 @@ import {
   CheckCircle,
   Loader2,
 } from "lucide-react";
-import { useRefUserStore, Commission } from "@/store/useRefDataStore";
+import { useRefUserStore } from "@/store/useRefDataStore";
 import { getAuthToken } from "@/utils/authHelper";
 import { IoAlertCircle } from "react-icons/io5";
+import { Commission } from "@/types/reffertypes";
 
 export default function Dashboard() {
   const {

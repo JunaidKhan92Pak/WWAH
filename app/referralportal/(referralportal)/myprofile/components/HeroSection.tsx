@@ -4,29 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { getAuthToken } from "@/utils/authHelper";
+import { User } from "@/types/reffertypes";
 
-interface User {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: number;
-  facebook: string;
-  instagram: string;
-  linkedin: string;
-  contactNo: string;
-  dob: string;
-  country: string;
-  nationality: string;
-  gender: string;
-  city: string;
-  createdAt: string;
-  updatedAt: string;
-  countryCode: string;
-  // Fixed field names to match database
-  profilePicture?: string;
-  coverPhoto?: string;
-}
+
 
 interface HeroSectionProps {
   user: User;

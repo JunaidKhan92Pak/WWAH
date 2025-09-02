@@ -1,57 +1,7 @@
-import { User, AcademicInfo, PaymentInfo, WorkExp } from "@/types/reffertypes";
+import { User, UserStore, DetailedInfo, Commission } from "@/types/reffertypes";
 import { deleteAuthToken, getAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
 
-export interface Commission {
-  _id: string;
-  user: string;
-  month: string;
-  referrals: number;
-  amount: number;
-  status: "Paid" | "Pending" | "Requested";
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface DetailedInfo {
-  AcademicInformation: AcademicInfo;
-  paymentInformation: PaymentInfo;
-  workExperience: WorkExp;
-}
-
-export interface UserStore {
-  user: User | null;
-  detailedInfo: DetailedInfo | null;
-  commissions: Commission[];
-  loading: boolean;
-  error: string | null;
-  isAuthenticate: boolean;
-  lastUpdated?: string;
-  embeddingUpdateStatus?: "success" | "error";
-  lastEmbeddingUpdate?: string | null;
-
-  // Actions
-  fetchUserProfile: (token: string | null) => Promise<void>;
-  updateDetailedInfo: (updateData: Partial<DetailedInfo>) => Promise<boolean>;
-  updateUserProfile: (userData: Partial<User>) => Promise<boolean>;
-  setUser: (user: User) => void;
-  logout: () => void;
-  clearError: () => void;
-  getLastUpdatedDate: () => string | null;
-
-  // Commission actions
-  fetchCommissions: (userId: string) => Promise<void>;
-  createCommission: (
-    userId: string,
-    commissionData: Omit<Commission, "_id" | "user" | "createdAt" | "updatedAt">
-  ) => Promise<boolean>;
-  updateCommission: (
-    userId: string,
-    commissionId: string,
-    updateData: Partial<Commission>
-  ) => Promise<boolean>;
-  deleteCommission: (userId: string, commissionId: string) => Promise<boolean>;
-}
 
 const defaultDetailedInfo: DetailedInfo = {
   AcademicInformation: {
@@ -163,7 +113,7 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         firstName: userData.user?.firstName || "",
         lastName: userData.user?.lastName || "",
         email: userData.user?.email || "",
-        phone: userData.user?.phone || 0,
+        phone: userData.user?.phone || "",
         facebook: userData.user?.facebook || "",
         instagram: userData.user?.instagram || "",
         linkedin: userData.user?.linkedin || "",
@@ -176,8 +126,24 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         createdAt: userData.user?.createdAt || "",
         updatedAt: userData.user?.updatedAt || "",
         countryCode: userData.user?.countryCode || "",
+        profilePicture: userData.user?.profilePicture || "",
+        coverPhoto: userData.user?.coverPhoto || "",
+        referralCode: userData.user?.referralCode || "",
+        referrals: userData.user?.referrals || [],
+        refId: userData.user?.refId || "",
+        totalReferrals: userData.user?.totalReferrals || 0,
+        commissionPerReferral: userData.user?.commissionPerReferral || 0,
         Commission: userData.user?.Commissions || [],
       };
+
+      // console.log("Transformed user data:", {
+      //   id: user._id,
+      //   profilePicture: user.profilePicture,
+      //   coverPhoto: user.coverPhoto,
+      //   firstName: user.firstName,
+      //   lastName: user.lastName,
+      // });
+      // console.log("User profile set in store successfully", user);
 
       console.log(user, "user from store");
       set({
@@ -187,6 +153,8 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
         isAuthenticate: true,
         error: null,
       });
+
+      // console.log("User profile set in store successfully",user);
     } catch (error) {
       console.error("Error fetching profile:", error);
       set({
@@ -360,7 +328,23 @@ export const useRefUserStore = create<UserStore>((set, get) => ({
       return false;
     }
   },
+  updateUserImages: (imageData: {
+    profilePicture?: string;
+    coverPhoto?: string;
+  }) => {
+    console.log("=== ZUSTAND: UPDATING USER IMAGES IN STORE ===");
+    console.log("Image data:", imageData);
 
+    set((state) => ({
+      user: state.user
+        ? {
+            ...state.user,
+            ...imageData,
+            updatedAt: new Date().toISOString(),
+          }
+        : null,
+    }));
+  },
   deleteCommission: async (
     userId: string,
     commissionId: string
