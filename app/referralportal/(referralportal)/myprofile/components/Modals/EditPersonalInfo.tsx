@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,8 +30,11 @@ import {
 } from "@/components/ui/form";
 import { User } from "@/types/reffertypes";
 import { useRefUserStore } from "@/store/useRefDataStore";
+import { countries } from "@/lib/countries";
+import { getCitiesByCountry, CityData } from "@/lib/cities";
 
 const formSchema = z.object({
+  countryCode: z.string().min(1, "Country code is required"),
   contactNo: z.string().min(1, "Contact number is required"),
   country: z.string().min(1, "Country is required"),
   city: z.string().min(1, "City is required"),
@@ -45,6 +48,7 @@ export default function EditPersonalInfo({ data }: { data: User }) {
   const [open, setOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [availableCities, setAvailableCities] = useState<CityData[]>([]);
   const { updateUserProfile } = useRefUserStore();
 
   // Format date to YYYY-MM-DD for input if it exists
@@ -72,6 +76,7 @@ export default function EditPersonalInfo({ data }: { data: User }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      countryCode: "+92", // Default to Pakistan
       contactNo: data?.contactNo || "",
       country: data?.country || "Pakistan",
       city: data?.city || "Lahore",
@@ -82,6 +87,33 @@ export default function EditPersonalInfo({ data }: { data: User }) {
     },
   });
 
+  // Watch for country changes to update cities and country code
+  const watchedCountry = form.watch("country");
+
+  useEffect(() => {
+    if (watchedCountry) {
+      // Get cities for the selected country
+      const cities = getCitiesByCountry(watchedCountry);
+      setAvailableCities(cities);
+
+      // Reset city selection when country changes (except initial load)
+      const currentCity = form.getValues("city");
+      const cityExists = cities.some((city) => city.name === currentCity);
+      if (!cityExists && cities.length > 0) {
+        form.setValue("city", "");
+      }
+    }
+  }, [watchedCountry, form]);
+
+  // Initialize cities on component mount
+  useEffect(() => {
+    const initialCountry = form.getValues("country");
+    if (initialCountry) {
+      const cities = getCitiesByCountry(initialCountry);
+      setAvailableCities(cities);
+    }
+  }, [form]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Form submitting with values:", values);
     setIsSubmitting(true);
@@ -89,7 +121,7 @@ export default function EditPersonalInfo({ data }: { data: User }) {
     try {
       // Map form values to User object properties
       const userData = {
-        contactNo: values.contactNo,
+        contactNo: `${values.countryCode}${values.contactNo}`, // Combine country code with contact number
         country: values.country,
         city: values.city,
         dob: values.dateOfBirth,
@@ -120,56 +152,26 @@ export default function EditPersonalInfo({ data }: { data: User }) {
     }
   }
 
-  const countries = [
-    { code: "+92", flag: "/pakflag.png", country: "Pakistan" },
-    { code: "+1", flag: "/countryarchive/usa_logo.png", country: "USA" },
-    { code: "+91", flag: "/countryarchive/india_logo.png", country: "India" },
-    { code: "+61", flag: "/australia.png", country: "Australia" },
-    { code: "+39", flag: "/countryarchive/italy_logo.png", country: "Italy" },
-    {
-      code: "+44",
-      flag: "/countryarchive/uk_logo.png",
-      country: "United Kingdom",
-    },
-    { code: "+1", flag: "/countryarchive/canada_logo.png", country: "Canada" },
-    { code: "+86", flag: "/countryarchive/china_logo.png", country: "China" },
-    {
-      code: "+353",
-      flag: "/countryarchive/IR_logo.png",
-      country: "Ireland",
-    },
-    { code: "+64", flag: "/nz.png", country: "New Zealand" },
-    {
-      code: "+49",
-      flag: "/countryarchive/germany_logo.png",
-      country: "Germany",
-    },
-    { code: "+60", flag: "/countryarchive/my_logo.png", country: "Malaysia" },
-    { code: "+33", flag: "/countryarchive/france_logo.png", country: "France" },
-    {
-      code: "+45",
-      flag: "/countryarchive/denmark_logo.png",
-      country: "Denmark",
-    },
-  ];
+  // Get the selected country code's flag
+  const getCountryCodeFlag = (countryCode: string) => {
+    const selectedCountry = countries.find(
+      (country) => country.code === countryCode
+    );
+    return selectedCountry?.flag || "https://flagcdn.com/w40/pk.png";
+  };
 
-  const pakistanCities = [
-    "Lahore",
-    "Karachi",
-    "Islamabad",
-    "Rawalpindi",
-    "Faisalabad",
-    "Multan",
-    "Peshawar",
-    "Quetta",
-    "Sialkot",
-    "Gujranwala",
-  ];
+  // Get the selected country's flag
+  // const getSelectedCountryFlag = () => {
+  //   const selectedCountry = countries.find(
+  //     (country) => country.name === watchedCountry
+  //   );
+  //   return selectedCountry?.flag || "https://flagcdn.com/w40/pk.png";
+  // };
 
   return (
     <>
       <div className="flex flex-col items-start space-y-2">
-        <p className="text-gray-600 text-base">Personal Information:</p>
+        <p className="text-gray-600 text-base">Basic Info:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
             src="/DashboardPage/User.svg"
@@ -208,7 +210,7 @@ export default function EditPersonalInfo({ data }: { data: User }) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {/* Contact and Country Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Contact Number */}
+                {/* Contact Number with Country Code Dropdown */}
                 <FormField
                   control={form.control}
                   name="contactNo"
@@ -217,20 +219,68 @@ export default function EditPersonalInfo({ data }: { data: User }) {
                       <FormLabel>Contact No.</FormLabel>
                       <FormControl>
                         <div className="flex">
-                          <div className="flex items-center bg-[#f1f1f1] px-3 rounded-l-md border-r">
-                            <Image
-                              src="/pakflag.png"
-                              alt="Pakistan"
-                              width={20}
-                              height={20}
-                              className="mr-1"
-                            />
-                            <span className="text-sm">+92</span>
-                          </div>
+                          {/* Country Code Dropdown */}
+                          <FormField
+                            control={form.control}
+                            name="countryCode"
+                            render={({ field: countryCodeField }) => (
+                              <Select
+                                onValueChange={countryCodeField.onChange}
+                                value={countryCodeField.value}
+                              >
+                                <SelectTrigger className="bg-[#f1f1f1] w-24 rounded-r-none border-r-0">
+                                  <div className="flex items-center">
+                                    <Image
+                                      src={getCountryCodeFlag(
+                                        countryCodeField.value
+                                      )}
+                                      alt="Country flag"
+                                      width={16}
+                                      height={16}
+                                      className="mr-1"
+                                    />
+                                    <span className="text-xs">
+                                      {countryCodeField.value}
+                                    </span>
+                                  </div>
+                                </SelectTrigger>
+                                <SelectContent className="max-h-60 overflow-y-auto">
+                                  {countries
+                                    .filter((country) => country.code) // Only show countries with valid codes
+                                    .sort((a, b) =>
+                                      a.name.localeCompare(b.name)
+                                    )
+                                    .map((country) => (
+                                      <SelectItem
+                                        key={`${country.id}-${country.code}`}
+                                        value={country.code}
+                                      >
+                                        <div className="flex items-center">
+                                          <Image
+                                            src={country.flag}
+                                            alt={`${country.name} flag`}
+                                            width={16}
+                                            height={16}
+                                            className="mr-2"
+                                          />
+                                          <span className="text-xs mr-1">
+                                            {country.code}
+                                          </span>
+                                          <span className="text-xs text-gray-600">
+                                            {country.name}
+                                          </span>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                          {/* Phone Number Input */}
                           <Input
                             {...field}
                             placeholder="3098487890"
-                            className="bg-[#f1f1f1] rounded-l-none border-l-0"
+                            className="bg-[#f1f1f1] rounded-l-none border-l-0 flex-1"
                           />
                         </div>
                       </FormControl>
@@ -252,26 +302,23 @@ export default function EditPersonalInfo({ data }: { data: User }) {
                       >
                         <SelectTrigger className="bg-[#f1f1f1] justify-between">
                           <div className="flex items-center">
-                            <Image
-                              src={
-                                countries.find((c) => c.country === field.value)
-                                  ?.flag || "/pakflag.png"
-                              }
-                              alt="Country flag"
-                              width={20}
-                              height={20}
-                              className="mr-2"
-                            />
+                        
                             <SelectValue placeholder="Select Country" />
                           </div>
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="max-h-60 overflow-y-auto">
                           {countries.map((country) => (
-                            <SelectItem
-                              key={country.country}
-                              value={country.country}
-                            >
-                              {country.country}
+                            <SelectItem key={country.id} value={country.name}>
+                              <div className="flex items-center">
+                                <Image
+                                  src={country.flag}
+                                  alt={`${country.name} flag`}
+                                  width={20}
+                                  height={20}
+                                  className="mr-2"
+                                />
+                                {country.name}
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -294,16 +341,39 @@ export default function EditPersonalInfo({ data }: { data: User }) {
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
+                        disabled={availableCities.length === 0}
                       >
                         <SelectTrigger className="bg-[#f1f1f1]">
-                          <SelectValue placeholder="Select City" />
+                          <SelectValue
+                            placeholder={
+                              availableCities.length === 0
+                                ? "Select a country first"
+                                : "Select City"
+                            }
+                          />
                         </SelectTrigger>
-                        <SelectContent>
-                          {pakistanCities.map((city) => (
-                            <SelectItem key={city} value={city}>
-                              {city}
+                        <SelectContent className="max-h-60 overflow-y-auto">
+                          {availableCities.length > 0 ? (
+                            availableCities
+                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .map((city) => (
+                                <SelectItem
+                                  key={`${city.name}-${city.stateCode}`}
+                                  value={city.name}
+                                >
+                                  {city.name}
+                                  {city.stateCode && (
+                                    <span className="text-gray-500 text-xs ml-1">
+                                      ({city.stateCode})
+                                    </span>
+                                  )}
+                                </SelectItem>
+                              ))
+                          ) : (
+                            <SelectItem value="no-cities" disabled>
+                              No cities available
                             </SelectItem>
-                          ))}
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
