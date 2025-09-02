@@ -4,6 +4,7 @@ import { fetchApplicationInfo, fetchBasicInfo } from "@/utils/stdDashboard";
 import { useEffect, useState } from "react";
 import { MdModeEditOutline } from "react-icons/md";
 import { useRouter } from "next/navigation";
+
 const Section = ({
   title,
   data,
@@ -18,7 +19,7 @@ const Section = ({
       <p className="font-semibold">{title}</p>
     </button>
     <div>
-      <div className="grid grid-cols-1  gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {data &&
           Object.entries(data).map(([key, value]) => (
             <div
@@ -28,7 +29,7 @@ const Section = ({
               <p className="text-sm text-muted-foreground capitalize">
                 {key.replace(/([A-Z])/g, " $1").trim()}
               </p>
-              <p className="font-medium">{value}</p>
+              <p className="font-medium">{value || ""}</p>
             </div>
           ))}
         {children}
@@ -36,8 +37,41 @@ const Section = ({
     </div>
   </div>
 );
+
+// Helper function to safely format dates
+const formatDate = (dateString?: string): string => {
+  if (!dateString || dateString === "undefined" || dateString === "null") {
+    return "";
+  }
+  try {
+    return new Date(dateString).toLocaleDateString("en-GB");
+  } catch {
+    return "";
+  }
+};
+
+// Helper function to safely get string values
+const safeString = (value?: string): string => {
+  if (!value || value === "undefined" || value === "null") {
+    return "";
+  }
+  return value;
+};
+
+// Helper function to safely combine phone numbers
+const formatPhoneNumber = (countryCode?: string, phoneNo?: string): string => {
+  const code = safeString(countryCode);
+  const number = safeString(phoneNo);
+  
+  if (!code && !number) return "";
+  if (!code) return number;
+  if (!number) return code;
+  return `${code}-${number}`;
+};
+
 export default function ReviewPage() {
   const router = useRouter();
+  
   interface Data1Type {
     familyName?: string;
     givenName?: string;
@@ -49,7 +83,9 @@ export default function ReviewPage() {
     religion?: string;
     permanentAddress?: string;
     country?: string;
+    city?: string;
     currentZipCode?: string;
+    zipCode?: string;
     countryCode?: string;
     phoneNo?: string;
     currentAddress?: string;
@@ -83,6 +119,7 @@ export default function ReviewPage() {
   }
 
   const [data1, setData1] = useState<Data1Type | null>(null);
+  
   interface Data2Type {
     countryOfStudy?: string;
     proficiencyLevel?: string;
@@ -113,8 +150,7 @@ export default function ReviewPage() {
   }
 
   const [data2, setData2] = useState<Data2Type | null>(null);
-  // console.log(data1, "data 1");
-  // console.log(data2, "data 2");
+  
   useEffect(() => {
     const getData = async () => {
       const result1 = await fetchBasicInfo();
@@ -125,87 +161,65 @@ export default function ReviewPage() {
 
     getData();
   }, []);
+
   const studentData = {
     personalInfo: {
-      familyName: `${data1?.familyName}`,
-      givenName: `${data1?.givenName}`,
-      nationality: `${data1?.nationality}`,
-      // dateOfBirth: `${data1?.DOB}`,
-      dateOfBirth: data1?.DOB
-        ? new Date(data1.DOB).toLocaleDateString("en-GB")
-        : "N/A",
-      countryOfResidence: `${data1?.countryOfResidence}`,
-      gender: `${data1?.gender}`,
-      maritalStatus: `${data1?.maritalStatus}`,
-      religion: `${data1?.religion}`,
+      familyName: safeString(data1?.familyName),
+      givenName: safeString(data1?.givenName),
+      nationality: safeString(data1?.nationality),
+      dateOfBirth: formatDate(data1?.DOB),
+      countryOfResidence: safeString(data1?.countryOfResidence),
+      gender: safeString(data1?.gender),
+      maritalStatus: safeString(data1?.maritalStatus),
+      religion: safeString(data1?.religion),
     },
     contactDetails: {
-      currentAddress: `${data1?.permanentAddress}`,
-      permanentAddress: `${data1?.currentAddress}`,
-      country: `${data1?.country}`,
-      // cityProvince: `${data1?.religion}`,
-      zipCode: `${data1?.currentZipCode}`,
-      phoneNumber: `${data1?.countryCode}-${data1?.phoneNo}`,
-      // email: `${data1?.religion}`,
-    },
-    currentDetails: {
-      currentAddress: `${data1?.permanentAddress}`,
-      permanentAddress: `${data1?.currentAddress}`,
-      country: `${data1?.currentCountry}`,
-      cityProvince: `${data1?.currentCity}`,
-      zipCode: `${data1?.currentZipCode}`,
-      phoneNumber: `${data1?.countryCode}-${data1?.currentPhoneNo}`,
-      email: `${data1?.currentEmail}`,
+      currentAddress: safeString(data1?.permanentAddress),
+      permanentAddress: safeString(data1?.currentAddress),
+      city: safeString(data1?.city),
+      zipCode: safeString(data1?.zipCode),
+      phoneNumber: formatPhoneNumber(data1?.countryCode, data1?.phoneNo),
     },
     passportInfo: {
-      passportNumber: `${data1?.passportNumber}`,
-      passportExpiryDate: data1?.passportExpiryDate
-        ? new Date(data1.passportExpiryDate).toLocaleDateString("en-GB")
-        : "N/A",
-      oldPassportNumber: `${data1?.oldPassportNumber}`,
-      oldPassportExpiryDate: data1?.oldPassportExpiryDate
-        ? new Date(data1.oldPassportExpiryDate).toLocaleDateString("en-GB")
-        : "N/A",
+      passportNumber: safeString(data1?.passportNumber),
+      passportExpiryDate: formatDate(data1?.passportExpiryDate),
+      oldPassportNumber: safeString(data1?.oldPassportNumber),
+      oldPassportExpiryDate: formatDate(data1?.oldPassportExpiryDate),
     },
     learningExperienceAbroad: {
-      countryName: `${data1?.visitedCountry}`,
-      institutionAttended: `${data1?.institution}`,
-      visaType: `${data1?.visaType}`,
-      visaExpiryDate: data1?.visaExpiryDate
-        ? new Date(data1.visaExpiryDate).toLocaleDateString("en-GB")
-        : "N/A",
-      durationOfStudy: `${data1?.durationOfStudyAbroad}`,
+      countryName: safeString(data1?.visitedCountry),
+      institutionAttended: safeString(data1?.institution),
+      visaType: safeString(data1?.visaType),
+      visaExpiryDate: formatDate(data1?.visaExpiryDate),
+      durationOfStudy: safeString(data1?.durationOfStudyAbroad),
     },
     financialSponsorInfo: {
-      name: `${data1?.sponsorName}`,
-      relationshipWithStudent: `${data1?.sponsorRelationship}`,
-      nationality: `${data1?.sponsorsNationality}`,
-      occupation: `${data1?.sponsorsOccupation}`,
-      email: `${data1?.sponsorsEmail}`,
-      phoneNumber: `${data1?.countryCode}-${data1?.sponsorsPhoneNo}`,
+      name: safeString(data1?.sponsorName),
+      relationshipWithStudent: safeString(data1?.sponsorRelationship),
+      nationality: safeString(data1?.sponsorsNationality),
+      occupation: safeString(data1?.sponsorsOccupation),
+      email: safeString(data1?.sponsorsEmail),
+      phoneNumber: formatPhoneNumber(data1?.countryCode, data1?.sponsorsPhoneNo),
     },
-    familyMembers: data1?.familyMembers,
+    familyMembers: data1?.familyMembers || [],
     languageProficiency: {
-      countryOfStudy: `${data2?.countryOfStudy}`,
-      proficiencyLevel: `${data2?.proficiencyLevel}`,
-      testTaken: `${data2?.proficiencyTest}`,
-      overallScore: `${data2?.overAllScore}`,
-      listeningScore: `${data2?.listeningScore}`,
-      readingScore: `${data2?.readingScore}`,
-      writingScore: `${data2?.writingScore}`,
-      speakingScore: `${data2?.speakingScore}`,
+      // countryOfStudy: safeString(data2?.countryOfStudy),
+      // proficiencyLevel: safeString(data2?.proficiencyLevel),
+      testTaken: safeString(data2?.proficiencyTest),
+      overallScore: safeString(data2?.overAllScore),
+      listeningScore: safeString(data2?.listeningScore),
+      readingScore: safeString(data2?.readingScore),
+      writingScore: safeString(data2?.writingScore),
+      speakingScore: safeString(data2?.speakingScore),
     },
-    educationalBackground: data2?.educationalBackground,
-    workExperience: data2?.workExperience,
+    educationalBackground: data2?.educationalBackground || [],
+    workExperience: data2?.workExperience || [],
     standardizedTests: {
-      testName: `${data2?.standardizedTest}`,
-      overallScore: `${data2?.standardizedOverallScore}`,
+      testName: safeString(data2?.standardizedTest),
+      overallScore: safeString(data2?.standardizedOverallScore),
       subScores: data2?.standardizedSubScore?.join(", ") || "",
     },
   };
-  const fdataMap = studentData?.familyMembers;
-  const wdataMap = studentData?.workExperience;
-  const edataMap = studentData?.educationalBackground;
 
   if (!data1 || !data2) {
     return <div className="text-center py-10">Loading your application...</div>;
@@ -239,18 +253,6 @@ export default function ReviewPage() {
         </Button>
       </div>
 
-      {/* Current Details Section */}
-      {/* <div className="flex justify-between">
-        <Section title="Current Details" data={studentData.currentDetails} />
-        <Button
-          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=3")
-          }
-        >
-          Edit <MdModeEditOutline />
-        </Button>
-      </div> */}
-
       {/* Passport Information Section */}
       <div className="flex justify-between">
         <Section title="Passport Information" data={studentData.passportInfo} />
@@ -279,6 +281,7 @@ export default function ReviewPage() {
           Edit <MdModeEditOutline />
         </Button>
       </div>
+
       {/* Financial Sponsor Information Section */}
       <div className="flex justify-between">
         <Section
@@ -294,52 +297,53 @@ export default function ReviewPage() {
           Edit <MdModeEditOutline />
         </Button>
       </div>
-      {/* Language Proficiency Section */}
-      {/* <div>
-        <Section title="Language Proficiency" data={studentData.languageProficiency} />
-      </div> */}
+
       {/* Family Members Section */}
       <div className="flex justify-between">
         <Section title="Family Members">
-          <div className="grid grid-cols-1 gap-4">
-            {fdataMap?.map((member, index) => (
-              <div
-                key={index}
-                className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
-              >
-                {/* Index Number */}
-                <p className="font-medium">{index + 1}</p>
-                <p className="text-sm text-muted-foreground">-</p>
+          {studentData.familyMembers.length === 0 ? (
+            <p className="text-muted-foreground italic">No family members added yet</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {studentData.familyMembers.map((member, index) => (
+                <div
+                  key={index}
+                  className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
+                >
+                  {/* Index Number */}
+                  <p className="font-medium">{index + 1}</p>
+                  <p className="text-sm text-muted-foreground">-</p>
 
-                {/* Name */}
-                <p className="text-sm text-muted-foreground">Name</p>
-                <p className="font-medium">{member.name}</p>
+                  {/* Name */}
+                  <p className="text-sm text-muted-foreground">Name</p>
+                  <p className="font-medium">{safeString(member.name)}</p>
 
-                {/* Relationship */}
-                <p className="text-sm text-muted-foreground">Relationship</p>
-                <p className="font-medium">{member.relationship}</p>
+                  {/* Relationship */}
+                  <p className="text-sm text-muted-foreground">Relationship</p>
+                  <p className="font-medium">{safeString(member.relationship)}</p>
 
-                {/* Nationality */}
-                <p className="text-sm text-muted-foreground">Nationality</p>
-                <p className="font-medium">{member.nationality}</p>
+                  {/* Nationality */}
+                  <p className="text-sm text-muted-foreground">Nationality</p>
+                  <p className="font-medium">{safeString(member.nationality)}</p>
 
-                {/* Occupation */}
-                <p className="text-sm text-muted-foreground">Occupation</p>
-                <p className="font-medium">{member.occupation}</p>
+                  {/* Occupation */}
+                  <p className="text-sm text-muted-foreground">Occupation</p>
+                  <p className="font-medium">{safeString(member.occupation)}</p>
 
-                {/* Email */}
-                <p className="text-sm text-muted-foreground">Email</p>
-                <p className="font-medium">{member.email}</p>
+                  {/* Email */}
+                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="font-medium">{safeString(member.email)}</p>
 
-                {/* Phone */}
-                <p className="text-sm text-muted-foreground">Phone</p>
-                <p className="font-medium">{member.phoneNo}</p>
+                  {/* Phone */}
+                  <p className="text-sm text-muted-foreground">Phone</p>
+                  <p className="font-medium">{safeString(member.phoneNo)}</p>
 
-                {/* Divider */}
-                <hr className="col-span-2" />
-              </div>
-            ))}
-          </div>
+                  {/* Divider */}
+                  <hr className="col-span-2" />
+                </div>
+              ))}
+            </div>
+          )}
         </Section>
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
@@ -354,56 +358,49 @@ export default function ReviewPage() {
       {/* Educational Background Section */}
       <div className="flex justify-between">
         <Section title="Educational Background">
-          <div className="grid grid-cols-1 gap-4">
-            {edataMap?.map((education, index) => (
-              <div
-                key={index}
-                className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
-              >
-                {/* Index Number */}
-                <p className="font-medium">{index + 1}</p>
-                <p className="text-sm text-muted-foreground">-</p>
+          {studentData.educationalBackground.length === 0 ? (
+            <p className="text-muted-foreground italic">No educational background added yet</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {studentData.educationalBackground.map((education, index) => (
+                <div
+                  key={index}
+                  className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
+                >
+                  {/* Index Number */}
+                  <p className="font-medium">{index + 1}</p>
+                  <p className="text-sm text-muted-foreground">-</p>
 
-                {/* Highest Degree */}
-                <p className="text-sm text-muted-foreground">Highest Degree</p>
-                <p className="font-medium">{education.highestDegree}</p>
+                  {/* Highest Degree */}
+                  <p className="text-sm text-muted-foreground">Highest Degree</p>
+                  <p className="font-medium">{safeString(education.highestDegree)}</p>
 
-                {/* Subject Name */}
-                <p className="text-sm text-muted-foreground">Subject Name</p>
-                <p className="font-medium">{education.subjectName}</p>
+                  {/* Subject Name */}
+                  <p className="text-sm text-muted-foreground">Subject Name</p>
+                  <p className="font-medium">{safeString(education.subjectName)}</p>
 
-                {/* Institution Attended */}
-                <p className="text-sm text-muted-foreground">
-                  Institution Attended
-                </p>
-                <p className="font-medium">{education.institutionAttended}</p>
+                  {/* Institution Attended */}
+                  <p className="text-sm text-muted-foreground">Institution Attended</p>
+                  <p className="font-medium">{safeString(education.institutionAttended)}</p>
 
-                {/* CGPA/Marks */}
-                <p className="text-sm text-muted-foreground">CGPA/Marks</p>
-                <p className="font-medium">{education.marks}</p>
+                  {/* CGPA/Marks */}
+                  <p className="text-sm text-muted-foreground">CGPA/Marks</p>
+                  <p className="font-medium">{safeString(education.marks)}</p>
 
-                {/* Degree Start Date */}
-                <p className="text-sm text-muted-foreground">
-                  Degree Start Date
-                </p>
+                  {/* Degree Start Date */}
+                  <p className="text-sm text-muted-foreground">Degree Start Date</p>
+                  <p className="font-medium">{formatDate(education.degreeStartDate)}</p>
 
-                <p className="font-medium">
-                  {new Date(education.degreeStartDate).toLocaleDateString()}
-                </p>
+                  {/* Degree Completion Date */}
+                  <p className="text-sm text-muted-foreground">Degree Completion Date</p>
+                  <p className="font-medium">{formatDate(education.degreeEndDate)}</p>
 
-                {/* Degree Completion Date */}
-                <p className="text-sm text-muted-foreground">
-                  Degree Completion Date
-                </p>
-                <p className="font-medium">
-                  {new Date(education.degreeEndDate).toLocaleDateString()}
-                </p>
-
-                {/* Divider */}
-                <hr className="col-span-2" />
-              </div>
-            ))}
-          </div>
+                  {/* Divider */}
+                  <hr className="col-span-2" />
+                </div>
+              ))}
+            </div>
+          )}
         </Section>
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
@@ -414,49 +411,49 @@ export default function ReviewPage() {
           Edit <MdModeEditOutline />
         </Button>
       </div>
+
       {/* Work Experience Section */}
       <div className="flex justify-between">
         <Section title="Work Experience">
-          <div className="grid grid-cols-1 gap-4">
-            {wdataMap?.map((experience, index) => (
-              <div
-                key={index}
-                className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
-              >
-                {/* Index Number */}
-                <p className="font-medium">{index + 1}</p>
-                <p className="text-sm text-muted-foreground">-</p>
+          {studentData.workExperience.length === 0 ? (
+            <p className="text-muted-foreground italic">No work experience added yet</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {studentData.workExperience.map((experience, index) => (
+                <div
+                  key={index}
+                  className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]"
+                >
+                  {/* Index Number */}
+                  <p className="font-medium">{index + 1}</p>
+                  <p className="text-sm text-muted-foreground">-</p>
 
-                {/* Job Title */}
-                <p className="text-sm text-muted-foreground">Job Title</p>
-                <p className="font-medium">{experience.jobTitle}</p>
+                  {/* Job Title */}
+                  <p className="text-sm text-muted-foreground">Job Title</p>
+                  <p className="font-medium">{safeString(experience.jobTitle)}</p>
 
-                {/* Organization Name */}
-                <p className="text-sm text-muted-foreground">Organization</p>
-                <p className="font-medium">{experience.organizationName}</p>
+                  {/* Organization Name */}
+                  <p className="text-sm text-muted-foreground">Organization</p>
+                  <p className="font-medium">{safeString(experience.organizationName)}</p>
 
-                {/* Employment Type */}
-                <p className="text-sm text-muted-foreground">Employment Type</p>
-                <p className="font-medium">{experience.employmentType}</p>
+                  {/* Employment Type */}
+                  <p className="text-sm text-muted-foreground">Employment Type</p>
+                  <p className="font-medium">{safeString(experience.employmentType)}</p>
 
-                {/* Date From */}
-                <p className="text-sm text-muted-foreground">Start Date</p>
+                  {/* Date From */}
+                  <p className="text-sm text-muted-foreground">Start Date</p>
+                  <p className="font-medium">{formatDate(experience.from)}</p>
 
-                <p className="font-medium">
-                  {new Date(experience.from).toLocaleDateString()}
-                </p>
+                  {/* Date To */}
+                  <p className="text-sm text-muted-foreground">End Date</p>
+                  <p className="font-medium">{formatDate(experience.to)}</p>
 
-                {/* Date To */}
-                <p className="text-sm text-muted-foreground">End Date</p>
-                <p className="font-medium">
-                  {new Date(experience.to).toLocaleDateString()}
-                </p>
-
-                {/* Divider */}
-                <hr className="col-span-2" />
-              </div>
-            ))}
-          </div>
+                  {/* Divider */}
+                  <hr className="col-span-2" />
+                </div>
+              ))}
+            </div>
+          )}
         </Section>
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
@@ -467,16 +464,23 @@ export default function ReviewPage() {
           Edit <MdModeEditOutline />
         </Button>
       </div>
+
+      {/* Language Proficiency Section */}
+      <div className="flex justify-between">
+        <Section title="Language Proficiency" data={studentData.languageProficiency} />
+        <Button
+          className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
+          onClick={() =>
+            router.push("/dashboard/completeapplication?tab=appinfo&step=3")
+          }
+        >
+          Edit <MdModeEditOutline />
+        </Button>
+      </div>
+
       {/* Standardized Test Section */}
       <div className="flex justify-between">
-        <Section title="Standardized Test" data={studentData.standardizedTests}>
-          <div className="grid grid-cols-1 gap-4">
-            <div className="space-y-1 grid grid-cols-1 sm:grid-cols-[30%,70%]">
-              {/* Divider */}
-              <hr className="col-span-2" />
-            </div>
-          </div>
-        </Section>
+        <Section title="Standardized Test" data={studentData.standardizedTests} />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
           onClick={() =>
@@ -486,14 +490,6 @@ export default function ReviewPage() {
           Edit <MdModeEditOutline />
         </Button>
       </div>
-      {/* <div className="text-right my-4">
-        <Button
-          type="submit"
-          className="w-1/3 sm:w-[17%] bg-red-600 hover:bg-red-700"
-        >
-          Submit
-        </Button>
-      </div> */}
     </div>
   );
 }

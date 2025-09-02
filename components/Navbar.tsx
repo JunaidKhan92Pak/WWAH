@@ -130,17 +130,17 @@ const Navbar = () => {
                 <div className="relative">
                   <button
                     type="button"
-                    className="flex items-center text-sm rounded-full focus:ring-4 focus:ring-gray-300"
+                    className="flex items-center text-sm focus:ring-4 focus:ring-gray-300 h-8 w-8"
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
                     <Image
-                      src={user?.profilePicture || "/default-profile.png"}
+                      src={user?.profilePicture || "/icons/userred.svg"}
                       // src="/icons/userred.svg"
                       alt="user"
                       width={32}
                       height={32}
-                      className="rounded-full"
+                      className="rounded-full object-fit h-8 w-8"
                     />
                   </button>
 

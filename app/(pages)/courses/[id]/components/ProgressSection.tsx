@@ -353,6 +353,10 @@ export const ProgressSection: React.FC<ProgressSectionProps> = ({
         fieldValue = editedUserData.studyLevel || '';
         fieldType = 'select';
         options = [
+          { label: "Matric", value: "Matric" },
+          { label: "O Levels", value: "O Levels" },
+          { label: "Intermediate", value: "Intermediate" },
+          { label: "A Levels", value: "A Levels" },
           { label: "Bachelor's", value: "Bachelor" },
           { label: "Master's", value: "Master" },
           { label: "PhD", value: "PhD" },

@@ -44,7 +44,7 @@ const HeroSection = ({ user }: HeroSectionProps) => {
     user?.coverPhoto || "/DashboardPage/profileflow.svg"
   );
   const [profilePic, setProfilePic] = useState<string>(
-    user?.profilePicture || "/DashboardPage/image.jpg"
+    user?.profilePicture || "/icons/userred.svg"
   );
   const [isUploading, setIsUploading] = useState<{
     cover: boolean;

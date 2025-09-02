@@ -74,7 +74,7 @@ export function Sidebar() {
       {/* Profile Section */}
       <Card className="p-2 m-2 flex flex-col items-center text-center bg-white rounded-lg">
         <Image
-          src={user?.profilePicture || "/default-profile.png"}
+          src={user?.profilePicture || "/icons/userred.svg"}
           alt="user"
           width={54}
           height={54}

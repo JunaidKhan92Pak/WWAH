@@ -197,7 +197,7 @@ function Page() {
                 >
                   <span className="sr-only">Open user menu</span>
                   <Image
-                    src={user?.profilePicture || "/default-profile.png"}
+                    src={user?.profilePicture || "/icons/userred.svg"}
                     alt="user"
                     width={40}
                     height={40}
