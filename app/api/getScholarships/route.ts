@@ -54,9 +54,9 @@ export async function GET(req: Request) {
                 .map((d) => d.trim().toLowerCase())
                 .filter((d) => d !== "") || []
 
-        const textSearchSupported = await Scholarship.collection.indexExists("name_text")
+        // const textSearchSupported = await Scholarship.collection.indexExists("name_text")
         const query: Record<string, unknown> = {}
-
+       
         // Text search
         if (search) {
             const escapeRegex = (text: string) =>
