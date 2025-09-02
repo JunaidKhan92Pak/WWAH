@@ -82,7 +82,7 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
     <>
       {/* First Name */}
       <div className="flex flex-col space-y-2">
-        <p className="text-gray-600 text-base">First Name:</p>
+        <p className="text-gray-600 text-base">Name:</p>
         <div className="flex flex-row items-center gap-x-2">
           <Image
             src="/DashboardPage/User.svg"
@@ -90,7 +90,9 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
             width={16}
             height={16}
           />
-          <p className="text-sm">{currentFirstName}</p>
+          <p className="text-sm">
+            {currentFirstName} {currentLastName}
+          </p>
           <Image
             src="/DashboardPage/pen.svg"
             alt="Edit"
@@ -102,19 +104,7 @@ const EditfirstandlastName: FC<EditfirstandlastNameProps> = ({
         </div>
       </div>
 
-      {/* Last Name */}
-      <div className="flex flex-col space-y-2">
-        <p className="text-gray-600 text-base">Last Name:</p>
-        <div className="flex flex-row items-center gap-x-2">
-          <Image
-            src="/DashboardPage/User.svg"
-            alt="Icon"
-            width={16}
-            height={16}
-          />
-          <p className="text-sm">{currentLastName}</p>
-        </div>
-      </div>
+     
 
       {/* Last Updated Info */}
       {lastUpdated && (

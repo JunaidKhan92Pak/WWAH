@@ -221,10 +221,7 @@ const ReferralControl: React.FC = () => {
                   href={`/adminportal/referralControl/${user._id}`}
                   className="group block"
                 >
-                  <tr
-                    key={user._id}
-                    className="hover:bg-gray-50"
-                  >
+                  <tr key={user._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap ">
                       <div className="flex items-center  ">
                         <div className="flex-shrink-0 h-10 w-10">

@@ -59,5 +59,5 @@ export interface User {
   countryCode: string;
   profilePicture?: string;
   coverPhoto?: string;
-  // detailedInfo: DetailedInfo;
+  Commission?: string; // detailedInfo: DetailedInfo;
 }

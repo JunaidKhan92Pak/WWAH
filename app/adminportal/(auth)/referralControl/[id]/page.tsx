@@ -1,9 +1,65 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-// import { useRefUserStore } from "@/store/refUserStore";
 import { getAuthToken } from "@/utils/authHelper";
-import { useRefUserStore } from "@/store/useRefDataStore";
+// import { useRefUserStore } from "@/store/useRefDataStore";
+import AdminCommissionForm from "@/app/adminportal/refportal/components/AdminCommissionForm";
+
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: number;
+  facebook: string;
+  instagram: string;
+  linkedin: string;
+  contactNo: string;
+  dob: string;
+  country: string;
+  nationality: string;
+  gender: string;
+  city: string;
+  createdAt: string;
+  updatedAt: string;
+  countryCode: string;
+  Commissions: string[]; // if commissions also have a shape, define it here
+}
+
+interface AcademicInformation {
+  currentDegree: string;
+  program: string;
+  uniName: string;
+  currentSemester: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface PaymentInformation {
+  preferredPaymentMethod: string;
+  bankAccountTitle: string;
+  bankName: string;
+  accountNumberIban: string;
+  mobileWalletNumber: string;
+  accountHolderName: string;
+  termsAndAgreement: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface WorkExperience {
+  hasWorkExperience: boolean;
+  hasBrandAmbassador: boolean;
+  jobDescription: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface DetailedInfo {
+  AcademicInformation: AcademicInformation;
+  paymentInformation: PaymentInformation;
+  workExperience: WorkExperience;
+}
 
 export default function RefUserDetails({
   params,
@@ -11,8 +67,11 @@ export default function RefUserDetails({
   params: Promise<{ id: string }>;
 }) {
   const [userId, setUserId] = useState<string>("");
-  const { user, detailedInfo, loading, error, fetchUserProfile, clearError } =
-    useRefUserStore();
+  const [specificUser, setSpecificUser] = useState<User | null>(null);
+  const [specificDetailedInfo, setSpecificDetailedInfo] =
+    useState<DetailedInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Unwrap params
   useEffect(() => {
@@ -27,10 +86,15 @@ export default function RefUserDetails({
   const fetchSpecificUserData = async (id: string) => {
     const token = getAuthToken();
     if (!token) {
+      setError("No authentication token found");
+      setLoading(false);
       return;
     }
 
     try {
+      setLoading(true);
+      setError(null);
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/mbaData/user/${id}`,
         {
@@ -51,7 +115,7 @@ export default function RefUserDetails({
 
       const userData = await response.json();
 
-      // Transform and set the data similar to your store logic
+      // Transform detailed info
       const transformedDetailedInfo = {
         AcademicInformation: userData.AcademmicInfo || {
           currentDegree: "",
@@ -81,59 +145,47 @@ export default function RefUserDetails({
         },
       };
 
-      // You'll need to add these to your store or use local state
-      // For now, we'll use the store's setUser method
-      if (userData.user) {
-        const user = {
-          _id: userData.user._id || "",
-          firstName: userData.user.firstName || "",
-          lastName: userData.user.lastName || "",
-          email: userData.user.email || "",
-          phone: userData.user.phone || 0,
-          facebook: userData.user.facebook || "",
-          instagram: userData.user.instagram || "",
-          linkedin: userData.user.linkedin || "",
-          contactNo: userData.user.contactNo || "",
-          dob: userData.user.dob || "",
-          country: userData.user.country || "",
-          nationality: userData.user.nationality || "",
-          gender: userData.user.gender || "",
-          city: userData.user.city || "",
-          createdAt: userData.user.createdAt || "",
-          updatedAt: userData.user.updatedAt || "",
-          countryCode: userData.user.countryCode || "",
-        };
+      // Transform user data
+      const user = {
+        _id: userData.user?._id || "",
+        firstName: userData.user?.firstName || "",
+        lastName: userData.user?.lastName || "",
+        email: userData.user?.email || "",
+        phone: userData.user?.phone || 0,
+        facebook: userData.user?.facebook || "",
+        instagram: userData.user?.instagram || "",
+        linkedin: userData.user?.linkedin || "",
+        contactNo: userData.user?.contactNo || "",
+        dob: userData.user?.dob || "",
+        country: userData.user?.country || "",
+        nationality: userData.user?.nationality || "",
+        gender: userData.user?.gender || "",
+        city: userData.user?.city || "",
+        createdAt: userData.user?.createdAt || "",
+        updatedAt: userData.user?.updatedAt || "",
+        countryCode: userData.user?.countryCode || "",
+        Commissions: userData.user?.Commissions || [],
+      };
 
-        // You might want to extend your store to handle this admin view data
-        useRefUserStore.setState({
-          user,
-          detailedInfo: transformedDetailedInfo,
-          loading: false,
-          error: null,
-        });
-      }
+      // Set local state instead of mutating global store
+      setSpecificUser(user);
+      setSpecificDetailedInfo(transformedDetailedInfo);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching specific user:", error);
-      useRefUserStore.setState({
-        error:
-          error instanceof Error ? error.message : "Failed to fetch user data",
-        loading: false,
-      });
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch user data"
+      );
+      setLoading(false);
     }
   };
 
   // Fetch user data when userId is available
   useEffect(() => {
     if (userId) {
-      useRefUserStore.setState({ loading: true, error: null });
       fetchSpecificUserData(userId);
     }
   }, [userId]);
-
-  // Clear error on component mount
-  useEffect(() => {
-    clearError();
-  }, [clearError]);
 
   if (loading) {
     return (
@@ -154,8 +206,9 @@ export default function RefUserDetails({
           <p className="mb-4">{error}</p>
           <button
             onClick={() => {
-              const token = getAuthToken();
-              fetchUserProfile(token);
+              if (userId) {
+                fetchSpecificUserData(userId);
+              }
             }}
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
           >
@@ -166,7 +219,7 @@ export default function RefUserDetails({
     );
   }
 
-  if (!user) {
+  if (!specificUser) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -190,15 +243,15 @@ export default function RefUserDetails({
             <div className="flex items-center space-x-6">
               <div className="flex-shrink-0">
                 <div className="h-20 w-20 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-2xl font-bold">
-                  {user.firstName?.charAt(0)}
-                  {user.lastName?.charAt(0)}
+                  {specificUser.firstName?.charAt(0)}
+                  {specificUser.lastName?.charAt(0)}
                 </div>
               </div>
               <div>
                 <h1 className="text-3xl font-bold">
-                  {user.firstName} {user.lastName}
+                  {specificUser.firstName} {specificUser.lastName}
                 </h1>
-                <p className="text-xl opacity-90">{user.email}</p>
+                <p className="text-xl opacity-90">{specificUser.email}</p>
                 <p className="opacity-80">User ID: {userId}</p>
               </div>
             </div>
@@ -220,7 +273,7 @@ export default function RefUserDetails({
                     First Name
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.firstName || "N/A"}
+                    {specificUser.firstName || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -228,21 +281,23 @@ export default function RefUserDetails({
                     Last Name
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.lastName || "N/A"}
+                    {specificUser.lastName || "N/A"}
                   </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Email
                   </label>
-                  <p className="mt-1 text-sm text-gray-900">{user.email}</p>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {specificUser.email}
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Phone
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.phone || "N/A"}
+                    {specificUser.phone || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -250,7 +305,7 @@ export default function RefUserDetails({
                     Contact Number
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.contactNo || "N/A"}
+                    {specificUser.contactNo || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -258,7 +313,9 @@ export default function RefUserDetails({
                     Date of Birth
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.dob ? new Date(user.dob).toLocaleDateString() : "N/A"}
+                    {specificUser.dob
+                      ? new Date(specificUser.dob).toLocaleDateString()
+                      : "N/A"}
                   </p>
                 </div>
                 <div>
@@ -266,7 +323,7 @@ export default function RefUserDetails({
                     Gender
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.gender || "N/A"}
+                    {specificUser.gender || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -274,7 +331,7 @@ export default function RefUserDetails({
                     Nationality
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.nationality || "N/A"}
+                    {specificUser.nationality || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -282,7 +339,7 @@ export default function RefUserDetails({
                     Country
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.country || "N/A"}
+                    {specificUser.country || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -290,21 +347,23 @@ export default function RefUserDetails({
                     City
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.city || "N/A"}
+                    {specificUser.city || "N/A"}
                   </p>
                 </div>
               </div>
 
               {/* Social Media Links */}
-              {(user.facebook || user.instagram || user.linkedin) && (
+              {(specificUser.facebook ||
+                specificUser.instagram ||
+                specificUser.linkedin) && (
                 <div className="mt-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Social Media
                   </label>
                   <div className="flex flex-wrap gap-4">
-                    {user.facebook && (
+                    {specificUser.facebook && (
                       <a
-                        href={user.facebook}
+                        href={specificUser.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200"
@@ -312,9 +371,9 @@ export default function RefUserDetails({
                         Facebook
                       </a>
                     )}
-                    {user.instagram && (
+                    {specificUser.instagram && (
                       <a
-                        href={user.instagram}
+                        href={specificUser.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-800 hover:bg-pink-200"
@@ -322,9 +381,9 @@ export default function RefUserDetails({
                         Instagram
                       </a>
                     )}
-                    {user.linkedin && (
+                    {specificUser.linkedin && (
                       <a
-                        href={user.linkedin}
+                        href={specificUser.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200"
@@ -343,8 +402,8 @@ export default function RefUserDetails({
                       Created At
                     </label>
                     <p className="text-gray-900">
-                      {user.createdAt
-                        ? new Date(user.createdAt).toLocaleDateString()
+                      {specificUser.createdAt
+                        ? new Date(specificUser.createdAt).toLocaleDateString()
                         : "N/A"}
                     </p>
                   </div>
@@ -353,8 +412,8 @@ export default function RefUserDetails({
                       Last Updated
                     </label>
                     <p className="text-gray-900">
-                      {user.updatedAt
-                        ? new Date(user.updatedAt).toLocaleDateString()
+                      {specificUser.updatedAt
+                        ? new Date(specificUser.updatedAt).toLocaleDateString()
                         : "N/A"}
                     </p>
                   </div>
@@ -371,14 +430,15 @@ export default function RefUserDetails({
               </h2>
             </div>
             <div className="p-6 space-y-4">
-              {detailedInfo?.AcademicInformation ? (
+              {specificDetailedInfo?.AcademicInformation ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Current Degree
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.AcademicInformation.currentDegree || "N/A"}
+                      {specificDetailedInfo.AcademicInformation.currentDegree ||
+                        "N/A"}
                     </p>
                   </div>
                   <div>
@@ -386,7 +446,8 @@ export default function RefUserDetails({
                       Program
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.AcademicInformation.program || "N/A"}
+                      {specificDetailedInfo.AcademicInformation.program ||
+                        "N/A"}
                     </p>
                   </div>
                   <div>
@@ -394,7 +455,8 @@ export default function RefUserDetails({
                       University Name
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.AcademicInformation.uniName || "N/A"}
+                      {specificDetailedInfo.AcademicInformation.uniName ||
+                        "N/A"}
                     </p>
                   </div>
                   <div>
@@ -402,8 +464,8 @@ export default function RefUserDetails({
                       Current Semester
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.AcademicInformation.currentSemester ||
-                        "N/A"}
+                      {specificDetailedInfo.AcademicInformation
+                        .currentSemester || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -423,7 +485,7 @@ export default function RefUserDetails({
               </h2>
             </div>
             <div className="p-6 space-y-4">
-              {detailedInfo?.workExperience ? (
+              {specificDetailedInfo?.workExperience ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -432,12 +494,12 @@ export default function RefUserDetails({
                       </label>
                       <span
                         className={`mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          detailedInfo.workExperience.hasWorkExperience
+                          specificDetailedInfo.workExperience.hasWorkExperience
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {detailedInfo.workExperience.hasWorkExperience
+                        {specificDetailedInfo.workExperience.hasWorkExperience
                           ? "Yes"
                           : "No"}
                       </span>
@@ -448,24 +510,24 @@ export default function RefUserDetails({
                       </label>
                       <span
                         className={`mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          detailedInfo.workExperience.hasBrandAmbassador
+                          specificDetailedInfo.workExperience.hasBrandAmbassador
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {detailedInfo.workExperience.hasBrandAmbassador
+                        {specificDetailedInfo.workExperience.hasBrandAmbassador
                           ? "Yes"
                           : "No"}
                       </span>
                     </div>
                   </div>
-                  {detailedInfo.workExperience.jobDescription && (
+                  {specificDetailedInfo.workExperience.jobDescription && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Job Description
                       </label>
                       <p className="mt-1 text-sm text-gray-900 bg-gray-50 p-3 rounded-md">
-                        {detailedInfo.workExperience.jobDescription}
+                        {specificDetailedInfo.workExperience.jobDescription}
                       </p>
                     </div>
                   )}
@@ -486,15 +548,15 @@ export default function RefUserDetails({
               </h2>
             </div>
             <div className="p-6 space-y-4">
-              {detailedInfo?.paymentInformation ? (
+              {specificDetailedInfo?.paymentInformation ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Preferred Payment Method
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.paymentInformation.preferredPaymentMethod ||
-                        "N/A"}
+                      {specificDetailedInfo.paymentInformation
+                        .preferredPaymentMethod || "N/A"}
                     </p>
                   </div>
                   <div>
@@ -502,8 +564,8 @@ export default function RefUserDetails({
                       Bank Account Title
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.paymentInformation.bankAccountTitle ||
-                        "N/A"}
+                      {specificDetailedInfo.paymentInformation
+                        .bankAccountTitle || "N/A"}
                     </p>
                   </div>
                   <div>
@@ -511,7 +573,8 @@ export default function RefUserDetails({
                       Bank Name
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.paymentInformation.bankName || "N/A"}
+                      {specificDetailedInfo.paymentInformation.bankName ||
+                        "N/A"}
                     </p>
                   </div>
                   <div>
@@ -519,8 +582,8 @@ export default function RefUserDetails({
                       Account Number/IBAN
                     </label>
                     <p className="mt-1 text-sm text-gray-900 font-mono">
-                      {detailedInfo.paymentInformation.accountNumberIban
-                        ? `****${detailedInfo.paymentInformation.accountNumberIban.slice(
+                      {specificDetailedInfo.paymentInformation.accountNumberIban
+                        ? `****${specificDetailedInfo.paymentInformation.accountNumberIban.slice(
                             -4
                           )}`
                         : "N/A"}
@@ -531,8 +594,8 @@ export default function RefUserDetails({
                       Mobile Wallet Number
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.paymentInformation.mobileWalletNumber ||
-                        "N/A"}
+                      {specificDetailedInfo.paymentInformation
+                        .mobileWalletNumber || "N/A"}
                     </p>
                   </div>
                   <div>
@@ -540,11 +603,12 @@ export default function RefUserDetails({
                       Account Holder Name
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {detailedInfo.paymentInformation.accountHolderName ||
-                        "N/A"}
+                      {specificDetailedInfo.paymentInformation
+                        .accountHolderName || "N/A"}
                     </p>
                   </div>
-                  {detailedInfo.paymentInformation.termsAndAgreement && (
+                  {specificDetailedInfo.paymentInformation
+                    .termsAndAgreement && (
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Terms & Agreement
@@ -563,6 +627,9 @@ export default function RefUserDetails({
             </div>
           </div>
         </div>
+
+        {/* Commission Form - Pass the userId from params */}
+        <AdminCommissionForm userId={userId} />
 
         {/* Back Button */}
         <div className="mt-8 flex justify-center">
