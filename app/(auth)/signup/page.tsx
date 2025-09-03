@@ -1103,15 +1103,23 @@ console.log(errors)
     (code: string): boolean;
   }
 
-  const validateReferralCode: ReferralCodeValidation = (code) => {
-    if (!code || code.trim() === "") {
-      return true;
-    }
-    // 🆕 Updated regex to match the format from your referral modal (FATxxx)
-    const referralRegex = /^FAT[A-Z0-9]{3}$/;
-    return referralRegex.test(code.trim());
-  };
+const validateReferralCode: ReferralCodeValidation = (code) => {
+  if (!code || code.trim() === "") {
+    return true;
+  }
+  // Updated regex to match REF + 3 letters + 3 digits format (e.g., REFjun013)
+  const referralRegex = /^REF[a-zA-Z]{3}\d{3}$/;
+  return referralRegex.test(code.trim());
+};
 
+// Also update the error message in handleSendOtp function:
+if (formData.referralCode && !validateReferralCode(formData.referralCode)) {
+  setError(
+    "Invalid referral code format. Expected format: REFxxx### (e.g., REFjun013)"
+  );
+  setLoading(false);
+  return;
+}
   interface HandleSendOtpEvent {
     preventDefault: () => void;
   }
