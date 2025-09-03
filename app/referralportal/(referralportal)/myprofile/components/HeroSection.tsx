@@ -6,11 +6,9 @@ import { Button } from "@/components/ui/button";
 import { getAuthToken } from "@/utils/authHelper";
 import { User } from "@/types/reffertypes";
 
-
-
 interface HeroSectionProps {
   user: User;
-  onUserUpdate?: (updatedUser: User) => void; // Callback to update parent component
+  onUserUpdate?: (updatedUser: User) => void;
 }
 
 const HeroSection = ({ user, onUserUpdate }: HeroSectionProps) => {

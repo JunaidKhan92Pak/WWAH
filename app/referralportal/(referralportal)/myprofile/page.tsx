@@ -46,11 +46,6 @@ const Page = () => {
     // Update the user in the store with the new data from backend
     setUser(updatedUser);
 
-    // Alternatively, you could just update the images:
-    // updateUserImages({
-    //   profilePicture: updatedUser.profilePicture,
-    //   coverPhoto: updatedUser.coverPhoto
-    // });
   };
 
   // Check if user data is loaded but incomplete

@@ -1,7 +1,8 @@
+
+
 import { User, UserStore, DetailedInfo, Commission } from "@/types/reffertypes";
 import { deleteAuthToken, getAuthToken } from "@/utils/authHelper";
 import { create } from "zustand";
-
 
 const defaultDetailedInfo: DetailedInfo = {
   AcademicInformation: {
