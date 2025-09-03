@@ -89,7 +89,7 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
   useEffect(() => {
     if (isOpen && !referralCode) {
       const code = user?.referralCode ?? "";
-      const link = `https://www.wwah.ai/signup?ref=${code}`;
+      const link = `${process.env.NEXT_PUBLIC_APP_URL}/signup?ref=${code}`;
       setReferralCode(code);
       setReferralLink(link);
 
