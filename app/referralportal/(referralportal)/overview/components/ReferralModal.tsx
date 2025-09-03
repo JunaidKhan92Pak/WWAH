@@ -16,20 +16,12 @@ import {
   Eye,
 } from "lucide-react";
 import QRCodeGen from "qrcode-generator";
+import { useRefUserStore } from "@/store/useRefDataStore";
 
 interface ReferralModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const generateRandomCode = () => {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  const prefix = "FAT";
-  const suffix = Array.from({ length: 3 }, () =>
-    characters.charAt(Math.floor(Math.random() * characters.length))
-  ).join("");
-  return prefix + suffix;
-};
 
 const socialIcons = [
   { icon: Facebook, label: "Facebook", color: "bg-blue-600 hover:bg-blue-700" },
@@ -47,16 +39,57 @@ const socialIcons = [
   { icon: Mail, label: "Email", color: "bg-gray-600 hover:bg-gray-700" },
 ];
 
+// Social sharing functions
+const handleSocialShare = (
+  platform: string,
+  referralLink: string,
+  referralCode: string
+) => {
+  const shareText = `Join me on WWAH! Use my referral code ${referralCode} and get exclusive benefits. Sign up here: ${referralLink}`;
+  const encodedText = encodeURIComponent(shareText);
+  const encodedUrl = encodeURIComponent(referralLink);
+
+  let shareUrl = "";
+
+  switch (platform) {
+    case "Facebook":
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+      break;
+    case "LinkedIn":
+      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&summary=${encodedText}`;
+      break;
+    case "WhatsApp":
+      shareUrl = `https://wa.me/?text=${encodedText}`;
+      break;
+    case "Email":
+      shareUrl = `mailto:?subject=Join me on WWAH!&body=${encodedText}`;
+      break;
+    case "Instagram":
+      navigator.clipboard.writeText(shareText);
+      alert(
+        "Referral message copied to clipboard! You can paste it in your Instagram post or story."
+      );
+      return;
+    default:
+      return;
+  }
+
+  if (shareUrl) {
+    window.open(shareUrl, "_blank", "width=600,height=400");
+  }
+};
+
 export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
   const [referralCode, setReferralCode] = useState("");
   const [referralLink, setReferralLink] = useState("");
   const [copied, setCopied] = useState("");
   const [qrCodeSvg, setQrCodeSvg] = useState("");
+  const user = useRefUserStore((state) => state.user);
 
   useEffect(() => {
     if (isOpen && !referralCode) {
-      const code = generateRandomCode();
-      const link = `https://wwah.ai/ref/${code}`;
+      const code = user?.referralCode ?? "";
+      const link = `https://www.wwah.ai/signup?ref=${code}`;
       setReferralCode(code);
       setReferralLink(link);
 
@@ -66,7 +99,7 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
       qr.make();
       setQrCodeSvg(qr.createSvgTag(4, 0));
     }
-  }, [isOpen, referralCode]);
+  }, [isOpen, referralCode, user?.referralCode]);
 
   const handleCopy = (type: string) => {
     setCopied(type);
@@ -110,10 +143,8 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md w-full mx-auto bg-white rounded-3xl p-0 border-0 shadow-2xl">
+      <DialogContent className="max-w-lg w-full mx-auto bg-white rounded-3xl p-0 border-0 shadow-2xl">
         <div className="relative p-6 md:p-8">
-          
-
           <div className="space-y-6">
             {/* Referral Code Section */}
             <Card className="bg-orange-50 border-0">
@@ -135,10 +166,11 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
                       </Button>
                       <Button
                         size="sm"
+                        onClick={() => handleNativeCopy("link", referralLink)}
                         className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 text-sm"
                       >
                         <Share className="h-3 w-3 mr-1" />
-                        Share
+                        {copied === "link" ? "Copied!" : "Share Link"}
                       </Button>
                     </div>
                   </div>
@@ -174,10 +206,13 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
                     key={index}
                     size="sm"
                     className={`${social.color} text-white rounded-full h-10 w-10 p-0 transition-colors`}
-                    onClick={() => {
-                      // Add actual sharing logic here
-                      console.log(`Share via ${social.label}`);
-                    }}
+                    onClick={() =>
+                      handleSocialShare(
+                        social.label,
+                        referralLink,
+                        referralCode
+                      )
+                    }
                   >
                     <social.icon className="h-4 w-4" />
                   </Button>

@@ -96,7 +96,6 @@ export interface UserStore {
   user: User | null;
   detailedInfo: DetailedInfo | null;
   commissions: Commission[];
-
   loading: boolean;
   error: string | null;
   isAuthenticate: boolean;
