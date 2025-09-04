@@ -303,11 +303,9 @@ const ApplicationInfo = () => {
 
       if (result.success) {
         toast.success("Application information saved successfully!")
-
         // Clear local data after successful submission
         clearSavedData()
         localStorage.removeItem("application-info-current-page")
-
         // Navigate to the next section
         router.push("/dashboard/completeapplication?tab=documents")
       } else {
@@ -356,7 +354,6 @@ const ApplicationInfo = () => {
     goToPage(Math.max(currentPage - 1, 1))
     setValidationErrors([])
   }
-
   const validateCurrentPage = async () => {
     switch (currentPage) {
       case 1:

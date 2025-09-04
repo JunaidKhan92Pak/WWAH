@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
       const responseKey =
         type === "applied" ? "appliedCourses" : "favouriteCourses";
 
-      console.log("No course IDs provided, returning empty response");
+      // console.log("No course IDs provided, returning empty response");
       return NextResponse.json(
         {
           success: true,
@@ -111,18 +111,18 @@ export async function GET(req: NextRequest) {
     try {
       // Try to parse as JSON first (for applied courses with objects)
       const parsed = JSON.parse(decodeURIComponent(courseIdsParam));
-      console.log("Parsed data:", parsed);
+      // console.log("Parsed data:", parsed);
 
       if (Array.isArray(parsed)) {
         parsed.forEach((item, index) => {
           if (typeof item === "string") {
             // Handle old string format or favourites
             courseIds.push(item );
-            console.log(`Added string course ID: ${index}`);
+            console.warn(`Added string course ID: ${index}`);
           } else if (typeof item === "object" && item.courseId) {
             // Handle new applied course object format (SCHEMA ALIGNED)
             courseIds.push(item.courseId);
-            console.log(`Added object course ID: ${item.courseId}`);
+            // console.log(`Added object course ID: ${item.courseId}`);
 
             if (includeApplicationData || type === "applied") {
               // Store ONLY the schema fields
@@ -134,10 +134,10 @@ export async function GET(req: NextRequest) {
               };
 
               applicationDataMap.set(item.courseId, applicationData);
-              console.log(
-                `Stored application data for ${item.courseId}:`,
-                applicationData
-              );
+              // console.log(
+              //   `Stored application data for ${item.courseId}:`,
+              //   applicationData
+              // );
             }
           }
         });
@@ -145,7 +145,7 @@ export async function GET(req: NextRequest) {
         throw new Error("Invalid format - not an array");
       }
     } catch {
-      console.log("JSON parse failed, trying comma-separated string parsing");
+      // console.log("JSON parse failed, trying comma-separated string parsing");
       // Fallback to comma-separated string parsing (for favourites or old format)
       courseIds = decodeURIComponent(courseIdsParam)
         .split(",")
@@ -162,7 +162,7 @@ export async function GET(req: NextRequest) {
       const responseKey =
         type === "applied" ? "appliedCourses" : "favouriteCourses";
 
-      console.log("No valid course IDs found after parsing");
+      // console.log("No valid course IDs found after parsing");
       return NextResponse.json(
         {
           success: true,
@@ -198,7 +198,7 @@ export async function GET(req: NextRequest) {
       const responseKey =
         type === "applied" ? "appliedCourses" : "favouriteCourses";
 
-      console.error("No valid ObjectIds found");
+      // console.error("No valid ObjectIds found");
       return NextResponse.json(
         {
           success: false,
@@ -321,12 +321,12 @@ export async function GET(req: NextRequest) {
                       null;
       }
 
-      console.log(`Processing course ${courseId}:`, {
-        hasApplicationData: !!applicationData,
-        applicationData: applicationData,
-        countryName: countryName,
-        hasCostOfLiving: !!costOfLiving,
-      });
+      // console.log(`Processing course ${courseId}:`, {
+      //   hasApplicationData: !!applicationData,
+      //   applicationData: applicationData,
+      //   countryName: countryName,
+      //   hasCostOfLiving: !!costOfLiving,
+      // });
 
       const enhancedCourse = {
         ...course,
@@ -352,9 +352,9 @@ export async function GET(req: NextRequest) {
     });
 
     // Log details about each found course
-    enhancedCourses.forEach((course, index) => {
-      console.log(`Course ${index + 1}: ${course.course_title} - Cost of Living:`, course.costOfLiving);
-    });
+    // enhancedCourses.forEach((course, index) => {
+    //   console.log(`Course ${index + 1}: ${course.course_title} - Cost of Living:`, course.costOfLiving);
+    // });
 
     // Check for missing courses
     const foundIds = courses.map((course) => course._id.toString());

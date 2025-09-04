@@ -58,6 +58,14 @@ interface ApplicableCoursesProps {
   scholarshipName: string;
   s_id: string; // Add id prop to pass scholarship ID
   logo: string;
+  successChances?: {
+    academicBackground?: string;
+    age?: string;
+    englishProficiency?: string;
+    gradesAndCGPA?: string;
+    nationality?: string;
+    workExperience?: string;
+  };
 }
 
 export default function ApplicableCourses({
@@ -67,6 +75,7 @@ export default function ApplicableCourses({
   scholarshipName,
   s_id,
   logo,
+  successChances 
 }: ApplicableCoursesProps) {
   const router = useRouter();
   const { user, fetchUserProfile } = useUserStore();
@@ -80,26 +89,7 @@ export default function ApplicableCourses({
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
 
-  // console.log(logo,"fhjhgg");
-  // console.log(s_id, "Scholarship ID from ApplicableCourses");
-  // console.log("Host country:", hostCountry);
-  // console.log(scholarshipName, "Scholarship Name");
-  // Transform dynamic data to Course objects
   useEffect(() => {
-    // Debug: Log the incoming tableData
-    // console.log("Raw tableData:", tableData);
-    // console.log("Countries array:", tableData?.countries);
-    // console.log(
-    //   "All tableData keys:",
-    //   tableData ? Object.keys(tableData) : "No tableData"
-    // );
-    // console.log("Raw tableData:", tableData);
-    // console.log("Countries array:", tableData?.countries);
-    // console.log(
-    //   "All tableData keys:",
-    //   tableData ? Object.keys(tableData) : "No tableData"
-    // );
-
     if (tableData && Array.isArray(tableData.course)) {
       const transformedCourses: Course[] = tableData.course.map((_, index) => {
         const courseObj = {
@@ -127,13 +117,13 @@ export default function ApplicableCourses({
         };
 
         // Debug: Log each transformed course
-        console.log(`Course ${index + 1}:`, courseObj);
-        console.log(`Course ${index + 1} countries:`, courseObj.countries);
+        // console.log(`Course ${index + 1}:`, courseObj);
+        // console.log(`Course ${index + 1} countries:`, courseObj.countries);
 
         return courseObj;
       });
 
-      console.log("All transformed courses:", transformedCourses);
+      // console.log("All transformed courses:", transformedCourses);
 
       setCourses(transformedCourses);
       setFilteredCourses(transformedCourses);
@@ -153,7 +143,7 @@ export default function ApplicableCourses({
   }, []);
   const token = getAuthToken();
   // Function to handle course application using API service
-  console.log(user, "fetchuserProfile");
+  // console.log(user, "fetchuserProfile");
   const showLoginPrompt = () => {
     toast.error("Please login to apply for courses.", {
       duration: 6000,
@@ -170,19 +160,18 @@ export default function ApplicableCourses({
 
   // Updated handleApplyCourse function
   const handleApplyCourse = async (course: Course) => {
-    console.log("gjjfjfj");
-    console.log(course, "Applying for course");
+    // console.log("gjjfjfj");
+    // console.log(course, "Applying for course");
 
     // Check if user is logged in
     if (!token) {
-      console.log("User not logged in");
+      // console.log("User not logged in");
       showLoginPrompt();
       return;
     }
 
     try {
       setApplyingCourseId(course.id);
-
       const applicationData = {
         banner: banner,
         userId: user?._id,
@@ -196,6 +185,7 @@ export default function ApplicableCourses({
         scholarshipType: course.scholarshipType || "Not specified",
         deadline: course.deadline || "Not specified",
         ScholarshipId: s_id || "Not specified",
+        successChances : successChances 
       };
 
       const result = await fetch(
@@ -211,7 +201,7 @@ export default function ApplicableCourses({
         }
       );
       const data = await result.json();
-
+      
       if (result.ok) {
         toast.success("Application submitted successfully!", {
           duration: 2000,

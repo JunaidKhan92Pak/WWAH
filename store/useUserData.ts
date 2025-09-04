@@ -115,6 +115,14 @@ interface AppliedScholarshipCourse {
   updatedAt?: string;
   ScholarshipId: string; // Add ScholarshipId to link to the scholarship
   // applicationStatus:number;
+  successChances?: {
+    academicBackground?: string;
+    age?: string;
+    englishProficiency?: string;
+    gradesAndCGPA?: string;
+    nationality?: string;
+    workExperience?: string;
+  };
 }
 
 // Basic user profile data
@@ -2172,6 +2180,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
     return Math.round((course.applicationStatus / 7) * 100);
   },
+
   fetchConfirmedScholarshipCourses: async (id: string) => {
     console.log("Fetching confirmed scholarship courses for id:", id);
     const token = getAuthToken();
@@ -2228,7 +2237,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
               banner: application.banner || "",
               logo: application.logo || "",
               scholarshipName:
-                application.scholarshipName || "Unknown Scholarship",
+              application.scholarshipName || "Unknown Scholarship",
               ScholarshipId: application.ScholarshipId || "",
               hostCountry: application.hostCountry || "Not specified",
               courseName: application.courseName || "Not specified",
@@ -2240,6 +2249,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
               status: application.status || "pending",
               applicationStatus: application.applicationStatus || 1,
               appliedDate: application.appliedDate,
+              successChances  : application.successChances,
               createdAt: application.createdAt,
               updatedAt: application.updatedAt,
             };
