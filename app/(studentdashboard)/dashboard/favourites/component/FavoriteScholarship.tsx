@@ -440,7 +440,7 @@ export default function FavoriteScholarship() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-800">
-            Your Favorite Scholarships
+            My Favorite Scholarships
           </h2>
           {favoriteList.length > 0 && (
             <p className="text-sm text-gray-600 mt-1">
