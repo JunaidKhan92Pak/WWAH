@@ -278,7 +278,7 @@ const ApplyingSection: React.FC = () => {
       const overallChance = calculateOverallSuccess(safeMetrics);
       newSuccessChances[course._id] = overallChance;
     });
-
+  
     setCourseSuccessChances(newSuccessChances);
   }, [isLoggedIn, hasData, userSuccessInfo, detailedAppliedCourses, transformUserDataForCalculation, transformCourseDataForCalculation, calculateOverallSuccess]);
 
@@ -807,7 +807,7 @@ const ApplyingSection: React.FC = () => {
             <DialogTitle className="flex flex-col items-center text-center gap-6">
               <div className="flex flex-col items-center gap-2">
                 <Image src="/spark.png" alt="Spark Icon" width={100} height={100} />
-                <p>Are you sure you want to confirm this scholarship?</p>
+                <p>Are you sure you want to confirm this Course?</p>
               </div>
             </DialogTitle>
           </DialogHeader>
@@ -840,7 +840,7 @@ const ApplyingSection: React.FC = () => {
           msOverflowStyle: "none",
         }}
       >
-        {detailedAppliedCourses.map((course, index) => {
+       {[...detailedAppliedCourses].reverse().map((course, index) => {
           const applicationDetails = getApplicationDetails(course._id);
           const isConfirmed = applicationDetails?.isConfirmed || false;
           const statusId = applicationDetails?.statusId || applicationDetails?.applicationStatus || 1;

@@ -36,8 +36,8 @@ interface ProgressSectionProps {
   data: CourseData;
   // embedding?: any;
   costOfLiving?: {
-    amount: number;
     currency: string;
+    amount: number;
   };
 }
 
@@ -59,8 +59,8 @@ interface EditableField {
 
 // Types matching your Zustand store
 type LanguageProficiency = {
-  score: string | number;
   test: string;
+  score: string | number;
 };
 
 type StudyPreferenced = {
@@ -77,12 +77,12 @@ type SuccessData = {
   nationality: string;
   majorSubject: string;
   livingCosts?: {
-    amount: number;
     currency: string;
+    amount: number;
   };
   tuitionFee?: {
-    amount: number;
     currency: string;
+    amount: number;
   };
   languageProficiency: LanguageProficiency;
   workExperience: string;
@@ -161,13 +161,13 @@ export const ProgressSection: React.FC<ProgressSectionProps> = ({
         test: userData.languageProficiency?.test || "IELTS",
         score: userData.languageProficiency?.score || 0,
       },
-      grade: userData.grade || 0,
       gradeType: userData.gradetype || "percentage",
+      grade: userData.grade || 0,
       studyLevel: userData.studyLevel || "",
       workExperience: userData.workExperience || "0",
       majorSubject: userData.majorSubject || "",
-      tuitionFee: userData.tuitionFee || { amount: 0, currency: "USD" },
-      livingCosts: userData.livingCosts || { amount: 0, currency: "USD" },
+      tuitionFee: userData.tuitionFee || {  currency: "USD" ,amount: 0},
+      livingCosts: userData.livingCosts || {  currency: "USD" , amount: 0,},
     };
   }, []);
 
@@ -671,7 +671,7 @@ export const ProgressSection: React.FC<ProgressSectionProps> = ({
   const EditModal: React.FC = () => {
     const [inputValue, setInputValue] = useState(currentEditField?.value || '');
     const [additionalValues, setAdditionalValues] = useState<{ [key: string]: string }>({});
-
+  
     useEffect(() => {
       if (currentEditField) {
         setInputValue(currentEditField.value || '');
@@ -682,23 +682,73 @@ export const ProgressSection: React.FC<ProgressSectionProps> = ({
         );
       }
     }, [currentEditField]);
-
+  
     if (!isEditModalOpen || !currentEditField) return null;
-
+  
     const handleSave = () => {
       handleSaveEdit(String(inputValue), additionalValues);
     };
-
+  
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
         <div className="bg-white rounded-2xl p-6 w-[90%] max-w-lg mx-4 animate-slideUp">
           <h3 className="text-xl font-semibold mb-4">Edit {currentEditField.label}</h3>
-
+  
           <div className="space-y-4">
-            {/* Main input field */}
+            {/* Additional fields first (dropdown/selection fields) */}
+            {currentEditField.key === 'grade' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Grade Type</label>
+                <select
+                  value={additionalValues.gradeType || 'percentage'}
+                  onChange={(e) => setAdditionalValues(prev => ({ ...prev, gradeType: e.target.value }))}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                >
+                  <option value="percentage">Percentage</option>
+                  <option value="cgpa">CGPA</option>
+                </select>
+              </div>
+            )}
+  
+            {currentEditField.key === 'english' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Test Type</label>
+                <select
+                  value={additionalValues.test || 'IELTS'}
+                  onChange={(e) => setAdditionalValues(prev => ({ ...prev, test: e.target.value }))}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                >
+                  <option value="IELTS">IELTS</option>
+                  <option value="TOEFL">TOEFL</option>
+                  <option value="PTE">PTE</option>
+                </select>
+              </div>
+            )}
+  
+            {currentEditField.type === 'currency' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                <select
+                  value={additionalValues.currency || 'USD'}
+                  onChange={(e) => setAdditionalValues(prev => ({ ...prev, currency: e.target.value }))}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                >
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="CAD">CAD</option>
+                  <option value="AUD">AUD</option>
+                </select>
+              </div>
+            )}
+  
+            {/* Main input field second */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {currentEditField.type === 'currency' ? 'Amount' : currentEditField.label}
+                {currentEditField.type === 'currency' ? 'Amount' : 
+                 currentEditField.key === 'english' ? 'Score' : 
+                 currentEditField.key === 'grade' ? 'Grade Value' : 
+                 currentEditField.label}
               </label>
               {currentEditField.type === 'select' ? (
                 <select
@@ -718,62 +768,20 @@ export const ProgressSection: React.FC<ProgressSectionProps> = ({
                   type={currentEditField.type === 'currency' ? 'number' : currentEditField.type}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={`Enter ${currentEditField.label.toLowerCase()}`}
+                  placeholder={`Enter ${
+                    currentEditField.type === 'currency' ? 'amount' : 
+                    currentEditField.key === 'english' ? 'score' : 
+                    currentEditField.key === 'grade' ? 'grade value' : 
+                    currentEditField.label.toLowerCase()
+                  }`}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   min={currentEditField.type === 'number' || currentEditField.type === 'currency' ? "0" : undefined}
                   step={currentEditField.key === 'grade' || currentEditField.key === 'english' ? "0.1" : "1"}
                 />
               )}
             </div>
-
-            {/* Additional fields based on field type */}
-            {currentEditField.key === 'grade' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Grade Type</label>
-                <select
-                  value={additionalValues.gradeType || 'percentage'}
-                  onChange={(e) => setAdditionalValues(prev => ({ ...prev, gradeType: e.target.value }))}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                >
-                  <option value="percentage">Percentage</option>
-                  <option value="cgpa">CGPA</option>
-                </select>
-              </div>
-            )}
-
-            {currentEditField.key === 'english' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Test Type</label>
-                <select
-                  value={additionalValues.test || 'IELTS'}
-                  onChange={(e) => setAdditionalValues(prev => ({ ...prev, test: e.target.value }))}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                >
-                  <option value="IELTS">IELTS</option>
-                  <option value="TOEFL">TOEFL</option>
-                  <option value="PTE">PTE</option>
-                </select>
-              </div>
-            )}
-
-            {currentEditField.type === 'currency' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
-                <select
-                  value={additionalValues.currency || 'USD'}
-                  onChange={(e) => setAdditionalValues(prev => ({ ...prev, currency: e.target.value }))}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                >
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                  <option value="CAD">CAD</option>
-                  <option value="AUD">AUD</option>
-                </select>
-              </div>
-            )}
           </div>
-
+  
           <div className="flex gap-3 mt-6">
             <button
               onClick={() => {
@@ -795,7 +803,6 @@ export const ProgressSection: React.FC<ProgressSectionProps> = ({
       </div>
     );
   };
-
   // Prompt components
   const LoginPrompt: React.FC = () => (
     <div className="flex flex-col items-center justify-center h-full">

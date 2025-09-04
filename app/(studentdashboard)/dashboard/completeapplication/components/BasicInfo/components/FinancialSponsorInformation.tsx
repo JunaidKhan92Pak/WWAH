@@ -172,7 +172,7 @@ const FinancialSponsorInformation = ({
                   {/* Input Field */}
                   <Input
                     type="text"
-                    placeholder="Enter your email address"
+                    placeholder="Enter Your Sponsor email address"
                     className="bg-[#f1f1f1] placeholder-[#313131] placeholder:text-sm pl-10"
                     {...field}
                     value={field.value || ""}

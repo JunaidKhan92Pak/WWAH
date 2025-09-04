@@ -62,7 +62,7 @@ const safeString = (value?: string): string => {
 const formatPhoneNumber = (countryCode?: string, phoneNo?: string): string => {
   const code = safeString(countryCode);
   const number = safeString(phoneNo);
-  
+
   if (!code && !number) return "";
   if (!code) return number;
   if (!number) return code;
@@ -71,7 +71,7 @@ const formatPhoneNumber = (countryCode?: string, phoneNo?: string): string => {
 
 export default function ReviewPage() {
   const router = useRouter();
-  
+
   interface Data1Type {
     familyName?: string;
     givenName?: string;
@@ -119,7 +119,7 @@ export default function ReviewPage() {
   }
 
   const [data1, setData1] = useState<Data1Type | null>(null);
-  
+
   interface Data2Type {
     countryOfStudy?: string;
     proficiencyLevel?: string;
@@ -150,7 +150,7 @@ export default function ReviewPage() {
   }
 
   const [data2, setData2] = useState<Data2Type | null>(null);
-  
+
   useEffect(() => {
     const getData = async () => {
       const result1 = await fetchBasicInfo();
@@ -234,8 +234,7 @@ export default function ReviewPage() {
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
           onClick={() =>
             router.push("/dashboard/completeapplication?tab=basicinfo&step=1")
-          }
-        >
+          }>
           Edit <MdModeEditOutline />
         </Button>
       </div>
@@ -297,7 +296,11 @@ export default function ReviewPage() {
           Edit <MdModeEditOutline />
         </Button>
       </div>
-
+      {/* Language Proficiency Section */}
+      <Section
+        title="Language Proficiency"
+        data={studentData.languageProficiency}
+      />
       {/* Family Members Section */}
       <div className="flex justify-between">
         <Section title="Family Members">

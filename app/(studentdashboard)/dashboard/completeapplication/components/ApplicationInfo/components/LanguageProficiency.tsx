@@ -48,7 +48,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                   <SelectTrigger className="bg-[#f1f1f1]">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 overflow-y-auto">
                     <SelectItem value="beginner">Beginner</SelectItem>
                     <SelectItem value="intermediate">Intermediate</SelectItem>
                     <SelectItem value="advanced">Advanced</SelectItem>
@@ -72,7 +72,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                   <SelectTrigger className="bg-[#f1f1f1]">
                     <SelectValue placeholder="Select a test" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 overflow-y-auto">
                     <SelectItem value="ielts">IELTS</SelectItem>
                     <SelectItem value="toefl">TOEFL</SelectItem>
                     <SelectItem value="pte">PTE</SelectItem>
@@ -98,7 +98,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     <SelectTrigger className="bg-[#f1f1f1]">
                       <SelectValue placeholder="Select score" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-60 overflow-y-auto">
                       {scoreOptions.map((score) => (
                         <SelectItem key={score} value={score}>
                           {score}
@@ -133,7 +133,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     <SelectTrigger className="bg-[#f1f1f1]">
                       <SelectValue placeholder="Select score" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-60 overflow-y-auto">
                       {scoreOptions.map((score) => (
                         <SelectItem key={score} value={score}>
                           {score}
@@ -168,7 +168,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     <SelectTrigger className="bg-[#f1f1f1]">
                       <SelectValue placeholder="Select score" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-60 overflow-y-auto">
                       {scoreOptions.map((score) => (
                         <SelectItem key={score} value={score}>
                           {score}
@@ -203,7 +203,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     <SelectTrigger className="bg-[#f1f1f1]">
                       <SelectValue placeholder="Select score" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-60 overflow-y-auto">
                       {scoreOptions.map((score) => (
                         <SelectItem key={score} value={score}>
                           {score}
@@ -238,7 +238,7 @@ const LanguageProficiency = ({ form }: { form: UseFormReturn<FormValues> }) => {
                     <SelectTrigger className="bg-[#f1f1f1]">
                       <SelectValue placeholder="Select score" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-60 overflow-y-auto">
                       {scoreOptions.map((score) => (
                         <SelectItem key={score} value={score}>
                           {score}

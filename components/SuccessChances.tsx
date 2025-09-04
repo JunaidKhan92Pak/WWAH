@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { getAuthToken } from "@/utils/authHelper"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import Link from "next/link"
 
 const nationalities = getNames()
 const currencyOptions = currency.data.map((c: { code: string; currency: string }) => `${c.code} - ${c.currency}`)
@@ -110,7 +111,7 @@ const majorSubjectsByDegree: Record<string, { options: string[]; allowMultiple?:
     options: [
       "physics",
       "chemistry",
-      "ciology",
+      "Biology",
       "Earth and Environmental Sciences",
       "astronomy",
       "biotechnology",
@@ -217,7 +218,7 @@ const majorSubjectsByDegree: Record<string, { options: string[]; allowMultiple?:
     options: [
       "physics",
       "chemistry",
-      "ciology",
+      "Biology",
       "Earth and Environmental Sciences",
       "astronomy",
       "biotechnology",
@@ -324,7 +325,7 @@ const majorSubjectsByDegree: Record<string, { options: string[]; allowMultiple?:
     options: [
       "physics",
       "chemistry",
-      "ciology",
+      "Biology",
       "Earth and Environmental Sciences",
       "astronomy",
       "biotechnology",
@@ -431,7 +432,7 @@ const majorSubjectsByDegree: Record<string, { options: string[]; allowMultiple?:
     options: [
       "physics",
       "chemistry",
-      "ciology",
+      "Biology",
       "Earth and Environmental Sciences",
       "astronomy",
       "biotechnology",
@@ -538,7 +539,7 @@ const majorSubjectsByDegree: Record<string, { options: string[]; allowMultiple?:
     options: [
       "physics",
       "chemistry",
-      "ciology",
+      "Biology",
       "Earth and Environmental Sciences",
       "astronomy",
       "biotechnology",
@@ -652,21 +653,21 @@ const englishProficiencyOptions = [
 
 const englishTestOptions = [
   "IELTS",
-  "PTE Academic",
-  "TOEFL iBT",
-  "TOEFL PBT",
+  "PTE",
+  "TOEFL",
+  // "TOEFL PBT",
   "Duolingo English Test",
   "LanguageCert Academic",
   "Cambridge English Advanced (CAE)",
   "Oxford ELLT",
-  "MOI (Medium of Instruction)",
+  // "MOI (Medium of Instruction)",
   "Any Other (Specify)",
 ]
 
 const testScoreRanges: Record<string, { min: number; max: number; label: string }> = {
   "IELTS": { min: 0, max: 9, label: "Enter your IELTS overall score (e.g., 6.5)" },
   "TOEFL": { min: 0, max: 120, label: "Enter your TOEFL iBT score (e.g., 95)" },
-  "TOEFL PBT": { min: 310, max: 677, label: "Enter your TOEFL PBT score (e.g., 550)" },
+  // "TOEFL PBT": { min: 310, max: 677, label: "Enter your TOEFL PBT score (e.g., 550)" },
   "PTE": { min: 10, max: 90, label: "Enter your PTE Academic score (e.g., 65)" },
   "Duolingo English Test": { min: 10, max: 160, label: "Enter your Duolingo score (e.g., 105)" },
   "LanguageCert Academic": { min: 45, max: 100, label: "Enter your LanguageCert Academic score (e.g., 78)" },
@@ -862,7 +863,7 @@ const SuccessChances = () => {
   const [successOpen, setSuccessOpen] = useState(false)
   const [showWelcome, setShowWelcome] = useState(true)
   const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState<Record<number, AnswerType>>({})
+  const [answers, setAnswers] = useState<Record<string | number, AnswerType>>({})
   const [selectedCurrency, setSelectedCurrency] = useState<Record<number, string>>({})
   const [gradeData, setGradeData] = useState<Grade>({ gradeType: "", score: "" })
   const [studentData, setStudentData] = useState<StudentData | null>(null)
@@ -1019,10 +1020,10 @@ const SuccessChances = () => {
     }
   }
 
-  const handleAnswer = (value: AnswerType, id: number) => {
+  const handleAnswer = (value: AnswerType, id: string | number) => {
     setAnswers((prev) => ({ ...prev, [id]: value }))
     setValidationErrors((prev) =>
-      prev.filter((error) => !error.field.includes(id.toString()) && error.field !== getFieldNameById(id)),
+      prev.filter((error) => !error.field.includes(id.toString()) && error.field !== getFieldNameById(Number(id))),
     )
   }
 
@@ -1352,7 +1353,7 @@ const SuccessChances = () => {
     if (selectedTest === "Any Other (Specify)") {
       return (
         <div className="space-y-4">
-          <div>
+          {/* <div>
             <Label htmlFor="custom-test">Test Name</Label>
             <Input
               id="custom-test"
@@ -1360,7 +1361,7 @@ const SuccessChances = () => {
               placeholder="Enter test name"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
             />
-          </div>
+          </div> */}
           <div>
             <Label htmlFor="custom-score">Overall Score</Label>
             <Input
@@ -1410,8 +1411,6 @@ const SuccessChances = () => {
           placeholder={q.placeholder}
           emptyMessage="No majors found"
         />
-
-
       )
     }
 
@@ -1532,10 +1531,73 @@ const SuccessChances = () => {
     )
   }
 
-  const renderStudyDestination = (q: Question) => {
-    const selectedCountry = answers[q.id] as string
-    const isNonEnglishCountry = nonEnglishCountries.includes(selectedCountry)
+  // const renderStudyDestination = (q: Question) => {
+  //   const selectedCountry = answers[q.id] as string
+  //   const isNonEnglishCountry = nonEnglishCountries.includes(selectedCountry)
 
+  //   return (
+  //     <div className="space-y-4">
+  //       <Combobox
+  //         options={studyDestinations}
+  //         value={selectedCountry || ""}
+  //         onChange={(val) => handleAnswer(val, q.id)}
+  //         placeholder="Select country"
+  //         emptyMessage="No countries found"
+  //       />
+
+  //       {isNonEnglishCountry && (
+  //         <motion.div
+  //           initial={{ opacity: 0, height: 0 }}
+  //           animate={{ opacity: 1, height: "auto" }}
+  //           className="space-y-4 p-4 bg-gray-50 rounded-lg"
+  //         >
+  //           <h4 className="font-medium text-gray-900">
+  //             Have you studied or are currently learning{" "}
+  //             {selectedCountry === "Germany"
+  //               ? "German"
+  //               : selectedCountry === "Italy"
+  //                 ? "Italian"
+  //                 : "the local language"}
+  //             ?
+  //           </h4>
+  //           <RadioGroup className="space-y-2">
+  //             <div className="flex items-center space-x-2">
+  //               <RadioGroupItem value="yes" id="lang-yes" />
+  //               <Label htmlFor="lang-yes">Yes</Label>
+  //             </div>
+  //             <div className="flex items-center space-x-2">
+  //               <RadioGroupItem value="no" id="lang-no" />
+  //               <Label htmlFor="lang-no">No</Label>
+  //             </div>
+  //             <div className="flex items-center space-x-2">
+  //               <RadioGroupItem value="help" id="lang-help" />
+  //               <Label htmlFor="lang-help">I want to learn it with the help of WWAH</Label>
+  //             </div>
+  //           </RadioGroup>
+
+  //           <div className="mt-4">
+  //              {/* If answer is no then it will show that alert */}
+  //             <Alert className="border-blue-200 bg-blue-50">
+  //               <Info className="h-4 w-4 text-blue-600" />
+  //               <AlertDescription className="text-blue-700">
+  //                 Based on your selected country, additional language proficiency may be required or advantageous.
+  //               </AlertDescription>
+  //             </Alert>
+  //             if answer is want to Contact wwah the this message will show 
+  //             <Button variant="outline" className="mt-2 bg-transparent" onClick={() => setShowLanguageHelp(true)}>
+  //               Register for Language Classes
+  //             </Button>
+  //           </div>
+  //         </motion.div>
+  //       )}
+  //     </div>
+  //   )
+  // }
+  const renderStudyDestination = (q: Question) => {
+    const selectedCountry = answers[q.id] as string;
+    const languageAnswer = answers[`${q.id}-language`] as string; // Get language answer
+    const isNonEnglishCountry = nonEnglishCountries.includes(selectedCountry);
+  
     return (
       <div className="space-y-4">
         <Combobox
@@ -1545,7 +1607,7 @@ const SuccessChances = () => {
           placeholder="Select country"
           emptyMessage="No countries found"
         />
-
+  
         {isNonEnglishCountry && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -1557,11 +1619,16 @@ const SuccessChances = () => {
               {selectedCountry === "Germany"
                 ? "German"
                 : selectedCountry === "Italy"
-                  ? "Italian"
-                  : "the local language"}
+                ? "Italian"
+                : "the local language"}
               ?
             </h4>
-            <RadioGroup className="space-y-2">
+            
+            <RadioGroup 
+              value={languageAnswer} 
+              onValueChange={(val) => handleAnswer(val, `${q.id}-language`)}
+              className="space-y-2"
+            >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="lang-yes" />
                 <Label htmlFor="lang-yes">Yes</Label>
@@ -1575,24 +1642,140 @@ const SuccessChances = () => {
                 <Label htmlFor="lang-help">I want to learn it with the help of WWAH</Label>
               </div>
             </RadioGroup>
-
-            <div className="mt-4">
-              <Alert className="border-blue-200 bg-blue-50">
-                <Info className="h-4 w-4 text-blue-600" />
-                <AlertDescription className="text-blue-700">
-                  Based on your selected country, additional language proficiency may be required or advantageous.
-                </AlertDescription>
-              </Alert>
-              <Button variant="outline" className="mt-2 bg-transparent" onClick={() => setShowLanguageHelp(true)}>
-                Register for Language Classes
-              </Button>
-            </div>
+  
+            {/* Show language test selection if answer is "yes" */}
+            {languageAnswer === "yes" && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="space-y-4 mt-4"
+              >
+                <h4 className="font-medium text-gray-900">
+                  Which {selectedCountry === "Germany" ? "German" : selectedCountry === "Italy" ? "Italian" : "local language"} test have you taken or are preparing for?
+                </h4>
+                <RadioGroup 
+                  value={answers[`${q.id}-test`] as string || ""} 
+                  onValueChange={(val) => handleAnswer(val, `${q.id}-test`)}
+                  className="space-y-2"
+                >
+                  {selectedCountry === "Germany" && (
+                    <>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="TestDaF" id="testdaf" />
+                        <Label htmlFor="testdaf">TestDaF</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Goethe-Zertifikat" id="goethe" />
+                        <Label htmlFor="goethe">Goethe-Zertifikat</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="DSH" id="dsh" />
+                        <Label htmlFor="dsh">DSH</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="ÖSD" id="osd" />
+                        <Label htmlFor="osd">ÖSD</Label>
+                      </div>
+                    </>
+                  )}
+                  {selectedCountry === "Italy" && (
+                    <>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="CELI" id="celi" />
+                        <Label htmlFor="celi">CELI</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="CILS" id="cils" />
+                        <Label htmlFor="cils">CILS</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="PLIDA" id="plida" />
+                        <Label htmlFor="plida">PLIDA</Label>
+                      </div>
+                    </>
+                  )}
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="other" id="other-test" />
+                    <Label htmlFor="other-test">Any Other (Specify)</Label>
+                  </div>
+                </RadioGroup>
+  
+                {answers[`${q.id}-test`] === "other" && (
+                  <Input
+                    placeholder="Please specify the test"
+                    value={answers[`${q.id}-test-other`] as string || ""}
+                    onChange={(e) => handleAnswer(e.target.value, `${q.id}-test-other`)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+                  />
+                )}
+  
+                <div>
+                  <Label htmlFor="test-score">Enter your test score:</Label>
+                  <Input
+                    id="test-score"
+                    type="text"
+                    placeholder="Enter your test score"
+                    value={answers[`${q.id}-test-score`] as string || ""}
+                    onChange={(e) => handleAnswer(e.target.value, `${q.id}-test-score`)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
+                  />
+                </div>
+              </motion.div>
+            )}
+  
+            {/* Show Alert only if answer is "no" */}
+            {languageAnswer === "no" && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="mt-4"
+              >
+                <Alert className="border-blue-200 bg-blue-50">
+                  <Info className="h-4 w-4 text-blue-600" />
+                  <AlertDescription className="text-blue-700">
+                    Based on your selected country, additional language proficiency may be required or advantageous.
+                    Don't worry if you haven't learned the local language yet, we offer language classes for your preferred study destination.
+                  </AlertDescription>
+                </Alert>
+                <Button 
+                  variant="outline" 
+                  className="mt-4 bg-transparent" 
+                  onClick={() => setShowLanguageHelp(true)}
+                >
+                  Register Now
+                </Button>
+              </motion.div>
+            )}
+  
+            {/* Show Button only if answer is "help" */}
+            {languageAnswer === "help" && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="mt-4"
+              >
+                <Alert className="border-indigo-200 bg-indigo-50">
+                  <Info className="h-4 w-4 text-indigo-600" />
+                  <AlertDescription className="text-indigo-700">
+                    Need help learning the local language of your preferred country?
+                    We offer language classes to support your study abroad goals.
+                  </AlertDescription>
+                </Alert>
+                <Link
+                   href={'/form'} 
+                  // variant="outline" 
+                  className="mt-4 bg-transparent" 
+                  onClick={() => setShowLanguageHelp(true)}
+                >
+                  Register for Language Classes
+                </Link>
+              </motion.div>
+            )}
           </motion.div>
         )}
       </div>
-    )
-  }
-
+    );
+  };
   const shouldRenderQuestion = (questionId: number) => {
     if (questionId !== 8 && questionId !== 9) {
       return true
@@ -1640,7 +1823,7 @@ const SuccessChances = () => {
             className="p-4 bg-blue-50 rounded-lg"
           >
             <p className="text-blue-800 font-medium mb-2">We&apos;ll help you prepare for IELTS, PTE & more.</p>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">Register for English Prep Classes</Button>
+            <a href="/form" className="p-2 rounded-sm  bg-blue-600 hover:bg-blue-700 text-white">Register for English Prep Classes</a>
           </motion.div>
         )}
       </div>
