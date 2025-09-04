@@ -403,26 +403,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header with user info and debug info */}
-        {/* <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Welcome, {user.firstName} {user.lastName}
-          </h1>
-          <p className="text-gray-600">
-            View your commission records and manage withdrawals
-          </p>
-          <div className="mt-2 text-xs text-gray-500">
-            Debug: User ID: {user._id} | Commissions Count: {commissions.length}
-            <Button
-              onClick={handleForceRefresh}
-              size="sm"
-              variant="outline"
-              className="ml-2 text-xs h-6"
-            >
-              Refresh Data
-            </Button>
-          </div>
-        </div> */}
 
         {/* Header */}
         <div className="flex justify-end items-center mb-8">

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ReferralModal from "./components/ReferralModal";
 import totalSignups from "../../../../public/refferalportal/Overview/totalSignups.svg";
@@ -67,6 +66,17 @@ interface APIReferralsResponse {
     referrerName?: string;
     commissionData?: CommissionData;
     referrals: APIReferral[];
+    pagination?: {
+      current: number; // API uses 'current' not 'currentPage'
+      pages: number; // API uses 'pages' not 'totalPages'
+      total: number; // API uses 'total' not 'totalItems'
+      limit: number;
+      currentPage?: number;
+      totalPages?: number;
+      totalItems?: number;
+      hasNext?: boolean;
+      hasPrev?: boolean;
+    };
   };
 }
 
@@ -83,54 +93,113 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch statistics and referrals data
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      try {
-        setLoading(true);
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalReferrals, setTotalReferrals] = useState<number>(0);
+  const [loadingReferrals, setLoadingReferrals] = useState<boolean>(false);
+  const itemsPerPage = 5;
+  console.log(totalReferrals);
+  // Fetch statistics (only once)
+  const fetchStats = async (): Promise<void> => {
+    try {
+      const token = getAuthToken();
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
 
-        const token = getAuthToken();
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
-
-        // Fetch current user's statistics
-        const statsResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/referrals/my-statistics`,
-          {
-            headers,
-          }
-        );
-
-        if (!statsResponse.ok) {
-          throw new Error("Failed to fetch statistics");
+      const statsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/referrals/my-statistics`,
+        {
+          headers,
         }
+      );
 
-        const statsResult: APIStatsResponse = await statsResponse.json();
+      if (!statsResponse.ok) {
+        throw new Error("Failed to fetch statistics");
+      }
 
-        // Fetch current user's referrals only
-        const referralsResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/referrals/my-referrals?page=1&limit=50`,
-          {
-            headers,
-          }
-        );
+      const statsResult: APIStatsResponse = await statsResponse.json();
 
-        if (!referralsResponse.ok) {
-          throw new Error("Failed to fetch referrals");
+      const updatedStatsData: StatData[] = [
+        {
+          title: "Total Sign-ups",
+          value: statsResult.data.totalReferrals.toString(),
+          icon: totalSignups,
+          bgColor: "bg-blue-50",
+          iconColor: "text-blue-600",
+        },
+        {
+          title: "Pending Sign-ups",
+          value: statsResult.data.pending.toString(),
+          icon: pendingSignups,
+          bgColor: "bg-yellow-50",
+          iconColor: "text-yellow-600",
+        },
+        {
+          title: "Approved Sign-ups",
+          value: statsResult.data.approved.toString(),
+          icon: approvedSignups,
+          bgColor: "bg-pink-50",
+          iconColor: "text-pink-600",
+        },
+        {
+          title: "Rejected Sign-ups",
+          value: statsResult.data.rejected.toString(),
+          icon: rejectedSignups,
+          bgColor: "bg-gray-50",
+          iconColor: "text-gray-600",
+        },
+        {
+          title: "Total Commission Earned",
+          value: `Rs: ${statsResult.data.totalCommissionEarned.toLocaleString()} `,
+          icon: profits,
+          bgColor: "bg-green-50",
+          iconColor: "text-green-600",
+        },
+      ];
+
+      setStatsData(updatedStatsData);
+    } catch (err: unknown) {
+      console.error("Error fetching stats:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+    }
+  };
+
+  // Fetch referrals with pagination
+  const fetchReferrals = async (page: number): Promise<void> => {
+    try {
+      setLoadingReferrals(true);
+
+      const token = getAuthToken();
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const referralsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}adminDashboard/referrals/my-referrals?page=${page}&limit=${itemsPerPage}`,
+        {
+          headers,
         }
+      );
 
-        const referralsResult: APIReferralsResponse =
-          await referralsResponse.json();
-        console.log(referralsResult, "referral result from ");
+      if (!referralsResponse.ok) {
+        throw new Error("Failed to fetch referrals");
+      }
 
-        // Extract referrer name and commission data
+      const referralsResult: APIReferralsResponse =
+        await referralsResponse.json();
+
+      // Set referrer name and commission data (only on first load)
+      if (page === 1) {
         if (referralsResult.data && referralsResult.data.referrerName) {
           setReferrerName(referralsResult.data.referrerName);
         }
 
-        // Set commission data from the response
         if (referralsResult.data && referralsResult.data.commissionData) {
           setCommissionData({
             commissionPerReferral:
@@ -140,86 +209,108 @@ export default function Home() {
             currency: referralsResult.data.commissionData.currency,
           });
         }
+      }
 
-        // Update stats data with real data from current user
-        const updatedStatsData: StatData[] = [
-          {
-            title: "Total Sign-ups",
-            value: statsResult.data.totalReferrals.toString(),
-            icon: totalSignups,
-            bgColor: "bg-blue-50",
-            iconColor: "text-blue-600",
-          },
-          {
-            title: "Pending Sign-ups",
-            value: statsResult.data.pending.toString(),
-            icon: pendingSignups,
-            bgColor: "bg-yellow-50",
-            iconColor: "text-yellow-600",
-          },
-          {
-            title: "Approved Sign-ups",
-            value: statsResult.data.approved.toString(),
-            icon: approvedSignups,
-            bgColor: "bg-pink-50",
-            iconColor: "text-pink-600",
-          },
-          {
-            title: "Rejected Sign-ups",
-            value: statsResult.data.rejected.toString(),
-            icon: rejectedSignups,
-            bgColor: "bg-gray-50",
-            iconColor: "text-gray-600",
-          },
-          {
-            title: "Total Commission Earned",
-            value: `Rs: ${statsResult.data.totalCommissionEarned.toLocaleString()} `,
-            icon: profits,
-            bgColor: "bg-green-50",
-            iconColor: "text-green-600",
-          },
-        ];
+      // Transform referrals data
+      const transformedReferralsData: ReferralData[] =
+        referralsResult.data.referrals.map((item: APIReferral) => ({
+          name: `${item.referral.firstName} ${item.referral.lastName}`,
+          initials: `${item.referral.firstName.charAt(
+            0
+          )}${item.referral.lastName.charAt(0)}`,
+          status:
+            item.referral.status.charAt(0).toUpperCase() +
+            item.referral.status.slice(1),
+          date: new Date(item.referral.createdAt).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+          }),
+          statusColor: getStatusColor(item.referral.status),
+          referralId: item.referral.id,
+          profilePicture: item.referral.profilePicture,
+          commissionEarned:
+            item.referral.status === "accepted"
+              ? commissionData.commissionPerReferral
+              : 0,
+        }));
 
-        // Transform referrals data to match your component structure
-        const transformedReferralsData: ReferralData[] =
-          referralsResult.data.referrals.map((item: APIReferral) => ({
-            name: `${item.referral.firstName} ${item.referral.lastName}`,
-            initials: `${item.referral.firstName.charAt(
-              0
-            )}${item.referral.lastName.charAt(0)}`,
-            status:
-              item.referral.status.charAt(0).toUpperCase() +
-              item.referral.status.slice(1),
-            date: new Date(item.referral.createdAt).toLocaleDateString(
-              "en-US",
-              {
-                month: "long",
-                day: "numeric",
-              }
-            ),
-            statusColor: getStatusColor(item.referral.status),
-            referralId: item.referral.id,
-            profilePicture: item.referral.profilePicture,
-            commissionEarned:
-              item.referral.status === "accepted"
-                ? commissionData.commissionPerReferral
-                : 0,
-          }));
+      setReferralsData(transformedReferralsData);
 
-        setStatsData(updatedStatsData);
-        setReferralsData(transformedReferralsData);
+      // Update pagination info using the correct property names
+      if (referralsResult.data.pagination) {
+        const paginationData = referralsResult.data.pagination;
+
+        // Use the actual API response property names
+        const totalPages =
+          paginationData.pages || paginationData.totalPages || 1;
+        const totalItems =
+          paginationData.total || paginationData.totalItems || 0;
+        const currentPageFromAPI =
+          paginationData.current || paginationData.currentPage || page;
+
+        setTotalPages(totalPages);
+        setTotalReferrals(totalItems);
+        setCurrentPage(currentPageFromAPI);
+
+        console.log("Setting pagination from API:", {
+          totalPages,
+          totalItems,
+          currentPage: currentPageFromAPI,
+          rawPaginationData: paginationData,
+        });
+      } else {
+        // Fallback logic when no pagination data is provided
+        console.log("No pagination data from API, using fallback");
+
+        if (transformedReferralsData.length < itemsPerPage && page === 1) {
+          setTotalPages(1);
+          setTotalReferrals(transformedReferralsData.length);
+        } else if (transformedReferralsData.length < itemsPerPage && page > 1) {
+          setTotalPages(page);
+          setTotalReferrals(
+            (page - 1) * itemsPerPage + transformedReferralsData.length
+          );
+        } else {
+          // Assume there might be more pages
+          setTotalPages(page + 1);
+          setTotalReferrals(
+            (page - 1) * itemsPerPage + transformedReferralsData.length
+          );
+        }
+      }
+    } catch (err: unknown) {
+      console.error("Error fetching referrals:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+    } finally {
+      setLoadingReferrals(false);
+    }
+  };
+
+  // Initial data fetch
+  useEffect(() => {
+    const fetchInitialData = async (): Promise<void> => {
+      try {
+        setLoading(true);
+        await Promise.all([fetchStats(), fetchReferrals(1)]);
       } catch (err: unknown) {
-        console.error("Error fetching data:", err);
-        const errorMessage =
-          err instanceof Error ? err.message : "An unknown error occurred";
-        setError(errorMessage);
+        console.error("Error fetching initial data:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchInitialData();
   }, []);
+
+  // Handle page change
+  const handlePageChange = (newPage: number): void => {
+    if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
+      setCurrentPage(newPage);
+      fetchReferrals(newPage);
+    }
+  };
 
   // Helper function to get status color
   const getStatusColor = (status: string): string => {
@@ -302,30 +393,30 @@ export default function Home() {
               className={`${stat.bgColor} border-0 shadow-sm hover:shadow-md transition-shadow`}
             >
               <CardContent className="p-4 lg:p-6">
-                <div className="space-y-3">
+                <div className="space-y-3 flex lg:flex-col items-center justify-evenly gap-1  lg:justify-center">
                   {/* Icon and Title Row */}
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`p-2 rounded-lg ${getDarkerBgColor(
-                        stat.bgColor
-                      )}`}
-                    >
+                  <div className="flex items-center justify-center gap-2 sm:gap-1 h-16">
+                    <div className="rounded-lg flex sm:w-1/2 h-full  items-center justify-center">
                       <Image
                         src={stat.icon}
                         alt="icon"
-                        width={20}
+                        width={0}
                         height={20}
-                        className={`h-5 w-5 ${stat.iconColor}`}
+                        className={`h-10 ${stat.iconColor}`}
                       />
                     </div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-700 leading-tight">
+                    <p className="text-xs sm:text-sm font-medium text-gray-700 leading-tight w-full h-full flex items-center justify-center">
                       {stat.title}
                     </p>
                   </div>
 
                   {/* Value */}
-                  <div className="text-right">
-                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                  <div
+                    className={`flex justify-center items-center rounded-lg h-10 px-2 min-w-11 ${getDarkerBgColor(
+                      stat.bgColor
+                    )}`}
+                  >
+                    <span className="text-md sm:text-md lg:text-md font-bold text-gray-900">
                       {stat.value}
                     </span>
                   </div>
@@ -377,66 +468,101 @@ export default function Home() {
         {/* My Referrals Section */}
         <Card className="bg-white shadow-sm">
           <CardContent className="p-4 sm:p-6 lg:p-8">
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-4 lg:mb-6">
-              My Referrals ({referralsData.length})
-            </h3>
+            <div className="flex justify-between items-center mb-4 lg:mb-6">
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+                My Referrals ({totalReferrals})
+              </h3>
+              {totalPages > 1 && (
+                <div className="text-sm text-gray-500">
+                  Page {currentPage} of {totalPages}
+                </div>
+              )}
+            </div>
 
-            {referralsData.length === 0 ? (
+            {loadingReferrals ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+              </div>
+            ) : referralsData.length === 0 ? (
               <div className="text-center py-8 lg:py-12">
                 <p className="text-gray-500 text-sm sm:text-base">
                   No referrals found
                 </p>
               </div>
             ) : (
-              <div className="space-y-3 lg:space-y-4">
-                {referralsData.map((referral, index) => (
-                  <div
-                    key={referral.referralId || index}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
-                  >
-                    {/* User Info */}
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
-                        {referral.profilePicture ? (
-                          <img
-                            src={referral.profilePicture}
-                            alt={referral.name}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <AvatarFallback className="bg-red-600 text-white font-medium text-xs sm:text-sm">
-                            {referral.initials}
-                          </AvatarFallback>
-                        )}
-                      </Avatar>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-bold text-gray-900 text-sm sm:text-base truncate">
-                          {referral.name}
+              <>
+                <div className="space-y-3 lg:space-y-4">
+                  {referralsData.map((referral, index) => (
+                    <div
+                      key={referral.referralId || index}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors w-full"
+                    >
+                      {/* User Info */}
+                      <div className="flex items-center gap-3 sm:w-[30%] flex-1">
+                        <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
+                          {referral.profilePicture ? (
+                            <img
+                              src={referral.profilePicture}
+                              alt={referral.name}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <AvatarFallback className="bg-red-600 text-white font-medium text-xs sm:text-sm">
+                              {referral.initials}
+                            </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-bold text-gray-900 text-sm sm:text-base truncate">
+                            {referral.name}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Status and Info */}
+                      <div className="sm:w-[30%]">
+                        <p className="border-0 font-medium px-2 sm:px-3 py-1 flex-shrink-0 w-full flex justify-center items-center">
+                          {referral.status}
                         </p>
                       </div>
-                    </div>
-
-                    {/* Status and Info */}
-                    <div className="flex flex-row sm:flex-row items-start sm:items-center gap-2 sm:gap-3 flex-wrap">
-                      <Badge
-                        className={`${referral.statusColor} border-0 font-medium px-2 sm:px-3 py-1 text-xs sm:text-sm flex-shrink-0`}
-                      >
-                        {referral.status}
-                      </Badge>
-
-                      {referral.commissionEarned > 0 && (
-                        <span className="text-xs sm:text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded flex-shrink-0">
-                          +{referral.commissionEarned.toLocaleString()}
+                      <div className="sm:w-[30%] ">
+                        <span className="text-gray-500 flex-shrink-0 flex justify-center items-center">
+                          {referral.date}
                         </span>
-                      )}
-
-                      <span className="text-xs sm:text-sm text-gray-500 flex-shrink-0">
-                        {referral.date}
-                      </span>
+                      </div>
                     </div>
+                  ))}
+                </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center sm:justify-end gap-3 mt-6 pt-4  border-gray-100">
+                    {/* Previous Button */}
+                    <Button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      variant="outline"
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </Button>
+
+                    {/* Page Indicator */}
+                    <div className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md">
+                      {currentPage} of {totalPages}
+                    </div>
+
+                    {/* Next Button */}
+                    <Button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </Button>
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>

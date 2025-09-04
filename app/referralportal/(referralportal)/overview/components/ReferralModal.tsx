@@ -155,25 +155,25 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="md:max-w-lg md:w-full mx-auto bg-white rounded-3xl p-0 border-0 shadow-2xl">
-          <div className="relative p-6 md:p-8">
-            <div className="space-y-6">
+        <DialogContent className="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl w-[90vw] sm:w-full mx-auto bg-white rounded-2xl sm:rounded-3xl p-0 border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative p-4 sm:p-6 md:p-8">
+            <div className="space-y-4 sm:space-y-6">
               {/* Referral Code Section */}
               <Card className="bg-orange-50 border-0">
-                <CardContent className="p-4">
-                  <div className="text-center space-y-3">
-                    <h3 className="font-medium text-gray-700">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="text-center space-y-2 sm:space-y-3">
+                    <h3 className="text-sm sm:text-base font-medium text-gray-700">
                       Referral Code:
                     </h3>
-                    <div className="flex items-center justify-center gap-3">
-                      <span className="text-xl font-bold text-gray-900">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                      <span className="text-lg sm:text-xl font-bold text-gray-900 break-all text-center">
                         {referralCode}
                       </span>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 w-full sm:w-auto">
                         <Button
                           size="sm"
                           onClick={() => handleNativeCopy("code", referralCode)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 text-sm"
+                          className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-1 text-xs sm:text-sm flex-1 sm:flex-none"
                         >
                           <Copy className="h-3 w-3 mr-1" />
                           {copied === "code" ? "Copied!" : "Copy"}
@@ -181,10 +181,15 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
                         <Button
                           size="sm"
                           onClick={() => handleNativeCopy("link", referralLink)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 text-sm"
+                          className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-1 text-xs sm:text-sm flex-1 sm:flex-none"
                         >
                           <Share className="h-3 w-3 mr-1" />
-                          {copied === "link" ? "Copied!" : "Share Link"}
+                          <span className="hidden xs:inline">
+                            {copied === "link" ? "Copied!" : "Share Link"}
+                          </span>
+                          <span className="xs:hidden">
+                            {copied === "link" ? "Copied!" : "Share"}
+                          </span>
                         </Button>
                       </div>
                     </div>
@@ -194,15 +199,15 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
 
               {/* Referral Link Section */}
               <Card className="bg-gray-50 border-0">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm text-gray-700 flex-1 truncate">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                    <span className="text-xs sm:text-sm text-gray-700 flex-1 break-all">
                       {referralLink}
                     </span>
                     <Button
                       size="sm"
                       onClick={() => handleNativeCopy("link", referralLink)}
-                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 text-sm flex-shrink-0"
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-1 text-xs sm:text-sm flex-shrink-0 w-full sm:w-auto"
                     >
                       {copied === "link" ? "Copied!" : "Copy Link"}
                       <Copy className="h-3 w-3 ml-1" />
@@ -212,16 +217,16 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
               </Card>
 
               {/* Share Via Section */}
-              <div className="text-center space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">
+              <div className="text-center space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                   Share Via
                 </h3>
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-2 sm:gap-3 flex-wrap">
                   {socialIcons.map((social, index) => (
                     <Button
                       key={index}
                       size="sm"
-                      className={`${social.color} text-white rounded-full h-10 w-10 p-0 transition-colors`}
+                      className={`${social.color} text-white rounded-full h-8 w-8 sm:h-10 sm:w-10 p-0 transition-colors`}
                       onClick={() =>
                         handleSocialShare(
                           social.label,
@@ -230,37 +235,42 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
                         )
                       }
                     >
-                      <social.icon className="h-4 w-4" />
+                      <social.icon className="h-3 w-3 sm:h-4 sm:w-4" />
                     </Button>
                   ))}
                 </div>
               </div>
 
               {/* QR Code Section */}
-              <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-6">
-                  <div className="space-y-2">
+              <div className="text-center space-y-3 sm:space-y-4">
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
+                  <div className="space-y-2 flex-shrink-0">
                     <div
                       id="qr-code"
-                      className="bg-white p-3 rounded-lg border inline-block"
+                      className="bg-white p-2 sm:p-3 rounded-lg border inline-block"
                       dangerouslySetInnerHTML={{ __html: qrCodeSvg }}
+                      style={{
+                        fontSize: 0, // Remove any text spacing
+                      }}
                     />
-                    <p className="text-sm text-gray-600 font-medium">QR Code</p>
+                    <p className="text-xs sm:text-sm text-gray-600 font-medium">
+                      QR Code
+                    </p>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 w-full max-w-xs lg:max-w-none lg:w-auto">
                     <Button
-                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 w-full"
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 w-full text-xs sm:text-sm"
                       onClick={handlePreview}
                     >
-                      <Eye className="h-4 w-4 mr-2" />
+                      <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                       Preview
                     </Button>
                     <Button
-                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 w-full"
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 w-full text-xs sm:text-sm"
                       onClick={downloadQRCode}
                     >
-                      <Download className="h-4 w-4 mr-2" />
+                      <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                       Download
                     </Button>
                   </div>
@@ -274,47 +284,50 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
       {/* QR Code Preview Modal */}
       {showPreview && (
         <Dialog open={showPreview} onOpenChange={() => setShowPreview(false)}>
-          <DialogContent className="max-w-md w-full mx-auto bg-white rounded-3xl p-0 border-0 shadow-2xl">
-            <div className="relative p-6">
-              <div className="absolute top-4 right-4">
-                {/* <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setShowPreview(false)}
-                  className="h-8 w-8 p-0 rounded-full"
-                >
-                  <X className="h-4 w-4" />
-                </Button> */}
-              </div>
-
-              <div className="text-center space-y-4">
-                <h3 className="text-xl font-semibold text-gray-900">
+          <DialogContent
+            className="max-w-xs sm:max-w-sm md:max-w-md w-[90vw] sm:w-full mx-auto bg-white rounded-2xl sm:rounded-3xl p-0 border-0 shadow-2xl max-h-[90vh] overflow-y-auto scrollbar-hide scroll-smooth"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            <div className="relative p-4 sm:p-6">
+              <div className="text-center space-y-3 sm:space-y-4">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
                   QR Code Preview
                 </h3>
 
                 <div className="flex justify-center">
-                  <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-lg">
-                    <div dangerouslySetInnerHTML={{ __html: qrCodeSvg }} />
+                  <div className="bg-white p-4 sm:p-6 rounded-xl border-2 border-gray-200 shadow-lg">
+                    <div
+                      dangerouslySetInnerHTML={{ __html: qrCodeSvg }}
+                      style={{
+                        fontSize: 0, // Remove any text spacing
+                      }}
+                    />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600">
+                <div className="space-y-2 px-2 sm:px-4">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     Referral Code:{" "}
-                    <span className="font-mono font-bold">{referralCode}</span>
+                    <span className="font-mono font-bold break-all">
+                      {referralCode}
+                    </span>
                   </p>
-                  <p className="text-xs text-gray-500 break-all px-4">
+                  <p className="text-xs text-gray-500 break-all">
                     {referralLink}
                   </p>
                 </div>
 
-                <div className="flex gap-3 justify-center pt-4">
+                <div className="flex gap-2 sm:gap-3 justify-center pt-2 sm:pt-4 px-2 sm:px-0">
                   <Button
-                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-2"
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 text-xs sm:text-sm flex-1 sm:flex-none max-w-xs"
                     onClick={downloadQRCode}
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download QR Code
+                    <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                    <span className="hidden sm:inline">Download QR Code</span>
+                    <span className="sm:hidden">Download</span>
                   </Button>
                 </div>
               </div>
