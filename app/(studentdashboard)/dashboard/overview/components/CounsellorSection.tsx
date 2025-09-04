@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import ChatModal from "./ChatBox";
+// import ChatModal from "./ChatBox";
 import Link from "next/link";
 import { useChatStore } from "@/store/chatStore";
 import { useSocket } from "@/context/socket-context"; // Import socket context
@@ -28,11 +28,11 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
     }
   }, [socket, userEmail?.email, socket?.connected]);
 
-  const closeChat = () => {
-    setIsChatOpen(false);
-    // Clear notifications when chat closes
-    clearNotifications();
-  };
+  // const closeChat = () => {
+  //   setIsChatOpen(false);
+  //   // Clear notifications when chat closes
+  //   clearNotifications();
+  // };
 
   const handleChatClick = () => {
     // console.log("Button clicked - before:", isChatOpen);
