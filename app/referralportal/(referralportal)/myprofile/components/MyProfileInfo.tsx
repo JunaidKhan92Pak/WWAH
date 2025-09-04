@@ -45,6 +45,9 @@ const MyProfileInfo = ({ user, detailInfo }: UserProps) => {
             <EditPaymentDetails
               open={paymentModalOpen}
               setOpen={setPaymentModalOpen}
+             data={
+              detailInfo.paymentInformation
+             }
             />
           </>
         )}

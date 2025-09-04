@@ -71,7 +71,7 @@ const ApplyingSection: React.FC = () => {
     fetchAppliedCourses,
     // removeAppliedCourse,
   } = useUserStore();
-console.log(appliedCourses, "appliedCourses from store");
+  console.log(appliedCourses, "appliedCourses from store");
   // Function to fetch detailed course information from the API
   const fetchDetailedAppliedCourses = async (courseIds: string[]) => {
     if (courseIds.length === 0) {
