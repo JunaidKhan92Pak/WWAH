@@ -658,7 +658,7 @@ export default function Dashboard() {
           open={isWithdrawalModalOpen}
           onOpenChange={setIsWithdrawalModalOpen}
         >
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="w-[90%] mx-auto sm:max-w-md rounded-sm">
             <div className="text-center py-8">
               <div className="relative mb-6">
                 <div className="absolute -top-2 -left-2 w-2 h-2 bg-orange-400 rounded-full opacity-60"></div>

@@ -234,7 +234,7 @@ const Page = () => {
                   onKeyDown={(e) => handleKeyDown(index, e)}
                   onPaste={handlePaste}
                   disabled={loading || resendLoading}
-                  className="w-12 h-12 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-colors"
+                  className="md:w-12 md:h-12 w-8 h-8 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-colors"
                 />
               ))}
             </div>
@@ -282,7 +282,7 @@ const Page = () => {
             <button
               type="submit"
               disabled={loading || resendLoading}
-              className="w-full bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
+              className="w-full bg-red-600 text-white py-2 md:py-3 rounded-lg font-medium hover:bg-red-700 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>

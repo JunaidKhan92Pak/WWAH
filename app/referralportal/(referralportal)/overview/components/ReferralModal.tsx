@@ -155,7 +155,7 @@ export default function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-lg w-full mx-auto bg-white rounded-3xl p-0 border-0 shadow-2xl">
+        <DialogContent className="md:max-w-lg md:w-full mx-auto bg-white rounded-3xl p-0 border-0 shadow-2xl">
           <div className="relative p-6 md:p-8">
             <div className="space-y-6">
               {/* Referral Code Section */}

@@ -143,7 +143,7 @@ const Page = () => {
           <h3 className="font-bold text-center text-gray-900 mb-2">
             Reset Password
           </h3>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-5">
             Please enter your new password to secure your account.
           </p>
 
@@ -166,7 +166,7 @@ const Page = () => {
                 <PiKeyLight className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg z-10" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full pl-10 pr-12 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 placeholder:text-sm md:placeholder:text-base"
+                  className="w-full pl-10 pr-12 p-2 md:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 placeholder:text-sm md:placeholder:text-base"
                   placeholder="Enter new password (min 6 characters)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -197,7 +197,7 @@ const Page = () => {
                 <PiKeyLight className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg z-10" />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  className="w-full pl-10 pr-12 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 placeholder:text-sm md:placeholder:text-base"
+                  className="w-full pl-10 pr-12 p-2 md:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 placeholder:text-sm md:placeholder:text-base"
                   placeholder="Confirm new password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -280,7 +280,7 @@ const Page = () => {
             </div>
             <div>
               <Link
-                href="/referralportal/forgotpassword"
+                href="/referralportal/forget"
                 className="text-red-600 hover:text-red-700 text-sm"
               >
                 Start password reset again
