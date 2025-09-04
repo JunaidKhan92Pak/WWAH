@@ -1734,7 +1734,7 @@ const SuccessChances = () => {
                   <Info className="h-4 w-4 text-blue-600" />
                   <AlertDescription className="text-blue-700">
                     Based on your selected country, additional language proficiency may be required or advantageous.
-                    Don't worry if you haven't learned the local language yet, we offer language classes for your preferred study destination.
+                    Don&apos;t worry if you haven&apos;t learned the local language yet, we offer language classes for your preferred study destination.
                   </AlertDescription>
                 </Alert>
                 <Button 

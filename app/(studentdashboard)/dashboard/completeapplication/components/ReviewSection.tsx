@@ -232,9 +232,7 @@ export default function ReviewPage() {
         <Section title="Personal Information" data={studentData.personalInfo} />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() =>
-            router.push("/dashboard/completeapplication?tab=basicinfo&step=1")
-          }>
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=1")}>
           Edit <MdModeEditOutline />
         </Button>
       </div>
@@ -257,11 +255,7 @@ export default function ReviewPage() {
         <Section title="Passport Information" data={studentData.passportInfo} />
         <Button
           className="bg-[#F4D0D2] hover:bg-[#F4D0D2] text-black flex items-center gap-1"
-          onClick={() =>
-            router.push("/dashboard/completeapplication?tab=basicinfo&step=3")
-          }
-        >
-          Edit <MdModeEditOutline />
+          onClick={() => router.push("/dashboard/completeapplication?tab=basicinfo&step=3")}> Edit <MdModeEditOutline />
         </Button>
       </div>
 
