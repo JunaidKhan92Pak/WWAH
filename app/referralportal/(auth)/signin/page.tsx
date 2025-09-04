@@ -100,7 +100,7 @@ const Page = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [facebookLoading, setFacebookLoading] = useState(false);
+  // const [facebookLoading, setFacebookLoading] = useState(false);
 
   // Handle Google Sign-In response
   const handleGoogleSignIn = useCallback(
@@ -169,92 +169,92 @@ const Page = () => {
   );
 
   // Handle Facebook Sign-In
-  const handleFacebookSignIn = useCallback(async () => {
-    if (!window.FB) {
-      setErrors((prev) => ({
-        ...prev,
-        generalError: "Facebook SDK not loaded. Please try again.",
-      }));
-      return;
-    }
+  // const handleFacebookSignIn = useCallback(async () => {
+  //   if (!window.FB) {
+  //     setErrors((prev) => ({
+  //       ...prev,
+  //       generalError: "Facebook SDK not loaded. Please try again.",
+  //     }));
+  //     return;
+  //   }
 
-    setFacebookLoading(true);
-    setErrors((prev) => ({ ...prev, generalError: "" }));
+  //   setFacebookLoading(true);
+  //   setErrors((prev) => ({ ...prev, generalError: "" }));
 
-    window.FB.login(
-      async (response: FacebookLoginResponse) => {
-        try {
-          if (response.status === "connected" && response.authResponse) {
-            // Get user data from Facebook
-            window.FB.api("/me?fields=email,name", async (userInfo) => {
-              try {
-                const res = await fetch(
-                  `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/facebook-login`,
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({
-                      accessToken: response.authResponse!.accessToken,
-                      userID: response.authResponse!.userID,
-                      email: userInfo.email,
-                      name: userInfo.name,
-                    }),
-                  }
-                );
+  //   window.FB.login(
+  //     async (response: FacebookLoginResponse) => {
+  //       try {
+  //         if (response.status === "connected" && response.authResponse) {
+  //           // Get user data from Facebook
+  //           window.FB.api("/me?fields=email,name", async (userInfo) => {
+  //             try {
+  //               const res = await fetch(
+  //                 `${process.env.NEXT_PUBLIC_BACKEND_API}refportal/facebook-login`,
+  //                 {
+  //                   method: "POST",
+  //                   headers: {
+  //                     "Content-Type": "application/json",
+  //                   },
+  //                   credentials: "include",
+  //                   body: JSON.stringify({
+  //                     accessToken: response.authResponse!.accessToken,
+  //                     userID: response.authResponse!.userID,
+  //                     email: userInfo.email,
+  //                     name: userInfo.name,
+  //                   }),
+  //                 }
+  //               );
 
-                const data = await res.json();
+  //               const data = await res.json();
 
-                if (res.ok && data.success) {
-                  const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
-                  const isProduction = process.env.NODE_ENV === "production";
+  //               if (res.ok && data.success) {
+  //                 const expireDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  //                 const isProduction = process.env.NODE_ENV === "production";
 
-                  document.cookie = `authToken=${
-                    data.token
-                  }; expires=${expireDate.toUTCString()}; path=/; ${
-                    isProduction ? "secure; samesite=none" : "samesite=lax"
-                  }`;
+  //                 document.cookie = `authToken=${
+  //                   data.token
+  //                 }; expires=${expireDate.toUTCString()}; path=/; ${
+  //                   isProduction ? "secure; samesite=none" : "samesite=lax"
+  //                 }`;
 
-                  router.push(callbackUrl);
-                } else {
-                  setErrors((prev) => ({
-                    ...prev,
-                    generalError:
-                      data.message ||
-                      "Facebook sign-in failed. Please try again.",
-                  }));
-                }
-              } catch (error) {
-                console.error("Facebook sign-in error:", error);
-                setErrors((prev) => ({
-                  ...prev,
-                  generalError: "Network error. Please try again.",
-                }));
-              } finally {
-                setFacebookLoading(false);
-              }
-            });
-          } else {
-            setErrors((prev) => ({
-              ...prev,
-              generalError: "Facebook login was cancelled or failed.",
-            }));
-            setFacebookLoading(false);
-          }
-        } catch (error) {
-          console.error("Facebook login error:", error);
-          setErrors((prev) => ({
-            ...prev,
-            generalError: "Facebook login failed. Please try again.",
-          }));
-          setFacebookLoading(false);
-        }
-      },
-      { scope: "email" }
-    );
-  }, [router, callbackUrl]);
+  //                 router.push(callbackUrl);
+  //               } else {
+  //                 setErrors((prev) => ({
+  //                   ...prev,
+  //                   generalError:
+  //                     data.message ||
+  //                     "Facebook sign-in failed. Please try again.",
+  //                 }));
+  //               }
+  //             } catch (error) {
+  //               console.error("Facebook sign-in error:", error);
+  //               setErrors((prev) => ({
+  //                 ...prev,
+  //                 generalError: "Network error. Please try again.",
+  //               }));
+  //             } finally {
+  //               setFacebookLoading(false);
+  //             }
+  //           });
+  //         } else {
+  //           setErrors((prev) => ({
+  //             ...prev,
+  //             generalError: "Facebook login was cancelled or failed.",
+  //           }));
+  //           setFacebookLoading(false);
+  //         }
+  //       } catch (error) {
+  //         console.error("Facebook login error:", error);
+  //         setErrors((prev) => ({
+  //           ...prev,
+  //           generalError: "Facebook login failed. Please try again.",
+  //         }));
+  //         setFacebookLoading(false);
+  //       }
+  //     },
+  //     { scope: "email" }
+  //   );
+  // }, [router, callbackUrl]);
 
   // Initialize Facebook SDK
   useEffect(() => {
@@ -534,9 +534,9 @@ const Page = () => {
             </div>
 
             {/* Social Media Login Buttons */}
-            <div className="flex gap-3 mb-4">
+            <div className=" w-full mb-4">
               {/* Google Sign-In Button */}
-              <div className="flex-1">
+              <div className="w-full" >
                 {googleLoading ? (
                   <button
                     type="button"
@@ -571,7 +571,7 @@ const Page = () => {
               </div>
 
               {/* Facebook Sign-In Button */}
-              <button
+              {/* <button
                 type="button"
                 onClick={handleFacebookSignIn}
                 disabled={facebookLoading}
@@ -586,7 +586,7 @@ const Page = () => {
                 <span className="text-sm">
                   {facebookLoading ? "Loading..." : "Facebook"}
                 </span>
-              </button>
+              </button> */}
             </div>
 
             <p className="text-center mt-4 text-gray-600 mb-2 sm:px-8 md:mb-2 md:w-full lg:text-[14px] lg:mb-2 lg:leading-5 2xl:leading-10 2xl:text-[28px] 2xl:space-y-4">
