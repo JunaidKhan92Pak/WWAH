@@ -21,7 +21,7 @@ interface Document {
 export default function Home() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState(
-    "Upload Document Successful"
+    "Document Uploaded Successfully"
   );
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -329,7 +329,7 @@ export default function Home() {
   }, [showSuccessModal]);
 
   const handleSubmit = async () => {
-    alert("file submitted");
+    // alert("file submitted");
     router.push("/dashboard/completeapplication?tab=review")
   };
 

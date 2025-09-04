@@ -601,7 +601,7 @@ const AppliedScholarship = () => {
                   width={100}
                   height={100}
                 />
-                Are you sure you want to confirm this scholarship?
+                Are you sure you want to confirm this course?
               </div>
             </DialogTitle>
           </DialogHeader>
@@ -667,7 +667,7 @@ const AppliedScholarship = () => {
                 msOverflowStyle: "none",
               }}
             >
-              {appliedCoursesArray.map(
+              {[...appliedCoursesArray].reverse().map(
                 (application: AppliedScholarshipCourseProps) => {
                   const isConfirmed = application.isConfirmed || false;
 
@@ -685,12 +685,20 @@ const AppliedScholarship = () => {
                           </a>
                         </button>
                         {/* ✅ FIXED: Delete button with proper confirmation check */}
+                        {/* Remove Button with conditional styling and click handler */}
                         <button
-                          className="py-1 px-4 rounded-md transition-colors text-black-600 hover:bg-red-50 cursor-pointer"
                           onClick={() =>
                             handleDeleteButtonClick(application._id)
                           }
-                          title="Delete Application"
+                          className={`border py-1 px-4 rounded-md flex items-center justify-center transition-colors ${isConfirmed
+                            ? "text-black-400 bg-[#FCE7D2] cursor-not-allowed opacity-50"
+                            : "text-black-600 hover:bg-red-50 cursor-pointer"
+                            }`}
+                          title={
+                            isConfirmed
+                              ? "Cannot remove confirmed course"
+                              : "Remove from applications"
+                          }
                         >
                           <Image
                             src="/delete.svg"
@@ -769,13 +777,11 @@ const AppliedScholarship = () => {
                                         </Label>
                                         <Input
                                           id={`link-${application._id}`}
-                                          value={`${
-                                            typeof window !== "undefined"
-                                              ? window.location.origin
-                                              : ""
-                                          }/scholarships/${
-                                            application.ScholarshipId
-                                          }`}
+                                          value={`${typeof window !== "undefined"
+                                            ? window.location.origin
+                                            : ""
+                                            }/scholarships/${application.ScholarshipId
+                                            }`}
                                           readOnly
                                         />
                                       </div>
@@ -994,21 +1000,20 @@ const AppliedScholarship = () => {
                               </div>
                             </div>
                             {/* ✅ NEW: Confirm Scholarship Button */}
-                            <button
+                            <Button
                               onClick={() =>
                                 handleConfirmButtonClick(application._id)
                               }
-                              disabled={isConfirmed}
-                              className={` py-1 rounded mr-4 text-white font-medium text-[13px] mt-2 ${
-                                isConfirmed
-                                  ? "bg-red-600 cursor-not-allowed px-8"
-                                  : "bg-red-600 hover:bg-[#A01419] cursor-pointer px-2"
-                              }`}
+                              disabled={isConfirmed === true}
+                              className={` py-1 rounded mr-4 text-white font-medium text-[13px] mt-2 ${isConfirmed
+                                ? "bg-red-600 cursor-not-allowed px-8 opacity-50"
+                                : "bg-red-600 hover:bg-[#A01419] cursor-pointer px-2"
+                                }`}
                             >
                               {isConfirmed
                                 ? "Confirmed"
                                 : "Confirm Scholarship"}
-                            </button>
+                            </Button>
                             {application.appliedAt && (
                               <div className="text-[12px] text-gray-500">
                                 Applied: {formatDate(application.appliedAt)}

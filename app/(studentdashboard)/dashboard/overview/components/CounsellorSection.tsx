@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-// import ChatModal from "./ChatBox";
+import ChatModal from "./ChatBox";
 import Link from "next/link";
 import { useChatStore } from "@/store/chatStore";
 import { useSocket } from "@/context/socket-context"; // Import socket context
@@ -28,11 +28,11 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
     }
   }, [socket, userEmail?.email, socket?.connected]);
 
-  // const closeChat = () => {
-  //   setIsChatOpen(false);
-  //   // Clear notifications when chat closes
-  //   clearNotifications();
-  // };
+  const closeChat = () => {
+    setIsChatOpen(false);
+    // Clear notifications when chat closes
+    clearNotifications();
+  };
 
   const handleChatClick = () => {
     // console.log("Button clicked - before:", isChatOpen);
@@ -46,7 +46,7 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
     <>
       <div className="relative w-full">
         {/* Blurred counsellor section */}
-        <div className="justify-center items-center flex flex-col text-center pt-8 blur-sm opacity-30 pointer-events-none">
+        <div className="justify-center items-center flex flex-col text-center pt-8  pointer-events-none">
           <p className="font-semibold text-lg md:text-xl">
             Your Designated Counsellor
           </p>
@@ -54,7 +54,7 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
             <Image
               src="/DashboardPage/Objects.svg"
               alt="Object"
-              width={64}
+              width={64}          
               height={64}
               className="rounded-full mx-auto"
             />
@@ -98,19 +98,6 @@ const CounsellorSection = ({ userEmail }: { userEmail: { email: string } }) => {
               Book a Counselling Session
             </Button>
           </Link>
-        </div>
-
-        {/* Overlay text */}
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center">
-          <p className="text-black font-medium text-base md:text-lg md:leading-snug mb-4">
-            You will be assigned a WWAH advisor soon.
-          </p>
-
-          <button className="bg-[#C7161E] text-white px-6 py-2 text-[14px] rounded-full">
-            <Link href="/dashboard/completeapplication">
-              Complete Your Profile
-            </Link>
-          </button>
         </div>
       </div>
     </>
