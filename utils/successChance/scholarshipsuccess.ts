@@ -102,15 +102,18 @@ export const extractWorkExpRequirement = (workExpText: string) => {
 };
 
 // Calculate work experience success percentage
-export const calculateWorkExperienceSuccess = (userExp: number, scholarshipWorkExpText: string) => {
-    if (!userExp || !scholarshipWorkExpText) return 10;
+export const calculateWorkExperienceSuccess = (userExp: number | string, scholarshipWorkExpText: string) => {
+    // Convert userExp to number if it's a string
+    const userExpNumber = typeof userExp === 'string' ? parseFloat(userExp) || 0 : (userExp || 0);
+    
+    if (!userExpNumber || !scholarshipWorkExpText) return 10;
 
     const workExpRequirement = extractWorkExpRequirement(scholarshipWorkExpText);
     if (workExpRequirement === 0) return 100; // No experience required
-    if (userExp >= workExpRequirement) return 100; // Meets or exceeds requirement
-    if (userExp >= workExpRequirement * 0.75) return 85; // At least 75% of required
-    if (userExp >= workExpRequirement * 0.5) return 70; // At least 50% of required
-    if (userExp >= workExpRequirement * 0.25) return 40; // At least 25% of required
+    if (userExpNumber >= workExpRequirement) return 100; // Meets or exceeds requirement
+    if (userExpNumber >= workExpRequirement * 0.75) return 85; // At least 75% of required
+    if (userExpNumber >= workExpRequirement * 0.5) return 70; // At least 50% of required
+    if (userExpNumber >= workExpRequirement * 0.25) return 40; // At least 25% of required
     return 20; // Less than 25% of required
 };
 
@@ -157,7 +160,6 @@ export const calculateAgeSuccess = (userDob: string, scholarshipAgeText: string)
     if (userAge <= ageRequirement + 10) return 40; // Significantly over
     return 20; // Far above limit
 };
-
 // Calculate all success metrics at once
 export const calculateAllSuccessMetrics = (user: any, scholarship: any) => {
     console.log(`Client User: ${JSON.stringify(user)} Scholarship: ${JSON.stringify(scholarship)}`);

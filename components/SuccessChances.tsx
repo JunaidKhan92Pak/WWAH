@@ -1330,8 +1330,7 @@ const SuccessChances = () => {
                   id="other-grade"
                   type="text"
                   placeholder="Describe your grade or grading system"
-                  className={`w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 ${hasError ? "border-red-500" : "border-gray-300"
-                    }`}
+                  className={`w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 ${hasError ? "border-red-500" : "border-gray-300"}`}
                   value={gradeData.score}
                   onChange={(e) => handleGradeScoreChange(e.target.value)}
                 />

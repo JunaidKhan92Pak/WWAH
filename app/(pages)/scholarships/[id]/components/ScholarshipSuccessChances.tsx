@@ -809,5 +809,4 @@ export const ScholarshipSuccessChances = ({
     </>
   );
 };
-
 export default ScholarshipSuccessChances;

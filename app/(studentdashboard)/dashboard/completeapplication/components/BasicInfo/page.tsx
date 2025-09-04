@@ -878,5 +878,4 @@ const BasicInfo = () => {
     </div>
   );
 };
-
 export default BasicInfo;

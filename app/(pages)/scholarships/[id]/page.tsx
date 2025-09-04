@@ -129,8 +129,8 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p> Not Aviable</p>;
 
-  console.log("Scholarship Data:", data);
-  console.log(data.applicationProcess, "applicationProcess");
+  // console.log("Scholarship Data:", data);
+  // console.log(data.applicationProcess, "applicationProcess");
   return (
     <>
       <Hero
@@ -190,6 +190,7 @@ const Scholarshipdetail = ({ params }: { params: Promise<{ id: string }> }) => {
           s_id={data._id}
           scholarshipName={data.name}
           logo={data.logo}
+          successChances={data?.successChances}
         />
       </div>
 
