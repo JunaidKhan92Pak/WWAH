@@ -64,7 +64,7 @@ const Page = () => {
   const [sessionId, setSessionId] = useState("");
   const [countdown, setCountdown] = useState(0);
   const [googleLoading, setGoogleLoading] = useState(false);
-
+console.log(googleLoading);
   // Form state and validation errors
   const [formData, setFormData] = useState({
     firstName: "",
@@ -493,7 +493,7 @@ const Page = () => {
           </div>
 
           {/* Google Sign-In Button */}
-          {currentStep === "register" && (
+          {/* {currentStep === "register" && (
             <div className="w-full mb-4">
               {googleLoading && (
                 <div className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
@@ -509,7 +509,7 @@ const Page = () => {
                 style={{ minHeight: "44px" }}
               />
             </div>
-          )}
+          )} */}
 
           {/* Divider - only show during registration */}
           {currentStep === "register" && (
