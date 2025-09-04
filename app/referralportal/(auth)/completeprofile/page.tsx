@@ -343,7 +343,7 @@ const Step1 = () => {
 
           <div className="flex flex-col md:flex-row gap-2 md:items-end">
             <div className="md:w-1/2">
-              <label className="block text-gray-700 text-sm">Country</label>
+              <label className="block text-gray-700 text-sm pb-1">Country</label>
               <Select
                 value={personalInfo.country}
                 onValueChange={(value) => handleSelectChange("country", value)}
@@ -371,7 +371,7 @@ const Step1 = () => {
               )}
             </div>
             <div className="md:w-1/2 ">
-              <label className="block text-gray-700 text-sm">City</label>
+              <label className="block text-gray-700 text-sm pb-1">City</label>
               <CityComboBox
                 personalInfo={personalInfo}
                 availableCities={availableCities}
@@ -389,37 +389,37 @@ const Step1 = () => {
               Social Media Links
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center">
-              <div className="w-[95%]">
-                <label className="block text-gray-700 text-sm">Facebook</label>
+              <div className="w-[95%] mt-2">
+                <label className="block text-gray-700 text-sm pb-1">Facebook</label>
                 <input
                   type="url"
                   name="facebook"
                   placeholder="Facebook profile link"
                   value={personalInfo.facebook}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 md:py-2 py-1 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm "
                 />
               </div>
-              <div className="w-[95%]">
-                <label className="block text-gray-700 text-sm">LinkedIn</label>
+              <div className="w-[95%] mt-2">
+                <label className="block text-gray-700 text-sm pb-1">LinkedIn</label>
                 <input
                   type="url"
                   name="linkedin"
                   placeholder="LinkedIn profile link"
                   value={personalInfo.linkedin}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 md:py-2 py-1 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm"
                 />
               </div>
-              <div className="w-[95%]">
-                <label className="block text-gray-700 text-sm">Instagram</label>
+              <div className="w-[95%] mt-2">
+                <label className="block text-gray-700 text-sm pb-1">Instagram</label>
                 <input
                   type="url"
                   name="instagram"
                   placeholder="Instagram profile link"
                   value={personalInfo.instagram}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 md:py-2 py-1 bg-[#F1F1F1] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm"
                 />
               </div>
             </div>

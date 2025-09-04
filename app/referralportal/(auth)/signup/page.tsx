@@ -86,7 +86,7 @@ const Page = () => {
     phone: "",
     referralCode: "",
   });
-console.log(errors, "error state");
+  console.log(errors, "error state");
   const [otpData, setOtpData] = useState({
     emailOtp: "",
     phoneOtp: "",
@@ -178,7 +178,7 @@ console.log(errors, "error state");
             window.google.accounts.id.renderButton(googleButton, {
               theme: "outline",
               size: "large",
-              width: "384",
+              width: "300",
               text: "signup_with",
             });
           }
@@ -503,7 +503,9 @@ console.log(errors, "error state");
               )}
               <div
                 id="google-signin-button"
-                className={`w-full ${googleLoading ? "hidden" : ""}`}
+                className={`w-full flex justify-center items-center ml-8 md:ml-14${
+                  googleLoading ? "hidden" : ""
+                }`}
                 style={{ minHeight: "44px" }}
               />
             </div>

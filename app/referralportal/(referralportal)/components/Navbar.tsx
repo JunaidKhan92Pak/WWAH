@@ -71,7 +71,13 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => setIsOpen(!isOpen);
-
+  const openGmail = () => {
+    window.open(
+      "https://mail.google.com/mail/?view=cm&to=info@wwah.ai",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
   return (
     <nav className="h-16 flex items-center px-2 sm:px-6 justify-between bg-white relative">
       <div className="flex items-center gap-4">
@@ -173,12 +179,21 @@ export function Navbar() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3">
-                    <a
-                      href="mailto:support@wwdh.ai"
-                      className="flex-1 bg-[#C7161E] text-white py-2 px-4 rounded-lg text-center font-medium hover:bg-red-700 transition-colors"
+                    <div
+                      className="flex items-center space-x-3 cursor-pointer"
+                      onClick={() =>
+                        (window.location.href =
+                          "mailto:info@worldwideadmissionshub.com")
+                      }
                     >
-                      Send Email
-                    </a>
+                      {/* <IoMailUnreadOutline className="text-xl min-w-[20px]" /> */}
+                      <p
+                        className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg text-center font-medium hover:bg-red-700 transition-colors"
+                        onClick={openGmail}
+                      >
+                        Send Email
+                      </p>
+                    </div>
                     <a
                       href="https://wa.me/923430445345"
                       target="_blank"
