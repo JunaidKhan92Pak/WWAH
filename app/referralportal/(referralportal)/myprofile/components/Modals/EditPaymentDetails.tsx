@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+// import { useRouter } from "next/navigation";
 import { z } from "zod";
 import Image from "next/image";
 import {
@@ -21,6 +21,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { getAuthToken } from "@/utils/authHelper";
+
+// **ADDITION: Define PaymentInfo interface**
+interface PaymentInfo {
+  preferredPaymentMethod: string;
+  bankAccountTitle?: string;
+  bankName?: string;
+  accountNumberIban?: string;
+  mobileWalletNumber?: string;
+  accountHolderName?: string;
+  createdAt?: Date;
+  updatedAt: Date;
+}
 
 // Zod validation schemas
 const bankTransferSchema = z.object({
@@ -71,18 +83,16 @@ const paymentSchema = z.discriminatedUnion("preferredPaymentMethod", [
   noneSchema,
 ]);
 
+// **ADDITION: Updated interface to accept payment data**
 interface PaymentModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  updatedAt?: string;
+  data: PaymentInfo; // Pass the payment data as prop
 }
 
-const PaymentModal: React.FC<PaymentModalProps> = ({
-  open,
-  setOpen,
-  updatedAt,
-}) => {
-  const router = useRouter();
+// **ADDITION: Updated component to accept data prop**
+const PaymentModal: React.FC<PaymentModalProps> = ({ open, setOpen, data }) => {
+  // const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -108,6 +118,21 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     mobileWalletNumber: "",
     accountHolderName: "",
   });
+
+  // **ADDITION: useEffect to populate form with existing data**
+  useEffect(() => {
+    if (data && open) {
+      setSelectedMethod(data.preferredPaymentMethod || "");
+      setPaymentInformation({
+        preferredPaymentMethod: data.preferredPaymentMethod || "",
+        bankAccountTitle: data.bankAccountTitle || "",
+        bankName: data.bankName || "",
+        accountNumberIban: data.accountNumberIban || "",
+        mobileWalletNumber: data.mobileWalletNumber || "",
+        accountHolderName: data.accountHolderName || "",
+      });
+    }
+  }, [data, open]);
 
   // Handler for payment method selection
   const handlePaymentMethodChange = (value: string) => {
@@ -162,10 +187,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
         console.log("Frontend - Sending payment data (none):", requestData);
 
+        // **ADDITION: Use updatePaymentInformation endpoint instead**
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}refupdateprofile/paymentInformation`,
+          `${process.env.NEXT_PUBLIC_BACKEND_API}refupdateprofile/updatePaymentInformation`,
           {
-            method: "POST",
+            method: "PATCH",
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -184,7 +210,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           // Auto close success modal after 2 seconds
           setTimeout(() => {
             setSuccessOpen(false);
-            router.push("/referralportal/completeprofile/termsagreement ");
+            // **ADDITION: Remove automatic navigation - let parent handle it**
+            // router.push("/referralportal/completeprofile/termsagreement ");
           }, 2000);
         } else {
           console.error("Error:", res.message);
@@ -286,10 +313,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
       console.log("Frontend - Sending payment data:", requestData);
 
+      // **ADDITION: Use updatePaymentInformation endpoint instead**
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}refupdateprofile/paymentInformation`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}refupdateprofile/updatePaymentInformation`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -313,7 +341,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         // Auto close success modal after 2 seconds
         setTimeout(() => {
           setSuccessOpen(false);
-          router.push("/referralportal/completeprofile/termsagreement ");
+          // **ADDITION: Remove automatic navigation - let parent handle it**
+          // router.push("/referralportal/completeprofile/termsagreement ");
         }, 2000);
       } else {
         console.error("Error:", res.message);
@@ -369,8 +398,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             height={18}
           />
           <p className="text-sm">
-            {updatedAt
-              ? `last updated on ${new Date(updatedAt).toLocaleDateString(
+            {/* **ADDITION: Use data.updatedAt instead of updatedAt prop** */}
+            {data?.updatedAt
+              ? `last updated on ${new Date(data.updatedAt).toLocaleDateString(
                   "en-GB"
                 )}`
               : "Not set"}
@@ -401,7 +431,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
               <Label className="mb-2 block">
                 Choose Preferred Payment Method:
               </Label>
-              <Select onValueChange={handlePaymentMethodChange}>
+              <Select
+                onValueChange={handlePaymentMethodChange}
+                value={selectedMethod}
+              >
                 <SelectTrigger className="w-full rounded-lg bg-[#f1f1f1]">
                   <SelectValue placeholder="Select:" />
                 </SelectTrigger>

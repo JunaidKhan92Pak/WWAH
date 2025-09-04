@@ -153,8 +153,8 @@ export default function AdminCommissionForm({
       // Company Info (You can customize this)
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text("Your Company Name", pageWidth / 2, 45, { align: "center" });
-      doc.text("Company Address", pageWidth / 2, 55, { align: "center" });
+      doc.text("World Wide Admission Hub", pageWidth / 2, 45, { align: "center" });
+      doc.text("", pageWidth / 2, 55, { align: "center" });
 
       // Invoice Details
       let yPos = 80;
@@ -169,8 +169,8 @@ export default function AdminCommissionForm({
       // MBA Info
       doc.text(`MBA Name: ${user.firstName} ${user.lastName}`, 20, yPos);
       yPos += 15;
-      doc.text(`MBA ID: ${user._id}`, 20, yPos);
-      yPos += 15;
+      // doc.text(`MBA ID: ${user._id}`, 20, yPos);
+      // yPos += 15;
       doc.text(`Number of Referrals: ${commission.referrals}`, 20, yPos);
       yPos += 15;
       doc.text(
@@ -183,9 +183,9 @@ export default function AdminCommissionForm({
       yPos += 15;
 
       // Generate transaction ID (you might want to store this in DB)
-      const transactionId = `TXN${Date.now()}${commission._id.slice(-4)}`;
-      doc.text(`Transaction ID: ${transactionId}`, 20, yPos);
-      yPos += 15;
+      // const transactionId = `TXN${Date.now()}${commission._id.slice(-4)}`;
+      // doc.text(`Transaction ID: ${transactionId}`, 20, yPos);
+      // yPos += 15;
       doc.text(
         `Purpose of Payment: Commission Payment - ${commission.month}`,
         20,

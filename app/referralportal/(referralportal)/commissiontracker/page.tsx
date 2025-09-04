@@ -139,6 +139,8 @@ export default function Dashboard() {
     }
   };
 
+  // Replace the logo loading section in your generatePDF function with this improved version:
+
   const generatePDF = async (commission: Commission) => {
     if (!user) {
       alert("User data not available");
@@ -153,22 +155,106 @@ export default function Dashboard() {
 
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
 
+      let yPos = 20;
+
+      // Improved logo loading with better error handling and fallback
+      try {
+        const logoUrl = "/logopng.png"; // Make sure this path is correct
+
+        // Check if the logo exists first
+        const response = await fetch(logoUrl);
+        if (response.ok) {
+          // Create canvas to convert image to base64
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          if (!ctx) {
+            throw new Error("Could not get canvas 2d context");
+          }
+
+          const img = new Image();
+
+          await new Promise((resolve, reject) => {
+            img.onload = () => {
+              // Set canvas dimensions
+              canvas.width = img.width;
+              canvas.height = img.height;
+
+              // Draw image on canvas
+              ctx.drawImage(img, 0, 0);
+
+              // Get base64 data
+              const dataUrl = canvas.toDataURL("image/png");
+
+              // Add logo to PDF
+              const logoWidth = 40;
+              const logoHeight = 20;
+              const logoX = (pageWidth - logoWidth) / 2;
+
+              try {
+                doc.addImage(
+                  dataUrl,
+                  "PNG",
+                  logoX,
+                  yPos,
+                  logoWidth,
+                  logoHeight
+                );
+                console.log("Logo added successfully");
+              } catch (pdfError) {
+                console.error("Error adding logo to PDF:", pdfError);
+              }
+
+              resolve(true);
+            };
+
+            img.onerror = (error) => {
+              console.error("Failed to load logo image:", error);
+              reject(error);
+            };
+
+            // Set crossOrigin before src to avoid CORS issues
+            img.crossOrigin = "anonymous";
+            img.src = logoUrl;
+          });
+
+          yPos += 35; // Space after logo
+        } else {
+          console.log("Logo file not found at path:", logoUrl);
+          yPos += 10; // Minimal space when no logo
+        }
+      } catch (logoError) {
+        console.error("Logo loading error:", logoError);
+        // Continue without logo - don't break the PDF generation
+        yPos += 10;
+      }
+
+      // Rest of your PDF generation code remains the same...
       // Header
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
-      doc.text(`Payment Invoice - ${commission.month}`, pageWidth / 2, 30, {
+      doc.text(`Payment Invoice - ${commission.month}`, pageWidth / 2, yPos, {
         align: "center",
       });
 
-      // Company Info (You can customize this)
+      yPos += 20;
+
+      // Company Info
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text("Your Company Name", pageWidth / 2, 45, { align: "center" });
-      doc.text("Company Address", pageWidth / 2, 55, { align: "center" });
+      doc.text("World Wide Admission Hub", pageWidth / 2, yPos, {
+        align: "center",
+      });
+      yPos += 10;
+      doc.text("Head Office: Al Waheeda, Dubai.", pageWidth / 2, yPos, {
+        align: "center",
+      });
+
+      yPos += 30;
 
       // Invoice Details
-      let yPos = 80;
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
       doc.text("Invoice Details", 20, yPos);
@@ -177,10 +263,8 @@ export default function Dashboard() {
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
 
-      // MBA Info
-      doc.text(`MBA Name: ${user.firstName} ${user.lastName}`, 20, yPos);
-      yPos += 15;
-      doc.text(`MBA ID: ${user._id}`, 20, yPos);
+      // User and Commission Info
+      doc.text(`Name: ${user.firstName} ${user.lastName}`, 20, yPos);
       yPos += 15;
       doc.text(`Number of Referrals: ${commission.referrals}`, 20, yPos);
       yPos += 15;
@@ -192,19 +276,15 @@ export default function Dashboard() {
       yPos += 15;
       doc.text(`Date of Payment: ${new Date().toLocaleDateString()}`, 20, yPos);
       yPos += 15;
-
-      // Generate transaction ID (you might want to store this in DB)
-      const transactionId = `TXN${Date.now()}${commission._id.slice(-4)}`;
-      doc.text(`Transaction ID: ${transactionId}`, 20, yPos);
-      yPos += 15;
       doc.text(
         `Purpose of Payment: Commission Payment - ${commission.month}`,
         20,
         yPos
       );
 
-      // Statement
       yPos += 30;
+
+      // Statement
       doc.setFont("helvetica", "bold");
       doc.text("Statement:", 20, yPos);
       yPos += 15;
@@ -214,12 +294,13 @@ export default function Dashboard() {
       const splitStatement = doc.splitTextToSize(statementText, pageWidth - 40);
       doc.text(splitStatement, 20, yPos);
 
+      yPos += splitStatement.length * 5 + 20;
+
       // Signature section
-      yPos += 40;
       doc.setFont("helvetica", "bold");
       doc.text("Authorized Signature / Company Seal", 20, yPos);
       yPos += 30;
-      doc.line(20, yPos, 120, yPos); // Signature line
+      doc.line(20, yPos, 120, yPos);
       yPos += 10;
       doc.setFont("helvetica", "normal");
       doc.text("Company Representative", 20, yPos);
@@ -229,7 +310,7 @@ export default function Dashboard() {
       doc.text(
         `Generated on: ${new Date().toLocaleString()}`,
         20,
-        doc.internal.pageSize.getHeight() - 20
+        pageHeight - 15
       );
 
       // Download the PDF
@@ -245,7 +326,6 @@ export default function Dashboard() {
       setDownloadingPdf(null);
     }
   };
-
   const formatCurrency = (amount: number) => `Rs. ${amount.toLocaleString()}`;
 
   // Force refresh function for debugging
@@ -391,46 +471,6 @@ export default function Dashboard() {
             </DialogContent>
           </Dialog>
         </div>
-
-        {/* Summary Cards */}
-        {/* {commissions.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {commissions.filter((c) => c.status === "Paid").length}
-                </div>
-                <div className="text-sm text-gray-600">Paid</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-yellow-600">
-                  {commissions.filter((c) => c.status === "Pending").length}
-                </div>
-                <div className="text-sm text-gray-600">Pending</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">
-                  {commissions.filter((c) => c.status === "Requested").length}
-                </div>
-                <div className="text-sm text-gray-600">Requested</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-gray-900">
-                  {formatCurrency(
-                    commissions.reduce((sum, c) => sum + c.amount, 0)
-                  )}
-                </div>
-                <div className="text-sm text-gray-600">Total Amount</div>
-              </CardContent>
-            </Card>
-          </div>
-        )} */}
 
         {/* Table */}
         <Card className="mb-8">
